@@ -1,48 +1,50 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import {
   of,
   Observable,
   Subscription
 } from 'rxjs';
 import {
-  tap,
   map,
   shareReplay,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
+
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  IMcsFormGroup,
   IMcsNavigateAwayGuard,
-  McsNavigationService,
-  IMcsFormGroup
+  McsNavigationService
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { SystemMessageForm } from '@app/features-shared';
 import {
-  RouteKey,
+  McsSystemMessage,
   McsSystemMessageEdit,
-  McsSystemMessage
+  RouteKey
 } from '@app/models';
-import {
-  isNullOrEmpty,
-  getSafeProperty,
-  CommonDefinition,
-  unsubscribeSafely
-} from '@app/utilities';
+import { McsApiService } from '@app/services';
 import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
-import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { SystemMessageForm } from '@app/features-shared';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { McsSystemMessageMapper } from '../message-mapper';
 
 @Component({

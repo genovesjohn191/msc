@@ -1,13 +1,15 @@
+
+
 import {
+  ChangeDetectionStrategy,
   Component,
-  ViewChild,
-  ChangeDetectionStrategy
+  ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  McsAuthenticationIdentity,
+  McsAuthenticationService
+} from '@app/core';
 import { McsIdentity } from '@app/models';
-import { McsAuthenticationIdentity, McsAuthenticationService } from '@app/core';
-import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 import { CommonDefinition } from '@app/utilities';
 
 @Component({

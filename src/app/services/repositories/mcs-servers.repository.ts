@@ -3,9 +3,9 @@ import {
   McsApiClientFactory,
   McsApiServersFactory
 } from '@app/api-client';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { McsServer } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { McsRepositoryBase } from '../core/mcs-repository.base';
 import { McsServersDataContext } from '../data-context/mcs-servers-data.context';

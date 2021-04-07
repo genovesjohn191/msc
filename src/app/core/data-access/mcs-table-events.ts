@@ -5,14 +5,14 @@ import {
   Injector
 } from '@angular/core';
 import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
+import {
   isNullOrEmpty,
   unsubscribeSafely,
   McsDisposable
 } from '@app/utilities';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@peerlancers/ngx-event-bus';
 
 import { McsTableDataSource2 } from './mcs-table-datasource2';
 

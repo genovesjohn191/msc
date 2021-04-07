@@ -25,6 +25,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsServer,
@@ -45,7 +46,6 @@ import {
   KeyboardKey
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { ConsoleStatus } from './console-status';
 import { IConsolePageEntity } from './factory/console-page-entity.interface';

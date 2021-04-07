@@ -3,10 +3,10 @@ import {
   McsApiClientFactory,
   McsApiJobsFactory
 } from '@app/api-client';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { McsJob } from '@app/models';
 import { compareDates } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { McsRepositoryBase } from '../core/mcs-repository.base';
 import { McsJobsDataContext } from '../data-context/mcs-jobs-data.context';

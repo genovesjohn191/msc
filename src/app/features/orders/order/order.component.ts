@@ -1,9 +1,26 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
+  of,
+  BehaviorSubject,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  concatMap,
+  finalize,
+  map,
+  shareReplay,
+  switchMap,
+  take,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -11,57 +28,41 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import {
-  Subject,
-  Observable,
-  of,
-  Subscription,
-  BehaviorSubject
-} from 'rxjs';
-import {
-  finalize,
-  shareReplay,
-  concatMap,
-  tap,
-  take,
-  map,
-  switchMap
-} from 'rxjs/operators';
-import {
-  McsTableDataSource,
+  McsAuthenticationIdentity,
   McsNavigationService,
-  McsAuthenticationIdentity
+  McsTableDataSource
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  getSafeProperty,
-  unsubscribeSafely,
-  CommonDefinition,
-  createObject,
-  isNullOrUndefined
-} from '@app/utilities';
-import {
-  McsOrder,
-  McsOrderItem,
-  OrderWorkflowAction,
-  McsOrderApprover,
-  RouteKey,
-  ItemType,
-  McsOrderWorkflow,
-  WorkflowStatus,
-  DeliveryType,
   deliveryTypeText,
-  McsCompany
+  DeliveryType,
+  ItemType,
+  McsCompany,
+  McsOrder,
+  McsOrderApprover,
+  McsOrderItem,
+  McsOrderWorkflow,
+  OrderWorkflowAction,
+  RouteKey,
+  WorkflowStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  DialogService,
   DialogConfirmation,
-  DialogRef
+  DialogRef,
+  DialogService
 } from '@app/shared';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 enum OrderDetailsView {
   OrderDetails = 0,

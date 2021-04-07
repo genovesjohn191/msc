@@ -1,74 +1,76 @@
 import {
-  OnDestroy,
-  Component,
-  ChangeDetectionStrategy,
-  OnInit,
-  ViewChild,
-  Injector,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder
-} from '@angular/forms';
-import {
-  Subject,
-  Observable,
-  zip,
-  of,
   forkJoin,
-  Subscription,
-  throwError
+  of,
+  throwError,
+  zip,
+  Observable,
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
-  takeUntil,
-  tap,
+  catchError,
   filter,
-  catchError
+  takeUntil,
+  tap
 } from 'rxjs/operators';
+
 import {
-  McsOrderWizardBase,
-  OrderRequester,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import {
   CoreValidators,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsOrderWizardBase,
+  OrderRequester
 } from '@app/core';
+import { SwitchAccountService } from '@app/core-layout/shared';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { OrderDetails } from '@app/features-shared';
 import {
-  Guid,
-  isNullOrEmpty,
-  unsubscribeSafely,
-  CommonDefinition,
-  getSafeProperty,
-  createObject,
-  getCurrentDate,
-  addMonthsToDate,
-  pluck,
-  isNullOrUndefined,
-  formatStringToPhoneNumber
-} from '@app/utilities';
-import { McsFormGroupDirective } from '@app/shared';
-import { McsApiService } from '@app/services';
-import {
-  RouteKey,
-  McsOrderCreate,
-  McsOrderWorkflow,
-  McsOrderItemCreate,
-  OrderIdType,
-  McsOption,
   colocationEscorteeText,
   ColocationEscortee,
-  McsServiceBase,
+  DeliveryType,
   McsAccount,
   McsCompany,
-  DeliveryType,
-  McsOptionGroup
+  McsOption,
+  McsOptionGroup,
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsOrderWorkflow,
+  McsServiceBase,
+  OrderIdType,
+  RouteKey
 } from '@app/models';
-import { OrderDetails } from '@app/features-shared';
-import { ColocationStaffEscortService } from './colocation-staff-escort.service';
 import { McsOrderColocationStaffEscort } from '@app/models/request/mcs-order-colocation-staff-escort';
-import { SwitchAccountService } from '@app/core-layout/shared';
-import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsApiService } from '@app/services';
+import { McsFormGroupDirective } from '@app/shared';
+import {
+  addMonthsToDate,
+  createObject,
+  formatStringToPhoneNumber,
+  getCurrentDate,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  pluck,
+  unsubscribeSafely,
+  CommonDefinition,
+  Guid
+} from '@app/utilities';
+
+import { ColocationStaffEscortService } from './colocation-staff-escort.service';
 
 const COLOCATION_STAFF_ESCORT = Guid.newGuid().toString();
 const TEXTAREA_MAXLENGTH_DEFAULT = 850;

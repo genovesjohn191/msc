@@ -1,38 +1,40 @@
 import {
-  ChangeDetectorRef,
-  Injector
-} from '@angular/core';
-import {
   Observable,
   Subscription
 } from 'rxjs';
 import {
-  tap,
   catchError,
   shareReplay,
   switchMap,
-  take
+  take,
+  tap
 } from 'rxjs/operators';
+
 import {
-  McsErrorHandlerService,
+  ChangeDetectorRef,
+  Injector
+} from '@angular/core';
+import {
   McsAccessControlService,
+  McsErrorHandlerService,
   McsServerPermission
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty
-} from '@app/utilities';
-import {
+  HttpStatusCode,
+  McsApiErrorContext,
   McsJob,
   McsResource,
-  McsServer,
-  HttpStatusCode,
-  McsApiErrorContext
+  McsServer
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
+
 import { ServerService } from './server.service';
 
 export abstract class ServerDetailsBase {

@@ -1,23 +1,28 @@
 import {
-  Component,
-  Output,
-  EventEmitter,
+  Observable,
+  Subject
+} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  OnInit
+  Component,
+  EventEmitter,
+  OnInit,
+  Output
 } from '@angular/core';
 import { CoreConfig } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
-import {
-  RouteKey,
-  McsCompany,
-  McsIdentity
-} from '@app/models';
-import { Observable, Subject } from 'rxjs';
-import { SwitchAccountService } from '../switch-account/switch-account.service';
-import { takeUntil } from 'rxjs/operators';
-import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
+import { EventBusPropertyListenOn } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import {
+  McsCompany,
+  McsIdentity,
+  RouteKey
+} from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
+
+import { SwitchAccountService } from '../switch-account/switch-account.service';
 
 @Component({
   selector: 'mcs-account-panel',

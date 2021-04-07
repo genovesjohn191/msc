@@ -10,6 +10,7 @@ import {
 } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsIdentity,
@@ -26,7 +27,6 @@ import {
   CommonDefinition,
   McsDisposable
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   LogClass,
   LogIgnore

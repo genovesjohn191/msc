@@ -1,31 +1,32 @@
 import {
-  Injectable,
-  isDevMode
-} from '@angular/core';
-import {
-  Observable,
-  Subject,
   fromEvent,
-  merge,
   interval,
-  timer
+  merge,
+  timer,
+  Observable,
+  Subject
 } from 'rxjs';
 import {
-  takeUntil,
+  distinctUntilChanged,
   filter,
-  distinctUntilChanged
+  takeUntil
 } from 'rxjs/operators';
+
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  coerceNumber,
-  resolveEnvVar,
-  McsEnvironmentVariables,
-  CommonDefinition
-} from '@app/utilities';
-import { McsIdentity } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+  isDevMode,
+  Injectable
+} from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import { McsIdentity } from '@app/models';
+import {
+  coerceNumber,
+  isNullOrEmpty,
+  resolveEnvVar,
+  unsubscribeSafely,
+  CommonDefinition,
+  McsEnvironmentVariables
+} from '@app/utilities';
 import { LogMethod } from '@peerlancers/ngx-logger';
 
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';

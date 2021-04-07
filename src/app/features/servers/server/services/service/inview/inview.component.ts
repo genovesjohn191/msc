@@ -1,33 +1,35 @@
-import {
-  Component,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import {
   CoreConfig,
   McsAuthenticationIdentity
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   InviewLevel,
-  ServerServicesAction,
   McsJob,
-  ServerServicesView,
-  McsServer
+  McsServer,
+  ServerServicesAction,
+  ServerServicesView
 } from '@app/models';
 import {
   replacePlaceholder,
-  CommonDefinition,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
-import { ServerServiceDetailBase } from '../server-service-detail.base';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
+import { ServerServiceDetailBase } from '../server-service-detail.base';
 
 @Component({
   selector: 'mcs-service-inview',

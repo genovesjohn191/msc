@@ -14,13 +14,13 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { McsIdentity } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 @Component({
   selector: 'mcs-catalog-page',

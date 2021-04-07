@@ -1,13 +1,4 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import {
   of,
   Observable
 } from 'rxjs';
@@ -15,34 +6,45 @@ import {
   concatMap,
   tap
 } from 'rxjs/operators';
+
 import {
-  McsUniqueId,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {
+  CoreRoutes,
   McsNavigationService,
-  CoreRoutes
+  McsUniqueId
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  getSafeProperty,
-  CommonDefinition,
-  createObject
-} from '@app/utilities';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   McsServer,
-  ServerCommand,
-  VmPowerstateCommand,
-  McsServerPowerstateCommand,
-  McsServerRename,
   McsServerDelete,
   McsServerPasswordReset,
-  RouteKey
+  McsServerPowerstateCommand,
+  McsServerRename,
+  RouteKey,
+  ServerCommand,
+  VmPowerstateCommand
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
-  DialogService,
-  DialogConfirmation
+  DialogConfirmation,
+  DialogService
 } from '@app/shared';
-import { McsEvent } from '@app/events';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { RenameServerDialogComponent } from '../server-dialogs/rename-server/rename-server.dialog';
 
 @Component({

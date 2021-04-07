@@ -20,6 +20,7 @@ import {
   CoreRoutes,
   McsAccessControlService
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   DataStatus,
@@ -36,7 +37,6 @@ import {
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
 

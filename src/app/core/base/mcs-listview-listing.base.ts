@@ -18,6 +18,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
+import {
   McsApiCollection,
   McsQueryParam
 } from '@app/models';
@@ -32,10 +36,6 @@ import {
   CommonDefinition,
   McsDisposable
 } from '@app/utilities';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@peerlancers/ngx-event-bus';
 
 import { McsListViewDatasource } from '../data-access/mcs-listview-datasource';
 

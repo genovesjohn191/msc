@@ -10,6 +10,7 @@ import {
   tap
 } from 'rxjs/operators';
 
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsEntityBase,
@@ -22,7 +23,6 @@ import {
   isNullOrEmpty,
   mergeArrays
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { McsDataContext } from './mcs-data-context.interface';
 import { McsRepositoryConfig } from './mcs-repository.config';

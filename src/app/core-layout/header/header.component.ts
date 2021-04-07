@@ -1,25 +1,29 @@
+import { Subscription } from 'rxjs';
+
 import {
-  Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
-  OnInit,
-  OnDestroy,
   ChangeDetectorRef,
-  ViewChild
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
 } from '@angular/core';
 import {
-  CommonDefinition,
-  unsubscribeSafely,
-  isNullOrEmpty } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+  McsAuthenticationIdentity,
+  McsNavigationService
+} from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
-  RouteKey,
+  McsRouteInfo,
   RouteCategory,
-  McsRouteInfo
+  RouteKey
 } from '@app/models';
-import { Subscription } from 'rxjs';
-import { McsAuthenticationIdentity, McsNavigationService } from '@app/core';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-header',

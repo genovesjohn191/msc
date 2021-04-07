@@ -5,6 +5,7 @@ import {
 } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   ActionStatus,
   EntityRequester,
@@ -15,7 +16,6 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { McsRepository } from '../../core/mcs-repository.interface';
 import { IMcsJobEntity } from './mcs-job-entity.interface';

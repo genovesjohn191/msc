@@ -1,3 +1,5 @@
+import { Subscription } from 'rxjs';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,11 +9,6 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-
 import {
   CoreConfig,
   McsAccessControlService,
@@ -19,6 +16,7 @@ import {
   McsRouteSettingsService
 } from '@app/core';
 import { McsAuthenticationService } from '@app/core/authentication/mcs-authentication.service';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   routeCategoryText,
@@ -34,6 +32,7 @@ import {
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-navigation',

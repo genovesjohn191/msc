@@ -1,4 +1,4 @@
-import { EventBusState } from '@peerlancers/ngx-event-bus';
+import { EventBusState } from '@app/event-bus';
 import { McsAzureService } from '@app/models';
 
 export class DataChangeAzureManagedServicesEvent extends EventBusState<McsAzureService[]> {

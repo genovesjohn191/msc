@@ -3,9 +3,9 @@ import {
   Component,
   ViewEncapsulation
 } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { CommonDefinition } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 @Component({
   selector: 'mcs-catalog-page-header',

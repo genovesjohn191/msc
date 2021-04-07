@@ -1,27 +1,28 @@
 import {
-  Injectable,
-  ErrorHandler,
-  isDevMode,
-  Injector
-} from '@angular/core';
-import {
   HttpErrorResponse,
   HttpResponse
 } from '@angular/common/http';
 import {
-  resolveEnvVar,
-  isNullOrEmpty,
-  McsEnvironmentVariables
-} from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+  isDevMode,
+  ErrorHandler,
+  Injectable,
+  Injector
+} from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  McsIdentity,
-  McsApiErrorResponse,
+  ApiErrorRequester,
   HttpStatusCode,
   McsApiErrorContext,
-  ApiErrorRequester
+  McsApiErrorResponse,
+  McsIdentity
 } from '@app/models';
-import { McsEvent } from '@app/events';
+import {
+  isNullOrEmpty,
+  resolveEnvVar,
+  McsEnvironmentVariables
+} from '@app/utilities';
+
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 

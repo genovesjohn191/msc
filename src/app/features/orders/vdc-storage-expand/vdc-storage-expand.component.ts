@@ -1,70 +1,71 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  ViewChild,
-  ChangeDetectorRef,
-  ElementRef,
-  Injector,
-  OnInit
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
-import {
-  Observable,
   throwError,
+  Observable,
   Subject,
   Subscription
 } from 'rxjs';
 import {
   catchError,
-  takeUntil,
+  map,
   shareReplay,
-  map
+  takeUntil
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import {
-  McsOrderWizardBase,
-  McsErrorHandlerService,
-  IMcsFormGroup,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import {
   CoreValidators,
+  IMcsFormGroup,
+  McsErrorHandlerService,
   McsFormGroupService,
+  McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
-import {
-  McsResource,
-  McsOrderWorkflow,
-  OrderIdType,
-  McsResourceStorage,
-  McsOrderCreate,
-  McsOrderItemCreate,
-  McsExpandResourceStorage
-} from '@app/models';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
-import { McsApiService } from '@app/services';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  animateFactory,
-  getSafeProperty,
-  CommonDefinition,
-  Guid,
-  convertMbToGb,
-  convertGbToMb,
-  createObject
-} from '@app/utilities';
-import {
-  McsFormGroupDirective,
-  ComponentHandlerDirective
-} from '@app/shared';
 import {
   OrderDetails,
   VdcManageStorage
 } from '@app/features-shared';
-import { VdcStorageExpandService } from './vdc-storage-expand.service';
+import {
+  McsExpandResourceStorage,
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsOrderWorkflow,
+  McsResource,
+  McsResourceStorage,
+  OrderIdType
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  ComponentHandlerDirective,
+  McsFormGroupDirective
+} from '@app/shared';
+import {
+  animateFactory,
+  convertGbToMb,
+  convertMbToGb,
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition,
+  Guid
+} from '@app/utilities';
 
+import { VdcStorageExpandService } from './vdc-storage-expand.service';
 
 type ExpandVdcStorageProperties = {
   sizeMB: number;

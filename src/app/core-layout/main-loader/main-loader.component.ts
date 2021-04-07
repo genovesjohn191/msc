@@ -1,29 +1,30 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
-  Subject,
   timer,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
-  takeUntil,
-  tap,
+  debounceTime,
   distinctUntilChanged,
-  debounceTime
+  takeUntil,
+  tap
 } from 'rxjs/operators';
+
 import {
-  unsubscribeSafely,
-  getRandomNumber,
-  animateFactory
-} from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import {
+  animateFactory,
+  getRandomNumber,
+  unsubscribeSafely
+} from '@app/utilities';
 
 const LOADER_MAX_VALUE = 100;
 const LOADER_INTERVAL_MS = 700;

@@ -1,20 +1,27 @@
 import {
-  Component,
-  OnInit,
+  Subject,
+  Subscription
+} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import {
+  AfterViewInit,
   ChangeDetectorRef,
+  Component,
   OnDestroy,
-  AfterViewInit
+  OnInit
 } from '@angular/core';
-import { Subscription, Subject } from 'rxjs';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsBrowserService } from '@app/core/services/mcs-browser.service';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
-  unsubscribeSafely,
-  isNullOrEmpty
+  Breakpoint,
+  McsRouteInfo
+} from '@app/models';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
-import { McsRouteInfo, Breakpoint, DeviceType } from '@app/models';
-import { McsBrowserService } from '@app/core/services/mcs-browser.service';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mcs-content',

@@ -10,12 +10,12 @@ import {
   Optional,
   SkipSelf
 } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   isNullOrEmpty,
   McsDisposable
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';

@@ -14,6 +14,10 @@ import {
   Injectable,
   Injector
 } from '@angular/core';
+import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   ActionStatus,
@@ -29,19 +33,15 @@ import {
   unsubscribeSafely,
   McsDisposable
 } from '@app/utilities';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@peerlancers/ngx-event-bus';
 
 import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
 import { IMcsJobEntity } from './base/mcs-job-entity.interface';
 import { McsJobBackupAggregationTargetManager } from './entities/mcs-job-backup-aggregation-target.manager';
+import { McsJobInternetManager } from './entities/mcs-job-internet.manager';
 import { McsJobLicenseManager } from './entities/mcs-job-license.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
 import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
-import { McsJobInternetManager } from './entities/mcs-job-internet.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {

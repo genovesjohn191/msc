@@ -1,42 +1,42 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import '../styles/base.scss';
+
 import { HttpClient } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import {
-  TranslateModule,
   TranslateLoader,
+  TranslateModule,
   TranslateService
 } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import {
-  LoggerModule,
-  LoggerConfig
+  LoggerConfig,
+  LoggerModule
 } from '@peerlancers/ngx-logger';
-import { EventBusModule } from '@peerlancers/ngx-event-bus';
 
-import { AppComponent } from './app.component';
-import { AppState } from './app.service';
-import { appRoutes } from './app.routes';
-import {
-  CoreModule,
-  CoreConfig,
-  McsCookieService
-} from './core';
-import { ServicesModule } from './services';
-import {
-  resolveEnvVar,
-  isNullOrEmpty,
-  McsEnvironmentVariables,
-  CommonDefinition,
-  Guid,
-  createObject
-} from './utilities';
-import { SharedModule } from './shared';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
-
-import '../styles/base.scss';
+import { AppComponent } from './app.component';
+import { appRoutes } from './app.routes';
+import { AppState } from './app.service';
+import {
+  CoreConfig,
+  CoreModule,
+  McsCookieService
+} from './core';
+import { EventBusModule } from './event-bus';
+import { ServicesModule } from './services';
+import { SharedModule } from './shared';
+import {
+  createObject,
+  isNullOrEmpty,
+  resolveEnvVar,
+  CommonDefinition,
+  Guid,
+  McsEnvironmentVariables
+} from './utilities';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', `.json?id=${Guid.newGuid().toString()}`);

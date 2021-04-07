@@ -2,10 +2,10 @@ import {
   forkJoin,
   of,
   zip,
+  BehaviorSubject,
   Observable,
   Subject,
-  Subscription,
-  BehaviorSubject
+  Subscription
 } from 'rxjs';
 import {
   filter,
@@ -32,6 +32,7 @@ import {
   McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   OrderDetails,
@@ -56,7 +57,6 @@ import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import {
   createObject,
-  formatStringToPhoneNumber,
   getCurrentDate,
   getSafeProperty,
   isNullOrEmpty,
@@ -67,7 +67,6 @@ import {
   Guid
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { RemoteHandsService } from './remote-hands.service';
 

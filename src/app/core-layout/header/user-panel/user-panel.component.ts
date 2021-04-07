@@ -1,42 +1,44 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  Subject,
   Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
-  takeUntil,
   map,
   shareReplay,
+  takeUntil
 } from 'rxjs/operators';
+
 import {
-  McsJob,
-  Breakpoint,
-  McsCompany,
-  RouteKey,
-  McsIdentity
-} from '@app/models';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
-  McsBrowserService,
   McsAuthenticationService,
+  McsBrowserService,
   McsNavigationService
 } from '@app/core';
+import { EventBusPropertyListenOn } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  refreshView,
+  Breakpoint,
+  McsCompany,
+  McsIdentity,
+  McsJob,
+  RouteKey
+} from '@app/models';
+import {
   isNullOrEmpty,
+  refreshView,
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+import { TranslateService } from '@ngx-translate/core';
+
 import { SwitchAccountService } from '../../shared';
 import { UserPanelService } from './user-panel.service';
 

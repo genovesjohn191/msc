@@ -20,6 +20,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
+import {
   Breakpoint,
   McsApiCollection,
   McsFilterInfo,
@@ -36,10 +40,6 @@ import {
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@peerlancers/ngx-event-bus';
 
 import { McsTableDataSource } from '../data-access/mcs-table-datasource';
 import { McsTableSelection } from '../data-access/mcs-table-selection';

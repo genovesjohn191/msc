@@ -1,28 +1,29 @@
+import {
+  Subject,
+  Subscription
+} from 'rxjs';
+
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  Subscription,
-  Subject
-} from 'rxjs';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import {
-  McsRouteInfo,
   HttpStatusCode,
+  McsRouteInfo,
   RoutePlatform
 } from '@app/models';
 import {
   isNullOrEmpty,
-  McsDisposable,
-  unsubscribeSafely
+  unsubscribeSafely,
+  McsDisposable
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
 import { LogClass } from '@peerlancers/ngx-logger';
 
+import { McsAccessControlService } from '../authentication/mcs-access-control.service';
+import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
+import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsErrorHandlerService } from './mcs-error-handler.service';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
-import { McsAccessControlService } from '../authentication/mcs-access-control.service';
-import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
-import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 
 @Injectable()
 @LogClass()

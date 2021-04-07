@@ -1,10 +1,10 @@
 import { Injector } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   ActionStatus,
   EntityRequester,
   McsBackUpAggregationTarget
 } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { McsBatsRepository } from '../../repositories/mcs-bats.repository';
 import { McsJobEntityBase } from '../base/mcs-job-entity.base';

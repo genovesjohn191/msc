@@ -1,14 +1,16 @@
-import { Injector } from '@angular/core';
 import {
-  Observable,
-  of
+  of,
+  Observable
 } from 'rxjs';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
+import { Injector } from '@angular/core';
+import { McsNavigationService } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { RouteKey } from '@app/models';
-import { McsNavigationService } from '@app/core';
-import { IServerServiceActionStrategy } from '../server-service-action.strategy';
+
 import { ServerServiceActionDetail } from '../server-service-action.context';
+import { IServerServiceActionStrategy } from '../server-service-action.strategy';
 
 export class ServiceRaiseInviewLevelAction implements IServerServiceActionStrategy<void> {
 

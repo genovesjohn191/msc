@@ -1,27 +1,28 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {
   Observable,
   Subscription
 } from 'rxjs';
 import {
-  shareReplay,
-  map
+  map,
+  shareReplay
 } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import { McsJob } from '@app/models';
 import {
-  unsubscribeSafely,
   getSafeProperty,
+  unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-notification',

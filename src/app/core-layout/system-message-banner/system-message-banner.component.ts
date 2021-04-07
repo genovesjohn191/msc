@@ -1,23 +1,24 @@
+import { Subscription } from 'rxjs';
+
 import {
-  Component,
   ChangeDetectionStrategy,
-  OnDestroy,
   ChangeDetectorRef,
+  Component,
+  OnDestroy,
   ViewEncapsulation
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   McsSystemMessage,
-  Severity,
-  MessageType
+  MessageType,
+  Severity
 } from '@app/models';
 import {
-  unsubscribeSafely,
   isNullOrEmpty,
+  unsubscribeSafely,
   McsStatusType
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-system-message-banner',

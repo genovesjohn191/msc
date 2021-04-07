@@ -1,62 +1,64 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  Injector} from '@angular/core';
-import {
+  zip,
   BehaviorSubject,
-  Observable,
   Subject,
-  Subscription,
-  zip
+  Subscription
 } from 'rxjs';
 import {
-  takeUntil,
   filter,
-  tap,
-  map
+  takeUntil,
+  tap
 } from 'rxjs/operators';
+
 import {
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
   FormControl,
-  FormGroup,
-  FormBuilder} from '@angular/forms';
+  FormGroup
+} from '@angular/forms';
 import {
-  McsOrderWizardBase,
   CoreValidators,
-  OrderRequester,
-  IMcsFormGroup
+  IMcsFormGroup,
+  McsOrderWizardBase,
+  OrderRequester
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
+  OrderDetails,
+  SmacSharedDetails,
+  SmacSharedFormConfig
+} from '@app/features-shared';
+import {
+  DeliveryType,
   McsOption,
   McsOrderCreate,
   McsOrderItemCreate,
-  OrderIdType,
-  DeliveryType,
   McsOrderWorkflow,
+  OrderIdType,
   RouteKey
 } from '@app/models';
-import {
-  SmacSharedFormConfig,
-  SmacSharedDetails,
-  OrderDetails} from '@app/features-shared';
+import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import {
-  CommonDefinition,
-  getSafeProperty,
-  createObject,
-  Guid,
-  isNullOrEmpty,
   addDaysToDate,
+  createObject,
   getCurrentDate,
-  formatStringToPhoneNumber,
-  unsubscribeSafely
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition,
+  Guid
 } from '@app/utilities';
-import { ServerRequestPatchService } from './server-request-patch.service';
-import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 import { TranslateService } from '@ngx-translate/core';
+
+import { ServerRequestPatchService } from './server-request-patch.service';
 
 const MAX_INSTRUCTIONS_LENGTH = 850;
 const VISIBILE_ROWS = 3;
