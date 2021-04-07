@@ -10,7 +10,9 @@ import { DynamicInputNumberComponent } from './input-number/input-number.compone
 import { DynamicInputPasswordComponent } from './input-password/input-password.component';
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
+import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zone/select-availability-zone.component';
 import { DynamicSelectBatComponent } from './select-bat/select-bat.component';
+import { DynamicSelectChipsTenantComponent } from './select-chips-tenant/select-chips-tenant.component';
 import { DynamicSelectChipsVmComponent } from './select-chips-vm/select-chips-vm.component';
 import { DynamicSelectChipsComponent } from './select-chips/select-chips.component';
 import { DynamicSelectGroupComponent } from './select-group/select-group.component';
@@ -31,8 +33,10 @@ const exports: any[] | Type<any> = [
   DynamicInputTextComponent,
   DynamicInputPasswordComponent,
   DynamicInputRandomComponent,
+  DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
   DynamicSelectChipsComponent,
+  DynamicSelectChipsTenantComponent,
   DynamicSelectChipsVmComponent,
   DynamicSelectComponent,
   DynamicSelectGroupComponent,

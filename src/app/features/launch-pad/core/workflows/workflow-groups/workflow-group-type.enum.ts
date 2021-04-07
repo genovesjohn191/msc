@@ -23,14 +23,14 @@ export enum WorkflowGroupId {
   ManagementToolsRemoveCvm = 300003,
   ManagementToolsRename = 300004,
 
-  HostSecurityProvisionAntiVirus = 4000000,
-  HostSecurityProvisionHids = 4000001,
+  HostSecurityProvisionAntiVirus = 400000,
+  HostSecurityProvisionHids = 400001,
 
-  ServerBackupProvision = 5000000,
+  ServerBackupProvision = 500000,
 
-  VmBackupProvision = 6000000,
+  VmBackupProvision = 600000,
 
-  MicrosoftCreateSubscription = 7000000,
+  MicrosoftCreateSubscription = 700000,
 }
 
 export const workflowGroupIdText = {

@@ -1,13 +1,9 @@
 import {
   DynamicInputHiddenField,
-  DynamicSelectField,
-  DynamicSelectVmField
+  DynamicSelectAvailabilityZoneField,
+  DynamicSelectChipsTenantField
 } from '@app/features-shared/dynamic-form';
-import {
-  McsObjectCrispElementServiceAttribute,
-  PlatformType,
-  ServiceType
-} from '@app/models';
+import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { LaunchPadForm } from './form.interface';
 import {
@@ -18,21 +14,26 @@ import { standardContextMapper } from './shared/standard-context-mapper';
 
 export const microsoftCreateSubscriptionForm: LaunchPadForm = {
   config: [
-    new DynamicSelectVmField({
-      key: 'server',
-      label: 'Target Server',
-      validators: { required: true },
-      useServiceIdAsKey: true
+    new DynamicInputHiddenField({
+      key: 'companyId',
+      value: '',
+      eventName: 'company-change',
+      dependents: ['tenant'],
     }),
-    new DynamicSelectField({
-      key: 'availabilityZone',
-      label: 'Availability Zone',
+    new DynamicSelectChipsTenantField({
+      key: 'tenant',
+      label: 'Tenant',
+      placeholder: 'Search for name or tenant ID...',
       validators: { required: true },
-      options: [
-        { key: 'Global', value: 'Global'},
-        { key: 'AZ1', value: 'AZ1'}
-      ]
-    })
+      allowCustomInput: true,
+      useTenantIdAsKey: true,
+      maxItems: 1
+    }),
+    new DynamicSelectAvailabilityZoneField({
+      key: 'location',
+      label: 'Location',
+      validators: { required: true }
+    }),
   ],
 
   mapContext: standardContextMapper,

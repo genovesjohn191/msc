@@ -8,7 +8,6 @@ import {
   McsQueryParam,
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsLicense,
   McsTenant,
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -26,7 +25,7 @@ export class McsApiTenantsService implements IMcsApiTenantsService {
    * Get Tenant (MCS API Response)
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getTenants(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTenant[]>> {
+  public getTenants(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTenant[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -38,6 +37,7 @@ export class McsApiTenantsService implements IMcsApiTenantsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/tenants';
     mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
