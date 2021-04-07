@@ -8,8 +8,8 @@
       <div class="data-wrapper">
         <div class="widget">
           <h3>{{ 'reports.overview.contactUsWidget.title' | translate }}</h3>
-          <mcs-cta-list *ngFor="let contactInfo of contactsInfo.contacts">
-            <mcs-cta-list-panel [icon]="contactPersonIcon">
+          <mcs-cta-list>
+            <mcs-cta-list-panel [icon]="contactPersonIcon" *ngFor="let contactInfo of contactsInfo.contacts">
               <mcs-cta-list-body *ngIf="contactInfo.position"
                 style="display: block;">
                 {{ contactInfo.position }}
