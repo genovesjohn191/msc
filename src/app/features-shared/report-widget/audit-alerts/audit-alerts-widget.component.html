@@ -4,30 +4,30 @@
     <table mat-table [dataSource]="dataSource">
       <!-- Severity Column -->
       <ng-container matColumnDef="severity">
-        <th mat-header-cell *matHeaderCellDef hidden-small>
+        <th mat-header-cell *matHeaderCellDef>
           {{ 'columnHeader.severity' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
+        <td mat-cell *matCellDef="let row">
           {{ row.severity || 'Unavailable'}}
         </td>
       </ng-container>
 
       <!-- Type Column -->
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef hidden-small>
+        <th mat-header-cell *matHeaderCellDef>
           {{ 'columnHeader.type' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
+        <td mat-cell *matCellDef="let row">
           {{ row.type || 'Unavailable' }}
         </td>
       </ng-container>
 
       <!-- Operation Name Column -->
       <ng-container matColumnDef="operationName">
-        <th mat-header-cell *matHeaderCellDef hidden-small>
+        <th mat-header-cell *matHeaderCellDef>
           {{ 'columnHeader.operationName' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
+        <td mat-cell *matCellDef="let row">
           {{ row.operationName || 'Unavailable' }}
         </td>
       </ng-container>
@@ -48,21 +48,23 @@
         [hidden]="dataSource?.isInProgress$ | async"></tr>
     </table>
     <!-- Table Statuses -->
-    <div *ngIf="dataSource?.isInProgress$ | async" align="center">
-      <mcs-loader size="medium"></mcs-loader>
-    </div>
-    <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-      {{ 'reports.noDataFound' | translate }}
-    </div>
-    <div *ngIf="dataSource?.hasError$ | async" text-center>
-      <div class="listing-status-wrapper">
-        <span>{{ 'reports.errorMessage' | translate }}</span>
-        <a (click)="retryDatasource()"
-          mcsId
-          mcsEventTracker="retry-loading-audit-alerts-list"
-          mcsEventCategory="audit-alerts"
-          mcsEventLabel="dashboard-insight-page">{{ 'reports.retryLabel' | translate }}</a>.
+    <mcs-item orientation="block">
+      <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+        <mcs-loader size="medium"></mcs-loader>
       </div>
-    </div>
+      <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+        {{ 'reports.noDataFound' | translate }}
+      </div>
+      <div *ngIf="dataSource?.hasError$ | async" text-center>
+        <div class="listing-status-wrapper">
+          <span>{{ 'reports.errorMessage' | translate }}</span>
+          <a (click)="retryDatasource()"
+            mcsId
+            mcsEventTracker="retry-loading-audit-alerts-list"
+            mcsEventCategory="audit-alerts"
+            mcsEventLabel="dashboard-insight-page">{{ 'reports.retryLabel' | translate }}</a>.
+        </div>
+      </div>
+    </mcs-item>
   </div>
 </div>

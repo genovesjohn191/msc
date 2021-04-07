@@ -8,4 +8,14 @@
     top: $space-large;
     right: $space-large;
   }
+
+  .listing-table-wrapper {
+    max-width: 100%;
+    min-width: 100%;
+    overflow-x: auto;
+
+    .mat-table {
+      min-width: 100%;
+    }
+  }
 }

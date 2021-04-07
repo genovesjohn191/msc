@@ -25,8 +25,14 @@ $shadow-effect: 1px solid #e3e3e3;
       }
     }
 
+    mcs-cta-list-panel:last-child {
+      .item-wrapper {
+        margin-bottom: 0;
+      }
+    }
+
     .error-wrapper {
-      margin: $space-large 0;
+      margin: $space-large 0 0;
     }
 
     &.flat {
