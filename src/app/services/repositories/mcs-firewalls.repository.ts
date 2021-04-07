@@ -3,9 +3,9 @@ import {
   McsApiClientFactory,
   McsApiFirewallsFactory
 } from '@app/api-client';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { McsFirewall } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { McsRepositoryBase } from '../core/mcs-repository.base';
 import { McsFirewallsDataContext } from '../data-context/mcs-firewalls-data.context';

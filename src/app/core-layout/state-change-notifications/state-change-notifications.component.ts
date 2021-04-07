@@ -1,26 +1,27 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input,
-  Renderer2,
-  ViewChild,
-  ElementRef,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
-} from '@angular/core';
 import { Subscription } from 'rxjs';
+
 import {
-  McsJob,
-  DataStatus
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import {
+  DataStatus,
+  McsJob
 } from '@app/models';
 import {
-  unsubscribeSafely,
   addOrUpdateArrayRecord,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-state-change-notifications',

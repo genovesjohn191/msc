@@ -1,14 +1,18 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { Injectable } from '@angular/core';
 import {
-  CanActivate,
   ActivatedRouteSnapshot,
+  CanActivate,
   RouterStateSnapshot
 } from '@angular/router';
-import { Observable } from 'rxjs';
-import { McsAuthenticationIdentity, McsErrorHandlerService } from '@app/core';
-import { HttpStatusCode } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import {
+  McsAuthenticationIdentity,
+  McsErrorHandlerService
+} from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import { HttpStatusCode } from '@app/models';
 
 @Injectable()
 export class LaunchPadGuard implements CanActivate {

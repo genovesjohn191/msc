@@ -70,6 +70,10 @@ import {
 } from '@app/api-client';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
 import { IMcsApiObjectsService } from '@app/api-client/interfaces/mcs-api-objects.interface';
+import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   ApiErrorRequester,
@@ -107,7 +111,6 @@ import {
   McsJobConnection,
   McsKeyValue,
   McsLicense,
-  McsNetworkDnsBase,
   McsNetworkDnsSummary,
   McsObjectCrispElement,
   McsObjectInstalledService,
@@ -206,10 +209,6 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@peerlancers/ngx-event-bus';
 import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsRepository } from './core/mcs-repository.interface';

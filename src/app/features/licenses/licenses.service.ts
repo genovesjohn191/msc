@@ -1,24 +1,20 @@
-import { Injectable } from '@angular/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
-  Subscription,
+  BehaviorSubject,
   Observable,
-  BehaviorSubject
+  Subscription
 } from 'rxjs';
-import {
-  McsNotificationContextService,
-  McsAccessControlService
-} from '@app/core';
-import {
-  McsJob
-} from '@app/models';
-import {
-  isNullOrEmpty,
-  addOrUpdateArrayRecord,
-  McsDisposable,
-  unsubscribeSafely
-} from '@app/utilities';
+
+import { Injectable } from '@angular/core';
+import { McsAccessControlService } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import { McsJob } from '@app/models';
+import {
+  addOrUpdateArrayRecord,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  McsDisposable
+} from '@app/utilities';
 
 @Injectable()
 export class LicenseService implements McsDisposable {

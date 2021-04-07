@@ -1,22 +1,24 @@
 import {
+  Observable,
+  Subscription
+} from 'rxjs';
+import {
+  shareReplay,
+  take,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectorRef,
   Injector
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  Subscription,
-  Observable
-} from 'rxjs';
-import {
-  take,
-  tap,
-  shareReplay
-} from 'rxjs/operators';
-import { unsubscribeSafely } from '@app/utilities';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import { McsResource } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+import { unsubscribeSafely } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { VdcService } from '../vdc/vdc.service';
 
 export abstract class VdcDetailsBase {

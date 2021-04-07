@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core';
+import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   DataStatus,
@@ -10,10 +14,6 @@ import {
   compareStrings,
   isNullOrEmpty
 } from '@app/utilities';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@peerlancers/ngx-event-bus';
 import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';

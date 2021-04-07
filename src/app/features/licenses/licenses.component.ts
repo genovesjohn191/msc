@@ -1,14 +1,4 @@
 import {
-  Component,
-  OnInit,
-  Injector,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  ViewChild,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {
   Observable,
   Subject
 } from 'rxjs';
@@ -17,7 +7,17 @@ import {
   shareReplay,
   takeUntil
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   McsAccessControlService,
   McsMatTableContext,
@@ -26,30 +26,32 @@ import {
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
+  licenseStatusText,
+  LicenseStatus,
+  McsFilterInfo,
+  McsJob,
   McsLicense,
   McsQueryParam,
-  McsFilterInfo,
-  RouteKey,
-  LicenseStatus,
-  licenseStatusText,
-  McsJob
+  RouteKey
 } from '@app/models';
-import {
-  getSafeProperty,
-  CommonDefinition,
-  isNullOrEmpty,
-  unsubscribeSafely,
-  createObject
-} from '@app/utilities';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
-import { LicenseService } from './licenses.service';
 import {
   ColumnFilter,
   Paginator,
   Search
 } from '@app/shared';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+
+import { LicenseService } from './licenses.service';
 
 @Component({
   selector: 'mcs-licenses',

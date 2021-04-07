@@ -1,66 +1,68 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-  ViewChild,
-  AfterViewInit
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
-import {
-  Subscription,
-  Observable,
   of,
-  Subject
+  Observable,
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup
+} from '@angular/forms';
 import {
   CoreValidators,
   IMcsFormGroup
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  replacePlaceholder,
-  isNullOrEmpty,
-  convertMbToGb,
-  convertGbToMb,
-  getSafeProperty,
-  unsubscribeSafely,
-  CommonDefinition,
-  compareStrings
-} from '@app/utilities';
+  ServerManageNetwork,
+  ServerManageScale,
+  ServerManageStorage
+} from '@app/features-shared';
 import {
   CatalogItemType,
-  ServiceType,
   McsResource,
-  McsResourceStorage,
   McsResourceCatalogItem,
+  McsResourceStorage,
   McsServerCreate,
-  McsServerCreateStorage,
   McsServerCreateNic,
-  McsServerOperatingSystem,
   McsServerCreateOs,
+  McsServerCreateStorage,
+  McsServerOperatingSystem,
+  Os,
   OsType,
-  Os
+  ServiceType
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import {
-  ServerManageStorage,
-  ServerManageNetwork,
-  ServerManageScale
-} from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+import {
+  compareStrings,
+  convertGbToMb,
+  convertMbToGb,
+  getSafeProperty,
+  isNullOrEmpty,
+  replacePlaceholder,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;

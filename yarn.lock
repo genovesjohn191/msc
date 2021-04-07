@@ -1271,13 +1271,6 @@
     puka "^1.0.1"
     read-package-json-fast "^1.1.3"
 
-"@peerlancers/ngx-event-bus@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@peerlancers/ngx-event-bus/-/ngx-event-bus-1.0.5.tgz#dad9541ffc3091b2ab7fa85cf4b1b15f90682c44"
-  integrity sha512-iQHEryBeRPhczQtwmXInlwLfZFmI2QPLYHpbptTEkythZsMVhrTPWr9CgxaB9W6q2gC+e63fZIQFCOTNFdREHg==
-  dependencies:
-    tslib "^1.9.0"
-
 "@peerlancers/ngx-logger@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@peerlancers/ngx-logger/-/ngx-logger-1.0.6.tgz#36d8d239acd0940bb51781b945fadd072546aa00"

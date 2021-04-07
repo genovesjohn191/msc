@@ -1,4 +1,4 @@
-import { EventBusState } from '@peerlancers/ngx-event-bus';
+import { EventBusState } from '@app/event-bus';
 import { McsServer } from '@app/models';
 
 export class ServerAddBackupServerSelectedEvent extends EventBusState<McsServer> {

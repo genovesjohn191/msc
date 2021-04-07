@@ -1,62 +1,64 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  ViewChild,
-  Injector,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder,
-  AbstractControl
-} from '@angular/forms';
-import {
-  Observable,
-  Subject,
   zip,
   BehaviorSubject,
+  Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
-  takeUntil,
-  filter,
-  tap,
-  map,
   distinctUntilChanged,
-  shareReplay
+  filter,
+  map,
+  shareReplay,
+  takeUntil,
+  tap
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import {
-  McsOrderWizardBase,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import {
   CoreValidators,
+  McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { OrderDetails } from '@app/features-shared';
 import {
+  LicenseStatus,
+  McsJob,
+  McsLicense,
+  McsOption,
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsOrderWorkflow,
+  OrderIdType
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import { McsFormGroupDirective } from '@app/shared';
+import {
+  addOrUpdateArrayRecord,
+  createObject,
+  getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  Guid,
-  getSafeProperty,
-  createObject,
   CommonDefinition,
-  addOrUpdateArrayRecord
+  Guid
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
-import { McsFormGroupDirective } from '@app/shared';
-import { McsApiService } from '@app/services';
-import {
-  McsOption,
-  McsLicense,
-  McsOrderWorkflow,
-  McsOrderCreate,
-  OrderIdType,
-  McsOrderItemCreate,
-  LicenseStatus,
-  McsJob
-} from '@app/models';
-import { OrderDetails } from '@app/features-shared';
+
 import { MsLicenseCountChangeService } from './ms-license-count-change.service';
 
 const DEFAULT_LICENSE_COUNT_MIN = 1;

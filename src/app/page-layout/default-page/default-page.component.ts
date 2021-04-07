@@ -1,24 +1,24 @@
 import {
-  Component,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Component
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import {
+  DataStatus,
+  JobType,
+  McsJob,
+  McsServerCredential
+} from '@app/models';
+import {
+  DialogMessageConfig,
+  DialogService
+} from '@app/shared';
 import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import {
-  DialogService,
-  DialogMessageConfig
-} from '@app/shared';
-import {
-  McsJob,
-  JobType,
-  DataStatus,
-  McsServerCredential
-} from '@app/models';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-default-page',

@@ -14,6 +14,7 @@ import {
   NavigationEnd,
   Router
 } from '@angular/router';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsIdentity,
@@ -25,7 +26,6 @@ import {
   unsubscribeSafely,
   McsDisposable
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   LogClass,
   LogIgnore

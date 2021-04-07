@@ -1,20 +1,21 @@
+import { Subscription } from 'rxjs';
+
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ChangeDetectorRef
+  ViewEncapsulation
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
+  deleteArrayRecord,
+  isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  isNullOrEmpty,
-  deleteArrayRecord,
   Guid
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 const HIDE_ERROR_NOTIFICATION_DURATION = 10000;
 

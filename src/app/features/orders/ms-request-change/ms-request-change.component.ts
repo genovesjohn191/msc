@@ -34,6 +34,7 @@ import {
   McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   OrderDetails,
@@ -70,7 +71,6 @@ import {
   Guid
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { MsRequestChangeService } from './ms-request-change.service';
 

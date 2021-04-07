@@ -1,66 +1,68 @@
 import {
-  Component,
-  OnDestroy,
-  Injector,
-  ViewChild,
-  ElementRef,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  OnInit
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
-import {
-  Subject,
-  Observable,
   throwError,
+  Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
-  map,
   catchError,
+  map,
   shareReplay,
   takeUntil
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import {
-  McsOrderWizardBase,
-  McsErrorHandlerService,
-  McsFormGroupService,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import {
   CoreValidators,
   IMcsFormGroup,
+  McsErrorHandlerService,
+  McsFormGroupService,
+  McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
-import {
-  McsOrderWorkflow,
-  McsResource,
-  McsResourceCompute,
-  OrderIdType,
-  McsOrderCreate,
-  McsOrderItemCreate
-} from '@app/models';
-import {
-  getSafeProperty,
-  unsubscribeSafely,
-  isNullOrEmpty,
-  convertMbToGb,
-  CommonDefinition,
-  Guid,
-  convertGbToMb,
-  createObject
-} from '@app/utilities';
-import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
-import {
-  McsFormGroupDirective,
-  ComponentHandlerDirective
-} from '@app/shared';
 import {
   OrderDetails,
   VdcManageScale
 } from '@app/features-shared';
+import {
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsOrderWorkflow,
+  McsResource,
+  McsResourceCompute,
+  OrderIdType
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  ComponentHandlerDirective,
+  McsFormGroupDirective
+} from '@app/shared';
+import {
+  convertGbToMb,
+  convertMbToGb,
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition,
+  Guid
+} from '@app/utilities';
+
 import { VdcScaleService } from './vdc-scale.service';
 
 type VdcScaleProperties = {

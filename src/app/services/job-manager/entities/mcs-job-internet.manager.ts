@@ -1,11 +1,12 @@
 import { Injector } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   ActionStatus,
   EntityRequester,
-	McsInternetPort
+  McsInternetPort
 } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsInternetRepository } from '@app/services/repositories/mcs-internet.repository';
+
 import { McsJobEntityBase } from '../base/mcs-job-entity.base';
 
 export class McsJobInternetManager extends McsJobEntityBase<McsInternetPort> {

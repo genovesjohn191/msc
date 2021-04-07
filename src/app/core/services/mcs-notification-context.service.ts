@@ -11,6 +11,7 @@ import {
 } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   DataStatus,
@@ -28,7 +29,6 @@ import {
   unsubscribeSafely,
   McsDisposable
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';

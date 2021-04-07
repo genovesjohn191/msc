@@ -5,6 +5,7 @@ import {
   Injectable,
   Injector
 } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   EntityRequester,
@@ -16,7 +17,6 @@ import {
   unsubscribeSafely,
   McsDisposable
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { IMcsEntityStateManager } from './base/mcs-entity-state-manager.interface';
 import { McsBackupAggregationTargetStateManager } from './entities/mcs-backup-aggregation-target.state-manager';

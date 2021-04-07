@@ -9,8 +9,6 @@ import {
   map,
   tap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import {
   ChangeDetectionStrategy,
@@ -20,6 +18,7 @@ import {
   OnInit
 } from '@angular/core';
 import { McsTableDataSource } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsJob,
@@ -34,12 +33,13 @@ import {
 } from '@app/shared';
 import {
   addOrUpdateArrayRecord,
+  deleteArrayRecord,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  Guid,
-  deleteArrayRecord
+  Guid
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 import { MediaManageServers } from '../../shared';
 import { MediumDetailsBase } from '../medium-details.base';

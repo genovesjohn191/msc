@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
+  AccountStatus,
   McsCompany,
   McsIdentity,
-  AccountStatus,
-  McsPlatform,
-  McsKeyValue
+  McsKeyValue,
+  McsPlatform
 } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+
 import { McsCookieService } from '../services/mcs-cookie.service';
 
 @Injectable()

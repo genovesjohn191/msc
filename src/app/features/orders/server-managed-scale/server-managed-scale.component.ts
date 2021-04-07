@@ -31,6 +31,7 @@ import {
   McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   OrderDetails,
@@ -64,7 +65,6 @@ import {
   CommonDefinition,
   Guid
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { ServerManagedScaleService } from './server-managed-scale.service';
 

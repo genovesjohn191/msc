@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
 import {
   Observable,
   Subject,
@@ -16,28 +9,36 @@ import {
   map,
   shareReplay
 } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
+
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition
-} from '@app/utilities';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
+  ticketTypeText,
   CommentCategory,
   CommentType,
-  McsFileInfo,
   McsComment,
+  McsFileInfo,
   McsTicket,
-  TicketType,
-  ticketTypeText,
   McsTicketAttachment,
+  McsTicketCreateAttachment,
   McsTicketCreateComment,
-  McsTicketCreateAttachment
+  TicketType
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-ticket',

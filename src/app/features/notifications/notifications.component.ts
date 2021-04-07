@@ -1,45 +1,46 @@
 import {
-  Component,
-  ChangeDetectorRef,
+  Observable,
+  Subscription
+} from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
   Injector,
   OnDestroy,
   ViewChild
 } from '@angular/core';
 import {
-  Observable,
-  Subscription
-} from 'rxjs';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { map } from 'rxjs/operators';
-import {
   McsAuthenticationIdentity,
+  McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
-  McsTableEvents,
-  McsMatTableQueryParam,
-  McsMatTableContext
+  McsTableEvents
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  createObject,
-  getSafeProperty
-} from '@app/utilities';
-import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   McsCompany,
+  McsFilterInfo,
   McsJob,
-  RouteKey,
   McsQueryParam,
-  McsFilterInfo
+  RouteKey
 } from '@app/models';
-import { McsEvent } from '@app/events';
+import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
   Paginator,
   Search
 } from '@app/shared';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-notifications',

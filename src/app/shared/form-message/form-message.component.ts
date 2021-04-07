@@ -1,33 +1,35 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  Input,
-  ChangeDetectorRef,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
-import {
-  Observable,
   of,
+  Observable,
   Subscription
 } from 'rxjs';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { McsScrollDispatcherService } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   animateFactory,
-  McsStatusType,
-  unsubscribeSafely,
   isNullOrEmpty,
-  CommonDefinition
+  unsubscribeSafely,
+  CommonDefinition,
+  McsStatusType
 } from '@app/utilities';
-import { McsScrollDispatcherService } from '@app/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+
+import { ComponentHandlerDirective } from '../directives';
 import {
   FormMessage,
   FormMessageContent
 } from './form-message';
-import { ComponentHandlerDirective } from '../directives';
 import { FormMessageConfig } from './form-message.config';
 
 @Component({

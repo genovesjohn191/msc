@@ -1,26 +1,27 @@
-import { Injectable } from '@angular/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
-  Subscription,
+  BehaviorSubject,
   Observable,
-  BehaviorSubject
+  Subscription
 } from 'rxjs';
+
+import { Injectable } from '@angular/core';
 import {
-  McsNotificationContextService,
-  McsAccessControlService
+  McsAccessControlService,
+  McsNotificationContextService
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   McsJob,
   McsPermission
 } from '@app/models';
 import {
-  isNullOrEmpty,
   addOrUpdateArrayRecord,
   compareDates,
-  McsDisposable,
-  unsubscribeSafely
+  isNullOrEmpty,
+  unsubscribeSafely,
+  McsDisposable
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
 
 @Injectable()
 export class UserPanelService implements McsDisposable {
