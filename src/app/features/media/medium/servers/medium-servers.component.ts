@@ -9,6 +9,8 @@ import {
   map,
   tap
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import {
   ChangeDetectionStrategy,
@@ -35,10 +37,9 @@ import {
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  Guid
+  Guid,
+  deleteArrayRecord
 } from '@app/utilities';
-import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 import { MediaManageServers } from '../../shared';
 import { MediumDetailsBase } from '../medium-details.base';
@@ -58,6 +59,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   public manageServers: MediaManageServers;
 
   private _newAttachServer: McsResourceMediaServer;
+  private _detachedServer: McsResourceMediaServer;
   private _inProgressServerId: string;
   private _serverDatasourceCache: Observable<McsResourceMediaServer[]>;
   private _mediaInProgressByJob: boolean = false;
@@ -280,6 +282,8 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
     // Refresh everything when job is done
     if (!job.inProgress) {
+      this._updateTableDataSource();
+      this._detachedServer = null;
       this._inProgressServerId = null;
       this._mediaInProgressByJob = false;
       this._changeDetectorRef.markForCheck();
@@ -288,6 +292,9 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
     // Add in progress jobs
     this._inProgressServerId = job.clientReferenceObject.serverId;
+    this._detachedServer = new McsResourceMedia();
+    this._detachedServer.id = this._inProgressServerId;
+    this._detachedServer.name = job.clientReferenceObject.serverName;
     this._mediaInProgressByJob = true;
     this._changeDetectorRef.markForCheck();
   }
@@ -307,14 +314,34 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
     let hasNewRecord = !isNullOrEmpty(this._newAttachServer) && !isNullOrEmpty(tableDataSource);
     if (hasNewRecord) {
-      tableDataSource = tableDataSource.pipe(
-        map((result) => {
-          result = addOrUpdateArrayRecord(result, this._newAttachServer, false,
-            (item) => item.id === SERVER_MEDIA_NEW_ID);
-          return result;
-        })
-      );
+      tableDataSource = this._addAttachedServerInDataSource(tableDataSource);
+    }
+
+    let hasDetachedRecord = !isNullOrEmpty(this._detachedServer) && !isNullOrEmpty(tableDataSource);
+    if (hasDetachedRecord) {
+      tableDataSource = this._removeDetachedServerInDataSource(tableDataSource);
     }
     this.serversDataSource.updateDatasource(tableDataSource);
+  }
+
+  private _addAttachedServerInDataSource(tableDataSource: Observable<McsResourceMediaServer[]>):
+    Observable<McsResourceMediaServer[]> {
+    return tableDataSource.pipe(
+      map((servers) => {
+        servers = addOrUpdateArrayRecord(servers, this._newAttachServer, false,
+          (item) => item.id === SERVER_MEDIA_NEW_ID);
+        return servers;
+      })
+    );
+  }
+
+  private _removeDetachedServerInDataSource(tableDataSource: Observable<McsResourceMediaServer[]>):
+    Observable<McsResourceMediaServer[]> {
+    return tableDataSource.pipe(
+      map((servers) => {
+        servers = deleteArrayRecord(servers, (item) => item.id === this._detachedServer.id);
+        return servers;
+      })
+    );
   }
 }
