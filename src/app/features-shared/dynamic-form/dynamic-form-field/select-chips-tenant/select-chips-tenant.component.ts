@@ -14,27 +14,24 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import {
-  CommonDefinition,
-  isNullOrEmpty
-} from '@app/utilities';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 import {
   McsQueryParam,
-  McsServer
+  McsTenant
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   DynamicSelectChipsFieldComponentBase,
   DynamicSelectChipsValue
 } from '../dynamic-select-chips-field-component.base';
-import { DynamicSelectChipsVmField } from './select-chips-vm';
+import { DynamicSelectChipsTenantField } from './select-chips-tenant';
 import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption
 } from '../../dynamic-form-field-config.interface';
 
 @Component({
-  selector: 'mcs-dff-select-chips-vm-field',
+  selector: 'mcs-dff-select-chips-tenant-field',
   templateUrl: '../shared-template/select-chips.component.html',
   styleUrls: [
     '../dynamic-form-field.scss',
@@ -43,7 +40,7 @@ import {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DynamicSelectChipsVmComponent),
+      useExisting: forwardRef(() => DynamicSelectChipsTenantComponent),
       multi: true
     }
   ],
@@ -51,16 +48,15 @@ import {
     '(blur)': 'onTouched()'
   }
 })
-export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldComponentBase<McsServer> {
+export class DynamicSelectChipsTenantComponent extends DynamicSelectChipsFieldComponentBase<McsTenant> {
   @ViewChild('valueInput') valueInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  public config: DynamicSelectChipsVmField;
+  public config: DynamicSelectChipsTenantField;
 
   private _companyId: string = '';
-  private _serviceId: string = '';
 
-  private _serviceIdMapping: Map<string, string> = new Map<string, string>();
+  private _tenantIdMapping: Map<string, string> = new Map<string, string>();
 
   constructor(
     private _apiService: McsApiService,
@@ -87,10 +83,10 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
       if (validChip) {
         translatedValue.push(chip);
       } else {
-        // Assumes value is service ID and search via map
-        if (this._serviceIdMapping.has(chip.value)) {
+        // Assumes value is tenant ID and search via map
+        if (this._tenantIdMapping.has(chip.value)) {
           chip.label = chip.value;
-          chip.value = this.config.useServiceIdAsKey ? chip.value : this._serviceIdMapping.get(chip.value);
+          chip.value = this.config.useTenantIdAsKey ? chip.value : this._tenantIdMapping.get(chip.value);
 
         // Check if we can allow custom input after service ID search has failed
         } else if (this.config.allowCustomInput) {
@@ -155,15 +151,10 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
         this._companyId = params.value;
         this.retrieveOptions();
         break;
-
-      case 'service-id-change':
-        this._serviceId = params.value;
-        this.filterOptions();
-        break;
     }
   }
 
-  protected callService(): Observable<McsServer[]> {
+  protected callService(): Observable<McsTenant[]> {
     // Force the control to reselect the initial value
     this.writeValue([]);
     // Force the form to check the validty of the control
@@ -174,28 +165,29 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     ]);
 
     let param = new McsQueryParam();
-    return this._apiService.getServers(param, optionalHeaders)
+    param.pageSize = 2000;
+    return this._apiService.getTenants(param, optionalHeaders)
     .pipe(
       takeUntil(this.destroySubject),
       map((response) => response && response.collection));
   }
 
-  protected filter(collection: McsServer[]): FlatOption[] {
+  protected filter(collection: McsTenant[]): FlatOption[] {
     let options: FlatOption[] = [];
-    this._serviceIdMapping.clear();
+    this._tenantIdMapping.clear();
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
 
       // Build a service ID map so we can map with service IDs to correct key when initializing the value
-      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.serviceId) && !this._serviceIdMapping.has(item.serviceId);
+      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.tenantId) && !this._tenantIdMapping.has(item.tenantId);
       if (uniqueNonEmptyServiceId) {
-        this._serviceIdMapping.set(item.serviceId, item.id);
+        this._tenantIdMapping.set(item.tenantId, item.id);
       }
 
-      let key = this.config.useServiceIdAsKey ? item.serviceId : item.id;
+      let key = this.config.useTenantIdAsKey ? item.tenantId : item.id;
       let value = item.name;
-      if (item.serviceId) { value += ` (${item.serviceId})`; }
+      if (item.tenantId) { value += ` (${item.tenantId})`; }
 
       options.push({ type: 'flat', key, value });
     });
@@ -210,7 +202,7 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     return options;
   }
 
-  public search(selectedOption: McsServer | string): FlatOption[] {
+  public search(selectedOption: McsTenant | string): FlatOption[] {
     if (typeof selectedOption === 'object') {
       return this.config.options.filter(option => option.key.indexOf(option.key) === 0);
     }
@@ -220,42 +212,9 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     return this.config.options.filter(option => option.value.toLowerCase().indexOf(filterValue) >= 0);
   }
 
-  private _exluded(item: McsServer): boolean {
-    // Filter by service ID
-    if (!isNullOrEmpty(this._serviceId) && item.serviceId !== this._serviceId) {
-      return true;
-    }
-
+  private _exluded(item: McsTenant): boolean {
     // Filter no service ID if service ID is used as key
-    if (this.config.useServiceIdAsKey && isNullOrEmpty(item.serviceId)) {
-      return true;
-    }
-
-    // Filter dedicated
-    if (this.config.dataFilter?.hideDedicated && item.isDedicated) {
-      return true;
-    }
-
-    // Filter Non-Dedicated
-    if (this.config.dataFilter?.hideNonDedicated && !item.isDedicated) {
-      return true;
-    }
-
-    // Filter hardware type
-    if (!isNullOrEmpty(this.config.dataFilter?.allowedHardwareType)
-    && this.config.dataFilter.allowedHardwareType.indexOf(item.hardware.type) < 0) {
-      return true;
-    }
-
-    // Filter service type
-    if (!isNullOrEmpty(this.config.dataFilter?.allowedServiceType)
-    && this.config.dataFilter.allowedServiceType.indexOf(item.serviceType) < 0) {
-      return true;
-    }
-
-    // Filter platform type
-    if (!isNullOrEmpty(this.config.dataFilter?.allowedPlatformType)
-    && this.config.dataFilter.allowedPlatformType.indexOf(item.platform.type) < 0) {
+    if (this.config.useTenantIdAsKey && isNullOrEmpty(item.tenantId)) {
       return true;
     }
 

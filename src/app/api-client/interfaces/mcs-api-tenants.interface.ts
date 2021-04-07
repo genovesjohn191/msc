@@ -11,7 +11,7 @@ export interface IMcsApiTenantsService {
    * Get Tenants (MCS API Response)
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getTenants(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTenant[]>>;
+  getTenants(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTenant[]>>;
 
   /**
    * Get tenant by ID (MCS API Response)

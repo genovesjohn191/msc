@@ -1806,8 +1806,8 @@ export class McsApiService {
     );
   }
 
-  public getTenants(query?: McsQueryParam): Observable<McsApiCollection<McsTenant>> {
-    return this._tenantsApi.getTenants(query).pipe(
+  public getTenants(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsTenant>> {
+    return this._tenantsApi.getTenants(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTenants'))
       ),

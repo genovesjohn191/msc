@@ -61,8 +61,10 @@ export type DynamicFormFieldType =
   | 'textbox-number'
   | 'textbox-password'
   | 'textbox-random'
+  | 'select-availability-zone'
   | 'select-bat'
   | 'select-chips'
+  | 'select-chips-tenant'
   | 'select-chips-vm'
   | 'select'
   | 'select-group'
@@ -75,7 +77,6 @@ export type DynamicFormFieldType =
   | 'select-vm'
   | 'slide-toggle';
 
-
 export type DynamicFormFieldTemplate =
   'input-text'
   | 'input-hidden'
@@ -83,8 +84,10 @@ export type DynamicFormFieldTemplate =
   | 'input-number'
   | 'input-password'
   | 'input-random'
+  | 'select-availability-zone'
   | 'select-bat'
   | 'select-chips'
+  | 'select-chips-tenant'
   | 'select-chips-vm'
   | 'select'
   | 'select-group'

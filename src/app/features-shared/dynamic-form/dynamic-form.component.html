@@ -38,6 +38,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-input-random-field>
 
+        <mcs-dff-select-availability-zone-field *ngSwitchCase="'select-availability-zone'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
+        </mcs-dff-select-availability-zone-field>
+
         <mcs-dff-select-bat-field *ngSwitchCase="'select-bat'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-select-bat-field>
@@ -45,6 +49,10 @@
         <mcs-dff-select-chips-field *ngSwitchCase="'select-chips'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-select-chips-field>
+
+        <mcs-dff-select-chips-tenant-field *ngSwitchCase="'select-chips-tenant'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
+        </mcs-dff-select-chips-tenant-field>
 
         <mcs-dff-select-chips-vm-field *ngSwitchCase="'select-chips-vm'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
