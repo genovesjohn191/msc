@@ -79,19 +79,7 @@
                 </ng-template>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (vdcServices$ | async), serviceTitle: 'VDCs'}">
-                </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (serverServices$ | async), serviceTitle: 'Servers'}">
-                </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (firewallServices$ | async), serviceTitle: 'Firewalls'}">
-                </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (internetPortServices$ | async), serviceTitle: 'Internet Ports'}">
+                  context: { $implicit: (antiVirus$ | async), serviceTitle: 'Anti-Virus'}">
                 </ng-container>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
@@ -99,15 +87,11 @@
                 </ng-container>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (serverBackup$ | async), serviceTitle: 'Server Backup'}">
+                  context: { $implicit: (dns$ | async), serviceTitle: 'DNS'}">
                 </ng-container>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (vmBackup$ | async), serviceTitle: 'VM Backup'}">
-                </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (antiVirus$ | async), serviceTitle: 'Anti-Virus'}">
+                  context: { $implicit: (firewallServices$ | async), serviceTitle: 'Firewalls'}">
                 </ng-container>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
@@ -115,7 +99,27 @@
                 </ng-container>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (dns$ | async), serviceTitle: 'DNS'}">
+                  context: { $implicit: (internetPortServices$ | async), serviceTitle: 'Internet Ports'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (serverBackup$ | async), serviceTitle: 'Server Backup'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (serverServices$ | async), serviceTitle: 'Servers'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (vdcStorages$ | async), serviceTitle: 'VDC Storage'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (vdcServices$ | async), serviceTitle: 'VDCs'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (vmBackup$ | async), serviceTitle: 'VM Backup'}">
                 </ng-container>
               </mcs-select>
             </mcs-form-field>

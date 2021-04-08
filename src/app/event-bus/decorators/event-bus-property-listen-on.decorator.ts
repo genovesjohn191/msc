@@ -12,7 +12,7 @@ export function EventBusPropertyListenOn<T>(event: EventBusState<T>) {
     let eventsService = EventBusDispatcherCore.getInstance();
     let decoratorSubject = new BehaviorSubject<any>({});
 
-    let instanceFunc = function() {
+    let instanceFunc = () => {
       let eventObject = eventsService.getEvent(event);
       let eventSubject = eventObject.subject.pipe(
         map((response) => response || {})
