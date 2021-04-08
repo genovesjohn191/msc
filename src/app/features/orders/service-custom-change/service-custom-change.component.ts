@@ -11,6 +11,7 @@ import {
   FormControl,
   FormBuilder
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   takeUntil,
   map,
@@ -53,7 +54,8 @@ import {
   McsAccount,
   RouteKey,
   DeliveryType,
-  McsServer
+  McsServer,
+  McsResource
 } from '@app/models';
 import {
   OrderDetails,
@@ -62,7 +64,6 @@ import {
 } from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
 import { ServiceCustomChangeService } from './service-custom-change.service';
-import { ActivatedRoute } from '@angular/router';
 
 const SERVICE_CUSTOM_CHANGE = Guid.newGuid().toString();
 const TEXTAREA_MAXLENGTH_DEFAULT = 850;
@@ -92,6 +93,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public firewallServices$: Observable<CustomChangeService[]>;
   public internetPortServices$: Observable<CustomChangeService[]>;
   public batServices$: Observable<CustomChangeService[]>;
+  public vdcStorages$: Observable<CustomChangeService[]>;
   public dns$: Observable<CustomChangeService[]>;
   public serverBackup$: Observable<CustomChangeService[]>;
   public vmBackup$: Observable<CustomChangeService[]>;
@@ -99,7 +101,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public hids$: Observable<CustomChangeService[]>;
 
   public serversList$: Observable<McsServer[]>;
-
+  public vdcList$: Observable<McsResource[]>;
   public account$: Observable<McsAccount>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
 
@@ -152,12 +154,14 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
 
   public ngOnInit(): void {
     this._subscribesToServersList();
+    this._subscribesToVdcList();
     this._subscribesToSelectedService();
     this._subscribeToVdcServices();
     this._subscribeToServerServices();
     this._subscribeToFirewallServices();
     this._subscribeToInternetPortServices();
     this._subscribeToBatServices();
+    this._subscribesToVdcStorage();
     this._subscribeToServerBackupServices();
     this._subscribeToVMBackupServices();
     this._subscribeToAntiVirusServices();
@@ -316,14 +320,27 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   }
 
   /**
+   * Subscribes to list of vdc resources
+   */
+  private _subscribesToVdcList(): void {
+    this.vdcList$ = this._apiService.getResources().pipe(
+      map((response) => {
+        let resources = getSafeProperty(response, (obj) => obj.collection);
+        return resources
+          .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
+          .map((resource) => resource);
+      }),
+      shareReplay(1)
+    );
+  }
+
+  /**
    * Subscribe to vdc services
    */
   private _subscribeToVdcServices(): void {
-    this.vdcServices$ = this._apiService.getResources().pipe(
-      map((response) => {
-        let resources = getSafeProperty(response, (obj) => obj.collection);
-        return resources.filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
-          .map((resource) => {
+    this.vdcServices$ = this.vdcList$.pipe(
+      map((resources) => {
+        return resources.map((resource) => {
             return {
               name: `${serviceTypeText[resource.serviceType]} VDC (${resource.name})`,
               serviceId: resource.name
@@ -401,6 +418,33 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
               serviceId: bat.serviceId
             } as CustomChangeService;
           });
+      })
+    );
+  }
+
+  /**
+   * Subscribes to vdc storage
+   */
+  private _subscribesToVdcStorage(): void {
+    this.vdcStorages$ = this.vdcList$.pipe(
+      map((vdcCollection) => {
+        let vdcStorageGroup: CustomChangeService[] = [];
+        let vdc = getSafeProperty(vdcCollection, (obj) => obj) || [];
+
+        vdc.forEach((resource) => {
+          this._apiService.getResource(resource.id).subscribe((vdcStorage) => {
+            vdcStorage.storage.forEach((storage) => {
+              let vdcStorageInvalidToCustomChange = isNullOrEmpty(storage?.serviceId) || !storage?.serviceChangeAvailable;
+              if (vdcStorageInvalidToCustomChange) { return; }
+
+              vdcStorageGroup.push({
+                name: `${storage.name} - for ${resource.serviceId} (${storage.serviceId})`,
+                serviceId: storage.serviceId
+              });
+            });
+          })
+        })
+        return vdcStorageGroup;
       })
     );
   }
