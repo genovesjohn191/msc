@@ -23,4 +23,7 @@ export class McsAzureResource extends McsEntityBase {
 
   @JsonProperty()
   public portalUrl: string = undefined;
+
+  @JsonProperty()
+  public resourceGroupName: string = undefined;
 }

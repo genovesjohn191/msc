@@ -49,30 +49,30 @@
 
         <!-- Retention Period Column -->
         <ng-container matColumnDef="retentionPeriod">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.retentionPeriod' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.retentionPeriod }}
           </td>
         </ng-container>
 
         <!-- InView Level Column -->
         <ng-container matColumnDef="inviewLevel">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.inviewLevel' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ inviewLevelLabel(row.inviewLevel) }}
           </td>
         </ng-container>
 
         <!-- Service ID Column -->
         <ng-container matColumnDef="serviceId">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.serviceId }}
           </td>
         </ng-container>
