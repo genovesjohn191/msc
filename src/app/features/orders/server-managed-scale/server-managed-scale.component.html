@@ -41,7 +41,7 @@
           <p>{{ 'orderServerManagedScale.vm.label' | translate }}</p>
           <mcs-form-field>
             <mcs-select [placeholder]="'orderServerManagedScale.vm.placeholder' | translate"
-              required mcsId="select-server"
+              mcsId="select-server"
               [formControl]="fcManageServer"
               (selectionChange)="onChangeServer($event)"
               [mcsContextualHelp]="'orderServerManagedScale.vm.contextualHelp' | translate">

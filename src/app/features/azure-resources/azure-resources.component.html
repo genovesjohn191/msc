@@ -49,32 +49,42 @@
           </td>
         </ng-container>
 
+        <!-- Resource Group Column -->
+        <ng-container matColumnDef="resourceGroup">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.resourceGroup' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.resourceGroupName }}
+          </td>
+        </ng-container>
+
         <!-- Service ID Column -->
         <ng-container matColumnDef="serviceId">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.serviceId }}
           </td>
         </ng-container>
 
         <!-- Subscription Column -->
         <ng-container matColumnDef="subscription">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.subscription' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.subscriptionName }}
           </td>
         </ng-container>
 
         <!-- Subscription ID Column -->
         <ng-container matColumnDef="subscriptionId">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.subscriptionId' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.subscriptionId }}
           </td>
         </ng-container>

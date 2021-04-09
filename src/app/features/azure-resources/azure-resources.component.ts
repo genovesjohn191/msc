@@ -46,6 +46,7 @@ export class AzureResourcesComponent {
   public readonly dataEvents: McsTableEvents<McsAzureResource>;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'resourceGroup' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscription' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscriptionId' }),
@@ -113,7 +114,11 @@ export class AzureResourcesComponent {
   public onRaiseTicket(resource: McsAzureResource): void {
     return isNullOrEmpty(resource.serviceId) ?
       this._navigationService.navigateTo(RouteKey.TicketCreate) :
-      this._navigationService.navigateTo(RouteKey.TicketCreate, [], { queryParams: { serviceId: resource.serviceId } });
+      this._navigationService.navigateTo(RouteKey.TicketCreate, [], {
+        queryParams: {
+          serviceId: resource.serviceId
+        }
+      });
   }
 
   private _getAzureResources(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureResource>> {
