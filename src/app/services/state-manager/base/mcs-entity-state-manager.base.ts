@@ -21,10 +21,6 @@ export abstract class McsEntityStateManagerBase<T extends McsEntityBase> impleme
     this.entityRepository = _injector.get(_repoInstance);
   }
 
-  public deleteEntityById(id: string): void {
-    this.entityRepository.deleteById(id);
-  }
-
   /**
    * Gets the updated entity details
    * @param id Id of the entity to be obtained
@@ -82,6 +78,10 @@ export abstract class McsEntityStateManagerBase<T extends McsEntityBase> impleme
    * Refreshes the data cache
    */
   public refreshDataCache(): void {
+    // By clearing the data from the repository, the dataClear event of the corresponding
+    // entity will be dispatched accordingly in which the subscriber of that event will
+    // automatically call the corresponding action in order to generate new data from the table,
+    // based on default pagination (if any).
     this.entityRepository.clearData();
   }
 }

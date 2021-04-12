@@ -1,8 +1,10 @@
 import { Observable } from 'rxjs';
+
 import {
   McsEntityBase,
   McsEntityRequester
 } from '@app/models';
+
 import { IMcsEntitySortable } from './mcs-entity-sortable.interface';
 
 export interface IMcsEntityStateManager<T extends McsEntityBase> extends IMcsEntitySortable {
@@ -10,5 +12,4 @@ export interface IMcsEntityStateManager<T extends McsEntityBase> extends IMcsEnt
   updateEntityState(entity: McsEntityRequester): void;
   clearEntityState(entity: McsEntityRequester): void;
   refreshDataCache(): void;
-  deleteEntityById(id: string): void;
 }
