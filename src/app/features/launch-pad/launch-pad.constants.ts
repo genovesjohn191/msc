@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteKey } from '@app/models';
 import { LaunchPadGuard } from './launch-pad.guard';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
+import { DeploymentCreateAzureComponent } from './deployments/azure-deployment-create/azure-deployment-create.component';
 import {
   companyIdParam,
   LaunchPadWorkflowLaunchComponent,
@@ -31,6 +32,12 @@ export const launchPadRoutes: Routes = [
   {
     path: `workflows/launch/:${sourceParam}/:${companyIdParam}/:${worklowGroupIdParam}/:${serviceIdParam}/:${productIdParam}`,
     component: LaunchPadWorkflowLaunchComponent,
+    data: { routeId: RouteKey.LaunchPadWorkflowLaunch },
+    canActivate: [ LaunchPadGuard ]
+  },
+  {
+    path: 'deployments/create',
+    component: DeploymentCreateAzureComponent,
     data: { routeId: RouteKey.LaunchPadWorkflowLaunch },
     canActivate: [ LaunchPadGuard ]
   },

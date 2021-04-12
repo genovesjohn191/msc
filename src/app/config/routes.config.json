@@ -35,6 +35,24 @@
     "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
+  "launchPadDeployments": {
+    "enumKey": "LaunchPadDeployments",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/deployments",
+    "documentTitle": "LAUNCH Pad - Deployments",
+    "requiredPermissions": ["RawDataView"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
+    "requireAllFeatures": true
+  },
+  "launchPadDeploymentCreate": {
+    "enumKey": "LaunchPadDeploymentCreate",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/deployments/create",
+    "documentTitle": "LAUNCH Pad - Create Deployment",
+    "requiredPermissions": ["RawDataView"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
+    "requireAllFeatures": true
+  },
   "reportOverview": {
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",
