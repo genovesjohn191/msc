@@ -1056,11 +1056,26 @@ export class McsApiService {
   public getBackupAggregationTargets(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
     Observable<McsApiCollection<McsBackUpAggregationTarget>> {
 
-    return this._batsApi.getBackUpAggregationTargets(query, optionalHeaders).pipe(
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._batsApi.getBackUpAggregationTargets(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
+    let dataCollection = isNullOrEmpty(query) ?
+      this._batsRepository.getAll() :
+      this._batsRepository.filterBy(query);
+
+    return dataCollection.pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'))
       ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+      map((response) =>
+        this._mapToCollection(response, this._batsRepository.getTotalRecordsCount())
+      )
     );
   }
 
