@@ -22,6 +22,7 @@
             <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
           </a>
           <ul *ngIf="showLaunchPadMenu">
+            <!-- Workflows -->
             <li>
               <a [mcsRouterLink]="routeKeyEnum.LaunchPadWorkflows"
                 mcsId="launch-pad-workflows-link"
@@ -29,9 +30,21 @@
                 mcsEventCategory="navigation"
                 mcsEventLabel="main-nav"
                 mcsRouterLinkActive="active">
-                Workflows
+                {{ 'navigation.launchPad.workflows' | translate }}
               </a>
             </li>
+            <!-- Deployments -->
+            <li>
+              <a [mcsRouterLink]="routeKeyEnum.LaunchPadDeployments"
+                mcsId="launch-pad-deployments-link"
+                mcsEventTracker="navigate-to-launch-pad-deployments"
+                mcsEventCategory="navigation"
+                mcsEventLabel="main-nav"
+                mcsRouterLinkActive="active">
+                {{ 'navigation.launchPad.deployments' | translate }}
+              </a>
+            </li>
+            <!-- Reporting -->
             <li *ngIf="workflowReportingLink">
               <a [href]="workflowReportingLink"
                 target="_blank"
@@ -39,7 +52,7 @@
                 mcsEventTracker="navigate-to-launch-pad-workflows-reporting"
                 mcsEventCategory="navigation"
                 mcsEventLabel="main-nav">
-                Reporting
+                {{ 'navigation.launchPad.reporting' | translate }}
               </a>
             </li>
           </ul>

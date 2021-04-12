@@ -3,7 +3,10 @@
     "title": "Macquarie Cloud Services Portal",
     "launchPad": {
       "label": "LAUNCH Pad",
-      "crispOrders": "CRISP Orders"
+      "crispOrders": "CRISP Orders",
+      "workflows": "Workflows",
+      "deployments": "Deployments",
+      "reporting": "Reporting"
     },
     "privateCloud": {
       "label": "Private Cloud",

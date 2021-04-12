@@ -11,6 +11,9 @@ import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.co
 import { LaunchPadSearchElementsResultComponent } from './search/results-table/elements-result.component';
 import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
 import { LaunchPadGuard } from './launch-pad.guard';
+import { DeploymentCreateAzureComponent } from './deployments/azure-deployment-create/azure-deployment-create.component';
+import { DynamicFormModule } from '@app/features-shared';
+import { QuillConfig, QuillModule} from 'ngx-quill';
 
 @NgModule({
   declarations: [
@@ -18,17 +21,21 @@ import { LaunchPadGuard } from './launch-pad.guard';
     LaunchPadSearchElementsResultComponent,
     LaunchPadSearchServicesResultComponent,
     LaunchPadWorkflowsComponent,
-    LaunchPadWorkflowLaunchComponent
+    LaunchPadWorkflowLaunchComponent,
+    DeploymentCreateAzureComponent
   ],
   exports: [],
   imports: [
     SharedModule,
     LaunchPadCoreModule,
+    DynamicFormModule,
+    QuillModule.forRoot(),
     RouterModule.forChild(launchPadRoutes)
   ],
   providers: [
     McsStorageService,
-    LaunchPadGuard
+    LaunchPadGuard,
+    DynamicFormModule
   ]
 })
 
