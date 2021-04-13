@@ -17,10 +17,6 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get Firewalls (MCS API Response)
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getFirewalls(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewall[]>> {
 
     // Set default values if null
@@ -45,10 +41,6 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
       );
   }
 
-  /**
-   * Get firewall by ID (MCS API Response)
-   * @param id Firewall identification
-   */
   public getFirewall(id: any): Observable<McsApiSuccessResponse<McsFirewall>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/firewalls/${id}`;
@@ -64,11 +56,6 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
       );
   }
 
-  /**
-   * Get all firewall policies (MCS API Response)
-   * @param id Firewall identification
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getFirewallPolicies(
     id: any,
     query?: McsQueryParam

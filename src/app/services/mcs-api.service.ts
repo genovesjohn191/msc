@@ -37,6 +37,7 @@ import {
   IMcsApiServersService,
   IMcsApiSystemService,
   IMcsApiTenantsService,
+  IMcsApiTerraformService,
   IMcsApiTicketsService,
   IMcsApiToolsService,
   IMcsApiWorkflowsService,
@@ -64,6 +65,7 @@ import {
   McsApiServersFactory,
   McsApiSystemFactory,
   McsApiTenantsFactory,
+  McsApiTerraformFactory,
   McsApiTicketsFactory,
   McsApiToolsFactory,
   McsApiWorkflowsFactory
@@ -193,6 +195,9 @@ import {
   McsSystemMessageEdit,
   McsSystemMessageValidate,
   McsTenant,
+  McsTerraformDeployment,
+  McsTerraformModule,
+  McsTerraformTag,
   McsTicket,
   McsTicketAttachment,
   McsTicketComment,
@@ -276,6 +281,7 @@ export class McsApiService {
   private readonly _serversApi: IMcsApiServersService;
   private readonly _systemMessageApi: IMcsApiSystemService;
   private readonly _tenantsApi: IMcsApiTenantsService;
+  private readonly _terraformApi: IMcsApiTerraformService;
   private readonly _ticketsApi: IMcsApiTicketsService;
   private readonly _toolsService: IMcsApiToolsService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
@@ -327,6 +333,7 @@ export class McsApiService {
     this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
     this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
     this._tenantsApi = apiClientFactory.getService(new McsApiTenantsFactory());
+    this._terraformApi = apiClientFactory.getService(new McsApiTerraformFactory());
     this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
     this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
@@ -1835,6 +1842,60 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAvailabilityZones'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getTerraformDeployments(query?: McsQueryParam): Observable<McsApiCollection<McsTerraformDeployment>> {
+    return this._terraformApi.getDeployments(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeployments'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getTerraformDeployment(id: string): Observable<McsTerraformDeployment> {
+    return this._terraformApi.getDeployment(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeployment'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getTerraformModules(query?: McsQueryParam): Observable<McsApiCollection<McsTerraformModule>> {
+    return this._terraformApi.getModules(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformModules'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getTerraformModule(id: string): Observable<McsTerraformModule> {
+    return this._terraformApi.getModule(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformModule'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getTerraformTags(query?: McsQueryParam): Observable<McsApiCollection<McsTerraformTag>> {
+    return this._terraformApi.getTags(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTags'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getTerraformTag(id: string): Observable<McsTerraformTag> {
+    return this._terraformApi.getTag(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTag'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

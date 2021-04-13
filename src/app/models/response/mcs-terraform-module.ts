@@ -2,10 +2,28 @@ import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
-export class McsAvailabilityZone extends McsEntityBase {
+export class McsTerraformModule extends McsEntityBase {
 
   @JsonProperty()
   public name: string = undefined;
+
+  @JsonProperty()
+  public fullName: string = undefined;
+
+  @JsonProperty()
+  public slugId: string = undefined;
+
+  @JsonProperty()
+  public slug: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public projectKey: string = undefined;
+
+  @JsonProperty()
+  public tags: string[] = undefined;
 
   @JsonProperty({
     serializer: McsDateSerialization,
@@ -18,7 +36,4 @@ export class McsAvailabilityZone extends McsEntityBase {
     deserializer: McsDateSerialization
   })
   public updatedOn: Date = undefined;
-
-  @JsonProperty()
-  public active: boolean = undefined;
 }

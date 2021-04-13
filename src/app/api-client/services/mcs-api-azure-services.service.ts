@@ -16,9 +16,6 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  /**
-   * Gets all the subscriptions
-   */
   public getAzureServices(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsAzureService[]>> {
      // Set default values if null
     let searchParams = new Map<string, any>();
@@ -40,9 +37,7 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
       })
     );
   }
-  /**
-   * Gets a subscription by id
-   */
+
   public getAzureServiceById(id: string): Observable<McsApiSuccessResponse<McsAzureService>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/services/${id}`;

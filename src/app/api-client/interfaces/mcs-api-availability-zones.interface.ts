@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import {
   McsQueryParam,
   McsApiSuccessResponse,
-  McsTenant,
   McsAvailabilityZone,
 } from '@app/models';
 

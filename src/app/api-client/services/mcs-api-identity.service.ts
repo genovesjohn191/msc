@@ -14,9 +14,6 @@ export class McsApiIdentityService implements IMcsApiIdentityService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get the user identity
-   */
   public getIdentity(): Observable<McsApiSuccessResponse<McsIdentity>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/identity';

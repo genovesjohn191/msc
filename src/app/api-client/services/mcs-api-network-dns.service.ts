@@ -16,10 +16,6 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
 
   constructor(private _apiClientService: McsApiClientHttpService) { }
 
-  /**
-   * Get all the network dns
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getNetworkDns(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsSummary[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -39,11 +35,6 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
     );
   }
 
-
-  /**
-   * Get all the network dns zones
-   * @param id dns id to get specific dns details
-   */
   public getNetworkDnsById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsSummary>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${id}`;

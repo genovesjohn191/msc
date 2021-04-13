@@ -2,30 +2,28 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  isNullOrEmpty,
-  serializeObjectToJson
+  isNullOrEmpty
 } from '@app/utilities';
 import {
+  McsQueryParam,
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsSystemMessage,
-  McsSystemMessageCreate,
-  McsQueryParam,
-  McsSystemMessageEdit,
-  McsSystemMessageValidate
+  McsTerraformDeployment,
+  McsTerraformTag,
+  McsTerraformModule,
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
-import { IMcsApiSystemService } from '../interfaces/mcs-api-system.interface';
+import { IMcsApiTerraformService } from '../interfaces/mcs-api-terraform.interface';
 
 /**
- * System Service Class
+ * Licenses Services Class
  */
 @Injectable()
-export class McsApiSystemService implements IMcsApiSystemService {
+export class McsApiTerraformService implements IMcsApiTerraformService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getMessages(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsSystemMessage[]>> {
+  public getDeployments(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformDeployment[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -35,7 +33,7 @@ export class McsApiSystemService implements IMcsApiSystemService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/system/messages';
+    mcsApiRequestParameter.endPoint = '/terraform/deployments';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -43,28 +41,29 @@ export class McsApiSystemService implements IMcsApiSystemService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsSystemMessage[]>(McsSystemMessage, response);
+            .deserializeResponse<McsTerraformDeployment[]>(McsTerraformDeployment, response);
           return apiResponse;
         })
       );
   }
 
-  public getMessage(id: string): Observable<McsApiSuccessResponse<McsSystemMessage>> {
+  public getDeployment(id: any): Observable<McsApiSuccessResponse<McsTerraformDeployment>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/system/messages/${id}`;
+    mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsSystemMessage>(McsSystemMessage, response);
+            .deserializeResponse<McsTerraformDeployment>(McsTerraformDeployment, response);
           return apiResponse;
         })
       );
   }
 
-  public getActiveMessages(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsSystemMessage[]>> {
+  public getModules(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformModule[]>> {
+
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
@@ -73,7 +72,7 @@ export class McsApiSystemService implements IMcsApiSystemService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/system/active-messages';
+    mcsApiRequestParameter.endPoint = '/terraform/modules';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -81,63 +80,63 @@ export class McsApiSystemService implements IMcsApiSystemService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsSystemMessage[]>(McsSystemMessage, response);
+            .deserializeResponse<McsTerraformModule[]>(McsTerraformModule, response);
           return apiResponse;
         })
       );
   }
 
-  public createMessage(messageData: McsSystemMessageCreate):
-    Observable<McsApiSuccessResponse<McsSystemMessageCreate>> {
-
+  public getModule(id: any): Observable<McsApiSuccessResponse<McsTerraformModule>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/system/messages`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(messageData);
+    mcsApiRequestParameter.endPoint = `/terraform/modules/${id}`;
 
-    return this._mcsApiService.post(mcsApiRequestParameter)
+    return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsSystemMessageCreate>(McsSystemMessageCreate, response);
+            .deserializeResponse<McsTerraformModule>(McsTerraformModule, response);
           return apiResponse;
         })
       );
   }
 
-  public validateMessage(messageData: McsSystemMessageValidate):
-    Observable<McsApiSuccessResponse<McsSystemMessage[]>> {
+  public getTags(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformTag[]>> {
+
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/system/messages/validate-requests';
-    mcsApiRequestParameter.recordData = serializeObjectToJson(messageData);
+    mcsApiRequestParameter.endPoint = '/terraform/tags';
+    mcsApiRequestParameter.searchParameters = searchParams;
 
-    return this._mcsApiService.post(mcsApiRequestParameter)
+    return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsSystemMessage[]>(McsSystemMessage, response);
+            .deserializeResponse<McsTerraformTag[]>(McsTerraformTag, response);
           return apiResponse;
         })
       );
   }
 
-  public editMessage(id: string, messageData: McsSystemMessageEdit):
-    Observable<McsApiSuccessResponse<McsSystemMessageEdit>> {
+  public getTag(id: any): Observable<McsApiSuccessResponse<McsTerraformTag>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/system/messages/${id}`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(messageData);
+    mcsApiRequestParameter.endPoint = `/terraform/tags/${id}`;
 
-    return this._mcsApiService.put(mcsApiRequestParameter)
+    return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsSystemMessageEdit>(McsSystemMessageEdit, response);
+            .deserializeResponse<McsTerraformTag>(McsTerraformTag, response);
           return apiResponse;
         })
       );
   }
-
 }

@@ -24,10 +24,6 @@ export class McsApiMediaService implements IMcsApiMediaService {
     private _serversService: McsApiServersService
   ) { }
 
-  /**
-   * Get Medias (MCS API Response)
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getMedia(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResourceMedia[]>> {
 
     // Set default values if null
@@ -52,10 +48,6 @@ export class McsApiMediaService implements IMcsApiMediaService {
       );
   }
 
-  /**
-   * Get media by ID (MCS API Response)
-   * @param id Media identification
-   */
   public getMedium(id: any): Observable<McsApiSuccessResponse<McsResourceMedia>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/media/${id}`;
@@ -73,9 +65,6 @@ export class McsApiMediaService implements IMcsApiMediaService {
       );
   }
 
-  /**
-   * Get the attached servers from the media
-   */
   public getMediaServers(mediaId: any):
     Observable<McsApiSuccessResponse<McsResourceMediaServer[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -92,14 +81,6 @@ export class McsApiMediaService implements IMcsApiMediaService {
       );
   }
 
-  /**
-   * Detaches the server to the existing media
-   * *Note: This will send a job (notification)
-   *
-   * @param serverId Server Identification to be detached from the media
-   * @param mediaId Media Identification where the server will be detached
-   * @param serverDetails Server details to be detached
-   */
   public detachServerMedia(
     serverId: any,
     mediaId: any,
@@ -108,13 +89,6 @@ export class McsApiMediaService implements IMcsApiMediaService {
     return this._serversService.detachServerMedia(serverId, mediaId, serverDetails);
   }
 
-  /**
-   * Attaches the server to the existing media
-   * *Note: This will send a job (notification)
-   *
-   * @param serverId Server Identification
-   * @param mediaData Server media data
-   */
   public attachServerMedia(
     serverId: any,
     mediaDetails: McsServerAttachMedia

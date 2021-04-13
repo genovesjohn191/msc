@@ -18,10 +18,6 @@ export class McsApiCatalogService implements IMcsApiCatalogService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get Catalog by ID (MCS API Response)
-   * @param id Catalog identification
-   */
   public getCatalog(): Observable<McsApiSuccessResponse<McsCatalog>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs';
@@ -37,9 +33,6 @@ export class McsApiCatalogService implements IMcsApiCatalogService {
       );
   }
 
-  /**
-   * Get Catalog Products (MCS API Response)
-   */
   public getCatalogProducts(): Observable<McsApiSuccessResponse<McsCatalogProductBracket>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/products';
@@ -55,9 +48,6 @@ export class McsApiCatalogService implements IMcsApiCatalogService {
       );
   }
 
-  /**
-   * Get Catalog Product (MCS API Response)
-   */
   public getCatalogProduct(id: string): Observable<McsApiSuccessResponse<McsCatalogProduct>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/products/' + id;
@@ -73,9 +63,6 @@ export class McsApiCatalogService implements IMcsApiCatalogService {
       );
   }
 
-  /**
-   * Get Catalog Solutions (MCS API Response)
-   */
   public getCatalogSolutions(): Observable<McsApiSuccessResponse<McsCatalogSolutionBracket>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/solutions';
@@ -91,9 +78,6 @@ export class McsApiCatalogService implements IMcsApiCatalogService {
       );
   }
 
-  /**
-   * Get Catalog Solution (MCS API Response)
-   */
   public getCatalogSolution(id: string): Observable<McsApiSuccessResponse<McsCatalogSolution>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/solutions/' + id;
