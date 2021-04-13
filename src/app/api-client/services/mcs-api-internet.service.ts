@@ -16,10 +16,6 @@ export class McsApiInternetService implements IMcsApiInternetService {
 
   constructor(private _apiClientService: McsApiClientHttpService) { }
 
-  /**
-   * Get all the internet ports
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getInternetPorts(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsInternetPort[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -39,10 +35,6 @@ export class McsApiInternetService implements IMcsApiInternetService {
     );
   }
 
-  /**
-   * Get the internet port
-   * @param id Internet port identification
-   */
   public getInternetPort(id: string): Observable<McsApiSuccessResponse<McsInternetPort>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/networks/internet/${id}`;

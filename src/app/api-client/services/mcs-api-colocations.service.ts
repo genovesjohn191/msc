@@ -18,9 +18,6 @@ export class McsApiColocationsService implements IMcsApiColocationsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get Colocation Racks
-   */
   getColocationRacks(): Observable<McsApiSuccessResponse<McsColocationRack[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/colocation/racks';
@@ -36,9 +33,6 @@ export class McsApiColocationsService implements IMcsApiColocationsService {
       );
   }
 
-  /**
-   * Get Colocation Antennas
-   */
   getColocationAntennas(): Observable<McsApiSuccessResponse<McsColocationAntenna[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/colocation/antennas';
@@ -54,9 +48,6 @@ export class McsApiColocationsService implements IMcsApiColocationsService {
       );
   }
 
-  /**
-   * Get Colocation Custom Devices
-   */
   getColocationCustomDevices(): Observable<McsApiSuccessResponse<McsColocationCustomDevice[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/colocation/custom-devices';
@@ -72,9 +63,6 @@ export class McsApiColocationsService implements IMcsApiColocationsService {
       );
   }
 
-  /**
-   * Get Colocation Rooms
-   */
   getColocationRooms(): Observable<McsApiSuccessResponse<McsColocationRoom[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/colocation/rooms';
@@ -90,9 +78,6 @@ export class McsApiColocationsService implements IMcsApiColocationsService {
       );
   }
 
-  /**
-   * Get Colocation Standard Square Metres
-   */
   getColocationStandardSqms(): Observable<McsApiSuccessResponse<McsColocationStandardSqm[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/colocation/standard-square-metres';

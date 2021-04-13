@@ -14,9 +14,6 @@ export class McsApiPlatformService implements IMcsApiPlatformService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get platform settings from API
-   */
   public getPlatform(): Observable<McsApiSuccessResponse<McsPlatform>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/platform`;

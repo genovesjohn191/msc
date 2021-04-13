@@ -21,10 +21,6 @@ export class McsApiTenantsService implements IMcsApiTenantsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get Tenant (MCS API Response)
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getTenants(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTenant[]>> {
 
     // Set default values if null
@@ -50,10 +46,6 @@ export class McsApiTenantsService implements IMcsApiTenantsService {
       );
   }
 
-  /**
-   * Get tenant by ID (MCS API Response)
-   * @param id Tenant identification
-   */
   public getTenant(id: any): Observable<McsApiSuccessResponse<McsTenant>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/public-cloud/tenants/${id}`;

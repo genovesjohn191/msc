@@ -16,9 +16,6 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  /**
-   * Gets all the azure resources
-   */
   public getAzureResources(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsAzureResource[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -41,9 +38,6 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
     );
   }
 
-  /**
-   * Gets azure resource by subscription id
-   */
   public getAzureResourcesBySubscriptionId(subscriptionId: string): Observable<McsApiSuccessResponse<McsAzureResource[]>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/resources?subscription_id=${subscriptionId}`;
@@ -58,12 +52,10 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
   );
   }
 
-  /**
-   * Gets azure resource by id
-   */
+
   public getAzureResourceById(resourceId: string): Observable<McsApiSuccessResponse<McsAzureResource>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    // TODO: not implemented in API yet, need model
+
     requestParameter.endPoint = `/public-cloud/resources/${resourceId}`;
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(

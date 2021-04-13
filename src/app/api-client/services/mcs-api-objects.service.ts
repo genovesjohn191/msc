@@ -8,8 +8,7 @@ import {
   McsObjectCrispElement,
   McsObjectInstalledService,
   McsApiRequestParameter,
-  McsObjectQueryParams,
-  ProductType
+  McsObjectQueryParams
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { IMcsApiObjectsService } from '../interfaces/mcs-api-objects.interface';

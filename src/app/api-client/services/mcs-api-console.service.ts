@@ -14,10 +14,6 @@ export class McsApiConsoleService implements IMcsApiConsoleService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get the server console for the commands to be executed
-   * @param id Server identification
-   */
   public getServerConsole(id: string): Observable<McsApiSuccessResponse<McsConsole>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/console`;

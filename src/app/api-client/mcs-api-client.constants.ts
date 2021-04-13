@@ -34,39 +34,41 @@ import { McsApiObjectsService } from './services/mcs-api-objects.service';
 import { McsApiMetadataService } from './services/mcs-api-metadata.service';
 import { McsApiAvailabilityZonesService } from './services/mcs-api-availability-zones.service';
 import { McsApiTenantsService } from './services/mcs-api-tenants.service';
+import { McsApiTerraformService } from './services/mcs-api-terraform.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
   McsApiClientFactory,
 
+  McsApiAccountService,
+  McsApiAvailabilityZonesService,
+  McsApiAzureResourcesService,
+  McsApiAzureServicesService,
+  McsApiBatsService,
+  McsApiCatalogService,
+  McsApiColocationsService,
   McsApiCompaniesService,
   McsApiConsoleService,
   McsApiFirewallsService,
+  McsApiIdentityService,
+  McsApiInternetService,
   McsApiJobsService,
-  McsApiPlatformService,
+  McsApiLicensesService,
   McsApiMediaService,
   McsApiMetadataService,
+  McsApiNetworkDnsService,
+  McsApiObjectsService,
   McsApiOrdersService,
-  McsApiCatalogService,
-  McsApiColocationsService,
+  McsApiPlatformService,
+  McsApiReportsService,
   McsApiResourcesService,
   McsApiServersService,
-  McsApiBatsService,
+  McsApiSystemService,
+  McsApiTenantsService,
+  McsApiTerraformService,
   McsApiTicketsService,
   McsApiToolsService,
-  McsApiInternetService,
-  McsApiNetworkDnsService,
-  McsApiSystemService,
-  McsApiIdentityService,
-  McsApiLicensesService,
-  McsApiAccountService,
-  McsApiAzureResourcesService,
-  McsApiAzureServicesService,
-  McsApiReportsService,
-  McsApiWorkflowsService,
-  McsApiObjectsService,
-  McsApiAvailabilityZonesService,
-  McsApiTenantsService
+  McsApiWorkflowsService
 ];
 
 export const apiClientInterceptors: Provider[] = [

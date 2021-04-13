@@ -18,10 +18,6 @@ export class McsApiJobsService implements IMcsApiJobsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get all the jobs from the API
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getJobs(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsJob[]>> {
 
     // Set default values if null
@@ -45,10 +41,6 @@ export class McsApiJobsService implements IMcsApiJobsService {
       );
   }
 
-  /**
-   * Get all jobs based on its status
-   * @param statuses Statuses to be filtered
-   */
   public getJobsByStatus(...statuses: JobStatus[]): Observable<McsApiSuccessResponse<McsJob[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/jobs/?status=${statuses.map((status) => `${JobStatus[status]}`)}`;
@@ -62,10 +54,6 @@ export class McsApiJobsService implements IMcsApiJobsService {
     );
   }
 
-  /**
-   * Get job by ID (MCS API Response)
-   * @param id JOB identification
-   */
   public getJob(id: any): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/jobs/${id}`;
@@ -80,9 +68,6 @@ export class McsApiJobsService implements IMcsApiJobsService {
       );
   }
 
-  /**
-   * Get job connection from API
-   */
   public getJobConnection(): Observable<McsApiSuccessResponse<McsJobConnection>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/jobs/connection`;

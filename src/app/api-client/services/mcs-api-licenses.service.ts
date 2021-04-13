@@ -21,10 +21,6 @@ export class McsApiLicensesService implements IMcsApiLicensesService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get Licenses (MCS API Response)
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getLicenses(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsLicense[]>> {
 
     // Set default values if null
@@ -49,10 +45,6 @@ export class McsApiLicensesService implements IMcsApiLicensesService {
       );
   }
 
-  /**
-   * Get license by ID (MCS API Response)
-   * @param id License identification
-   */
   public getLicense(id: any): Observable<McsApiSuccessResponse<McsLicense>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/public-cloud/licenses/${id}`;

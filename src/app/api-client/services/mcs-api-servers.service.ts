@@ -61,10 +61,6 @@ export class McsApiServersService implements IMcsApiServersService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get Servers (MCS API Response)
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getServers(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServer[]>> {
 
     // Set default values if null
@@ -90,10 +86,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Get server by ID (MCS API Response)
-   * @param id Server identification
-   */
   public getServer(id: any): Observable<McsApiSuccessResponse<McsServer>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}`;
@@ -109,11 +101,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Get the os-updates of the server
-   * @param id Server identification
-   * @param query contains the keyword, page index and size
-   */
   public getServerOsUpdates(
     id: any,
     query?: McsQueryParam
@@ -140,11 +127,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Get the os-updates details of the server
-   * @param id Server identification
-   * @param query contains the keyword, page index and size
-   */
   public getServerOsUpdatesDetails(
     id: any
   ): Observable<McsApiSuccessResponse<McsServerOsUpdatesDetails>> {
@@ -163,12 +145,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Update server os by ID
-   * *Note: This will send a job (notification)
-   * @param id Server identification
-   * @param updateRequestDetails Can be update IDs or/and categories
-   */
   public updateServerOs(
     id: any,
     updateRequestDetails: McsServerOsUpdatesRequest
@@ -189,9 +165,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets all the server os-updates categories
-   */
   public getServerOsUpdatesCategories()
     : Observable<McsApiSuccessResponse<McsServerOsUpdatesCategory[]>> {
 
@@ -211,10 +184,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Inspect the Server for available updates
-   * @param id Server identification
-   */
   public inspectServerForAvailableOsUpdates(
     id: string,
     inspectRequest: McsServerOsUpdatesInspectRequest
@@ -237,10 +206,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Get the schedule of the Server OS update
-   * @param id Server identification
-   */
   public getServerOsUpdatesSchedule(
     id: any
   ): Observable<McsApiSuccessResponse<McsServerOsUpdatesSchedule[]>> {
@@ -261,11 +226,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Update the schedule of the Server OS update
-   * @param id Server identification
-   * @param schedule Model that contains the cron and the schedule details
-   */
   public updateServerOsUpdatesSchedule(
     id: any,
     schedule: McsServerOsUpdatesScheduleRequest
@@ -288,10 +248,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Delete the schedule of the Server OS update
-   * @param id Server identification
-   */
   public deleteServerOsUpdatesSchedule(
     id: any
   ): Observable<McsApiSuccessResponse<boolean>> {
@@ -310,13 +266,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Put server command/action to process the server
-   * *Note: This will send a job (notification)
-   * @param id Server identification
-   * @param command Command type (Start, Stop, Restart)
-   * @param referenceObject Reference object of the server client to determine the status of job
-   */
   public sendServerPowerState(
     id: any,
     powerstate: McsServerPowerstateCommand
@@ -336,11 +285,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Post server reset vm password
-   * @param id Server identification
-   * @param resetDetails Server details to be reset
-   */
   public resetVmPassword(id: any, resetDetails: McsServerPasswordReset):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -358,11 +302,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Renames a server based on the new name provided
-   * @param id Server identification
-   * @param referenceObject Reference object to obtain during subscribe
-   */
   public renameServer(id: any, serverData: McsServerRename):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -380,11 +319,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Updates server compute data to process the scaling updates
-   * @param id Server identification
-   * @param serverData Server data for the patch update
-   */
   public updateServerCompute(
     id: any,
     serverData: McsServerUpdate
@@ -404,10 +338,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will create the new server based on the inputted information
-   * @param serverData Server data to be created
-   */
   public createServer(serverData: McsServerCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -425,11 +355,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will clone an existing server
-   * @param id Server id to be cloned
-   * @param serverData Server data to be cloned
-   */
   public cloneServer(
     id: string,
     serverData: McsServerClone
@@ -449,11 +374,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will delete an existing server
-   * @param id Server id to delete
-   * @param deleteDetails Details of the server to be deleted
-   */
   public deleteServer(id: string, deleteDetails: McsServerDelete): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}`;
@@ -470,9 +390,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will get the server os data from the API
-   */
   public getServerOs(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServerOperatingSystem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/servers/os';
@@ -489,9 +406,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will get the server storage data from the API
-   */
   public getServerStorage(serverId: any):
     Observable<McsApiSuccessResponse<McsServerStorageDevice[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -508,11 +422,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Creates server storage based on the data provided
-   * @param serverId Server identification
-   * @param storageData Server storage data
-   */
   public createServerStorage(
     serverId: any,
     storageData: McsServerStorageDeviceUpdate
@@ -532,12 +441,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Updates server storage based on the data provided
-   * @param serverId Server identification
-   * @param storageId Server storage identification
-   * @param storageData Server storage data
-   */
   public updateServerStorage(
     serverId: any,
     storageId: any,
@@ -558,12 +461,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Deletes server storage based on the data provided
-   * @param serverId Server identification
-   * @param storageId Server storage identification
-   * @param storageData Server storage data
-   */
   public deleteServerStorage(
     serverId: string,
     storageId: string,
@@ -584,11 +481,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Get the server thumbnail for the image of the console
-   * * Note: This will return the thumbnail for display
-   * @param id Server identification
-   */
   public getServerThumbnail(id: any): Observable<McsApiSuccessResponse<McsServerThumbnail>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/thumbnail`;
@@ -604,9 +496,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will get the server networks from the API
-   */
   public getServerNics(serverId: any): Observable<McsApiSuccessResponse<McsServerNic[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/nics`;
@@ -622,11 +511,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Adds server nic based on the nic data provided
-   * @param serverId Server identification
-   * @param nicData Server nic data
-   */
   public addServerNic(
     serverId: any,
     nicData: McsServerCreateNic
@@ -646,12 +530,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Updates server nic based on the ID provided
-   * @param serverId Server identification
-   * @param nicId NIC identification
-   * @param nicData Server network data
-   */
   public updateServerNic(
     serverId: any,
     nicId: any,
@@ -672,12 +550,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Deletes server nic based on the ID provided
-   * @param serverId Server identification
-   * @param nicId Network identification
-   * @param nicData Server network data
-   */
   public deleteServerNic(
     serverId: any,
     nicId: any,
@@ -698,9 +570,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will get the server compute from the API
-   */
   public getServerCompute(serverId: any): Observable<McsApiSuccessResponse<McsServerCompute>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/compute`;
@@ -716,9 +585,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * This will get the server medias from the API
-   */
   public getServerMedias(serverId: any): Observable<McsApiSuccessResponse<McsServerMedia[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/media`;
@@ -734,11 +600,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Attaches the server media based on the given server id
-   * @param serverId Server Identification
-   * @param mediaData Server media data
-   */
   public attachServerMedia(
     serverId: any,
     mediaDetails: McsServerAttachMedia
@@ -758,12 +619,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Detaches the server media based on the given server id
-   * @param serverId Server Identification
-   * @param mediaId Media Identification
-   * @param referenceObject Reference object to be returned from the job
-   */
   public detachServerMedia(
     serverId: string,
     mediaId: string,
@@ -784,10 +639,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Get server snapshots from API
-   * @param id Server identification
-   */
   public getServerSnapshots(serverId: any): Observable<McsApiSuccessResponse<McsServerSnapshot[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/snapshots`;
@@ -803,11 +654,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Creates server snapshot
-   * @param serverId Server identification
-   * @param data Snapshot model to be created
-   */
   public createServerSnapshot(id: any, createSnapshot: McsServerSnapshotCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -825,11 +671,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Restores server snapshot
-   * @param serverId Server identification
-   * @param snapshotRestore Restore details of the snapshot
-   */
   public restoreServerSnapshot(id: any, snapshotRestore: McsServerSnapshotRestore):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -847,11 +688,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Deletes the existing server snapshot
-   * @param serverId Server id to where the snapshot will be deleted
-   * @param snapshotDelete Delete details of the snapshot
-   */
   public deleteServerSnapshot(id: string, snapshotDelete: McsServerSnapshotDelete):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -869,10 +705,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the summary of a server's vm backup
-   * @param serverId Server id to where the vm backup will be coming from
-   */
   public getServerBackupVm(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupVm>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -889,10 +721,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the server vm backup details
-   * @param serverId Server id to where the vm backup details will be coming from
-   */
   public getServerBackupVmDetails(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupVmDetails>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -909,9 +737,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the summary of a server's vm backup
-   */
   public getServerBackupVms(): Observable<McsApiSuccessResponse<McsServerBackupVm[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/vm-backups`;
@@ -927,10 +752,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the summary of a server's server backup
-   * @param serverId Server id to where the vm backup will be coming from
-   */
   public getServerBackupServer(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupServer>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -947,10 +768,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the server server backup details
-   * @param serverId Server id to where the server backup details will be coming from
-   */
   public getServerBackupServerDetails(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupServerDetails>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -967,9 +784,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the servers with server backup provision
-   */
   public getServerBackupServers():
     Observable<McsApiSuccessResponse<McsServerBackupServer[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -986,10 +800,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the server host security details
-   * @param serverId Server id to where the host security will be coming from
-   */
   public getServerHostSecurity(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurity>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/host-security`;
@@ -1005,9 +815,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the server host security anti-virus
-   */
   public getServerHostSecurityAntiVirus(): Observable<McsApiSuccessResponse<McsServerHostSecurityAntiVirus[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/host-security/av`;
@@ -1023,10 +830,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the server av logs
-   * @param serverId Server id to where the anti virus will be coming from
-   */
   public getServerHostSecurityAvLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityAvLog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/host-security/av/logs`;
@@ -1042,9 +845,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the server host security hids
-   */
   public getServerHostSecurityHids(): Observable<McsApiSuccessResponse<McsServerHostSecurityHids[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/host-security/hids`;
@@ -1060,10 +860,6 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  /**
-   * Gets the server hids logs
-   * @param serverId Server id to where the hids will be coming from
-   */
   public getServerHostSecurityHidsLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityHidsLog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/host-security/hids/logs`;

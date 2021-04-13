@@ -16,12 +16,6 @@ export class McsApiCompaniesService implements IMcsApiCompaniesService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get all the companies from the API
-   * @param page Page index of the page to obtained
-   * @param perPage Size of item per page
-   * @param searchKeyword Keyword to be search during filtering
-   */
   public getCompanies(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsCompany[]>> {
 
     // Set default values if null
@@ -41,10 +35,6 @@ export class McsApiCompaniesService implements IMcsApiCompaniesService {
       );
   }
 
-  /**
-   * Get company by ID (MCS API Response)
-   * @param id Company identification
-   */
   public getCompany(id: any): Observable<McsApiSuccessResponse<McsCompany>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/companies/${id}`;
@@ -60,9 +50,6 @@ export class McsApiCompaniesService implements IMcsApiCompaniesService {
       );
   }
 
-  /**
-   * Get active user company info
-   */
   public getCompanyActiveUser(): Observable<McsApiSuccessResponse<McsCompany>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/companies/my-company`;

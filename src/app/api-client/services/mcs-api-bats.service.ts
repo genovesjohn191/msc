@@ -17,9 +17,6 @@ export class McsApiBatsService implements IMcsApiBatsService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  /**
-   * Get all the backup aggregation targets
-   */
   public getBackUpAggregationTargets(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsBackUpAggregationTarget[]>> {
 
@@ -45,10 +42,6 @@ export class McsApiBatsService implements IMcsApiBatsService {
       );
   }
 
-  /**
-   * Get all the backup aggregation targets
-   * @param id aggregation target identification
-   */
   public getBackUpAggregationTarget(id: any): Observable<McsApiSuccessResponse<McsBackUpAggregationTarget>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/storage/backup/aggregation-targets/${id}`;
@@ -64,10 +57,6 @@ export class McsApiBatsService implements IMcsApiBatsService {
       );
   }
 
-  /**
-   * Get all the backup aggregation target linked services
-   * @param id aggregation target identification
-   */
   public getBackUpAggregationTargetLinkedServices(id: any): Observable<McsApiSuccessResponse<McsBatLinkedService[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/storage/backup/aggregation-targets/${id}/linked-services`;

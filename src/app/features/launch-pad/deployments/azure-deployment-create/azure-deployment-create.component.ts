@@ -82,6 +82,7 @@ export class DeploymentCreateAzureComponent implements IMcsNavigateAwayGuard {
       hint: 'Hint for tag goes here...'
     })
   ]
+
   public canNavigateAway(): boolean {
     return true;
   }

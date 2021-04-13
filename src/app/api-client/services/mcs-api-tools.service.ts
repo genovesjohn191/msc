@@ -16,9 +16,6 @@ export class McsApiToolsService implements IMcsApiToolsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get all the portals from the API
-   */
   public getPortals(): Observable<McsApiSuccessResponse<McsPortal[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/portals';

@@ -14,9 +14,6 @@ export class McsApiAccountService implements IMcsApiAccountService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  /**
-   * Gets the current account information
-   */
   public getAccount(): Observable<McsApiSuccessResponse<McsAccount>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/account`;
@@ -31,9 +28,6 @@ export class McsApiAccountService implements IMcsApiAccountService {
     );
   }
 
-  /**
-   * Gets the user information by username
-   */
   public getUser(username: string): Observable<McsApiSuccessResponse<McsAccount>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/account/users/${username}`;
@@ -48,9 +42,6 @@ export class McsApiAccountService implements IMcsApiAccountService {
     );
   }
 
-  /**
-   * Gets all users' information
-   */
   public getUsers(): Observable<McsApiSuccessResponse<McsAccount[]>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/account/users`;

@@ -25,10 +25,6 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get all the tickets from the API
-   * @param query Query predicate that serves as the parameter of the endpoint
-   */
   public getTickets(query?: McsTicketQueryParams): Observable<McsApiSuccessResponse<McsTicket[]>> {
 
     // Set default values if null
@@ -55,10 +51,6 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
       );
   }
 
-  /**
-   * Get the ticket from the API
-   * @param id ID of the ticket to obtain
-   */
   public getTicket(id: any): Observable<McsApiSuccessResponse<McsTicket>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets/' + id;
@@ -74,10 +66,6 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
       );
   }
 
-  /**
-   * This will create the new ticket based on the inputted information
-   * @param ticketData Ticket data to be created
-   */
   public createTicket(ticketData: McsTicketCreate):
     Observable<McsApiSuccessResponse<McsTicketCreate>> {
 
@@ -96,10 +84,6 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
       );
   }
 
-  /**
-   * This will create the new comment based on the inputted information
-   * @param commentData Comment data to be created
-   */
   public createComment(ticketId: any, commentData: McsTicketCreateComment):
     Observable<McsApiSuccessResponse<McsTicketComment>> {
 
@@ -118,10 +102,6 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
       );
   }
 
-  /**
-   * This will create the new attachment based on the inputted information
-   * @param attachmentData Attachment data to be created
-   */
   public createAttachment(ticketId: any, attachmentData: McsTicketCreateAttachment):
     Observable<McsApiSuccessResponse<McsTicketAttachment>> {
 
@@ -140,11 +120,6 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
       );
   }
 
-  /**
-   * Get the File attachment from API as Blob
-   * @param ticketId ID of the ticket
-   * @param attachmentId Attachment ID of the file
-   */
   public getFileAttachment(ticketId: any, attachmentId: any): Observable<Blob> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments/${attachmentId}/file`;

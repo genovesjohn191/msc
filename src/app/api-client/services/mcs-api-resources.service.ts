@@ -25,9 +25,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  /**
-   * Get Resources (MCS API Response)
-   */
   public getResources(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResource[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/resources';
@@ -44,10 +41,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource by ID (MCS API Response)
-   * @param id Resource identification
-   */
   public getResource(id: any): Observable<McsApiSuccessResponse<McsResource>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}`;
@@ -63,10 +56,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource compute by ID (MCS API Response)
-   * @param id Resource identification
-   */
   public getResourceCompute(id: any): Observable<McsApiSuccessResponse<McsResourceCompute>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/compute`;
@@ -82,10 +71,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource storage by ID (MCS API Response)
-   * @param id Resource identification
-   */
   public getResourceStorage(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceStorage[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/storage`;
@@ -102,10 +87,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource networks by ID (MCS API Response)
-   * @param resourceId Resource identification
-   */
   public getResourceNetworks(resourceId: any, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsResourceNetwork[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -123,11 +104,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource network details by ID (MCS API Response)
-   * @param resourceId Resource identification
-   * @param networkId Network identification
-   */
   public getResourceNetwork(resourceId: any, networkId: any, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsResourceNetwork>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -145,10 +121,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource catalogs (MCS API Response)
-   * @param resourceId Resource identification
-   */
   public getResourceCatalogs(resourceId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -165,11 +137,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource catalog by ID (MCS API Response)
-   * @param resourceId Resource identification
-   * @param catalogId Catalog identification
-   */
   public getResourceCatalog(resourceId: string, catalogId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalog>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -186,11 +153,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource catalog items by ID (MCS API Response)
-   * @param resourceId Resource identification
-   * @param catalogId Catalog identification
-   */
   public getResourceCatalogItems(resourceId: string, catalogId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalogItem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -207,12 +169,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource catalog items by ID (MCS API Response)
-   * @param resourceId Resource identification
-   * @param catalogId Catalog identification
-   * @param itemId Catalog Item identification
-   */
   public getResourceCatalogItem(resourceId: string, catalogId: string, itemId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalogItem>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -229,10 +185,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Get resource vApps by ID (MCS API Response)
-   * @param id Resource identification
-   */
   public getResourceVApps(id: any): Observable<McsApiSuccessResponse<McsResourceVApp[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/vapps`;
@@ -248,12 +200,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Create the catalog item on the resource id provided
-   * @param resourceId Resource Id where the catalog item will be created
-   * @param catalogId Catalog Id where the catalog item will be attached
-   * @param createItemData Catalog item data to be used
-   */
   public createResourceCatalogItem(resourceId: string, catalogId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -270,11 +216,6 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  /**
-   * Validates the catalog items based on the inputted payload
-   * @param resourceId Resource Id where the catalog items will be validated
-   * @param createItemData Catalog item data to be used
-   */
   public validateCatalogItems(resourceId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsValidation[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
