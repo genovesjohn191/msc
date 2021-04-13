@@ -208,6 +208,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * Clears the cache data and it will not notify the dataChange event
    */
   public clearData(): void {
+    if (this.getTotalRecordsCount() <= 0) { return; }
+
     this._context.totalRecordsCount = 0;
     this._allRecordsCount = 0;
     clearArrayRecord(this.dataRecords);
