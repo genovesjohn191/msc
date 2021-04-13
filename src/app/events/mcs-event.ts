@@ -77,7 +77,6 @@ import { ServerAddBackupVmSelectedEvent } from './items/server-add-backup-vm-sel
 import { ServerAddHidsSelectedEvent } from './items/server-add-hids-selected.event';
 import { ServerManagedRaiseInviewSelectedEvent } from './items/server-raise-inview-selected.event';
 import { ServerRequestPatchSelectedEvent } from './items/server-request-patch-selected.event';
-import { ServerManagedScaleSelectedEvent } from './items/server-scale-manage-selected.event';
 import { ServiceRequestChangeSelectedEvent } from './items/service-request-change-selected.event';
 import { SessionTimedOutEvent } from './items/session-timedout.event';
 import { SystemMessageHideEvent } from './items/system-message-hide.event';
@@ -92,7 +91,6 @@ export class McsEvent {
   public static accountChange = new AccountChangeEvent();
   public static userChange = new UserChangeEvent();
   public static sessionTimedOut = new SessionTimedOutEvent();
-  public static serverScaleManageSelected = new ServerManagedScaleSelectedEvent();
   public static serverRaiseInviewSelected = new ServerManagedRaiseInviewSelectedEvent();
   public static serverAddAvSelected = new ServerAddAvSelectedEvent();
   public static serverAddHidsSelected = new ServerAddHidsSelectedEvent();

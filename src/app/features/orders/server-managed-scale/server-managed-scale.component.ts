@@ -1,11 +1,15 @@
 import {
+  EMPTY,
   Observable,
   Subject,
   Subscription
 } from 'rxjs';
 import {
+  catchError,
   map,
   shareReplay,
+  switchMap,
+  takeUntil,
   tap
 } from 'rxjs/operators';
 
@@ -24,6 +28,10 @@ import {
   FormControl,
   FormGroup
 } from '@angular/forms';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
 import {
   CoreValidators,
   IMcsFormGroup,
@@ -108,12 +116,13 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
 
   constructor(
     _injector: Injector,
+    private _activatedRoute: ActivatedRoute,
+    private _apiService: McsApiService,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef,
+    private _eventDispatcher: EventBusDispatcherService,
     private _formBuilder: FormBuilder,
     private _formGroupService: McsFormGroupService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _apiService: McsApiService,
     private _scaleManagedServerService: ServerManagedScaleService
   ) {
     super(
@@ -134,6 +143,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     this._registerEvents();
     this._registerProvisionStateMap();
     this._subscribeToManagedCloudServers();
+    this._subscribesToSelectedServerId();
   }
 
   public ngOnDestroy() {
@@ -324,6 +334,24 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     );
   }
 
+  private _subscribesToSelectedServerId(): void {
+    this._activatedRoute.queryParams.pipe(
+      switchMap((params: ParamMap) => {
+        let serverSelectedId = params['serverId'];
+        if (isNullOrEmpty(serverSelectedId)) { return; }
+        return this._apiService.getServer(serverSelectedId).pipe(
+          map((server: McsServer) => {
+            return server;
+          })
+        )
+      }),
+      catchError(() => EMPTY),
+      takeUntil(this._destroySubject))
+    .subscribe((server: McsServer) => {
+      this.fcManageServer.setValue(server);
+    });
+  }
+
   /**
    * Register jobs/notifications events
    */
@@ -331,12 +359,6 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     this._resourcesDataChangeHandler = this._eventDispatcher.addEventListener(
       McsEvent.dataChangeResources, () => this._changeDetectorRef.markForCheck()
     );
-    this._selectedServerHandler = this._eventDispatcher.addEventListener(
-      McsEvent.serverScaleManageSelected, this._onSelectedScaleManagedServer.bind(this)
-    );
-
-    // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected);
   }
 
   /**
@@ -363,14 +385,6 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   private _touchInvalidFields(): void {
     this._formGroupService.touchAllFormFields(this.fgServerManagedScaleDetails);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
-  }
-
-  /**
-   * Event listener whenever a manage server is selected
-   */
-  private _onSelectedScaleManagedServer(server: McsServer): void {
-    if (isNullOrEmpty(server)) { return; }
-    this.fcManageServer.setValue(server);
   }
 
   /**
