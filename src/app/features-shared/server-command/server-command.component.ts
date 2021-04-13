@@ -21,7 +21,6 @@ import {
   McsUniqueId
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/events';
 import {
   McsServer,
   McsServerDelete,
@@ -79,7 +78,6 @@ export class ServerCommandComponent {
   constructor(
     private _translateService: TranslateService,
     private _dialogService: DialogService,
-    private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
@@ -357,8 +355,11 @@ export class ServerCommandComponent {
       );
       return;
     }
-    this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, this.server);
-    this._navigationService.navigateTo(RouteKey.OrderServerManagedScale);
+    this._navigationService.navigateTo(RouteKey.OrderServerManagedScale, [],
+      { queryParams: {
+        serverId: this.server.id
+      }}
+    );
   }
 
   /**

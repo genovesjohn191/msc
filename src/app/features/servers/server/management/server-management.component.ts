@@ -161,8 +161,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       this.setViewMode(ServerManagementView.ManageScale);
       return;
     }
-    this.eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server);
-    this._navigationService.navigateTo(RouteKey.OrderServerManagedScale);
+    this._navigationService.navigateTo(RouteKey.OrderServerManagedScale, [],
+      { queryParams: {
+        serverId: server.id
+      }}
+    );
   }
 
   /**
