@@ -7,6 +7,7 @@ import { IMcsNavigateAwayGuard } from '@app/core';
 import {
   DynamicFormFieldConfigBase,
   DynamicInputTextField,
+  DynamicSelectChipsCompanyField,
   DynamicSelectField
 } from '@app/features-shared/dynamic-form';
 
@@ -24,15 +25,14 @@ export class DeploymentCreateAzureComponent implements IMcsNavigateAwayGuard {
   };
 
   public fieldData: DynamicFormFieldConfigBase[] = [
-    new DynamicSelectField({
+    new DynamicSelectChipsCompanyField({
       key: 'company',
       label: 'Company',
-      // validators: { required: true },
-      options: [
-        { key: 'key1', value: 'value1'},
-        { key: 'key2', value: 'value2'},
-      ],
-      hint: 'Hint for company goes here...'
+      placeholder: 'Search for name or company ID...',
+      validators: { required: true },
+      allowCustomInput: true,
+      maxItems: 1,
+      dependents: []
     }),
     new DynamicSelectField({
       key: 'tenant',

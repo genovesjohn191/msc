@@ -98,7 +98,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsRemoveCvm,
-        WorkflowGroupId.ManagementToolsRename
+        WorkflowGroupId.ManagementToolsUpdate
       ]
     ],
 
@@ -106,7 +106,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsRemoveCvm,
-        WorkflowGroupId.ManagementToolsRename
+        WorkflowGroupId.ManagementToolsUpdate
       ]
     ],
 
@@ -378,13 +378,13 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
 
     [ ProductType.PrimaryDedicatedStorage,
       [
-        WorkflowGroupId.DedicatedStorageAttachVolume,
-        WorkflowGroupId.DedicatedStorageAttachVolumeCluster,
         WorkflowGroupId.DedicatedStorageCreateAttachVolume,
-        WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster,
-        WorkflowGroupId.DedicatedStorageIncreaseVolume,
-        WorkflowGroupId.DedicatedStorageRemoveZoning,
+        WorkflowGroupId.DedicatedStorageAttachVolume,
+        WorkflowGroupId.DedicatedStorageIncreaseVolumeSize,
         WorkflowGroupId.DedicatedStorageUnmaskVolume,
+        WorkflowGroupId.DedicatedStorageRemoveZoning,
+        WorkflowGroupId.DedicatedStorageAttachVolumeCluster,
+        WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster
       ]
     ],
 
@@ -469,7 +469,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.ManagementToolsAddCvm,
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsRemoveCvm,
-        WorkflowGroupId.ManagementToolsRename
+        WorkflowGroupId.ManagementToolsUpdate
       ]
     ],
 

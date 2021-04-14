@@ -10,6 +10,7 @@ export * from './input-text/input-text';
 export * from './select-availability-zone/select-availability-zone';
 export * from './select-bat/select-bat';
 export * from './select-chips/select-chips';
+export * from './select-chips-company/select-chips-company';
 export * from './select-chips-tenant/select-chips-tenant';
 export * from './select-chips-vm/select-chips-vm';
 export * from './select/select';
