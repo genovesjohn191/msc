@@ -28,6 +28,7 @@ export const backupProvisionFormConfig: DynamicFormFieldConfigBase[] = [
     key: 'backupAggregationTarget',
     label: 'Backup Aggregation Target',
     useServiceIdAsKey: true,
+    eventName: 'bat-change',
     dependents: ['retentionPeriodInDays'],
   }),
   new DynamicSelectRetentionPeriodField({
@@ -87,6 +88,7 @@ export const backupProvisionAddOnFormConfig: DynamicFormFieldConfigBase[] = [
     key: 'backupAggregationTarget',
     label: 'Backup Aggregation Target',
     useServiceIdAsKey: true,
+    eventName: 'bat-change',
     dependents: ['retentionPeriodInDays'],
   }),
   new DynamicSelectRetentionPeriodField({

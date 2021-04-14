@@ -8,8 +8,11 @@ import {
   DynamicFormFieldConfigBase,
   DynamicInputTextField,
   DynamicSelectChipsCompanyField,
-  DynamicSelectField
+  DynamicSelectChipsField,
+  DynamicSelectField,
+  DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
+import { DynamicSelectAzureSubscriptionField } from '@app/features-shared/dynamic-form/dynamic-form-field/select-azure-subscription/select-azure-subscription';
 
 @Component({
   selector: 'mcs-deployment-create',
@@ -32,34 +35,24 @@ export class DeploymentCreateAzureComponent implements IMcsNavigateAwayGuard {
       validators: { required: true },
       allowCustomInput: true,
       maxItems: 1,
-      dependents: []
+      eventName: 'company-change',
+      dependents: ['tenant', 'subscription']
     }),
-    new DynamicSelectField({
+    new DynamicSelectTenantField({
       key: 'tenant',
       label: 'Tenant',
-      // validators: { required: true },
-      options: [
-        { key: 'key1', value: 'value1'},
-        { key: 'key2', value: 'value2'},
-      ],
-      hint: 'Hint for tenant goes here...'
+      validators: { required: true }
     }),
-    new DynamicSelectField({
+    new DynamicSelectAzureSubscriptionField({
       key: 'subscription',
       label: 'Subscription',
-      // validators: { required: true },
-      options: [
-        { key: 'key1', value: 'value1'},
-        { key: 'key2', value: 'value2'},
-      ],
-      hint: 'Hint for subscription goes here...'
+      validators: { required: true }
     }),
     new DynamicInputTextField({
       key: 'name',
       label: 'Deployment Name',
       placeholder: 'Enter a deployment name',
-      // validators: { required: true, minlength: 1, maxlength: 20 },
-      hint: 'Hint for name goes here...'
+      validators: { required: true, minlength: 1, maxlength: 50 },
     }),
     new DynamicSelectField({
       key: 'module',

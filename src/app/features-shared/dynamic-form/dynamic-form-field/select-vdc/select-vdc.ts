@@ -10,7 +10,7 @@ export class DynamicSelectVdcField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-vdc';
   public template: DynamicFormFieldTemplate = 'select-vdc';
-  public eventName: DynamicFormFieldOnChangeEvent = 'resource-change';
+
   public hideSelfManaged?: boolean = false;
   public hideManaged?: boolean = false;
 

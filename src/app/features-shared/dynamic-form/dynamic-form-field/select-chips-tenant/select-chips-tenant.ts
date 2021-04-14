@@ -36,7 +36,6 @@ export class DynamicSelectChipsTenantField extends DynamicFormFieldConfigBase {
     allowCustomInput?: boolean;
     maxItems?: number;
     useTenantIdAsKey?: boolean;
-    dataFilter?: ServerFilterConfig;
   }) {
     super(options);
 

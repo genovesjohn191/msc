@@ -6,10 +6,12 @@ import {
   DynamicFormControlSettings
 } from '../../dynamic-form-field-config.interface';
 
-export class DynamicSelectNetworkField extends DynamicFormFieldConfigBase {
+export class DynamicSelectAzureSubscriptionField extends DynamicFormFieldConfigBase {
   // Overrides
-  public type: DynamicFormFieldType = 'select-network';
-  public template: DynamicFormFieldTemplate = 'select-network';
+  public type: DynamicFormFieldType = 'select-azure-subscription';
+  public template: DynamicFormFieldTemplate = 'select-azure-subscription';
+
+  public useServiceIdAsKey: boolean = false;
 
   public constructor(options: {
     key: string;
@@ -22,7 +24,10 @@ export class DynamicSelectNetworkField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
+    useServiceIdAsKey?: boolean;
   }) {
     super(options);
+
+    this.useServiceIdAsKey = options.useServiceIdAsKey || false;
   }
 }

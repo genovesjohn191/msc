@@ -1585,7 +1585,16 @@ export class McsApiService {
     );
   }
 
-  public getAzureServices(query?: McsQueryParam): Observable<McsApiCollection<McsAzureService>> {
+  public getAzureServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsAzureService>> {
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._azureServicesApi.getAzureServices(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureServices'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
     let azureServices = isNullOrEmpty(query) ?
       this._azureServicesRepository.getAll() :
       this._azureServicesRepository.filterBy(query);

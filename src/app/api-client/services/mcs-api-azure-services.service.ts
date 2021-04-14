@@ -16,7 +16,7 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  public getAzureServices(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsAzureService[]>> {
+  public getAzureServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService[]>> {
      // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
@@ -27,6 +27,7 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/services`;
     requestParameter.searchParameters = searchParams;
+    requestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(
@@ -38,9 +39,10 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
     );
   }
 
-  public getAzureServiceById(id: string): Observable<McsApiSuccessResponse<McsAzureService>> {
+  public getAzureServiceById(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/services/${id}`;
+    requestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(

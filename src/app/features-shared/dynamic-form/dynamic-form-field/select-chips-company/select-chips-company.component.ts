@@ -11,7 +11,7 @@ import {
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import { isNullOrEmpty } from '@app/utilities';
@@ -139,19 +139,49 @@ export class DynamicSelectChipsCompanyComponent extends DynamicSelectChipsFieldC
     throw new Error('Method not implemented.');
   }
 
-  public search(selectedOption: McsCompany | string): FlatOption[] {
+  public search(selectedOption: McsCompany | string): Observable<FlatOption[]> {
     if (typeof selectedOption === 'object') {
-      return this.config.options.filter(option => option.key.indexOf(option.key) === 0);
+      return of(this.config.options.filter(option => option.key.indexOf(option.key) === 0));
     }
 
-    const filterValue = selectedOption.toLowerCase();
+    if (isNullOrEmpty(selectedOption)) return of([]);
 
-    return this.config.options.filter(option => option.value.toLowerCase().indexOf(filterValue) >= 0);
+    let param = new McsQueryParam();
+    param.pageSize = 10;
+    param.keyword = selectedOption;
+
+    return this._apiService.getCompanies(param)
+    .pipe(
+      takeUntil(this.destroySubject),
+      map((response) => {
+        let options: FlatOption[] = [];
+
+        response.collection.forEach((item) => {
+          let key = item.id;
+          let value = `${item.name} (${item.id})`;
+
+          options.push({ type: 'flat', key, value });
+        });
+
+        return options;
+      }));
   }
 
-  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: DynamicSelectChipsValue[]): void {
+    let singleValue: string = '';
+    let multipleValue: string[] = [];
+    if (!isNullOrEmpty(value)) {
+      if (this.config.maxItems === 1) {
+        singleValue = value[0].value;
+      } else {
+        value.forEach((item) => {
+          multipleValue.push(item.value);
+        });
+      }
+    }
+
     this.dataChange.emit({
-      value,
+      value: this.config.maxItems === 1 ? singleValue : multipleValue,
       eventName,
       dependents
     });
@@ -162,33 +192,17 @@ export class DynamicSelectChipsCompanyComponent extends DynamicSelectChipsFieldC
     this.writeValue([]);
     // Force the form to check the validty of the control
     this.valueChange([]);
-
-    let param = new McsQueryParam();
-    param.pageSize = 10000;
-    return this._apiService.getCompanies(param)
-    .pipe(
-      takeUntil(this.destroySubject),
-      map((response) => response && response.collection));
+    return of([]);
   }
 
   protected filter(collection: McsCompany[]): FlatOption[] {
-    let options: FlatOption[] = [];
-
-    collection.forEach((item) => {
-      let key = item.id;
-      let value = `${item.name} (${item.id})`;
-
-      options.push({ type: 'flat', key, value });
-    });
-
     if (!isNullOrEmpty(this.config.initialValue)) {
       // Force the control to reselect the initial value
       this.writeValue(this.config.initialValue);
       // Force the form to check the validty of the control
       this.valueChange(this.config.initialValue);
     }
-
-    return options;
+    return [];
   }
 
   private _tryAddChip(chip: DynamicSelectChipsValue): void {

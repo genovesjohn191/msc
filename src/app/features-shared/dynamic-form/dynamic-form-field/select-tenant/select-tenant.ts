@@ -6,10 +6,12 @@ import {
   DynamicFormControlSettings
 } from '../../dynamic-form-field-config.interface';
 
-export class DynamicSelectNetworkField extends DynamicFormFieldConfigBase {
+export class DynamicSelectTenantField extends DynamicFormFieldConfigBase {
   // Overrides
-  public type: DynamicFormFieldType = 'select-network';
-  public template: DynamicFormFieldTemplate = 'select-network';
+  public type: DynamicFormFieldType = 'select-tenant';
+  public template: DynamicFormFieldTemplate = 'select-tenant';
+
+  public useTenantIdAsKey: boolean = false;
 
   public constructor(options: {
     key: string;
@@ -22,7 +24,10 @@ export class DynamicSelectNetworkField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
+    useTenantIdAsKey?: boolean;
   }) {
     super(options);
+
+    this.useTenantIdAsKey = options.useTenantIdAsKey || false;
   }
 }

@@ -7,6 +7,7 @@
   matBadgeSize="small"
   [matTooltip]="hasError ? 'Failed to load options' : ''"
   matTooltipPosition="above"
+  (focusout)="addToChips(valueInput)"
   [hintLabel]="config.hint">
   <mat-label [attr.for]="id">{{ label }} {{ required ? ' *' : ''}}</mat-label>
 
@@ -45,7 +46,5 @@
       <small>{{ option.value }}</small>
     </mat-option>
   </mat-autocomplete>
-
-
 
 </mat-form-field>

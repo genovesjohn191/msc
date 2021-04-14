@@ -45,6 +45,8 @@ export const microsoftCreateSubscriptionForm: LaunchPadForm = {
     mappedProperties.push({ key: 'tenant',
       value: findCrispElementAttribute(CrispAttributeNames.LinkedMsTenant, attributes)?.displayValue } );
 
+    mappedProperties.push({ key: 'location', value: 'Global' } );
+
     return mappedProperties;
   }
 }

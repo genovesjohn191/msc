@@ -12,7 +12,6 @@ export class DynamicSelectChipsCompanyField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-chips-company';
   public template: DynamicFormFieldTemplate = 'select-chips-company';
-  public eventName: DynamicFormFieldOnChangeEvent = 'company-change';
   public value?: DynamicSelectChipsValue[];
 
   public allowDuplicates: boolean = false;
