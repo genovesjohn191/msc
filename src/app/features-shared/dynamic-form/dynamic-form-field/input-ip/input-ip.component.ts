@@ -53,7 +53,11 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     switch (params.eventName) {
       case 'ip-mode-change':
-        this._updateBehavior(params.value);
+        this._updateBehavior(params.value.toLowerCase() === 'manual');
+        break;
+
+      case 'management-name-change':
+        this._updateBehavior(isNullOrEmpty(params.value));
         break;
 
       case 'company-change':
@@ -93,9 +97,7 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
     this.config.ipGatewayValidator = this._ipValidationService.ipGatewayValidator.bind(this);
   }
 
-  private _updateBehavior(mode: string ): void {
-    let required = mode.toLowerCase() === 'manual';
-
+  private _updateBehavior(required: boolean): void {
     this.updateVisiblityBasedOnRequirement(required);
 
     this._changeDetectorRef.markForCheck();

@@ -5,7 +5,7 @@ export enum WorkflowType {
 
   ManagementToolsAddCvm = 'launchpad.managementtools.addcvm',
   ManagementToolsRemoveCvm = 'launchpad.managementtools.deletecvm',
-  ManagementToolsRename = 'launchpad.managementtools.rename',
+  ManagementToolsUpdate = 'launchpad.managementtools.update',
   ManagementToolsQueryStatus = 'launchpad.managementtools.querystatus',
 
   DedicatedStorageAttachVolume = 'launchpad.dedicatedstorage.attachvolume',

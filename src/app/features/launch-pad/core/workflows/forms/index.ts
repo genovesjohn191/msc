@@ -3,7 +3,7 @@ export * from './form.interface';
 export * from './vdc-vm-instance-provision.form';
 export * from './management-tools-add-cvm.form';
 export * from './management-tools-remove-cvm.form';
-export * from './management-tools-rename.form';
+export * from './management-tools-update.form';
 
 export * from './dedicated-storage-attach-volume-cluster.form';
 export * from './dedicated-storage-attach-volume.form';

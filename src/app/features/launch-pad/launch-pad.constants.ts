@@ -26,7 +26,7 @@ export const launchPadRoutes: Routes = [
   {
     path: 'workflows',
     component: LaunchPadWorkflowsComponent,
-    data: { routeId: RouteKey.LaunchPadWorkflowLaunch },
+    data: { routeId: RouteKey.LaunchPadWorkflows },
     canActivate: [ LaunchPadGuard ]
   },
   {
@@ -38,7 +38,7 @@ export const launchPadRoutes: Routes = [
   {
     path: 'deployments/create',
     component: DeploymentCreateAzureComponent,
-    data: { routeId: RouteKey.LaunchPadWorkflowLaunch },
+    data: { routeId: RouteKey.LaunchPadDeploymentCreate },
     canActivate: [ LaunchPadGuard ]
   },
 ];

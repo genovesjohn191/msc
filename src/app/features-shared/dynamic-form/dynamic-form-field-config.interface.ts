@@ -64,6 +64,7 @@ export type DynamicFormFieldType =
   | 'select-availability-zone'
   | 'select-bat'
   | 'select-chips'
+  | 'select-chips-company'
   | 'select-chips-tenant'
   | 'select-chips-vm'
   | 'select'
@@ -87,6 +88,7 @@ export type DynamicFormFieldTemplate =
   | 'select-availability-zone'
   | 'select-bat'
   | 'select-chips'
+  | 'select-chips-company'
   | 'select-chips-tenant'
   | 'select-chips-vm'
   | 'select'
@@ -102,12 +104,13 @@ export type DynamicFormFieldTemplate =
 
 export type DynamicFormFieldOnChangeEvent =
   ''
-  | 'company-change'
   | 'az-change'
   | 'bat-change'
+  | 'company-change'
   | 'ip-mode-change'
-  | 'resource-change'
+  | 'management-name-change'
   | 'network-change'
+  | 'resource-change'
   | 'service-id-change';
 
 export type DynamicFormFieldInputType =

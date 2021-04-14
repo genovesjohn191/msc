@@ -13,7 +13,7 @@ import { LaunchPadSearchServicesResultComponent } from './search/results-table/s
 import { LaunchPadGuard } from './launch-pad.guard';
 import { DeploymentCreateAzureComponent } from './deployments/azure-deployment-create/azure-deployment-create.component';
 import { DynamicFormModule } from '@app/features-shared';
-import { QuillConfig, QuillModule} from 'ngx-quill';
+import { QuillModule} from 'ngx-quill';
 
 @NgModule({
   declarations: [

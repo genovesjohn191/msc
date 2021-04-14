@@ -7,11 +7,11 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex, 'Create a new virtual data centre VM instance w/ Add Ons.'],
 
   [WorkflowGroupId.DedicatedStorageUnmaskVolume, 'Unmask dedicated storage volume.'],
-  [WorkflowGroupId.DedicatedStorageIncreaseVolume, 'Increase dedicated storage volume.'],
+  [WorkflowGroupId.DedicatedStorageIncreaseVolumeSize, 'Increase dedicated storage volume.'],
   [WorkflowGroupId.DedicatedStorageAttachVolumeCluster, 'Attach dedicated storage volume cluster.'],
   [WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster, 'Create and attach dedicated storage volume cluster.'],
-  [WorkflowGroupId.DedicatedStorageAttachVolume, 'Attach dedicated storage volume.'],
-  [WorkflowGroupId.DedicatedStorageCreateAttachVolume, 'Create and attach dedicated storage volume.'],
+  [WorkflowGroupId.DedicatedStorageAttachVolume, 'Attach existing dedicated storage volume.'],
+  [WorkflowGroupId.DedicatedStorageCreateAttachVolume, 'Create new dedicated storage volume.'],
   [WorkflowGroupId.DedicatedStorageRemoveZoning, 'Remove dedicated storage zoning.'],
 
   [WorkflowGroupId.HostSecurityProvisionAntiVirus, 'Provision an anti-virus software.'],
@@ -20,7 +20,7 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.ManagementToolsQueryStatus, 'Query nanagement tools status.'],
   [WorkflowGroupId.ManagementToolsAddCvm, 'Add to management tools.'],
   [WorkflowGroupId.ManagementToolsRemoveCvm, 'Remove from management tools.'],
-  [WorkflowGroupId.ManagementToolsRename, 'Rename in management tools.'],
+  [WorkflowGroupId.ManagementToolsUpdate, 'Update in management tools.'],
 
   [WorkflowGroupId.MicrosoftCreateSubscription, 'Create Microsoft subscription for a tenant.'],
 

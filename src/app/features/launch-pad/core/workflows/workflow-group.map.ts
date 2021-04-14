@@ -15,7 +15,7 @@ import {
   VdcVmInstanceProvisionWorkflowGroup,
   HostSecurityProvisionAntiVirusWorkflowGroup,
   HostSecurityProvisionHidsWorkflowGroup,
-  ManagementToolsRenameWorkflowGroup,
+  ManagementToolsUpdateWorkflowGroup,
   VdcVmInstanceProvisionComplexWorkflowGroup,
   MicrosoftCreateSubscriptionWorkflowGroup
 } from './workflow-groups';
@@ -29,7 +29,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.DedicatedStorageAttachVolumeCluster, DedicatedStorageAttachVolumeClusterWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageCreateAttachVolume, DedicatedStorageCreateAndAttachVolumeWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster, DedicatedStorageCreateAndAttachVolumeClusterWorkflowGroup ],
-  [ WorkflowGroupId.DedicatedStorageIncreaseVolume, DedicatedStorageIncreaseVolumeWorkflowGroup ],
+  [ WorkflowGroupId.DedicatedStorageIncreaseVolumeSize, DedicatedStorageIncreaseVolumeWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageRemoveZoning, DedicatedStorageRemoveZoningWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageUnmaskVolume, DedicatedStorageUnmaskVolumeWorkflowGroup ],
 
@@ -39,7 +39,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.ManagementToolsAddCvm, ManagementToolsAddCvmWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsQueryStatus, ManagementToolsQueryStatusWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsRemoveCvm, ManagementToolsRemoveCvmWorkflowGroup ],
-  [ WorkflowGroupId.ManagementToolsRename, ManagementToolsRenameWorkflowGroup ],
+  [ WorkflowGroupId.ManagementToolsUpdate, ManagementToolsUpdateWorkflowGroup ],
 
   [ WorkflowGroupId.MicrosoftCreateSubscription, MicrosoftCreateSubscriptionWorkflowGroup ],
 
