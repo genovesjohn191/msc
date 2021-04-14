@@ -5,7 +5,7 @@ import {
   ElementRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import {
   DynamicFormFieldDataChangeEventParam,
@@ -77,16 +77,16 @@ export class DynamicSelectChipsComponent extends DynamicSelectChipsFieldComponen
     this.valueChange(this.config.value);
   }
 
-  public search(selectedOption: string): FlatOption[] {
+  public search(selectedOption: string): Observable<FlatOption[]> {
     if (typeof selectedOption === 'object') {
-      return this.config.options.filter(option => option.key.indexOf(option.key) === 0);
+      return of(this.config.options.filter(option => option.key.indexOf(option.key) === 0));
     }
 
     const filterValue = selectedOption.toLowerCase();
 
-    return this.config.options.filter(option =>
+    return of(this.config.options.filter(option =>
       option.value.toLowerCase().indexOf(filterValue) >= 0
-      || option.key.toLowerCase().indexOf(filterValue) >= 0);
+      || option.key.toLowerCase().indexOf(filterValue) >= 0));
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {

@@ -21,13 +21,17 @@ import {
 } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
+  from,
   Observable,
+  of,
   Subject,
   Subscription,
   throwError
 } from 'rxjs';
 import {
   catchError,
+  concatMap,
+  delay,
   map,
   startWith,
   switchMap,
@@ -126,11 +130,26 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
     return typeof item === 'string';
   }
 
+  public addToChips(inputControl: any): void {
+    const myArray = [1];
+
+    from(myArray).pipe(
+      concatMap( item => of(item).pipe( delay(200) ))
+    ).subscribe ( timedItem => {
+        if (isNullOrEmpty(inputControl.value)) return;
+
+        this.add({
+          input: inputControl,
+          value: inputControl.value
+        })
+    });
+  }
+
   public abstract add(event: MatChipInputEvent): void;
 
   public abstract selected(event: MatAutocompleteSelectedEvent): void;
 
-  public abstract search(selectedOption: T | string): FlatOption[];
+  public abstract search(selectedOption: T | string): Observable<FlatOption[]>;
 
   public abstract onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
 
@@ -141,7 +160,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
   protected initializeFiltering(): void {
     this.filteredOptions = this.inputCtrl.valueChanges.pipe(
       startWith(null as void),
-      map((option: string | null) => this.search(option)));
+      switchMap((option: string | null) => this.search(option)));
   }
 
   private _initialize(): void {

@@ -11,7 +11,7 @@ import {
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import {
@@ -210,14 +210,14 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     return options;
   }
 
-  public search(selectedOption: McsServer | string): FlatOption[] {
+  public search(selectedOption: McsServer | string): Observable<FlatOption[]> {
     if (typeof selectedOption === 'object') {
-      return this.config.options.filter(option => option.key.indexOf(option.key) === 0);
+      return of(this.config.options.filter(option => option.key.indexOf(option.key) === 0));
     }
 
     const filterValue = selectedOption.toLowerCase();
 
-    return this.config.options.filter(option => option.value.toLowerCase().indexOf(filterValue) >= 0);
+    return of(this.config.options.filter(option => option.value.toLowerCase().indexOf(filterValue) >= 0));
   }
 
   private _exluded(item: McsServer): boolean {

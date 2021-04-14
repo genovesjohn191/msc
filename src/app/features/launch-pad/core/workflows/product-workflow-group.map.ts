@@ -382,9 +382,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.DedicatedStorageAttachVolume,
         WorkflowGroupId.DedicatedStorageIncreaseVolumeSize,
         WorkflowGroupId.DedicatedStorageUnmaskVolume,
-        WorkflowGroupId.DedicatedStorageRemoveZoning,
-        WorkflowGroupId.DedicatedStorageAttachVolumeCluster,
-        WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster
+        WorkflowGroupId.DedicatedStorageRemoveZoning
       ]
     ],
 

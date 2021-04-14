@@ -10,7 +10,6 @@ export class DynamicSelectBatField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-bat';
   public template: DynamicFormFieldTemplate = 'select-bat';
-  public eventName: DynamicFormFieldOnChangeEvent = 'bat-change';
 
   public useServiceIdAsKey: boolean = false;
 

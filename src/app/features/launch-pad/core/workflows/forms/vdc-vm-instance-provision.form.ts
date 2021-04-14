@@ -32,6 +32,7 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
     new DynamicSelectVdcField({
       key: 'resource',
       label: 'VDC',
+      eventName: 'resource-change',
       dependents: ['os', 'storage', 'network', 'ipAddress'],
       validators: { required: true },
       settings: { preserve: true },
@@ -82,6 +83,7 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
     new DynamicSelectNetworkField({
       key: 'network',
       label: 'Network Name',
+      eventName: 'network-change',
       dependents: ['ipAddress'],
       validators: { required: true }
     }),

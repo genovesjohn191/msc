@@ -11,6 +11,7 @@ import { DynamicInputPasswordComponent } from './input-password/input-password.c
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
 import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zone/select-availability-zone.component';
+import { DynamicSelectAzureSubscriptionComponent } from './select-azure-subscription/select-azure-subscription.component';
 import { DynamicSelectBatComponent } from './select-bat/select-bat.component';
 import { DynamicSelectChipsCompanyComponent } from './select-chips-company/select-chips-company.component';
 import { DynamicSelectChipsTenantComponent } from './select-chips-tenant/select-chips-tenant.component';
@@ -22,6 +23,7 @@ import { DynamicSelectNetworkComponent } from './select-network/select-network.c
 import { DynamicSelectOsComponent } from './select-os/select-os.component';
 import { DynamicSelectRetentionPeriodComponent } from './select-retention-period/select-retention-period.component';
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
+import { DynamicSelectTenantComponent } from './select-tenant/select-tenant.component';
 import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
 import { DynamicSelectVmComponent } from './select-vm/select-vm.component';
 import { DynamicSelectComponent } from './select/select.component';
@@ -34,6 +36,7 @@ const exports: any[] | Type<any> = [
   DynamicInputTextComponent,
   DynamicInputPasswordComponent,
   DynamicInputRandomComponent,
+  DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
   DynamicSelectChipsComponent,
@@ -47,6 +50,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectOsComponent,
   DynamicSelectRetentionPeriodComponent,
   DynamicSelectStorageProfileComponent,
+  DynamicSelectTenantComponent,
   DynamicSelectVdcComponent,
   DynamicSelectVmComponent,
   DynamicSlideToggleComponent
