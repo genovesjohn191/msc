@@ -1737,14 +1737,7 @@
       "description": "Review the charges for this order below.",
       "totalLabel": "<strong>TOTAL</strong>",
       "noLineItems": "No items to display.",
-      "errorLineItems": "Something went wrong while processing your request. Please try again later.",
-      "columnHeaders": {
-        "description": "Description",
-        "monthlyCharge": "Monthly Fee",
-        "hourlyCharge": "Hourly Charge",
-        "oneOffCharge": "One-off Charge",
-        "excessUsageFeePerGB": "Excess Fee Per GB"
-      }
+      "errorLineItems": "Something went wrong while processing your request. Please try again later."
     },
     "deliveryType": {
       "header": "Desired delivery type",
@@ -3019,8 +3012,10 @@
     "destinationInterfaces": "Destination Interfaces",
     "diskScore": "Disk Score",
     "efficiency": "Efficiency",
+    "excessUsageFeePerGB": "Excess Fee Per GB",
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",
+    "hourlyCharge": "Hourly Charge",
     "installedBaseState": "Installed Base State",
     "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
@@ -3037,9 +3032,11 @@
     "media": "Media",
     "mediaSize": "Media Size",
     "memoryScore": "Memory Score",
+    "monthlyFee": "Monthly Fee",
     "name": "Name",
     "notification": "Notification",
     "offerId": "Offer ID",
+    "oneOffCharge": "One-off Charge",
     "operationName": "Operation Name",
     "orderId": "Order ID",
     "osType": "OS Type",
