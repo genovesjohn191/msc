@@ -62,7 +62,7 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
-  public getModules(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformModule[]>> {
+  public getModules(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformModule[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -74,6 +74,7 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/terraform/modules';
     mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -86,9 +87,10 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
-  public getModule(id: any): Observable<McsApiSuccessResponse<McsTerraformModule>> {
+  public getModule(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformModule>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/terraform/modules/${id}`;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -101,7 +103,7 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
-  public getTags(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformTag[]>> {
+  public getTags(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformTag[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -113,6 +115,7 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/terraform/tags';
     mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -125,9 +128,10 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
-  public getTag(id: any): Observable<McsApiSuccessResponse<McsTerraformTag>> {
+  public getTag(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformTag>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/terraform/tags/${id}`;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

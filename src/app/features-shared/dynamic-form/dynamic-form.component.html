@@ -98,6 +98,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-select-tenant-field>
 
+        <mcs-dff-select-chips-terraform-tag-field *ngSwitchCase="'select-chips-terraform-tag'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
+        </mcs-dff-select-chips-terraform-tag-field>
+
         <mcs-dff-select-vdc-field *ngSwitchCase="'select-vdc'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-select-vdc-field>

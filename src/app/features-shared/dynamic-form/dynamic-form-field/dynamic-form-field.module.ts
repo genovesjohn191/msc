@@ -15,6 +15,7 @@ import { DynamicSelectAzureSubscriptionComponent } from './select-azure-subscrip
 import { DynamicSelectBatComponent } from './select-bat/select-bat.component';
 import { DynamicSelectChipsCompanyComponent } from './select-chips-company/select-chips-company.component';
 import { DynamicSelectChipsTenantComponent } from './select-chips-tenant/select-chips-tenant.component';
+import { DynamicSelectChipsTerraformTagComponent } from './select-chips-terraform-tag/select-chips-terraform-tag.component';
 import { DynamicSelectChipsVmComponent } from './select-chips-vm/select-chips-vm.component';
 import { DynamicSelectChipsComponent } from './select-chips/select-chips.component';
 import { DynamicSelectGroupComponent } from './select-group/select-group.component';
@@ -42,6 +43,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectChipsComponent,
   DynamicSelectChipsCompanyComponent,
   DynamicSelectChipsTenantComponent,
+  DynamicSelectChipsTerraformTagComponent,
   DynamicSelectChipsVmComponent,
   DynamicSelectComponent,
   DynamicSelectGroupComponent,

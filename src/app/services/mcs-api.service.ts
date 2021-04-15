@@ -1872,8 +1872,8 @@ export class McsApiService {
     );
   }
 
-  public getTerraformModules(query?: McsQueryParam): Observable<McsApiCollection<McsTerraformModule>> {
-    return this._terraformApi.getModules(query).pipe(
+  public getTerraformModules(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsTerraformModule>> {
+    return this._terraformApi.getModules(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformModules'))
       ),
@@ -1881,8 +1881,8 @@ export class McsApiService {
     );
   }
 
-  public getTerraformModule(id: string): Observable<McsTerraformModule> {
-    return this._terraformApi.getModule(id).pipe(
+  public getTerraformModule(id: string, optionalHeaders?: Map<string, any>): Observable<McsTerraformModule> {
+    return this._terraformApi.getModule(id, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformModule'))
       ),
@@ -1890,8 +1890,8 @@ export class McsApiService {
     );
   }
 
-  public getTerraformTags(query?: McsQueryParam): Observable<McsApiCollection<McsTerraformTag>> {
-    return this._terraformApi.getTags(query).pipe(
+  public getTerraformTags(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsTerraformTag>> {
+    return this._terraformApi.getTags(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTags'))
       ),
@@ -1899,8 +1899,8 @@ export class McsApiService {
     );
   }
 
-  public getTerraformTag(id: string): Observable<McsTerraformTag> {
-    return this._terraformApi.getTag(id).pipe(
+  public getTerraformTag(id: string, optionalHeaders?: Map<string, any>): Observable<McsTerraformTag> {
+    return this._terraformApi.getTag(id, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTag'))
       ),
