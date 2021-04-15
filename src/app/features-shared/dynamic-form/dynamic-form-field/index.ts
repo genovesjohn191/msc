@@ -14,6 +14,7 @@ export * from './select-bat/select-bat';
 export * from './select-chips/select-chips';
 export * from './select-chips-company/select-chips-company';
 export * from './select-chips-tenant/select-chips-tenant';
+export * from './select-chips-terraform-module/select-chips-terraform-module';
 export * from './select-chips-terraform-tag/select-chips-terraform-tag';
 export * from './select-chips-vm/select-chips-vm';
 export * from './select-group/select-group';

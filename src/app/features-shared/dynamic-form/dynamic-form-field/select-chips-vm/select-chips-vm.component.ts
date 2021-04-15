@@ -59,7 +59,6 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
   public config: DynamicSelectChipsVmField;
 
   private _companyId: string = '';
-  private _serviceId: string = '';
 
   private _serviceIdMapping: Map<string, string> = new Map<string, string>();
 
@@ -156,16 +155,12 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
         this._companyId = params.value;
         this.retrieveOptions();
         break;
-
-      case 'service-id-change':
-        this._serviceId = params.value;
-        this.filterOptions();
-        break;
     }
   }
 
   protected callService(): Observable<McsServer[]> {
     // Force the control to reselect the initial value
+    this.config.value = [];
     this.writeValue([]);
     // Force the form to check the validty of the control
     this.valueChange([]);
@@ -222,23 +217,29 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
-    let selectedValue: McsServer = this.config.useServiceIdAsKey
-      ? this.collection.find((item) => item.serviceId === value)
-      : this.collection.find((item) => item.id === value);
+    let singleValue: McsServer;
+    let multipleValue: McsServer[] = [];
+    if (!isNullOrEmpty(value)) {
+      if (this.config.maxItems === 1) {
+        singleValue = this.config.useServiceIdAsKey
+        ? this.collection.find((item) => item.serviceId === value[0].value)
+        : this.collection.find((item) => item.id === value[0].value);
+
+      } else {
+        value.forEach((item) => {
+          multipleValue.push(item.value);
+        });
+      }
+    }
 
     this.dataChange.emit({
-      value: selectedValue,
+      value: this.config.maxItems === 1 ? singleValue : multipleValue,
       eventName,
       dependents
     });
   }
 
   private _exluded(item: McsServer): boolean {
-    // Filter by service ID
-    if (!isNullOrEmpty(this._serviceId) && item.serviceId !== this._serviceId) {
-      return true;
-    }
-
     // Filter no service ID if service ID is used as key
     if (this.config.useServiceIdAsKey && isNullOrEmpty(item.serviceId)) {
       return true;

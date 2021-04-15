@@ -66,6 +66,7 @@ export type DynamicFormFieldType =
   | 'select-chips'
   | 'select-chips-company'
   | 'select-chips-tenant'
+  | 'select-chips-terraform-module'
   | 'select-chips-terraform-tag'
   | 'select-chips-vm'
   | 'select'
@@ -93,6 +94,7 @@ export type DynamicFormFieldTemplate =
   | 'select-chips'
   | 'select-chips-company'
   | 'select-chips-tenant'
+  | 'select-chips-terraform-module'
   | 'select-chips-terraform-tag'
   | 'select-chips-vm'
   | 'select'
@@ -117,7 +119,7 @@ export type DynamicFormFieldOnChangeEvent =
   | 'management-name-change'
   | 'network-change'
   | 'resource-change'
-  | 'service-id-change';
+  | 'terraform-module-change';
 
 export type DynamicFormFieldInputType =
   ''

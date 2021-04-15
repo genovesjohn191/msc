@@ -1,0 +1,52 @@
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [matBadge]="hasError ? '!' : ''"
+  matBadgePosition="before"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  [matTooltip]="hasError ? 'Failed to load options' : ''"
+  matTooltipPosition="above"
+  (focusout)="addToChips(valueInput)"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ label }} {{ required ? ' *' : ''}}</mat-label>
+
+  <mat-chip-list class="chip" #chipList cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="drop($event)">
+
+    <mat-chip
+      class="box"
+      *ngFor="let item of config.value"
+      [selectable]="selectable"
+      [removable]="removable"
+      (removed)="remove(item)"
+      cdkDrag>
+      {{ isString(item) ? item : item.label }}
+      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+    </mat-chip>
+
+    <input
+      #valueInput type="text"
+      [mcsId]="id"
+      [required]="required"
+      [disabled]="disabled"
+      [placeholder]="config.placeholder"
+      [formControl]="inputCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)">
+
+      <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+  </mat-chip-list>
+
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-optgroup *ngFor="let group of filteredOptions | async" [label]="group.name" [disabled]="group.disabled">
+      <mat-option *ngFor="let option of group.options" [value]="option">
+        <small>{{ option.value }}</small>
+      </mat-option>
+    </mat-optgroup>
+  </mat-autocomplete>
+
+</mat-form-field>

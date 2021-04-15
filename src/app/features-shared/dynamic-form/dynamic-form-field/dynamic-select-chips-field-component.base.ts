@@ -45,7 +45,8 @@ import {
 import { DynamicFieldComponentBase } from './dynamic-field-component.base';
 import {
   DynamicFormFieldDataChangeEventParam,
-  FlatOption
+  FlatOption,
+  GroupedOption
 } from '../dynamic-form-field-config.interface';
 import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
 
@@ -65,7 +66,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
   public removable = true;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public inputCtrl = new FormControl();
-  public filteredOptions: Observable<FlatOption[]>;
+  public filteredOptions: Observable<FlatOption[] | GroupedOption[]>;
 
   protected collection: T[] = [];
   protected destroySubject: Subject<void> = new Subject<void>();
@@ -149,13 +150,13 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
 
   public abstract selected(event: MatAutocompleteSelectedEvent): void;
 
-  public abstract search(selectedOption: T | string): Observable<FlatOption[]>;
+  public abstract search(selectedOption: T | string): Observable<FlatOption[] | GroupedOption[]>;
 
   public abstract onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
 
   protected abstract callService(): Observable<T[]>;
 
-  protected abstract filter(collection: T[]): FlatOption[];
+  protected abstract filter(collection: T[]): FlatOption[] | GroupedOption[];
 
   protected initializeFiltering(): void {
     this.filteredOptions = this.inputCtrl.valueChanges.pipe(
