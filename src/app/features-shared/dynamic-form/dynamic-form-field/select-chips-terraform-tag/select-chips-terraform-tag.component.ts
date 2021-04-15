@@ -23,6 +23,7 @@ import {
 } from '@app/utilities';
 import {
   McsQueryParam,
+  McsTerraformModule,
   McsTerraformTag
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -33,6 +34,7 @@ import {
 import { DynamicSelectChipsTerraformTagField } from './select-chips-terraform-tag';
 import {
   DynamicFormFieldDataChangeEventParam,
+  DynamicFormFieldOnChangeEvent,
   FlatOption
 } from '../../dynamic-form-field-config.interface';
 
@@ -61,8 +63,10 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
   public config: DynamicSelectChipsTerraformTagField;
 
   private _companyId: string = '';
+  private _terraformModule: McsTerraformModule;
 
   private _slugIdMapping: Map<string, string> = new Map<string, string>();
+  private _searchKeyword: string = '';
 
   constructor(
     private _apiService: McsApiService,
@@ -157,11 +161,17 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
         this._companyId = params.value;
         this.retrieveOptions();
         break;
+
+      case 'terraform-module-change':
+        this._terraformModule = params.value as McsTerraformModule;
+        this.retrieveOptions();
+        break;
     }
   }
 
   protected callService(): Observable<McsTerraformTag[]> {
     // Force the control to reselect the initial value
+    this.config.value = [];
     this.writeValue([]);
     // Force the form to check the validty of the control
     this.valueChange([]);
@@ -213,15 +223,48 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
       return of(this.config.options.filter(option => option.key.indexOf(option.key) === 0));
     }
 
-    const filterValue = selectedOption.toLowerCase();
+    this._searchKeyword = selectedOption.toLowerCase();
+    return of(this.filter(this.collection));
+  }
 
-    return of(this.config.options.filter(option => option.value.toLowerCase().indexOf(filterValue) >= 0));
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    let singleValue: McsTerraformTag;
+    let multipleValue: McsTerraformTag[] = [];
+    if (!isNullOrEmpty(value)) {
+      if (this.config.maxItems === 1) {
+        singleValue = this.config.useSlugIdAsKey
+        ? this.collection.find((item) => item.slugId === value[0].value)
+        : this.collection.find((item) => item.id === value[0].value);
+
+      } else {
+        value.forEach((item) => {
+          multipleValue.push(item.value);
+        });
+      }
+    }
+
+    this.dataChange.emit({
+      value: this.config.maxItems === 1 ? singleValue : multipleValue,
+      eventName,
+      dependents
+    });
   }
 
   private _exluded(item: McsTerraformTag): boolean {
-    // Filter no service ID if service ID is used as key
+    // Filter no slug ID if slug ID is used as key
     if (this.config.useSlugIdAsKey && isNullOrEmpty(item.slugId)) {
       return true;
+    }
+
+    // Filter by module
+    if (!isNullOrEmpty(this._terraformModule) && item.module !== this._terraformModule.id) {
+      return true;
+    }
+
+    // Search filter
+    if (!isNullOrEmpty(this._searchKeyword)) {
+      let nameHasKeyword: boolean = item.name.toLowerCase().indexOf(this._searchKeyword) >= 0;
+      if (!nameHasKeyword) { return true; }
     }
 
     return false;

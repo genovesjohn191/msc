@@ -12,28 +12,42 @@ import {
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import {
+  map,
+  takeUntil
+} from 'rxjs/operators';
 
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 import {
   McsQueryParam,
-  McsTenant
+  McsTerraformModule,
+  McsTerraformTag
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   DynamicSelectChipsFieldComponentBase,
   DynamicSelectChipsValue
 } from '../dynamic-select-chips-field-component.base';
-import { DynamicSelectChipsTenantField } from './select-chips-tenant';
 import {
   DynamicFormFieldDataChangeEventParam,
   DynamicFormFieldOnChangeEvent,
-  FlatOption
+  FlatOption,
+  GroupedOption
 } from '../../dynamic-form-field-config.interface';
+import { DynamicSelectChipsTerraformModuleField } from './select-chips-terraform-module';
+
+const groupMapping: Map<string, string> = new Map([
+  ['TRM','Resource Modules'],
+  ['TSM','Solution Modules'],
+  ['Custom','Customer-specific modules'],
+]);
 
 @Component({
-  selector: 'mcs-dff-select-chips-tenant-field',
-  templateUrl: '../shared-template/select-chips.component.html',
+  selector: 'mcs-dff-select-chips-terraform-module-field',
+  templateUrl: '../shared-template/select-chips-group.component.html',
   styleUrls: [
     '../dynamic-form-field.scss',
     '../shared-template/select-chips.component.scss'
@@ -41,7 +55,7 @@ import {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DynamicSelectChipsTenantComponent),
+      useExisting: forwardRef(() => DynamicSelectChipsTerraformModuleComponent),
       multi: true
     }
   ],
@@ -49,15 +63,16 @@ import {
     '(blur)': 'onTouched()'
   }
 })
-export class DynamicSelectChipsTenantComponent extends DynamicSelectChipsFieldComponentBase<McsTenant> {
+export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChipsFieldComponentBase<McsTerraformModule> {
   @ViewChild('valueInput') valueInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  public config: DynamicSelectChipsTenantField;
+  public config: DynamicSelectChipsTerraformModuleField;
 
   private _companyId: string = '';
 
-  private _tenantIdMapping: Map<string, string> = new Map<string, string>();
+  private _slugIdMapping: Map<string, string> = new Map<string, string>();
+  private _searchKeyword: string = '';
 
   constructor(
     private _apiService: McsApiService,
@@ -85,9 +100,9 @@ export class DynamicSelectChipsTenantComponent extends DynamicSelectChipsFieldCo
         translatedValue.push(chip);
       } else {
         // Assumes value is tenant ID and search via map
-        if (this._tenantIdMapping.has(chip.value)) {
+        if (this._slugIdMapping.has(chip.value)) {
           chip.label = chip.value;
-          chip.value = this.config.useTenantIdAsKey ? chip.value : this._tenantIdMapping.get(chip.value);
+          chip.value = this.config.useSlugIdAsKey ? chip.value : this._slugIdMapping.get(chip.value);
 
         // Check if we can allow custom input after service ID search has failed
         } else if (this.config.allowCustomInput) {
@@ -155,7 +170,7 @@ export class DynamicSelectChipsTenantComponent extends DynamicSelectChipsFieldCo
     }
   }
 
-  protected callService(): Observable<McsTenant[]> {
+  protected callService(): Observable<McsTerraformModule[]> {
     // Force the control to reselect the initial value
     this.config.value = [];
     this.writeValue([]);
@@ -168,30 +183,45 @@ export class DynamicSelectChipsTenantComponent extends DynamicSelectChipsFieldCo
 
     let param = new McsQueryParam();
     param.pageSize = 2000;
-    return this._apiService.getTenants(param, optionalHeaders)
+
+    return this._apiService.getTerraformModules(param, optionalHeaders)
     .pipe(
       takeUntil(this.destroySubject),
       map((response) => response && response.collection));
   }
 
-  protected filter(collection: McsTenant[]): FlatOption[] {
-    let options: FlatOption[] = [];
-    this._tenantIdMapping.clear();
+  protected filter(collection: McsTerraformModule[]): GroupedOption[] {
+    let groupedOptions: GroupedOption[] = [];
+    this._slugIdMapping.clear();
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
 
-      // Build a service ID map so we can map with service IDs to correct key when initializing the value
-      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.tenantId) && !this._tenantIdMapping.has(item.tenantId);
+      // Build a slug ID map so we can map with service IDs to correct key when initializing the value
+      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.slugId) && !this._slugIdMapping.has(item.slugId);
       if (uniqueNonEmptyServiceId) {
-        this._tenantIdMapping.set(item.tenantId, item.id);
+        this._slugIdMapping.set(item.slugId, item.id);
       }
 
-      let key = this.config.useTenantIdAsKey ? item.tenantId : item.id;
-      let value = item.name;
-      if (item.tenantId) { value += ` (${item.tenantId})`; }
+      let groupName = groupMapping.has(item.projectKey) ? groupMapping.get(item.projectKey) : groupMapping.get('Custom');
+      let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
 
-      options.push({ type: 'flat', key, value });
+      let key = this.config.useSlugIdAsKey ? item.slugId : item.id;
+      let value = item.name;
+
+      let option = { key, value } as FlatOption;
+
+      if (existingGroup) {
+        // Add option to existing group
+        existingGroup.options.push(option);
+      } else {
+        // Add option to new group
+        groupedOptions.push({
+          type: 'group',
+          name: groupName,
+          options: [option]
+        });
+      }
     });
 
     if (!isNullOrEmpty(this.config.initialValue)) {
@@ -200,27 +230,25 @@ export class DynamicSelectChipsTenantComponent extends DynamicSelectChipsFieldCo
       // Force the form to check the validty of the control
       this.valueChange(this.config.initialValue);
     }
-
-    return options;
+    return groupedOptions;
   }
 
-  public search(selectedOption: McsTenant | string): Observable<FlatOption[]> {
+  public search(selectedOption: McsTerraformModule | string): Observable<GroupedOption[]> {
     if (typeof selectedOption === 'object') {
-      return of(this.config.options.filter(option => option.key.indexOf(option.key) === 0));
+      return of(this.config.options.filter(option => option.name?.indexOf(option.name) === 0));
     }
 
-    const filterValue = selectedOption.toLowerCase();
-
-    return of(this.config.options.filter(option => option.value.toLowerCase().indexOf(filterValue) >= 0));
+    this._searchKeyword = selectedOption.toLowerCase();
+    return of(this.filter(this.collection));
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
-    let singleValue: McsTenant;
-    let multipleValue: McsTenant[] = [];
+    let singleValue: McsTerraformModule;
+    let multipleValue: McsTerraformModule[] = [];
     if (!isNullOrEmpty(value)) {
       if (this.config.maxItems === 1) {
-        singleValue = this.config.useTenantIdAsKey
-        ? this.collection.find((item) => item.tenantId === value[0].value)
+        singleValue = this.config.useSlugIdAsKey
+        ? this.collection.find((item) => item.slugId === value[0].value)
         : this.collection.find((item) => item.id === value[0].value);
 
       } else {
@@ -237,10 +265,16 @@ export class DynamicSelectChipsTenantComponent extends DynamicSelectChipsFieldCo
     });
   }
 
-  private _exluded(item: McsTenant): boolean {
+  private _exluded(item: McsTerraformModule): boolean {
     // Filter no service ID if service ID is used as key
-    if (this.config.useTenantIdAsKey && isNullOrEmpty(item.tenantId)) {
+    if (this.config.useSlugIdAsKey && isNullOrEmpty(item.slugId)) {
       return true;
+    }
+
+    // Search filter
+    if (!isNullOrEmpty(this._searchKeyword)) {
+      let nameHasKeyword: boolean = item.name.toLowerCase().indexOf(this._searchKeyword) >= 0;
+      if (!nameHasKeyword) { return true; }
     }
 
     return false;

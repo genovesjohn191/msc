@@ -189,6 +189,7 @@ export class DynamicSelectChipsCompanyComponent extends DynamicSelectChipsFieldC
 
   protected callService(): Observable<McsCompany[]> {
     // Force the control to reselect the initial value
+    this.config.value = [];
     this.writeValue([]);
     // Force the form to check the validty of the control
     this.valueChange([]);

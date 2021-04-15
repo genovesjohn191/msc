@@ -49,7 +49,6 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
 
   // Filter variables
   private _companyId: string = '';
-  private _serviceId: string = '';
 
   private _serviceIdMapping: Map<string, string> = new Map<string, string>();
 
@@ -66,11 +65,6 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
       case 'company-change':
         this._companyId = params.value;
         this.retrieveOptions();
-        break;
-
-      case 'service-id-change':
-        this._serviceId = params.value;
-        this.filterOptions();
         break;
     }
   }
@@ -108,14 +102,13 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
     collection.forEach((item) => {
      if (this._exluded(item)) { return; }
 
-      let groupName = serviceTypeText[item.serviceType];
-
       // Build a service ID map so we can map with service IDs to correct key when initializing the value
       let uniqueNonEmptyServiceId = !isNullOrEmpty(item.serviceId) && !this._serviceIdMapping.has(item.serviceId);
       if (uniqueNonEmptyServiceId) {
         this._serviceIdMapping.set(item.serviceId, item.id);
       }
 
+      let groupName = serviceTypeText[item.serviceType];
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
 
       let key = this.config.useServiceIdAsKey ? item.serviceId : item.id;
@@ -149,11 +142,6 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
   }
 
   private _exluded(item: McsServer): boolean {
-    // Filter by service ID
-    if (!isNullOrEmpty(this._serviceId) && item.serviceId !== this._serviceId) {
-      return true;
-    }
-
     // Filter no service ID if service ID is used as key
     if (this.config.useServiceIdAsKey && isNullOrEmpty(item.serviceId)) {
       return true;
