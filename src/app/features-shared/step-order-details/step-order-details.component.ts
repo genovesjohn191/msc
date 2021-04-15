@@ -33,11 +33,12 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import {
-  McsTableDataSource,
   CoreValidators,
   IMcsDataChange,
   McsAuthenticationIdentity,
-  McsAccessControlService
+  McsAccessControlService,
+  McsMatTableContext,
+  McsTableDataSource2
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -46,7 +47,6 @@ import {
   isNullOrUndefined,
   createObject,
   getCurrentDate,
-  addDaysToDate,
   addHoursToDate,
   addMonthsToDate
 } from '@app/utilities';
@@ -64,11 +64,13 @@ import {
   McsOrderCharge,
   DeliveryType,
   WorkflowStatus,
-  McsPermission
+  McsPermission,
+  McsFilterInfo
 } from '@app/models';
 import {
   WizardStepComponent,
-  McsFormGroupDirective
+  McsFormGroupDirective,
+  ColumnFilter
 } from '@app/shared';
 import { McsApiService } from '@app/services';
 import { OrderDetails } from './order-details';
@@ -133,9 +135,10 @@ export class StepOrderDetailsComponent
   public minimumScheduleDate$: Observable<Date>;
 
   public workflowAction: OrderWorkflowAction;
-  public orderDatasource: McsTableDataSource<McsOrderItem>;
+  public dataSource: McsTableDataSource2<McsOrderItem>;
   public orderDataColumns: string[] = [];
   public dataChangeStatus: DataStatus;
+  public orderItems: McsOrderItem[] = [];
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -155,9 +158,7 @@ export class StepOrderDetailsComponent
     private _accessControlService: McsAccessControlService,
     private _translateService: TranslateService
   ) {
-    this.orderDatasource = new McsTableDataSource([]);
     this._registerFormGroup();
-    this._setDataColumns();
   }
 
   public get isImpersonating(): boolean {
@@ -450,21 +451,12 @@ export class StepOrderDetailsComponent
   }
 
   /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.orderDataColumns = Object.keys(
-      this._translate.instant('orderDetailsStep.orderDetails.columnHeaders')
-    );
-    if (isNullOrEmpty(this.orderDataColumns)) {
-      throw new Error('Column definition for order charges was not defined');
-    }
-  }
-
-  /**
    * Initializes the order data source
    */
   private _initializeOrderDatasource(): void {
+    this.dataSource = new McsTableDataSource2(this._setOrderItemsDataTypeToMatTableContext.bind(this));
+    this._setOrderDetailsTableColumns();
+
     if (isNullOrEmpty(this.order)) { return; }
 
     let orderItems = Object.assign([], this.order.items);
@@ -477,7 +469,49 @@ export class StepOrderDetailsComponent
         excessUsageFeePerGB: getSafeProperty(this.order, (obj) => obj.charges.excessUsageFeePerGB),
       }))
     });
-    this.orderDatasource.updateDatasource(orderItems);
+
+    this.orderItems = orderItems;
+    this.dataSource.updateDatasource(this._setOrderItemsDataTypeToMatTableContext.bind(this));
+  }
+
+  private _setOrderDetailsTableColumns(): void {
+    let tableColumns = [
+      createObject(McsFilterInfo, {
+        value: true,
+        exclude: true,
+        id: 'description'
+      }),
+      createObject(McsFilterInfo, {
+        value: (typeof this.order?.charges?.monthly === 'number') ? true : false,
+        exclude: true,
+        id: 'monthlyFee'
+      }),
+      createObject(McsFilterInfo, {
+        value: (typeof this.order?.charges?.hourly === 'number') ? true : false,
+        exclude: true,
+        id: 'hourlyCharge'
+      }),
+      createObject(McsFilterInfo, {
+        value: (typeof this.order?.charges?.oneOff === 'number') ? true : false,
+        exclude: true,
+        id: 'oneOffCharge'
+      }),
+      createObject(McsFilterInfo, {
+        value: (typeof this.order?.charges?.excessUsageFeePerGB === 'number') ? true : false,
+        exclude: true,
+        id: 'excessUsageFeePerGB'
+      }),
+    ]
+    let columnInfo: ColumnFilter = {
+      filters: tableColumns,
+      filterPredicate: undefined,
+      filtersChange: new BehaviorSubject(tableColumns)
+    }
+    this.dataSource.registerColumnFilter(columnInfo);
+  }
+
+  private _setOrderItemsDataTypeToMatTableContext(): Observable<McsMatTableContext<McsOrderItem>> {
+    return of(new McsMatTableContext(this.orderItems, this.orderItems?.length));
   }
 
   /**

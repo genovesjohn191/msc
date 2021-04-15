@@ -103,71 +103,70 @@
         </mcs-busy-ribbon>
 
         <ng-container *ngIf="!isUpdatingCharges">
-          <mcs-table [dataSource]="orderDatasource">
+          <table mat-table [dataSource]="dataSource">
             <!-- Description Column -->
-            <ng-container mcsColumnDef="description">
-              <mcs-header-cell *mcsHeaderCellDef>
-                {{ 'orderDetailsStep.orderDetails.columnHeaders.description' | translate }}
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'columnHeader.description' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row" text-wrap>
                 <span [innerHTML]="row.description"></span>
-              </mcs-data-cell>
+              </td>
             </ng-container>
 
             <!-- Monthly Charge Column -->
-            <ng-container mcsColumnDef="monthlyCharge" *ngIf="(chargesState$ | async)?.monthly">
-              <mcs-header-cell *mcsHeaderCellDef>
-                {{ 'orderDetailsStep.orderDetails.columnHeaders.monthlyCharge' | translate }}
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.monthly | mcsIsNotNullOrUndefined)">
+            <ng-container matColumnDef="monthlyFee">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'columnHeader.monthlyFee' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row" [mcsGreyedOut]="!(row.charges?.monthly | mcsIsNotNullOrUndefined)">
                 {{ row.charges?.monthlyInCurrency }}
-              </mcs-data-cell>
+              </td>
             </ng-container>
 
             <!-- Hourly Charge Column -->
-            <ng-container mcsColumnDef="hourlyCharge" *ngIf="(chargesState$ | async)?.hourly">
-              <mcs-header-cell *mcsHeaderCellDef>
-                {{ 'orderDetailsStep.orderDetails.columnHeaders.hourlyCharge' | translate }}
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.hourly | mcsIsNotNullOrUndefined)">
+            <ng-container matColumnDef="hourlyCharge">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'columnHeader.hourlyCharge' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row" [mcsGreyedOut]="!(row.charges?.hourly | mcsIsNotNullOrUndefined)">
                 {{ row.charges?.hourlyInCurrency }}
-              </mcs-data-cell>
+              </td>
             </ng-container>
 
             <!-- One-off Charge Column -->
-            <ng-container mcsColumnDef="oneOffCharge" *ngIf="(chargesState$ | async)?.oneOff">
-              <mcs-header-cell *mcsHeaderCellDef>
-                {{ 'orderDetailsStep.orderDetails.columnHeaders.oneOffCharge' | translate }}
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.oneOff | mcsIsNotNullOrUndefined)">
+            <ng-container matColumnDef="oneOffCharge">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'columnHeader.oneOffCharge' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row" [mcsGreyedOut]="!(row.charges?.oneOff | mcsIsNotNullOrUndefined)">
                 {{ row.charges?.oneOffInCurrency }}
-              </mcs-data-cell>
+              </td>
             </ng-container>
 
             <!-- Excess Usage Fee Per GB Column -->
-            <ng-container mcsColumnDef="excessUsageFeePerGB" *ngIf="(chargesState$ | async)?.excessUsagePerGb">
-              <mcs-header-cell *mcsHeaderCellDef>
-                {{ 'orderDetailsStep.orderDetails.columnHeaders.excessUsageFeePerGB' | translate }}
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.excessUsageFeePerGB | mcsIsNotNullOrUndefined)">
+            <ng-container matColumnDef="excessUsageFeePerGB">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'columnHeader.excessUsageFeePerGB' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row" [mcsGreyedOut]="!(row.charges?.excessUsageFeePerGB | mcsIsNotNullOrUndefined)">
                 {{ row.charges?.excessUsageFeePerGbInCurrency }}
-              </mcs-data-cell>
+              </td>
             </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+            <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+          </table>
 
-            <!-- Data Status Integration -->
-            <ng-container mcsDataStatusDef>
-              <mcs-data-empty *mcsDataEmptyDef>
-                <span>{{ 'orderDetailsStep.orderDetails.noLineItems' | translate }} </span>
-              </mcs-data-empty>
-              <mcs-data-error *mcsDataErrorDef>
-                <span>{{ 'orderDetailsStep.orderDetails.errorLineItems' | translate }}</span>
-              </mcs-data-error>
-            </ng-container>
-
-            <!-- Header and Data row -->
-            <mcs-header-row *mcsHeaderRowDef="orderDataColumns"></mcs-header-row>
-            <mcs-data-row *mcsDataRowDef="let row; columns: orderDataColumns;"></mcs-data-row>
-          </mcs-table>
+          <!-- Table Statuses -->
+          <mcs-item orientation="block" style="margin: 0;">
+            <div *ngIf="dataSource?.hasNoRecords$ | async" text-center style="padding-bottom: 15px">
+              <span>{{ 'orderDetailsStep.orderDetails.noLineItems' | translate }} </span>
+            </div>
+            <div *ngIf="dataSource?.hasError$ | async" text-center style="padding-bottom: 15px">
+              <span>{{ 'orderDetailsStep.orderDetails.errorLineItems' | translate }}</span>
+            </div>
+          </mcs-item>
         </ng-container>
       </section>
 
