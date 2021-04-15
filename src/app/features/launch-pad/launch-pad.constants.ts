@@ -1,15 +1,17 @@
 import { Routes } from '@angular/router';
 import { RouteKey } from '@app/models';
+
+import { AzureDeploymentCreateComponent } from './deployments/azure-deployment-create/azure-deployment-create.component';
+import { AzureDeploymentsComponent } from './deployments/azure-deployments.component';
 import { LaunchPadGuard } from './launch-pad.guard';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
-import { DeploymentCreateAzureComponent } from './deployments/azure-deployment-create/azure-deployment-create.component';
 import {
   companyIdParam,
-  LaunchPadWorkflowLaunchComponent,
   productIdParam,
   serviceIdParam,
   sourceParam,
-  worklowGroupIdParam
+  worklowGroupIdParam,
+  LaunchPadWorkflowLaunchComponent
 } from './workflows/launch-pad-workflow-launch.component';
 import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.component';
 
@@ -36,8 +38,14 @@ export const launchPadRoutes: Routes = [
     canActivate: [ LaunchPadGuard ]
   },
   {
+    path: 'deployments',
+    component: AzureDeploymentsComponent,
+    data: { routeId: RouteKey.LaunchPadDeployments },
+    canActivate: [ LaunchPadGuard ]
+  },
+  {
     path: 'deployments/create',
-    component: DeploymentCreateAzureComponent,
+    component: AzureDeploymentCreateComponent,
     data: { routeId: RouteKey.LaunchPadDeploymentCreate },
     canActivate: [ LaunchPadGuard ]
   },

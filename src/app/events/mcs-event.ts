@@ -15,11 +15,13 @@ import { DataChangeOrdersEvent } from './items/data-change-orders.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
 import { DataChangeServersEvent } from './items/data-change-servers.event';
 import { DataChangeSystemMessagesEvent } from './items/data-change-system-messages.event';
+import { DataChangeTerraformDeploymentsEvent } from './items/data-change-terraform-deployments.event';
 import { DataChangeTicketsEvent } from './items/data-change-tickets.event';
 import { DataChangeToolsEvent } from './items/data-change-tools.event';
 import { DataClearMediaEvent } from './items/data-clear-media.event';
 import { DataClearServersEvent } from './items/data-clear-servers.event';
 import { DataClearSystemMessageEvent } from './items/data-clear-system-messages.event';
+import { DataClearTerraformDeploymentsEvent } from './items/data-clear-terraform-deployments.event';
 import { EntityActiveEvent } from './items/entity-active.event';
 import { EntityClearStateEvent } from './items/entity-clear-state.event';
 import { EntityCreatedEvent } from './items/entity-created.event';
@@ -133,9 +135,12 @@ export class McsEvent {
   public static dataChangeAzureManagedServices = new DataChangeAzureManagedServicesEvent();
   public static dataChangeDnsListing = new DnsListingEvent();
   public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
+  public static dataChangeTerraformDeployments = new DataChangeTerraformDeploymentsEvent();
+
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();
   public static dataClearSystemMessage = new DataClearSystemMessageEvent();
+  public static dataClearTerraformDeployments = new DataClearTerraformDeploymentsEvent();
 
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();
