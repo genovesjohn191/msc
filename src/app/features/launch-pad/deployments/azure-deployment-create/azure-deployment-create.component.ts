@@ -10,7 +10,8 @@ import {
   DynamicSelectChipsCompanyField,
   DynamicSelectChipsField,
   DynamicSelectField,
-  DynamicSelectTenantField
+  DynamicSelectTenantField,
+  DynamicSelectChipsTerraformTagField
 } from '@app/features-shared/dynamic-form';
 import { DynamicSelectAzureSubscriptionField } from '@app/features-shared/dynamic-form/dynamic-form-field/select-azure-subscription/select-azure-subscription';
 
@@ -36,7 +37,7 @@ export class DeploymentCreateAzureComponent implements IMcsNavigateAwayGuard {
       allowCustomInput: true,
       maxItems: 1,
       eventName: 'company-change',
-      dependents: ['tenant', 'subscription']
+      dependents: ['tenant', 'subscription', 'tag']
     }),
     new DynamicSelectTenantField({
       key: 'tenant',
@@ -64,15 +65,12 @@ export class DeploymentCreateAzureComponent implements IMcsNavigateAwayGuard {
       ],
       hint: 'Hint for module goes here...'
     }),
-    new DynamicSelectField({
+    new DynamicSelectChipsTerraformTagField({
       key: 'tag',
       label: 'Tag',
-      // validators: { required: true },
-      options: [
-        { key: 'key1', value: 'value1'},
-        { key: 'key2', value: 'value2'},
-      ],
-      hint: 'Hint for tag goes here...'
+      placeholder: 'Search for a module tag...',
+      validators: { required: true },
+      maxItems: 1
     })
   ]
 

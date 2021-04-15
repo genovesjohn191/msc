@@ -19,7 +19,8 @@ import {
 import {
   DynamicFormFieldDataChangeEventParam,
   GroupedOption,
-  FlatOption
+  FlatOption,
+  DynamicFormFieldOnChangeEvent
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectOsField } from './select-os';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';

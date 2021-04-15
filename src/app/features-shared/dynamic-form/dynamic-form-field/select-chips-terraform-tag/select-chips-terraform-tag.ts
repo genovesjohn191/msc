@@ -8,15 +8,15 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectChipsValue } from '../dynamic-select-chips-field-component.base';
 
-export class DynamicSelectChipsTenantField extends DynamicFormFieldConfigBase {
+export class DynamicSelectChipsTerraformTagField extends DynamicFormFieldConfigBase {
   // Overrides
-  public type: DynamicFormFieldType = 'select-chips-tenant';
-  public template: DynamicFormFieldTemplate = 'select-chips-tenant';
+  public type: DynamicFormFieldType = 'select-chips-terraform-tag';
+  public template: DynamicFormFieldTemplate = 'select-chips-terraform-tag';
   public value?: DynamicSelectChipsValue[];
 
   public allowDuplicates: boolean = false;
   public options: FlatOption[] = [];
-  public useTenantIdAsKey: boolean = false;
+  public useSlugIdAsKey: boolean = false;
   public allowCustomInput: boolean = false;
   public maxItems: number = 0; // less than 1 is considered infinite
 
@@ -34,12 +34,12 @@ export class DynamicSelectChipsTenantField extends DynamicFormFieldConfigBase {
     settings?: DynamicFormControlSettings;
     allowCustomInput?: boolean;
     maxItems?: number;
-    useTenantIdAsKey?: boolean;
+    useSlugIdAsKey?: boolean;
   }) {
     super(options);
 
     this.allowCustomInput = options.allowCustomInput || false;
     this.maxItems = options.maxItems || 0;
-    this.useTenantIdAsKey = options.useTenantIdAsKey || false;
+    this.useSlugIdAsKey = options.useSlugIdAsKey || false;
   }
 }
