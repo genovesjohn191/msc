@@ -19,7 +19,7 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
 
   [WorkflowGroupId.ManagementToolsQueryStatus, 'Query nanagement tools status.'],
   [WorkflowGroupId.ManagementToolsAddCvm, 'Add to management tools.'],
-  [WorkflowGroupId.ManagementToolsRemoveCvm, 'Remove from management tools.'],
+  [WorkflowGroupId.ManagementToolsRemove, 'Remove from management tools.'],
   [WorkflowGroupId.ManagementToolsUpdate, 'Update in management tools.'],
 
   [WorkflowGroupId.MicrosoftCreateSubscription, 'Create Microsoft subscription for a tenant.'],

@@ -120,7 +120,7 @@ export const jobTypeText = {
 
   [JobType.LaunchpadManagedServerCreate]: 'New Managed Server',
   [JobType.LaunchpadManagementToolsAddCvm]: 'Add CVM to Management Tools',
-  [JobType.LaunchpadManagementToolsDeleteCvm]: 'Remove CVM from Management Tools',
+  [JobType.LaunchpadManagementToolsDeleteCvm]: 'Remove from Management Tools',
   [JobType.LaunchpadBackupProvisionServerBackup]: 'Backup Server',
   [JobType.LaunchpadBackupProvisionVmBackup]: 'Backup VM',
   [JobType.LaunchpadDedicatedStorageUnmaskVolume]: 'Unmask Dedicated Storage Volume',

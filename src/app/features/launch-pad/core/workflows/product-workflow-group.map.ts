@@ -13,91 +13,91 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.BrickFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.CloudFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.CloudLoadBalancer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.CloudPerformanceServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.CloudServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.CloudServerPrimary,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.CloudServicesGateway,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.CustomerDedicatedFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.DedicatedLoadBalancing,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.DedicatedManagedFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.DedicatedManagedFirewallSingle,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.DedicatedNetworkUtm,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.DedicatedServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm,
+        WorkflowGroupId.ManagementToolsRemove,
         WorkflowGroupId.ManagementToolsUpdate
       ]
     ],
@@ -105,7 +105,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.DedicatedServerVmInstance,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm,
+        WorkflowGroupId.ManagementToolsRemove,
         WorkflowGroupId.ManagementToolsUpdate
       ]
     ],
@@ -113,266 +113,266 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.DedicatedSras,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.DedicatedVcenterServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.FirewallDedicated,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.FirewallVa,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.FirewallVlan,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.FirewallVxlan,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.FourtyEightPortSwitch,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.GigabitFourtyEightPortSwitch,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.GlobalServerLoadBalancing,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.HostingClientToSiteVpn,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.HostingInternetPort,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.HostingSiteToSiteVpn,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.HpServerLarge,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.HpServerMedium,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.HpServerSmall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.HpServerVerySmall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.InfrastructureProxy,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.Internet,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.LoadBalancerVa,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.LoadBalancingChange,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.LoadBalancingGeneral,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.ManagedRouter,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.ManagedStorageLun,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.ManagedStorageSanDisk,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.ManagedSwitch,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.ManagementFirewallVa,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NasRaidOneDisk,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NasRaidOneServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NasRaidSDisk,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NasRaidSServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NetworkAttachedStorage,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NonStandardDedicatedLoadBalancing,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NonStandardFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NonStandardGatewayRouter,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NonStandardServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.NonStandardVirtualManagedServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.PerformanceInternet,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.PortSwitch,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
@@ -389,21 +389,21 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.SanRaidOneServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.SanRaidSServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.SecureWebGateway,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
@@ -428,35 +428,35 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.SolarisServerLarge,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.SolarisServerMedium,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.SolarisServerSmall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.StretchedDedicatedStorage,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.TwentyFourPortSwitch,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
@@ -466,7 +466,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         // WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex,
         WorkflowGroupId.ManagementToolsAddCvm,
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm,
+        WorkflowGroupId.ManagementToolsRemove,
         WorkflowGroupId.ManagementToolsUpdate
       ]
     ],
@@ -474,35 +474,35 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.VirtualDrVirtualFirewallSwitch,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.VirtualDrVirtualServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.VirtualFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.VirtualManagedServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
     [ ProductType.VirtualPrivateServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsRemove
       ]
     ],
 
