@@ -2,17 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component
 } from '@angular/core';
-
 import { IMcsNavigateAwayGuard } from '@app/core';
 import {
   DynamicFormFieldConfigBase,
   DynamicInputTextField,
   DynamicSelectChipsCompanyField,
-  DynamicSelectChipsField,
-  DynamicSelectField,
-  DynamicSelectTenantField,
+  DynamicSelectChipsTerraformModuleField,
   DynamicSelectChipsTerraformTagField,
-  DynamicSelectChipsTerraformModuleField
+  DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
 import { DynamicSelectAzureSubscriptionField } from '@app/features-shared/dynamic-form/dynamic-form-field/select-azure-subscription/select-azure-subscription';
 
@@ -22,7 +19,7 @@ import { DynamicSelectAzureSubscriptionField } from '@app/features-shared/dynami
   styleUrls: [ ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeploymentCreateAzureComponent implements IMcsNavigateAwayGuard {
+export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard {
   public config = {
     toolbar: [
       [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent

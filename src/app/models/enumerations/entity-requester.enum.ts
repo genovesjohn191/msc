@@ -10,5 +10,6 @@ export enum EntityRequester {
   BackupAggregationTarget,
   Resource,
   License,
-  Internet
+  Internet,
+  TerraformDeployment
 }

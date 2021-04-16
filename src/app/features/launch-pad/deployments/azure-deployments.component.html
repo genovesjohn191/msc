@@ -1,0 +1,253 @@
+<mcs-page [header]="'launchPadDeployments.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
+
+    <!-- Deployment Creation -->
+    <ng-container *ngIf="true"> <!-- TODO(apascual): Confirm if creation has corresponding permission -->
+      <mcs-top-panel-item *mcsTopPanelItemDef>
+        <mcs-action-item
+          (click)="onClickNewDeployment()"
+          mcsId
+          mcsEventTracker="create-new-deployment"
+          mcsEventCategory="launchpad-deployment"
+          mcsEventLabel="deployment-listing-top-panel">
+          <mcs-icon [key]="addIconKey"></mcs-icon>
+          <span>{{ 'launchPadDeployments.newDeployment' | translate }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </ng-container>
+
+    <!-- Deployment Actions -->
+    <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
+      <div class="listing-action-wrapper">
+        <mcs-responsive-panel *ngIf="true"> <!-- TODO(apascual): Confirm if action has corresponding permission -->
+          <mcs-action-item mcsResponsivePanelItem hidden-small
+            [disabled]="!canExecuteAction('startable')"
+            (click)="destroyMultipleDeployments()"
+            mcsId
+            mcsEventTracker="destroy"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="deployment-listing-top-panel">
+            <mcs-icon key="close-black"></mcs-icon>
+            <span>{{ 'launchPadDeployments.destroy' | translate }}</span>
+          </mcs-action-item>
+        </mcs-responsive-panel>
+
+        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+          <span>{{ totalCount | mcsPlural:
+                ('launchPadDeployments.dataSingular' | translate) : ('launchPadDeployments.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'servers.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="deployments-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'launchPadDeployments.filterColumn' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        storageKey="azure-deployments"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="deployments-mobile-search"></mcs-search>
+
+      <table mat-table [dataSource]="dataSource">
+        <!-- Selection Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef
+            hidden-small text-center class="action-header-cell">
+            <mcs-checkbox color="light"
+              (statusChange)="toggleAllDeploymentsSelection()"
+              [checked]="allDeploymentsAreSelected()"
+              [indeterminate]="dataSelection?.someItemsAreSelected()">
+            </mcs-checkbox>
+          </th>
+
+          <td mat-cell *matCellDef="let row"
+            hidden-small text-center class="action-data-cell"
+            [disabled]="row.isProcessing"
+            mcsCursor="default"
+            mcsStopPropagation>
+            <mcs-checkbox color="dark"
+              [checked]="dataSelection?.isItemSelected(row)"
+              (statusChange)="dataSelection?.toggleItemSelection(row)">
+            </mcs-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Deployment Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.deployment' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mcs-item>
+              <div *ngIf="!row.isProcessing">
+                <mcs-icon [key]="row.statusIconKey" size="small" [mcsTooltip]="row.statusLabel"></mcs-icon>
+              </div>
+              <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
+                <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
+              </div>
+              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadDeploymentDetails, row?.id]"
+                mcsId
+                mcsEventTracker="navigate-to-deployment"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="deployment-listing-page">
+                {{ row.name }}</a>
+            </mcs-item>
+          </td>
+        </ng-container>
+
+        <!-- Tenant Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.tenant' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.tenantName }}
+          </td>
+        </ng-container>
+
+        <!-- Subscription Column :: TODO(apascual): Under confirmation -->
+        <ng-container matColumnDef="subscription">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.subscription' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.subscriptionServiceId }}
+          </td>
+        </ng-container>
+
+        <!-- ModuleType Column :: TODO(apascual): Under confirmation -->
+        <ng-container matColumnDef="moduleType">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.moduleType' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.moduleType }}
+          </td>
+        </ng-container>
+
+        <!-- Module Column :: TODO(apascual): Under confirmation -->
+        <ng-container matColumnDef="module">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.module' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.module }}
+          </td>
+        </ng-container>
+
+        <!-- Version Column :: TODO(apascual): Under confirmation -->
+        <ng-container matColumnDef="version">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.version' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.tag }}
+          </td>
+        </ng-container>
+
+        <!-- Last Updated Column -->
+        <ng-container matColumnDef="lastUpdated">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.lastUpdated' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.updatedOn | mcsStdDateFormat }}
+          </td>
+        </ng-container>
+
+        <!-- Updated By Column -->
+        <ng-container matColumnDef="updatedBy">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.updatedBy' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.updatedBy }}
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef class="action-header-cell"></th>
+          <td mat-cell *matCellDef="let row"
+            mcsCursor="default"
+            mcsStopPropagation
+            text-center
+            class="action-data-cell">
+
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+            </button>
+            <mat-menu #actions="matMenu">
+              <button mat-menu-item>
+                {{ 'launchPadDeployments.edit' | translate }}
+              </button>
+              <button mat-menu-item>
+                {{ 'launchPadDeployments.delete' | translate }}
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          [disabled]="row.isDisabled"
+          [ngClass]="{'active-data-row': dataSelection?.isItemSelected(row)}"
+          (click)="navigateToDeployment(row)"
+          mcsId="deployment-{{ row.name }}"
+          mcsEventTracker="navigate-to-deployment"
+          mcsEventCategory="launchpad-deployment"
+          mcsEventLabel="deployment-listing-page"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          {{ 'launchPadDeployments.noDeployments' | translate }}
+          <span>
+            Click <a (click)="onClickNewDeployment()"
+            mcsEventTracker="create-new-deployment"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="empty-deployment-listing-option">here</a> to create new deployment.
+          </span>
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'launchPadDeployments.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-loading-deployment-list"
+              mcsEventCategory="launchpad-deployment"
+              mcsEventLabel="deployment-listing-page">{{ 'launchPadDeployments.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>
