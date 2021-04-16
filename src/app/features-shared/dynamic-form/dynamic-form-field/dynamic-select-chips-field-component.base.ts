@@ -106,6 +106,15 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
       this.currentServiceCall.unsubscribe();
     }
 
+    // Reset the collections
+    this.config.value = [];
+    this.collection = [];
+    this.filteredOptions = of([]);
+    // Force the control to reselect the initial value
+    this.writeValue([]);
+    // Force the form to check the validty of the control
+    this.valueChange([]);
+
     this.currentServiceCall = this.callService()
       .pipe(
         takeUntil(this.destroySubject),

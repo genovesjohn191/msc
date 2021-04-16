@@ -89,6 +89,7 @@ import {
   McsAvailabilityZone,
   McsAzureResource,
   McsAzureService,
+  McsAzureServicesRequestParams,
   McsBackUpAggregationTarget,
   McsBatLinkedService,
   McsBilling,
@@ -1585,7 +1586,7 @@ export class McsApiService {
     );
   }
 
-  public getAzureServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsAzureService>> {
+  public getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsAzureService>> {
     if (!isNullOrEmpty(optionalHeaders)) {
       return this._azureServicesApi.getAzureServices(query, optionalHeaders).pipe(
         catchError((error) =>

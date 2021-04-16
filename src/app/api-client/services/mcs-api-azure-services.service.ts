@@ -4,9 +4,9 @@ import { map } from 'rxjs/operators';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
-  McsQueryParam,
   McsApiRequestParameter,
-  McsAzureService
+  McsAzureService,
+  McsAzureServicesRequestParams
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiAzureServicesService } from '../interfaces/mcs-api-azure-services.interface';
@@ -16,13 +16,14 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  public getAzureServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService[]>> {
+  public getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService[]>> {
      // Set default values if null
     let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    if (isNullOrEmpty(query)) { query = new McsAzureServicesRequestParams(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('tenant_id', query.tenantId);
 
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/services`;

@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsAzureService,
-  McsQueryParam
+  McsAzureServicesRequestParams
 } from '@app/models';
 
 export interface IMcsApiAzureServicesService {
@@ -10,7 +10,7 @@ export interface IMcsApiAzureServicesService {
   /**
    * Gets all azure services
    */
-  getAzureServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService[]>>;
+  getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService[]>>;
 
   /**
    * Gets a azure service by id

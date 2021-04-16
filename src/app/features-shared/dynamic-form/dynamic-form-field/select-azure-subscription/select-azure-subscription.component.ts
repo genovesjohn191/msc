@@ -13,7 +13,9 @@ import {
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
-  McsAzureService, McsQueryParam
+  McsAzureService,
+  McsAzureServicesRequestParams,
+  McsTenant
 } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
@@ -43,6 +45,7 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
 
   // Filter variables
   private _companyId: string = '';
+  private _tenant: McsTenant;
 
   private _serviceIdMapping: Map<string, string> = new Map<string, string>();
 
@@ -58,6 +61,11 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
 
       case 'company-change':
         this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+
+      case 'tenant-change':
+        this._tenant = params.value as McsTenant;
         this.retrieveOptions();
         break;
     }
@@ -79,8 +87,9 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
 
-    let param = new McsQueryParam();
+    let param = new McsAzureServicesRequestParams();
     param.pageSize = 500;
+    param.tenantId = this._tenant?.tenantId;
 
     return this._apiService.getAzureServices(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),

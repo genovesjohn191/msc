@@ -171,12 +171,6 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
   }
 
   protected callService(): Observable<McsTerraformModule[]> {
-    // Force the control to reselect the initial value
-    this.config.value = [];
-    this.writeValue([]);
-    // Force the form to check the validty of the control
-    this.valueChange([]);
-
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);

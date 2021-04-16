@@ -119,6 +119,7 @@ export type DynamicFormFieldOnChangeEvent =
   | 'management-name-change'
   | 'network-change'
   | 'resource-change'
+  | 'tenant-change'
   | 'terraform-module-change';
 
 export type DynamicFormFieldInputType =
