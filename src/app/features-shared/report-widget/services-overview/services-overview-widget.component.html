@@ -12,17 +12,17 @@
               mcsEventTracker="{{ serviceInfo.eventTracker }}"
               mcsEventCategory="dashboard-navigation"
               mcsEventLabel="{{ serviceInfo.eventLabel }}">
-              {{ serviceInfo.count }} {{ serviceInfo.description }}
+              {{ serviceInfo.count }} {{ serviceDescription(serviceInfo) }}
             </a>
           </div>
           <ng-template #noLink>
-            <span>{{ serviceInfo.count }} {{ serviceInfo.description }}</span>
+            <span>{{ serviceInfo.count }} {{ serviceDescription(serviceInfo) }}</span>
           </ng-template>
           <ng-template #processing>
-            <span *ngIf="!serviceInfo.hasError; else error">{{ serviceInfo.count }} {{ serviceInfo.description }}</span>
+            <span *ngIf="!serviceInfo.hasError; else error">{{ serviceInfo.count }} {{ serviceDescription(serviceInfo) }}</span>
             <ng-template #error>
               <small  read-only>
-                Failed to retrieve {{ serviceInfo.description }}.
+                Failed to retrieve {{ serviceDescription(serviceInfo) }}.
                 <a (click)="serviceInfo.getData(serviceInfo.id)"><small>{{ 'reports.retryLabel' | translate }}</small></a>
               </small>
             </ng-template>

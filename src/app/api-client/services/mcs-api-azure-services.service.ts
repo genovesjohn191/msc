@@ -16,7 +16,8 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  public getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService[]>> {
+  public getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsAzureService[]>> {
      // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsAzureServicesRequestParams(); }

@@ -51,7 +51,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
     {
       id: 0,
       icon: CommonDefinition.ASSETS_SVG_SMALL_NOT_VISIBLE_COPY_BLACK,
-      description: 'Azure subscriptions',
+      description: 'Azure subscription',
       count: 0,
       processing: true,
       hasError: true,
@@ -64,7 +64,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
     {
       id: 1,
       icon: CommonDefinition.ASSETS_SVG_SMALL_CLOUD_BLACK,
-      description: 'License subscriptions',
+      description: 'License subscription',
       count: 0,
       processing: true,
       hasError: true,
@@ -88,6 +88,10 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._baseDestroySubject);
+  }
+
+  public serviceDescription(serviceInfo: ServiceInfo): string {
+    return serviceInfo.count === 1 ? serviceInfo.description : `${serviceInfo.description}s`;
   }
 
   public getAzureSubscriptionInfo(id: number): void {

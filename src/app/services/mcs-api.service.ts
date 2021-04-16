@@ -1586,7 +1586,8 @@ export class McsApiService {
     );
   }
 
-  public getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsAzureService>> {
+  public getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsAzureService>> {
     if (!isNullOrEmpty(optionalHeaders)) {
       return this._azureServicesApi.getAzureServices(query, optionalHeaders).pipe(
         catchError((error) =>

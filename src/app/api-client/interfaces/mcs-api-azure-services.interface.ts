@@ -10,7 +10,8 @@ export interface IMcsApiAzureServicesService {
   /**
    * Gets all azure services
    */
-  getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureService[]>>;
+  getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsAzureService[]>>;
 
   /**
    * Gets a azure service by id
