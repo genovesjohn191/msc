@@ -295,6 +295,7 @@ export * from './common/mcs-api-success-response';
 export * from './common/mcs-api-error';
 export * from './common/mcs-api-collection';
 export * from './common/mcs-api-error-context';
+export * from './common/mcs-azure-service-request-params';
 export * from './common/mcs-entity.base';
 export * from './common/mcs-event-track';
 export * from './common/mcs-entity-requester';

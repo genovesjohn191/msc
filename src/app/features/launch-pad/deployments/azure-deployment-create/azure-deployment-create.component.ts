@@ -40,7 +40,9 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard {
     new DynamicSelectTenantField({
       key: 'tenant',
       label: 'Tenant',
-      validators: { required: true }
+      validators: { required: true },
+      eventName: 'tenant-change',
+      dependents: ['subscription']
     }),
     new DynamicSelectAzureSubscriptionField({
       key: 'subscription',
