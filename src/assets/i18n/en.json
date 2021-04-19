@@ -116,6 +116,7 @@
   },
   "launchPadDeployments": {
     "header": "Deployments",
+    "leftPanelHeader": "Azure Deployment Filter",
     "newDeployment": "New Deployment",
     "destroy": "Destroy",
     "dataSingular": "Deployment",
