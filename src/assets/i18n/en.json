@@ -356,12 +356,7 @@
   },
   "orderApproval": {
     "noApprovers": "No Approvers",
-    "errorGettingApprovers": "Sorry, something’s not right. We weren’t able to retrieve the list of order approvers.",
-    "columnHeaders": {
-      "select": "",
-      "name": "Name",
-      "email": "Email Address"
-    }
+    "errorGettingApprovers": "Sorry, something’s not right. We weren’t able to retrieve the list of order approvers."
   },
   "orderDashboard": {
     "loading": "Loading available items.",
@@ -3025,6 +3020,7 @@
     "destinationInterfaces": "Destination Interfaces",
     "diskScore": "Disk Score",
     "efficiency": "Efficiency",
+    "emailAddress": "Email Address",
     "excessUsageFeePerGB": "Excess Fee Per GB",
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",

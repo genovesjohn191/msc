@@ -7,22 +7,25 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import {
+  Observable,
+  Subject
+} from 'rxjs';
 import {
   takeUntil,
   map
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
 import {
   IMcsDataChange,
-  McsTableDataSource,
-  McsTableSelection
+  McsMatTableContext,
+  McsTableDataSource2,
+  McsTableSelection2
 } from '@app/core';
-import { McsOrderApprover } from '@app/models';
 import {
-  isNullOrEmpty,
-  getSafeProperty
-} from '@app/utilities';
+  McsFilterInfo,
+  McsOrderApprover
+} from '@app/models';
+import { createObject } from '@app/utilities';
 import { McsApiService } from '@app/services';
 
 @Component({
@@ -36,9 +39,14 @@ import { McsApiService } from '@app/services';
 })
 
 export class OrderApprovalComponent implements OnInit, IMcsDataChange<McsOrderApprover[]> {
-  public approversColumns: string[];
-  public approversDataSource: McsTableDataSource<McsOrderApprover>;
-  public approversSelection: McsTableSelection<McsOrderApprover>;
+
+  public readonly dataSource: McsTableDataSource2<McsOrderApprover>;
+  public readonly dataSelection: McsTableSelection2<McsOrderApprover>;
+  public readonly defaultColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'emailAddress' }),
+  ];
 
   @Output()
   public dataChange = new EventEmitter<McsOrderApprover[]>();
@@ -47,16 +55,15 @@ export class OrderApprovalComponent implements OnInit, IMcsDataChange<McsOrderAp
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _translateService: TranslateService,
     private _apiService: McsApiService
   ) {
-    this.approversDataSource = new McsTableDataSource();
-    this.approversSelection = new McsTableSelection(this.approversDataSource, true);
-    this._setDataColumns();
+    this.dataSource = new McsTableDataSource2(this._getOrderApprovers.bind(this));
+    this.dataSelection = new McsTableSelection2(this.dataSource, true);
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
   public ngOnInit(): void {
-    this._initializeDataSource();
+    // this._initializeDataSource();
     this._subscribeToApproverSelection();
   }
 
@@ -65,39 +72,30 @@ export class OrderApprovalComponent implements OnInit, IMcsDataChange<McsOrderAp
    */
   public notifyDataChange(): void {
     this.dataChange.emit(
-      this.approversSelection.getSelectedItems()
+      this.dataSelection.getSelectedItems()
     );
-  }
-
-  /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.approversColumns = Object.keys(
-      this._translateService.instant('orderApproval.columnHeaders')
-    );
-    if (isNullOrEmpty(this.approversColumns)) {
-      throw new Error('column definition for order approvers was not defined');
-    }
   }
 
   /**
    * Initializes the datasource of the order approvers
    */
-  private _initializeDataSource(): void {
-    this.approversDataSource.updateDatasource(
-      this._apiService.getOrderApprovers().pipe(
-        map((response) => getSafeProperty(response, (obj) => obj.collection))
-      )
+  // private _initializeDataSource(): void {
+  //   this.dataSource.updateDatasource(this._getOrderApprovers());
+  //   this._changeDetectorRef.markForCheck();
+  // }
+
+  private _getOrderApprovers(): Observable<McsMatTableContext<McsOrderApprover>> {
+    return this._apiService.getOrderApprovers().pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
     );
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
    * Subscribes to approver selection change
    */
   private _subscribeToApproverSelection(): void {
-    this.approversSelection.dataSelectionChange().pipe(
+    this.dataSelection.dataSelectionChange().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this.notifyDataChange());
   }
