@@ -81,7 +81,7 @@ export class AzureDeploymentsComponent implements OnInit, OnDestroy {
     });
 
     // TODO(apascual):
-    // 1. There are some items in the table that are not in API response (status, subscription, moduletype, module, version).
+    // 1. There are some items in the table that are not in API response (status, subscription, moduletype).
     // 2. Add Data Activation Class, and change the isProcessing, and statusLabel content on HTML. Should be implemented in deletion.
     // 3. Status in McsTerraformDeployment model should be set based on actual field name.
     // 4. Check if we still need the events from terraform deployments, or the data activation class can do the work.

@@ -8,19 +8,31 @@ import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTerraformDeployment extends McsEntityBase {
   @JsonProperty()
-  public subscriptionServiceId: string = undefined;
-
-  @JsonProperty()
-  public tenantName: string = undefined;
-
-  @JsonProperty()
-  public tenantId: string = undefined;
-
-  @JsonProperty()
   public name: string = undefined;
 
   @JsonProperty()
   public subscriptionId: string = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public createdOn: Date = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public updatedOn: Date = undefined;
+
+  @JsonProperty()
+  public createdBy: string = undefined;
+
+  @JsonProperty()
+  public updatedBy: string = undefined;
+
+  @JsonProperty()
+  public companyId: string = undefined;
 
   @JsonProperty()
   public slugId: string = undefined;
@@ -31,23 +43,20 @@ export class McsTerraformDeployment extends McsEntityBase {
   @JsonProperty()
   public tag: string = undefined;
 
-  @JsonProperty({
-    serializer: McsDateSerialization,
-    deserializer: McsDateSerialization
-  })
-  public createdOn: Date = undefined;
+  @JsonProperty()
+  public subscriptionServiceId: string = undefined;
 
   @JsonProperty()
-  public createdBy: string = undefined;
-
-  @JsonProperty({
-    serializer: McsDateSerialization,
-    deserializer: McsDateSerialization
-  })
-  public updatedOn: Date = undefined;
+  public tenantName: string = undefined;
 
   @JsonProperty()
-  public updatedBy: string = undefined;
+  public tenantId: string = undefined;
+
+  @JsonProperty()
+  public tagName: string = undefined;
+
+  @JsonProperty()
+  public moduleName: string = undefined;
 
   public get statusIconKey(): string {
     // TODO(apascual): Check the status of deployment

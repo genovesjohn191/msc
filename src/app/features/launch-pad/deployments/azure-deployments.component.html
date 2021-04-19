@@ -11,7 +11,7 @@
           mcsEventTracker="create-new-deployment"
           mcsEventCategory="launchpad-deployment"
           mcsEventLabel="deployment-listing-top-panel">
-          <mcs-icon [key]="addIconKey"></mcs-icon>
+          <mcs-icon key="plus"></mcs-icon>
           <span>{{ 'launchPadDeployments.newDeployment' | translate }}</span>
         </mcs-action-item>
       </mcs-top-panel-item>
@@ -22,13 +22,12 @@
       <div class="listing-action-wrapper">
         <mcs-responsive-panel *ngIf="true"> <!-- TODO(apascual): Confirm if action has corresponding permission -->
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!canExecuteAction('startable')"
             (click)="destroyMultipleDeployments()"
             mcsId
             mcsEventTracker="destroy"
             mcsEventCategory="launchpad-deployment"
             mcsEventLabel="deployment-listing-top-panel">
-            <mcs-icon key="close-black"></mcs-icon>
+            <mcs-icon key="delete"></mcs-icon>
             <span>{{ 'launchPadDeployments.destroy' | translate }}</span>
           </mcs-action-item>
         </mcs-responsive-panel>
@@ -43,7 +42,7 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="'servers.leftPanelHeader' | translate">
+  <mcs-left-panel *mcsLeftPanelDef="'launchPadDeployments.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="deployments-desktop-search"></mcs-search>
@@ -90,7 +89,7 @@
         </ng-container>
 
         <!-- Deployment Column -->
-        <ng-container matColumnDef="name">
+        <ng-container matColumnDef="deployment">
           <th mat-header-cell *matHeaderCellDef>
             {{ 'columnHeader.deployment' | translate }}
           </th>
@@ -102,7 +101,7 @@
               <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
                 <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
               </div>
-              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadDeploymentDetails, row?.id]"
+              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadDeployments, row?.id]"
                 mcsId
                 mcsEventTracker="navigate-to-deployment"
                 mcsEventCategory="launchpad-deployment"
@@ -113,7 +112,7 @@
         </ng-container>
 
         <!-- Tenant Column -->
-        <ng-container matColumnDef="type">
+        <ng-container matColumnDef="tenant">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
             {{ 'columnHeader.tenant' | translate }}
           </th>
@@ -142,23 +141,23 @@
           </td>
         </ng-container>
 
-        <!-- Module Column :: TODO(apascual): Under confirmation -->
+        <!-- Module Column -->
         <ng-container matColumnDef="module">
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.module' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.module }}
+            {{ row.moduleName }}
           </td>
         </ng-container>
 
-        <!-- Version Column :: TODO(apascual): Under confirmation -->
+        <!-- Version Column -->
         <ng-container matColumnDef="version">
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.version' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.tag }}
+            {{ row.tagName }}
           </td>
         </ng-container>
 
@@ -191,10 +190,7 @@
             text-center
             class="action-data-cell">
 
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
-            </button>
-            <mat-menu #actions="matMenu">
+            <mat-menu #actionMenu="matMenu">
               <button mat-menu-item>
                 {{ 'launchPadDeployments.edit' | translate }}
               </button>
@@ -202,6 +198,9 @@
                 {{ 'launchPadDeployments.delete' | translate }}
               </button>
             </mat-menu>
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+              <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+            </button>
           </td>
         </ng-container>
 
