@@ -16,6 +16,7 @@ import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loadin
 import { CtaListModule } from '../cta-list/cta-list.module';
 import { PipesModule } from '../pipes/pipes.module';
 import { JsonViewerModule } from '../json-viewer/json-viewer.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { JsonViewerModule } from '../json-viewer/json-viewer.module';
     ItemModule,
     PipesModule,
     CtaListModule,
-    JsonViewerModule
+    JsonViewerModule,
+    AuthenticationModule
   ],
   exports: [
     CommonModule,
