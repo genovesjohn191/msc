@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit
+  OnInit,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   Observable,
@@ -31,7 +32,11 @@ import {
   selector: 'mcs-update-management-widget',
   templateUrl: './update-management-widget.component.html',
   styleUrls: ['./update-management-widget.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'widget-box'
+  }
 })
 export class UpdateManagementWidgetComponent implements OnInit {
   public readonly dataSource: McsTableDataSource2<McsReportUpdateManagement>;

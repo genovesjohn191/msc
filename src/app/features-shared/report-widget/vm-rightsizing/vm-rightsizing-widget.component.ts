@@ -39,7 +39,10 @@ import {
   templateUrl: './vm-rightsizing-widget.component.html',
   styleUrls: ['./vm-rightsizing-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'widget-box'
+  }
 })
 export class VmRightsizingWidgetComponent implements OnDestroy {
 

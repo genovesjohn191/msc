@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnInit
+  OnInit,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   Observable,
@@ -35,7 +36,11 @@ export interface AuditAlertsWidgetConfig {
   selector: 'mcs-audit-alerts-widget',
   templateUrl: './audit-alerts-widget.component.html',
   styleUrls: ['./audit-alerts-widget.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'widget-box'
+  }
 })
 export class AuditAlertsWidgetComponent implements OnInit {
   @Input()
