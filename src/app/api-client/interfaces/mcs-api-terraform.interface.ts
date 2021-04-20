@@ -6,6 +6,7 @@ import {
   McsTerraformModule,
   McsTerraformTag,
   McsTerraformDeploymentCreate,
+  McsTerraformTagQueryParams,
 } from '@app/models';
 
 export interface IMcsApiTerraformService {
@@ -45,7 +46,7 @@ export interface IMcsApiTerraformService {
     * Get Terraform tags (MCS API Response)
     * @param query Query predicate that serves as the parameter of the endpoint
     */
-  getTags(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformTag[]>>;
+  getTags(query?: McsTerraformTagQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformTag[]>>;
 
   /**
    * Get Terraform tag by ID (MCS API Response)

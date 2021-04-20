@@ -13,6 +13,7 @@ import {
   McsTerraformTag,
   McsTerraformModule,
   McsTerraformDeploymentCreate,
+  McsTerraformTagQueryParams,
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiTerraformService } from '../interfaces/mcs-api-terraform.interface';
@@ -121,14 +122,16 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
-  public getTags(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformTag[]>> {
+  public getTags(query?: McsTerraformTagQueryParams, optionalHeaders?: Map<string, any>)
+  : Observable<McsApiSuccessResponse<McsTerraformTag[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    if (isNullOrEmpty(query)) { query = new McsTerraformTagQueryParams(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('module_id', query.moduleId);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/terraform/tags';

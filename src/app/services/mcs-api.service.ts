@@ -200,6 +200,7 @@ import {
   McsTerraformDeploymentCreate,
   McsTerraformModule,
   McsTerraformTag,
+  McsTerraformTagQueryParams,
   McsTicket,
   McsTicketAttachment,
   McsTicketComment,
@@ -1903,7 +1904,9 @@ export class McsApiService {
     );
   }
 
-  public getTerraformTags(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsTerraformTag>> {
+  public getTerraformTags(query?: McsTerraformTagQueryParams, optionalHeaders?: Map<string, any>)
+  : Observable<McsApiCollection<McsTerraformTag>> {
+
     return this._terraformApi.getTags(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTags'))
