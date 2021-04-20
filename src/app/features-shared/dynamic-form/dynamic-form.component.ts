@@ -4,7 +4,7 @@ import {
   QueryList,
   OnInit,
   Component,
-  ChangeDetectorRef, AfterViewInit
+  ChangeDetectorRef, AfterViewInit, EventEmitter, Output
 } from '@angular/core';
 import {
   FormGroup,
@@ -42,6 +42,12 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   @Input()
   public hideMoreFieldsToggle: boolean = false;
 
+  @Output()
+  public afterDataChange: EventEmitter<null>;
+
+  @Output()
+  public beforeDataChange: EventEmitter<DynamicFormFieldDataChangeEventParam>;
+
   @ViewChildren('control')
   public controls: QueryList<DynamicFormFieldComponent>;
 
@@ -71,8 +77,11 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   private dataChangeEventQueue: DynamicFormFieldDataChangeEventParam[] = [];
 
   public constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _validationService: DynamicFormValidationService) {}
+  private _changeDetectorRef: ChangeDetectorRef,
+  private _validationService: DynamicFormValidationService) {
+    this.afterDataChange = new EventEmitter<null>();
+    this.beforeDataChange = new EventEmitter<DynamicFormFieldDataChangeEventParam>();
+  }
 
   public ngOnInit() {
     this.form = this._buildForm();
@@ -86,8 +95,13 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     return this.form.getRawValue();
   }
 
+  public onAfterDataChange(): void {
+    this.afterDataChange.emit();
+  }
   // Notify all dependent field controls if data has change
   public onDataChange(params: DynamicFormFieldDataChangeEventParam): void {
+    this.beforeDataChange.emit(params);
+
     let valid = !isNullOrEmpty(params.dependents) && !isNullOrEmpty(params.eventName);
     if (!valid) {
       return;

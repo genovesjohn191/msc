@@ -197,6 +197,7 @@ import {
   McsSystemMessageValidate,
   McsTenant,
   McsTerraformDeployment,
+  McsTerraformDeploymentCreate,
   McsTerraformModule,
   McsTerraformTag,
   McsTicket,
@@ -1870,6 +1871,16 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeployment'))
       ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public createTerraformDeployment(deploymentData: McsTerraformDeploymentCreate): Observable<McsTerraformDeployment> {
+    return this._terraformApi.createDeployment(deploymentData).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTerraformDeployment'))
+      ),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

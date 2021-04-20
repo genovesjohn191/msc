@@ -35,20 +35,29 @@
     "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
-  "launchPadDeployments": {
-    "enumKey": "LaunchPadDeployments",
+  "launchPadAzureDeployments": {
+    "enumKey": "LaunchPadAzureDeployments",
     "enumCategory": "LaunchPad",
-    "navigationPath": "launch-pad/deployments",
-    "documentTitle": "LAUNCH Pad - Deployments",
+    "navigationPath": "launch-pad/azure-deployments",
+    "documentTitle": "LAUNCH Pad - Azure Deployments",
     "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
-  "launchPadDeploymentCreate": {
-    "enumKey": "LaunchPadDeploymentCreate",
+  "launchPadAzureDeploymentCreate": {
+    "enumKey": "LaunchPadAzureDeploymentCreate",
     "enumCategory": "LaunchPad",
-    "navigationPath": "launch-pad/deployments/create",
-    "documentTitle": "LAUNCH Pad - Create Deployment",
+    "navigationPath": "launch-pad/azure-deployments/create",
+    "documentTitle": "LAUNCH Pad - Create Azure Deployment",
+    "requiredPermissions": ["RawDataView"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
+    "requireAllFeatures": true
+  },
+  "launchPadAzureDeploymentDetails": {
+    "enumKey": "LaunchPadAzureDeploymentDetails",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/azure-deployments",
+    "documentTitle": "LAUNCH Pad - Azure Deployment Details",
     "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true

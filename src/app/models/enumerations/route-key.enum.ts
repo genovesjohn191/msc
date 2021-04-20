@@ -4,9 +4,9 @@ export enum RouteKey {
   LaunchPadSearch,
   LaunchPadWorkflows,
   LaunchPadWorkflowLaunch,
-  LaunchPadDeployments,
-  LaunchPadDeploymentCreate,
-  LaunchPadDeploymentDetails,
+  LaunchPadAzureDeployments,
+  LaunchPadAzureDeploymentCreate,
+  LaunchPadAzureDeploymentDetails,
   ReportOverview,
   ReportInsights,
 

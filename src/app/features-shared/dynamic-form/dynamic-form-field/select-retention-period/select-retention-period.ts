@@ -13,16 +13,26 @@ export class DynamicSelectRetentionPeriodField extends DynamicFormFieldConfigBas
   public type: DynamicFormFieldType = 'select-retention-period';
   public template: DynamicFormFieldTemplate = 'select-retention-period';
   public options: FlatOption[] = [
-    { key: RetentionOption.FourteenDays.toString(), value: retentionOptionText[RetentionOption.FourteenDays]},
-    { key: RetentionOption.ThirtyDays.toString(), value: retentionOptionText[RetentionOption.ThirtyDays]},
-    { key: RetentionOption.SixMonths.toString(), value: retentionOptionText[RetentionOption.SixMonths]},
-    { key: RetentionOption.OneYear.toString(), value: retentionOptionText[RetentionOption.OneYear]},
-    { key: RetentionOption.TwoYears.toString(), value: retentionOptionText[RetentionOption.TwoYears]},
-    { key: RetentionOption.ThreeYears.toString(), value: retentionOptionText[RetentionOption.ThreeYears]},
-    { key: RetentionOption.FourYears.toString(), value: retentionOptionText[RetentionOption.FourYears]},
-    { key: RetentionOption.FiveYears.toString(), value: retentionOptionText[RetentionOption.FiveYears]},
-    { key: RetentionOption.SixYears.toString(), value: retentionOptionText[RetentionOption.SixYears]},
-    { key: RetentionOption.SevenYears.toString(), value: retentionOptionText[RetentionOption.SevenYears]}
+    { key: retentionOptionText[RetentionOption.FourteenDays].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.FourteenDays]},
+    { key: retentionOptionText[RetentionOption.ThirtyDays].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.ThirtyDays]},
+    { key: retentionOptionText[RetentionOption.SixMonths].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.SixMonths]},
+    { key: retentionOptionText[RetentionOption.OneYear].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.OneYear]},
+    { key: retentionOptionText[RetentionOption.TwoYears].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.TwoYears]},
+    { key: retentionOptionText[RetentionOption.ThreeYears].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.ThreeYears]},
+    { key: retentionOptionText[RetentionOption.FourteenDays].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.FourYears]},
+    { key: retentionOptionText[RetentionOption.FiveYears].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.FiveYears]},
+    { key: retentionOptionText[RetentionOption.SixYears].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.SixYears]},
+    { key: retentionOptionText[RetentionOption.SevenYears].replace(' ','-').toUpperCase(),
+      value: retentionOptionText[RetentionOption.SevenYears]}
   ];
 
   public constructor(options: {

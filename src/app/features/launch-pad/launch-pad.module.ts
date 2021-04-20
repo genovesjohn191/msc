@@ -7,8 +7,8 @@ import { DynamicFormModule } from '@app/features-shared';
 import { SharedModule } from '@app/shared';
 
 import { LaunchPadCoreModule } from './core/launch-pad-core.module';
-import { AzureDeploymentCreateComponent } from './deployments/azure-deployment-create/azure-deployment-create.component';
-import { AzureDeploymentsComponent } from './deployments/azure-deployments.component';
+import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
+import { AzureDeploymentsComponent } from './azure-deployments/azure-deployments.component';
 /** Components */
 import { launchPadRoutes } from './launch-pad.constants';
 import { LaunchPadGuard } from './launch-pad.guard';

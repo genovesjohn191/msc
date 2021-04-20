@@ -1,4 +1,4 @@
-<mcs-page [header]="'launchPadDeployments.header' | translate">
+<mcs-page [header]="'launchPadAzureDeployments.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
@@ -12,7 +12,7 @@
           mcsEventCategory="launchpad-deployment"
           mcsEventLabel="deployment-listing-top-panel">
           <mcs-icon key="plus"></mcs-icon>
-          <span>{{ 'launchPadDeployments.newDeployment' | translate }}</span>
+          <span>{{ 'launchPadAzureDeployments.newDeployment' | translate }}</span>
         </mcs-action-item>
       </mcs-top-panel-item>
     </ng-container>
@@ -28,13 +28,13 @@
             mcsEventCategory="launchpad-deployment"
             mcsEventLabel="deployment-listing-top-panel">
             <mcs-icon key="delete"></mcs-icon>
-            <span>{{ 'launchPadDeployments.destroy' | translate }}</span>
+            <span>{{ 'launchPadAzureDeployments.destroy' | translate }}</span>
           </mcs-action-item>
         </mcs-responsive-panel>
 
         <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
           <span>{{ totalCount | mcsPlural:
-                ('launchPadDeployments.dataSingular' | translate) : ('launchPadDeployments.dataPlural' | translate) }}
+                ('launchPadAzureDeployments.dataSingular' | translate) : ('launchPadAzureDeployments.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -42,14 +42,14 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="'launchPadDeployments.leftPanelHeader' | translate">
+  <mcs-left-panel *mcsLeftPanelDef="'launchPadAzureDeployments.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="deployments-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'launchPadDeployments.filterColumn' | translate" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'launchPadAzureDeployments.filterColumn' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="azure-deployments"
         [defaultFilters]="defaultColumnFilters">
@@ -101,7 +101,7 @@
               <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
                 <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
               </div>
-              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadDeployments, row?.id]"
+              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadAzureDeployments, row?.id]"
                 mcsId
                 mcsEventTracker="navigate-to-deployment"
                 mcsEventCategory="launchpad-deployment"
@@ -192,10 +192,10 @@
 
             <mat-menu #actionMenu="matMenu">
               <button mat-menu-item>
-                {{ 'launchPadDeployments.edit' | translate }}
+                {{ 'launchPadAzureDeployments.edit' | translate }}
               </button>
               <button mat-menu-item>
-                {{ 'launchPadDeployments.delete' | translate }}
+                {{ 'launchPadAzureDeployments.delete' | translate }}
               </button>
             </mat-menu>
             <button mat-icon-button [matMenuTriggerFor]="actionMenu">
@@ -223,7 +223,7 @@
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-          {{ 'launchPadDeployments.noDeployments' | translate }}
+          {{ 'launchPadAzureDeployments.noDeployments' | translate }}
           <span>
             Click <a (click)="onClickNewDeployment()"
             mcsEventTracker="create-new-deployment"
@@ -233,12 +233,12 @@
         </div>
         <div *ngIf="dataSource?.hasError$ | async" text-center>
           <div class="listing-status-wrapper">
-            <span>{{ 'launchPadDeployments.errorMessage' | translate }}</span>
+            <span>{{ 'launchPadAzureDeployments.errorMessage' | translate }}</span>
             <a (click)="retryDatasource()"
               mcsId
               mcsEventTracker="retry-loading-deployment-list"
               mcsEventCategory="launchpad-deployment"
-              mcsEventLabel="deployment-listing-page">{{ 'launchPadDeployments.retry' | translate }}</a>.
+              mcsEventLabel="deployment-listing-page">{{ 'launchPadAzureDeployments.retry' | translate }}</a>.
           </div>
         </div>
       </mcs-item>

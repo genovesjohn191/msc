@@ -31,9 +31,8 @@
       <div  [ngSwitch]="getTaskInfo(workflow)?.status">
         <mat-progress-bar *ngSwitchCase="0" mode="determinate" color="primary" value="0"></mat-progress-bar >
         <mat-progress-bar *ngSwitchCase="1" mode="indeterminate" color="primary"></mat-progress-bar >
-        <mat-progress-bar *ngSwitchCase="2" mode="indeterminate" color="primary"></mat-progress-bar >
-        <mat-progress-bar *ngSwitchCase="3" mode="determinate" color="primary"></mat-progress-bar >
-        <mat-progress-bar *ngSwitchDefault mode="determinate" color="warn"></mat-progress-bar >
+        <mat-progress-bar *ngSwitchCase="2" mode="determinate" color="primary" value="100"></mat-progress-bar >
+        <mat-progress-bar *ngSwitchDefault mode="determinate" color="warn" value="100"></mat-progress-bar >
       </div>
       <!-- <mat-progress-bar [mode]="getTaskInfo(workflow)?.status < 2 ? 'indeterminate' : 'determinate'" [color]="getTaskInfo(workflow)?.status < 3 ? 'primary' : 'warn'"></mat-progress-bar> -->
       <br />

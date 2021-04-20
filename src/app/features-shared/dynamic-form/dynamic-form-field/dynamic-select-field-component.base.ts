@@ -1,7 +1,8 @@
 import {
   throwError,
   Observable,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -42,7 +43,9 @@ export abstract class DynamicSelectFieldComponentBase<T>
 
   protected destroySubject: Subject<void> = new Subject<void>();
   protected collection: T[] = [];
+
   private _initialized: boolean = false;
+  private currentServiceCall: Subscription;
 
   constructor(protected _changeDetectorRef: ChangeDetectorRef) {
     super();
@@ -59,7 +62,15 @@ export abstract class DynamicSelectFieldComponentBase<T>
   public retrieveOptions(): void {
     this._startProcess();
 
-    this.callService()
+    if (this.currentServiceCall) {
+      this.currentServiceCall.unsubscribe();
+    }
+
+    // Reset the collections
+    this.config.value = [];
+    this.collection = [];
+
+    this.currentServiceCall = this.callService()
       .pipe(
         takeUntil(this.destroySubject),
         switchMap(() => this.callService()),

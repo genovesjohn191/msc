@@ -134,6 +134,7 @@ export * from './request/mcs-server-snapshot-create';
 export * from './request/mcs-system-message-create';
 export * from './request/mcs-system-message-edit';
 export * from './request/mcs-system-message-validate';
+export * from './request/mcs-terraform-deployment-create';
 export * from './request/mcs-ticket-create';
 export * from './request/mcs-ticket-create-attachment';
 export * from './request/mcs-ticket-create-comment';

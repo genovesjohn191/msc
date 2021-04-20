@@ -159,6 +159,7 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
 
       case 'company-change':
         this._companyId = params.value;
+        this._terraformModule = null;
         this.retrieveOptions();
         break;
 
@@ -170,12 +171,16 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
   }
 
   protected callService(): Observable<McsTerraformTag[]> {
+    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._terraformModule)) {
+      return of([]);
+    }
+
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
 
     let param = new McsQueryParam();
-    param.pageSize = 2000;
+    param.pageSize = 50;
 
     return this._apiService.getTerraformTags(param, optionalHeaders)
     .pipe(

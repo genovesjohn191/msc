@@ -5,7 +5,7 @@
       "label": "LAUNCH Pad",
       "crispOrders": "CRISP Orders",
       "workflows": "Workflows",
-      "deployments": "Deployments",
+      "azureDeployments": "Azure Deployments",
       "reporting": "Reporting"
     },
     "privateCloud": {
@@ -114,7 +114,7 @@
       }
     }
   },
-  "launchPadDeployments": {
+  "launchPadAzureDeployments": {
     "header": "Deployments",
     "leftPanelHeader": "Azure Deployment Filter",
     "newDeployment": "New Deployment",

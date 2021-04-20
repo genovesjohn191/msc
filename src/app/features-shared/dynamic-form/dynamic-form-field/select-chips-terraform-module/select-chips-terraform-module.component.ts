@@ -171,6 +171,10 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
   }
 
   protected callService(): Observable<McsTerraformModule[]> {
+    if (isNullOrEmpty(this._companyId)) {
+      return of([]);
+    }
+
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
