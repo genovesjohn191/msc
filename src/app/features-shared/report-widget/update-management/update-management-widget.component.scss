@@ -1,54 +1,9 @@
 @import "../../../../styles/shared/base";
 
 .update-management-widget {
-  max-width: 100%;
-  overflow-x: auto;
-  max-height: 570px;
+  margin-bottom: $space-large;
 
   @include print() {
     width: 850px;
-    overflow-x: visible;
-    height: auto;
-    max-height: none;
-    margin-top: $space-large;
-    display: table;
-  }
-  .listing-table-wrapper {
-    @include print() {
-      display: table;
-    }
-
-    .mat-table {
-      padding: 0;
-      margin: 0;
-
-      @include print() {
-        display: table-row-group;
-        overflow: visible;
-      }
-  
-      th {
-        position: sticky;
-        top: 0;
-        background: $color-black;
-
-        @include print() {
-          position: relative;
-          white-space: pre-wrap;
-          vertical-align: bottom;
-        }
-      }
-  
-      td {
-        @include print() {
-          white-space: pre-wrap;
-          vertical-align: middle;
-        }
-      }
-    }
-
-    .listing-status-wrapper {
-      justify-content: center;
-    }
   }
 }

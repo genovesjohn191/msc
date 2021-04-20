@@ -1,9 +1,10 @@
 @import "../../../../styles/shared/base";
 
 .vm-rightsizing-wrapper {
+  margin-bottom: $space-large;
+
   @include print() {
     width: 850px;
-    height: auto;
   }
 
   .item-wrapper {
@@ -13,67 +14,6 @@
 
     .content-wrapper {
       text-align: left;
-    }
-  }
-
-  .listing-table-wrapper {
-    max-height: 570px;
-    min-height: 127px;
-    width: 100%;
-    margin-top: $space-large;
-    overflow-x: auto;
-
-    @include print() {
-      overflow-x: visible;
-      height: auto;
-      max-height: none;
-      margin-top: $space-large;
-      display: table;
-    }
-
-    .mat-table {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-
-      @include print() {
-        width: 850px;
-        height: auto;
-        display: table-row-group;
-        overflow: visible;
-      }
-
-      th {
-        position: sticky;
-        top: 0;
-        background: $color-black;
-
-        @include print() {
-          position: relative;
-          white-space: pre-wrap;
-          vertical-align: bottom;
-        }
-      }
-
-      td {
-        @include print() {
-          white-space: pre-wrap;
-          vertical-align: middle;
-        }
-      }
-    }
-
-    mcs-item {
-      margin-top: 0;
-
-      .icon-wrapper {
-        margin-bottom: $space-large;
-      }
-
-      div {
-        z-index: 1;
-        margin-top: $space-xlarge;
-      }
     }
   }
 }
