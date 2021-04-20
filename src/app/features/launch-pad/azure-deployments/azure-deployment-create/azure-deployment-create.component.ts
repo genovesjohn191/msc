@@ -163,7 +163,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
   public id: string;
   public processing: boolean = false;
   public hasError: boolean = false;
-  public isSuccessful: boolean = false
+  public creationSuccessful: boolean = false
 
   public constructor(private _apiService: McsApiService, private _changeDetector: ChangeDetectorRef) { }
 
@@ -207,7 +207,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       this.hasError = false;
       this.processing = false;
       this.id = response.id;
-      this.isSuccessful = true;
+      this.creationSuccessful = true;
 
       this._changeDetector.markForCheck();
 
@@ -227,7 +227,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
   }
 
   public canNavigateAway(): boolean {
-    return isNullOrEmpty(this.deploymentInfo.variables);
+    return isNullOrEmpty(this.deploymentInfo.variables) || this.creationSuccessful;
   }
 
   public clone(data: McsTerraformDeploymentCreate): any {
