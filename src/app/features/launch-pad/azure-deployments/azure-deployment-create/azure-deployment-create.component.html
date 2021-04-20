@@ -4,7 +4,7 @@
     <mat-vertical-stepper [linear]="true" #stepper>
       <!-- Deployment Details -->
 
-      <mat-step [editable]="!isSuccessful && (!processing && !hasError)" [completed]="false">
+      <mat-step [editable]="!creationSuccessful && (!processing && !hasError)" [completed]="false">
         <ng-template matStepLabel>Deployment Details</ng-template>
 
         <mcs-dynamic-form #form [config]="formConfig" (afterDataChange)="formAfterDataChanged()" (beforeDataChange)="formBeforeDataChanged($event)"></mcs-dynamic-form>
@@ -21,7 +21,7 @@
       </mat-step>
 
       <!-- Variables -->
-      <mat-step [editable]="!isSuccessful && (!processing && !hasError)" [completed]="false">
+      <mat-step [editable]="!creationSuccessful && (!processing && !hasError)" [completed]="false">
         <ng-template matStepLabel>Variables</ng-template>
 
         <div *ngIf="!processing && !hasError">
@@ -100,7 +100,7 @@
       </mat-step>
 
       <!-- Go -->
-      <mat-step [editable]="isSuccessful" [completed]="false">
+      <mat-step [editable]="creationSuccessful" [completed]="false">
         <ng-template matStepLabel>Go</ng-template>
 
         <h2>New Azure Deployment</h2>
