@@ -15,6 +15,7 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
 import { CtaListModule } from '../cta-list/cta-list.module';
 import { PipesModule } from '../pipes/pipes.module';
+import { JsonViewerModule } from '../json-viewer/json-viewer.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { PipesModule } from '../pipes/pipes.module';
     ListModule,
     ItemModule,
     PipesModule,
-    CtaListModule
+    CtaListModule,
+    JsonViewerModule
   ],
   exports: [
     CommonModule,

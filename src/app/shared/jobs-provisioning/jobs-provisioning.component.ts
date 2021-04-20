@@ -35,7 +35,8 @@ import {
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  cloneDeep
 } from '@app/utilities';
 
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
@@ -229,6 +230,14 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public isActionHidden(job: McsJob): boolean {
     if (isNullOrEmpty(job)) { return false; }
     return getSafeProperty(job, (obj) => obj.clientReferenceObject.hideDetailsButton) || false;
+  }
+
+  public clone(referenceObject: any): any {
+    return cloneDeep(referenceObject);
+  }
+
+  public validReferenceObject(referenceObject: any): boolean {
+    return !isNullOrEmpty(referenceObject) && Object.keys(referenceObject).length > 0;
   }
 
   /**

@@ -20,7 +20,8 @@ import {
   addOrUpdateArrayRecord,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  cloneDeep
 } from '@app/utilities';
 
 import { Workflow } from '../../workflows/workflow.interface';
@@ -106,6 +107,14 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
     let task = job.tasks.find((t) => t.referenceId === workflow.referenceId);
 
     return task;
+  }
+
+  public clone(referenceObject: any): any {
+    return cloneDeep(referenceObject);
+  }
+
+  public validReferenceObject(referenceObject: any): boolean {
+    return !isNullOrEmpty(referenceObject) && Object.keys(referenceObject).length > 0;
   }
 
   private _startMonitoringProvisioningProgress(): void {
