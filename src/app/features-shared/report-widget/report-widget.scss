@@ -1,7 +1,6 @@
 @import "../../../styles/shared/base";
 
 $shadow-effect: 1px solid #e3e3e3;
-$table-max-height: 350px;
 
 .widget-box {
   .widget {
@@ -44,58 +43,6 @@ $table-max-height: 350px;
 
     &>h3 {
       margin-bottom: 10px;
-    }
-  }
-  .listing-table-wrapper {
-    max-height: $table-max-height;
-    max-width: 100%;
-    min-width: 100%;
-    margin-top: $space-large;
-    overflow-x: auto;
-
-    @include print() {
-      display: table;
-    }
-
-    .listing-status-wrapper {
-      justify-content: center;
-    }
-
-    .mat-table {
-      padding: 0;
-      margin: 0;
-      min-width: 100%;
-
-      @include print() {
-        overflow: visible;
-      }
-
-      th {
-        position: sticky;
-        top: 0;
-        background: $color-black;
-
-        @include print() {
-          position: relative;
-          white-space: pre-wrap;
-          vertical-align: bottom;
-        }
-      }
-
-      td {
-        @include print() {
-          white-space: pre-wrap;
-          vertical-align: middle;
-        }
-      }
-    }
-
-    .item-wrapper.item-block {
-      margin: 0;
-  
-      > div {
-        margin-top: $space-large;
-      }
     }
   }
 }
