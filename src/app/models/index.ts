@@ -319,6 +319,7 @@ export * from './common/mcs-entity-provision';
 export * from './common/mcs-azure-service-query-params';
 export * from './common/mcs-ticket-query-params';
 export * from './common/mcs-object-query-params';
+export * from './common/mcs-terraform-tag-query-params';
 export * from './common/mcs-rightsizing-query-params';
 
 /** Serialization */

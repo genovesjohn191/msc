@@ -24,7 +24,8 @@ import {
 import {
   McsQueryParam,
   McsTerraformModule,
-  McsTerraformTag
+  McsTerraformTag,
+  McsTerraformTagQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -179,8 +180,9 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
 
-    let param = new McsQueryParam();
-    param.pageSize = 50;
+    let param = new McsTerraformTagQueryParams();
+    param.pageSize = 2000;
+    param.moduleId = this._terraformModule.id;
 
     return this._apiService.getTerraformTags(param, optionalHeaders)
     .pipe(
