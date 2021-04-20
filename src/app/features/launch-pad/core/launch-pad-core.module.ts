@@ -14,7 +14,6 @@ import { LaunchPadWorkflowComponent } from './layout/workflow-group/workflow.com
 import { LaunchPadWorkflowSelectorComponent } from './layout/workflow-selector/workflow-selector.component';
 import { WorkflowSelectorLauncherComponent } from './layout/workflow-selector/workflow-selector-launcher.component';
 import { LaunchPadWorkflowGroupComponent } from './layout/workflow-group/workflow-group.component';
-import { WorkflowJsonViewerComponent } from './layout/workflow-json-viewer/workflow-json-viewer.component';
 import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
 import { LaunchPadWorkflowProvisionStateComponent } from './layout/workflow-provision-state/workflow-provision-state.component';
 import { McsApiService } from '@app/services';
@@ -25,7 +24,6 @@ import { LaunchPadObjectSelectorComponent } from './layout/workflow-group/object
   declarations: [
     LaunchPadComponent,
     WorkflowSelectorLauncherComponent,
-    WorkflowJsonViewerComponent,
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
     LaunchPadServiceIdSwitchDialogComponent,
@@ -38,7 +36,6 @@ import { LaunchPadObjectSelectorComponent } from './layout/workflow-group/object
   exports: [
     LaunchPadComponent,
     WorkflowSelectorLauncherComponent,
-    WorkflowJsonViewerComponent,
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
     LaunchPadServiceIdSwitchDialogComponent,

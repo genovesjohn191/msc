@@ -41,7 +41,7 @@
               </mat-panel-description>
             </mat-expansion-panel-header>
 
-            <mcs-workflow-json-viewer *ngIf="hasProperties(payload); else noProperties" [obj]="clone(payload)"></mcs-workflow-json-viewer>
+            <mcs-json-viewer *ngIf="hasProperties(payload); else noProperties" [obj]="clone(payload)"></mcs-json-viewer>
             <ng-template #noProperties>
               <small>No properties to display</small>
             </ng-template>

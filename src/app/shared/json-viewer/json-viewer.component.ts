@@ -2,13 +2,16 @@ import {
   Component,
   Input
 } from '@angular/core';
-import { isNullOrEmpty, isNullOrUndefined } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  isNullOrUndefined
+} from '@app/utilities';
 
 @Component({
-  selector: 'mcs-workflow-json-viewer',
-  templateUrl: 'workflow-json-viewer.component.html'
+  selector: 'mcs-json-viewer',
+  templateUrl: 'json-viewer.component.html'
 })
-export class WorkflowJsonViewerComponent {
+export class JsonViewerComponent {
   @Input()
   public set obj(value: any) {
     if (isNullOrEmpty(value)) {
