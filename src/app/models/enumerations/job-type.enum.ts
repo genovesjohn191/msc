@@ -77,6 +77,13 @@ export enum JobType {
   LaunchpadDedicatedStorageCreateAttachVolumeCluster = 102012,
   LaunchpadDedicatedStorageAttachVolumeCluster = 102013,
   LaunchpadDedicatedStorageRemoveZoning = 102014,
+  LaunchpadManagementToolsRename = 102015,
+  LaunchpadManagementToolsQueryStatus = 102016,
+  LaunchpadPublicCloudMicrosoftCreateSubscription = 102017,
+  LaunchpadManagementToolsUpdate = 102018,
+
+  // Terraform
+  TerraformCreatePlan = 104001,
 
   // Microsoft License
   PublicCloudLicenseChangeCount = 2000001,
@@ -132,6 +139,12 @@ export const jobTypeText = {
   [JobType.LaunchpadDedicatedStorageCreateAttachVolumeCluster]: 'Create and Attach Dedicated Storage Volume Cluster',
   [JobType.LaunchpadDedicatedStorageAttachVolumeCluster]: 'Attach Dedicated Storage Volume Cluster',
   [JobType.LaunchpadDedicatedStorageRemoveZoning]: 'Remove Dedicated Storage Zoning',
+  [JobType.LaunchpadManagementToolsRename]: 'Rename in Management Tools',
+  [JobType.LaunchpadManagementToolsQueryStatus]: 'Query Status from Management Tools',
+  [JobType.LaunchpadPublicCloudMicrosoftCreateSubscription]: 'Create Microsoft Subscription',
+  [JobType.LaunchpadManagementToolsUpdate]: 'Update in Management Tools',
+
+  [JobType.TerraformCreatePlan]: 'Create Terraform Plan',
 
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
   [JobType.InternetPortPlanChange]: 'Change Internet Port Plan',

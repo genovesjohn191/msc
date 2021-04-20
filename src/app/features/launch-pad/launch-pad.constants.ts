@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
+import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 
-import { AzureDeploymentCreateComponent } from './deployments/azure-deployment-create/azure-deployment-create.component';
-import { AzureDeploymentsComponent } from './deployments/azure-deployments.component';
+import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
+import { AzureDeploymentsComponent } from './azure-deployments/azure-deployments.component';
 import { LaunchPadGuard } from './launch-pad.guard';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
 import {
@@ -38,15 +39,16 @@ export const launchPadRoutes: Routes = [
     canActivate: [ LaunchPadGuard ]
   },
   {
-    path: 'deployments',
+    path: 'azure-deployments',
     component: AzureDeploymentsComponent,
-    data: { routeId: RouteKey.LaunchPadDeployments },
+    data: { routeId: RouteKey.LaunchPadAzureDeployments },
     canActivate: [ LaunchPadGuard ]
   },
   {
-    path: 'deployments/create',
+    path: 'azure-deployments/create',
     component: AzureDeploymentCreateComponent,
-    data: { routeId: RouteKey.LaunchPadDeploymentCreate },
-    canActivate: [ LaunchPadGuard ]
+    data: { routeId: RouteKey.LaunchPadAzureDeploymentCreate },
+    canActivate: [ LaunchPadGuard ],
+    canDeactivate: [ McsNavigateAwayGuard ],
   },
 ];

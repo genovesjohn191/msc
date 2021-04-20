@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  isNullOrEmpty
+  isNullOrEmpty,
+  serializeObjectToJson
 } from '@app/utilities';
 import {
   McsQueryParam,
@@ -11,6 +12,7 @@ import {
   McsTerraformDeployment,
   McsTerraformTag,
   McsTerraformModule,
+  McsTerraformDeploymentCreate,
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiTerraformService } from '../interfaces/mcs-api-terraform.interface';
@@ -52,6 +54,22 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
     mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsTerraformDeployment>(McsTerraformDeployment, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public createDeployment(deploymentData: McsTerraformDeploymentCreate): Observable<McsApiSuccessResponse<McsTerraformDeployment>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/deployments`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(deploymentData);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse

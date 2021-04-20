@@ -70,6 +70,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
 
   protected collection: T[] = [];
   protected destroySubject: Subject<void> = new Subject<void>();
+  protected initialized: boolean = false;
 
   private currentServiceCall: Subscription;
 
@@ -110,10 +111,12 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
     this.config.value = [];
     this.collection = [];
     this.filteredOptions = of([]);
-    // Force the control to reselect the initial value
-    this.writeValue([]);
-    // Force the form to check the validty of the control
-    this.valueChange([]);
+    if (!this.initialized) {
+      // Force the control to reselect the initial value
+      this.writeValue([]);
+      // Force the form to check the validty of the control
+      this.valueChange([]);
+    }
 
     this.currentServiceCall = this.callService()
       .pipe(
@@ -183,6 +186,8 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
     if (!isNullOrEmpty(this.config.value)) {
       this.setInitialValue(this.config.value);
     }
+
+    this.initialized = true;
   }
 
   private _startProcess(): void {

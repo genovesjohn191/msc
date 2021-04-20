@@ -5,6 +5,7 @@ import {
   McsTerraformDeployment,
   McsTerraformModule,
   McsTerraformTag,
+  McsTerraformDeploymentCreate,
 } from '@app/models';
 
 export interface IMcsApiTerraformService {
@@ -20,6 +21,13 @@ export interface IMcsApiTerraformService {
    * @param id Terraform Deployment identification
    */
   getDeployment(id: any): Observable<McsApiSuccessResponse<McsTerraformDeployment>>;
+
+
+  /**
+   * This will create the new deployment based on the inputted information
+   * @param deploymentData Deployment data to be created
+   */
+  createDeployment(deploymentData: McsTerraformDeploymentCreate): Observable<McsApiSuccessResponse<McsTerraformDeployment>>;
 
   /**
    * Get Terraform modules (MCS API Response)

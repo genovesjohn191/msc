@@ -136,12 +136,12 @@ export class AzureDeploymentsComponent implements OnInit, OnDestroy {
   }
 
   public onClickNewDeployment() {
-    this._navigationService.navigateTo(RouteKey.LaunchPadDeploymentCreate);
+    this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeploymentCreate);
   }
 
   public navigateToDeployment(deployment: McsTerraformDeployment): void {
     if (isNullOrEmpty(deployment) || deployment.isDisabled) { return; }
-    this._navigationService.navigateTo(RouteKey.LaunchPadDeploymentDetails, [deployment.id]);
+    this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeploymentDetails, [deployment.id]);
   }
 
   private _getDeployments(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTerraformDeployment>> {

@@ -20,6 +20,9 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
   @Output()
   public dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam> = new EventEmitter<DynamicFormFieldDataChangeEventParam>();
 
+  @Output()
+  public afterDataChange: EventEmitter<null> = new EventEmitter<null>();
+
   public get id(): string {
     return this.config.key;
   }
@@ -61,11 +64,9 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
   }
 
   public valueChange(val: any): void {
-    let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
-    if (validEvent) {
-      this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value);
-    }
+    this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value);
     this.propagateChange(this.config.value);
+    this.afterDataChange.emit();
   }
 
   public abstract onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;

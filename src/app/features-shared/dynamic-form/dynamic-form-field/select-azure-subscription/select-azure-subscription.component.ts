@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import {
   CommonDefinition,
@@ -61,6 +61,7 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
 
       case 'company-change':
         this._companyId = params.value;
+        this._tenant = null;
         this.retrieveOptions();
         break;
 
@@ -83,6 +84,10 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   }
 
   protected callService(): Observable<McsAzureService[]> {
+    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._tenant)) {
+      return of([]);
+    }
+
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);

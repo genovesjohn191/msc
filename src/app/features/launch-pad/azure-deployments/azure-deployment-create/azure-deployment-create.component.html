@@ -1,0 +1,140 @@
+<mcs-page header="Create a New Azure Deployment with Terraform" leftPanelExpandedByDefault="true">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <mat-vertical-stepper [linear]="true" #stepper>
+      <!-- Deployment Details -->
+
+      <mat-step [editable]="!isSuccessful && (!processing && !hasError)" [completed]="false">
+        <ng-template matStepLabel>Deployment Details</ng-template>
+
+        <mcs-dynamic-form #form [config]="formConfig" (afterDataChange)="formAfterDataChanged()" (beforeDataChange)="formBeforeDataChanged($event)"></mcs-dynamic-form>
+
+        <br />
+        <button
+        mat-raised-button
+        color="primary"
+        [disabled]="!validDeploymentDetails"
+        (click)="gotoVariables()">
+          <mat-icon>chevron_right</mat-icon>
+          Next
+        </button>
+      </mat-step>
+
+      <!-- Variables -->
+      <mat-step [editable]="!isSuccessful && (!processing && !hasError)" [completed]="false">
+        <ng-template matStepLabel>Variables</ng-template>
+
+        <div *ngIf="!processing && !hasError">
+          <div *ngIf="payload">
+            <table class="mcs-compact-table">
+              <tr>
+                <td>
+                  Tenant
+                </td>
+                <td>
+                  {{ deploymentInfo?.tenant }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Subscription
+                </td>
+                <td>
+                  {{ deploymentInfo?.subscription }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Name
+                </td>
+                <td>
+                  {{ deploymentInfo?.name + ' (' + deploymentInfo?.module + ' - ' + deploymentInfo?.tag + ')' }}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <form [formGroup]="tfvarsEditorForm">
+            <div style="max-width: 700px;">
+              <div style="margin-bottom: 15px; text-align: right;">
+                <a href="https://www.terraform.io/docs/language/syntax/configuration.html" target="_blank">
+                  HCL Syntax Reference
+                </a>
+              </div>
+
+              <quill-editor
+                (onContentChanged)="onVariablesChanged($event)"
+                formControlName="tfvars"
+                format="text"
+                [styles]="{ height: '250px', backgroundColor: '#000', fontFamily: 'Lucida Console', color: '#fff' }"
+                placeholder="Populate the variables for this deployment."
+                [modules]="quillConfig"></quill-editor>
+            </div>
+          </form>
+
+          <br />
+          <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!validVariables"
+          (click)="createDeployment()">
+            <mat-icon>chevron_right</mat-icon>
+            Create
+          </button>
+        </div>
+
+        <div *ngIf="processing">
+          <mcs-status-message type="info">
+            Please wait while we create your deployment.
+          </mcs-status-message>
+          <br />
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+
+        <div *ngIf="hasError">
+          <mcs-status-message type="error">
+            An unexpected server error has occured.<a style="margin-left: 5px;" mcsId (click)="retryCreation()">Go back</a>
+          </mcs-status-message>
+        </div>
+
+      </mat-step>
+
+      <!-- Go -->
+      <mat-step [editable]="isSuccessful" [completed]="false">
+        <ng-template matStepLabel>Go</ng-template>
+
+        <h2>New Azure Deployment</h2>
+
+        <mcs-list>
+          <mcs-item orientation="block">
+            <mcs-item>
+              <mcs-icon [key]="successIconKey" size="medium"></mcs-icon>
+              <span><strong>{{ payload?.name }}</strong> successfully created</span>
+            </mcs-item>
+          </mcs-item>
+          <mcs-item orientation="block">
+            <mcs-item>
+              <small>To deploy infrastructure in Azure you need to run a plan and apply.</small>
+            </mcs-item>
+            <mcs-item>
+              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadDeploymentDetails, id]"
+                mcsId="go-to-deployment-link"
+                mcsEventTracker="navigate-to-deployment-details"
+                mcsEventCategory="deployment"
+                mcsEventLabel="deployment-creation">
+                Go to your Deployment
+              </a>
+            </mcs-item>
+          </mcs-item>
+        </mcs-list>
+
+      </mat-step>
+
+    </mat-vertical-stepper>
+
+  </mcs-content-panel>
+</mcs-page>
+
+
+
+

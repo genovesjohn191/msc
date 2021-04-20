@@ -19,6 +19,8 @@ export interface DynamicFormFieldComponent {
 
   dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam>;
 
+  afterDataChange: EventEmitter<null>;
+
   onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
 
   clearFormField(reuseValue: boolean): void;
