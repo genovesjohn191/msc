@@ -1,3 +1,4 @@
+import { Params } from '@angular/router';
 import { isNullOrEmpty } from './mcs-object.function';
 
 /**
@@ -61,4 +62,18 @@ export function getDomainName(url) {
     }
   }
   return domain;
+}
+
+/**
+ * Converts the provided query parameters key to lowercase
+ * @param params Query parameters to extract from the url
+ */
+export function convertUrlParamsKeyToLowerCase(params: Params) {
+  let convertedParams: Params = {};
+
+  for (const [key, value] of Object.entries(params)) {
+    convertedParams[key.toLowerCase()] = value;
+  }
+
+  return convertedParams;
 }

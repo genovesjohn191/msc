@@ -1,7 +1,9 @@
+import { Params } from '@angular/router';
 import {
   isUrlValid,
   getHostName,
-  getDomainName
+  getDomainName,
+  convertUrlParamsKeyToLowerCase
 } from './mcs-url.function';
 
 describe('Url Functions', () => {
@@ -38,6 +40,20 @@ describe('Url Functions', () => {
     it('should return the domain name of the given URL with parameters', () => {
       let hostName = getDomainName('https://portal.macquariecloudservices.com/servers?id=1234');
       expect(hostName).toBe('macquariecloudservices.com');
+    });
+  });
+
+  describe('convertUrlParamsKeyToLowerCase()', () => {
+    it('should convert the url parameters key to lowercase', () => {
+      let queryParams: Params = {
+        serviceId: 'AZPCM1001',
+        subscriptionName: 'subscription-name'
+      }
+      let convertedParams = convertUrlParamsKeyToLowerCase(queryParams);
+      expect(convertedParams).toEqual({
+        serviceid: 'AZPCM1001',
+        subscriptionname: 'subscription-name'
+      });
     });
   });
 });
