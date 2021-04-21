@@ -27,7 +27,10 @@ import {
   FormControl,
   FormGroup
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  Params
+} from '@angular/router';
 import {
   CoreValidators,
   IMcsFormGroup,
@@ -68,7 +71,8 @@ import {
   pluck,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  convertUrlParamsKeyToLowerCase
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -200,10 +204,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   constructor(
     _injector: Injector,
     private _activatedRoute: ActivatedRoute,
-    private _msRequestChangeService: MsRequestChangeService,
-    private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
     private _eventDispatcher: EventBusDispatcherService,
+    private _formBuilder: FormBuilder,
+    private _msRequestChangeService: MsRequestChangeService,
     private _translateService: TranslateService
   ) {
     super(
@@ -458,21 +462,23 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _getSelectedAzureService(): void {
     this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
-      map((params) => {
-        if (isNullOrEmpty(params)) { return null; }
-        return new McsAzureServiceQueryParams(params?.serviceId, params?.resourceId);
+      map((params: Params) => {
+        let lowerParams: Params = convertUrlParamsKeyToLowerCase(params);
+        return new McsAzureServiceQueryParams(
+          lowerParams?.serviceid,
+          lowerParams?.resourceid
+        );
       }),
-      tap((params) => {
-        if (!params.serviceId) {
-          this.enableAzureResources = false;
-        }
-
+      tap((params: McsAzureServiceQueryParams) => {
         this.azureServices$.subscribe(services => {
           let serviceFound = services.find(service =>
             compareStrings(service.value.serviceId, params.serviceId) === 0);
-          this.fcMsService.setValue(serviceFound?.value);
+          let fcMsServiceValue = params?.serviceId ? serviceFound.value : null;
+          this.fcMsService.setValue(fcMsServiceValue);
         });
-        this._getAzureResources(params.serviceId);
+        if (!isNullOrEmpty(params.serviceId)) {
+          this._getAzureResources(params.serviceId);
+        }
       }),
       shareReplay(1)
     );
