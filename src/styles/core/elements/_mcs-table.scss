@@ -37,12 +37,15 @@ table {
   width: 100%;
 
   thead {
+    tr,
     tr.mat-header-row {
       text-align: left;
       white-space: nowrap;
       background-color: $table-header-background-color;
       height: $table-row-size;
 
+      th,
+      td,
       th.mat-header-cell {
         @extend %cell-style;
         @include font-size($table-header-font-size);
@@ -61,6 +64,7 @@ table {
   }
 
   tbody {
+    tr,
     tr.mat-row {
       text-align: left;
       white-space: nowrap;
@@ -71,6 +75,7 @@ table {
         background-color: $table-data-hover-background-color;
       }
 
+      td,
       td.mat-cell {
         @extend %cell-style;
         @include font-size($table-data-font-size);
