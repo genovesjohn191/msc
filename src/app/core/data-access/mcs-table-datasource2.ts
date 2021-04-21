@@ -174,6 +174,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   }
 
   public refreshDataRecords(): void {
+    this._resetPaginator();
     this._requestUpdate.next();
   }
 
