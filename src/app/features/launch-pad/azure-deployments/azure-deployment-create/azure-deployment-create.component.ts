@@ -38,6 +38,7 @@ import {
   CommonDefinition,
   isNullOrEmpty
 } from '@app/utilities';
+import { CodeEditorFieldContent } from '@app/shared';
 
 interface DeploymentInfo {
   tenant: string;
@@ -83,7 +84,8 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       key: 'subscription',
       label: 'Subscription',
       validators: { required: true },
-      eventName: 'subscription-change'
+      eventName: 'subscription-change',
+      useSubscriptionIdAsKey: true
     }),
     new DynamicInputTextField({
       key: 'name',
@@ -121,12 +123,6 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
     variables: ''
   };
 
-  // TODO: Clean up move to own component
-  public quillConfig = {
-    syntax: true,
-    toolbar: ['code-block']
-  };
-
   public get payload(): McsTerraformDeploymentCreate {
     if (isNullOrEmpty(this.form)) { return new McsTerraformDeploymentCreate(); }
     // Return valid workflow structure
@@ -136,7 +132,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       name: properties.name,
       subscriptionId: properties.subscription,
       tfvars: this.deploymentInfo.variables,
-      tag: !isNullOrEmpty(properties.tag) ?  properties.tag[0].value : ''
+      tag: !isNullOrEmpty(properties.tag) ? properties.tag[0].value : ''
     };
   }
 
@@ -234,9 +230,8 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
     return cloneDeep(data);
   }
 
-  public onVariablesChanged(param: ContentChange): void {
-    this.deploymentInfo.variables = param.text.trim();
-    this._changeDetector.detectChanges();
+  public onVariablesChanged(param: string): void {
+    this.deploymentInfo.variables = param.trim();
   }
 
   public formAfterDataChanged(): void {
