@@ -1,0 +1,12 @@
+<quill-editor
+  [id]="id"
+  (onContentChanged)="onContentChanged($event)"
+  format="text"
+  [styles]="{ height: height, backgroundColor: '#23241f', fontFamily: 'Lucida Console', color: '#fff' }"
+  placeholder="{{ placeholder }}"
+  [modules]="quillConfig"
+  [(ngModel)]="content"
+  [sanitize]="true"
+  [readOnly]="readOnly"
+  [required]="required">
+</quill-editor>

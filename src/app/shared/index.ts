@@ -7,6 +7,7 @@ export * from './button';
 export * from './pipes';
 export * from './table';
 export * from './directives';
+export * from './generic-form-fields';
 export * from './wizard';
 export * from './dialog';
 export * from './snack-bar';

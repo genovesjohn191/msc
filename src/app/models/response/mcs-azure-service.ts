@@ -7,6 +7,9 @@ export class McsAzureService extends McsEntityBase {
   public uuid: string = undefined;
 
   @JsonProperty()
+  public subscriptionId: string = undefined;
+
+  @JsonProperty()
   public serviceId: string = undefined;
 
   @JsonProperty()

@@ -62,13 +62,12 @@
                 </a>
               </div>
 
-              <quill-editor
-                (onContentChanged)="onVariablesChanged($event)"
+              <mcs-code-editor-form-field
+                (contentChanged)="onVariablesChanged($event)"
                 formControlName="tfvars"
-                format="text"
-                [styles]="{ height: '250px', backgroundColor: '#000', fontFamily: 'Lucida Console', color: '#fff' }"
-                placeholder="Populate the variables for this deployment."
-                [modules]="quillConfig"></quill-editor>
+                [content]="testValue"
+                height="400px"
+                placeholder="Populate the variables for this deployment."></mcs-code-editor-form-field>
             </div>
           </form>
 

@@ -33,6 +33,7 @@ import { FileAttachmentModule } from './file-attachment/file-attachment.module';
 import { FileDownloadModule } from './file-download/file-download.module';
 import { FormFieldModule } from './form-field/form-field.module';
 import { FormMessageModule } from './form-message/form-message.module';
+import { GenericFormFieldsModule } from './generic-form-fields/generic-form-fields.module';
 import { GridModule } from './grid/grid.module';
 import { IconModule } from './icon/icon.module';
 import { ImageModule } from './image/image.module';
@@ -105,6 +106,7 @@ const exportedModules = [
   FormFieldModule,
   FormMessageModule,
   FormsModule,
+  GenericFormFieldsModule,
   GridModule,
   IconModule,
   ImageModule,
