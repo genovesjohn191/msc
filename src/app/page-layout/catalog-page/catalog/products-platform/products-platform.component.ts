@@ -128,12 +128,14 @@ export class ProductsPlatformComponent implements OnInit {
     if (!(product instanceof McsCatalogProduct)) { return false; }
 
     let useCases = product.useCases || [];
-    let useCaseFound = useCases.find(useCase =>
-      containsString(useCase.name, keyword) ||
-      containsString(useCase.description, keyword)
-    );
-    // TODO(apascual): FUSION-3880 Waiting for the API endpoint to be finished.
-    // and we need to retest this
+    let useCaseFound = useCases.find(useCase => {
+      if (typeof useCase === 'string') {
+        return containsString(useCase, keyword);
+      }
+
+      return containsString(useCase.name, keyword) ||
+        containsString(useCase.description, keyword);
+    });
     return !isNullOrEmpty(useCaseFound);
   }
 }
