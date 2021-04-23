@@ -89,6 +89,10 @@ export class ReportInsightsComponent implements OnDestroy {
     return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Monitoring/AlertsManagementSummaryBlade`;
   }
 
+  public get azureVmRightsizingCloudHealthUrl(): string  {
+    return `${CommonDefinition.CLOUD_HEALTH_URL}/reports/metrics/azure-vm-rightsizing/current`;
+  }
+
   public set selectedResourceCostMonth(value: PeriodOption) {
     this._selectedResourceCostMonth = value;
     this.resourceMonthlyCostConfig = {

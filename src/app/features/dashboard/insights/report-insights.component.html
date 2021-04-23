@@ -11,7 +11,12 @@
           <div class="subtitle-container">
             <span>
               {{ 'reports.insights.subtitle' | translate }}
-              <a href="{{ cloudHealthUrl }}/dashboard" target="_blank">
+              <a href="{{ cloudHealthUrl }}/dashboard"
+                target="_blank"
+                mcsId="dashboard-insight-cloudhealth-link"
+                mcsEventTracker="navigate-to-cloudhealth"
+                mcsEventCategory="cloudhealth"
+                mcsEventLabel="dashboard-insight-page">
                 {{ 'reports.insights.vmCloudHealthLink' | translate }}
               </a>
             </span>
@@ -39,8 +44,8 @@
               The <a href="{{ cloudHealthUrl }}/olap_reports/azure_cost/history"
               target="_blank"
               mcsId="azure-history-cost"
-              mcsEventTracker="navigate-to-azure-history"
-              mcsEventCategory="dashboard-navigation"
+              mcsEventTracker="navigate-to-cloudhealth-azure-history"
+              mcsEventCategory="cloudhealth"
               mcsEventLabel="azure-history-link">
               historical costs</a>
               {{ 'reports.insights.costs.serviceOverview.subTitle' | translate }}
@@ -68,9 +73,9 @@
               The <a href="{{ cloudHealthUrl }}/olap_reports/azure_cost/current"
               target="_blank"
               mcsId="azure-cost"
-              mcsEventTracker="navigate-to-azure-cost"
+              mcsEventTracker="navigate-to-cloudhealth-azure-cost-link"
               mcsEventCategory="dashboard-navigation"
-              mcsEventLabel="azure-cost-link">
+              mcsEventLabel="cloudhealth-azure-cost-link">
               total cost</a>
               {{ 'reports.insights.costs.resourceCost.subTitle' | translate }}
             </div>
@@ -83,7 +88,7 @@
               The <a href="{{ cloudHealthUrl }}/olap_reports/azure_usage/vm"
               target="_blank"
               mcsId="azure-usage-vm"
-              mcsEventTracker="navigate-to-azure-usage-vm"
+              mcsEventTracker="navigate-to-cloudhealth-azure-usage-vm"
               mcsEventCategory="dashboard-navigation"
               mcsEventLabel="azure-usage-vm-link">
               number of virtual machines</a>
@@ -113,7 +118,7 @@
             <div class="widget-label">{{ 'reports.insights.costs.vmRightsizing.subTitle' | translate }}</div>
             <div class="label-below-chart">
               {{ 'reports.insights.costs.vmRightsizing.labelBelowChart' | translate }} Virtual Machine Rightsizing statistics provided by
-              <a href="{{ cloudHealthUrl }}/reports/metrics/azure-vm-rightsizing/current"
+              <a href="{{ azureVmRightsizingCloudHealthUrl }}"
                 target="_blank"
                 mcsId="vm-rightsizing-vmware-cloudhealth"
                 mcsEventTracker="navigate-to-vmware-cloudhealth"
@@ -122,6 +127,22 @@
                 VMware CloudHealth</a>.
             </div>
             <mcs-vm-rightsizing-widget></mcs-vm-rightsizing-widget>
+            <mat-divider></mat-divider>
+            
+            <!-- Inefficient VMs -->
+            <h2><span class="show-on-print-only">1.6 </span>{{ 'reports.insights.costs.inefficientVms.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.costs.inefficientVms.subTitle' | translate }}</div>
+            <div class="label-below-chart">
+              {{ 'reports.insights.costs.inefficientVms.secondSubtitle' | translate }}
+              <a href="{{ azureVmRightsizingCloudHealthUrl }}"
+                target="_blank"
+                mcsId="inefficient-vms-cloudhealth"
+                mcsEventTracker="navigate-to-vmware-cloudhealth"
+                mcsEventCategory="dashboard-navigation"
+                mcsEventLabel="vmware-cloudhealth-link">
+                VMware CloudHealth</a>.
+            </div>
+            <mcs-inefficient-vms-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-inefficient-vms-widget>
           </div>
         </section>
         <div #techReview>
@@ -185,7 +206,7 @@
                   <a href="{{ cloudHealthUrl }}/olap_reports/azure_performance/virtual_machine"
                   target="_blank"
                   mcsId="azure-performance"
-                  mcsEventTracker="navigate-to-azure-performance"
+                  mcsEventTracker="navigate-to-cloudhealth-azure-performance"
                   mcsEventCategory="dashboard-navigation"
                   mcsEventLabel="azure-performance-link">
                   VM memory, file system and CPU usage,</a>

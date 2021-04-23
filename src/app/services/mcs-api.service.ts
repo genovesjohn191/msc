@@ -131,6 +131,7 @@ import {
   McsReportAuditAlerts,
   McsReportCostRecommendations,
   McsReportGenericItem,
+  McsReportInefficientVms,
   McsReportIntegerData,
   McsReportManagementService,
   McsReportMonitoringAndAlerting,
@@ -139,6 +140,7 @@ import {
   McsReportSecurityScore,
   McsReportServiceChangeInfo,
   McsReportSubscription,
+  McsReportTopVmsByCost,
   McsReportUpdateManagement,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
@@ -1798,6 +1800,27 @@ export class McsApiService {
     return this._reportsApi.getAuditAlerts(periodStart, periodEnd, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAuditAlerts'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getInefficientVms(
+    period?: string,
+    subscriptionIds?: string[]
+    ): Observable<McsReportInefficientVms[]> {
+    return this._reportsApi.getInefficientVms(period, subscriptionIds).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInefficientVms'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getTopVmsByCost(query?: McsQueryParam): Observable<McsReportTopVmsByCost[]> {
+    return this._reportsApi.getTopVmsByCost(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.McsReportTopVmsByCost'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

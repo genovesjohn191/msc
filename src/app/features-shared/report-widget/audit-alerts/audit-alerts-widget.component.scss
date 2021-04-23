@@ -1,9 +1,0 @@
-@import "../../../../styles/shared/base";
-
-.audit-alerts-widget {
-  margin-bottom: $space-large;
-
-  @include print() {
-    width: 850px;
-  }
-}

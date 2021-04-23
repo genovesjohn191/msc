@@ -1,4 +1,4 @@
-<div class="update-management-widget">
+<div class="update-management-widget reporting-table-widget">
   <div class="listing-table-wrapper table-widget-wrapper">
     <!-- Table -->
     <table mat-table [dataSource]="dataSource">
@@ -75,7 +75,7 @@
             <a (click)="onRequestChange(row)"
                 mcsId="update-management-request-change"
                 mcsEventTracker="update-management-request-change"
-                mcsEventCategory="update-management"
+                mcsEventCategory="order-request-change"
                 mcsEventLabel="update-management-dashboard-insight">
               <div *ngIf="row.lastStatus === 'Succeeded'; else statusFailedTemplate">
                 {{ 'reports.insights.techReview.updateManagement.status.rollback' | translate }}
