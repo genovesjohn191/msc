@@ -19,7 +19,9 @@ import {
   McsRightSizingQueryParams,
   McsReportManagementService,
   McsReportUpdateManagement,
-  McsReportAuditAlerts
+  McsReportAuditAlerts,
+  McsReportInefficientVms,
+  McsReportTopVmsByCost
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -170,6 +172,16 @@ export class McsReportingService {
     periodEnd?: string,
     subscriptionIds?: string[]): Observable<McsReportAuditAlerts[]> {
     return this._apiService.getAuditAlerts(periodStart, periodEnd, subscriptionIds);
+  }
+
+  public getInefficientVms(
+    period?: string,
+    subscriptionIds?: string[]): Observable<McsReportInefficientVms[]> {
+    return this._apiService.getInefficientVms(period, subscriptionIds);
+  }
+
+  public getTopVmsByCost(query?: McsQueryParam): Observable<McsReportTopVmsByCost[]> {
+    return this._apiService.getTopVmsByCost(query);
   }
 
   public _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {

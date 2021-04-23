@@ -16,7 +16,10 @@ import {
   McsRightSizingQueryParams,
   McsReportManagementService,
   McsReportUpdateManagement,
-  McsReportAuditAlerts
+  McsReportAuditAlerts,
+  McsReportInefficientVms,
+  McsQueryParam,
+  McsReportTopVmsByCost
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -75,4 +78,10 @@ export interface IMcsApiReportsService {
     periodStart?: string,
     periodEnd?: string,
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>>;
+
+  getInefficientVms(
+    period?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>>;
+
+  getTopVmsByCost(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportTopVmsByCost[]>>;
 }

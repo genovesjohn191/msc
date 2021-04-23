@@ -31,7 +31,6 @@ import {
 @Component({
   selector: 'mcs-update-management-widget',
   templateUrl: './update-management-widget.component.html',
-  styleUrls: ['./update-management-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {

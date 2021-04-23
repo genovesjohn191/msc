@@ -35,7 +35,6 @@ export interface AuditAlertsWidgetConfig {
 @Component({
   selector: 'mcs-audit-alerts-widget',
   templateUrl: './audit-alerts-widget.component.html',
-  styleUrls: ['./audit-alerts-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {

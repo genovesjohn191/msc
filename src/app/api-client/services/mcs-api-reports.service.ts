@@ -20,7 +20,9 @@ import {
   McsRightSizingQueryParams,
   McsReportManagementService,
   McsReportUpdateManagement,
-  McsReportAuditAlerts
+  McsReportAuditAlerts,
+  McsReportInefficientVms,
+  McsReportTopVmsByCost
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -372,6 +374,50 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportAuditAlerts[]>(McsReportAuditAlerts, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getInefficientVms(
+    period?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>> {
+    let searchParams = new Map<string, any>();
+    searchParams.set('period', period);
+    if (!isNullOrEmpty(subscriptionIds)) {
+      searchParams.set('subscription_ids', subscriptionIds.join());
+    }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/inefficient-vms';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportInefficientVms[]>(McsReportInefficientVms, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getTopVmsByCost(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportTopVmsByCost[]>> {
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('per_page', query.pageSize);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/vm-costs';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportTopVmsByCost[]>(McsReportTopVmsByCost, response);
           return apiResponse;
         })
       );

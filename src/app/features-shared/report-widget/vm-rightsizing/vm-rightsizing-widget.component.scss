@@ -1,12 +1,6 @@
 @import "../../../../styles/shared/base";
 
 .vm-rightsizing-wrapper {
-  margin-bottom: $space-large;
-
-  @include print() {
-    width: 850px;
-  }
-
   .item-wrapper {
     .icon {
       margin-right: $space-large;

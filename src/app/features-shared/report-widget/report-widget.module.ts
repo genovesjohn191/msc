@@ -24,6 +24,8 @@ import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/
 import { ComplianceWidgetComponent } from './compliance/compliance-widget.component';
 import { UpdateManagementWidgetComponent } from './update-management/update-management-widget.component';
 import { AuditAlertsWidgetComponent } from './audit-alerts/audit-alerts-widget.component';
+import { InefficientVmsWidgetComponent } from './inefficient-vms/inefficient-vms-widget.component';
+import { TopVmsByCostWidgetComponent } from './top-vms-by-cost/top-vms-by-cost-widget.component';
 
 const exports: any[] | Type<any> = [
   AuditAlertsWidgetComponent,
@@ -33,6 +35,7 @@ const exports: any[] | Type<any> = [
   ComplianceWidgetComponent,
   ContactUsWidgetComponent,
   CostRecommendationsWidgetComponent,
+  InefficientVmsWidgetComponent,
   MonitoringAndAlertingWidgetComponent,
   OperationalMonthlySavingsWidgetComponent,
   OperationalSavingsSubitemsViewerComponent,
@@ -44,9 +47,10 @@ const exports: any[] | Type<any> = [
   SecurityWidgetComponent,
   ServicesCostOverviewWidgetComponent,
   ServicesOverviewWidgetComponent,
+  TopVmsByCostWidgetComponent,
+  UpdateManagementWidgetComponent,
   VirtualMachineUsageBreakdownWidgetComponent,
-  VmRightsizingWidgetComponent,
-  UpdateManagementWidgetComponent
+  VmRightsizingWidgetComponent
 ];
 
 @NgModule({
