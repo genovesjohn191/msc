@@ -231,7 +231,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
   }
 
   public onVariablesChanged(param: string): void {
-    this.deploymentInfo.variables = param.trim();
+    this.deploymentInfo.variables = param;
   }
 
   public formAfterDataChanged(): void {

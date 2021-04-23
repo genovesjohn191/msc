@@ -63,12 +63,13 @@
               </div>
 
               <mcs-code-editor-form-field
-                (contentChanged)="onVariablesChanged($event)"
+                (onValueChanged)="onVariablesChanged($event)"
                 formControlName="tfvars"
-                [content]="testValue"
-                height="400px"
-                placeholder="Populate the variables for this deployment."></mcs-code-editor-form-field>
+                [value]="testValue"
+                height="400px">
+              </mcs-code-editor-form-field>
             </div>
+
           </form>
 
           <br />
