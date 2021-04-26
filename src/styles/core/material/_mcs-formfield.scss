@@ -1,0 +1,21 @@
+$mcs-form-field-sizes: (
+  auto: inherit,
+  full: 100%,
+  xxsmall: 4rem,
+  xsmall: 8rem,
+  small: 12rem,
+  medium: 16rem,
+  large: 20rem,
+  xlarge: 24rem,
+  xxlarge: 28rem
+);
+
+mat-form-field.mat-form-field {
+
+  @each $form-size, $form-size-value in $mcs-form-field-sizes {
+    &.mcs-form-field-#{$form-size} {
+      width: 100%;
+      max-width: $form-size-value;
+    }
+  }
+}

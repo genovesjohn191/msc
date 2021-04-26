@@ -7,13 +7,13 @@ import {
   MAT_BOTTOM_SHEET_DATA
 } from '@angular/material/bottom-sheet';
 import { MatListItem } from '@angular/material/list';
-
 import { McsNavigationService } from '@app/core';
 import {
   ProductType,
-  RouteKey,
+  RouteKey
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
+
 import { LaunchPadContextSource } from '../../workflows/workflow-group.interface';
 import { workflowGroupMap } from '../../workflows/workflow-group.map';
 import { WorkflowGroupId } from '../../workflows/workflow-groups/workflow-group-type.enum';
@@ -58,7 +58,6 @@ export class LaunchPadWorkflowSelectorComponent {
     let id = WorkflowGroupId[element._getHostElement().dataset.id];
     let workflowGroupType = workflowGroupMap.get(id);
     if (isNullOrEmpty(workflowGroupType)) {
-      console.log(`No workflow group found for ${id.toString()}`);
       return;
     }
 

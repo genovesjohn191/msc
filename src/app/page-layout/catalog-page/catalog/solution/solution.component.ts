@@ -4,6 +4,7 @@ import {
   Subject
 } from 'rxjs';
 import {
+  finalize,
   map,
   shareReplay,
   takeUntil,
@@ -12,20 +13,28 @@ import {
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { EnquiryformViewModel } from '@app/features-shared';
 import {
   CatalogViewType,
+  McsCatalogEnquiryRequest,
   McsCatalogProductUseCase,
   McsCatalogSolution,
+  McsStateNotification,
   RouteKey
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import { ScrollableLinkGroup } from '@app/shared';
 import {
   createObject,
+  getSafeFormValue,
   getSafeProperty,
   isNullOrEmpty,
   CommonDefinition
@@ -47,6 +56,7 @@ import {
   }
 })
 export class SolutionComponent implements OnInit {
+  public showEnquiryForm: boolean;
   public selectedUseCase$: Observable<McsCatalogProductUseCase>;
   public solution$: Observable<McsCatalogSolution>;
 
@@ -59,8 +69,11 @@ export class SolutionComponent implements OnInit {
   private _destroySubject = new Subject<void>();
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _activatedRoute: ActivatedRoute,
-    private _catalogService: CatalogService
+    private _catalogService: CatalogService,
+    private _apiService: McsApiService,
+    private _eventBusDispatcher: EventBusDispatcherService
   ) { }
 
   public ngOnInit(): void {
@@ -78,6 +91,26 @@ export class SolutionComponent implements OnInit {
 
   public onClickUseCase(useCase: McsCatalogProductUseCase): void {
     this._selectedUseCaseChange.next(useCase);
+  }
+
+  public onSubmitEnquiry(viewmodel: EnquiryformViewModel, productId: string): void {
+    if (isNullOrEmpty(viewmodel)) { return; }
+
+    let enquiryRequest = new McsCatalogEnquiryRequest();
+    enquiryRequest.notes = getSafeFormValue(viewmodel.fcNote, obj => obj.value);
+    enquiryRequest.preferredContactMethod = +getSafeFormValue(viewmodel.fcContact, obj => obj.value);
+
+    this._apiService.createCatalogSolutionEnquiry(productId, enquiryRequest)
+      .pipe(
+        tap(() => {
+          this._eventBusDispatcher.dispatch(McsEvent.stateNotificationShow,
+            new McsStateNotification('success', 'message.requestSubmitted'));
+        }),
+        finalize(() => {
+          this.showEnquiryForm = false;
+          this._changeDetectorRef.markForCheck();
+        })
+      ).subscribe();
   }
 
   private _subscribeToSelectedUseCaseChange(): void {
@@ -106,6 +139,8 @@ export class SolutionComponent implements OnInit {
         }
         if (isNullOrEmpty(this._scrollableLink)) { return; }
         this._scrollableLink.reset();
+        this.showEnquiryForm = false;
+        this._changeDetectorRef.markForCheck();
       }),
       shareReplay(1)
     );

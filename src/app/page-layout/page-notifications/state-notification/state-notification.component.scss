@@ -1,0 +1,20 @@
+@import "../../../../styles/shared/base";
+
+.state-notification-snackbar {
+  background-color: $color-white;
+  color: $color-black;
+  position: relative;
+  top: 120px;
+
+  .state-notification-content {
+    @include display-flex(row);
+
+    .state-notification-icon {
+      display: block;
+    }
+
+    .state-notification-message {
+      padding-left: 8px;
+    }
+  }
+}

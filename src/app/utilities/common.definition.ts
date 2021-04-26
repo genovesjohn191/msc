@@ -236,4 +236,9 @@ export class CommonDefinition {
   /** Extensions */
   public static FILE_EXTENSION_ISO = 'iso';
   public static FILE_EXTENSION_OVA = 'ova';
+
+  /** State Notifications */
+  public static STATE_NOTIFICATION_DEFAULT_DURATION = 3000;
+  public static STATE_NOTIFICATION_SUCCESS_DURATION = 5000;
+  public static STATE_NOTIFICATION_ERROR_DURATION = 10000;
 }

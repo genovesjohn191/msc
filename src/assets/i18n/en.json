@@ -2886,6 +2886,8 @@
     "getProduct": "Something went wrong while retrieving the details for this product.",
     "getProductCatalogs": "Something went wrong while retrieving the list of available products.",
     "getProductCatalog": "Something went wrong while retrieving the list of available products.",
+    "createCatalogProductEnquiry": "Something went wrong while submitting your inquiry. Please try again.",
+    "createCatalogSolutionEnquiry": "Something went wrong while submitting your inquiry. Please try again.",
     "getLicenses": "Something went wrong while retrieving the list of licenses.",
     "getAccount": "Something went wrong while retrieving your account details. Please try again.",
     "getAzureResources": "Something went wrong while retrieving the list of azure resources. Please try again.",
@@ -3121,7 +3123,24 @@
     "zone": "Zone",
     "zoneCount": "Zones"    
   },
-  "formFields": {
-    "selectStorage": "Select storage profile"
+  "label": {
+    "none": "None",
+    "email": "Email",
+    "phone": "Phone",
+    "additionalNotesOptional": "Additional Notes (optional)",
+    "selectContact": "Select Contact",
+    "selectStorage": "Select Storage",
+    "learnMore": "Learn More",
+    "ownership": "Ownership"
+  },
+  "action": {
+    "enquireNow": "Enquire Now",
+    "submit": "Submit"
+  },
+  "message": {
+    "enquireNow": "Click Enquire Now, choose your preferred contact method and we'll get in touch to discuss this product more with you.",
+    "requestSubmitted": "Request successfully submitted.",
+    "selectContactRequired": "Contact is required.",
+    "inputNoteRequired": "Note is required."
   }
 }
