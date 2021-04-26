@@ -90,6 +90,7 @@ export * from './enumerations/form-response.enum';
 export * from './enumerations/dns-record-type.enum';
 export * from './enumerations/order-cabinet-location.enum';
 export * from './enumerations/workflow-type.enum';
+export * from './enumerations/contact.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -140,6 +141,7 @@ export * from './request/mcs-ticket-create-attachment';
 export * from './request/mcs-ticket-create-comment';
 export * from './request/mcs-resource-catalog-item-create';
 export * from './request/mcs-workflow-create';
+export * from './request/mcs-catalog-enquiry-request';
 
 /** Response */
 export * from './response/mcs-availability-zone';
@@ -253,6 +255,7 @@ export * from './response/mcs-catalog-solution-benefits-and-limitations';
 export * from './response/mcs-catalog-solution-bracket';
 export * from './response/mcs-catalog-solution-group';
 export * from './response/mcs-catalog-solution-product';
+export * from './response/mcs-catalog-enquiry';
 export * from './response/mcs-colocation-rack';
 export * from './response/mcs-colocation-antenna';
 export * from './response/mcs-colocation-custom-device';
@@ -323,6 +326,7 @@ export * from './common/mcs-ticket-query-params';
 export * from './common/mcs-object-query-params';
 export * from './common/mcs-terraform-tag-query-params';
 export * from './common/mcs-rightsizing-query-params';
+export * from './common/mcs-state-notification';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

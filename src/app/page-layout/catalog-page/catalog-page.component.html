@@ -1,11 +1,14 @@
-<ng-container *ngIf="isAnonymous$ | async; else coreLayoutTemplate">
+<ng-container *ngIf="isAnonymous$ | async; else defaultLayoutTemplate">
   <mcs-main-loader></mcs-main-loader>
   <mcs-catalog-page-header class="header"></mcs-catalog-page-header>
   <mcs-content class="content"></mcs-content>
 </ng-container>
 
-<ng-template #coreLayoutTemplate>
+<ng-template #defaultLayoutTemplate>
   <mcs-main-loader></mcs-main-loader>
   <mcs-header class="header"></mcs-header>
   <mcs-content class="content"></mcs-content>
+
+  <mcs-state-change-notifications class="hide-on-print"></mcs-state-change-notifications>
+  <mcs-page-notifications class="hide-on-print"></mcs-page-notifications>
 </ng-template>

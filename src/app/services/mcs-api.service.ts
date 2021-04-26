@@ -94,6 +94,8 @@ import {
   McsBatLinkedService,
   McsBilling,
   McsCatalog,
+  McsCatalogEnquiry,
+  McsCatalogEnquiryRequest,
   McsCatalogProduct,
   McsCatalogProductBracket,
   McsCatalogSolution,
@@ -1523,6 +1525,18 @@ export class McsApiService {
     );
   }
 
+  public createCatalogProductEnquiry(
+    id: string,
+    request: McsCatalogEnquiryRequest
+  ): Observable<McsCatalogEnquiry> {
+    return this._catalogService.createCatalogProductEnquiry(id, request).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createCatalogProductEnquiry'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public getCatalogSolutions(): Observable<McsCatalogSolutionBracket> {
     return this._catalogService.getCatalogSolutions().pipe(
       catchError((error) =>
@@ -1545,6 +1559,18 @@ export class McsApiService {
     return this._catalogService.getCatalogSolution(id).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCatalogSolution'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public createCatalogSolutionEnquiry(
+    id: string,
+    request: McsCatalogEnquiryRequest
+  ): Observable<McsCatalogEnquiry> {
+    return this._catalogService.createCatalogSolutionEnquiry(id, request).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createCatalogSolutionEnquiry'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
@@ -1775,7 +1801,7 @@ export class McsApiService {
     periodStart?: string,
     periodEnd?: string,
     subscriptionIds?: string[]
-    ): Observable<McsReportMonitoringAndAlerting> {
+  ): Observable<McsReportMonitoringAndAlerting> {
     return this._reportsApi.getMonitoringAndAlerting(periodStart, periodEnd, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getMonitoringAndAlerting'))
@@ -1928,7 +1954,7 @@ export class McsApiService {
   }
 
   public getTerraformTags(query?: McsTerraformTagQueryParams, optionalHeaders?: Map<string, any>)
-  : Observable<McsApiCollection<McsTerraformTag>> {
+    : Observable<McsApiCollection<McsTerraformTag>> {
 
     return this._terraformApi.getTags(query, optionalHeaders).pipe(
       catchError((error) =>

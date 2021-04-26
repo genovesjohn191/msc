@@ -1,0 +1,11 @@
+<ng-template #notificationUi let-state>
+  <div class="state-notification-content">
+    <div class="state-notification-icon">
+      <mcs-icon [key]="state?.icon" size="small"></mcs-icon>
+    </div>
+
+    <div class="state-notification-message">
+      <span>{{ state?.message | translate }}</span>
+    </div>
+  </div>
+</ng-template>

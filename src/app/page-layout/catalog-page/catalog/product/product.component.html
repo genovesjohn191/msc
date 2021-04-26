@@ -7,10 +7,29 @@
       <div class="product-catalog-item">
 
         <div class="product-catalog-widget-wrapper">
+          <!-- Enquire Now -->
+          <mcs-presentation-panel [embossed]="true">
+            <ng-container mcsPresentationPanelHeader>
+              <strong>{{ 'label.learnMore' | translate }}</strong>
+            </ng-container>
+
+            <p>{{ 'message.enquireNow' | translate }}</p>
+
+            <button mcsButton arrow="right" *ngIf="!showEnquiryForm"
+              (click)="showEnquiryForm = true"
+              mcsId="enquire-now">
+              {{ 'action.enquireNow' | translate }}
+            </button>
+
+            <mcs-enquiry-form *ngIf="showEnquiryForm"
+              (submitted)="onSubmitEnquiry($event, selectedProduct.id)">
+            </mcs-enquiry-form>
+          </mcs-presentation-panel>
+
           <!-- Ownerships -->
           <mcs-presentation-panel [embossed]="true" *mcsAccessControl="['CompanyView']">
             <ng-container mcsPresentationPanelHeader>
-              <strong>Ownership</strong>
+              <strong>{{ 'label.ownership' | translate }}</strong>
             </ng-container>
 
             <mcs-list>

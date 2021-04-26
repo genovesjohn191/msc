@@ -69,7 +69,7 @@ export class SelectStorageProfileComponent
     private _apiService: McsApiService
   ) {
     super();
-    this.placeholder = this._translateService.instant('formFields.selectStorage');
+    this.placeholder = this._translateService.instant('label.selectStorage');
   }
 
   public ngOnInit(): void {

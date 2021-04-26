@@ -1,5 +1,5 @@
 // Size Type
-export type McsSizeType = 'auto' | 'xxsmall' | 'xsmall' | 'small' |
+export type McsSizeType = 'auto' | 'full' | 'xxsmall' | 'xsmall' | 'small' |
   'medium' | 'large' | 'xlarge' | 'xxlarge';
 
 // Color Type

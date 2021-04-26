@@ -1,0 +1,21 @@
+<form [formGroup]="viewModel.fgEnquiry" mcsFormGroup>
+  <mcs-field-input-note
+    size="full"
+    [label]="'label.additionalNotesOptional' | translate"
+    [formControl]="viewModel.fcNote">
+  </mcs-field-input-note>
+
+  <mcs-field-select-contact
+    size="full"
+    [label]="'label.selectContact' | translate"
+    [formControl]="viewModel.fcContact">
+  </mcs-field-select-contact>
+</form>
+
+<div class="action-items">
+  <button mcsButton arrow="right"
+    mcsId="submit-enquiry"
+    (click)="onClickSubmit()">
+    {{ 'action.submit' | translate }}
+  </button>
+</div>

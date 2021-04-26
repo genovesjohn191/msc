@@ -81,6 +81,7 @@ import { ServerManagedRaiseInviewSelectedEvent } from './items/server-raise-invi
 import { ServerRequestPatchSelectedEvent } from './items/server-request-patch-selected.event';
 import { ServiceRequestChangeSelectedEvent } from './items/service-request-change-selected.event';
 import { SessionTimedOutEvent } from './items/session-timedout.event';
+import { StateNotificationShowEvent } from './items/state-notification-show.event';
 import { SystemMessageHideEvent } from './items/system-message-hide.event';
 import { SystemMessageShowEvent } from './items/system-message-show.event';
 import { UserChangeEvent } from './items/user-change.event';
@@ -107,6 +108,7 @@ export class McsEvent {
   public static loaderShow = new LoaderShowEvent();
   public static loaderHide = new LoaderHideEvent();
   public static errorShow = new ErrorShowEvent();
+  public static stateNotificationShow = new StateNotificationShowEvent();
   public static systemMessageShow = new SystemMessageShowEvent();
   public static systemMessageHide = new SystemMessageHideEvent();
 

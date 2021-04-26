@@ -1,17 +1,22 @@
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
 import {
-  McsApiSuccessResponse,
   McsApiRequestParameter,
+  McsApiSuccessResponse,
   McsCatalog,
+  McsCatalogEnquiry,
+  McsCatalogEnquiryRequest,
   McsCatalogProduct,
-  McsCatalogSolution,
   McsCatalogProductBracket,
+  McsCatalogSolution,
   McsCatalogSolutionBracket
 } from '@app/models';
-import { McsApiClientHttpService } from '../mcs-api-client-http.service';
+import { serializeObjectToJson } from '@app/utilities';
+
 import { IMcsApiCatalogService } from '../interfaces/mcs-api-catalog.interface';
+import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 
 @Injectable()
 export class McsApiCatalogService implements IMcsApiCatalogService {
@@ -63,6 +68,25 @@ export class McsApiCatalogService implements IMcsApiCatalogService {
       );
   }
 
+  public createCatalogProductEnquiry(
+    id: string,
+    request: McsCatalogEnquiryRequest
+  ): Observable<McsApiSuccessResponse<McsCatalogEnquiry>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/catalogs/products/${id}/enquiries`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(request);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsCatalogEnquiry>(McsCatalogEnquiry, response);
+          return apiResponse;
+        })
+      );
+  }
+
   public getCatalogSolutions(): Observable<McsApiSuccessResponse<McsCatalogSolutionBracket>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/solutions';
@@ -88,6 +112,25 @@ export class McsApiCatalogService implements IMcsApiCatalogService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsCatalogSolution>(McsCatalogSolution, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public createCatalogSolutionEnquiry(
+    id: string,
+    request: McsCatalogEnquiryRequest
+  ): Observable<McsApiSuccessResponse<McsCatalogEnquiry>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/catalogs/solutions/${id}/enquiries`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(request);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsCatalogEnquiry>(McsCatalogEnquiry, response);
           return apiResponse;
         })
       );
