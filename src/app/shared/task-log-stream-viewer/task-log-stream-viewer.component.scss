@@ -1,0 +1,31 @@
+@import "../../../styles/shared/base";
+
+$viewer-background-color: #23241f;
+$viewer-font-color: $color-white;
+$viewer-font: $monospaced-font;
+
+.task-log-stream-header-wrapper {
+  @include display-flex(row);
+  justify-content: space-between;
+
+  .status-wrapper {
+    margin-left: $space-small;
+
+    .status-info {
+      line-height: 40px; margin-left: $space-small;
+    }
+  }
+}
+
+.task-log-stream-wrapper {
+  margin-bottom: $space-large;
+
+  .log-viewer {
+    background-color:$viewer-background-color;
+    font-family: $viewer-font;
+    color: $viewer-font-color;
+    padding: $space-small;
+    overflow-y: auto;
+    @include font-size($font-size-small);
+  }
+}
