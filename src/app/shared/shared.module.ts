@@ -39,6 +39,7 @@ import { IconModule } from './icon/icon.module';
 import { ImageModule } from './image/image.module';
 import { InputModule } from './input/input.module';
 import { ItemModule } from './item/item.module';
+import { TaskLogStreamViewerModule } from './task-log-stream-viewer/task-log-stream-viewer.module';
 import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.module';
 import { JsonViewerModule } from './json-viewer/json-viewer.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
@@ -112,6 +113,7 @@ const exportedModules = [
   ImageModule,
   InputModule,
   ItemModule,
+  TaskLogStreamViewerModule,
   JobsProvisioningModule,
   JsonViewerModule,
   ListModule,

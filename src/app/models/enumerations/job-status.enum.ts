@@ -10,6 +10,17 @@ export enum JobStatus {
   SessionExpired = 6
 }
 
+export const jobStatusText = {
+  [JobStatus.Pending]: 'Pending',
+  [JobStatus.Active]: 'Active',
+  [JobStatus.Completed]: 'Completed',
+  [JobStatus.Cancelled]: 'Cancelled',
+  [JobStatus.Failed]: 'Failed',
+  [JobStatus.TimedOut]: 'Timed Out',
+  [JobStatus.SessionExpired]: 'Session Expired'
+};
+
+
 /**
  * Enumeration serializer and deserializer methods
  */

@@ -223,7 +223,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
   }
 
   public canNavigateAway(): boolean {
-    return isNullOrEmpty(this.deploymentInfo.variables) || this.creationSuccessful;
+    return isNullOrEmpty(this.creationSuccessful || !this.validVariables);
   }
 
   public clone(data: McsTerraformDeploymentCreate): any {
