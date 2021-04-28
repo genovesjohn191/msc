@@ -6,6 +6,11 @@
 
     <div class="state-notification-message">
       <span>{{ state?.message | translate }}</span>
+      <a *ngIf="tryAgainFunc"
+        href="javascript:void(0)"
+        (click)="onClickTryAgain()">
+        {{ 'message.pleaseTryAgain' | translate }}
+      </a>
     </div>
   </div>
 </ng-template>

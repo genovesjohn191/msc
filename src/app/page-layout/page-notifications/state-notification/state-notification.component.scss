@@ -15,6 +15,10 @@
 
     .state-notification-message {
       padding-left: 8px;
+
+      a {
+        padding-left: 4px;
+      }
     }
   }
 }

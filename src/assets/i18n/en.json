@@ -3121,7 +3121,7 @@
     "version": "Version",
     "vmName":"VM Name",
     "zone": "Zone",
-    "zoneCount": "Zones"    
+    "zoneCount": "Zones"
   },
   "label": {
     "none": "None",
@@ -3130,6 +3130,7 @@
     "additionalNotesOptional": "Additional Notes (optional)",
     "selectContact": "Select Contact",
     "selectStorage": "Select Storage",
+    "contactMeVia": "Contact me via...",
     "learnMore": "Learn More",
     "ownership": "Ownership"
   },
@@ -3138,8 +3139,12 @@
     "submit": "Submit"
   },
   "message": {
-    "enquireNow": "Click Enquire Now, choose your preferred contact method and we'll get in touch to discuss this product more with you.",
+    "productEnquireNow": "Click Enquire Now, choose your preferred contact method and we'll get in touch to discuss this product more with you.",
+    "solutionEnquireNow": "Click Enquire Now, choose your preferred contact method and we'll get in touch to discuss this solution more with you.",
+    "enquiryError": "An error occurred when attempting to submit your enquiry.",
+    "pleaseTryAgain": "Please try again.",
     "requestSubmitted": "Request successfully submitted.",
+    "thankyouRequest": "Thanks for your request. We'll be in touch soon.",
     "selectContactRequired": "Contact is required.",
     "inputNoteRequired": "Note is required."
   }

@@ -1,9 +1,11 @@
 import {
+  throwError,
   BehaviorSubject,
   Observable,
   Subject
 } from 'rxjs';
 import {
+  catchError,
   finalize,
   map,
   shareReplay,
@@ -120,7 +122,15 @@ export class ProductComponent implements OnInit {
       .pipe(
         tap(() => {
           this._eventBusDispatcher.dispatch(McsEvent.stateNotificationShow,
-            new McsStateNotification('success', 'message.requestSubmitted'));
+            new McsStateNotification('success', 'message.thankyouRequest'));
+        }),
+        catchError(error => {
+          this._eventBusDispatcher.dispatch(McsEvent.stateNotificationShow,
+            new McsStateNotification(
+              'error', 'message.enquiryError',
+              this._onShowEnquiryPanel.bind(this)
+            ));
+          return throwError(error);
         }),
         finalize(() => {
           this.showEnquiryForm = false;
@@ -129,16 +139,10 @@ export class ProductComponent implements OnInit {
       ).subscribe();
   }
 
-  /**
-   * Returns the sorted Pci Details based on the passed sorting predicate
-   */
   public sortPciDetails(pciDetails: McsCatalogProductPciDetail[]): McsCatalogProductPciDetail[] {
     return pciDetails.sort(this._sortPciDetailsPredicate.bind(this));
   }
 
-  /**
-   * Returns the property array with proper formatting
-   */
   public getFormattedProperties(productOption: McsCatalogProductOption): string[] {
     if (isNullOrEmpty(productOption) || isNullOrEmpty(productOption.properties)) { return []; }
     return productOption.type.toLowerCase() === PRODUCT_OPTION_TYPE_NUMERIC ?
@@ -146,11 +150,11 @@ export class ProductComponent implements OnInit {
       this._getPropertiesDefaultFormat(productOption.properties);
   }
 
-  /**
-   * Returns the properties with range format when the property array length has 2 items
-   * Format same unit "LowerValue-HigherValue Unit"
-   * Format different unit "first value unit - second value unit"
-   */
+  private _onShowEnquiryPanel(): void {
+    this.showEnquiryForm = true;
+    this._changeDetectorRef.markForCheck();
+  }
+
   private _getPropertiesNumericFormat(properties: McsCatalogProductOptionProperty[]): string[] {
     if (properties.length !== 2) { return this._getPropertiesDefaultFormat(properties); }
 
@@ -168,10 +172,6 @@ export class ProductComponent implements OnInit {
         ${secondProperty.value} ${secondProperty.unit}`];
   }
 
-  /**
-   * Returns the properties with default format when the property array has 1 or more than 2 items
-   * Format is "Label: Value Unit"
-   */
   private _getPropertiesDefaultFormat(properties: McsCatalogProductOptionProperty[]): string[] {
     let formattedProperties = [];
     for (let property of properties) {
@@ -182,9 +182,6 @@ export class ProductComponent implements OnInit {
     return formattedProperties;
   }
 
-  /**
-   * Subscribes to product catalog resolver
-   */
   private _subscribeToProductResolver(): void {
     this.product$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.product)),

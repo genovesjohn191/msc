@@ -6,7 +6,8 @@ import {
 export class McsStateNotification {
   constructor(
     public type: McsStatusType,
-    public message: string
+    public message: string,
+    public tryAgainFunc?: () => void
   ) { }
 
   public get duration(): number {
