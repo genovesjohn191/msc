@@ -1,9 +1,11 @@
 import {
+  throwError,
   BehaviorSubject,
   Observable,
   Subject
 } from 'rxjs';
 import {
+  catchError,
   finalize,
   map,
   shareReplay,
@@ -104,13 +106,26 @@ export class SolutionComponent implements OnInit {
       .pipe(
         tap(() => {
           this._eventBusDispatcher.dispatch(McsEvent.stateNotificationShow,
-            new McsStateNotification('success', 'message.requestSubmitted'));
+            new McsStateNotification('success', 'message.thankyouRequest'));
+        }),
+        catchError(error => {
+          this._eventBusDispatcher.dispatch(McsEvent.stateNotificationShow,
+            new McsStateNotification(
+              'success', 'message.enquiryError',
+              this._onShowEnquiryPanel.bind(this)
+            ));
+          return throwError(error);
         }),
         finalize(() => {
           this.showEnquiryForm = false;
           this._changeDetectorRef.markForCheck();
         })
       ).subscribe();
+  }
+
+   private _onShowEnquiryPanel(): void {
+    this.showEnquiryForm = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   private _subscribeToSelectedUseCaseChange(): void {

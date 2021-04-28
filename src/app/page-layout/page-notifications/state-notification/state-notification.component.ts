@@ -32,6 +32,7 @@ import {
   }
 })
 export class StateNotificationComponent implements OnDestroy {
+  public tryAgainFunc: () => void;
 
   private _notificationRef: MatSnackBarRef<any>
   private _notificationUi: TemplateRef<McsStateNotification>;
@@ -53,6 +54,13 @@ export class StateNotificationComponent implements OnDestroy {
     this._notificationUi = value;
   }
 
+  public onClickTryAgain(): void {
+    if (!isNullOrEmpty(this.tryAgainFunc)) {
+      this.tryAgainFunc();
+    }
+    this._notificationRef?.dismiss();
+  }
+
   private _registerEvents(): void {
     this._stateNotificationHandler = this._eventBusDispatcher.addEventListener(
       McsEvent.stateNotificationShow, this._onNotificationChange.bind(this));
@@ -61,6 +69,7 @@ export class StateNotificationComponent implements OnDestroy {
   private _onNotificationChange(state: McsStateNotification): void {
     if (isNullOrEmpty(state)) { return; }
     this._showNotification(state);
+    this.tryAgainFunc = state?.tryAgainFunc;
   }
 
   private _showNotification(state: McsStateNotification): void {

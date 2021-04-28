@@ -1530,9 +1530,6 @@ export class McsApiService {
     request: McsCatalogEnquiryRequest
   ): Observable<McsCatalogEnquiry> {
     return this._catalogService.createCatalogProductEnquiry(id, request).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createCatalogProductEnquiry'))
-      ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -1569,9 +1566,6 @@ export class McsApiService {
     request: McsCatalogEnquiryRequest
   ): Observable<McsCatalogEnquiry> {
     return this._catalogService.createCatalogSolutionEnquiry(id, request).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createCatalogSolutionEnquiry'))
-      ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
