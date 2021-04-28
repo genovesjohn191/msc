@@ -10,6 +10,7 @@ import {
   McsFeatureFlag,
   RouteKey
 } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
 
 import { McsNavigationService } from '../services/mcs-navigation.service';
 import { McsAccessControlService } from './mcs-access-control.service';
@@ -31,16 +32,19 @@ export class McsAuthenticationGuard implements CanActivate {
     // We need to update the return url here in order to cater the scenario
     // where the user manually entered the url while no user logged-in
     this._authenticationService.updateLoginReturnUrl(_routerState.url);
-    return this._authenticationService.IsAuthenticated().pipe(
-      map((isAuthenticated) => {
-        let maintenanceModeIsActivated = this._accesscontrolService
-          .hasAccessToFeature(McsFeatureFlag.MaintenanceMode);
-
-        if (maintenanceModeIsActivated) {
+    return this._authenticationService.authenticateUser().pipe(
+      map(identity => {
+        if (this._accesscontrolService.hasAccessToFeature(McsFeatureFlag.MaintenanceMode)) {
           this._navigationService.navigateTo(RouteKey.Maintenance);
           return false;
         }
-        return isAuthenticated;
+
+        if (identity?.isAnonymous) {
+          this._navigationService.navigateTo(RouteKey.Catalog);
+          return false;
+        }
+        this._accesscontrolService.setCatalogAccess(true);
+        return !isNullOrEmpty(identity);
       })
     );
   }

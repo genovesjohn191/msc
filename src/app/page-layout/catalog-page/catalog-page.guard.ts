@@ -1,5 +1,4 @@
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import {
@@ -7,14 +6,16 @@ import {
   CanActivate,
   RouterStateSnapshot
 } from '@angular/router';
-import { McsAuthenticationGuard } from '@app/core';
-import { McsApiService } from '@app/services';
+import {
+  McsAccessControlService,
+  McsAuthenticationGuard
+} from '@app/core';
 
 @Injectable()
 export class CatalogPageGuard implements CanActivate {
 
   constructor(
-    private _apiService: McsApiService,
+    private _accesscontrolService: McsAccessControlService,
     private _defaultAuthGuard: McsAuthenticationGuard
   ) { }
 
@@ -22,12 +23,9 @@ export class CatalogPageGuard implements CanActivate {
     _activatedRoute: ActivatedRouteSnapshot,
     _routerState: RouterStateSnapshot
   ) {
-
-    return this._apiService.getIdentity().pipe(
-      switchMap(identity => {
-        if (identity?.isAnonymous) { return of(true); }
-        return this._defaultAuthGuard.canActivate(_activatedRoute, _routerState);
-      })
-    );
+    if (this._accesscontrolService.hasAccessToCatalog) {
+      return of(true);
+    }
+    return this._defaultAuthGuard.canActivate(_activatedRoute, _routerState);
   }
 }

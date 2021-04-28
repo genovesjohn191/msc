@@ -52,6 +52,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this._authenticationIdentity.isImpersonating;
   }
 
+  public get isAnonymous(): boolean {
+    return this._authenticationIdentity.user?.isAnonymous;
+  }
+
   public get lightLogoIconKey(): string {
     return CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
   }

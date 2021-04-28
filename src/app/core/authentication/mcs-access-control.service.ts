@@ -1,18 +1,25 @@
 import { Injectable } from '@angular/core';
 import {
-  isNullOrEmpty,
-  getSafeProperty
-} from '@app/utilities';
-import {
   McsIdentity,
   McsKeyValuePair
 } from '@app/models';
+import {
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
+
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
 export class McsAccessControlService {
 
+  public hasAccessToCatalog = false;
+
   constructor(private _authenticationIdentity: McsAuthenticationIdentity) { }
+
+  public setCatalogAccess(hasAccess: boolean): void {
+    this.hasAccessToCatalog = hasAccess;
+  }
 
   /**
    * Checks both permission and feature
