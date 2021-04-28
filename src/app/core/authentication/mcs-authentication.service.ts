@@ -1,24 +1,30 @@
+import {
+  forkJoin,
+  of,
+  Observable
+} from 'rxjs';
+import {
+  map,
+  switchMap
+} from 'rxjs/operators';
+
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
-import {
-  Observable,
-  forkJoin
-} from 'rxjs';
-import { map } from 'rxjs/operators';
+import { AppState } from '@app/app.service';
 import {
   McsFeatureFlag,
   McsIdentity
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import { AppState } from '@app/app.service';
-import { McsApiService } from '@app/services';
+
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
-import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { McsAccessControlService } from './mcs-access-control.service';
+import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
 export class McsAuthenticationService {
@@ -91,21 +97,25 @@ export class McsAuthenticationService {
    *
    * Returns true if user is authenticated, and false if otherwise
    */
-  public IsAuthenticated(): Observable<boolean> {
-    let identityObservable = this._apiService.getIdentity();
-    let platformObservable = this._apiService.getPlatform();
-    let metadataLinks = this._apiService.getMetadataLinks();
+  public authenticateUser(): Observable<McsIdentity> {
+    let combinedCalls = forkJoin([
+      this._apiService.getPlatform(),
+      this._apiService.getMetadataLinks()
+    ]);
 
-    return forkJoin([identityObservable, platformObservable, metadataLinks]).pipe(
-      map(results => {
-        let identity = results[0];
-        let platform = results[1];
-        let links = results[2];
-        if (isNullOrEmpty(identity)) { return false; }
+    return this._apiService.getIdentity().pipe(
+      switchMap(identity => {
+        if (identity?.isAnonymous) { return of(identity); }
+        if (isNullOrEmpty(identity)) { return of(null); }
         this._setUserIdentity(identity);
-        this._authenticationIdentity.setActivePlatform(platform);
-        this._authenticationIdentity.setMetadataLinks(links.collection);
-        return true;
+
+        return combinedCalls.pipe(
+          map(([platform, links]) => {
+            this._authenticationIdentity.setActivePlatform(platform);
+            this._authenticationIdentity.setMetadataLinks(links.collection);
+            return identity;
+          })
+        );
       })
     );
   }
@@ -141,6 +151,6 @@ export class McsAuthenticationService {
       // _logoutUrl = '';
     }
 
-     return `${_logoutUrl}`;
+    return `${_logoutUrl}`;
   }
 }

@@ -15,7 +15,7 @@
 </div>
 
 <!-- User panel content -->
-<div mcsAlign="end" class="user-panel-wrapper">
+<div mcsAlign="end" class="user-panel-wrapper" *ngIf="!isAnonymous">
   <ng-container *ngIf="!isImpersonating">
     <div class="global-search" *mcsAccessControl="['RawDataView']; feature: ['EnableLaunchPad']">
       <mat-form-field>
