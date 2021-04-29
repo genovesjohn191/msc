@@ -1939,6 +1939,15 @@ export class McsApiService {
     );
   }
 
+  public deleteTerraformDeployment(id: any): Observable<boolean> {
+    return this._terraformApi.deleteDeployment(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteTerraformDeployment'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public getTerraformModules(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsTerraformModule>> {
     return this._terraformApi.getModules(query, optionalHeaders).pipe(
       catchError((error) =>
@@ -1972,6 +1981,33 @@ export class McsApiService {
     return this._terraformApi.getTag(id, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTag'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public createTerraformDeploymentPlan(id: any): Observable<McsJob> {
+    return this._terraformApi.createPlan(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTerraformDeploymentPlan'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public applyTerraformDeploymentPlan(id: any): Observable<McsJob> {
+    return this._terraformApi.applyDeployment(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.applyTerraformDeploymentPlan'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public destroyTerraformDeployment(id: any): Observable<McsJob> {
+    return this._terraformApi.destroyDeployment(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.destroyTerraformDeployment'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

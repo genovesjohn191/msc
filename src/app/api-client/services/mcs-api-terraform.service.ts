@@ -15,6 +15,7 @@ import {
   McsTerraformDeploymentCreate,
   McsTerraformTagQueryParams,
   McsTerraformDeploymentActivity,
+  McsJob,
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiTerraformService } from '../interfaces/mcs-api-terraform.interface';
@@ -105,6 +106,22 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
+  public deleteDeployment(id: any): Observable<McsApiSuccessResponse<boolean>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}`;
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<boolean>(Boolean, response);
+          console.log('DELETE RESP', apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
   public getModules(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformModule[]>> {
 
     // Set default values if null
@@ -188,4 +205,59 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
         })
       );
   }
+
+  public createPlan(id: any): Observable<McsApiSuccessResponse<McsJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}/activities`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
+      type: 'Plan'
+    });
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public applyDeployment(id: any): Observable<McsApiSuccessResponse<McsJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}/activities`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
+      type: 'Apply'
+    });
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public destroyDeployment(id: any): Observable<McsApiSuccessResponse<McsJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}/activities`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
+      type: 'Destroy'
+    });
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
 }
