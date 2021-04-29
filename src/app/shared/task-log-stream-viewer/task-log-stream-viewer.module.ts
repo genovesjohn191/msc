@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IconModule } from '../icon/icon.module';
 import { PipesModule } from '../pipes';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { PipesModule } from '../pipes';
     ClipboardModule,
     MatButtonModule,
     MatIconModule,
+    MatSnackBarModule,
     IconModule,
     PipesModule
   ],

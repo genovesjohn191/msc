@@ -1,0 +1,6 @@
+<mcs-page [header]="(deployment$ | async).name">
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-azure-deployment-activities [deployment]="deployment$ | async"></mcs-azure-deployment-activities>
+  </mcs-content-panel>
+</mcs-page>
+

@@ -1,5 +1,3 @@
-import { QuillModule } from 'ngx-quill';
-
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { McsStorageService } from '@app/core';
@@ -17,30 +15,41 @@ import { LaunchPadSearchElementsResultComponent } from './search/results-table/e
 import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
 import { LaunchPadWorkflowLaunchComponent } from './workflows/launch-pad-workflow-launch.component';
 import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.component';
+import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/activities/azure-deployment-activities.component';
+import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
+import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
+import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';
 
 @NgModule({
   declarations: [
+    // Workflows
     LaunchPadSearchComponent,
     LaunchPadSearchElementsResultComponent,
     LaunchPadSearchServicesResultComponent,
     LaunchPadWorkflowsComponent,
     LaunchPadWorkflowLaunchComponent,
-
+    // Azure Deployments
+    AzureDeploymentActivitiesComponent,
+    AzureDeploymentOverviewComponent,
+    AzureDeploymentCreateComponent,
     AzureDeploymentsComponent,
-    AzureDeploymentCreateComponent
+    AzureDeploymentComponent
   ],
-  exports: [],
+  exports: [
+    AzureDeploymentActivitiesComponent,
+    AzureDeploymentOverviewComponent
+  ],
   imports: [
     SharedModule,
     LaunchPadCoreModule,
     DynamicFormModule,
-    QuillModule.forRoot(),
     RouterModule.forChild(launchPadRoutes)
   ],
   providers: [
     McsStorageService,
     LaunchPadGuard,
-    DynamicFormModule
+    DynamicFormModule,
+    AzureDeploymentResolver
   ]
 })
 

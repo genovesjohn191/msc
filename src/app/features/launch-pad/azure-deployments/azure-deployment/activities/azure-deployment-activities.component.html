@@ -1,0 +1,98 @@
+<div>
+  <div style="display: flex; flex-direction: row; justify-content:space-between;">
+    <h1>Deployment Activities</h1>
+  </div>
+
+  <mcs-column-selector #columnFilter
+    storageKey="azure-deployments-activities"
+    [defaultFilters]="defaultColumnFilters">
+  </mcs-column-selector>
+  <div *ngIf="deployment" [hidden]="activity" class="listing-table-wrapper">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.id' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.id }}
+        </td>
+      </ng-container>
+
+      <!-- Started Column -->
+      <ng-container matColumnDef="createdOn">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.createdOn' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.createdOn | mcsStdDateFormat: 'friendly' }}
+        </td>
+      </ng-container>
+
+      <!-- Finished Column -->
+      <ng-container matColumnDef="updatedOn">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.finished' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.updatedOn | mcsStdDateFormat: 'friendly' }}
+        </td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.type' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.type }}
+        </td>
+      </ng-container>
+
+      <!-- Header and Data row -->
+      <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+        mcsCursor="pointer"
+        (click)="showActivityDetails(row)"
+        mcsId="deployment-{{ row.id }}"
+        mcsEventTracker="show-deployment-activity-details"
+        mcsEventCategory="launchpad-deployment"
+        mcsEventLabel="deployment-activities-page"></tr>
+    </table>
+
+    <!-- Table Statuses -->
+    <mcs-item orientation="block">
+      <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+        <mcs-loader size="medium"></mcs-loader>
+      </div>
+      <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+        No record
+      </div>
+      <div *ngIf="dataSource?.hasError$ | async" text-center>
+        <div class="listing-status-wrapper">
+          <span>Some error occured</span>
+          <a (click)="retryDatasource()"
+            mcsId
+            mcsEventTracker="retry-loading-deployment-activity-list"
+            mcsEventCategory="launchpad-deployment-activities"
+            mcsEventLabel="deployment-listing-page">Retry</a>
+        </div>
+      </div>
+    </mcs-item>
+
+    <!-- Paginator -->
+    <mcs-paginator #paginator
+      [totalCount]="dataSource?.totalCount$ | async">
+    </mcs-paginator>
+  </div>
+
+  <div *ngIf="activity" style="margin-top: 15px;">
+    <mcs-task-log-stream-viewer [value]="activity.result" [job]="activity.job"></mcs-task-log-stream-viewer>
+    <button
+    mat-raised-button
+    (click)="backToListing()">
+      <mat-icon>chevron_left</mat-icon>
+      Close
+    </button>
+  </div>
+</div>

@@ -3,6 +3,10 @@ import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 
 import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
+import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/activities/azure-deployment-activities.component';
+import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
+import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
+import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';
 import { AzureDeploymentsComponent } from './azure-deployments/azure-deployments.component';
 import { LaunchPadGuard } from './launch-pad.guard';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
@@ -51,4 +55,31 @@ export const launchPadRoutes: Routes = [
     canActivate: [ LaunchPadGuard ],
     canDeactivate: [ McsNavigateAwayGuard ],
   },
+  {
+    path: 'azure-deployments/:id',
+    component: AzureDeploymentComponent,
+    data: { routeId: RouteKey.LaunchPadAzureDeploymentDetails },
+    canActivate: [ LaunchPadGuard ],
+    resolve: {
+      deployment: AzureDeploymentResolver
+    },
+    children: [
+      {
+        path: '',
+        redirectTo: 'overview',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.LaunchPadAzureDeploymentDetailsOverview }
+      },
+      {
+        path: 'overview',
+        component: AzureDeploymentOverviewComponent,
+        data: { routeId: RouteKey.LaunchPadAzureDeploymentDetailsOverview }
+      },
+      {
+        path: 'history',
+        component: AzureDeploymentActivitiesComponent,
+        data: { routeId: RouteKey.LaunchPadAzureDeploymentDetailsHistory }
+      },
+    ]
+  }
 ];

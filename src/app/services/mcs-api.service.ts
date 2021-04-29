@@ -201,6 +201,7 @@ import {
   McsSystemMessageValidate,
   McsTenant,
   McsTerraformDeployment,
+  McsTerraformDeploymentActivity,
   McsTerraformDeploymentCreate,
   McsTerraformModule,
   McsTerraformTag,
@@ -1916,6 +1917,15 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeployment'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getTerraformDeploymentActivities(id: any, query?: McsQueryParam): Observable<McsApiCollection<McsTerraformDeploymentActivity>> {
+    return this._terraformApi.getDeploymentActivities(id, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeploymentActivities'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
