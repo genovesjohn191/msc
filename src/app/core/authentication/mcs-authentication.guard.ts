@@ -40,10 +40,13 @@ export class McsAuthenticationGuard implements CanActivate {
         }
 
         if (identity?.isAnonymous) {
+          this._accesscontrolService.setCatalogAccess(true);
           this._navigationService.navigateTo(RouteKey.Catalog);
           return false;
         }
-        this._accesscontrolService.setCatalogAccess(true);
+        if (!isNullOrEmpty(identity)) {
+          this._accesscontrolService.setCatalogAccess(true);
+        }
         return !isNullOrEmpty(identity);
       })
     );
