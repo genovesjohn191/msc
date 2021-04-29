@@ -23,6 +23,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // NOTE: This component will only read the first tasks in the job.
 
@@ -30,7 +31,7 @@ const ANSI_TO_HTML_CONVERTER = require('ansi-to-html');
 const AUTO_SCROLL_INTERVAL: number = 200;
 
 @Component({
-  selector: 'mcs-task-log-steam-viewer',
+  selector: 'mcs-task-log-stream-viewer',
   templateUrl: 'task-log-stream-viewer.component.html',
   styleUrls: ['task-log-stream-viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,7 +41,7 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
   protected logViewer: ElementRef;
 
   @Input()
-  public height: number = 500;
+  public height: number;
 
   @Input()
   public get job(): McsJob {
@@ -48,19 +49,29 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
   }
   public set job(val: McsJob) {
     let validJob = isNullOrEmpty(this.job) && !isNullOrEmpty(val);
-    if (!validJob) { return; }
-
+    if (!validJob) {
+      return;
+    }
+    this.value = '';
     this._job = val;
   }
 
-  public get viewerStyleHeight(): string {
-    return `height: ${ this.height.toString() }px;`;
+  @Input()
+  public get value(): string {
+    return this._value;
+  }
+  public set value(val: string) {
+    this._value = this._converter.toHtml(val);
   }
 
-  public value: string = '';
+  public get viewerStyleHeight(): string {
+    return this.height ? `height: ${ this.height.toString() }px;` : '';
+  }
+
   public rawValue: string = '';
   public panelOpenState: boolean = true;
 
+  private _value: string;
   private _job: McsJob;
   private _logs: string[] = [];
   private _currentUserJobHandler: Subscription;
@@ -78,7 +89,8 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
 
   public constructor(
     private _changeDetector: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService) {}
+    private _eventDispatcher: EventBusDispatcherService,
+    private _snackBar: MatSnackBar) {}
 
   public ngAfterViewInit(): void {
     this._initialize();
@@ -131,7 +143,18 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  public contentCopied(): void {
+    this._snackBar.open('Log Copied', '', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+  }
+
   private _scrollToBottom(): void {
+    let noJobToMonitor: boolean = isNullOrEmpty(this.job) || this.job.status >= JobStatus.Completed;
+    if (noJobToMonitor) { return; }
+
     let viewerElem = this.logViewer.nativeElement;
 
     // Resets auto scroll counter to ensure continuous auto scroll
@@ -148,15 +171,18 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-
   private _initialize(): void {
+    if (isNullOrEmpty(this.job)) {
+      return;
+    }
+
     this.job.tasks[0]?.logs?.forEach((task) => {
       this._logs.push(task.message);
     });
 
     let hasExistingLogs = !isNullOrEmpty(this._logs);
     if (hasExistingLogs) {
-      this.value = this._converter.toHtml(this._logs.join('\n'));
+      this.value = this._logs.join('\n');
       this.rawValue = this._logs.join('\n');
       this._changeDetector.markForCheck();
     }
@@ -196,7 +222,7 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
       let taskLog = taskLogs[i];
 
       this._logs.push(taskLog.message);
-      this.value = this.value + this._converter.toHtml(taskLog.message + '\n');
+      this.value = this.value + taskLog.message + '\n';
       this.rawValue = this.rawValue + taskLog.message + '\n';
     }
   }

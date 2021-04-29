@@ -14,6 +14,7 @@ import {
   McsTerraformModule,
   McsTerraformDeploymentCreate,
   McsTerraformTagQueryParams,
+  McsTerraformDeploymentActivity,
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiTerraformService } from '../interfaces/mcs-api-terraform.interface';
@@ -63,6 +64,29 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
           return apiResponse;
         })
       );
+  }
+
+  public getDeploymentActivities(id: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformDeploymentActivity[]>> {
+     // Set default values if null
+     let searchParams = new Map<string, any>();
+     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+     searchParams.set('page', query.pageIndex);
+     searchParams.set('per_page', query.pageSize);
+     searchParams.set('search_keyword', query.keyword);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}/activities`;
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+    .pipe(
+      map((response) => {
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsTerraformDeploymentActivity[]>(McsTerraformDeploymentActivity, response);
+        return apiResponse;
+      })
+    );
   }
 
   public createDeployment(deploymentData: McsTerraformDeploymentCreate): Observable<McsApiSuccessResponse<McsTerraformDeployment>> {

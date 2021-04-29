@@ -7,6 +7,8 @@ export enum RouteKey {
   LaunchPadAzureDeployments,
   LaunchPadAzureDeploymentCreate,
   LaunchPadAzureDeploymentDetails,
+  LaunchPadAzureDeploymentDetailsOverview,
+  LaunchPadAzureDeploymentDetailsHistory,
   ReportOverview,
   ReportInsights,
 

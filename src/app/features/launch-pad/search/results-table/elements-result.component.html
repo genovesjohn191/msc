@@ -78,10 +78,10 @@
   <div *ngIf="dataSource?.hasError$ | async" text-center>
     <span margin-right-small>{{ 'launchPadSearch.elements.table.errorMessage' | translate }}</span>
     <a (click)="retryDatasource()"
-      mcsId="retry-datasource"
-      mcsEventTracker="retry-tools"
-      mcsEventCategory="tools"
-      mcsEventLabel="tools-listing-page">{{ 'launchPadSearch.elements.table.retry' | translate }}</a>
+      mcsId
+      mcsEventTracker="retry-loading-crisp-elements-search-result"
+      mcsEventCategory="launchpad-search"
+      mcsEventLabel="launchpad-search-results-listing-page">{{ 'launchPadSearch.elements.table.retry' | translate }}</a>
   </div>
 </mcs-item>
 

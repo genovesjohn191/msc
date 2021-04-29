@@ -62,6 +62,24 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
+  "launchPadAzureDeploymentDetailsOverview": {
+    "enumKey": "LaunchPadAzureDeploymentDetailsOverview",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "overview",
+    "documentTitle": "LAUNCH Pad - Azure Deployment Overview",
+    "requiredPermissions": ["RawDataView"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
+    "requireAllFeatures": true
+  },
+  "launchPadAzureDeploymentDetailsHistory": {
+    "enumKey": "LaunchPadAzureDeploymentDetailsHistory",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "history",
+    "documentTitle": "LAUNCH Pad - Azure Deployment History",
+    "requiredPermissions": ["RawDataView"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
+    "requireAllFeatures": true
+  },
   "reportOverview": {
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",

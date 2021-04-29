@@ -91,6 +91,7 @@ export * from './enumerations/dns-record-type.enum';
 export * from './enumerations/order-cabinet-location.enum';
 export * from './enumerations/workflow-type.enum';
 export * from './enumerations/contact.enum';
+export * from './enumerations/terraform-deployment-activity-type.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -221,6 +222,7 @@ export * from './response/mcs-server-thumbnail';
 export * from './response/mcs-server-vmware-tools';
 export * from './response/mcs-system-message';
 export * from './response/mcs-terraform-deployment';
+export * from './response/mcs-terraform-deployment-activity';
 export * from './response/mcs-terraform-module';
 export * from './response/mcs-terraform-tag';
 export * from './response/mcs-ticket';
