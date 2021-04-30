@@ -32,10 +32,17 @@ export interface IMcsApiTerraformService {
   getDeploymentActivities(id: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformDeploymentActivity[]>>;
 
   /**
-   * This will create the new deployment based on the inputted information
+   * This will create the new deployment
    * @param deploymentData Deployment data to be created
    */
   createDeployment(deploymentData: McsTerraformDeploymentCreate): Observable<McsApiSuccessResponse<McsTerraformDeployment>>;
+
+  /**
+   * This will update an existing deployment
+   * @param id Terraform Deployment identification
+   * @param deploymentData Deployment data to be created
+   */
+  updateDeployment(id: any, deploymentData: McsTerraformDeploymentCreate): Observable<McsApiSuccessResponse<McsTerraformDeployment>>;
 
   /**
    * Delete Terraform deployment by ID (MCS API Response)

@@ -4,6 +4,10 @@ import {
 } from '@app/utilities';
 
 import { McsEntityBase } from '../common/mcs-entity.base';
+import {
+  TerraformDeploymentStatus,
+  TerraformDeploymentStatusSerialization
+} from '../enumerations/terraform-deployment-status.enum';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTerraformDeployment extends McsEntityBase {
@@ -12,6 +16,9 @@ export class McsTerraformDeployment extends McsEntityBase {
 
   @JsonProperty()
   public subscriptionId: string = undefined;
+
+  @JsonProperty()
+  public subscriptionName: string = undefined;
 
   @JsonProperty({
     serializer: McsDateSerialization,
@@ -35,6 +42,9 @@ export class McsTerraformDeployment extends McsEntityBase {
   public companyId: string = undefined;
 
   @JsonProperty()
+  public company: string = undefined;
+
+  @JsonProperty()
   public slugId: string = undefined;
 
   @JsonProperty()
@@ -42,6 +52,9 @@ export class McsTerraformDeployment extends McsEntityBase {
 
   @JsonProperty()
   public tag: string = undefined;
+
+  @JsonProperty()
+  public tagName: string = undefined;
 
   @JsonProperty()
   public subscriptionServiceId: string = undefined;
@@ -53,10 +66,16 @@ export class McsTerraformDeployment extends McsEntityBase {
   public tenantId: string = undefined;
 
   @JsonProperty()
-  public tagName: string = undefined;
+  public moduleName: string = undefined;
 
   @JsonProperty()
-  public moduleName: string = undefined;
+  public busy: boolean = undefined;
+
+  @JsonProperty({
+    serializer: TerraformDeploymentStatusSerialization,
+    deserializer: TerraformDeploymentStatusSerialization
+  })
+  public status: TerraformDeploymentStatus = undefined;
 
   public get statusIconKey(): string {
     // TODO(apascual): Check the status of deployment

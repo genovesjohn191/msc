@@ -1,3 +1,123 @@
-<div>
+<ng-container *ngIf="deployment$ | async" class="limited-view">
 
-</div>
+  <mcs-grid>
+    <mcs-grid-row>
+      <!-- Deployment Properties -->
+      <mcs-grid-column sizeSm="12">
+        <mcs-presentation-panel mcsId="deployment-properties">
+          <ng-container mcsPresentationPanelHeader>
+            <h2>Deployment Properties</h2>
+          </ng-container>
+
+          <mcs-item>
+            <span>Last Deployment:</span>
+            <mcs-icon size="small" [key]="deployment?.statusIconKey"></mcs-icon>
+            <span [innerHTML]="deployment.status | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Subscription:</span>
+            <span [innerHTML]="deployment.subscriptionName | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Company:</span>
+            <span [innerHTML]="deployment.company | mcsDataLabel"></span>
+            <span [innerHTML]="deployment.companyId | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Tenant:</span>
+            <span [innerHTML]="deployment.tenantName | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Last Updated:</span>
+            <span [innerHTML]="deployment.updatedOn | mcsDataLabel | mcsStdDateFormat: 'friendly'"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Created:</span>
+            <span [innerHTML]="deployment.createdOn | mcsDataLabel | mcsStdDateFormat: 'friendly'"></span>
+          </mcs-item>
+        </mcs-presentation-panel>
+      </mcs-grid-column>
+
+      <!-- Module Details -->
+      <mcs-grid-column sizeSm="12">
+        <mcs-presentation-panel mcsId="module-details">
+          <ng-container mcsPresentationPanelHeader>
+            <h2>Module Details</h2>
+          </ng-container>
+
+          <mcs-item>
+            <span>Name:</span>
+            <span [innerHTML]="deployment.moduleName | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Description:</span>
+            <span [innerHTML]="deployment.description | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Category:</span>
+            <span [innerHTML]="deployment.category | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>Tag:</span>
+            <span [innerHTML]="deployment.tagName | mcsDataLabel"></span>
+          </mcs-item>
+        </mcs-presentation-panel>
+      </mcs-grid-column>
+    </mcs-grid-row>
+
+    <mcs-grid-row>
+      <!-- Variables -->
+      <mcs-grid-column sizeSm="12" sizeLg="12">
+        <mcs-presentation-panel mcsId="deployment-tfvars">
+          <ng-container mcsPresentationPanelHeader>
+            <mcs-item>
+              <h2>Terraform Variables</h2>
+            </mcs-item>
+          </ng-container>
+
+          <ng-container>
+            <mcs-code-editor-form-field
+              (onValueChanged)="onVariablesChanged($event)"
+              [(ngModel)]="deployment.tfvars"
+              [disabled]="deployment.busy">
+            </mcs-code-editor-form-field>
+            <div [hidden]="!hasVariableChanges" class="action-wrapper">
+              <button
+                mat-button
+                (click)="resetVariables()"
+                mcsId="reset-deployment-variables"
+                mcsEventTracker="reset-deployment-variable-changes"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="azure-deployment-details-page"
+                [disabled]="deployment.busy">
+                <mat-icon>history</mat-icon>
+                Reset
+              </button>
+              <button
+                mat-raised-button
+                (click)="saveVariables()"
+                color="primary"
+                mcsId="save-deployment-variables"
+                mcsEventTracker="save-deployment-variable-changes"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="azure-deployment-details-page"
+                [disabled]="deployment.busy">
+                <mat-icon>done</mat-icon>
+                Save
+              </button>
+            </div>
+          </ng-container>
+        </mcs-presentation-panel>
+      </mcs-grid-column>
+    </mcs-grid-row>
+
+  </mcs-grid>
+</ng-container>

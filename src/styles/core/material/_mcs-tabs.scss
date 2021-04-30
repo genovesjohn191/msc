@@ -1,4 +1,6 @@
 
+$tab-body-padding: $space-medium 0;
+
 mat-tab-header {
   $tab-font: $base-font-bold;
   $tab-font-size: 17;
@@ -9,5 +11,17 @@ mat-tab-header {
     font-family: $tab-font;
     height: 100%;
     padding: 10px 0;
+  }
+}
+
+.tab-group-body-wrapper {
+  padding: $tab-body-padding;
+}
+
+.warn-snackbar {
+  .mat-simple-snackbar {
+    > span {
+      color: $color-scheme-danger;
+    }
   }
 }

@@ -1,0 +1,11 @@
+@import "../../../../styles/shared/base";
+
+.action-wrapper {
+  @include display-flex(row);
+  justify-content: flex-end;
+  margin-top: $space-medium;
+
+  > * {
+    margin-left: $space-medium;
+  }
+}

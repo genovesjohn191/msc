@@ -1,15 +1,15 @@
 
-<div *ngIf="job" class="task-log-stream-header-wrapper">
-  <div class="status-wrapper">
-    <mcs-icon [key]="getStatusIconKey(job.status)" color="light" size="medium"></mcs-icon>
-    <span class="status-info"><strong>{{ job.description }}</strong>: {{ getJobStatus(job.status) }}</span>
-    <span *ngIf="job.endedOn"> {{ job.endedOn | mcsStdDateFormat: 'friendly' }}</span>
-  </div>
+<div class="task-log-stream-header-wrapper">
   <div>
     Copy to clipboard
     <button mat-icon-button [cdkCopyToClipboard]="rawValue" (click)="contentCopied()">
       <mat-icon>content_copy</mat-icon>
     </button>
+  </div>
+  <div class="status-wrapper" *ngIf="job">
+    <mcs-icon [key]="getStatusIconKey(job.status)" color="light" size="medium"></mcs-icon>
+    <span class="status-info"><strong>{{ job.description }}</strong>: {{ getJobStatus(job.status) }}</span>
+    <span *ngIf="job.endedOn"> {{ job.endedOn | mcsStdDateFormat: 'friendly' }}</span>
   </div>
 </div>
 <div class="task-log-stream-wrapper">
