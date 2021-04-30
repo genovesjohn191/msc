@@ -28,7 +28,7 @@ export class McsTerraformDeploymentActivity extends McsEntityBase {
   public status: string = undefined;
 
   @JsonProperty()
-  public tag: string = undefined;
+  public tagName: string = undefined;
 
   @JsonProperty({
     serializer: TerraformDeploymentActivityTypeSerialization,

@@ -1,6 +1,22 @@
+
+
 <mcs-page [header]="(deployment$ | async).name">
   <mcs-content-panel *mcsContentPanelDef>
-    <mcs-azure-deployment-activities [deployment]="deployment$ | async"></mcs-azure-deployment-activities>
+    <ng-container *ngIf="deployment.busy">
+      <mcs-busy-ribbon theme="dark" margin-bottom-small>
+        <span>Something is going on</span>
+      </mcs-busy-ribbon>
+    </ng-container>
+
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+      <mat-tab label="Overview">
+      </mat-tab>
+      <mat-tab label="History">
+      </mat-tab>
+    </mat-tab-group>
+    <div class="tab-group-body-wrapper">
+      <router-outlet></router-outlet>
+    </div>
   </mcs-content-panel>
 </mcs-page>
 

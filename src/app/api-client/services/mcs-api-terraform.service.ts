@@ -90,12 +90,32 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
     );
   }
 
-  public createDeployment(deploymentData: McsTerraformDeploymentCreate): Observable<McsApiSuccessResponse<McsTerraformDeployment>> {
+  public createDeployment(deploymentData: McsTerraformDeploymentCreate):
+  Observable<McsApiSuccessResponse<McsTerraformDeployment>> {
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/terraform/deployments`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(deploymentData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsTerraformDeployment>(McsTerraformDeployment, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public updateDeployment(id: any, deploymentData: McsTerraformDeploymentCreate):
+  Observable<McsApiSuccessResponse<McsTerraformDeployment>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(deploymentData);
+
+    return this._mcsApiService.put(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
@@ -116,7 +136,6 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<boolean>(Boolean, response);
-          console.log('DELETE RESP', apiResponse);
           return apiResponse;
         })
       );

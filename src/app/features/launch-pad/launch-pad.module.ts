@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { McsStorageService } from '@app/core';
 import { DynamicFormModule } from '@app/features-shared';
-import { SharedModule } from '@app/shared';
+import { ConfirmationDialogDialogComponent, SharedModule } from '@app/shared';
 
 import { LaunchPadCoreModule } from './core/launch-pad-core.module';
 import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
@@ -19,6 +19,7 @@ import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-de
 import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
 import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';
+import { AzureDeploymentService } from './azure-deployments/azure-deployment/azure-deployment.service';
 
 @NgModule({
   declarations: [
@@ -33,11 +34,17 @@ import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-depl
     AzureDeploymentOverviewComponent,
     AzureDeploymentCreateComponent,
     AzureDeploymentsComponent,
-    AzureDeploymentComponent
+    AzureDeploymentComponent,
+    // Shared
+    ConfirmationDialogDialogComponent
   ],
   exports: [
     AzureDeploymentActivitiesComponent,
-    AzureDeploymentOverviewComponent
+    AzureDeploymentOverviewComponent,
+    ConfirmationDialogDialogComponent
+  ],
+  entryComponents: [
+    ConfirmationDialogDialogComponent
   ],
   imports: [
     SharedModule,
@@ -49,7 +56,8 @@ import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-depl
     McsStorageService,
     LaunchPadGuard,
     DynamicFormModule,
-    AzureDeploymentResolver
+    AzureDeploymentResolver,
+    AzureDeploymentService
   ]
 })
 

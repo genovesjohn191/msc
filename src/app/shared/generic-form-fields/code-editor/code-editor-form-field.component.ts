@@ -34,7 +34,7 @@ export class CodeEditorFormFieldComponent extends GenericFormFieldComponentBase 
   public id: string = McsUniqueId.NewId('code-editor');
 
   @Input()
-  public height: string = '400px';
+  public height: string = 'auto';
 
   public backgroundColor: string = '#23241f';
   public readOnlyBackgroundColor: string = '#2b2b2b';

@@ -92,6 +92,8 @@ export * from './enumerations/order-cabinet-location.enum';
 export * from './enumerations/workflow-type.enum';
 export * from './enumerations/contact.enum';
 export * from './enumerations/terraform-deployment-activity-type.enum';
+export * from './enumerations/terraform-deployment-status.enum';
+
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';

@@ -1939,6 +1939,16 @@ export class McsApiService {
     );
   }
 
+  public updateTerraformDeployment(id: any, deploymentData: McsTerraformDeploymentCreate): Observable<McsTerraformDeployment> {
+    return this._terraformApi.updateDeployment(id, deploymentData).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateTerraformDeployment'))
+      ),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public deleteTerraformDeployment(id: any): Observable<boolean> {
     return this._terraformApi.deleteDeployment(id).pipe(
       catchError((error) =>

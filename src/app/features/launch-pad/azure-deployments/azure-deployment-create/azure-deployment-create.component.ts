@@ -38,7 +38,6 @@ import {
   CommonDefinition,
   isNullOrEmpty
 } from '@app/utilities';
-import { CodeEditorFieldContent } from '@app/shared';
 
 interface DeploymentInfo {
   tenant: string;
