@@ -3143,6 +3143,8 @@
     "submit": "Submit"
   },
   "message": {
+    "noSolutionsDisplay": "No solutions to be displayed.",
+    "noProductsDisplay": "No products to be displayed.",
     "productEnquireNow": "Click Enquire Now, choose your preferred contact method and we'll get in touch to discuss this product more with you.",
     "solutionEnquireNow": "Click Enquire Now, choose your preferred contact method and we'll get in touch to discuss this solution more with you.",
     "enquiryError": "An error occurred when attempting to submit your enquiry.",

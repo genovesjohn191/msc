@@ -105,9 +105,10 @@ export class McsAuthenticationService {
 
     return this._apiService.getIdentity().pipe(
       switchMap(identity => {
-        if (identity?.isAnonymous) { return of(identity); }
         if (isNullOrEmpty(identity)) { return of(null); }
+
         this._setUserIdentity(identity);
+        if (identity?.isAnonymous) { return of(identity); }
 
         return combinedCalls.pipe(
           map(([platform, links]) => {
