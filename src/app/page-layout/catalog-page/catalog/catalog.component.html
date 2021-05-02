@@ -76,8 +76,10 @@
               </mcs-section>
             </mcs-left-panel-item>
           </ng-container>
+        </ng-container>
 
-          <!-- Use Case Filtering Options -->
+        <!-- Use Case Filtering Options -->
+        <ng-container *ngIf="activeCatalogItem.isForItemGroupView">
           <mcs-left-panel-item *mcsLeftPanelItemDef>
             <mcs-section>
               <strong>{{ 'catalog.useCase' | translate }}</strong>

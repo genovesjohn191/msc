@@ -22,4 +22,9 @@ export class CatalogItemDetails {
   public get isForDetailView(): boolean {
     return this.isForProductView || this.isForSolutionView;
   }
+
+  public get isForItemGroupView(): boolean {
+    return this.catalogViewType === CatalogViewType.ProductPlatform ||
+      this.catalogViewType === CatalogViewType.Solutions;
+  }
 }
