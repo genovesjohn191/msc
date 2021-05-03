@@ -177,8 +177,8 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     let dialogData = {
       data: resource,
       type: 'info',
-      title: this._translateService.instant('dialogInsufficientStorageSnapshot.title'),
-      message: this._translateService.instant('dialogInsufficientStorageSnapshot.message', { vdc_name: resource.name })
+      title: this._translateService.instant('dialog.snapshotInsufficientStorage.title'),
+      message: this._translateService.instant('dialog.snapshotInsufficientStorage.message', { vdc_name: resource.name })
     } as DialogMessageConfig;
 
     this._dialogService.openMessage(dialogData);
@@ -193,8 +193,8 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     let dialogData = {
       data: resource,
       type: 'info',
-      title: this._translateService.instant('dialogInvalidDiskSnapshot.title'),
-      message: this._translateService.instant('dialogInvalidDiskSnapshot.message', {
+      title: this._translateService.instant('dialog.snapshotDiskInvalid.title'),
+      message: this._translateService.instant('dialog.snapshotDiskInvalid.message', {
         vdc_name: resource.name,
         vCloudUrl: server.portalUrl
       })
@@ -211,8 +211,8 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     let dialogData = {
       data: server,
       type: 'info',
-      title: this._translateService.instant('dialogCreateSnapshot.title'),
-      message: this._translateService.instant('dialogCreateSnapshot.message', { server_name: server.name })
+      title: this._translateService.instant('dialog.snapshotCreate.title'),
+      message: this._translateService.instant('dialog.snapshotCreate.message', { server_name: server.name })
     } as DialogConfirmation<McsServer>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
@@ -244,8 +244,8 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
   private _showDiskConflictDialog(): void {
     let dialogData = {
       type: 'info',
-      title: this._translateService.instant('dialogDiskConflictSnapshot.title'),
-      message: this._translateService.instant('dialogDiskConflictSnapshot.message')
+      title: this._translateService.instant('dialog.snapshotDiskConflict.title'),
+      message: this._translateService.instant('dialog.snapshotDiskConflict.message')
     } as DialogMessageConfig;
 
     this._dialogService.openMessage(dialogData);
@@ -260,8 +260,8 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     let dialogData = {
       data: server,
       type: 'warning',
-      title: this._translateService.instant('dialogDeleteSnapshot.title'),
-      message: this._translateService.instant('dialogDeleteSnapshot.message', {
+      title: this._translateService.instant('dialog.snapshotDelete.title'),
+      message: this._translateService.instant('dialog.snapshotDelete.message', {
         snapshot_name: this._standardDateFormatPipe.transform(snapshot.createdOn)
       })
     } as DialogConfirmation<McsServer>;
@@ -295,8 +295,8 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     let dialogData = {
       data: server,
       type: 'info',
-      title: this._translateService.instant('dialogRestoreSnapshot.title'),
-      message: this._translateService.instant('dialogRestoreSnapshot.message', {
+      title: this._translateService.instant('dialog.snapshotRestore.title'),
+      message: this._translateService.instant('dialog.snapshotRestore.message', {
         server_name: server.name,
         snapshot_name: this._standardDateFormatPipe.transform(snapshot.createdOn)
       })

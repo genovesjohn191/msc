@@ -208,8 +208,8 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
 
     let dialogData = {
       data: powerStateDetails,
-      title: this._translateService.instant('dialogStopServerSingle.title'),
-      message: this._translateService.instant('dialogStopServerSingle.message', { server_name: server.name }),
+      title: this._translateService.instant('dialog.serverStopSingle.title'),
+      message: this._translateService.instant('dialog.serverStopSingle.message', { server_name: server.name }),
       type: 'info'
     } as DialogConfirmation<McsServerPowerstateCommand>;
 

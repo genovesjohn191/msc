@@ -202,8 +202,8 @@ export class ServerCommandComponent {
 
     let dialogData = {
       data: powerState,
-      title: this._translateService.instant('dialogResumeServerSingle.title'),
-      message: this._translateService.instant('dialogResumeServerSingle.message'),
+      title: this._translateService.instant('dialog.serverResumeSingle.title'),
+      message: this._translateService.instant('dialog.serverResumeSingle.message'),
       type: 'warning'
     } as DialogConfirmation<McsServerPowerstateCommand>;
 
@@ -230,8 +230,8 @@ export class ServerCommandComponent {
 
     let dialogData = {
       data: powerState,
-      title: this._translateService.instant('dialogSuspendServerSingle.title'),
-      message: this._translateService.instant('dialogSuspendServerSingle.message'),
+      title: this._translateService.instant('dialog.serverSuspendSingle.title'),
+      message: this._translateService.instant('dialog.serverSuspendSingle.message'),
       type: 'warning'
     } as DialogConfirmation<McsServerPowerstateCommand>;
 
@@ -283,8 +283,8 @@ export class ServerCommandComponent {
 
     let dialogData = {
       data: deleteDetails,
-      title: this._translateService.instant('dialogDeleteServerSingle.title'),
-      message: this._translateService.instant('dialogDeleteServerSingle.message'),
+      title: this._translateService.instant('dialog.serverDeleteSingle.title'),
+      message: this._translateService.instant('dialog.serverDeleteSingle.message'),
       type: 'warning'
     } as DialogConfirmation<McsServerDelete>;
 
@@ -313,12 +313,12 @@ export class ServerCommandComponent {
     });
 
     let messageContentByState = this.server.isPoweredOff ?
-      this._translateService.instant('dialogResetPassword.poweredOffMessage', { server_name: this.server.name }) :
-      this._translateService.instant('dialogResetPassword.poweredOnMessage', { server_name: this.server.name });
+      this._translateService.instant('dialog.serverResetPassword.poweredOffMessage', { server_name: this.server.name }) :
+      this._translateService.instant('dialog.serverResetPassword.poweredOnMessage', { server_name: this.server.name });
 
     let dialogData = {
       data: resetDetails,
-      title: this._translateService.instant('dialogResetPassword.title'),
+      title: this._translateService.instant('dialog.serverResetPassword.title'),
       message: messageContentByState,
       type: 'info'
     } as DialogConfirmation<McsServerDelete>;

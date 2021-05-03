@@ -103,9 +103,9 @@ export class SessionComponent implements OnInit {
   private _showTimeOutDialog(): void {
     this._closeIdleDialog();
     let dialogData = {
-      title: this._translateService.instant(`dialogSessionTimedOut.title`),
-      message: this._translateService.instant(`dialogSessionTimedOut.message`),
-      okText: this._translateService.instant(`dialogSessionTimedOut.signIn`)
+      title: this._translateService.instant(`dialog.sessionTimedOut.title`),
+      message: this._translateService.instant(`dialog.sessionTimedOut.message`),
+      okText: this._translateService.instant(`dialog.sessionTimedOut.signIn`)
     } as DialogMessageConfig;
 
     let dialogRef = this._dialogService.openMessage(dialogData, {
