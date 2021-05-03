@@ -7,8 +7,12 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 import { WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
 import { Observable } from 'rxjs';
 import { McsApiService } from '@app/services';
@@ -28,6 +32,7 @@ import {
 import { productWorkflowGroupMap } from '../../workflows/product-workflow-group.map';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
+
 
 @Component({
   selector: 'mcs-launch-pad-object-selector',
@@ -69,6 +74,7 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
   constructor(
     private _changeDetector: ChangeDetectorRef,
     private _apiService: McsApiService,
+    private _translateService: TranslateService,
     private _snackBar: MatSnackBar) { }
 
   public ngOnInit(): void {
@@ -135,7 +141,9 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
             this.hasError = false;
             this._changeDetector.markForCheck();
 
-            this._snackBar.open('Unable to retrieve CRISP attributes.', 'OK', {
+            this._snackBar.open(this._translateService.instant('snackBar.workflowCrispObjectLoadingFailed'),
+            this._translateService.instant('action.undo'),
+            {
               duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
               horizontalPosition: 'center',
               verticalPosition: 'bottom',

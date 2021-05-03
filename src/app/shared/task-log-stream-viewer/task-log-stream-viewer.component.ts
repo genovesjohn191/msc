@@ -8,6 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { EventBusDispatcherService } from '@app/event-bus';
@@ -90,6 +91,7 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
   public constructor(
     private _changeDetector: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
+    private _translateService: TranslateService,
     private _snackBar: MatSnackBar) {}
 
   public ngAfterViewInit(): void {
@@ -144,7 +146,10 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
   }
 
   public contentCopied(): void {
-    this._snackBar.open('Log Copied', '', {
+    this._snackBar.open(
+    this._translateService.instant('snackBar.terraformDeploymentActivitiesLogCopy'),
+    '',
+    {
       duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'

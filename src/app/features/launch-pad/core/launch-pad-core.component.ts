@@ -1,5 +1,11 @@
-import { Subject, throwError } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import {
+  Subject,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -34,6 +40,7 @@ import {
   McsWorkflowCreate
 } from '@app/models';
 import { WorkflowProvisionCompletionState } from './layout/workflow-provision-state/workflow-provision-state.component';
+import { TranslateService } from '@ngx-translate/core';
 
 enum WizardStep  {
   EditWorkflowGroup = 0,
@@ -114,6 +121,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     private _storageService: McsStorageService,
     private _changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar,
+    private _translateService: TranslateService,
     private _apiService: McsApiService
   ) { }
 
@@ -393,7 +401,9 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   }
 
   private _showWorkflowRemovalNotification(title: string): void {
-    let deleteConfirmationRef = this._snackBar.open(`${title} removed.`, 'Undo', {
+    let deleteConfirmationRef = this._snackBar.open(`${title} removed.`,
+    this._translateService.instant('action.undo'),
+    {
       duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',

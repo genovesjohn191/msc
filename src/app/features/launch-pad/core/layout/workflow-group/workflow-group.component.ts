@@ -1,13 +1,4 @@
-import {
-  forkJoin,
-  throwError,
-  Subject
-} from 'rxjs';
-import {
-  catchError,
-  takeUntil
-} from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -22,6 +13,16 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  forkJoin,
+  throwError,
+  Subject
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
+
 import {
   McsApiErrorContext,
   McsObjectCrispElement,
@@ -144,6 +145,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     private _workflowService: WorkflowService,
     private _apiService: McsApiService,
     private _dialog: MatDialog,
+    private _translateService: TranslateService,
     private _snackBar: MatSnackBar) {
 
       this._parentServiceRetrieved = new EventEmitter<McsObjectCrispElementService[]>();
@@ -279,7 +281,10 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     .pipe(
       catchError((error: McsApiErrorContext) => {
         if (error?.details?.status !== 404) {
-          this._snackBar.open('Unable to retrieve object from CRISP.', 'OK', {
+          this._snackBar.open(
+          this._translateService.instant('snackBar.workflowCrispObjectLoadingFailed'),
+          this._translateService.instant('action.ok'),
+          {
             duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
@@ -352,7 +357,10 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       forkJoin(tasks$)
       .pipe(catchError((error) => {
         if (error?.details?.status !== 404) {
-          this._snackBar.open('Unable to retrieve associated object from CRISP.', 'OK', {
+          this._snackBar.open(
+          this._translateService.instant('snackBar.workflowCrispObjectAssociatesLoadingFailed'),
+          this._translateService.instant('action.ok'),
+          {
             duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
@@ -515,7 +523,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         componentRef.instance.open();
       }
     }
-
 
     this.workflowComponentRef.push(componentRef);
   }
