@@ -1,3 +1,5 @@
+import { isNullOrEmpty } from './mcs-object.function';
+
 let luxon = require('luxon');
 let moment = require('moment');
 let momenttz = require('moment-timezone');
@@ -76,6 +78,50 @@ export function getTimeDifference(firstDate: Date, secondDate: Date): number {
   // Calculate the time difference using math functions
   let timeDifference = Math.abs(secondDate.getTime() - firstDate.getTime());
   return timeDifference;
+}
+
+/**
+ * Returns a friendly timespan e.g. 4d 6h
+ * @param milleseconds timespan in milleseconds
+ */
+export function getFriendlyTimespan(milleseconds: number): string {
+  if (isNullOrEmpty(milleseconds) || milleseconds < 0) {
+    return '';
+  }
+  if (milleseconds > 0 && milleseconds < 1000) {
+    return '1s';
+  }
+
+  let timespan: number = Math.floor(milleseconds * 0.001);
+  let days = 0;
+  let hours = 0;
+  let mins = 0;
+  let secs = 0;
+
+  // Calculate for days
+  if (timespan >= 86400) {
+    days = Math.floor(timespan / 86400);
+    timespan = timespan - (days * 86400);
+  }
+  // Calculate for hours
+  if (timespan >= 3600) {
+    hours = Math.floor(timespan / 3600);
+    timespan = timespan - (hours * 3600);
+  }
+  // Calculate for mins
+  if (timespan >= 60) {
+    mins = Math.floor(timespan / 60);
+    secs = timespan - (mins * 60);
+  } else {
+    secs = timespan;
+  }
+
+  let friendlyTimespan = '';
+  if (days > 0) { friendlyTimespan = `${days}d `}
+  if (hours > 0) { friendlyTimespan = `${friendlyTimespan}${hours}h `}
+  if (mins > 0 && days === 0) { friendlyTimespan = `${friendlyTimespan}${mins}m `}
+  if (secs > 0 && hours === 0) { friendlyTimespan = `${friendlyTimespan}${secs}s `}
+  return friendlyTimespan.trim();
 }
 
 /**

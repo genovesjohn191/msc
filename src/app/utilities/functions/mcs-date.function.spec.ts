@@ -11,7 +11,8 @@ import {
   getMonth,
   getTimeDifference,
   getYear,
-  isDateFormatValid
+  isDateFormatValid,
+  getFriendlyTimespan
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -66,6 +67,43 @@ describe('DATE Functions', () => {
       let timeDifference = getTimeDifference(firstDate, secondDate);
       expect(timeDifference).not.toEqual(15000);
       expect(timeDifference).toEqual(10000);
+    });
+  });
+
+  describe('getFriendlyTimespan()', () => {
+    it(`should convert days correctly`, () => {
+      let timespan = getFriendlyTimespan(106400 * 1000);
+      expect(timespan).toEqual('1d 5h');
+    });
+
+    it(`should convert hours correctly`, () => {
+      let timespan = getFriendlyTimespan(12503 * 1000);
+      expect(timespan).toEqual('3h 28m');
+    });
+
+    it(`should convert minutes correctly`, () => {
+      let timespan = getFriendlyTimespan(129 * 1000);
+      expect(timespan).toEqual('2m 9s');
+    });
+
+    it(`should convert seconds correctly`, () => {
+      let timespan = getFriendlyTimespan(50 * 1000);
+      expect(timespan).toEqual('50s');
+    });
+
+    it(`should round up if less than a second`, () => {
+      let timespan = getFriendlyTimespan(500);
+      expect(timespan).toEqual('1s');
+    });
+
+    it(`should return empty for negative parameter`, () => {
+      let timespan = getFriendlyTimespan(-1);
+      expect(timespan).toEqual('');
+    });
+
+    it(`should return empty for empty or null parameter`, () => {
+      let timespan = getFriendlyTimespan(null);
+      expect(timespan).toEqual('');
     });
   });
 
