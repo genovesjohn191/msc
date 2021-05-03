@@ -34,7 +34,9 @@ import {
 } from '@app/shared';
 import {
   createObject,
+  getFriendlyTimespan,
   getSafeProperty,
+  getTimeDifference,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
@@ -127,21 +129,8 @@ export class AzureDeploymentActivitiesComponent implements OnDestroy {
   public getDuration(startDate: Date, endDate: Date): string {
     if (isNullOrEmpty(startDate) || isNullOrEmpty(endDate)) { return ''; }
 
-    let eventStartTime = startDate;
-    let eventEndTime = endDate;
-    let duration: number = eventEndTime.valueOf() - eventStartTime.valueOf();
-    duration = duration * 0.001;
-    let durationPrefix: string = 'seconds';
-    // TODO: Create a proper converter
-    if (duration > 60) {
-      durationPrefix = 'minutes';
-      duration = duration / 60;
-    }
-    if (duration > 60) {
-      durationPrefix = 'hours';
-      duration = (duration / 60);
-    }
-    return (Math.round((duration + Number.EPSILON) * 100) / 100).toString() + ' seconds';
+    let duration: number = getTimeDifference(startDate, endDate);
+    return getFriendlyTimespan(duration);
   }
 
   private _getDeploymentActivities(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTerraformDeploymentActivity>> {
