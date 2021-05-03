@@ -115,7 +115,9 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
 
   public _showSaveNotification(): void {
     this._snackBar.open(
-      this._translateService.instant('snackBar.terraformDeploymentSaveVariablesSuccessNotification'), '', {
+    this._translateService.instant('snackBar.terraformDeploymentSaveVariablesSuccessNotification'),
+    '',
+    {
       duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'

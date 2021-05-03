@@ -349,14 +349,14 @@
 <ng-template #submitDialogTemplate>
   <mcs-dialog *ngIf="order$ | async as selectedOrder">
     <mcs-dialog-header [dialogRefTemplate]="dialogRef">
-      <h1>{{ 'dialogSubmitOrder.title' | translate  }}</h1>
+      <h1>{{ 'dialog.orderSubmit.title' | translate  }}</h1>
     </mcs-dialog-header>
 
     <mcs-dialog-content>
       <mcs-section>
         <mcs-item>
           <mcs-icon [key]="infoIconKey"></mcs-icon>
-          <span margin-left-medium [innerHtml]="'dialogSubmitOrder.message' | translate: { order:selectedOrder?.description }"></span>
+          <span margin-left-medium [innerHtml]="'dialog.orderSubmit.message' | translate: { order:selectedOrder?.description }"></span>
         </mcs-item>
         <mcs-order-agreement orderAgreementType="chargesQuoted" wrapAgreement="false"></mcs-order-agreement>
       </mcs-section>

@@ -242,8 +242,8 @@ export class ServersComponent implements OnInit, OnDestroy {
   public deleteMultipleServers(): void {
     let dialogData = {
       data: this.dataSelection.getSelectedItems(),
-      title: this._translateService.instant('dialogDeleteServerMultiple.title'),
-      message: this._translateService.instant('dialogDeleteServerMultiple.message'),
+      title: this._translateService.instant('dialog.serverDeleteMultiple.title'),
+      message: this._translateService.instant('dialog.serverDeleteMultiple.message'),
       type: 'warning'
     } as DialogConfirmation<McsServerDelete>;
 
@@ -267,8 +267,8 @@ export class ServersComponent implements OnInit, OnDestroy {
   public suspendMultipleServers(): void {
     let dialogData = {
       data: this.dataSelection.getSelectedItems(),
-      title: this._translateService.instant('dialogSuspendServerMultiple.title'),
-      message: this._translateService.instant('dialogSuspendServerMultiple.message'),
+      title: this._translateService.instant('dialog.serverSuspendMultiple.title'),
+      message: this._translateService.instant('dialog.serverSuspendMultiple.message'),
       type: 'warning'
     } as DialogConfirmation<any>;
 
@@ -294,8 +294,8 @@ export class ServersComponent implements OnInit, OnDestroy {
   public resumeMultipleServers(): void {
     let dialogData = {
       data: this.dataSelection.getSelectedItems(),
-      title: this._translateService.instant('dialogResumeServerMultiple.title'),
-      message: this._translateService.instant('dialogResumeServerMultiple.message'),
+      title: this._translateService.instant('dialog.serverResumeMultiple.title'),
+      message: this._translateService.instant('dialog.serverResumeMultiple.message'),
       type: 'warning'
     } as DialogConfirmation<any>;
 

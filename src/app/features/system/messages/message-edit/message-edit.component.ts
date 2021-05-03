@@ -171,8 +171,8 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
     let dialogData = {
       data: message,
       type: 'warning',
-      title: this._translateService.instant('dialogSaveConflictSystemMessageEdit.title'),
-      message: this._translateService.instant('dialogSaveConflictSystemMessageEdit.message')
+      title: this._translateService.instant('dialog.systemMessageUpdateOverride.title'),
+      message: this._translateService.instant('dialog.systemMessageUpdateOverride.message')
     } as DialogConfirmation<McsSystemMessageEdit>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
@@ -195,8 +195,8 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
     let dialogData = {
       data: message,
       type: 'warning',
-      title: this._translateService.instant('dialogSaveSystemMessageEdit.title'),
-      message: this._translateService.instant('dialogSaveSystemMessageEdit.message')
+      title: this._translateService.instant('dialog.systemMessageUpdate.title'),
+      message: this._translateService.instant('dialog.systemMessageUpdate.message')
     } as DialogConfirmation<McsSystemMessageEdit>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);

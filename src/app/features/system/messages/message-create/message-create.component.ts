@@ -157,8 +157,8 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDe
     let dialogData = {
       data: message,
       type: 'warning',
-      title: this._translateService.instant('dialogSaveConflictSystemMessageNew.title'),
-      message: this._translateService.instant('dialogSaveConflictSystemMessageNew.message')
+      title: this._translateService.instant('dialog.systemMessageOverride.title'),
+      message: this._translateService.instant('dialog.systemMessageOverride.message')
     } as DialogConfirmation<McsSystemMessageCreate>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
@@ -180,8 +180,8 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDe
     let dialogData = {
       data: message,
       type: 'warning',
-      title: this._translateService.instant('dialogSaveSystemMessageNew.title'),
-      message: this._translateService.instant('dialogSaveSystemMessageNew.message')
+      title: this._translateService.instant('dialog.systemMessageSave.title'),
+      message: this._translateService.instant('dialog.systemMessageSave.message')
     } as DialogConfirmation<McsSystemMessageCreate>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);

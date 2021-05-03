@@ -223,8 +223,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     let dialogData = {
       data: nic,
       type: 'warning',
-      title: this._translateService.instant('dialogDeleteNic.title'),
-      message: this._translateService.instant('dialogDeleteNic.message', { nic_name: nic.name })
+      title: this._translateService.instant('dialog.nicDelete.title'),
+      message: this._translateService.instant('dialog.nicDelete.message', { nic_name: nic.name })
     } as DialogConfirmation<McsServerNic>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);

@@ -59,8 +59,8 @@ export class DefaultPageComponent {
     }
 
     let dialogData = {
-      title: this._translateService.instant('dialogResetPasswordFinished.title'),
-      message: this._translateService.instant('dialogResetPasswordFinished.message', {
+      title: this._translateService.instant('dialog.serverResetPasswordFinished.title'),
+      message: this._translateService.instant('dialog.serverResetPasswordFinished.message', {
         server_name: credentials.server,
         username: credentials.username,
         password: credentials.password

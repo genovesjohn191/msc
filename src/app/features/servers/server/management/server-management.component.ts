@@ -251,8 +251,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     let dialogData = {
       data: media,
       type: 'warning',
-      title: this._translate.instant('dialogDetachMedia.title'),
-      message: this._translate.instant('dialogDetachMedia.message', { media_name: media.name })
+      title: this._translate.instant('dialog.mediaDetach.title'),
+      message: this._translate.instant('dialog.mediaDetach.message', { media_name: media.name })
     } as DialogConfirmation<McsServerMedia>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
