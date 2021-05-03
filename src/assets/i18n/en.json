@@ -2894,7 +2894,24 @@
     "getAzureServices": "Something went wrong while retrieving the list of services. Please try again.",
     "getNetworkDnsById": "Something went wrong while retrieving this DNS service. Please try again.",
     "getSubscriptions": "Something went wrong while retrieving your subscription information. Please try again.",
-    "getManagementServices": "Something went wrong while retrieving your management services information. Please try again."
+    "getManagementServices": "Something went wrong while retrieving your management services information. Please try again.",
+    "getTerraformDeployments": "Something went wrong while retrieving your Azure deployments. Please try again.",
+    "getTerraformDeployment": "Something went wrong while retrieving your Azure deployment details. Please try again.",
+    "getTerraformDeploymentActivities": "Something went wrong while retrieving your Azure deployment activities. Please try again.",
+    "createTerraformDeployment": "Something went wrong while creating your Azure deployment. Please try again.",
+    "updateTerraformDeployment": "Something went wrong while updating your Azure deployment. Please try again.",
+    "deleteTerraformDeployment": "Something went wrong while deleting your Azure deployment. Please try again.",
+    "getTerraformModules": "Something went wrong while retrieving your deployment modules. Please try again.",
+    "getTerraformModule": "Something went wrong while retrieving your deployment module details. Please try again.",
+    "getTerraformTags": "Something went wrong while retrieving your deployment tags. Please try again.",
+    "getTerraformTag": "Something went wrong while retrieving your deployment tag details. Please try again.",
+    "createTerraformDeploymentPlan": "Something went wrong while creating your Azure deployment plan. Please try again.",
+    "applyTerraformDeploymentPlan": "Something went wrong while applying your Azure deployment. Please try again.",
+    "destroyTerraformDeployment": "Something went wrong while destroying your Azure deployment. Please try again.",
+    "provisionWorkflows": "Something went wrong while provisioning your workflow. Please try again.",
+    "getCrispElements": "Something went wrong while retrieving CRISP elements. Please try again.",
+    "getCrispElement": "Something went wrong while retrieving CRISP element details. Please try again.",
+    "getInstalledServices": "Something went wrong while retrieving installed services. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3180,6 +3197,9 @@
   "snackBar": {
     "terraformDeploymentSaveVariablesSuccessNotification": "Variables saved successfully.",
     "terraformDeploymentReloadVariablesSuccessNotification": "Variables reloaded successfully.",
-    "terraformDeploymentSaveFailureNotification": "Failed to save deployment updates."
+    "terraformDeploymentSaveFailureNotification": "Failed to save deployment updates.",
+    "terraformDeploymentActivitiesLogCopy": "Log copied to clipboard.",
+    "workflowCrispObjectLoadingFailed": "Unable to retrieve details from CRISP.",
+    "workflowCrispObjectAssociatesLoadingFailed": "Unable to retrieve associated services information from CRISP."
   }
 }
