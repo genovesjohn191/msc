@@ -28,6 +28,7 @@ import {
 import { AzureDeploymentService } from '../azure-deployment.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogDialogComponent } from '@app/shared';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-azure-deployment-overview',
@@ -58,6 +59,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
     private _apiService: McsApiService,
     private _deploymentService: AzureDeploymentService,
     private _dialog: MatDialog,
+    private _translateService: TranslateService
   ) {
     this._subscribeToDeploymentDetails();
   }
@@ -82,12 +84,14 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   }
 
   public _showResetNotification(): void {
-    let reloadConfirmationRef = this._snackBar.open('Variables reloaded successfully.', 'Undo', {
+    let reloadConfirmationRef = this._snackBar.open(
+    this._translateService.instant('snackBar.terraformDeploymentReloadVariablesSuccessNotification'),
+    this._translateService.instant('action.undo'),
+    {
       duration: 10000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
     });
-
 
     reloadConfirmationRef.onAction()
     .pipe(takeUntil(this._snackBarSubject))
@@ -98,7 +102,10 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   }
 
   public _showFailureNotification(): void {
-    this._snackBar.open('Failed to save deployment updates.', 'OK', {
+    this._snackBar.open(
+    this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
+    this._translateService.instant('action.ok'),
+    {
       duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
@@ -107,7 +114,8 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   }
 
   public _showSaveNotification(): void {
-    this._snackBar.open('Variables saved successfully.', '', {
+    this._snackBar.open(
+      this._translateService.instant('snackBar.terraformDeploymentSaveVariablesSuccessNotification'), '', {
       duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
@@ -117,10 +125,11 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   public saveVariables(): void {
     const loadSaveStateDialogRef =
       this._dialog.open(ConfirmationDialogDialogComponent, { data: {
-        title: 'Terraform Deployment',
-        message: `Save variable changes to ${this.deployment.name}?`,
-        okText: 'Yes',
-        cancelText: 'Cancel',
+        title: this._translateService.instant('dialog.terraformDeploymentSaveVariables.title'),
+        message: this._translateService.instant('dialog.terraformDeploymentSaveVariables.message',
+          { deploymentName: this.deployment.name }),
+        okText: this._translateService.instant('action.yes'),
+        cancelText: this._translateService.instant('action.cancel'),
       } });
 
     loadSaveStateDialogRef.afterClosed()

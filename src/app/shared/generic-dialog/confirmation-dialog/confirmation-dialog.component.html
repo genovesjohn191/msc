@@ -1,7 +1,7 @@
-<span mat-dialog-title>{{ data.title }}</span>
+<span mat-dialog-title [innerHtml]="data.title"></span>
 
 <mat-dialog-content class="mat-typography">
-  <small>{{ data.message }}</small>
+  <small [innerHtml]="data.message"></small>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

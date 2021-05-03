@@ -10,34 +10,34 @@
           </ng-container>
 
           <mcs-item>
-            <span>Last Deployment:</span>
+            <span>{{ 'label.lastDeployment' | translate }}:</span>
             <mcs-icon size="small" [key]="deployment?.statusIconKey"></mcs-icon>
             <span [innerHTML]="deployment.status | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Subscription:</span>
+            <span>{{ 'label.subscription' | translate }}:</span>
             <span [innerHTML]="deployment.subscriptionName | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Company:</span>
+            <span>{{ 'label.company' | translate }}:</span>
             <span [innerHTML]="deployment.company | mcsDataLabel"></span>
             <span [innerHTML]="deployment.companyId | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Tenant:</span>
+            <span>{{ 'label.tenant' | translate }}:</span>
             <span [innerHTML]="deployment.tenantName | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Last Updated:</span>
+            <span>{{ 'label.lastUpdated' | translate }}:</span>
             <span [innerHTML]="deployment.updatedOn | mcsDataLabel | mcsStdDateFormat: 'friendly'"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Created:</span>
+            <span>{{ 'label.created' | translate }}:</span>
             <span [innerHTML]="deployment.createdOn | mcsDataLabel | mcsStdDateFormat: 'friendly'"></span>
           </mcs-item>
         </mcs-presentation-panel>
@@ -51,22 +51,22 @@
           </ng-container>
 
           <mcs-item>
-            <span>Name:</span>
+            <span>{{ 'label.name' | translate }}:</span>
             <span [innerHTML]="deployment.moduleName | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Description:</span>
+            <span>{{ 'label.description' | translate }}:</span>
             <span [innerHTML]="deployment.description | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Category:</span>
+            <span>{{ 'label.category' | translate }}:</span>
             <span [innerHTML]="deployment.category | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>Tag:</span>
+            <span>{{ 'label.tag' | translate }}:</span>
             <span [innerHTML]="deployment.tagName | mcsDataLabel"></span>
           </mcs-item>
         </mcs-presentation-panel>
@@ -99,7 +99,7 @@
                 mcsEventLabel="azure-deployment-details-page"
                 [disabled]="deployment.busy">
                 <mat-icon>history</mat-icon>
-                Reset
+                {{ 'action.reset' | translate }}
               </button>
               <button
                 mat-raised-button
@@ -111,7 +111,7 @@
                 mcsEventLabel="azure-deployment-details-page"
                 [disabled]="deployment.busy">
                 <mat-icon>done</mat-icon>
-                Save
+                {{ 'action.save' | translate }}
               </button>
             </div>
           </ng-container>

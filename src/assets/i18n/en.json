@@ -3128,19 +3128,36 @@
     "zoneCount": "Zones"
   },
   "label": {
-    "none": "None",
-    "email": "Email",
-    "phone": "Phone",
     "additionalNotesOptional": "Additional Notes (optional)",
+    "category": "Category",
+    "contactMeVia": "Contact me via...",
+    "company": "Company",
+    "created": "Created",
+    "description": "Description",
+    "email": "Email",
+    "lastDeployment": "Last Deployment",
+    "lastUpdated": "Last Updated",
+    "learnMore": "Learn More",
+    "name": "Name",
+    "none": "None",
+    "ownership": "Ownership",
+    "phone": "Phone",
     "selectContact": "Select Contact",
     "selectStorage": "Select Storage",
-    "contactMeVia": "Contact me via...",
-    "learnMore": "Learn More",
-    "ownership": "Ownership"
+    "subscription": "Subscription",
+    "tag": "Tag",
+    "tenant": "Tenant"
   },
   "action": {
+    "cancel": "Cancel",
+    "close": "Close",
     "enquireNow": "Enquire Now",
-    "submit": "Submit"
+    "ok": "OK",
+    "reset": "Reset",
+    "save": "Save",
+    "submit": "Submit",
+    "undo": "Undo",
+    "yes": "Yes"
   },
   "message": {
     "noSolutionsDisplay": "No solutions to be displayed.",
@@ -3153,5 +3170,16 @@
     "thankyouRequest": "Thanks for your request. We'll be in touch soon.",
     "selectContactRequired": "Contact is required.",
     "inputNoteRequired": "Note is required."
+  },
+  "dialog": {
+    "terraformDeploymentSaveVariables": {
+      "title": "Terraform Deployment",
+      "message": "Save variable changes to <strong>{{deploymentName}}</strong>?"
+    }
+  },
+  "snackBar": {
+    "terraformDeploymentSaveVariablesSuccessNotification": "Variables saved successfully.",
+    "terraformDeploymentReloadVariablesSuccessNotification": "Variables reloaded successfully.",
+    "terraformDeploymentSaveFailureNotification": "Failed to save deployment updates."
   }
 }
