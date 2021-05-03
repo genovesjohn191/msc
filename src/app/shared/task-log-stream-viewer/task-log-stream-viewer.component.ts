@@ -145,7 +145,7 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
 
   public contentCopied(): void {
     this._snackBar.open('Log Copied', '', {
-      duration: 2000,
+      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
     });

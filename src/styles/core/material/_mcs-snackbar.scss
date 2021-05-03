@@ -1,0 +1,7 @@
+.warn-snackbar {
+  .mat-simple-snackbar {
+    > span {
+      color: $color-scheme-danger;
+    }
+  }
+}

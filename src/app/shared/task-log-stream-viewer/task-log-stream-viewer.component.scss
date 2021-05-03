@@ -29,5 +29,6 @@ $viewer-font-size: 12;
     overflow-y: auto;
     overflow-x: auto;
     @include font-size($viewer-font-size);
+    white-space: pre-wrap;
   }
 }

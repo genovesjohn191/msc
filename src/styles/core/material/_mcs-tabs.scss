@@ -17,11 +17,3 @@ mat-tab-header {
 .tab-group-body-wrapper {
   padding: $tab-body-padding;
 }
-
-.warn-snackbar {
-  .mat-simple-snackbar {
-    > span {
-      color: $color-scheme-danger;
-    }
-  }
-}

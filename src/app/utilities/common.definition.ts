@@ -241,4 +241,9 @@ export class CommonDefinition {
   public static STATE_NOTIFICATION_DEFAULT_DURATION = 3000;
   public static STATE_NOTIFICATION_SUCCESS_DURATION = 5000;
   public static STATE_NOTIFICATION_ERROR_DURATION = 10000;
+
+  /** Snack Bar Config */
+  public static SNACKBAR_STANDARD_DURATION = 2000;
+  public static SNACKBAR_ACTIONABLE_DURATION = 10000;
+  public static SNACKBAR_WARN_CLASS = ['warn-snackbar'];
 }

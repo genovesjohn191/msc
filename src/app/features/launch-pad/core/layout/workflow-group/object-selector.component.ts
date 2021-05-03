@@ -8,7 +8,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 
-import { isNullOrEmpty } from '@app/utilities';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
 import { Observable } from 'rxjs';
 import { McsApiService } from '@app/services';
@@ -136,9 +136,10 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
             this._changeDetector.markForCheck();
 
             this._snackBar.open('Unable to retrieve CRISP attributes.', 'OK', {
-              duration: 5000,
+              duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
               horizontalPosition: 'center',
-              verticalPosition: 'bottom'
+              verticalPosition: 'bottom',
+              panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
             });
 
             return [];
