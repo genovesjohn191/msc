@@ -21,6 +21,7 @@ import {
 import { McsTerraformDeployment } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
+  CommonDefinition,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
@@ -98,16 +99,16 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
 
   public _showFailureNotification(): void {
     this._snackBar.open('Failed to save deployment updates.', 'OK', {
-      duration: 10000,
+      duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      panelClass: ['warn-snackbar']
+      panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
     });
   }
 
   public _showSaveNotification(): void {
     this._snackBar.open('Variables saved successfully.', '', {
-      duration: 2000,
+      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
     });

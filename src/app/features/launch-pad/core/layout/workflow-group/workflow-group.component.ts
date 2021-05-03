@@ -34,7 +34,8 @@ import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  Guid
+  Guid,
+  CommonDefinition
 } from '@app/utilities';
 
 import { LaunchPadWorkflow } from '../../workflows/workflow';
@@ -279,9 +280,10 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       catchError((error: McsApiErrorContext) => {
         if (error?.details?.status !== 404) {
           this._snackBar.open('Unable to retrieve object from CRISP.', 'OK', {
-            duration: 10000,
+            duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
             horizontalPosition: 'center',
-            verticalPosition: 'bottom'
+            verticalPosition: 'bottom',
+            panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
           });
         }
 
@@ -351,9 +353,10 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       .pipe(catchError((error) => {
         if (error?.details?.status !== 404) {
           this._snackBar.open('Unable to retrieve associated object from CRISP.', 'OK', {
-            duration: 10000,
+            duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
             horizontalPosition: 'center',
-            verticalPosition: 'bottom'
+            verticalPosition: 'bottom',
+            panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
           });
         }
 

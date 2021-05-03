@@ -18,6 +18,7 @@ import {
 } from '@app/core';
 import {
   cloneDeep,
+  CommonDefinition,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
@@ -39,9 +40,6 @@ enum WizardStep  {
   ConfirmDetails = 1,
   ProvisionWorkflows = 2
 }
-
-const standardSnackbarDurationInMs = 4000;
-const removeWorkflowsSnackbarDurationInMs = 6000;
 
 @Component({
   selector: 'mcs-launch-pad',
@@ -388,13 +386,18 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     let action = existing ? 'updated' : 'added';
     let message = `${title} - ${serviceId} is ${action}.`;
     this._snackBar.open(message, '', {
-      duration: standardSnackbarDurationInMs
+      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
     });
   }
 
   private _showWorkflowRemovalNotification(title: string): void {
     let deleteConfirmationRef = this._snackBar.open(`${title} removed.`, 'Undo', {
-      duration: removeWorkflowsSnackbarDurationInMs
+      duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
     });
 
     deleteConfirmationRef.onAction()
