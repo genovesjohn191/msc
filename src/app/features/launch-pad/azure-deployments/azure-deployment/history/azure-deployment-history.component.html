@@ -7,7 +7,7 @@
           <mcs-presentation-panel mcsId="activity-listing">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
-                <h2>{{ activity ? activity?.type + ' Deployment Logs (' + activity.tagName + ')' : 'Deployment History' }}</h2>
+                <h2>Deployment History</h2>
               </mcs-item>
             </ng-container>
 
@@ -117,16 +117,18 @@
               </div>
 
               <!-- Activities Log -->
-              <div *ngIf="activity">
-                <mcs-task-log-stream-viewer [value]="activity.result" [job]="activity.job" [height]="605"></mcs-task-log-stream-viewer>
-                <div class="action-wrapper">
-                  <button
-                  mat-button
-                  (click)="backToListing()">
-                    <mat-icon>chevron_left</mat-icon>
-                    {{ 'action.back' | translate }}
-                  </button>
-                </div>
+              <div *ngIf="activity" class="action-box">
+                <mcs-section>
+                  <mcs-item>
+                    <h2 auto-width>
+                      {{ 'Deployment Logs (' + activity.tagName + ')' }}
+                    </h2>
+                    <mcs-icon [key]="closeIconKey" size="small"
+                      mcsCursor="pointer" mcsAlign="end"
+                      (click)="backToListing()"></mcs-icon>
+                  </mcs-item>
+                  <mcs-task-log-stream-viewer [value]="activity.result" [job]="activity.job" [height]="523"></mcs-task-log-stream-viewer>
+                </mcs-section>
               </div>
             </ng-container>
           </mcs-presentation-panel>

@@ -33,6 +33,7 @@ import {
   Paginator
 } from '@app/shared';
 import {
+  CommonDefinition,
   createObject,
   getFriendlyTimespan,
   getSafeProperty,
@@ -67,6 +68,10 @@ export class AzureDeploymentActivitiesComponent implements OnDestroy {
     }
   }
 
+  public get closeIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_CLOSE_BLACK;
+  }
+
   public get deployment(): McsTerraformDeployment {
     return this._deployment;
   }
@@ -76,6 +81,7 @@ export class AzureDeploymentActivitiesComponent implements OnDestroy {
     this.dataSource = new McsTableDataSource2(this._getDeploymentActivities.bind(this));
   }
   public deployment$: Observable<McsTerraformDeployment>;
+
   public activity: McsTerraformDeploymentActivity;
 
   public readonly defaultColumnFilters = [
