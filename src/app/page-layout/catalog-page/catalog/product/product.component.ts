@@ -67,6 +67,7 @@ export class ProductComponent implements OnInit {
   public showEnquiryForm: boolean;
   public selectedUseCase$: Observable<McsCatalogProductUseCase>;
   public product$: Observable<McsCatalogProduct>;
+  public processOnGoing = new BehaviorSubject<boolean>(false);
 
   public productOptionsColumns = ['name', 'options'];
   public thresholdColumns = ['description', 'alertThreshold'];
@@ -118,6 +119,7 @@ export class ProductComponent implements OnInit {
     enquiryRequest.notes = getSafeFormValue(viewmodel.fcNote, obj => obj.value);
     enquiryRequest.preferredContactMethod = +getSafeFormValue(viewmodel.fcContact, obj => obj.value);
 
+    this.processOnGoing.next(true);
     this._apiService.createCatalogProductEnquiry(productId, enquiryRequest)
       .pipe(
         tap(() => {
@@ -133,6 +135,7 @@ export class ProductComponent implements OnInit {
           return throwError(error);
         }),
         finalize(() => {
+          this.processOnGoing.next(false);
           this.showEnquiryForm = false;
           this._changeDetectorRef.markForCheck();
         })

@@ -1,15 +1,15 @@
 import {
+  ChangeDetectorRef,
   Directive,
-  TemplateRef,
-  ViewContainerRef,
   Input,
-  ChangeDetectorRef
+  TemplateRef,
+  ViewContainerRef
 } from '@angular/core';
 import { McsAuthenticationIdentity } from '@app/core';
 import { AccountStatus } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 
-type accountType = 'default' | 'impersonator';
+type accountType = 'default' | 'impersonator' | 'anonymous';
 
 @Directive({
   selector: '[mcsExclusiveForAccount]'
@@ -17,9 +17,9 @@ type accountType = 'default' | 'impersonator';
 
 export class ExclusiveForAccountDirective {
   @Input()
-  public set mcsExclusiveForAccount(type: accountType) {
-    type = isNullOrEmpty(type) ? 'default' : type;
-    this._createViewForAccount(type);
+  public set mcsExclusiveForAccount(account: accountType | accountType[]) {
+    let types = typeof account === 'string' ? [account] : account;
+    this._createViewForAccount(types);
   }
 
   private _accountTypeMap: Map<accountType, AccountStatus>;
@@ -37,9 +37,16 @@ export class ExclusiveForAccountDirective {
    * Creates the view based on specific type of account
    * @param type Account name enumeration
    */
-  private _createViewForAccount(type: accountType): void {
-    let accountEnum = this._accountTypeMap.get(type);
-    let showElement = this._authIdentityService.activeAccountStatus === accountEnum;
+  private _createViewForAccount(types: accountType[]): void {
+    let showElement = isNullOrEmpty(types) ? true : false;
+
+    types?.forEach(type => {
+      let accountEnum = this._accountTypeMap.get(type);
+      if (showElement) { return; }
+
+      showElement = this._authIdentityService.activeAccountStatus === accountEnum;
+    });
+
     showElement ? this.viewContainer.createEmbeddedView(this.templateRef) : this.viewContainer.clear();
     this._changeDetectorRef.markForCheck();
   }
@@ -51,5 +58,6 @@ export class ExclusiveForAccountDirective {
     this._accountTypeMap = new Map();
     this._accountTypeMap.set('default', AccountStatus.Default);
     this._accountTypeMap.set('impersonator', AccountStatus.Impersonator);
+    this._accountTypeMap.set('anonymous', AccountStatus.Anonymous);
   }
 }

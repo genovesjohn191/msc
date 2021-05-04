@@ -47,7 +47,10 @@ export class McsAuthenticationIdentity {
   public get activeAccountStatus(): AccountStatus {
     let hasActiveAccount = this._cookieService
       .getEncryptedItem<McsCompany>(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
-    return hasActiveAccount ? AccountStatus.Impersonator : AccountStatus.Default;
+
+    return hasActiveAccount ? AccountStatus.Impersonator :
+      this._user?.isAnonymous ? AccountStatus.Anonymous :
+      AccountStatus.Default;
   }
 
   public get isImpersonating(): boolean {
