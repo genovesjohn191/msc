@@ -7,7 +7,7 @@
           <mcs-presentation-panel mcsId="activity-listing">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
-                <h2>{{ activity ? activity?.type + ' Deployment Logs (' + activity.tagName + ')' : 'Deployment Activities' }}</h2>
+                <h2>{{ activity ? activity?.type + ' Deployment Logs (' + activity.tagName + ')' : 'Deployment History' }}</h2>
               </mcs-item>
             </ng-container>
 
@@ -19,6 +19,16 @@
               </mcs-column-selector>
               <div *ngIf="deployment" class="listing-table-wrapper" [hidden]="activity">
                 <table mat-table [dataSource]="dataSource">
+                  <!-- Type Column -->
+                  <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{ 'columnHeader.type' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{ row.type }}
+                    </td>
+                  </ng-container>
+
                   <!-- Id Column -->
                   <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef>
@@ -32,10 +42,10 @@
                   <!-- Started Column -->
                   <ng-container matColumnDef="createdOn">
                     <th mat-header-cell *matHeaderCellDef>
-                      {{ 'columnHeader.createdOn' | translate }}
+                      {{ 'columnHeader.started' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let row">
-                      {{ row.createdOn | mcsStdDateFormat: 'friendly' }}
+                      {{ row.createdOn | mcsStdDateFormat }}
                     </td>
                   </ng-container>
 
@@ -45,7 +55,7 @@
                       {{ 'columnHeader.finished' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let row">
-                      {{ row.updatedOn | mcsStdDateFormat: 'friendly' }}
+                      {{ row.updatedOn | mcsStdDateFormat }}
                     </td>
                   </ng-container>
 
@@ -56,16 +66,6 @@
                     </th>
                     <td mat-cell *matCellDef="let row">
                       {{ getDuration(row.createdOn, row.updatedOn) }}
-                    </td>
-                  </ng-container>
-
-                  <!-- Type Column -->
-                  <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef>
-                      {{ 'columnHeader.type' | translate }}
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                      {{ row.type }}
                     </td>
                   </ng-container>
 
@@ -118,13 +118,13 @@
 
               <!-- Activities Log -->
               <div *ngIf="activity">
-                <mcs-task-log-stream-viewer [value]="activity.result" [job]="activity.job"></mcs-task-log-stream-viewer>
+                <mcs-task-log-stream-viewer [value]="activity.result" [job]="activity.job" [height]="605"></mcs-task-log-stream-viewer>
                 <div class="action-wrapper">
                   <button
                   mat-button
                   (click)="backToListing()">
                     <mat-icon>chevron_left</mat-icon>
-                    {{ 'action.close' | translate }}
+                    {{ 'action.back' | translate }}
                   </button>
                 </div>
               </div>

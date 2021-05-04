@@ -34,10 +34,18 @@ export class CodeEditorFormFieldComponent extends GenericFormFieldComponentBase 
   public id: string = McsUniqueId.NewId('code-editor');
 
   @Input()
-  public height: string = 'auto';
+  public height: number = 0;
+
+  public get formattedHeight(): string {
+    return this.height <= 0 ? 'auto' : `${this.height}px`;
+  };
+
 
   public backgroundColor: string = '#23241f';
-  public readOnlyBackgroundColor: string = '#2b2b2b';
+  public readOnlyBackgroundColor: string = '#f4f4f4';
+
+  public foreColor: string = '#fff';
+  public readOnlyForeColor: string = '#000';
 
   public quillConfig = {
     syntax: false,

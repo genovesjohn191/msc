@@ -87,7 +87,8 @@
             <mcs-code-editor-form-field
               (onValueChanged)="onVariablesChanged($event)"
               [(ngModel)]="deployment.tfvars"
-              [disabled]="deployment.busy">
+              [disabled]="deployment.busy || !variablesEditMode"
+              [height]="384">
             </mcs-code-editor-form-field>
             <div [hidden]="!hasVariableChanges" class="action-wrapper">
               <button
