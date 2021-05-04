@@ -1,6 +1,6 @@
 
 
-<mcs-page [header]="(deployment$ | async).name">
+<mcs-page *ngIf="deployment$ | async" [header]="deployment.name + ' (' + deployment.tenantName + ')'">
   <mcs-content-panel *mcsContentPanelDef>
     <ng-container *ngIf="deployment.busy">
       <mcs-busy-ribbon theme="dark" margin-bottom-small>
@@ -8,13 +8,26 @@
       </mcs-busy-ribbon>
     </ng-container>
 
-    <mat-tab-group [(selectedIndex)]="selectedTabIndex">
-      <mat-tab label="Overview">
-      </mat-tab>
-      <mat-tab label="History">
-      </mat-tab>
-    </mat-tab-group>
-    <div class="tab-group-body-wrapper">
+    <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+      <mcs-tab [label]="'label.overview' | translate" id="overview"></mcs-tab>
+      <mcs-tab [label]="'label.history' | translate" id="history"></mcs-tab>
+
+      <!-- Action tab -->
+      <ng-container mcsTabHeaderCustom>
+        <mat-menu #actionMenu="matMenu" mcsAlign="end">
+          <button mat-menu-item>{{ 'action.plan' | translate }}</button>
+          <button mat-menu-item>{{ 'action.apply' | translate }}</button>
+          <button mat-menu-item>{{ 'action.planAndApply' | translate }}</button>
+          <button mat-menu-item>{{ 'action.upgrade' | translate }}</button>
+          <button mat-menu-item>{{ 'action.rename' | translate }}</button>
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+          <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+        </button>
+      </ng-container>
+    </mcs-tab-group>
+
+    <div class="routing-tab-content-wrapper">
       <router-outlet></router-outlet>
     </div>
   </mcs-content-panel>

@@ -40,12 +40,8 @@ export class CodeEditorFormFieldComponent extends GenericFormFieldComponentBase 
     return this.height <= 0 ? 'auto' : `${this.height}px`;
   };
 
-
   public backgroundColor: string = '#23241f';
-  public readOnlyBackgroundColor: string = '#f4f4f4';
-
   public foreColor: string = '#fff';
-  public readOnlyForeColor: string = '#000';
 
   public quillConfig = {
     syntax: false,

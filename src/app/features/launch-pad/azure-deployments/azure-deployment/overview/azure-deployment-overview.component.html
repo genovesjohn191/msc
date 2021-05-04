@@ -79,7 +79,42 @@
         <mcs-presentation-panel mcsId="deployment-tfvars">
           <ng-container mcsPresentationPanelHeader>
             <mcs-item>
-              <h2>Terraform Variables</h2>
+              <h2>{{ 'label.terraformVariables' | translate }}</h2>
+              <a *ngIf="!variablesEditMode"
+                mcsCursor="pointer"
+                display-inline-block
+                orientation="block"
+                mcsId="edit-deployment-variables"
+                mcsEventTracker="edit-deployment-variables"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="azure-deployment-details-page"
+                (click)="edit()">
+                {{ 'action.edit' | translate }}
+              </a>
+              <a *ngIf="variablesEditMode"
+                mcsCursor="pointer"
+                display-inline-block
+                orientation="block"
+                mcsId="cancel-deployment-variables"
+                mcsEventTracker="cancel-deployment-variable-changes"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="azure-deployment-details-page"
+                [disabled]="deployment.busy"
+                (click)="resetVariables()">
+                {{ 'action.cancel' | translate }}
+              </a>
+              <a *ngIf="variablesEditMode"
+                mcsCursor="pointer"
+                display-inline-block
+                orientation="block"
+                mcsId="save-deployment-variables"
+                mcsEventTracker="save-deployment-variable-changes"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="azure-deployment-details-page"
+                [disabled]="deployment.busy || !hasVariableChanges"
+                (click)="saveVariables()">
+                {{ 'action.save' | translate }}
+              </a>
             </mcs-item>
           </ng-container>
 
@@ -87,34 +122,9 @@
             <mcs-code-editor-form-field
               (onValueChanged)="onVariablesChanged($event)"
               [(ngModel)]="deployment.tfvars"
-              [disabled]="deployment.busy || !variablesEditMode"
-              [height]="384">
+              [disabled]="!variablesEditMode || deployment.busy"
+              [height]="405">
             </mcs-code-editor-form-field>
-            <div [hidden]="!hasVariableChanges" class="action-wrapper">
-              <button
-                mat-button
-                (click)="resetVariables()"
-                mcsId="reset-deployment-variables"
-                mcsEventTracker="reset-deployment-variable-changes"
-                mcsEventCategory="launchpad-deployment"
-                mcsEventLabel="azure-deployment-details-page"
-                [disabled]="deployment.busy">
-                <mat-icon>history</mat-icon>
-                {{ 'action.reset' | translate }}
-              </button>
-              <button
-                mat-raised-button
-                (click)="saveVariables()"
-                color="primary"
-                mcsId="save-deployment-variables"
-                mcsEventTracker="save-deployment-variable-changes"
-                mcsEventCategory="launchpad-deployment"
-                mcsEventLabel="azure-deployment-details-page"
-                [disabled]="deployment.busy">
-                <mat-icon>done</mat-icon>
-                {{ 'action.save' | translate }}
-              </button>
-            </div>
           </ng-container>
         </mcs-presentation-panel>
       </mcs-grid-column>
