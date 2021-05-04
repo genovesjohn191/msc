@@ -46,7 +46,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   public deployment: McsTerraformDeployment;
   public hasError: boolean;
   public processing: boolean;
-  public variablesEditMode: boolean = true;
+  public variablesEditMode: boolean = false;
 
   // private _deployment: McsTerraformDeployment;
   private _variableCache: string;
@@ -70,59 +70,28 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
     unsubscribeSafely(this._snackBarSubject);
   }
 
-
   public onVariablesChanged(param: string): void {
     if (isNullOrEmpty(this._variableCache)) {
       this._variableCache = param;
     }
   }
 
+  public edit(): void {
+    this.variablesEditMode = true;
+    this._changeDetector.markForCheck();
+    console.log(this.variablesEditMode);
+  }
+
   public resetVariables(): void {
+    let hasChanges: boolean = this.hasVariableChanges;
     this._variableChangesCache = this.deployment.tfvars;
     this.deployment.tfvars = this._variableCache;
+    this.variablesEditMode = false;
     this._changeDetector.markForCheck();
-    this._showResetNotification();
-  }
 
-  public _showResetNotification(): void {
-    let reloadConfirmationRef = this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentReloadVariablesSuccessNotification'),
-    this._translateService.instant('action.undo'),
-    {
-      duration: 10000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
-
-    reloadConfirmationRef.onAction()
-    .pipe(takeUntil(this._snackBarSubject))
-    .subscribe(() => {
-      this.deployment.tfvars = this._variableChangesCache;
-      this._changeDetector.markForCheck();
-    });
-  }
-
-  public _showFailureNotification(): void {
-    this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
-    this._translateService.instant('action.ok'),
-    {
-      duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
-    });
-  }
-
-  public _showSaveNotification(): void {
-    this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentSaveVariablesSuccessNotification'),
-    '',
-    {
-      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
+    if (hasChanges) {
+      this._showResetNotification();
+    }
   }
 
   public saveVariables(): void {
@@ -142,6 +111,48 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
         this._save();
         this._changeDetector.markForCheck();
       }
+    });
+  }
+
+  public _showResetNotification(): void {
+    let reloadConfirmationRef = this._snackBar.open(
+    this._translateService.instant('snackBar.terraformDeploymentCancelVariableEditNotification'),
+    this._translateService.instant('action.undo'),
+    {
+      duration: 10000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+
+    reloadConfirmationRef.onAction()
+    .pipe(takeUntil(this._snackBarSubject))
+    .subscribe(() => {
+      this.variablesEditMode = true;
+      this.deployment.tfvars = this._variableChangesCache;
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  private _showFailureNotification(): void {
+    this._snackBar.open(
+    this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
+    this._translateService.instant('action.ok'),
+    {
+      duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
+    });
+  }
+
+  private _showSaveNotification(): void {
+    this._snackBar.open(
+    this._translateService.instant('snackBar.terraformDeploymentSaveVariablesSuccessNotification'),
+    '',
+    {
+      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
     });
   }
 
@@ -165,6 +176,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
       this.hasError = false;
       this.processing = false;
       this.deployment.busy = false;
+      this.variablesEditMode = false;
       this._changeDetector.markForCheck();
 
       this._showSaveNotification();

@@ -1,12 +1,34 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import {
+  Observable,
+  of,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  tap
+} from 'rxjs/operators';
+
 import { McsNavigationService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
-import { McsRouteInfo, McsTerraformDeployment, RouteKey } from '@app/models';
-import { getSafeProperty, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
-import { Observable, Subscription } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import {
+  McsRouteInfo,
+  McsTerraformDeployment,
+  RouteKey
+} from '@app/models';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { AzureDeploymentService } from './azure-deployment.service';
 
 @Component({
@@ -17,12 +39,9 @@ import { AzureDeploymentService } from './azure-deployment.service';
 export class AzureDeploymentComponent implements OnInit, OnDestroy {
   public deployment$: Observable<McsTerraformDeployment>;
   public deployment: McsTerraformDeployment;
+  public selectedTabId$: Observable<string>;
 
   private _routerHandler: Subscription;
-  private _tabRoutes: string[] = [
-    'overview',
-    'history'
-  ]
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
@@ -33,26 +52,19 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     this._listenToRouteChange();
   }
 
-  public set selectedTabIndex(val: number) {
-    this._navigationService.navigateTo(
-      RouteKey.LaunchPadAzureDeploymentDetails,
-      [this.deployment.id, this._tabRoutes[val]]
-    );
-
-    this._selectedTabIndex = val;
-  }
-  public get selectedTabIndex(): number {
-    return this._selectedTabIndex;
-  }
-
-  private _selectedTabIndex: number = 0;
-
   public ngOnInit(): void {
     this._subscribeToResolve();
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     unsubscribeSafely(this._routerHandler);
+  }
+
+  public onTabChanged(tab: any): void {
+    this._navigationService.navigateTo(
+      RouteKey.LaunchPadAzureDeploymentDetails,
+      [this.deployment.id,  tab.id]
+    );
   }
 
   private _subscribeToResolve(): void {
@@ -78,8 +90,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
         if (paramsIndex >= 0) {
           tabUrl = tabUrl.substr(0, paramsIndex);
         }
-        let tabIndex = this._tabRoutes.findIndex((r) => r === tabUrl);
-        this._selectedTabIndex = tabIndex;
+        this.selectedTabId$ = of(tabUrl);
       });
   }
 }

@@ -2,7 +2,7 @@
   [id]="id"
   (onContentChanged)="onContentChanged($event)"
   format="text"
-  [styles]="{ height: formattedHeight, backgroundColor: disabled ? readOnlyBackgroundColor : backgroundColor, fontFamily: 'Lucida Console', color: disabled ? readOnlyForeColor : foreColor }"
+  [styles]="{ height: formattedHeight, backgroundColor: backgroundColor, fontFamily: 'Lucida Console', color: foreColor }"
   [modules]="quillConfig"
   [(ngModel)]="value"
   [sanitize]="true"

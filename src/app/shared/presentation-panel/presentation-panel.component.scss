@@ -20,6 +20,7 @@ $presentation-panel-content-padding: 13px;
   @include align-items(center);
   padding: $presentation-panel-header-padding;
   background-color: $color-grey-07;
+  min-height: 50px;
 }
 
 .presentation-panel-content {
