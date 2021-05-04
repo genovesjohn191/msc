@@ -2945,7 +2945,7 @@
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",
     "hourlyCharge": "Hourly Charge",
-    "id": "Id",
+    "id": "ID",
     "installedBaseState": "Installed Base State",
     "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
@@ -2998,6 +2998,7 @@
     "source": "Source",
     "sourceInterfaces": "Source Interfaces",
     "speed": "Speed",
+    "started": "Started",
     "subscription": "Subscription",
     "subscriptionId": "Subscription ID",
     "summary": "Summary",
@@ -3050,6 +3051,7 @@
     "tenant": "Tenant"
   },
   "action": {
+    "back": "Back",
     "cancel": "Cancel",
     "close": "Close",
     "enquireNow": "Enquire Now",

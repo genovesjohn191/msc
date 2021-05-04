@@ -15,7 +15,7 @@ import { LaunchPadSearchElementsResultComponent } from './search/results-table/e
 import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
 import { LaunchPadWorkflowLaunchComponent } from './workflows/launch-pad-workflow-launch.component';
 import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.component';
-import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/activities/azure-deployment-activities.component';
+import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/history/azure-deployment-history.component';
 import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
 import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';

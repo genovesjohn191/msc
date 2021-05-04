@@ -47,8 +47,8 @@ import { McsEvent } from '@app/events';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'mcs-azure-deployment-activities',
-  templateUrl: './azure-deployment-activities.component.html',
+  selector: 'mcs-azure-deployment-history',
+  templateUrl: './azure-deployment-history.component.html',
   styleUrls: ['../../azure-deployments.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -79,11 +79,11 @@ export class AzureDeploymentActivitiesComponent implements OnDestroy {
   public activity: McsTerraformDeploymentActivity;
 
   public readonly defaultColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'createdOn' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'updatedOn' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'duration' }),
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'tag' })
   ];
 

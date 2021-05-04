@@ -3,7 +3,7 @@ import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 
 import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
-import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/activities/azure-deployment-activities.component';
+import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/history/azure-deployment-history.component';
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
 import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
 import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';

@@ -46,6 +46,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   public deployment: McsTerraformDeployment;
   public hasError: boolean;
   public processing: boolean;
+  public variablesEditMode: boolean = true;
 
   // private _deployment: McsTerraformDeployment;
   private _variableCache: string;
