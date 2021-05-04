@@ -8,10 +8,7 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  McsAuthenticationIdentity,
-  McsNavigationService
-} from '@app/core';
+import { McsNavigationService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
@@ -44,17 +41,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public constructor(
     private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _navigationService: McsNavigationService,
-    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _navigationService: McsNavigationService
   ) {}
-
-  public get isImpersonating(): boolean {
-    return this._authenticationIdentity.isImpersonating;
-  }
-
-  public get isAnonymous(): boolean {
-    return this._authenticationIdentity.user?.isAnonymous;
-  }
 
   public get lightLogoIconKey(): string {
     return CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;

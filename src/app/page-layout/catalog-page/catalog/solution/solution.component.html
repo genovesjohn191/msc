@@ -8,7 +8,7 @@
 
         <div class="product-catalog-widget-wrapper">
           <!-- Enquire Now -->
-          <mcs-presentation-panel [embossed]="true">
+          <mcs-presentation-panel [embossed]="true" *mcsExclusiveForAccount="['default', 'impersonator']">
             <ng-container mcsPresentationPanelHeader>
               <strong>{{ 'label.learnMore' | translate }}</strong>
             </ng-container>
@@ -22,6 +22,7 @@
             </button>
 
             <mcs-enquiry-form *ngIf="showEnquiryForm"
+              [disabled]="processOnGoing | async"
               (submitted)="onSubmitEnquiry($event, solution.id)">
             </mcs-enquiry-form>
           </mcs-presentation-panel>

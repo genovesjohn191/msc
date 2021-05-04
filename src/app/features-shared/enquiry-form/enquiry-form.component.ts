@@ -1,7 +1,10 @@
+
+
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Input,
   OnInit,
   Output,
   ViewChild,
@@ -22,6 +25,9 @@ import { EnquiryformViewModel } from './enquiry-form.viewmodel';
 })
 export class EnquiryFormComponent implements OnInit {
   public viewModel = new EnquiryformViewModel();
+
+  @Input()
+  public disabled = false;
 
   @Output()
   public submitted = new EventEmitter<EnquiryformViewModel>();

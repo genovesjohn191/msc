@@ -1,20 +1,21 @@
 <form [formGroup]="viewModel.fgEnquiry" mcsFormGroup>
-  <mcs-field-input-note
-    size="full"
-    [label]="'label.additionalNotesOptional' | translate"
-    [formControl]="viewModel.fcNote">
-  </mcs-field-input-note>
-
   <mcs-field-select-contact
     size="full"
     [label]="'label.contactMeVia' | translate"
     [formControl]="viewModel.fcContact">
   </mcs-field-select-contact>
+
+  <mcs-field-input-note
+    size="full"
+    [label]="'label.additionalNotesOptional' | translate"
+    [formControl]="viewModel.fcNote">
+  </mcs-field-input-note>
 </form>
 
 <div class="action-items">
   <button mcsButton arrow="right"
     mcsId="submit-enquiry"
+    [disabled]="disabled"
     (click)="onClickSubmit()">
     {{ 'action.submit' | translate }}
   </button>
