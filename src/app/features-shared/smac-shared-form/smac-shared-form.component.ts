@@ -35,7 +35,8 @@ import {
   getSafeProperty,
   isNullOrEmpty,
   createObject,
-  formatStringToPhoneNumber
+  formatStringToPhoneNumber,
+  formatStringToText
 } from '@app/utilities';
 import {
   CoreValidators,
@@ -149,10 +150,10 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
     if (!this.isValid()) { return; }
 
     this.dataChange.emit(createObject(SmacSharedDetails, {
-      testCases: getSafeProperty(this.fgSmacSharedForm.controls['fcTestCases'], (obj) => obj.value),
-      notes: getSafeProperty(this.fgSmacSharedForm.controls['fcNotes'], (obj) => obj.value),
-      contactAfterChange: getSafeProperty(this.fgSmacSharedForm.controls['fcContact'], (obj) => obj.value),
-      referenceNumber: getSafeProperty(this.fgSmacSharedForm.controls['fcCustomerReference'], (obj) => obj.value)
+      testCases: getSafeProperty(this.fcTestCases, (obj) => obj.value),
+      notes: getSafeProperty(this.fcNotes, (obj) => formatStringToText(obj.value)),
+      contactAfterChange: getSafeProperty(this.fcContact, (obj) => obj.value),
+      referenceNumber: getSafeProperty(this.fcCustomerReference, (obj) => obj.value)
     }));
   }
 

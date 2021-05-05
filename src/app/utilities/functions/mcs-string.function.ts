@@ -138,6 +138,11 @@ export function convertSpacesToDash(source: string): string {
   return source.replace(/\s+/g, '-').toLowerCase();
 }
 
+// TO DO: create a pipe to convert all string format to text
+export function formatStringToText(source: string): string {
+  return source.replace(/(\t)/g,' ');
+}
+
 /**
  * Returns the converted string numbers to phone number
  */
