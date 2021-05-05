@@ -2,7 +2,7 @@
 
 <mcs-page *ngIf="deployment$ | async" [header]="deployment.name + ' (' + deployment.tenantName + ')'">
   <mcs-content-panel *mcsContentPanelDef>
-    <ng-container *ngIf="deployment.busy">
+    <ng-container *ngIf="deployment.isProcessing">
       <mcs-busy-ribbon theme="dark" margin-bottom-small>
         <span>Something is going on</span>
       </mcs-busy-ribbon>
@@ -15,11 +15,50 @@
       <!-- Action tab -->
       <ng-container mcsTabHeaderCustom>
         <mat-menu #actionMenu="matMenu" mcsAlign="end">
-          <button mat-menu-item>{{ 'action.plan' | translate }}</button>
-          <button mat-menu-item>{{ 'action.apply' | translate }}</button>
-          <button mat-menu-item>{{ 'action.planAndApply' | translate }}</button>
-          <button mat-menu-item>{{ 'action.upgrade' | translate }}</button>
-          <button mat-menu-item>{{ 'action.rename' | translate }}</button>
+          <button mat-menu-item (click)="planClicked()"
+            mcsId="create-plan"
+            mcsEventTracker="create-deployment-plan"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="azure-deployment-details-page"
+            [disabled]="deployment.isProcessing">
+            {{ 'action.plan' | translate }}
+          </button>
+
+          <button mat-menu-item (click)="applyClicked()"
+            mcsId="apply-deployment"
+            mcsEventTracker="apply-deployment"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="azure-deployment-details-page"
+            [disabled]="deployment.isProcessing">
+            {{ 'action.apply' | translate }}
+          </button>
+
+          <button mat-menu-item (click)="planAndApplyClicked()"
+            mcsId="plan-and-apply-deployment"
+            mcsEventTracker="plan-and-apply-deployment"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="azure-deployment-details-page"
+            [disabled]="deployment.isProcessing">
+            {{ 'action.planAndApply' | translate }}
+          </button>
+
+          <button mat-menu-item (click)="upgradeClicked()"
+            mcsId="upgrade-deployment"
+            mcsEventTracker="upgrade-deployment"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="azure-deployment-details-page"
+            [disabled]="deployment.isProcessing">
+            {{ 'action.upgrade' | translate }}
+          </button>
+
+          <button mat-menu-item (click)="renameClicked()"
+            mcsId="rename-deployment"
+            mcsEventTracker="rename-deployment"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="azure-deployment-details-page"
+            [disabled]="deployment.isProcessing">
+            {{ 'action.rename' | translate }}
+          </button>
         </mat-menu>
         <button mat-icon-button [matMenuTriggerFor]="actionMenu">
           <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>

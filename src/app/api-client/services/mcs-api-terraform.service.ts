@@ -16,6 +16,7 @@ import {
   McsTerraformTagQueryParams,
   McsTerraformDeploymentActivity,
   McsJob,
+  McsTerraformDeploymentUpdate,
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiTerraformService } from '../interfaces/mcs-api-terraform.interface';
@@ -108,7 +109,7 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
-  public updateDeployment(id: any, deploymentData: McsTerraformDeploymentCreate):
+  public updateDeployment(id: any, deploymentData: McsTerraformDeploymentUpdate):
   Observable<McsApiSuccessResponse<McsTerraformDeployment>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();

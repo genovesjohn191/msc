@@ -23,7 +23,7 @@
           <mcs-item>
             <span>{{ 'label.company' | translate }}:</span>
             <span [innerHTML]="deployment.company | mcsDataLabel"></span>
-            <span [innerHTML]="deployment.companyId | mcsDataLabel"></span>
+            <span> ({{ deployment.companyId | mcsDataLabel }})</span>
           </mcs-item>
 
           <mcs-item>
@@ -33,12 +33,12 @@
 
           <mcs-item>
             <span>{{ 'label.lastUpdated' | translate }}:</span>
-            <span [innerHTML]="deployment.updatedOn | mcsDataLabel | mcsStdDateFormat: 'friendly'"></span>
+            <span [innerHTML]="deployment.updatedOn | mcsDataLabel | mcsStdDateFormat"></span>
           </mcs-item>
 
           <mcs-item>
             <span>{{ 'label.created' | translate }}:</span>
-            <span [innerHTML]="deployment.createdOn | mcsDataLabel | mcsStdDateFormat: 'friendly'"></span>
+            <span [innerHTML]="deployment.createdOn | mcsDataLabel | mcsStdDateFormat"></span>
           </mcs-item>
         </mcs-presentation-panel>
       </mcs-grid-column>
@@ -99,7 +99,7 @@
                 mcsEventTracker="cancel-deployment-variable-changes"
                 mcsEventCategory="launchpad-deployment"
                 mcsEventLabel="azure-deployment-details-page"
-                [disabled]="deployment.busy"
+                [disabled]="deployment.isProcessing"
                 (click)="resetVariables()">
                 {{ 'action.cancel' | translate }}
               </a>
@@ -111,7 +111,7 @@
                 mcsEventTracker="save-deployment-variable-changes"
                 mcsEventCategory="launchpad-deployment"
                 mcsEventLabel="azure-deployment-details-page"
-                [disabled]="deployment.busy || !hasVariableChanges"
+                [disabled]="deployment.isProcessing || !hasVariableChanges"
                 (click)="saveVariables()">
                 {{ 'action.save' | translate }}
               </a>
@@ -122,7 +122,7 @@
             <mcs-code-editor-form-field
               (onValueChanged)="onVariablesChanged($event)"
               [(ngModel)]="deployment.tfvars"
-              [disabled]="!variablesEditMode || deployment.busy"
+              [disabled]="!variablesEditMode || deployment.isProcessing"
               [height]="405">
             </mcs-code-editor-form-field>
           </ng-container>
