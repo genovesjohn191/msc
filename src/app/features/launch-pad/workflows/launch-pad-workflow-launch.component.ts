@@ -16,7 +16,7 @@ import {
   tap
 } from 'rxjs/operators';
 
-import {McsErrorHandlerService } from '@app/core';
+import { McsErrorHandlerService } from '@app/core';
 import {
   HttpStatusCode,
   ProductType

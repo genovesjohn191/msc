@@ -19,7 +19,7 @@ export enum WorkflowGroupId {
   DedicatedStorageUnmaskVolume = 200007,
 
   ManagementToolsQueryStatus = 300001,
-  ManagementToolsAddCvm = 300002,
+  ManagementToolsAdd = 300002,
   ManagementToolsRemove = 300003,
   ManagementToolsUpdate = 300004,
 
@@ -46,7 +46,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.DedicatedStorageUnmaskVolume]: 'Unmask Volume',
 
   [WorkflowGroupId.ManagementToolsQueryStatus]: 'Query Management Tools Status',
-  [WorkflowGroupId.ManagementToolsAddCvm]: 'Add To Management Tools',
+  [WorkflowGroupId.ManagementToolsAdd]: 'Add To Management Tools',
   [WorkflowGroupId.ManagementToolsRemove]: 'Remove From Management Tools',
   [WorkflowGroupId.ManagementToolsUpdate]: 'Update In Management Tools',
 

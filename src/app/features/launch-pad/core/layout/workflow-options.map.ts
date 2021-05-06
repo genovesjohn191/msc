@@ -18,7 +18,7 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.HostSecurityProvisionHids, 'Provision a host intrusion prevention system.'],
 
   [WorkflowGroupId.ManagementToolsQueryStatus, 'Query nanagement tools status.'],
-  [WorkflowGroupId.ManagementToolsAddCvm, 'Add to management tools.'],
+  [WorkflowGroupId.ManagementToolsAdd, 'Add to management tools.'],
   [WorkflowGroupId.ManagementToolsRemove, 'Remove from management tools.'],
   [WorkflowGroupId.ManagementToolsUpdate, 'Update in management tools.'],
 

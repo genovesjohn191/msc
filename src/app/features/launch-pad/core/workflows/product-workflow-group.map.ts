@@ -97,6 +97,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.DedicatedServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
+        WorkflowGroupId.ManagementToolsAdd,
         WorkflowGroupId.ManagementToolsRemove,
         WorkflowGroupId.ManagementToolsUpdate
       ]
@@ -105,6 +106,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.DedicatedServerVmInstance,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
+        WorkflowGroupId.ManagementToolsAdd,
         WorkflowGroupId.ManagementToolsRemove,
         WorkflowGroupId.ManagementToolsUpdate
       ]
@@ -381,7 +383,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.DedicatedStorageCreateAttachVolume,
         WorkflowGroupId.DedicatedStorageAttachVolume,
         WorkflowGroupId.DedicatedStorageIncreaseVolumeSize,
-        WorkflowGroupId.DedicatedStorageUnmaskVolume,
+        // WorkflowGroupId.DedicatedStorageUnmaskVolume,
         WorkflowGroupId.DedicatedStorageRemoveZoning
       ]
     ],
@@ -464,7 +466,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       [
         WorkflowGroupId.VirtualDataCentreVmInstanceProvision,
         // WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex,
-        WorkflowGroupId.ManagementToolsAddCvm,
+        WorkflowGroupId.ManagementToolsAdd,
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsRemove,
         WorkflowGroupId.ManagementToolsUpdate
