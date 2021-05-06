@@ -24,7 +24,7 @@ import {
   cloneDeep
 } from '@app/utilities';
 
-import { Workflow } from '../../workflows/workflow.interface';
+import { Workflow } from '../../core/workflow.interface';
 
 export enum WorkflowProvisionCompletionState
 {

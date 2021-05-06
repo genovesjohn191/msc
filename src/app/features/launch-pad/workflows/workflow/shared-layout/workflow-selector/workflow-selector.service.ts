@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { workflowOptions } from '../workflow-options.map';
-import { WorkflowGroupId, workflowGroupIdText } from '../../workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowGroupId, workflowGroupIdText } from '../../core/workflow-groups/workflow-group-type.enum';
 
 export interface WorkflowSelectorItem {
   id: WorkflowGroupId;

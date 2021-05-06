@@ -7,9 +7,9 @@ import {
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
 
-import { WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
-import { workflowGroupIdText } from '../../workflows/workflow-groups/workflow-group-type.enum';
-import { Workflow } from '../../workflows/workflow.interface';
+import { WorkflowGroupSaveState } from '../../core/workflow-group.interface';
+import { workflowGroupIdText } from '../../core/workflow-groups/workflow-group-type.enum';
+import { Workflow } from '../../core/workflow.interface';
 
 @Component({
   selector: 'mcs-workflow-load-state-dialog',

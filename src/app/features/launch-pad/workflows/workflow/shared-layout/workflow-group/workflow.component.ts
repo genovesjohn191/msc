@@ -12,8 +12,8 @@ import {
 } from '@app/features-shared/dynamic-form';
 import { WorkflowType } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { LaunchPadWorkflow } from '../../workflows/workflow';
-import { Workflow } from '../../workflows/workflow.interface';
+import { LaunchPadWorkflow } from '../../core/workflow';
+import { Workflow } from '../../core/workflow.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow',

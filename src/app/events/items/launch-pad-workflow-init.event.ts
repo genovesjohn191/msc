@@ -1,5 +1,5 @@
 import { EventBusState } from '@app/event-bus';
-import { WorkflowGroupConfig } from '@app/features/launch-pad/core/workflows/workflow-group.interface';
+import { WorkflowGroupConfig } from '@app/features/launch-pad/workflows/workflow/core/workflow-group.interface';
 
 export class LaunchPadWorkflowInitEvent extends EventBusState<WorkflowGroupConfig> {
   constructor() {

@@ -61,6 +61,7 @@ export class McsNotificationJobService implements McsDisposable {
   private _userChangeHandler: Subscription;
   private _jobConnection: McsJobConnection;
   private _destroySubject = new Subject<void>();
+  private _initialized: boolean = false;
 
   /**
    * Returns the connection status of websocket
@@ -133,7 +134,17 @@ export class McsNotificationJobService implements McsDisposable {
       heartbeat_out: DEFAULT_HEARTBEAT_OUT,
       reconnect_delay: CommonDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL
     } as StompConfig;
-    this._stompService.initAndConnect();
+
+    try {
+      this._stompService.initAndConnect();
+    } catch {
+      this._stompService.connectionState$.subscribe((value) => {
+        if (value === 3 && !this._initialized) {
+          this._initialized = true;
+          this._stompService.initAndConnect();
+        }
+      })
+    }
   }
 
   /**

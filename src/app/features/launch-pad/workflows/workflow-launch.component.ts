@@ -24,13 +24,13 @@ import {
 import { McsApiService } from '@app/services';
 import { isNullOrEmpty } from '@app/utilities';
 import {
-  LaunchPadComponent,
+  LaunchPadWorkflowCoreComponent,
   LaunchPadContextSource,
   WorkflowGroupSaveState
-} from '../core';
-import { workflowGroupMap } from '../core/workflows/workflow-group.map';
-import { WorkflowGroupId } from '../core/workflows/workflow-groups/workflow-group-type.enum';
-import { WorkflowData } from '../core/workflows/workflow.interface';
+} from './workflow';
+import { workflowGroupMap } from './workflow/core/workflow-group.map';
+import { WorkflowGroupId } from './workflow/core/workflow-groups/workflow-group-type.enum';
+import { WorkflowData } from './workflow/core/workflow.interface';
 
 export const errorSnackbarDuration: number = 30000;
 export const sourceParam: string = 'source';
@@ -41,13 +41,13 @@ export const productIdParam: string = 'productid';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-launch.component',
-  templateUrl: './launch-pad-workflow-launch.component.html',
-  styleUrls: ['./launch-pad-workflow-launch.component.scss'],
+  templateUrl: './workflow-launch.component.html',
+  styleUrls: ['./workflow-launch.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadWorkflowLaunchComponent implements OnInit {
   @ViewChild('launchPad')
-  protected launchPad: LaunchPadComponent;
+  protected launchPad: LaunchPadWorkflowCoreComponent;
 
   public context: WorkflowGroupSaveState;
   public workflowGroupId: WorkflowGroupId

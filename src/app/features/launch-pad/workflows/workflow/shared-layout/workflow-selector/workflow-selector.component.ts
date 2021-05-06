@@ -14,10 +14,10 @@ import {
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 
-import { LaunchPadContextSource } from '../../workflows/workflow-group.interface';
-import { workflowGroupMap } from '../../workflows/workflow-group.map';
-import { WorkflowGroupId } from '../../workflows/workflow-groups/workflow-group-type.enum';
-import { WorkflowService } from '../../workflows/workflow.service';
+import { LaunchPadContextSource } from '../../core/workflow-group.interface';
+import { workflowGroupMap } from '../../core/workflow-group.map';
+import { WorkflowGroupId } from '../../core/workflow-groups/workflow-group-type.enum';
+import { WorkflowService } from '../../core/workflow.service';
 import {
   LaunchPadWorkflowSelectorService,
   WorkflowSelectorItem

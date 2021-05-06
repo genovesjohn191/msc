@@ -29,17 +29,17 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 
-import { LaunchPadWorkflowGroupComponent } from './layout/workflow-group/workflow-group.component';
-import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
-import { WorkflowGroupSaveState } from './workflows/workflow-group.interface';
-import { Workflow } from './workflows/workflow.interface';
+import { LaunchPadWorkflowGroupComponent } from './shared-layout/workflow-group/workflow-group.component';
+import { LaunchPadLoadStateDialogComponent } from './shared-layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
+import { WorkflowGroupSaveState } from './core/workflow-group.interface';
+import { Workflow } from './core/workflow.interface';
 import { McsApiService } from '@app/services';
 import {
   McsApiCollection,
   McsJob,
   McsWorkflowCreate
 } from '@app/models';
-import { WorkflowProvisionCompletionState } from './layout/workflow-provision-state/workflow-provision-state.component';
+import { WorkflowProvisionCompletionState } from './shared-layout/workflow-provision-state/workflow-provision-state.component';
 import { TranslateService } from '@ngx-translate/core';
 
 enum WizardStep  {
@@ -49,12 +49,12 @@ enum WizardStep  {
 }
 
 @Component({
-  selector: 'mcs-launch-pad',
-  templateUrl: './launch-pad-core.component.html',
-  styleUrls: ['./launch-pad-core.component.scss'],
+  selector: 'mcs-workflow-core',
+  templateUrl: './workflow-core.component.html',
+  styleUrls: ['./workflow-core.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
+export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAwayGuard {
   @ViewChild('stepper')
   protected stepper: MatVerticalStepper;
 

@@ -13,7 +13,7 @@ import {
   CommonDefinition,
   isNullOrEmpty
 } from '@app/utilities';
-import { WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
+import { WorkflowGroupSaveState } from '../../core/workflow-group.interface';
 import { Observable } from 'rxjs';
 import { McsApiService } from '@app/services';
 import {
@@ -29,7 +29,7 @@ import {
   startWith,
   switchMap
 } from 'rxjs/operators';
-import { productWorkflowGroupMap } from '../../workflows/product-workflow-group.map';
+import { productWorkflowGroupMap } from '../../core/product-workflow-group.map';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 
