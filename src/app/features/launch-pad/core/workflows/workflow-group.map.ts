@@ -36,7 +36,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.HostSecurityProvisionAntiVirus, HostSecurityProvisionAntiVirusWorkflowGroup ],
   [ WorkflowGroupId.HostSecurityProvisionHids, HostSecurityProvisionHidsWorkflowGroup ],
 
-  [ WorkflowGroupId.ManagementToolsAddCvm, ManagementToolsAddCvmWorkflowGroup ],
+  [ WorkflowGroupId.ManagementToolsAdd, ManagementToolsAddCvmWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsQueryStatus, ManagementToolsQueryStatusWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsRemove, ManagementToolsRemoveWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsUpdate, ManagementToolsUpdateWorkflowGroup ],
