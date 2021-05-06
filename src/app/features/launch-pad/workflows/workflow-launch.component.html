@@ -1,7 +1,7 @@
 <mcs-page header="Run LAUNCH Pad Workflow" leftPanelExpandedByDefault="true">
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <mcs-launch-pad #launchPad [context]="context" *ngIf="!processing"></mcs-launch-pad>
+    <mcs-workflow-core #launchPad [context]="context" *ngIf="!processing"></mcs-workflow-core>
 
     <div *ngIf="processing" class="placeholder-content">
       <div class="placeholder-content_item"></div>

@@ -17,8 +17,8 @@ import {
   sourceParam,
   worklowGroupIdParam,
   LaunchPadWorkflowLaunchComponent
-} from './workflows/launch-pad-workflow-launch.component';
-import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.component';
+} from './workflows/workflow-launch.component';
+import { LaunchPadWorkflowsComponent } from './workflows/workflows.component';
 
 /**
  * List of routes for the main module

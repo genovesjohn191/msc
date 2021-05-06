@@ -31,7 +31,7 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { WorkflowSelectorConfig } from '../../core';
+import { WorkflowSelectorConfig } from '../../workflows/workflow';
 
 @Component({
   selector: 'mcs-launch-pad-search-services-result',

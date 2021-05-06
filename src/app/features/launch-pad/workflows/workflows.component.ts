@@ -2,13 +2,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CoreRoutes, McsNavigationService, McsStorageService } from '@app/core';
 import { RouteKey } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { WorkflowGroupSaveState } from '../core';
-import { workflowGroupIdText } from '../core/workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowGroupSaveState } from './workflow';
+import { workflowGroupIdText } from './workflow/core/workflow-groups/workflow-group-type.enum';
 
 @Component({
   selector: 'mcs-launch-pad-workflows.component',
-  templateUrl: './launch-pad-workflows.component.html',
-  styleUrls: ['./launch-pad-workflows.component.scss'],
+  templateUrl: './workflows.component.html',
+  styleUrls: ['./workflows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadWorkflowsComponent  {

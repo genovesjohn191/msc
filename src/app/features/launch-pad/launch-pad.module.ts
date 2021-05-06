@@ -4,7 +4,7 @@ import { McsStorageService } from '@app/core';
 import { DynamicFormModule } from '@app/features-shared';
 import { ConfirmationDialogDialogComponent, SharedModule } from '@app/shared';
 
-import { LaunchPadCoreModule } from './core/launch-pad-core.module';
+import { LaunchPadWorkflowCoreModule } from './workflows/workflow/workflow-core.module';
 import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
 import { AzureDeploymentsComponent } from './azure-deployments/azure-deployments.component';
 /** Components */
@@ -13,8 +13,8 @@ import { LaunchPadGuard } from './launch-pad.guard';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
 import { LaunchPadSearchElementsResultComponent } from './search/results-table/elements-result.component';
 import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
-import { LaunchPadWorkflowLaunchComponent } from './workflows/launch-pad-workflow-launch.component';
-import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.component';
+import { LaunchPadWorkflowLaunchComponent } from './workflows/workflow-launch.component';
+import { LaunchPadWorkflowsComponent } from './workflows/workflows.component';
 import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/history/azure-deployment-history.component';
 import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
@@ -48,7 +48,7 @@ import { AzureDeploymentService } from './azure-deployments/azure-deployment/azu
   ],
   imports: [
     SharedModule,
-    LaunchPadCoreModule,
+    LaunchPadWorkflowCoreModule,
     DynamicFormModule,
     RouterModule.forChild(launchPadRoutes)
   ],

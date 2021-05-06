@@ -39,23 +39,23 @@ import {
   CommonDefinition
 } from '@app/utilities';
 
-import { LaunchPadWorkflow } from '../../workflows/workflow';
-import { WorkflowGroupDirective } from '../../workflows/workflow-group.directive';
+import { LaunchPadWorkflow } from '../../core/workflow';
+import { WorkflowGroupDirective } from '../../core/workflow-group.directive';
 import {
   WorkflowGroup,
   WorkflowGroupConfig,
   WorkflowGroupSaveState
-} from '../../workflows/workflow-group.interface';
-import { workflowGroupMap } from '../../workflows/workflow-group.map';
-import { WorkflowGroupId } from '../../workflows/workflow-groups/workflow-group-type.enum';
+} from '../../core/workflow-group.interface';
+import { workflowGroupMap } from '../../core/workflow-group.map';
+import { WorkflowGroupId } from '../../core/workflow-groups/workflow-group-type.enum';
 import {
   Workflow,
   WorkflowData
-} from '../../workflows/workflow.interface';
-import { WorkflowService } from '../../workflows/workflow.service';
+} from '../../core/workflow.interface';
+import { WorkflowService } from '../../core/workflow.service';
 import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
 import { LaunchPadWorkflowComponent } from './workflow.component';
-import { LaunchPadForm } from '../../workflows/forms/form.interface';
+import { LaunchPadForm } from '../../core/forms/form.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',

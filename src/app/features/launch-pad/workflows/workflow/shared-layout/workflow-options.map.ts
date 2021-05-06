@@ -1,4 +1,4 @@
-import { WorkflowGroupId } from '../workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowGroupId } from '../core/workflow-groups/workflow-group-type.enum';
 
 // Workflow: Add workflow group to selector options
 export const workflowOptions: Map<WorkflowGroupId, string> = new Map([

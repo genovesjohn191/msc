@@ -29,7 +29,7 @@ import {
 } from '@app/utilities';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { WorkflowSelectorConfig } from '../../core';
+import { WorkflowSelectorConfig } from '../../workflows/workflow';
 
 @Component({
   selector: 'mcs-launch-pad-search-elements-result',
