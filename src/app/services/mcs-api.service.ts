@@ -203,6 +203,7 @@ import {
   McsTerraformDeployment,
   McsTerraformDeploymentActivity,
   McsTerraformDeploymentCreate,
+  McsTerraformDeploymentUpdate,
   McsTerraformModule,
   McsTerraformTag,
   McsTerraformTagQueryParams,
@@ -1939,7 +1940,7 @@ export class McsApiService {
     );
   }
 
-  public updateTerraformDeployment(id: any, deploymentData: McsTerraformDeploymentCreate): Observable<McsTerraformDeployment> {
+  public updateTerraformDeployment(id: any, deploymentData: McsTerraformDeploymentUpdate): Observable<McsTerraformDeployment> {
     return this._terraformApi.updateDeployment(id, deploymentData).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateTerraformDeployment'))

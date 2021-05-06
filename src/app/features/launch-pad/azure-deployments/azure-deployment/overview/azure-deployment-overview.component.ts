@@ -79,7 +79,6 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   public edit(): void {
     this.variablesEditMode = true;
     this._changeDetector.markForCheck();
-    console.log(this.variablesEditMode);
   }
 
   public resetVariables(): void {
@@ -95,7 +94,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   }
 
   public saveVariables(): void {
-    const loadSaveStateDialogRef =
+    const saveVariablesDialogRef =
       this._dialog.open(ConfirmationDialogDialogComponent, { data: {
         title: this._translateService.instant('dialog.terraformDeploymentSaveVariables.title'),
         message: this._translateService.instant('dialog.terraformDeploymentSaveVariables.message',
@@ -104,7 +103,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
         cancelText: this._translateService.instant('action.cancel'),
       } });
 
-    loadSaveStateDialogRef.afterClosed()
+    saveVariablesDialogRef.afterClosed()
     .pipe(takeUntil(this._dialogSubject))
     .subscribe(result => {
       if (result) {
@@ -159,13 +158,17 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   private _save(): void {
     this.hasError = false;
     this.processing = true;
-    this.deployment.busy = true;
+    this.deployment.isProcessing = true;
 
-    this._apiService.updateTerraformDeployment(this.deployment.id, this.deployment)
+    this._apiService.updateTerraformDeployment(this.deployment.id, {
+      name: this.deployment.name,
+      tfvars: this.deployment.tfvars,
+      tag: this.deployment.tag
+    })
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;
-      this.deployment.busy = false;
+      this.deployment.isProcessing = false;
       this._changeDetector.markForCheck();
 
       this._showFailureNotification();
@@ -175,7 +178,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
       this._variableCache = this.deployment.tfvars;
       this.hasError = false;
       this.processing = false;
-      this.deployment.busy = false;
+      this.deployment.isProcessing = false;
       this.variablesEditMode = false;
       this._changeDetector.markForCheck();
 

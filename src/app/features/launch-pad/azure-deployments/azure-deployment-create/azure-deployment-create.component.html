@@ -117,7 +117,9 @@
               <small>To deploy infrastructure in Azure you need to run a plan and apply.</small>
             </mcs-item>
             <mcs-item>
-              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadDeploymentDetails, id]"
+              <a
+                mcsCursor="pointer"
+                [mcsRouterLink]="[routeKeyEnum.LaunchPadAzureDeploymentDetails, id]"
                 mcsId="go-to-deployment-link"
                 mcsEventTracker="navigate-to-deployment-details"
                 mcsEventCategory="deployment"

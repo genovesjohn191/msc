@@ -9,6 +9,7 @@ import {
   McsTerraformTagQueryParams,
   McsTerraformDeploymentActivity,
   McsJob,
+  McsTerraformDeploymentUpdate,
 } from '@app/models';
 
 export interface IMcsApiTerraformService {
@@ -42,7 +43,7 @@ export interface IMcsApiTerraformService {
    * @param id Terraform Deployment identification
    * @param deploymentData Deployment data to be created
    */
-  updateDeployment(id: any, deploymentData: McsTerraformDeploymentCreate): Observable<McsApiSuccessResponse<McsTerraformDeployment>>;
+  updateDeployment(id: any, deploymentData: McsTerraformDeploymentUpdate): Observable<McsApiSuccessResponse<McsTerraformDeployment>>;
 
   /**
    * Delete Terraform deployment by ID (MCS API Response)
