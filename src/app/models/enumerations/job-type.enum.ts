@@ -84,6 +84,8 @@ export enum JobType {
 
   // Terraform
   TerraformCreatePlan = 104001,
+  TerraformCreateApply = 104002,
+  TerraformCreateDestroy = 104003,
 
   // Microsoft License
   PublicCloudLicenseChangeCount = 2000001,
@@ -145,6 +147,8 @@ export const jobTypeText = {
   [JobType.LaunchpadManagementToolsUpdate]: 'Update in Management Tools',
 
   [JobType.TerraformCreatePlan]: 'Create Terraform Plan',
+  [JobType.TerraformCreateApply]: 'Create Terraform Apply',
+  [JobType.TerraformCreateDestroy]: 'Create Terraform Destroy',
 
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
   [JobType.InternetPortPlanChange]: 'Change Internet Port Plan',

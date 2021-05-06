@@ -2905,6 +2905,7 @@
     "getTerraformModule": "Something went wrong while retrieving your deployment module details. Please try again.",
     "getTerraformTags": "Something went wrong while retrieving your deployment tags. Please try again.",
     "getTerraformTag": "Something went wrong while retrieving your deployment tag details. Please try again.",
+    "createTerraformDeploymentActivity": "Something went wrong while creating your Azure deployment activity. Please try again.",
     "createTerraformDeploymentPlan": "Something went wrong while creating your Azure deployment plan. Please try again.",
     "applyTerraformDeploymentPlan": "Something went wrong while applying your Azure deployment. Please try again.",
     "destroyTerraformDeployment": "Something went wrong while destroying your Azure deployment. Please try again.",

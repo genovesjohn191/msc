@@ -42,6 +42,7 @@ import { McsJobLicenseManager } from './entities/mcs-job-license.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
 import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
+import { McsJobTerraformDeploymentManager } from './entities/mcs-job-terraform-deployment.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -319,6 +320,18 @@ export class McsJobManagerClient implements McsDisposable {
     // Internet
     this._jobEntitiesFactory.set(JobType.InternetPortPlanChange,
       new McsJobInternetManager(ActionStatus.Update, this._injector)
+    );
+
+    // Terraform Deployments
+    // TODO(apascual): Need to check if Plan, Apply, and Destroy are adding new item or just updating?
+    this._jobEntitiesFactory.set(JobType.TerraformCreatePlan,
+      new McsJobTerraformDeploymentManager(ActionStatus.Add, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.TerraformCreateApply,
+      new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.TerraformCreateDestroy,
+      new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
     );
   }
 }

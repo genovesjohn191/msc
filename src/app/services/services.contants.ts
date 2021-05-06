@@ -20,6 +20,7 @@ import { McsResourcesRepository } from './repositories/mcs-resources.repository'
 import { McsServersOsRepository } from './repositories/mcs-servers-os.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
+import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsStateManagerClient } from './state-manager/mcs-state-manager.client';
 
@@ -41,6 +42,7 @@ export const repositoryProviders: any[] = [
   McsAccountRepository,
   McsAzureResourcesRepository,
   McsAzureServicesRepository,
+  McsTerraformDeploymentsRepository,
   McsApiService
 ];
 

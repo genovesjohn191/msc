@@ -1,15 +1,17 @@
 import { Observable } from 'rxjs';
+
 import {
-  McsQueryParam,
   McsApiSuccessResponse,
+  McsJob,
+  McsQueryParam,
   McsTerraformDeployment,
+  McsTerraformDeploymentActivity,
+  McsTerraformDeploymentCreate,
+  McsTerraformDeploymentCreateActivity,
+  McsTerraformDeploymentUpdate,
   McsTerraformModule,
   McsTerraformTag,
-  McsTerraformDeploymentCreate,
-  McsTerraformTagQueryParams,
-  McsTerraformDeploymentActivity,
-  McsJob,
-  McsTerraformDeploymentUpdate,
+  McsTerraformTagQueryParams
 } from '@app/models';
 
 export interface IMcsApiTerraformService {
@@ -76,20 +78,30 @@ export interface IMcsApiTerraformService {
   getTag(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsTerraformTag>>;
 
   /**
+   * This will create the a deployment activity for the target azure deployment
+   * @param id Id of the deployment to run the plan against
+   * @param request Request payload for the activity
+   */
+  createDeploymentActivity(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsApiSuccessResponse<McsJob>>;
+
+  /**
    * This will create the a plan for the target azure deployment
    * @param id Id of the deployment to run the plan against
+   * @param request Request payload for the action
    */
-  createPlan(id: any): Observable<McsApiSuccessResponse<McsJob>>;
+  createPlan(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * This will apply the variable changes on the target azure deployment
    * @param id Id of the deployment to run apply against
+   * @param request Request payload for the action
    */
-  applyDeployment(id: any): Observable<McsApiSuccessResponse<McsJob>>;
+  applyDeployment(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * This will destroy recent applied deployment changes
    * @param id Id of the deployment to destroy
+   * @param request Request payload for the action
    */
-  destroyDeployment(id: any): Observable<McsApiSuccessResponse<McsJob>>;
+  destroyDeployment(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsApiSuccessResponse<McsJob>>;
 }

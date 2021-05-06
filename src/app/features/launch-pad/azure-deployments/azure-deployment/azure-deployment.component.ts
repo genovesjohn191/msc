@@ -1,45 +1,46 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {
-  Observable,
   of,
+  Observable,
   Subject,
-  Subscription,
-  throwError
+  Subscription
 } from 'rxjs';
 import {
-  catchError,
   map,
   shareReplay,
   takeUntil,
   tap
 } from 'rxjs/operators';
 
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { McsNavigationService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
-  McsJob,
   McsRouteInfo,
   McsTerraformDeployment,
-  RouteKey
+  McsTerraformDeploymentCreateActivity,
+  RouteKey,
+  TerraformDeploymentActivityType
 } from '@app/models';
+import { McsApiService } from '@app/services';
+import { ConfirmationDialogDialogComponent } from '@app/shared';
 import {
+  createObject,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { AzureDeploymentService } from './azure-deployment.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogDialogComponent } from '@app/shared';
 import { TranslateService } from '@ngx-translate/core';
-import { McsApiService } from '@app/services';
+
+import { AzureDeploymentService } from './azure-deployment.service';
 
 @Component({
   selector: 'mcs-azure-deployment',
@@ -79,62 +80,68 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   public onTabChanged(tab: any): void {
     this._navigationService.navigateTo(
       RouteKey.LaunchPadAzureDeploymentDetails,
-      [this.deployment.id,  tab.id]
+      [this.deployment.id, tab.id]
     );
   }
 
   public planClicked(): void {
     const planDialogRef =
-    this._dialog.open(ConfirmationDialogDialogComponent, { data: {
-      title: 'Azure Deployment-01',
-      message: `Run a plan against ${this.deployment.name}?`,
-      okText: this._translateService.instant('action.ok'),
-      cancelText: this._translateService.instant('action.cancel'),
-    } });
+      this._dialog.open(ConfirmationDialogDialogComponent, {
+        data: {
+          title: 'Azure Deployment-01',
+          message: `Run a plan against ${this.deployment.name}?`,
+          okText: this._translateService.instant('action.ok'),
+          cancelText: this._translateService.instant('action.cancel'),
+        }
+      });
 
     planDialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
-      if (result) {
-        this._plan();
-      }
-    });
+      .pipe(takeUntil(this._dialogSubject))
+      .subscribe(result => {
+        if (result) {
+          this._plan();
+        }
+      });
   }
 
   public applyClicked(): void {
     const applyDialogRef =
-    this._dialog.open(ConfirmationDialogDialogComponent, { data: {
-      title: 'Azure Deployment-01',
-      message: `Apply ${this.deployment.name}?`,
-      okText: this._translateService.instant('action.ok'),
-      cancelText: this._translateService.instant('action.cancel'),
-    } });
+      this._dialog.open(ConfirmationDialogDialogComponent, {
+        data: {
+          title: 'Azure Deployment-01',
+          message: `Apply ${this.deployment.name}?`,
+          okText: this._translateService.instant('action.ok'),
+          cancelText: this._translateService.instant('action.cancel'),
+        }
+      });
 
     applyDialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
-      if (result) {
-        this._apply();
-      }
-    });
+      .pipe(takeUntil(this._dialogSubject))
+      .subscribe(result => {
+        if (result) {
+          this._apply();
+        }
+      });
   }
 
   public planAndApplyClicked(): void {
     const planAndApplyDialogRef =
-    this._dialog.open(ConfirmationDialogDialogComponent, { data: {
-      title: 'Azure Deployment-01',
-      message: `Run a plan and apply against ${this.deployment.name}?`,
-      okText: this._translateService.instant('action.ok'),
-      cancelText: this._translateService.instant('action.cancel'),
-    } });
+      this._dialog.open(ConfirmationDialogDialogComponent, {
+        data: {
+          title: 'Azure Deployment-01',
+          message: `Run a plan and apply against ${this.deployment.name}?`,
+          okText: this._translateService.instant('action.ok'),
+          cancelText: this._translateService.instant('action.cancel'),
+        }
+      });
 
     planAndApplyDialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
-      if (result) {
-        this._apply();
-      }
-    });
+      .pipe(takeUntil(this._dialogSubject))
+      .subscribe(result => {
+        if (result) {
+          this._apply();
+        }
+      });
   }
 
   public upgradeClicked(): void {
@@ -146,31 +153,27 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   }
 
   private _plan(): void {
-    this.deployment.isProcessing = true;
-
-    this._apiService.createTerraformDeploymentPlan(this.deployment.id)
-    .pipe(catchError(() => {
-      this.deployment.isProcessing = false;
-      this._changeDetector.markForCheck();
-      return throwError('Terraform deployment plan endpoint failed.');
-    }))
-    .subscribe((response: McsJob) => {
-      this.deployment.isProcessing = false;
-      this._changeDetector.markForCheck();
+    let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
+      confirm: true,
+      type: TerraformDeploymentActivityType.Plan,
+      clientReferenceObject: {
+        terraformDeploymentId: this.deployment.id
+      }
     });
+
+    this._apiService.createTerraformDeploymentActivity(this.deployment.id, requestPayload).subscribe();
   }
 
   private _apply(): void {
-    this._apiService.applyTerraformDeploymentPlan(this.deployment.id)
-    .pipe(catchError(() => {
-      this.deployment.isProcessing = false;
-      this._changeDetector.markForCheck();
-      return throwError('Terraform deployment apply endpoint failed.');
-    }))
-    .subscribe((response: McsJob) => {
-      this.deployment.isProcessing = false;
-      this._changeDetector.markForCheck();
+    let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
+      confirm: true,
+      type: TerraformDeploymentActivityType.Apply,
+      clientReferenceObject: {
+        terraformDeploymentId: this.deployment.id
+      }
     });
+
+    this._apiService.createTerraformDeploymentActivity(this.deployment.id, requestPayload).subscribe();
   }
 
   private _subscribeToResolve(): void {
