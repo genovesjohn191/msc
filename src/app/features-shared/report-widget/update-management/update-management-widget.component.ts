@@ -82,8 +82,8 @@ export class UpdateManagementWidgetComponent implements OnInit {
     return this._reportingService.getUpdateManagement().pipe(
       map(response => new McsMatTableContext(response,
         response?.length)),
-      catchError(() => {
-        return throwError('Update management endpoint failed.');
+      catchError((error) => {
+        return throwError(error);
       })
     );
   }

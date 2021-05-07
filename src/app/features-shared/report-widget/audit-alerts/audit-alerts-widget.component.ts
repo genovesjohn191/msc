@@ -98,8 +98,8 @@ export class AuditAlertsWidgetComponent implements OnInit {
     return this._reportingService.getAuditAlerts(this._startPeriod, this._endPeriod, this._subscriptionIds).pipe(
       map((response) => new McsMatTableContext(response,
         response?.length)),
-      catchError(() => {
-        return throwError('Audit Alerts endpoint failed.');
+      catchError((error) => {
+        return throwError(error);
       })
     );
   }

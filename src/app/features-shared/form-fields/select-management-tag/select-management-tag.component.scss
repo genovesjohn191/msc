@@ -1,0 +1,34 @@
+@import "../../../../styles/shared/base";
+
+$dropdown-container-width: 184px;
+$border: 1px solid $color-black;
+
+.select-management-tag-container {
+  margin-top: $space-medium;
+
+  .mat-list-base {
+    border: $border;
+    padding: 0;
+
+    .mat-list-item {
+      height: 100%;
+
+      .mat-list-item-content {
+        justify-content: space-between;
+        padding: $space-small;
+
+        .sub-text {
+          @include font-size($font-size-small);
+        }
+
+        .dropdown-container {
+          min-width: $dropdown-container-width;
+        }
+      }
+    }
+
+    .mat-list-item:not(:last-child) {
+      border-bottom: $border;
+    }
+  }
+}

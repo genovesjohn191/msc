@@ -1,0 +1,45 @@
+@import "../../../styles/shared/base";
+
+$border: 1px solid $color-black;
+$text-padding: 2px;
+$order-listbox-height: 146px;
+$left-container-min-width: 139px;
+
+.order-listbox-container {
+  display: flex;
+  justify-content: flex-start;
+  border: $border;
+  margin-top: $space-xsmall;
+  height: $order-listbox-height;
+
+  .item-wrapper {
+    margin: 0;
+  }
+
+  .left-container {
+    border-right: $border;
+    overflow-y: auto;
+    min-width: $left-container-min-width;
+
+    .mat-icon {
+      height: auto;
+    }
+  }
+
+  .right-container {
+    flex: auto;
+    overflow-y: auto;
+  }
+
+  a {
+    text-decoration: none;
+    width: 100%;
+    padding: $text-padding 0 $text-padding $space-small;
+
+    &:hover,
+    &.active {
+      background-color: $color-grey-07;
+      color: $color-primary-01;
+    }
+  }
+}

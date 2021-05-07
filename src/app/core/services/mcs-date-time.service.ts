@@ -11,7 +11,8 @@ import * as moment from 'moment-timezone';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
-  'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly';
+  'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly' |
+  'noYearDateShortTime' | 'longDateShortTime';
 
 @Injectable()
 export class McsDateTimeService {
@@ -96,5 +97,7 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('longTime', 'h:mm:ss A Z');
     this._dateTimeMapTable.set('fullTime', 'h:mm:ss A ZZ');
     this._dateTimeMapTable.set('isoDate', 'YYYY-MM-DD[T]HH:mm');
+    this._dateTimeMapTable.set('noYearDateShortTime', 'ddd, DD MMM, h:mm A');
+    this._dateTimeMapTable.set('longDateShortTime', 'ddd, DD MMM YYYY, h:mm A');
   }
 }

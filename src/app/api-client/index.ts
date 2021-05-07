@@ -9,6 +9,7 @@ export * from './interfaces/mcs-api-azure-resources.interface';
 export * from './interfaces/mcs-api-azure-services.interface';
 export * from './interfaces/mcs-api-bats.interface';
 export * from './interfaces/mcs-api-catalog.interface';
+export * from './interfaces/mcs-api-cloudhealth-alert.interface';
 export * from './interfaces/mcs-api-colocations.interface';
 export * from './interfaces/mcs-api-companies.interface';
 export * from './interfaces/mcs-api-console.interface';

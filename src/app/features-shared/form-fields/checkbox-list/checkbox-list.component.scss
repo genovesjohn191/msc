@@ -1,0 +1,47 @@
+@import "../../../../styles/shared/base";
+
+$container-border: 1px solid $color-black;
+$checkbox-after-border: 2px solid $color-white;
+
+.checkbox-list-container {
+  margin-top: $space-medium;
+
+  .mat-list-base {
+    padding: 0;
+    border: $container-border;
+
+    .mat-list-item {
+      height: 100%;
+      padding: 0;
+
+      .mat-list-item-content {
+        padding: $space-small;
+
+        .sub-text {
+          @include font-size($font-size-small);
+        }
+
+        .mat-pseudo-checkbox {
+          border-color: $color-black;
+        }
+
+        .mat-pseudo-checkbox::after {
+          border-bottom: $checkbox-after-border;
+        }
+
+        .mat-pseudo-checkbox-checked {
+          border-color: $color-primary-01;
+          background-color: $color-primary-01;
+        }
+
+        .mat-pseudo-checkbox-checked::after {
+          border-left: $checkbox-after-border;
+        }
+      }
+    }
+
+    .mat-list-option:not(:last-child) {
+      border-bottom: $container-border;
+    }
+  }
+}

@@ -91,11 +91,11 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     this._changeDetectorRef.markForCheck();
 
     this.reportingService.getPerformanceReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
-    .pipe(catchError(() => {
+    .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
       this._changeDetectorRef.markForCheck();
-      return throwError('Performance and scalability endpoint failed.');
+      return throwError(error);
     }))
     .subscribe((result) => {
       this.dataBehavior.next(result);

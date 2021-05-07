@@ -110,8 +110,8 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
         let dataSourceContext = new McsMatTableContext(vmRightSizing, vmRightSizing.length);
         return dataSourceContext;
       }),
-      catchError(() => {
-        return throwError('VM Rightsizing endpoint failed.');
+      catchError((error) => {
+        return throwError(error);
       })
     );
   }
@@ -122,11 +122,11 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
 
     this._reportingService.getVMRightsizingSummary()
     .pipe(
-      catchError(() => {
+      catchError((error) => {
         this.hasError = true;
         this.processing = false;
         this._changeDetectorRef.markForCheck();
-        return throwError('Cost Recommendations endpoint failed.');
+        return throwError(error);
       }),
       takeUntil(this._destroySubject))
     .subscribe((response) => {

@@ -85,11 +85,11 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
     this._changeDetector.markForCheck();
 
     this.reportingService.getServicesCostOverviewReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
-    .pipe(catchError(() => {
+    .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
       this._changeDetector.markForCheck();
-      return throwError('Services cost overview endpoint failed.');
+      return throwError(error);
     }))
     .subscribe((result) => {
       this.dataBehavior.next(result);

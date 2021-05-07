@@ -68,8 +68,8 @@ export class TopVmsByCostWidgetComponent {
     return this._reportingService.getTopVmsByCost(queryParam).pipe(
       map(response => new McsMatTableContext(response,
         response?.length)),
-      catchError(() => {
-        return throwError('Top VMs by Cost endpoint failed.');
+      catchError((error) => {
+        return throwError(error);
       })
     );
   }

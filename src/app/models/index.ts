@@ -93,7 +93,9 @@ export * from './enumerations/workflow-type.enum';
 export * from './enumerations/contact.enum';
 export * from './enumerations/terraform-deployment-activity-type.enum';
 export * from './enumerations/terraform-deployment-status.enum';
-
+export * from './enumerations/azure-service-request-type.enum';
+export * from './enumerations/period-range.enum';
+export * from './enumerations/cloudhealth-management-tag.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -297,6 +299,8 @@ export * from './response/mcs-report-top-vms-by-cost';
 export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
+export * from './response/mcs-cloudhealth-alert';
+export * from './response/mcs-cloudhealth-alert-configuration-items';
 
 /** Common */
 export * from './common/mcs-api-search-key';
@@ -333,6 +337,7 @@ export * from './common/mcs-object-query-params';
 export * from './common/mcs-terraform-tag-query-params';
 export * from './common/mcs-rightsizing-query-params';
 export * from './common/mcs-state-notification';
+export * from './common/mcs-cloudhealth-option';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

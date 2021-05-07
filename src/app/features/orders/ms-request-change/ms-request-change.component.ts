@@ -58,7 +58,10 @@ import {
   McsOrderCreate,
   McsOrderItemCreate,
   McsOrderWorkflow,
-  OrderIdType
+  OrderIdType,
+  azureServiceRequestTypeText,
+  AzureServiceRequestType,
+  McsCloudHealthOption
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -77,6 +80,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 import { MsRequestChangeService } from './ms-request-change.service';
+import { CloudHealthAlertType } from './cloudhealth/cloudhealth-services';
 
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
@@ -84,7 +88,16 @@ const MS_REQUEST_SERVICE_CHANGE = Guid.newGuid().toString();
 const MULTI_SELECT_LIMIT = 5;
 const LOADING_TEXT = 'loading';
 
-type MsRequestChangeProperties = {
+type MsCloudHealthResources = {
+  name: string;
+  type: string;
+  subscription: string;
+  resourceGroup: string;
+  action: string;
+}
+
+type MsCustomRequestChangeProperties = {
+  type: string;
   complexity: string;
   category: string;
   resourceIdentifiers: string[];
@@ -92,6 +105,16 @@ type MsRequestChangeProperties = {
   customerReferenceNumber: string;
   requestDescription: string;
 };
+
+type MsCloudHealthRequestChangeProperties = {
+  type: string;
+  complexity: string;
+  resources: MsCloudHealthResources[];
+  phoneConfirmationRequired: boolean;
+  customerReferenceNumber: string;
+};
+
+type MsRequestChangeProperties = MsCloudHealthRequestChangeProperties | MsCustomRequestChangeProperties;
 
 @Component({
   selector: 'mcs-ms-request-change',
@@ -103,6 +126,7 @@ type MsRequestChangeProperties = {
 export class MsRequestChangeComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
   public fgMsServiceChange: FormGroup;
   public fcMsService: FormControl;
+  public fcMsServiceRequestType: FormControl;
   public fcAzureProduct: FormControl;
   public fcComplexity: FormControl;
   public fcAzureResource: FormControl;
@@ -112,9 +136,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public complexityOptions$: Observable<McsOption[]>;
   public contactOptions$: Observable<McsOption[]>;
   public azureServices$: Observable<McsOption[]>;
+  public serviceRequestType$: Observable<McsOption[]>;
   public selectedServiceId$: Observable<McsAzureServiceQueryParams>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public selectedScheduleDate: Date;
+  public cloudHealthService: McsCloudHealthOption[];
 
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
@@ -201,6 +227,17 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     );
   }
 
+  @ViewChild('fgCloudhealthService')
+  public set fgCloudhealthService(value: IMcsFormGroup) {
+    if (isNullOrEmpty(value)) { return; }
+
+    let isRegistered = this.fgMsServiceChange.contains('fgCloudhealthService');
+    if (isRegistered) { return; }
+    this.fgMsServiceChange.addControl('fgCloudhealthService',
+      value.getFormGroup().formGroup
+    );
+  }
+
   constructor(
     _injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -226,6 +263,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   public ngOnInit(): void {
     this._getSelectedAzureService();
+    this._subscribeToRequestTypeOptions();
     this._subscribeToAzureProductOptions();
     this._subscribeToContactOptions();
     this._subscribeToSubscriptions();
@@ -298,6 +336,35 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._resetAzureResources(service);
   }
 
+  public onRequestTypeChange(requestType: AzureServiceRequestType): void {
+    let isRequestTypeCloudHealth = this.isServiceRequestTypeCloudHealth(requestType);
+    this.fcMsServiceRequestType.setValue(requestType);
+    if (isRequestTypeCloudHealth) {
+      this.fcAzureProduct.disable();
+      this.fcAzureResource.disable();
+      this.fgMsServiceChange.controls['fgSmacSharedForm'].get('fcNotes').disable();
+    } else {
+      this.fcAzureProduct.enable();
+      this.fcAzureResource.enable();
+      this.fgMsServiceChange.controls['fgSmacSharedForm'].get('fcNotes').enable();
+      this.fgMsServiceChange.removeControl('fgCloudhealthService');
+    }
+    this._subscribeToSmacSharedFormConfig();
+    this.fgMsServiceChange.updateValueAndValidity();
+  }
+
+  public isServiceRequestTypeCloudHealth(requestType: AzureServiceRequestType): boolean {
+    return requestType === AzureServiceRequestType.CloudHealth;
+  }
+
+  public isServiceRequestTypeCustom(requestType: AzureServiceRequestType): boolean {
+    return requestType === AzureServiceRequestType.Custom;
+  }
+
+  public onCloudHealthChange(alerts: McsCloudHealthOption[]): void {
+    this.cloudHealthService = alerts;
+  }
+
   /**
    * Maps enumeration to Options Array
    */
@@ -313,11 +380,13 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _registerFormGroup(): void {
     this.fcMsService = new FormControl('', [CoreValidators.required]);
+    this.fcMsServiceRequestType = new FormControl('', [CoreValidators.required]);
     this.fcAzureProduct = new FormControl('', [CoreValidators.required]);
     this.fcAzureResource = new FormControl('', [CoreValidators.required]);
 
     this.fgMsServiceChange = this._formBuilder.group({
       fcMsService: this.fcMsService,
+      fcfcMsServiceRequestType: this.fcMsServiceRequestType,
       fcAzureProduct: this.fcAzureProduct,
       fcAzureResource: this.fcAzureResource
     });
@@ -343,6 +412,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _onServiceRequestDetailsFormChange(): void {
     let selectedResources = pluck(this.fcAzureResource.value, 'azureId');
+    let orderProperties = this._setOrderProperties(this.fcMsServiceRequestType?.value, selectedResources);
     this._msRequestChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
@@ -352,18 +422,67 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
             serviceId: this.fcMsService.value.serviceId,
             deliveryType: DeliveryType.Standard, // set to Standard as default
             schedule: getCurrentDate().toISOString(),
-            properties: {
-              complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
-              category: azureProductsText[this.fcAzureProduct.value],
-              resourceIdentifiers: selectedResources,
-              phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-              customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-              requestDescription: this._smacSharedDetails.notes
-            } as MsRequestChangeProperties
+            properties: orderProperties as MsRequestChangeProperties
           })
         ]
       })
     );
+  }
+
+  /**
+   * Sets the order properties depending on the request type
+   */
+  private _setOrderProperties(requestType: number, selectedResources?: string[]): MsRequestChangeProperties {
+    let properties: MsCustomRequestChangeProperties | MsCloudHealthRequestChangeProperties;
+    switch (requestType) {
+      case AzureServiceRequestType.Custom:
+        properties = {
+          type: azureServiceRequestTypeText[AzureServiceRequestType.Custom],
+          complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
+          category: azureProductsText[this.fcAzureProduct.value],
+          resourceIdentifiers: selectedResources,
+          phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
+          customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+          requestDescription: this._smacSharedDetails.notes
+        }
+        break;
+      case AzureServiceRequestType.CloudHealth:
+        let cloudHealthChanges = this._setOrderCloudhealthResources(this.cloudHealthService);
+        properties = {
+          type: azureServiceRequestTypeText[AzureServiceRequestType.CloudHealth],
+          complexity: complexityText[Complexity.Simple],
+          resources: cloudHealthChanges,
+          phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
+          customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+        }
+        break
+      default:
+        break;
+    }
+
+    return properties;
+  }
+
+  private _setOrderCloudhealthResources(alerts: McsCloudHealthOption[]): MsCloudHealthResources[] {
+    if (isNullOrEmpty(alerts)) { return; }
+    let resources = [];
+    alerts.forEach((alert) => {
+      resources.push({
+        name: alert.config?.name,
+        type: alert.config?.type,
+        subscription: alert.config?.subscriptionId,
+        resourceGroup: alert.config?.resourceGroupName,
+        action: this._setCloudHealthAlertActionValue(alert)
+      })
+    })
+    return resources;
+  }
+
+  private _setCloudHealthAlertActionValue(alert: McsCloudHealthOption): string {
+    const actionRemove = this._translateService.instant('action.remove');
+    const mTagLabel = this._translateService.instant('orderMsRequestChange.detailsStep.managementTags.actionLabel');
+    return alert?.alertType === CloudHealthAlertType.ManagementTags ?
+      `${mTagLabel} ${alert.text}` : actionRemove;
   }
 
   /**
@@ -382,6 +501,22 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   /**
+   * Initialize the options for request type
+   */
+  private _subscribeToRequestTypeOptions(): void {
+    this.serviceRequestType$ = of([
+      createObject(McsOption, {
+        text: azureServiceRequestTypeText[AzureServiceRequestType.Custom],
+        value: AzureServiceRequestType.Custom
+      }),
+      createObject(McsOption, {
+        text: azureServiceRequestTypeText[AzureServiceRequestType.CloudHealth],
+        value: AzureServiceRequestType.CloudHealth
+      })
+    ]);
+  }
+
+  /**
    * Initialize the options for contact control
    */
   private _subscribeToContactOptions(): void {
@@ -392,9 +527,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    * Subscribe to Smac Shared Form Config
    */
   private _subscribeToSmacSharedFormConfig(): void {
+    let isRequestTypeCustom = this.fcMsServiceRequestType?.value === AzureServiceRequestType.Custom;
     let testCaseConfig = { isIncluded: false };
     let notesConfig = {
-      isIncluded: true, validators: [CoreValidators.required],
+      isIncluded: isRequestTypeCustom ? true : false, validators: [CoreValidators.required],
       placeholder: this.requestDescriptionPlaceHolder,
       isRequired: true
     };
@@ -477,6 +613,9 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           this.fcMsService.setValue(fcMsServiceValue);
         });
         if (!isNullOrEmpty(params.serviceId)) {
+          if (!isNullOrEmpty(params.azureId)) {
+            this.fcMsServiceRequestType.setValue(AzureServiceRequestType.Custom);
+          }
           this._getAzureResources(params.serviceId);
         }
       }),

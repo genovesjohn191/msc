@@ -66,11 +66,11 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
     this._changeDetectorRef.markForCheck();
 
     this.reportingService.getResourceHealth()
-    .pipe(catchError(() => {
+    .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
       this._changeDetectorRef.markForCheck();
-      return throwError('Resource Health endpoint failed.');
+      return throwError(error);
     }))
     .subscribe((response) => {
       this.empty = isNullOrEmpty(response) ? true : false;

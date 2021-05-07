@@ -11,6 +11,8 @@ import { FieldSelectContactComponent } from './field-select-contact/field-select
 import { InputInlineEditComponent } from './input-inline-edit/input-inline-edit.component';
 import { SelectResourceDropdownComponent } from './select-resource/select-resource-dropdown.component';
 import { SelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
+import { CheckBoxListComponent } from './checkbox-list/checkbox-list.component';
+import { SelectManagementTagComponent } from './select-management-tag/select-management-tag.component';
 
 const exports: any[] | Type<any> = [
   // TODO(apascual): Need to adjust these 3 fields since they need to
@@ -21,8 +23,10 @@ const exports: any[] | Type<any> = [
 
   FieldErrorMessageDirective,
 
+  CheckBoxListComponent,
   FieldSelectContactComponent,
-  FieldInputNoteComponent
+  FieldInputNoteComponent,
+  SelectManagementTagComponent
 ];
 
 @NgModule({

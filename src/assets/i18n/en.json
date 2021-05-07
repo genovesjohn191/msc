@@ -912,7 +912,31 @@
       "azureProductContextualHelp": "The main Azure product this service request relates to",
       "complexityLabel": "Complexity",
       "complexityDescription": "This will affect the cost of your request. We'll contact you and get your approval if we need to recategorize this after your request is submitted.",
-      "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required."
+      "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required.",
+      "serviceRequestTypePlaceHolder": "Select an Azure Request Type",
+      "noSubName": "Unknown subscription",
+      "noName": "Unknown name",
+      "noGrpName": "Unknown resource group",
+      "noSize": "Unknown size",
+      "noIpAddress": "Unknown IP address",
+      "unattachedDisk" : {
+        "label": "Please remove the following unattached disks:",
+        "subLabel": "Unchecked disks below will be left as is."
+      },
+      "managementTags" : {
+        "text": "Undefined Update Management Tags",
+        "label": "Please correct the mcsUpdateMgmt tags for the following VMs:",
+        "subLabel": "Deployment schedules will run at 11pm on the chosen day.",
+        "actionLabel": "Correct Update Management Tag:"
+      },
+      "unattachedIps" : {
+        "label": "Please remove the following unattached IP addresses:",
+        "subLabel": "Unchecked IP addresses below will be left as is."
+      },
+      "unattachedSnapshot" : {
+        "label": "Please remove the following unattached snapshots:",
+        "subLabel": "Unchecked snapshots below will be left as is."
+      }
     },
     "errors": {
       "complexity": "You must select a complexity",
@@ -2895,6 +2919,24 @@
     "getNetworkDnsById": "Something went wrong while retrieving this DNS service. Please try again.",
     "getSubscriptions": "Something went wrong while retrieving your subscription information. Please try again.",
     "getManagementServices": "Something went wrong while retrieving your management services information. Please try again.",
+    "getServicesCostOverviewReport": "Something went wrong while retrieving your services cost overview information. Please try again.",
+    "getResourceMonthlyCostReport": "Something went wrong while retrieving your resource monthly cost information. Please try again.",
+    "getVirtualMachineBreakdownReport": "Something went wrong while retrieving your virtual machine breakdown information. Please try again.",
+    "getPerformanceReport": "Something went wrong while retrieving your performance information. Please try again.",
+    "getAzureResourcesReport": "Something went wrong while retrieving your azure resources information. Please try again.",
+    "getCostRecommendations": "Something went wrong while retrieving your cost recommendation information. Please try again.",
+    "getServiceChanges": "Something went wrong while retrieving your service changes information. Please try again.",
+    "getOperationalMonthlySavings": "Something went wrong while retrieving your operational monthly savings information. Please try again.",
+    "getVMRightsizing": "Something went wrong while retrieving your VM rightsizing information. Please try again.",
+    "getVMRightsizingSummary": "Something went wrong while retrieving your VM rightsizing summary information. Please try again.",
+    "getResourceHealth": "Something went wrong while retrieving your resource health information. Please try again.",
+    "getSecurityScore": "Something went wrong while retrieving your security score information. Please try again.",
+    "getResourceCompliance": "Something went wrong while retrieving your resource compliance information. Please try again.",
+    "getMonitoringAndAlerting": "Something went wrong while retrieving your monitoring and alerting information. Please try again.",
+    "getUpdateManagement": "Something went wrong while retrieving your update management information. Please try again.",
+    "getAuditAlerts": "Something went wrong while retrieving your audit alerts information. Please try again.",
+    "getInefficientVms": "Something went wrong while retrieving your inefficient VMs information. Please try again.",
+    "getTopVmsByCost": "Something went wrong while retrieving your top VMs by cost information. Please try again.",
     "getTerraformDeployments": "Something went wrong while retrieving your Azure deployments. Please try again.",
     "getTerraformDeployment": "Something went wrong while retrieving your Azure deployment details. Please try again.",
     "getTerraformDeploymentActivities": "Something went wrong while retrieving your Azure deployment activities. Please try again.",
@@ -2912,7 +2954,9 @@
     "provisionWorkflows": "Something went wrong while provisioning your workflow. Please try again.",
     "getCrispElements": "Something went wrong while retrieving CRISP elements. Please try again.",
     "getCrispElement": "Something went wrong while retrieving CRISP element details. Please try again.",
-    "getInstalledServices": "Something went wrong while retrieving installed services. Please try again."
+    "getInstalledServices": "Something went wrong while retrieving installed services. Please try again.",
+    "getCloudHealthAlerts": "Something went wrong while retrieving your Cloudhealth Alerts. Please try again.",
+    "getCloudHealthAlert": "Something went wrong while retrieving your Cloudhealth Alert. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3047,6 +3091,7 @@
     "overview": "Overview",
     "ownership": "Ownership",
     "phone": "Phone",
+    "requestType": "Request Type",
     "selectContact": "Select Contact",
     "selectStorage": "Select Storage",
     "subscription": "Subscription",
@@ -3069,6 +3114,7 @@
     "submit": "Submit",
     "plan": "Plan",
     "planAndApply": "Plan & Apply",
+    "remove": "Remove",
     "undo": "Undo",
     "upgrade": "Upgrade",
     "yes": "Yes"
@@ -3083,7 +3129,9 @@
     "requestSubmitted": "Request successfully submitted.",
     "thankyouRequest": "Thanks for your request. We'll be in touch soon.",
     "selectContactRequired": "Contact is required.",
-    "inputNoteRequired": "Note is required."
+    "inputNoteRequired": "Note is required.",
+    "noCloudHealthAlertsDisplay": "No CloudHealth Alerts to be displayed.",
+    "noDataFound": "No data found."
   },
   "dialog": {
     "mediaDetach": {

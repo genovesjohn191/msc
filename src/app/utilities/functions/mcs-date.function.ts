@@ -225,6 +225,34 @@ export function getYear(date: Date = new Date()): number {
 }
 
 /**
+ * Gets the first date of the week (Sunday)
+ */
+export function getFirstDateOfTheWeek(date: Date = new Date()): number {
+  return date.getDate() - date.getDay();
+}
+
+/**
+ * Gets the first date of the current month
+ */
+export function getFirstDateOfTheMonth(date: Date = new Date()): number {
+  return date.getFullYear(), date.getMonth(), 1;
+}
+
+/**
+ * Gets the first date of the current year
+ */
+export function getFirstDateOfTheYear(date: Date = new Date()): Date {
+  return new Date(date.getFullYear(), 0, 1);
+}
+
+/**
+ * Gets the last date of the previous year
+ */
+export function getLastDateOfThePreviousYear(date: Date = new Date()): Date {
+  return new Date(date.getFullYear() - 1, 11, 31);
+}
+
+/**
  * Adds time to a specific date
  * @param date date to increment
  * @param hours number of hours to add, default to 1

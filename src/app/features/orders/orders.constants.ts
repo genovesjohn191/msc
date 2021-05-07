@@ -33,6 +33,7 @@ import { OrdersGuard } from './orders.guard';
 import { McsPrivateCloudOnlyGuard } from '@app/core/guards/mcs-private-cloud-only.guard';
 import { McsPublicCloudOnlyGuard } from '@app/core/guards/mcs-public-cloud-only.guard';
 import { ChangeInternetPortPlanComponent } from './change-internet-port-plan/change-internet-port-plan.component';
+import { CloudHealthServicesComponent } from './ms-request-change/cloudhealth/cloudhealth-services.component';
 
 /**
  * List of services for the main module
@@ -73,7 +74,8 @@ export const ordersComponents: any[] = [
   ModifySimpleFirewallChangeComponent,
   RemoveSimpleFirewallChangeComponent,
   FirewallChangesSharedRuleComponent,
-  ChangeInternetPortPlanComponent
+  ChangeInternetPortPlanComponent,
+  CloudHealthServicesComponent
 ];
 
 /**

@@ -20,6 +20,7 @@ import {
   IMcsApiAzureServicesService,
   IMcsApiBatsService,
   IMcsApiCatalogService,
+  IMcsApiCloudHealthAlertService,
   IMcsApiColocationsService,
   IMcsApiCompaniesService,
   IMcsApiConsoleService,
@@ -100,6 +101,8 @@ import {
   McsCatalogProductBracket,
   McsCatalogSolution,
   McsCatalogSolutionBracket,
+  McsCloudHealthAlert,
+  McsCloudHealthAlertConfigurationItems,
   McsColocationAntenna,
   McsColocationCustomDevice,
   McsColocationRack,
@@ -244,6 +247,8 @@ import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
+import { McsApiCloudHealthAlertService } from '@app/api-client/services/mcs-api-cloudhealth-alert.service';
+import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 
 @Injectable()
 @LogClass()
@@ -274,6 +279,7 @@ export class McsApiService {
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
   private readonly _batsApi: IMcsApiBatsService;
   private readonly _catalogService: IMcsApiCatalogService;
+  private readonly _cloudHealthAlertApi: IMcsApiCloudHealthAlertService;
   private readonly _colocationServicesApi: IMcsApiColocationsService;
   private readonly _companyActiveUser: IMcsApiCompaniesService;
   private readonly _consoleApi: IMcsApiConsoleService;
@@ -328,6 +334,7 @@ export class McsApiService {
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
     this._batsApi = apiClientFactory.getService(new McsApiBatsFactory());
     this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
+    this._cloudHealthAlertApi = apiClientFactory.getService(new McsApiCloudHealthAlertFactory());
     this._colocationServicesApi = apiClientFactory.getService(new McsApiColocationsFactory());
     this._companyActiveUser = apiClientFactory.getService(new McsApiCompaniesFactory());
     this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
@@ -1153,6 +1160,27 @@ export class McsApiService {
     );
   }
 
+  public getCloudHealthAlerts(
+    periodStart?: string,
+    periodEnd?: string
+  ): Observable<McsApiCollection<McsCloudHealthAlert>> {
+    return this._cloudHealthAlertApi.getCloudHealthAlerts(periodStart, periodEnd).pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCloudHealthAlerts'))
+      )
+    );
+  }
+
+  public getCloudHealthAlertById(id?: string): Observable<McsCloudHealthAlert> {
+    return this._cloudHealthAlertApi.getCloudHealthAlertById(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCloudHealthAlert'))
+      )
+    );
+  }
+
   public getPortals(_query?: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
     return this._toolsService.getPortals().pipe(
       map((response) => this._mapToCollection(response.content, response.totalCount)),
@@ -1761,7 +1789,7 @@ export class McsApiService {
   public getVMRightsizingSummary(): Observable<McsReportVMRightsizingSummary> {
     return this._reportsApi.getVMRightsizingSummary().pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.McsReportVMRightsizingSummary'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVMRightsizingSummary'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
@@ -1846,7 +1874,7 @@ export class McsApiService {
   public getTopVmsByCost(query?: McsQueryParam): Observable<McsReportTopVmsByCost[]> {
     return this._reportsApi.getTopVmsByCost(query).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.McsReportTopVmsByCost'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTopVmsByCost'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

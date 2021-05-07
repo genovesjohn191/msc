@@ -102,11 +102,11 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
 
     this._reportingService.getResourceCompliance(this._period, this._subscriptionIds)
     .pipe(
-      catchError(() => {
+      catchError((error) => {
         this.hasError = true;
         this.processing = false;
         this._changeDetectorRef.markForCheck();
-        return throwError('Resource Compliance endpoint failed.');
+        return throwError(error);
       }),
       takeUntil(this._destroySubject))
     .subscribe((response) => {
