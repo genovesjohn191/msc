@@ -6,7 +6,8 @@ import {
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   TerraformDeploymentStatus,
-  TerraformDeploymentStatusSerialization
+  TerraformDeploymentStatusSerialization,
+  terraformDeploymentStatusText
 } from '../enumerations/terraform-deployment-status.enum';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
@@ -68,9 +69,6 @@ export class McsTerraformDeployment extends McsEntityBase {
   @JsonProperty()
   public moduleName: string = undefined;
 
-  @JsonProperty()
-  public busy: boolean = undefined;
-
   @JsonProperty({
     serializer: TerraformDeploymentStatusSerialization,
     deserializer: TerraformDeploymentStatusSerialization
@@ -78,8 +76,26 @@ export class McsTerraformDeployment extends McsEntityBase {
   public status: TerraformDeploymentStatus = undefined;
 
   public get statusIconKey(): string {
-    // TODO(apascual): Check the status of deployment
-    // ASSETS_SVG_STATE_RUNNING , ASSETS_SVG_STATE_RESTARTING, ASSETS_SVG_STATE_STOPPED
-    return CommonDefinition.ASSETS_SVG_STATE_RUNNING;
+    switch (this.status) {
+      case TerraformDeploymentStatus.Unknown:   // Red
+      case TerraformDeploymentStatus.Failed:
+        return CommonDefinition.ASSETS_SVG_STATE_STOPPED;
+
+      case TerraformDeploymentStatus.Succeeded: // Green
+        return CommonDefinition.ASSETS_SVG_STATE_RUNNING;
+
+      case TerraformDeploymentStatus.InProgress: // Amber
+        return CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
+
+      case TerraformDeploymentStatus.New: // Grey
+      case TerraformDeploymentStatus.WaitingConfirmation:
+        return CommonDefinition.ASSETS_SVG_STATE_SUSPENDED;
+    }
+  }
+
+  public get statusLabel(): string {
+    return (this.isProcessing) ?
+      this.processingText :
+      terraformDeploymentStatusText[this.status];
   }
 }

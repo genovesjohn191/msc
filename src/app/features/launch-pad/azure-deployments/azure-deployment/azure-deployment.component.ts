@@ -66,6 +66,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     private _changeDetector: ChangeDetectorRef
   ) {
     this._listenToRouteChange();
+    this._watchDeploymentChanges();
   }
 
   public ngOnInit(): void {
@@ -201,5 +202,11 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
         }
         this.selectedTabId$ = of(tabUrl);
       });
+  }
+
+  private _watchDeploymentChanges(): void {
+    this._eventDispatcher.addEventListener(McsEvent.dataChangeTerraformDeployments, (payload) => {
+      this._changeDetector.markForCheck();
+    });
   }
 }

@@ -25,7 +25,15 @@
                       {{ 'columnHeader.type' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let row">
-                      {{ row.type }}
+                      <mcs-item>
+                        <div *ngIf="!row.isProcessing">
+                          <mcs-icon [key]="row.statusIconKey" size="small" [mcsTooltip]="row.statusLabel"></mcs-icon>
+                        </div>
+                        <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
+                          <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
+                        </div>
+                        <span>{{ row.type }}</span>
+                      </mcs-item>
                     </td>
                   </ng-container>
 

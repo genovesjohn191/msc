@@ -6,9 +6,18 @@ export enum TerraformDeploymentStatus {
   InProgress = 'InProgress',
   Succeeded = 'Succeeded',
   Failed = 'Failed',
-  Unconfirmed = 'Unconfirmed',
+  WaitingConfirmation = 'WaitingConfirmation',
   New = 'New'
 }
+
+export const terraformDeploymentStatusText = {
+  [TerraformDeploymentStatus.Unknown]: 'Unknown',
+  [TerraformDeploymentStatus.InProgress]: 'In-Progress',
+  [TerraformDeploymentStatus.Succeeded]: 'Succeeded',
+  [TerraformDeploymentStatus.Failed]: 'Failed',
+  [TerraformDeploymentStatus.WaitingConfirmation]: 'Waiting for Confirmation',
+  [TerraformDeploymentStatus.New]: 'New'
+};
 
 /**
  * Enumeration serializer and deserializer methods
