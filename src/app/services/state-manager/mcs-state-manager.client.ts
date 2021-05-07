@@ -24,6 +24,7 @@ import { McsMediaStateManager } from './entities/mcs-media.state-manager';
 import { McsOrderStateManager } from './entities/mcs-order.state-manager';
 import { McsServerStateManager } from './entities/mcs-server.state-manager';
 import { McsSystemMessageStateManager } from './entities/mcs-system-message.state-manager';
+import { McsTerraformDeploymentStateManager } from './entities/mcs-terraform-deployment.state-manager';
 import { McsTicketStateManager } from './entities/mcs-ticket.state-manager';
 
 @Injectable()
@@ -156,5 +157,6 @@ export class McsStateManagerClient implements McsDisposable {
     this._entityFactoryTable.set(EntityRequester.Ticket, new McsTicketStateManager(this._injector));
     this._entityFactoryTable.set(EntityRequester.SystemMessage, new McsSystemMessageStateManager(this._injector));
     this._entityFactoryTable.set(EntityRequester.BackupAggregationTarget, new McsBackupAggregationTargetStateManager(this._injector));
+    this._entityFactoryTable.set(EntityRequester.TerraformDeployment, new McsTerraformDeploymentStateManager(this._injector));
   }
 }

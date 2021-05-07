@@ -203,6 +203,7 @@ import {
   McsTerraformDeployment,
   McsTerraformDeploymentActivity,
   McsTerraformDeploymentCreate,
+  McsTerraformDeploymentCreateActivity,
   McsTerraformDeploymentUpdate,
   McsTerraformModule,
   McsTerraformTag,
@@ -241,6 +242,7 @@ import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
+import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 
 @Injectable()
@@ -264,6 +266,7 @@ export class McsApiService {
   private readonly _serversRepository: McsServersRepository;
   private readonly _systemMessagesRepository: McsSystemMessagesRepository;
   private readonly _ticketsRepository: McsTicketsRepository;
+  private readonly _terraformDeploymentsRepository: McsTerraformDeploymentsRepository;
 
   private readonly _accountApi: IMcsApiAccountService;
   private readonly _availabilityZonesApi: IMcsApiAvailabilityZonesService;
@@ -314,6 +317,7 @@ export class McsApiService {
     this._serversRepository = _injector.get(McsServersRepository);
     this._systemMessagesRepository = _injector.get(McsSystemMessagesRepository);
     this._ticketsRepository = _injector.get(McsTicketsRepository);
+    this._terraformDeploymentsRepository = _injector.get(McsTerraformDeploymentsRepository);
 
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
@@ -1830,7 +1834,7 @@ export class McsApiService {
   public getInefficientVms(
     period?: string,
     subscriptionIds?: string[]
-    ): Observable<McsReportInefficientVms[]> {
+  ): Observable<McsReportInefficientVms[]> {
     return this._reportsApi.getInefficientVms(period, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInefficientVms'))
@@ -1904,20 +1908,18 @@ export class McsApiService {
   }
 
   public getTerraformDeployments(query?: McsQueryParam): Observable<McsApiCollection<McsTerraformDeployment>> {
-    return this._terraformApi.getDeployments(query).pipe(
+    return this._mapToEntityRecords(this._terraformDeploymentsRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeployments'))
-      ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+      )
     );
   }
 
   public getTerraformDeployment(id: string): Observable<McsTerraformDeployment> {
-    return this._terraformApi.getDeployment(id).pipe(
+    return this._mapToEntityRecord(this._terraformDeploymentsRepository, id).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeployment'))
-      ),
-      map((response) => getSafeProperty(response, (obj) => obj.content))
+      )
     );
   }
 
@@ -1935,26 +1937,68 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTerraformDeployment'))
       ),
-      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.TerraformDeployment)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public updateTerraformDeployment(id: any, deploymentData: McsTerraformDeploymentUpdate): Observable<McsTerraformDeployment> {
     return this._terraformApi.updateDeployment(id, deploymentData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateTerraformDeployment'))
-      ),
-      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateTerraformDeployment'));
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.TerraformDeployment, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public deleteTerraformDeployment(id: any): Observable<boolean> {
     return this._terraformApi.deleteDeployment(id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteTerraformDeployment'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteTerraformDeployment'))
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public createTerraformDeploymentActivity(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsJob> {
+    return this._terraformApi.createDeploymentActivity(id, request).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTerraformDeploymentActivity'))
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public createTerraformDeploymentPlan(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsJob> {
+    return this._terraformApi.createPlan(id, request).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTerraformDeploymentPlan'))
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public applyTerraformDeploymentPlan(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsJob> {
+    return this._terraformApi.applyDeployment(id, request).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.applyTerraformDeploymentPlan'))
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public destroyTerraformDeployment(id: any, request: McsTerraformDeploymentCreateActivity): Observable<McsJob> {
+    return this._terraformApi.destroyDeployment(id, request).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.destroyTerraformDeployment'))
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -1992,33 +2036,6 @@ export class McsApiService {
     return this._terraformApi.getTag(id, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTag'))
-      ),
-      map((response) => getSafeProperty(response, (obj) => obj.content))
-    );
-  }
-
-  public createTerraformDeploymentPlan(id: any): Observable<McsJob> {
-    return this._terraformApi.createPlan(id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTerraformDeploymentPlan'))
-      ),
-      map((response) => getSafeProperty(response, (obj) => obj.content))
-    );
-  }
-
-  public applyTerraformDeploymentPlan(id: any): Observable<McsJob> {
-    return this._terraformApi.applyDeployment(id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.applyTerraformDeploymentPlan'))
-      ),
-      map((response) => getSafeProperty(response, (obj) => obj.content))
-    );
-  }
-
-  public destroyTerraformDeployment(id: any): Observable<McsJob> {
-    return this._terraformApi.destroyDeployment(id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.destroyTerraformDeployment'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
