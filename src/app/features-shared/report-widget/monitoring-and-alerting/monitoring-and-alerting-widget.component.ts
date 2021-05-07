@@ -105,11 +105,11 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     this._changeDetectorRef.markForCheck();
 
     this._reportingService.getMonitoringAndAlerting(this._startPeriod, this._endPeriod, this._subscriptionIds)
-    .pipe(catchError(() => {
+    .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
       this._changeDetectorRef.markForCheck();
-      return throwError('Monitoring and Alerting endpoint failed.');
+      return throwError(error);
     }))
     .subscribe((result) => {
       this.processing = false;

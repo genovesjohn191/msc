@@ -35,6 +35,7 @@ import { McsApiMetadataService } from './services/mcs-api-metadata.service';
 import { McsApiAvailabilityZonesService } from './services/mcs-api-availability-zones.service';
 import { McsApiTenantsService } from './services/mcs-api-tenants.service';
 import { McsApiTerraformService } from './services/mcs-api-terraform.service';
+import { McsApiCloudHealthAlertService } from './services/mcs-api-cloudhealth-alert.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
@@ -46,6 +47,7 @@ export const apiClientProviders: Provider[] = [
   McsApiAzureServicesService,
   McsApiBatsService,
   McsApiCatalogService,
+  McsApiCloudHealthAlertService,
   McsApiColocationsService,
   McsApiCompaniesService,
   McsApiConsoleService,

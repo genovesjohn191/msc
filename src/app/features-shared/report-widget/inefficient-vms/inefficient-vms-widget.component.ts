@@ -73,8 +73,8 @@ export class InefficientVmsWidgetComponent {
     return this._reportingService.getInefficientVms(this._period, this._subscriptionIds).pipe(
       map(response => new McsMatTableContext(response,
         response?.length)),
-      catchError(() => {
-        return throwError('Inefficient VMs endpoint failed.');
+      catchError((error) => {
+        return throwError(error);
       })
     );
   }

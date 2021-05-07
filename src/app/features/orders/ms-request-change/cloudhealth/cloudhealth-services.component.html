@@ -1,0 +1,55 @@
+<form [formGroup]="fgCloudhealth" mcsFormGroup>
+  <div style="margin-top: 15px">
+    <mcs-order-listbox *ngIf="cloudHealthPeriodRange$ | async"
+      [categoryList]="cloudHealthPeriodRange$ | async"
+      [selectedItemList]="cloudHealthAlerts$ | async"
+      [categoryId]="'select-cloudhealth-period-range'"
+      [selectedItemId]="'select-cloudhealth-alert'"
+      [categoryEventTracker]="'period-range'"
+      [selectedItemEventTracker]="'cloudhealth-alert'"
+      [eventCategory]="'cloudhealth'"
+      [isProcessing]="isChProcessing"
+      [eventLabel]="'azure-service-request-page'"
+      (categoryChange)="onClickPeriodRange($event)"
+      (selectedItemChange)="onClickCloudHealthAlert($event)">
+    </mcs-order-listbox>
+
+    <!-- Cloudhealth alert list by Type-->
+    <div style="margin-top: 15px">
+      <ng-container *ngIf="isChByIdProcessing; else cloudHealthByIdTemplate">
+        <mcs-loader style="padding-top: 10px" size="medium"></mcs-loader>
+      </ng-container>
+      <ng-template #cloudHealthByIdTemplate>
+        <ng-container *ngIf="alertType">
+          <h6>{{ alertLabel }}</h6>
+          <span>{{ alertSubLabel }}</span>
+          <ng-container *ngIf="cloudHealthAlertOptions?.length === 0; else hasDataTemplate">
+            <mcs-item>
+              <span>{{ 'message.noDataFound' | translate }}</span>
+            </mcs-item>
+          </ng-container>
+          <ng-template #hasDataTemplate>
+            <ng-container *ngIf="alertType === alertManagementTag; else notManagementTagTemplate">
+              <mcs-select-management-tag
+                [managementTagList]="cloudHealthAlertOptions"
+                [dropdownList]="managementTagOptions$ | async"
+                [formControl]="fcDropdown">
+              </mcs-select-management-tag>
+            </ng-container>
+    
+            <ng-template #notManagementTagTemplate>
+              <mcs-checkbox-list
+                [eventId]="'cloudhealth-alert-checkbox'"
+                [eventTracker]="'select-cloudhealth-alert-checkbox'"
+                [eventCategory]="'cloudhealth'"
+                [eventLabel]="'azure-service-request-page'"
+                [optionList]="cloudHealthAlertOptions"
+                [formControl]="fcCheckbox">
+              </mcs-checkbox-list>
+            </ng-template>
+          </ng-template>
+        </ng-container>
+      </ng-template>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,26 @@
+<div class="select-management-tag-container">
+  <mat-list>
+    <mat-list-item *ngFor="let managementTag of managementTagList">
+      <div class="option-label">
+        <div class="text">{{ managementTag.text }}</div>
+        <div class="sub-text">{{ managementTag.subText }}</div>
+      </div>
+      <div class="dropdown-container">
+        <mcs-form-field>
+          <mcs-select
+            required
+            mcsId="cloudhealth-alert-dropdown"
+            mcsEventTracker="select-cloudhealth-alert-dropdown"
+            mcsEventCategory="cloudhealth"
+            mcsEventLabel="azure-service-request-page"
+            (selectionChange)="onSelectChange($event, managementTag)">
+            <mcs-option *ngFor="let dropdown of dropdownList"
+              [value]="dropdown">
+              {{ dropdown.text }}
+            </mcs-option>
+          </mcs-select>
+        </mcs-form-field>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

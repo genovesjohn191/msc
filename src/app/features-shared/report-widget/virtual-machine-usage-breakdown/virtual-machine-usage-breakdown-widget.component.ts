@@ -84,11 +84,11 @@ export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDe
     this._changeDetectorRef.markForCheck();
 
     this.reportingService.getVirtualMachineBreakdownReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
-    .pipe(catchError(() => {
+    .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
       this._changeDetectorRef.markForCheck();
-      return throwError('Virtual machine breakdown endpoint failed.');
+      return throwError(error);
     }))
     .subscribe((result) => {
       this.dataBehavior.next(result);

@@ -85,11 +85,11 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
 
     this._reportingService.getOperationalMonthlySavings()
     .pipe(
-      catchError(() => {
+      catchError((error) => {
         this.hasError = true;
         this.processing = false;
         this._changeDetectorRef.markForCheck();
-        return throwError('Operational Monthly Savings endpoint failed.');
+        return throwError(error);
       }),
       takeUntil(this._destroySubject))
     .subscribe((response) => {

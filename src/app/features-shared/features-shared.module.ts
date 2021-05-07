@@ -13,6 +13,7 @@ import { InternetManagePortPlanComponent } from './internet-manage-port-plan/int
 import { OrderAgreementComponent } from './order-agreement/mcs-order-agreement.component';
 import { OrderApprovalComponent } from './order-approval/order-approval.component';
 import { OrderItemLeadTimeComponent } from './order-item-lead-time/order-item-lead-time.component';
+import { OrderListBoxComponent } from './order-listbox/order-listbox.component';
 import { ServerCommandComponent } from './server-command/server-command.component';
 import { RenameServerDialogComponent } from './server-dialogs/rename-server/rename-server.dialog';
 /** Components */
@@ -50,6 +51,7 @@ const exportedComponents = [
   VdcManageStorageComponent,
   VdcManageScaleComponent,
   OrderAgreementComponent,
+  OrderListBoxComponent,
   SystemMessageFormComponent,
   RenameServerDialogComponent,
   HelpWidgetComponent,

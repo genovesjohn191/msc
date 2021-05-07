@@ -110,11 +110,11 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
     this.hasError = false;
     this.processing = true;
     this.reportingService.getResourceMonthlyCostReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
-    .pipe(catchError(() => {
+    .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
       this._changeDetector.markForCheck();
-      return throwError('Resources Monthly Cost endpoint failed.');
+      return throwError(error);
     }))
     .subscribe((result) => {
       this.chartData = result;

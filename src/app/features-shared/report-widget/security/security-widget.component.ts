@@ -85,11 +85,11 @@ export class SecurityWidgetComponent implements OnInit, OnDestroy {
 
     this._reportingService.getSecurityScore()
     .pipe(
-      catchError(() => {
+      catchError((error) => {
         this.hasError = true;
         this.processing = false;
         this._changeDetectorRef.markForCheck();
-        return throwError('Security Score endpoint failed.');
+        return throwError(error);
       }),
       takeUntil(this._destroySubject))
     .subscribe((response) => {
