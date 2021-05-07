@@ -33,22 +33,13 @@
             {{ 'action.apply' | translate }}
           </button>
 
-          <button mat-menu-item (click)="planAndApplyClicked()"
-            mcsId="plan-and-apply-deployment"
-            mcsEventTracker="plan-and-apply-deployment"
-            mcsEventCategory="launchpad-deployment"
-            mcsEventLabel="azure-deployment-details-page"
-            [disabled]="deployment.isProcessing">
-            {{ 'action.planAndApply' | translate }}
-          </button>
-
           <button mat-menu-item (click)="upgradeClicked()"
             mcsId="upgrade-deployment"
             mcsEventTracker="upgrade-deployment"
             mcsEventCategory="launchpad-deployment"
             mcsEventLabel="azure-deployment-details-page"
             [disabled]="deployment.isProcessing">
-            {{ 'action.upgrade' | translate }}
+            {{ 'action.changeTag' | translate }}
           </button>
 
           <button mat-menu-item (click)="renameClicked()"

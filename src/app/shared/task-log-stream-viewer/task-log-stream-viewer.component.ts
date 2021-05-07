@@ -127,21 +127,15 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
 
   public getStatusIconKey(status: JobStatus): string {
     switch(status) {
-      case JobStatus.Active: {
-        return CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS
-      }
+      case JobStatus.Active:
+      case JobStatus.Pending:
+        return CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
 
-      case JobStatus.Pending: {
-        return CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS
-      }
+      case JobStatus.Completed:
+        return CommonDefinition.ASSETS_SVG_SUCCESS;
 
-      case JobStatus.Completed: {
-        return CommonDefinition.ASSETS_SVG_SUCCESS
-      }
-
-      default: {
-        return CommonDefinition.ASSETS_SVG_ERROR
-      }
+      default:
+        return CommonDefinition.ASSETS_SVG_ERROR;
     }
   }
 

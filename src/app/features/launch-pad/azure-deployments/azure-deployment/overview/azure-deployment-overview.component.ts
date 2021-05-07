@@ -29,6 +29,8 @@ import { AzureDeploymentService } from '../azure-deployment.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogDialogComponent } from '@app/shared';
 import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-azure-deployment-overview',
@@ -60,9 +62,11 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
     private _apiService: McsApiService,
     private _deploymentService: AzureDeploymentService,
     private _dialog: MatDialog,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this._subscribeToDeploymentDetails();
+    this._watchDeploymentChanges();
   }
 
   public ngOnDestroy(): void {
@@ -194,5 +198,11 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
       }),
       shareReplay(1)
     );
+  }
+
+  private _watchDeploymentChanges(): void {
+    this._eventDispatcher.addEventListener(McsEvent.dataChangeTerraformDeployments, (payload) => {
+      this._changeDetector.markForCheck();
+    });
   }
 }
