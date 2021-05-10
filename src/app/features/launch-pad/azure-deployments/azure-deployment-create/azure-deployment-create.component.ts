@@ -21,7 +21,8 @@ import {
   DynamicSelectChipsCompanyField,
   DynamicSelectChipsTerraformModuleField,
   DynamicSelectChipsTerraformTagField,
-  DynamicSelectTenantField
+  DynamicSelectTenantField,
+  DynamicSelectTerraformModuleTypeField
 } from '@app/features-shared/dynamic-form';
 import { DynamicSelectAzureSubscriptionField } from '@app/features-shared/dynamic-form/dynamic-form-field/select-azure-subscription/select-azure-subscription';
 import {
@@ -92,6 +93,13 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       placeholder: 'Enter a deployment name',
       validators: { required: true, minlength: 1, maxlength: 50 },
     }),
+    // new DynamicSelectTerraformModuleTypeField({
+    //   key: 'moduleType',
+    //   label: 'Module Type',
+    //   validators: { required: true },
+    //   eventName: 'terraform-module-type-change',
+    //   dependents: ['module']
+    // }),
     new DynamicSelectChipsTerraformModuleField({
       key: 'module',
       label: 'Module',

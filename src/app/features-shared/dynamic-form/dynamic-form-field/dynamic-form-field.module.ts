@@ -26,6 +26,7 @@ import { DynamicSelectOsComponent } from './select-os/select-os.component';
 import { DynamicSelectRetentionPeriodComponent } from './select-retention-period/select-retention-period.component';
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 import { DynamicSelectTenantComponent } from './select-tenant/select-tenant.component';
+import { DynamicSelectTerraformModuleTypeComponent } from './select-terraform-module-type/select-terraform-module-type.component';
 import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
 import { DynamicSelectVmComponent } from './select-vm/select-vm.component';
 import { DynamicSelectComponent } from './select/select.component';
@@ -55,6 +56,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectRetentionPeriodComponent,
   DynamicSelectStorageProfileComponent,
   DynamicSelectTenantComponent,
+  DynamicSelectTerraformModuleTypeComponent,
   DynamicSelectVdcComponent,
   DynamicSelectVmComponent,
   DynamicSlideToggleComponent

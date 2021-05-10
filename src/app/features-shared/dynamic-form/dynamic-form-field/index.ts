@@ -24,6 +24,7 @@ export * from './select-os/select-os';
 export * from './select-retention-period/select-retention-period';
 export * from './select-storage-profile/select-storage-profile';
 export * from './select-tenant/select-tenant';
+export * from './select-terraform-module-type/select-terraform-module-type';
 export * from './select-vdc/select-vdc';
 export * from './select-vm/select-vm';
 export * from './slide-toggle/slide-toggle';

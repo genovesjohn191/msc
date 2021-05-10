@@ -11,6 +11,15 @@ export class McsTerraformTag extends McsEntityBase {
   public message: string = undefined;
 
   @JsonProperty()
+  public category: string = undefined;
+
+  @JsonProperty()
+  public categoryName: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
   public tfvars: string = undefined;
 
   @JsonProperty()

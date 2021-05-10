@@ -22,7 +22,7 @@
 
           <mcs-item>
             <span>{{ 'label.company' | translate }}:</span>
-            <span [innerHTML]="deployment.company | mcsDataLabel"></span>
+            <span [innerHTML]="deployment.companyName | mcsDataLabel"></span>
             <span> ({{ deployment.companyId | mcsDataLabel }})</span>
           </mcs-item>
 
@@ -62,7 +62,7 @@
 
           <mcs-item>
             <span>{{ 'label.category' | translate }}:</span>
-            <span [innerHTML]="deployment.category | mcsDataLabel"></span>
+            <span [innerHTML]="deployment.categoryName | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
