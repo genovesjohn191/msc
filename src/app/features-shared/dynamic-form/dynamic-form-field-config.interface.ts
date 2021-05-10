@@ -78,6 +78,7 @@ export type DynamicFormFieldType =
   | 'select-retention-period'
   | 'select-storage-profile'
   | 'select-tenant'
+  | 'select-terraform-module-type'
   | 'select-vdc'
   | 'select-vm'
   | 'slide-toggle';
@@ -106,6 +107,7 @@ export type DynamicFormFieldTemplate =
   | 'select-retention-period'
   | 'select-storage-profile'
   | 'select-tenant'
+  | 'select-terraform-module-type'
   | 'select-vdc'
   | 'select-vm'
   | 'slide-toggle';
@@ -121,6 +123,7 @@ export type DynamicFormFieldOnChangeEvent =
   | 'resource-change'
   | 'subscription-change'
   | 'tenant-change'
+  | 'terraform-module-type-change'
   | 'terraform-module-change'
   | 'terraform-tag-change';
 

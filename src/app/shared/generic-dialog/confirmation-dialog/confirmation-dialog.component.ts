@@ -18,9 +18,9 @@ export interface ConfirmationDialogData {
   selector: 'mcs-confirmation-dialog.component',
   templateUrl: './confirmation-dialog.component.html',
 })
-export class ConfirmationDialogDialogComponent {
+export class ConfirmationDialogComponent {
   public constructor(
-    public dialogRef: MatDialogRef<ConfirmationDialogDialogComponent>,
+    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData
   ) {}
 }

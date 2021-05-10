@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { McsStorageService } from '@app/core';
 import { DynamicFormModule } from '@app/features-shared';
-import { ConfirmationDialogDialogComponent, SharedModule } from '@app/shared';
+import { ConfirmationDialogComponent, SharedModule } from '@app/shared';
 
 import { LaunchPadWorkflowCoreModule } from './workflows/workflow/workflow-core.module';
 import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
@@ -20,6 +20,7 @@ import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/az
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
 import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';
 import { AzureDeploymentService } from './azure-deployments/azure-deployment/azure-deployment.service';
+import { TerraformTagChangeDialogModule } from '@app/features-shared/terraform-tag-change-dialog/terraform-tag-change-dialog.module';
 
 @NgModule({
   declarations: [
@@ -36,20 +37,21 @@ import { AzureDeploymentService } from './azure-deployments/azure-deployment/azu
     AzureDeploymentsComponent,
     AzureDeploymentComponent,
     // Shared
-    ConfirmationDialogDialogComponent
+    ConfirmationDialogComponent
   ],
   exports: [
     AzureDeploymentActivitiesComponent,
     AzureDeploymentOverviewComponent,
-    ConfirmationDialogDialogComponent
+    ConfirmationDialogComponent
   ],
   entryComponents: [
-    ConfirmationDialogDialogComponent
+    ConfirmationDialogComponent
   ],
   imports: [
     SharedModule,
     LaunchPadWorkflowCoreModule,
     DynamicFormModule,
+    TerraformTagChangeDialogModule,
     RouterModule.forChild(launchPadRoutes)
   ],
   providers: [

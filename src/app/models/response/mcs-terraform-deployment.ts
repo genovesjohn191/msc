@@ -43,7 +43,16 @@ export class McsTerraformDeployment extends McsEntityBase {
   public companyId: string = undefined;
 
   @JsonProperty()
-  public company: string = undefined;
+  public companyName: string = undefined;
+
+  @JsonProperty()
+  public categoryId: string = undefined;
+
+  @JsonProperty()
+  public categoryName: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
 
   @JsonProperty()
   public slugId: string = undefined;
@@ -65,6 +74,9 @@ export class McsTerraformDeployment extends McsEntityBase {
 
   @JsonProperty()
   public tenantId: string = undefined;
+
+  @JsonProperty()
+  public moduleId: string = undefined;
 
   @JsonProperty()
   public moduleName: string = undefined;

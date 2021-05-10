@@ -27,7 +27,7 @@ import {
 } from '@app/utilities';
 import { AzureDeploymentService } from '../azure-deployment.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogDialogComponent } from '@app/shared';
+import { ConfirmationDialogComponent } from '@app/shared';
 import { TranslateService } from '@ngx-translate/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -99,7 +99,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
 
   public saveVariables(): void {
     const saveVariablesDialogRef =
-      this._dialog.open(ConfirmationDialogDialogComponent, { data: {
+      this._dialog.open(ConfirmationDialogComponent, { data: {
         title: this._translateService.instant('dialog.terraformDeploymentSaveVariables.title'),
         message: this._translateService.instant('dialog.terraformDeploymentSaveVariables.message',
           { deploymentName: this.deployment.name }),

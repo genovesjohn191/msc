@@ -1,0 +1,34 @@
+<span mat-dialog-title>{{ data.title }}</span>
+
+<div mat-dialog-content class="mat-typography">
+  <p>
+    <small>Existing tag: {{ this.data.deployment.tagName }}</small>
+  </p>
+  <mat-form-field
+  appearance="outline">
+    <mat-label>New Module Tag</mat-label>
+    <input
+      [mcsId]="upgrade-tag"
+      type="text"
+      matInput
+      required
+      [formControl]="filterControl"
+      [matAutocomplete]="autoGroup">
+    <mat-autocomplete #autoGroup="matAutocomplete">
+      <mat-optgroup *ngFor="let group of filteredOptions | async" [label]="group.name">
+        <mat-option *ngFor="let option of group.options" [value]="option.value">
+          <small>{{ option.value }}</small>
+        </mat-option>
+      </mat-optgroup>
+    </mat-autocomplete>
+  </mat-form-field>
+  <p>
+    <small>Note: the updated module tag will not take effect <br/> until you've performed an apply on the deployment</small>
+  </p>
+</div>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.newTag" cdkFocusInitial [disabled]="!valid">Update</button>
+</mat-dialog-actions>
+

@@ -33,9 +33,9 @@
             {{ 'action.apply' | translate }}
           </button>
 
-          <button mat-menu-item (click)="upgradeClicked()"
-            mcsId="upgrade-deployment"
-            mcsEventTracker="upgrade-deployment"
+          <button mat-menu-item (click)="changeTagClicked()"
+            mcsId="change-deployment-tag"
+            mcsEventTracker="change-deployment-tag"
             mcsEventCategory="launchpad-deployment"
             mcsEventLabel="azure-deployment-details-page"
             [disabled]="deployment.isProcessing">
