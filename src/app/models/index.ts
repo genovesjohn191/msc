@@ -336,6 +336,7 @@ export * from './common/mcs-ticket-query-params';
 export * from './common/mcs-object-query-params';
 export * from './common/mcs-terraform-tag-query-params';
 export * from './common/mcs-rightsizing-query-params';
+export * from './common/mcs-vdc-storage-query-params';
 export * from './common/mcs-state-notification';
 export * from './common/mcs-cloudhealth-option';
 

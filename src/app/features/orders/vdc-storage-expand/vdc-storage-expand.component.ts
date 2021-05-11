@@ -2,13 +2,14 @@ import {
   throwError,
   Observable,
   Subject,
-  Subscription
+  of
 } from 'rxjs';
 import {
   catchError,
   map,
   shareReplay,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -26,6 +27,10 @@ import {
   FormGroup
 } from '@angular/forms';
 import {
+  ActivatedRoute,
+  Params
+} from '@angular/router';
+import {
   CoreValidators,
   IMcsFormGroup,
   McsErrorHandlerService,
@@ -33,19 +38,17 @@ import {
   McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/events';
 import {
   OrderDetails,
   VdcManageStorage
 } from '@app/features-shared';
 import {
-  McsExpandResourceStorage,
   McsOrderCreate,
   McsOrderItemCreate,
   McsOrderWorkflow,
   McsResource,
   McsResourceStorage,
+  McsVdcStorageQueryParams,
   OrderIdType
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -62,7 +65,10 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  convertUrlParamsKeyToLowerCase,
+  compareStrings,
+  isEmptyObject
 } from '@app/utilities';
 
 import { VdcStorageExpandService } from './vdc-storage-expand.service';
@@ -86,13 +92,17 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
 
   public resources$: Observable<McsResource[]>;
   public selectedResource$: Observable<McsResource>;
+  public selectedServiceId$: Observable<McsVdcStorageQueryParams>;
+  public selectedStorage$: Observable<McsResourceStorage>;
+
   public fgVdcStorageExpandDetails: FormGroup;
   public fcResource: FormControl;
   public fcStorage: FormControl;
+
   public storageGB: number;
+  public selectedVdcStorage: McsResourceStorage;
   private _selectedStorage: McsResourceStorage;
   private _vdcManageStorage: VdcManageStorage;
-  private _selectedServerHandler: Subscription;
 
   /**
    * Returns the back icon key as string
@@ -132,12 +142,13 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   private _componentHandler: ComponentHandlerDirective;
 
   private _destroySubject = new Subject<void>();
+  private _vdcStorageDataChangeHandler = new Subject<void>();
 
   constructor(
     _injector: Injector,
+    private _activatedRoute: ActivatedRoute,
     private _vdcStorageExpandService: VdcStorageExpandService,
     private _elementRef: ElementRef,
-    private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
     private _apiService: McsApiService,
@@ -154,17 +165,17 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
         }
       });
     this._registerFormGroup();
-    this._registerEvents();
     this._vdcManageStorage = new VdcManageStorage();
   }
 
   public ngOnInit() {
     this._getAllResources();
+    this._subscribesToSelectedVdcStorage();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
-    unsubscribeSafely(this._selectedServerHandler);
+    unsubscribeSafely(this._vdcStorageDataChangeHandler);
   }
 
   /**
@@ -173,6 +184,10 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   public onChangeResource(resource: McsResource): void {
     if (isNullOrEmpty(resource) || isNullOrEmpty(resource.serviceId)) { return; }
+    if (isEmptyObject(this._activatedRoute.snapshot.queryParams)) {
+      this.selectedStorage$ = of(null);
+    }
+    this._selectedStorage = null;
     this._resetExpandVdcStorageState();
     this._getSelectedResource(resource);
   }
@@ -269,18 +284,6 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   }
 
   /**
-   * Register jobs/notifications events
-   */
-  private _registerEvents(): void {
-    this._selectedServerHandler = this._eventDispatcher.addEventListener(
-      McsEvent.vdcStorageExpandSelectedEvent, this._onSelectedVdcStorageExpand.bind(this)
-    );
-
-    // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.vdcStorageExpandSelectedEvent);
-  }
-
-  /**
    * Validates the form fields in all existing form groups
    */
   private _validateFormFields(): boolean {
@@ -325,16 +328,6 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   }
 
   /**
-   * Event listener whenever a storage is selected for expanding
-   * @param expandResourceStorage obj containing both resource and storage
-   */
-  private _onSelectedVdcStorageExpand(expandResourceStorage: McsExpandResourceStorage): void {
-    if (isNullOrEmpty(expandResourceStorage)) { return; }
-    this.fcResource.setValue(expandResourceStorage.resource);
-    this.fcStorage.setValue(expandResourceStorage.storage);
-  }
-
-  /**
    * Register form group elements
    */
   private _registerFormGroup() {
@@ -355,7 +348,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     }
 
     this.fgVdcStorageExpandDetails.valueChanges.pipe(
-      takeUntil(this._destroySubject)
+      takeUntil(this._vdcStorageDataChangeHandler)
     ).subscribe();
   }
 
@@ -366,5 +359,35 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     if (!isNullOrEmpty(this._componentHandler)) {
       this._componentHandler.recreateComponent();
     }
+  }
+
+  private _subscribesToSelectedVdcStorage(): void {
+    this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
+      takeUntil(this._destroySubject),
+      map((params: Params) => {
+        let lowerParams: Params = convertUrlParamsKeyToLowerCase(params);
+        return new McsVdcStorageQueryParams(lowerParams?.resourceid, lowerParams?.storageid);
+      }),
+      tap((params: McsVdcStorageQueryParams) => {
+        this.resources$.subscribe(resources => {
+          let resourceFound = resources.find(resource => compareStrings(resource.id, params.resourceId) === 0);
+          let fcResourceValue = resourceFound ? resourceFound : null;
+          this.fcResource.setValue(fcResourceValue);
+          this._getVdcStorage(params.resourceId, params.storageId);
+        })
+      }),
+      shareReplay(1)
+    )
+  }
+
+  private _getVdcStorage(resourceId: string, storageId: string): void {
+    this.selectedStorage$ = this._apiService.getVdcStorage(resourceId, storageId).pipe(
+      map((storage: McsResourceStorage) => {
+        this.selectedVdcStorage = storage;
+        this.onChangeStorage(storage);
+        return storage;
+      }),
+      shareReplay(1)
+    )
   }
 }

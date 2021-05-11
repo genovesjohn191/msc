@@ -497,6 +497,15 @@ export class McsApiService {
     );
   }
 
+  public getVdcStorage(resourceId: string, storageId: string): Observable<McsResourceStorage> {
+    return this._resourcesApi.getVdcStorage(resourceId, storageId).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getStorage'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public getResourceNetworks(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResourceNetwork>> {
     return this._resourcesApi.getResourceNetworks(id, optionalHeaders).pipe(
       catchError((error) =>

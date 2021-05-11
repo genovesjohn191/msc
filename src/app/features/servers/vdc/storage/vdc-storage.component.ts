@@ -26,12 +26,10 @@ import {
 import {
   McsResourceStorage,
   RouteKey,
-  McsExpandResourceStorage,
   McsResource,
   McsFeatureFlag,
   McsFilterInfo
 } from '@app/models';
-import { McsEvent } from '@app/events';
 import { ColumnFilter } from '@app/shared';
 import { VdcDetailsBase } from '../vdc-details.base';
 
@@ -119,13 +117,12 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
    * Navigate to Ordering Expand Vdc Storage
    */
   public navigateToExpandVdcStorage(resourceDetails: McsResource, resourceStorage: McsResourceStorage): void {
-    this.eventDispatcher.dispatch(
-      McsEvent.vdcStorageExpandSelectedEvent,
-      createObject(McsExpandResourceStorage, {
-        resource: resourceDetails, storage: resourceStorage
-      })
+    this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand, [],
+      { queryParams: {
+        resourceId : resourceDetails.id,
+        storageId : resourceStorage.id
+      }}
     );
-    this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand);
   }
 
   /**
