@@ -1,10 +1,10 @@
-<span mat-dialog-title>{{ data.title }}</span>
+<span mat-dialog-title>{{ 'dialog.terraformDeploymentChangeTag.title' | translate: { deployment: this.data.deployment.name } }}</span>
 
 <div mat-dialog-content class="mat-typography">
   <p>
-    <small>Existing tag: {{ this.data.deployment.tagName }}</small>
+    <small>{{ 'dialog.terraformDeploymentChangeTag.existingTag' | translate: { tag: this.data.deployment.tagName } }}</small>
   </p>
-  <mat-form-field appearance="outline" style="width: 100%;">
+  <mat-form-field appearance="outline" style="width: 100%; max-width: 350px;">
     <mat-label>New Module Tag</mat-label>
     <input
       [mcsId]="'upgrade-tag'"
@@ -13,7 +13,7 @@
       required
       [formControl]="filterControl"
       [matAutocomplete]="autoGroup">
-    <mat-autocomplete #autoGroup="matAutocomplete">
+    <mat-autocomplete autoActiveFirstOption #autoGroup="matAutocomplete">
       <mat-optgroup *ngFor="let group of filteredOptions | async" [label]="group.name">
         <mat-option *ngFor="let option of group.options" [value]="option.value">
           <small>{{ option.value }}</small>
@@ -21,13 +21,23 @@
       </mat-optgroup>
     </mat-autocomplete>
   </mat-form-field>
-  <p>
-    <small>Note: the updated module tag will not take effect <br/> until you've performed an apply on the deployment</small>
-  </p>
+
+  <div *ngIf="valid">
+    <p>
+      <small>{{ 'dialog.terraformDeploymentChangeTag.warning' | translate }}</small>
+    </p>
+
+    <mcs-code-editor-form-field
+      [value]="data.newTag.tfvars"
+      >
+    </mcs-code-editor-form-field>
+
+  </div>
+
 </div>
 
 <mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="false">Cancel</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="data.newTag" cdkFocusInitial [disabled]="!valid">Update</button>
+  <button mat-button [mat-dialog-close]="false" cdkFocusInitial>{{ 'action.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.newTag" [disabled]="!valid">{{ 'action.update' | translate }}</button>
 </mat-dialog-actions>
 

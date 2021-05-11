@@ -9,7 +9,7 @@
   <div class="status-wrapper" *ngIf="job">
     <mcs-icon [key]="getStatusIconKey(job.status)" color="light" size="medium"></mcs-icon>
     <span class="status-info"><strong>{{ job.description }}</strong>: {{ getJobStatus(job.status) }}</span>
-    <span *ngIf="job.endedOn"> {{ job.endedOn | mcsStdDateFormat: 'friendly' }}</span>
+    <span *ngIf="job.endedOn"> {{ job.endedOn | mcsStdDateFormat }}</span>
   </div>
 </div>
 <div class="task-log-stream-wrapper">

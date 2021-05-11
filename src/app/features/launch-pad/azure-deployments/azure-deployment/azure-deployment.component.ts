@@ -179,8 +179,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   }
 
   public changeTagClicked(): void {
-    const dialogRef =
-    this._dialog.open(TerraformTagChangeDialogComponent, {
+    const dialogRef = this._dialog.open(TerraformTagChangeDialogComponent, {
       data: {
         title: `Change tag for '${this.deployment.name}'`,
         message: `Existing Tag: ${this.deployment.tagName}?`,
@@ -192,15 +191,13 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed()
     .pipe(takeUntil(this._dialogSubject))
     .subscribe(result => {
-      if (result) {
-        if (!isNullOrEmpty(result) && this.deployment.tag !== result) {
-          this._saveDeploymentChanges({
-            name: this.deployment.name,
-            tfvars: this.deployment.tfvars,
-            tag: result
-          });
-        }
-      }
+      if (!result || isNullOrEmpty(result)) { return; }
+
+      this._saveDeploymentChanges({
+        name: this.deployment.name,
+        tfvars: this.deployment.tfvars,
+        tag: result.id
+      });
     });
   }
 

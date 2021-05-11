@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
+  map,
   startWith,
   switchMap
 } from 'rxjs/operators';
@@ -30,7 +31,7 @@ export interface TerraformTagChangeDialogData {
   title: string;
   deployment: McsTerraformDeployment,
   availableTags: McsTerraformTag[],
-  newTag: string;
+  newTag: McsTerraformTag;
 }
 
 @Component({
@@ -42,7 +43,7 @@ export class TerraformTagChangeDialogComponent implements OnInit {
   public filterControl = new FormControl();
 
   public get valid(): boolean {
-    return !isNullOrEmpty(this.data.newTag) && this.data.newTag !== this.data.deployment.tag;
+    return !isNullOrEmpty(this.data.newTag) && this.data.newTag.id !== this.data.deployment.tag;
   };
 
   public constructor(
@@ -58,9 +59,10 @@ export class TerraformTagChangeDialogComponent implements OnInit {
     let groupedOptions: GroupedOption[] = [];
 
     collection.forEach((item) => {
+      if (this._exluded(item)) { return; }
       if (!isNullOrEmpty(searchKeyword)) {
-        let nameHasKeyword: boolean = item.name.toLowerCase().indexOf(searchKeyword) >= 0;
-        if (!nameHasKeyword) { return; }
+        let noMatch: boolean = item.name.toLowerCase().indexOf(searchKeyword) < 0;
+        if (noMatch) { return; }
       }
 
       let groupName = item.categoryName;
@@ -87,21 +89,26 @@ export class TerraformTagChangeDialogComponent implements OnInit {
     return groupedOptions;
   }
 
+  private _exluded(item: McsTerraformTag): boolean {
+    // Exclude current deployment tag
+    let currentTag: boolean = item.id === this.data.deployment.tag;
+    if (currentTag) { return true; }
+
+    return false;
+  }
+
   private _initializeFiltering(): void {
     this.filteredOptions = this.filterControl.valueChanges
     .pipe(
-      startWith(null as void),
-      debounceTime(500),
-      distinctUntilChanged(),
-      switchMap((value) => {
-        this.data.newTag = '';
-        // Do not proceed with empty search
-        if (isNullOrEmpty(value)) { return []; };
-
+      startWith(''),
+      map((value) => {
         let result = this.data.availableTags.find((tag) => tag.name === value);
-        if (result) { this.data.newTag = result.id; }
+        if (result) {
+          this.data.newTag = result;
+        }
 
-        return of(this._filter(this.data.availableTags, value));
-      }));
+        return this._filter(this.data.availableTags, value);
+      })
+    );
   }
 }

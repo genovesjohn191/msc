@@ -3259,6 +3259,15 @@
     "terraformDeploymentSaveVariables": {
       "title": "Terraform Deployment",
       "message": "Save variable changes to <strong>{{deploymentName}}</strong>?"
+    },
+    "terraformDeploymentRename": {
+      "title": "Terraform Deployment",
+      "message": "Save variable changes to <strong>{{deploymentName}}</strong>?"
+    },
+    "terraformDeploymentChangeTag": {
+      "title": "Change tag for '{{ deployment }}'",
+      "warning": "Note: The updated module tag will not take effect until you've performed an apply on the deployment.",
+      "existingTag": "Existing tag: {{ tag }}"
     }
   },
   "snackBar": {
