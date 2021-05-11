@@ -28,6 +28,10 @@ import { StepManualOrderCompletedComponent } from './step-manual-order-completed
 import { StepOrderDetailsComponent } from './step-order-details/step-order-details.component';
 import { StepProvisioningComponent } from './step-provisioning/step-provisioning.component';
 import { SystemMessageFormComponent } from './system-message-form/system-message-form.component';
+import {
+  TerraformDeploymentRenameDialogComponent
+} from './terraform-deployment-rename-dialog/terraform-deployment-rename-dialog.component';
+import { TerraformTagChangeDialogComponent } from './terraform-tag-change-dialog/terraform-tag-change-dialog.component';
 import { VdcManageScaleComponent } from './vdc-manage-scale/vdc-manage-scale.component';
 import { VdcManageStorageComponent } from './vdc-manage-storage/vdc-manage-storage.component';
 
@@ -54,6 +58,8 @@ const exportedComponents = [
   OrderListBoxComponent,
   SystemMessageFormComponent,
   RenameServerDialogComponent,
+  TerraformTagChangeDialogComponent,
+  TerraformDeploymentRenameDialogComponent,
   HelpWidgetComponent,
   SmacSharedFormComponent,
   InternetManagePortPlanComponent,
@@ -66,14 +72,16 @@ const exportedComponents = [
   declarations: exportedComponents,
   imports: [
     SharedModule,
-    FormFieldsModule,
+    FormFieldsModule
   ],
   exports: [
     ...exportedComponents,
     FormFieldsModule
   ],
   entryComponents: [
-    RenameServerDialogComponent
+    RenameServerDialogComponent,
+    TerraformTagChangeDialogComponent,
+    TerraformDeploymentRenameDialogComponent
   ],
   providers: [
   ]

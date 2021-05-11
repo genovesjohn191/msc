@@ -3263,7 +3263,7 @@
   },
   "snackBar": {
     "terraformDeploymentSaveVariablesSuccessNotification": "Variables saved successfully.",
-    "terraformDeploymentUpgradeTagSuccessNotification": "Tag has been changed. Please ensure the variables are up to date.",
+    "terraformDeploymentSaveSuccessNotification": "Deployment has been updated.",
     "terraformDeploymentCancelVariableEditNotification": "Variable changes cancelled.",
     "terraformDeploymentSaveFailureNotification": "Failed to save deployment updates.",
     "terraformDeploymentActivitiesLogCopy": "Log copied to clipboard.",

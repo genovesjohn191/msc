@@ -1,0 +1,23 @@
+<span mat-dialog-title>{{ data.title }}</span>
+
+<div mat-dialog-content class="mat-typography">
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>New Deployment Name</mat-label>
+    <input
+      #control
+      [mcsId]="'deployment-name'"
+      type="text"
+      matInput
+      required
+      placeholder="Enter a new deployment name"
+      [maxlength]="maxDeploymentNameLength"
+      [(ngModel)]="data.newName">
+      <mat-hint align="end">{{control.value?.length || 0}}/{{ maxDeploymentNameLength }}</mat-hint>
+  </mat-form-field>
+</div>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.newName" cdkFocusInitial [disabled]="!valid">Update</button>
+</mat-dialog-actions>
+
