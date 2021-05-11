@@ -3141,7 +3141,12 @@
     },
     "nicDelete": {
       "title": "Delete Nic",
-      "message": "This server will be restarted.\r\n\nAre you sure you want to delete <strong>{{nic_name}}</strong>?"
+      "noMemory": {
+        "message": "This server will be restarted.\r\n\nAre you sure you want to delete <strong>{{nic_name}}</strong>?"
+      },
+      "includesMemory": {
+        "message": "Your NIC could not be deleted at this time as a snapshot with memory exists for this server. Please remove the snapshot and try again."
+      }
     },
     "orderSubmit": {
       "title": "Submit Order",

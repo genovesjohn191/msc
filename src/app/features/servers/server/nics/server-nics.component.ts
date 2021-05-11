@@ -6,17 +6,22 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   Injector,
+  TemplateRef,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
   Observable,
-  of
+  of,
+  throwError,
+  Subject
 } from 'rxjs';
 import {
   shareReplay,
   tap,
-  map
+  map,
+  catchError,
+  takeUntil
 } from 'rxjs/operators';
 import { McsTableDataSource } from '@app/core';
 import {
@@ -31,7 +36,8 @@ import {
 import {
   ComponentHandlerDirective,
   DialogService,
-  DialogConfirmation
+  DialogConfirmation,
+  DialogRef
 } from '@app/shared';
 import {
   McsJob,
@@ -39,8 +45,9 @@ import {
   McsServerNic,
   McsServerCreateNic,
   McsServer,
-  McsResource,
-  McsFeatureFlag
+  McsFeatureFlag,
+  McsServerSnapshot,
+  McsApiCollection
 } from '@app/models';
 import { McsEvent } from '@app/events';
 import { ServerManageNetwork } from '@app/features-shared';
@@ -81,9 +88,17 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public nicsDataSource: McsTableDataSource<McsServerNic>;
   public nicsColumns: string[];
 
+  public isSnapshotProcessing: boolean;
+  public dialogRef: DialogRef<any>;
+
+  @ViewChild('submitDialogTemplate')
+  private _submitDialogTemplate: TemplateRef<any>;
+
   private _newNic: McsServerNic;
   private _inProgressNicId: string;
   private _serverNicsCache: Observable<McsServerNic[]>;
+
+  private _destroySubject = new Subject<void>();
 
   private _createNicHandler: Subscription;
   private _updateNicHandler: Subscription;
@@ -97,6 +112,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public get checkIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHECK;
+  }
+
+  public get errorIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_ERROR;
   }
 
   /**
@@ -216,31 +235,41 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
+   * Closes the server snapshot includesMemory dialog box
+   */
+  public closeDialog(): void {
+    this.dialogRef.close();
+  }
+
+  /**
    * Deletes the selected NIC
    * @param nic NIC to be deleted
    */
   public deleteNic(server: McsServer, nic: McsServerNic): void {
-    let dialogData = {
-      data: nic,
-      type: 'warning',
-      title: this._translateService.instant('dialog.nicDelete.title'),
-      message: this._translateService.instant('dialog.nicDelete.message', { nic_name: nic.name })
-    } as DialogConfirmation<McsServerNic>;
-
-    let dialogRef = this._dialogService.openConfirmation(dialogData);
-
-    this.selectedNic = nic;
-    dialogRef.afterClosed().subscribe((result) => {
-      if (isNullOrEmpty(result)) { return; }
-
-      let nicValues = new McsServerCreateNic();
-      nicValues.name = this.selectedNic.logicalNetworkName;
-      nicValues.clientReferenceObject = {
-        serverId: server.id,
-        nicId: this.selectedNic.id
-      };
-      this.apiService.deleteServerNic(server.id, this.selectedNic.id, nicValues).subscribe();
-    });
+    this.isSnapshotProcessing = true;
+    this.apiService.getServerSnapshots(server.id)
+    .pipe(
+      takeUntil(this._destroySubject),
+      catchError((error) => {
+        this.isSnapshotProcessing = false;
+        this._changeDetectorRef.markForCheck();
+        return throwError(error);
+      })
+    )
+    .subscribe((snapshot: McsApiCollection<McsServerSnapshot>) => {
+      this.isSnapshotProcessing = false;
+      let snapshots = getSafeProperty(snapshot, (obj) => obj.collection);
+      let serverHasSnapshots = snapshots.length > 0;
+      if (serverHasSnapshots) {
+        let snapshotIncludesMemory = snapshots.find((data) => data.includesMemory);
+        snapshotIncludesMemory ?
+          this.serverDialogBoxIncludesMemory() :
+          this.serverDialogBoxNoMemory(server, nic);
+      } else {
+        this.serverDialogBoxNoMemory(server, nic);
+      }
+      this._changeDetectorRef.markForCheck();
+  });
   }
 
   /**
@@ -293,6 +322,42 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
     this.isVMWareToolsInstalled = server.isVMWareToolsInstalled;
     this.isVMWareToolsRunning = server.isVMWareToolsRunning;
+  }
+
+  /**
+   * Dialog box for server snapshot with includesMemory=true
+   */
+  private serverDialogBoxIncludesMemory(): void {
+    this.dialogRef = this._dialogService.open(this._submitDialogTemplate, {
+      size: 'medium'
+    });
+  }
+
+  /**
+   * Dialog box for server with empty snapshot or includesMemory=false
+   */
+  private serverDialogBoxNoMemory(server: McsServer, nic: McsServerNic): void {
+    let dialogData = {
+      data: nic,
+      type: 'warning',
+      title: this._translateService.instant('dialog.nicDelete.title'),
+      message: this._translateService.instant('dialog.nicDelete.noMemory.message', { nic_name: nic.name })
+    } as DialogConfirmation<McsServerNic>;
+
+    this.dialogRef = this._dialogService.openConfirmation(dialogData);
+    this.selectedNic = nic;
+
+    this.dialogRef.afterClosed().subscribe((result) => {
+      if (isNullOrEmpty(result)) { return; }
+
+      let nicValues = new McsServerCreateNic();
+      nicValues.name = this.selectedNic.logicalNetworkName;
+      nicValues.clientReferenceObject = {
+        serverId: server.id,
+        nicId: this.selectedNic.id
+      };
+      this.apiService.deleteServerNic(server.id, this.selectedNic.id, nicValues).subscribe();
+    });
   }
 
   /**
