@@ -106,7 +106,7 @@
           <mcs-data-cell *mcsDataCellDef="let row">
             <mcs-item *ngIf="(resource$ | async)?.hasNetworks">
               <span *ngIf="isEditNicEnabled(server, row)">
-                <a [disabled]="!server.executable"
+                <a [disabled]="!server.executable || isSnapshotProcessing"
                     (click)="openEditNicWindow(row)"
                     mcsId="edit-nic"
                     mcsEventTracker="edit-nic"
@@ -117,7 +117,7 @@
               </span>
               <span>
                 <a *ngIf="!row.isPrimary"
-                  [disabled]="!server.executable"
+                  [disabled]="!server.executable || isSnapshotProcessing"
                   (click)="deleteNic(server, row)"
                   mcsId="delete-nic"
                   mcsEventTracker="delete-nic"
@@ -232,3 +232,27 @@
     </mcs-section>
   </ng-container>
 </mcs-presentation-panel>
+
+<ng-template #submitDialogTemplate>
+  <mcs-dialog>
+    <mcs-dialog-header [dialogRefTemplate]="dialogRef">
+      <h1>{{ 'dialog.nicDelete.title' | translate  }}</h1>
+    </mcs-dialog-header>
+
+    <mcs-dialog-content>
+      <mcs-section>
+        <mcs-item>
+          <mcs-icon [key]="errorIconKey" color="red"></mcs-icon>
+          <span margin-left-medium [innerHtml]="'dialog.nicDelete.includesMemory.message' | translate"></span>
+        </mcs-item>
+      </mcs-section>
+    </mcs-dialog-content>
+
+    <mcs-dialog-actions>
+      <button mcsButton mcsId="close-server-delete-nic"
+        size="small" (click)="closeDialog()">
+        {{ 'action.cancel' | translate }}
+      </button>
+    </mcs-dialog-actions>
+  </mcs-dialog>
+</ng-template>

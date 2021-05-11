@@ -9,6 +9,9 @@ export class McsServerSnapshot extends McsEntityBase {
   @JsonProperty()
   public poweredOn: boolean = undefined;
 
+  @JsonProperty()
+  public includesMemory: boolean = undefined;
+
   @JsonProperty({
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
