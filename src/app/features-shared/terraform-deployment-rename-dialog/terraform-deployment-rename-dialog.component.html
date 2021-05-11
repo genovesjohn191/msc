@@ -5,6 +5,7 @@
     <mat-label>New Deployment Name</mat-label>
     <input
       #control
+      cdkFocusInitial
       [mcsId]="'deployment-name'"
       type="text"
       matInput
@@ -17,7 +18,7 @@
 </div>
 
 <mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="false">Cancel</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="data.newName" cdkFocusInitial [disabled]="!valid">Update</button>
+  <button mat-button [mat-dialog-close]="false">{{ 'action.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.newName" [disabled]="!valid">{{ 'action.update' | translate }}</button>
 </mat-dialog-actions>
 

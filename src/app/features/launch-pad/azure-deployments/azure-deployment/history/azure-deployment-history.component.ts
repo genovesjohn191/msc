@@ -25,7 +25,8 @@ import {
   McsRouteInfo,
   McsTerraformDeployment,
   McsTerraformDeploymentActivity,
-  RouteKey
+  RouteKey,
+  TerraformDeploymentStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -130,6 +131,10 @@ export class AzureDeploymentActivitiesComponent implements OnDestroy {
   public backToListing(): void {
     this.activity = null;
     this._changeDetector.markForCheck();
+  }
+
+  public isFinished(status: TerraformDeploymentStatus): boolean {
+    return status === TerraformDeploymentStatus.Failed || status === TerraformDeploymentStatus.Succeeded;
   }
 
   public getDuration(startDate: Date, endDate: Date): string {

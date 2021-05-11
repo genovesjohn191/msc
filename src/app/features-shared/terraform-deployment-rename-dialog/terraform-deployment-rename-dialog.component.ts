@@ -1,9 +1,7 @@
 import {
   Component,
-  Inject,
-  OnInit
+  Inject
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA

@@ -63,17 +63,17 @@
                       {{ 'columnHeader.finished' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let row">
-                      {{ row.updatedOn | mcsStdDateFormat }}
+                      {{ isFinished(row.status) ? (row.updatedOn | mcsStdDateFormat) : '' }}
                     </td>
                   </ng-container>
 
-                  <!-- Finished Column -->
+                  <!-- Duration Column -->
                   <ng-container matColumnDef="duration">
                     <th mat-header-cell *matHeaderCellDef>
                       {{ 'columnHeader.duration' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let row">
-                      {{ getDuration(row.createdOn, row.updatedOn) }}
+                      {{ isFinished(row.status) ? getDuration(row.createdOn, row.updatedOn) : '' }}
                     </td>
                   </ng-container>
 
