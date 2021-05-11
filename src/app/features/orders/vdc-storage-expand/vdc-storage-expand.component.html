@@ -40,7 +40,7 @@
 
           <p>{{ 'orderVdcStorageExpand.vdc.description' | translate }}</p>
           <mcs-form-field>
-            <mcs-select [formControl]="fcResource" required
+            <mcs-select [formControl]="fcResource"
               [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
               (selectionChange)="onChangeResource($event)"
               [mcsContextualHelp]="'orderVdcStorageExpand.vdc.contextualHelp' | translate"
@@ -48,8 +48,8 @@
               mcsEventTracker="select-resource-click"
               mcsEventCategory="orders"
               mcsEventLabel="select-resource">
-
-              <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
+              <mcs-option *ngFor="let resource of resources$ | async" [value]="resource"
+                [selected]="(selectedServiceId$ | async)?.resourceId === resource.id">
                 {{ resource.name }}
               </mcs-option>
             </mcs-select>
@@ -57,7 +57,8 @@
 
           <ng-container *ngIf="selectedResource$ | async as selectedResource">
               <div class="action-box" *mcsComponentHandler>
-                <mcs-select [formControl]="fcStorage" required
+                <mcs-select [formControl]="fcStorage"
+                  [(ngModel)]="selectedVdcStorage"
                   (selectionChange)="onChangeStorage($event)"
                   [placeholder]="'orderVdcStorageExpand.vdcStorage.placeholder' | translate"
                   [mcsContextualHelp]="'orderVdcStorageExpand.vdcStorage.contextualHelp' | translate"
@@ -65,7 +66,8 @@
                   mcsEventTracker="select-resource-click"
                   mcsEventCategory="orders"
                   mcsEventLabel="select-resource">
-                  <mcs-option *ngFor="let storage of selectedResource.storage" [value]="storage">
+                  <mcs-option *ngFor="let storage of selectedResource.storage" [value]="storage"
+                    [selected]="(selectedStorage$ | async)?.id === storage.id">
                     {{ storage.name }}
                   </mcs-option>
                 </mcs-select>

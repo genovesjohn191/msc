@@ -38,6 +38,8 @@ export interface IMcsApiResourcesService {
    */
   getResourceStorage(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceStorage[]>>;
 
+  getVdcStorage(resourceId: string, storageId: string): Observable<McsApiSuccessResponse<McsResourceStorage>>;
+
   /**
    * Get resource networks by ID (MCS API Response)
    * @param resourceId Resource identification
