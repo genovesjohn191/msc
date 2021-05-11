@@ -29,6 +29,7 @@ import {
   McsRouteInfo,
   McsTerraformDeployment,
   McsTerraformDeploymentCreateActivity,
+  McsTerraformDeploymentUpdate,
   McsTerraformTag,
   McsTerraformTagQueryParams,
   RouteKey,
@@ -46,7 +47,10 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 import { AzureDeploymentService } from './azure-deployment.service';
-import { TerraformTagChangeDialogComponent } from '@app/features-shared';
+import {
+  TerraformDeploymentRenameDialogComponent,
+  TerraformTagChangeDialogComponent
+} from '@app/features-shared';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -115,7 +119,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   }
 
   public planClicked(): void {
-    const planDialogRef =
+    const dialogRef =
       this._dialog.open(ConfirmationDialogComponent, {
         data: {
           title: 'Azure Deployment-01',
@@ -125,7 +129,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
         }
       });
 
-    planDialogRef.afterClosed()
+    dialogRef.afterClosed()
       .pipe(takeUntil(this._dialogSubject))
       .subscribe(result => {
         if (result) {
@@ -135,7 +139,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   }
 
   public applyClicked(): void {
-    const applyDialogRef =
+    const dialogRef =
       this._dialog.open(ConfirmationDialogComponent, {
         data: {
           title: 'Azure Deployment-01',
@@ -145,7 +149,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
         }
       });
 
-    applyDialogRef.afterClosed()
+    dialogRef.afterClosed()
       .pipe(takeUntil(this._dialogSubject))
       .subscribe(result => {
         if (result) {
@@ -155,7 +159,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   }
 
   public planAndApplyClicked(): void {
-    const planAndApplyDialogRef =
+    const dialogRef =
       this._dialog.open(ConfirmationDialogComponent, {
         data: {
           title: 'Azure Deployment-01',
@@ -165,7 +169,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
         }
       });
 
-    planAndApplyDialogRef.afterClosed()
+    dialogRef.afterClosed()
       .pipe(takeUntil(this._dialogSubject))
       .subscribe(result => {
         if (result) {
@@ -185,20 +189,44 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
       }
     });
 
-  dialogRef.afterClosed()
+    dialogRef.afterClosed()
     .pipe(takeUntil(this._dialogSubject))
     .subscribe(result => {
       if (result) {
         if (!isNullOrEmpty(result) && this.deployment.tag !== result) {
-          this.deployment.tag = result;
-          this._saveDeploymentChanges();
+          this._saveDeploymentChanges({
+            name: this.deployment.name,
+            tfvars: this.deployment.tfvars,
+            tag: result
+          });
         }
       }
     });
   }
 
   public renameClicked(): void {
+    const dialogRef =
+    this._dialog.open(TerraformDeploymentRenameDialogComponent, {
+      data: {
+        title: `Rename deployment '${this.deployment.name}'`,
+        deployment: this.deployment,
+        newName: this.deployment.name
+      }
+    });
 
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this._dialogSubject))
+    .subscribe(result => {
+      if (result) {
+        if (!isNullOrEmpty(result) && this.deployment.name !== result) {
+          this._saveDeploymentChanges({
+            name: result,
+            tfvars: this.deployment.tfvars,
+            tag: this.deployment.tag
+          });
+        }
+      }
+    });
   }
 
   private _plan(): void {
@@ -225,15 +253,11 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     this._apiService.createTerraformDeploymentActivity(this.deployment.id, requestPayload).subscribe();
   }
 
-  private _saveDeploymentChanges(): void {
+  private _saveDeploymentChanges(payload: McsTerraformDeploymentUpdate): void {
     this.deployment.isProcessing = true;
     this._changeDetector.markForCheck();
 
-    this._apiService.updateTerraformDeployment(this.deployment.id, {
-      name: this.deployment.name,
-      tfvars: this.deployment.tfvars,
-      tag: this.deployment.tag
-    })
+    this._apiService.updateTerraformDeployment(this.deployment.id, payload)
     .pipe(catchError(() => {
       this.deployment.isProcessing = false;
       this._changeDetector.markForCheck();
@@ -243,6 +267,11 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     }))
     .subscribe((response: McsTerraformDeployment) => {
       this.deployment.isProcessing = false;
+      // this.deployment.name = payload.name;
+      // this.deployment.tag = payload.tag;
+      // this.deployment.tfvars = payload.tfvars;
+      console.log(response);
+      Object.assign(this.deployment, response);
       this._changeDetector.markForCheck();
 
       this._showSaveNotification();
@@ -297,10 +326,10 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   private _showSaveNotification(): void {
     this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentUpgradeTagSuccessNotification'),
-    this._translateService.instant('action.ok'),
+    this._translateService.instant('snackBar.terraformDeploymentSaveSuccessNotification'),
+    '',
     {
-      duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
+      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
     });

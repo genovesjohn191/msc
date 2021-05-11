@@ -4,17 +4,29 @@ import {
   OnInit
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  startWith,
+  switchMap
+} from 'rxjs/operators';
+
 import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { McsTerraformDeployment, McsTerraformTag } from '@app/models';
+import {
+  McsTerraformDeployment,
+  McsTerraformTag
+} from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
-import { FlatOption, GroupedOption } from '../dynamic-form';
+import {
+  FlatOption,
+  GroupedOption
+} from '../dynamic-form';
 
-export interface ConfirmationDialogData {
+export interface TerraformTagChangeDialogData {
   title: string;
   deployment: McsTerraformDeployment,
   availableTags: McsTerraformTag[],
@@ -35,7 +47,7 @@ export class TerraformTagChangeDialogComponent implements OnInit {
 
   public constructor(
     public dialogRef: MatDialogRef<TerraformTagChangeDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData
+    @Inject(MAT_DIALOG_DATA) public data: TerraformTagChangeDialogData
   ) {}
 
   public ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { McsStorageService } from '@app/core';
-import { DynamicFormModule } from '@app/features-shared';
+import { DynamicFormModule, FeaturesSharedModule } from '@app/features-shared';
 import { ConfirmationDialogComponent, SharedModule } from '@app/shared';
 
 import { LaunchPadWorkflowCoreModule } from './workflows/workflow/workflow-core.module';
@@ -20,7 +20,6 @@ import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/az
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
 import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';
 import { AzureDeploymentService } from './azure-deployments/azure-deployment/azure-deployment.service';
-import { TerraformTagChangeDialogModule } from '@app/features-shared/terraform-tag-change-dialog/terraform-tag-change-dialog.module';
 
 @NgModule({
   declarations: [
@@ -49,9 +48,9 @@ import { TerraformTagChangeDialogModule } from '@app/features-shared/terraform-t
   ],
   imports: [
     SharedModule,
+    FeaturesSharedModule,
     LaunchPadWorkflowCoreModule,
     DynamicFormModule,
-    TerraformTagChangeDialogModule,
     RouterModule.forChild(launchPadRoutes)
   ],
   providers: [
