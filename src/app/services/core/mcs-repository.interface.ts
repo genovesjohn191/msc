@@ -5,10 +5,10 @@ import { McsQueryParam } from '@app/models';
 import { McsRepositoryConfig } from './mcs-repository.config';
 
 export interface McsRepository<T> {
-  getAll(): Observable<T[]>;
-  filterBy(query: McsQueryParam): Observable<T[]>;
+  getAll(parentId?: string): Observable<T[]>;
+  filterBy(query: McsQueryParam, parentId?: string): Observable<T[]>;
   getBy(predicate: (entity: T) => boolean): Observable<T>;
-  getById(id: string): Observable<T>;
+  getById(id: string, parentId?: string): Observable<T>;
   getTotalRecordsCount(): number;
 
   addOrUpdate(entity: T, insertIndex?: number): void;

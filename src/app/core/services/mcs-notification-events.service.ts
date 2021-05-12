@@ -145,6 +145,9 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.ManagedServerProvisionBat, McsEvent.jobBackupAggregationTargetAddEvent);
     this._jobTypeEventMap.set(JobType.PublicCloudLicenseChangeCount, McsEvent.jobMsLicenseCountChangeEvent);
     this._jobTypeEventMap.set(JobType.InternetPortPlanChange, McsEvent.jobInternetChangePortPlanEvent);
+    this._jobTypeEventMap.set(JobType.TerraformCreateApply, McsEvent.jobTerraformCreateApplyEvent);
+    this._jobTypeEventMap.set(JobType.TerraformCreateDestroy, McsEvent.jobTerraformCreateDestroyEvent);
+    this._jobTypeEventMap.set(JobType.TerraformCreatePlan, McsEvent.jobTerraformCreatePlanEvent);
   }
 
   /**

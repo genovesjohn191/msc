@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  map,
+  tap
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -11,6 +14,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  CoreRoutes,
   McsAccessControlService,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -29,7 +33,9 @@ import {
 import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
-  DialogService,
+  DialogResult,
+  DialogResultAction,
+  DialogService2,
   Paginator,
   Search
 } from '@app/shared';
@@ -71,7 +77,7 @@ export class AzureDeploymentsComponent implements OnInit, OnDestroy {
     private _navigationService: McsNavigationService,
     private _translateService: TranslateService,
     private _apiService: McsApiService,
-    private _dialogService: DialogService
+    private _dialogService: DialogService2
   ) {
     this.dataSource = new McsTableDataSource2(this._getDeployments.bind(this));
     this.dataSelection = new McsTableSelection2(this.dataSource, true);
@@ -137,6 +143,28 @@ export class AzureDeploymentsComponent implements OnInit, OnDestroy {
 
   public onClickNewDeployment() {
     this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeploymentCreate);
+  }
+
+  public onClickDelete(deployment: McsTerraformDeployment): void {
+    if (isNullOrEmpty(deployment)) { return; }
+
+    let dialogRef = this._dialogService.openNameConfirmation({
+      name: deployment.name,
+      placeholder: this._translateService.instant('dialog.terraformDeploymentDelete.placeholder'),
+      title: this._translateService.instant('dialog.terraformDeploymentDelete.title'),
+      message: this._translateService.instant('dialog.terraformDeploymentDelete.message', {
+        deploymentUrl: `${CoreRoutes.getNavigationPath(RouteKey.LaunchPadAzureDeployments)}/${deployment.id}`
+      }),
+      confirmText: this._translateService.instant('action.yes'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
+
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm || !result?.data) { return; }
+        this._apiService.deleteTerraformDeployment(deployment.id).subscribe();
+      })
+    ).subscribe();
   }
 
   public navigateToDeployment(deployment: McsTerraformDeployment): void {

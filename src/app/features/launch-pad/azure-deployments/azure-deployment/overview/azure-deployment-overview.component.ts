@@ -1,36 +1,40 @@
 import {
+  throwError,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  catchError,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {
-  Observable,
-  Subject,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  shareReplay,
-  take,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
-
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import { McsTerraformDeployment } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  CommonDefinition,
+  DialogActionType,
+  DialogResult,
+  DialogResultAction,
+  DialogService2
+} from '@app/shared';
+import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
-import { AzureDeploymentService } from '../azure-deployment.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '@app/shared';
 import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/events';
+
+import { AzureDeploymentService } from '../azure-deployment.service';
 
 @Component({
   selector: 'mcs-azure-deployment-overview',
@@ -39,20 +43,12 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AzureDeploymentOverviewComponent implements OnDestroy {
-  public get hasVariableChanges(): boolean {
-    let diff: string = this.deployment.tfvars.replace(this._variableCache, '').trim();
-    return !isNullOrEmpty(diff);
-  }
-
   public deployment$: Observable<McsTerraformDeployment>;
-  public deployment: McsTerraformDeployment;
-  public hasError: boolean;
-  public processing: boolean;
   public variablesEditMode: boolean = false;
 
-  // private _deployment: McsTerraformDeployment;
   private _variableCache: string;
   private _variableChangesCache: string;
+  private _destroySubject = new Subject<void>();
   private _dialogSubject = new Subject<void>();
   private _snackBarSubject = new Subject<void>();
 
@@ -61,7 +57,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
     private _snackBar: MatSnackBar,
     private _apiService: McsApiService,
     private _deploymentService: AzureDeploymentService,
-    private _dialog: MatDialog,
+    private _dialogService: DialogService2,
     private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService
   ) {
@@ -72,6 +68,11 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   public ngOnDestroy(): void {
     unsubscribeSafely(this._dialogSubject);
     unsubscribeSafely(this._snackBarSubject);
+  }
+
+  public hasVariableChanges(deployment: McsTerraformDeployment): boolean {
+    let diff: string = deployment.tfvars.replace(this._variableCache, '').trim();
+    return !isNullOrEmpty(diff);
   }
 
   public onVariablesChanged(param: string): void {
@@ -85,104 +86,103 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
     this._changeDetector.markForCheck();
   }
 
-  public resetVariables(): void {
-    let hasChanges: boolean = this.hasVariableChanges;
-    this._variableChangesCache = this.deployment.tfvars;
-    this.deployment.tfvars = this._variableCache;
+  public resetVariables(deployment: McsTerraformDeployment): void {
+    let hasChanges: boolean = this.hasVariableChanges(deployment);
+    this._variableChangesCache = deployment.tfvars;
+    deployment.tfvars = this._variableCache;
     this.variablesEditMode = false;
     this._changeDetector.markForCheck();
 
     if (hasChanges) {
-      this._showResetNotification();
+      this._showResetNotification(deployment);
     }
   }
 
-  public saveVariables(): void {
-    const saveVariablesDialogRef =
-      this._dialog.open(ConfirmationDialogComponent, { data: {
-        title: this._translateService.instant('dialog.terraformDeploymentSaveVariables.title'),
-        message: this._translateService.instant('dialog.terraformDeploymentSaveVariables.message',
-          { deploymentName: this.deployment.name }),
-        okText: this._translateService.instant('action.yes'),
-        cancelText: this._translateService.instant('action.cancel'),
-      } });
-
-    saveVariablesDialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
-      if (result) {
-        this._save();
-        this._changeDetector.markForCheck();
-      }
+  public saveVariables(deployment: McsTerraformDeployment): void {
+    let dialogRef = this._dialogService.openConfirmation({
+      type: DialogActionType.Warning,
+      title: this._translateService.instant('dialog.terraformDeploymentSaveVariables.title'),
+      message: this._translateService.instant('dialog.terraformDeploymentSaveVariables.message', {
+        deploymentName: deployment.name
+      }),
+      confirmText: this._translateService.instant('action.yes'),
+      cancelText: this._translateService.instant('action.cancel')
     });
+
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this._save(deployment);
+      })
+    ).subscribe();
   }
 
-  public _showResetNotification(): void {
+  public _showResetNotification(deployment: McsTerraformDeployment): void {
     let reloadConfirmationRef = this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentCancelVariableEditNotification'),
-    this._translateService.instant('action.undo'),
-    {
-      duration: 10000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
+      this._translateService.instant('snackBar.terraformDeploymentCancelVariableEditNotification'),
+      this._translateService.instant('action.undo'),
+      {
+        duration: 10000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
 
     reloadConfirmationRef.onAction()
-    .pipe(takeUntil(this._snackBarSubject))
-    .subscribe(() => {
-      this.variablesEditMode = true;
-      this.deployment.tfvars = this._variableChangesCache;
-      this._changeDetector.markForCheck();
-    });
+      .pipe(takeUntil(this._snackBarSubject))
+      .subscribe(() => {
+        this.variablesEditMode = true;
+        deployment.tfvars = this._variableChangesCache;
+        this._changeDetector.markForCheck();
+      });
   }
 
   private _showFailureNotification(): void {
     this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
-    this._translateService.instant('action.ok'),
-    {
-      duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
-    });
+      this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
+      this._translateService.instant('action.ok'),
+      {
+        duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
+      });
   }
 
   private _showSaveNotification(): void {
     this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentSaveVariablesSuccessNotification'),
-    '',
-    {
-      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
+      this._translateService.instant('snackBar.terraformDeploymentSaveVariablesSuccessNotification'),
+      '',
+      {
+        duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
   }
 
-  private _save(): void {
-    this.hasError = false;
-    this.processing = true;
-    this.deployment.isProcessing = true;
+  private _save(deployment: McsTerraformDeployment): void {
+    // this.hasError = false;
+    // this.processing = true;
+    // this.deployment.isProcessing = true;
 
-    this._apiService.updateTerraformDeployment(this.deployment.id, {
-      name: this.deployment.name,
-      tfvars: this.deployment.tfvars,
-      tag: this.deployment.tag
-    })
-    .pipe(catchError(() => {
-      this.hasError = true;
-      this.processing = false;
-      this.deployment.isProcessing = false;
-      this._changeDetector.markForCheck();
+    this._apiService.updateTerraformDeployment(deployment.id, {
+      name: deployment.name,
+      tfvars: deployment.tfvars,
+      tag: deployment.tag
+    }).pipe(
+      catchError(() => {
+        // this.hasError = true;
+        // this.processing = false;
+        // this.deployment.isProcessing = false;
+        this._changeDetector.markForCheck();
 
-      this._showFailureNotification();
-      return throwError('Terraform deployment update endpoint failed.');
-    }))
-    .subscribe((response: McsTerraformDeployment) => {
-      this._variableCache = this.deployment.tfvars;
-      this.hasError = false;
-      this.processing = false;
-      this.deployment.isProcessing = false;
+        this._showFailureNotification();
+        return throwError('Terraform deployment update endpoint failed.');
+      })
+    ).subscribe((response: McsTerraformDeployment) => {
+      this._variableCache = deployment.tfvars;
+      // this.hasError = false;
+      // this.processing = false;
+      // this.deployment.isProcessing = false;
       this.variablesEditMode = false;
       this._changeDetector.markForCheck();
 
@@ -192,10 +192,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
 
   private _subscribeToDeploymentDetails(): void {
     this.deployment$ = this._deploymentService.getDeploymentDetails().pipe(
-      take(1),
-      tap((deploymentDetails) => {
-        this.deployment = deploymentDetails;
-      }),
+      takeUntil(this._destroySubject),
       shareReplay(1)
     );
   }

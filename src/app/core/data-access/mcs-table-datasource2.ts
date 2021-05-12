@@ -1,4 +1,5 @@
 import {
+  combineLatest,
   of,
   BehaviorSubject,
   EMPTY,
@@ -7,6 +8,7 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  debounceTime,
   distinctUntilChanged,
   exhaustMap,
   filter,
@@ -29,6 +31,7 @@ import {
   Search
 } from '@app/shared';
 import {
+  deleteArrayRecord,
   getSafeProperty,
   isNullOrEmpty,
   isNullOrUndefined,
@@ -36,6 +39,12 @@ import {
   CommonDefinition,
   McsDataSource
 } from '@app/utilities';
+
+export class McsMatTableConfig {
+  constructor(
+    public applyDefaultPagination: boolean // Set to true if you want to auto include next page from previous page
+  ) { }
+}
 
 export class McsMatTableContext<TEntity> {
   constructor(
@@ -74,8 +83,10 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   private _columnFilter: ColumnFilter;
   private _search: Search;
   private _paginator: Paginator;
+  private _configuration: McsMatTableConfig;
 
   private _datasourceFunc: DelegateSource<TEntity>;
+  private _insertRecordsChange = new BehaviorSubject<TEntity[]>(null);
   private _dataRecordsChange = new BehaviorSubject<TEntity[]>(null);
   private _dataColumnsChange = new BehaviorSubject<string[]>(null);
   private _dataStatusChange = new BehaviorSubject<DataStatus>(null);
@@ -87,7 +98,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   private _pageSubject = new Subject<void>();
   private _columnSelectorSubject = new Subject<void>();
 
-  constructor(dataSource?: DatasourceType<TEntity>) {
+  constructor(dataSource?: DatasourceType<TEntity>, private _fromRepository = true) {
     this.updateDatasource(dataSource);
     this._subscribeToIsInProgressFlag();
     this._subscribeToHasNoRecordsFlag();
@@ -98,7 +109,16 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   }
 
   public connect(_collectionViewer: CollectionViewer): Observable<TEntity[]> {
-    return this._dataRecordsChange.asObservable().pipe(
+    return combineLatest([
+      this._dataRecordsChange,
+      this._insertRecordsChange
+    ]).pipe(
+      map(([dataRecords, insertedRecords]) => {
+        if (!isNullOrUndefined(insertedRecords)) {
+          return [...insertedRecords, ...dataRecords];
+        }
+        return dataRecords;
+      }),
       filter((records) => records !== null)
     );
   }
@@ -134,6 +154,12 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   public updateDatasource(dataSource: DatasourceType<TEntity>): void {
     this._setDatasourcePointer(dataSource);
     this._subscribeToRequestUpdate();
+  }
+
+  public registerConfiguration(config: McsMatTableConfig): McsTableDataSource2<TEntity> {
+    this._configuration = config;
+    this._requestUpdate.next();
+    return this;
   }
 
   public registerPaginator(paginator: Paginator): McsTableDataSource2<TEntity> {
@@ -176,6 +202,30 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   public refreshDataRecords(): void {
     this._resetPaginator();
     this._requestUpdate.next();
+    this._dataRecordsChange.next(null);
+  }
+
+  public insertRecord(dataRecord: TEntity): void {
+    if (isNullOrEmpty(dataRecord)) { return; }
+
+    let insertedRecords = this._insertRecordsChange.getValue();
+    if (isNullOrUndefined(insertedRecords)) { insertedRecords = []; }
+    insertedRecords.push(dataRecord);
+    this._insertRecordsChange.next(insertedRecords);
+  }
+
+  public deleteInsertedRecord(predicate: (item: TEntity) => boolean): void {
+    let insertedRecords = this._insertRecordsChange.getValue();
+    if (isNullOrEmpty(insertedRecords)) { return; }
+
+    insertedRecords = deleteArrayRecord(insertedRecords, predicate);
+    this._insertRecordsChange.next(insertedRecords);
+  }
+
+  public findRecord(predicate: (item: TEntity) => boolean): TEntity {
+    let insertedRecords = this._insertRecordsChange.getValue() || [];
+    let dataRecords = this._dataRecordsChange.getValue() || [];
+    return [...insertedRecords, ...dataRecords].find(predicate);
   }
 
   private _setDatasourcePointer(dataSource: DatasourceType<TEntity>): void {
@@ -249,6 +299,8 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
       startWith([null]),
       takeUntil(this._destroySubject),
       switchMap(() => {
+        if (isNullOrUndefined(this._datasourceFunc)) { return of(null); }
+
         this._dataStatusChange.next(DataStatus.Active);
         let tableParam = new McsMatTableQueryParam(this._search, this._paginator);
 
@@ -263,20 +315,31 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
             return EMPTY;
           })
         );
-      })
-    ).subscribe(response => {
-      if (isNullOrUndefined(this._datasourceFunc)) { return; }
+      }),
+      distinctUntilChanged(),
+      debounceTime(300),
+      tap(response => {
+        if (isNullOrUndefined(this._datasourceFunc)) { return; }
 
-      this.onCompletion(response.dataRecords);
-      this._updateDataRecords(response.dataRecords);
-      this._setTotalRecordsCount(response.totalCount);
-      this._dataStatusChange.next(response.totalCount > 0 ?
-        DataStatus.Success : DataStatus.Empty);
-    });
+        this.onCompletion(response.dataRecords);
+        this._updateDataRecords(response.dataRecords);
+        this._setTotalRecordsCount(response.totalCount);
+        this._dataStatusChange.next(response.totalCount > 0 ?
+          DataStatus.Success : DataStatus.Empty
+        );
+      })
+    ).subscribe();
   }
 
   private _updateDataRecords(records: TEntity[]): void {
-    this._dataRecordsChange.next(records);
+    if (!this._configuration?.applyDefaultPagination) {
+      this._dataRecordsChange.next(records);
+      return;
+    }
+
+    let existingRecords = this._dataRecordsChange.getValue() || [];
+    existingRecords.push(...records);
+    this._dataRecordsChange.next(existingRecords);
   }
 
   private _setTotalRecordsCount(count: number): void {

@@ -64,6 +64,9 @@ import { JobServerSnapshotApplyEvent } from './items/job-server-snapshot-apply.e
 import { JobServerSnapshotCreateEvent } from './items/job-server-snapshot-create.event';
 import { JobServerSnapshotDeleteEvent } from './items/job-server-snapshot-delete.event';
 import { JobSuccessfulEvent } from './items/job-successful.event';
+import { JobTerraformCreateApplyEvent } from './items/job-terraform-create-apply.event';
+import { JobTerraformCreateDestroyEvent } from './items/job-terraform-create-destroy.event';
+import { JobTerraformCreatePlanEvent } from './items/job-terraform-create-plan.event';
 import { JobVdcScaleEvent } from './items/job-vdc-scale.event';
 import { JobVdcStorageExpandEvent } from './items/job-vdc-storage-expand.event';
 import { LaunchPadWorkflowInitEvent } from './items/launch-pad-workflow-init.event';
@@ -175,6 +178,11 @@ export class McsEvent {
   public static jobServerHidsAddEvent = new JobServerHidsAddEvent();
   public static jobServerBackupServerAddEvent = new JobServerBackupServerAddEvent();
   public static jobServerBackupVmAddEvent = new JobServerBackupVmAddEvent();
+
+  public static jobTerraformCreatePlanEvent = new JobTerraformCreatePlanEvent();
+  public static jobTerraformCreateApplyEvent = new JobTerraformCreateApplyEvent();
+  public static jobTerraformCreateDestroyEvent = new JobTerraformCreateDestroyEvent();
+
   public static jobBackupAggregationTargetAddEvent = new JobBackupAggregationTargetAddEvent();
   public static jobVdcScaleEvent = new JobVdcScaleEvent();
   public static jobVdcStorageExpandEvent = new JobVdcStorageExpandEvent();

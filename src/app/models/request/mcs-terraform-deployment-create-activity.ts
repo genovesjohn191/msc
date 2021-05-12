@@ -8,6 +8,8 @@ import {
 
 export interface McsTerraformDeploymentCreateActivityRefObj {
   terraformDeploymentId: string;
+  terraformActivityRefId: string;
+  type: TerraformDeploymentActivityType;
 }
 
 export class McsTerraformDeploymentCreateActivity extends McsApiJobRequestBase<McsTerraformDeploymentCreateActivityRefObj> {

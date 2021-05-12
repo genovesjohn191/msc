@@ -1,21 +1,21 @@
+<mcs-page *ngIf="deployment$ | async as deployment"
+  [header]="deployment.name + ' (' + deployment.tenantName + ')'">
 
-
-<mcs-page *ngIf="deployment$ | async" [header]="deployment.name + ' (' + deployment.tenantName + ')'">
   <mcs-content-panel *mcsContentPanelDef>
     <ng-container *ngIf="deployment.isProcessing">
       <mcs-busy-ribbon theme="dark" margin-bottom-small>
-        <span>Something is going on</span>
+        <span>{{ 'message.deploymentBusy' | translate }}</span>
       </mcs-busy-ribbon>
     </ng-container>
 
-    <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+    <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event, deployment)">
       <mcs-tab [label]="'label.overview' | translate" id="overview"></mcs-tab>
       <mcs-tab [label]="'label.history' | translate" id="history"></mcs-tab>
 
       <!-- Action tab -->
       <ng-container mcsTabHeaderCustom>
         <mat-menu #actionMenu="matMenu" mcsAlign="end">
-          <button mat-menu-item (click)="planClicked()"
+          <button mat-menu-item (click)="planClicked(deployment)"
             mcsId="create-plan"
             mcsEventTracker="create-deployment-plan"
             mcsEventCategory="launchpad-deployment"
@@ -24,7 +24,7 @@
             {{ 'action.plan' | translate }}
           </button>
 
-          <button mat-menu-item (click)="applyClicked()"
+          <button mat-menu-item (click)="applyClicked(deployment)"
             mcsId="apply-deployment"
             mcsEventTracker="apply-deployment"
             mcsEventCategory="launchpad-deployment"
@@ -33,7 +33,7 @@
             {{ 'action.apply' | translate }}
           </button>
 
-          <button mat-menu-item (click)="changeTagClicked()"
+          <button mat-menu-item (click)="changeTagClicked(deployment)"
             mcsId="change-deployment-tag"
             mcsEventTracker="change-deployment-tag"
             mcsEventCategory="launchpad-deployment"
@@ -42,7 +42,7 @@
             {{ 'action.changeTag' | translate }}
           </button>
 
-          <button mat-menu-item (click)="renameClicked()"
+          <button mat-menu-item (click)="renameClicked(deployment)"
             mcsId="rename-deployment"
             mcsEventTracker="rename-deployment"
             mcsEventCategory="launchpad-deployment"

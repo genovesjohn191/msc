@@ -323,9 +323,8 @@ export class McsJobManagerClient implements McsDisposable {
     );
 
     // Terraform Deployments
-    // TODO(apascual): Need to check if Plan, Apply, and Destroy are adding new item or just updating?
     this._jobEntitiesFactory.set(JobType.TerraformCreatePlan,
-      new McsJobTerraformDeploymentManager(ActionStatus.Add, this._injector)
+      new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
     );
     this._jobEntitiesFactory.set(JobType.TerraformCreateApply,
       new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)

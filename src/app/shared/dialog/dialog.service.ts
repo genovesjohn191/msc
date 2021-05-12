@@ -35,6 +35,9 @@ import { DialogMessageConfig } from './dialog-message/dialog-message-config';
 import { DialogMessageComponent } from './dialog-message/dialog-message.component';
 import { DialogRef } from './dialog-ref/dialog-ref';
 
+/**
+ * @deprecated Do not use this anymore. Use the DialogService2 instead.
+ */
 @Injectable()
 export class DialogService {
   /**
