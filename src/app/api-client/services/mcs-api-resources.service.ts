@@ -89,7 +89,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
 
   public getVdcStorage(resourceId: string, storageId: string): Observable<McsApiSuccessResponse<McsResourceStorage>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/storages/${storageId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/storage/${storageId}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
