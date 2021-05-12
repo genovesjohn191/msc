@@ -3133,7 +3133,8 @@
     "selectContactRequired": "Contact is required.",
     "inputNoteRequired": "Note is required.",
     "noCloudHealthAlertsDisplay": "No CloudHealth Alerts to be displayed.",
-    "noDataFound": "No data found."
+    "noDataFound": "No data found.",
+    "deploymentBusy": "This deployment is currently busy and some actions may be temporarily unavailable."
   },
   "dialog": {
     "mediaDetach": {
@@ -3264,6 +3265,11 @@
     "terraformDeploymentRename": {
       "title": "Terraform Deployment",
       "message": "Save variable changes to <strong>{{deploymentName}}</strong>?"
+    },
+    "terraformDeploymentDelete": {
+      "title": "Terraform Deployment",
+      "message": "Deleting a deployment will orphan the deployed resources in Azure.\r\nIf you wish to destroy the associated Azure resources destroy them first from the <a href='{{deploymentUrl}}' target='_blank'>deployment view</a>.?",
+      "placeholder": "Type the name of the deployment here..."
     },
     "terraformDeploymentChangeTag": {
       "title": "Change tag for '{{ deployment }}'",

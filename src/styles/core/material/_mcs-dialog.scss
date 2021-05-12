@@ -1,0 +1,28 @@
+mat-dialog-container.mat-dialog-container {
+
+  .mat-dialog-actions {
+    @include display-flex(row);
+    justify-content: flex-end;
+
+    >*:not(:first-child) {
+      margin-left: 8px;
+    }
+  }
+
+  @at-root .mat-dialog-container {
+    .mat-dialog-title {
+      margin: 0;
+    }
+
+    .mat-dialog-content {
+      padding: $space-large;
+      @include display-flex(column);
+      white-space: break-spaces;
+    }
+
+    .mat-dialog-actions {
+      padding-bottom: $space-medium;
+    }
+  }
+}
+

@@ -33,13 +33,13 @@ import { FileAttachmentModule } from './file-attachment/file-attachment.module';
 import { FileDownloadModule } from './file-download/file-download.module';
 import { FormFieldModule } from './form-field/form-field.module';
 import { FormMessageModule } from './form-message/form-message.module';
+import { DialogModule2 } from './generic-dialog/dialog.module';
 import { GenericFormFieldsModule } from './generic-form-fields/generic-form-fields.module';
 import { GridModule } from './grid/grid.module';
 import { IconModule } from './icon/icon.module';
 import { ImageModule } from './image/image.module';
 import { InputModule } from './input/input.module';
 import { ItemModule } from './item/item.module';
-import { TaskLogStreamViewerModule } from './task-log-stream-viewer/task-log-stream-viewer.module';
 import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.module';
 import { JsonViewerModule } from './json-viewer/json-viewer.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
@@ -72,6 +72,7 @@ import { StatusMessageModule } from './status-message/status-message.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
 import { TableModule } from './table/table.module';
 import { TagListModule } from './tag-list/tag-list.module';
+import { TaskLogStreamViewerModule } from './task-log-stream-viewer/task-log-stream-viewer.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TreeModule } from './tree/tree.module';
 import { WidgetsModule } from './widgets/widgets.module';
@@ -152,7 +153,8 @@ const exportedModules = [
   TranslateModule,
   TreeModule,
   WidgetsModule,
-  WizardModule
+  WizardModule,
+  DialogModule2
 ];
 
 @NgModule({

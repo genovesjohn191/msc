@@ -71,6 +71,7 @@ import {
   McsApiToolsFactory,
   McsApiWorkflowsFactory
 } from '@app/api-client';
+import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
 import { IMcsApiObjectsService } from '@app/api-client/interfaces/mcs-api-objects.interface';
 import {
@@ -102,7 +103,6 @@ import {
   McsCatalogSolution,
   McsCatalogSolutionBracket,
   McsCloudHealthAlert,
-  McsCloudHealthAlertConfigurationItems,
   McsColocationAntenna,
   McsColocationCustomDevice,
   McsColocationRack,
@@ -247,8 +247,6 @@ import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
-import { McsApiCloudHealthAlertService } from '@app/api-client/services/mcs-api-cloudhealth-alert.service';
-import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 
 @Injectable()
 @LogClass()
@@ -1962,10 +1960,7 @@ export class McsApiService {
 
   public getTerraformDeploymentActivities(id: any, query?: McsQueryParam): Observable<McsApiCollection<McsTerraformDeploymentActivity>> {
     return this._terraformApi.getDeploymentActivities(id, query).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeploymentActivities'))
-      ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+      map((response) => this._mapToCollection(response))
     );
   }
 
@@ -1980,6 +1975,8 @@ export class McsApiService {
   }
 
   public updateTerraformDeployment(id: any, deploymentData: McsTerraformDeploymentUpdate): Observable<McsTerraformDeployment> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.TerraformDeployment, id);
+
     return this._terraformApi.updateDeployment(id, deploymentData).pipe(
       catchError((error) => {
         this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
@@ -1991,6 +1988,8 @@ export class McsApiService {
   }
 
   public deleteTerraformDeployment(id: any): Observable<boolean> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.TerraformDeployment, id);
+
     return this._terraformApi.deleteDeployment(id).pipe(
       catchError((error) => {
         this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
@@ -2137,18 +2136,20 @@ export class McsApiService {
    * Maps the entity records based on the repository provided
    * @param entityRepository Entity Repository on where to get the entities
    * @param query Query to be obtained
+   * @param parentId Parent Id of the entity where it belongs to
    */
   private _mapToEntityRecords<T>(
     entityRepository: McsRepository<T>,
-    query?: McsQueryParam
+    query?: McsQueryParam,
+    parentId?: string
   ): Observable<McsApiCollection<T>> {
     if (isNullOrEmpty(entityRepository)) {
       throw new Error('Unable to get the list of records from an empty repository.');
     }
 
     let dataCollection = isNullOrEmpty(query) ?
-      entityRepository.getAll() :
-      entityRepository.filterBy(query);
+      entityRepository.getAll(parentId) :
+      entityRepository.filterBy(query, parentId);
 
     return dataCollection.pipe(
       map((response) => this._mapToCollection(response, entityRepository.getTotalRecordsCount()))
@@ -2159,12 +2160,13 @@ export class McsApiService {
    * Maps the entity record details on the repository
    * @param entityRepository Entity Repository on where to get the details of the entity
    * @param id Id of the entity to be obtained
+   * @param parentId Parent Id of the entity where it belongs to
    */
-  private _mapToEntityRecord<T>(entityRepository: McsRepository<T>, id: string): Observable<T> {
+  private _mapToEntityRecord<T>(entityRepository: McsRepository<T>, id: string, parentId?: string): Observable<T> {
     if (isNullOrEmpty(entityRepository)) {
       throw new Error('Unable to get the list of records from an empty repository.');
     }
-    return entityRepository.getById(id);
+    return entityRepository.getById(id, parentId);
   }
 
   /**

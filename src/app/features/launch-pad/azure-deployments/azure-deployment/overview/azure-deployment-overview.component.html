@@ -1,4 +1,4 @@
-<ng-container *ngIf="deployment$ | async" class="limited-view">
+<ng-container *ngIf="deployment$ | async as deployment" class="limited-view">
 
   <mcs-grid>
     <mcs-grid-row>
@@ -100,7 +100,7 @@
                 mcsEventCategory="launchpad-deployment"
                 mcsEventLabel="azure-deployment-details-page"
                 [disabled]="deployment.isProcessing"
-                (click)="resetVariables()">
+                (click)="resetVariables(deployment)">
                 {{ 'action.cancel' | translate }}
               </a>
               <a *ngIf="variablesEditMode"
@@ -111,8 +111,8 @@
                 mcsEventTracker="save-deployment-variable-changes"
                 mcsEventCategory="launchpad-deployment"
                 mcsEventLabel="azure-deployment-details-page"
-                [disabled]="deployment.isProcessing || !hasVariableChanges"
-                (click)="saveVariables()">
+                [disabled]="deployment.isProcessing || !hasVariableChanges(deployment)"
+                (click)="saveVariables(deployment)">
                 {{ 'action.save' | translate }}
               </a>
             </mcs-item>

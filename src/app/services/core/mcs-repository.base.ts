@@ -50,10 +50,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * Get all records from the repository and creates a new observable
    * if the records has been changed the observers will be notified
    */
-  public getAll(): Observable<T[]> {
+  public getAll(parentId?: string): Observable<T[]> {
     let allRecordsObserver = this._allRecordsAreLoaded ?
       this._getAllRecordsFromCache() :
-      this._getAllRecordsFromContext();
+      this._getAllRecordsFromContext(parentId);
 
     return allRecordsObserver.pipe(
       switchMap(() => of(this.dataRecords)),
@@ -70,7 +70,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * observers will be notified
    * @param query Query of the records to be filtered
    */
-  public filterBy(query: McsQueryParam): Observable<T[]> {
+  public filterBy(query: McsQueryParam, parentId?: string): Observable<T[]> {
     let filteredRecords: Observable<T[]>;
 
     // Filter records by search keyword query and return the record immediately.
@@ -82,7 +82,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
     let isSearching = !isNullOrEmpty(query.keyword) || searchKeywordIsDifferent;
     filteredRecords = isSearching ?
       this._filterRecordsBySearchQuery(query) :
-      this._filterRecordsByPageQuery(query);
+      this._filterRecordsByPageQuery(query, parentId);
 
     return filteredRecords.pipe(
       switchMap(() => of(this.filteredRecords)),
@@ -254,8 +254,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * Filters the records from the context based on the query
    * @param query Query to be filtered in the repository
    */
-  private _pageRecordsFromContext(query: McsQueryParam): Observable<T[]> {
-    return this._context.filterRecords(query).pipe(
+  private _pageRecordsFromContext(query: McsQueryParam, parentId: string): Observable<T[]> {
+    return this._context.filterRecords(query, parentId).pipe(
       tap((newFilteredRecords) => {
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
@@ -284,8 +284,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * Searched the records by search query
    * @param query Query on how the records will be filtered
    */
-  private _filterRecordsBySearchQuery(query: McsQueryParam): Observable<T[]> {
-    let searchedRecords = this._context.filterRecords(query).pipe(
+  private _filterRecordsBySearchQuery(query: McsQueryParam, parentId?: string): Observable<T[]> {
+    let searchedRecords = this._context.filterRecords(query, parentId).pipe(
       tap((newFilteredRecords) => {
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
@@ -322,7 +322,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * Page the records by page query
    * @param query Query on how the records will be filtered
    */
-  private _filterRecordsByPageQuery(query: McsQueryParam): Observable<T[]> {
+  private _filterRecordsByPageQuery(query: McsQueryParam, parentId: string): Observable<T[]> {
     let recordsCountToPull = query.pageSize * query.pageIndex;
     let currentRecordCount = this.dataRecords.length;
     let requestRecordFromCache = this._allRecordsAreLoaded
@@ -330,7 +330,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
 
     let filterByObserver = requestRecordFromCache ?
       this._pageRecordsFromCache(query) :
-      this._pageRecordsFromContext(query);
+      this._pageRecordsFromContext(query, parentId);
 
     return filterByObserver;
   }
@@ -345,8 +345,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   /**
    * Get all records from data context, and append it to the datasource
    */
-  private _getAllRecordsFromContext(): Observable<T[]> {
-    return this._context.getAllRecords().pipe(
+  private _getAllRecordsFromContext(parentId: string): Observable<T[]> {
+    return this._context.getAllRecords(parentId).pipe(
       tap((newRecords) => {
         this._allRecordsCount = this._context.totalRecordsCount;
         this._cacheRecords(...newRecords);

@@ -191,10 +191,18 @@
             class="action-data-cell">
 
             <mat-menu #actionMenu="matMenu">
-              <button mat-menu-item>
+              <!-- <button mat-menu-item mcsId="edit-deployment"
+                (click)="onClickEdit(row)"
+                mcsEventTracker="edit-deployment"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="deployment-listing-page">
                 {{ 'launchPadAzureDeployments.edit' | translate }}
-              </button>
-              <button mat-menu-item>
+              </button> -->
+              <button mat-menu-item mcsId="delete-deployment"
+                (click)="onClickDelete(row)"
+                mcsEventTracker="delete-deployment"
+                mcsEventCategory="launchpad-deployment"
+                mcsEventLabel="deployment-listing-page">
                 {{ 'launchPadAzureDeployments.delete' | translate }}
               </button>
             </mat-menu>

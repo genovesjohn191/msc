@@ -1,9 +1,9 @@
 import {
   of,
+  throwError,
   Observable,
   Subject,
-  Subscription,
-  throwError
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -20,11 +20,15 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { McsNavigationService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import {
+  TerraformDeploymentRenameDialogComponent,
+  TerraformTagChangeDialogComponent
+} from '@app/features-shared';
 import {
   McsRouteInfo,
   McsTerraformDeployment,
@@ -36,22 +40,23 @@ import {
   TerraformDeploymentActivityType
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { ConfirmationDialogComponent } from '@app/shared';
 import {
-  CommonDefinition,
+  DialogActionType,
+  DialogResult,
+  DialogResultAction,
+  DialogService2
+} from '@app/shared';
+import {
   createObject,
   getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition,
+  Guid
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AzureDeploymentService } from './azure-deployment.service';
-import {
-  TerraformDeploymentRenameDialogComponent,
-  TerraformTagChangeDialogComponent
-} from '@app/features-shared';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'mcs-azure-deployment',
@@ -60,7 +65,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AzureDeploymentComponent implements OnInit, OnDestroy {
   public deployment$: Observable<McsTerraformDeployment>;
-  public deployment: McsTerraformDeployment;
   public selectedTabId$: Observable<string>;
 
   private _dialogSubject = new Subject<void>();
@@ -74,7 +78,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     private _deploymentService: AzureDeploymentService,
     private _navigationService: McsNavigationService,
     private _eventDispatcher: EventBusDispatcherService,
-    private _dialog: MatDialog,
+    private _dialogService: DialogService2,
     private _translateService: TranslateService,
     private _apiService: McsApiService,
     private _snackBar: MatSnackBar,
@@ -84,23 +88,6 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     this._watchDeploymentChanges();
   }
 
-  private _loadAvailableTags(): void {
-    let optionalHeaders = new Map<string, any>([
-      [CommonDefinition.HEADER_COMPANY_ID, this.deployment.companyId]
-    ]);
-
-    let param = new McsTerraformTagQueryParams();
-    param.pageSize = 2000;
-    param.moduleId = this.deployment.moduleId;
-
-    this._apiService.getTerraformTags(param, optionalHeaders)
-    .pipe(
-      takeUntil(this._destroySubject),
-      map((response) => response && response.collection))
-    .subscribe((response) => {
-      this._availableTags = response;
-    });
-  }
   public ngOnInit(): void {
     this._subscribeToResolve();
   }
@@ -111,166 +98,154 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     unsubscribeSafely(this._routerHandler);
   }
 
-  public onTabChanged(tab: any): void {
+  public onTabChanged(tab: any, deployment: McsTerraformDeployment): void {
     this._navigationService.navigateTo(
       RouteKey.LaunchPadAzureDeploymentDetails,
-      [this.deployment.id, tab.id]
+      [deployment.id, tab.id]
     );
   }
 
-  public planClicked(): void {
-    const dialogRef =
-      this._dialog.open(ConfirmationDialogComponent, {
-        data: {
-          title: 'Azure Deployment-01',
-          message: `Run a plan against ${this.deployment.name}?`,
-          okText: this._translateService.instant('action.ok'),
-          cancelText: this._translateService.instant('action.cancel'),
-        }
-      });
+  public planClicked(deployment: McsTerraformDeployment): void {
+    let dialogRef = this._dialogService.openConfirmation({
+      type: DialogActionType.Warning,
+      title: 'Azure Deployment-01',
+      message: `Run a plan against ${deployment.name}?`,
+      confirmText: this._translateService.instant('action.ok'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
 
-    dialogRef.afterClosed()
-      .pipe(takeUntil(this._dialogSubject))
-      .subscribe(result => {
-        if (result) {
-          this._plan();
-        }
-      });
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this._plan(deployment);
+      })
+    ).subscribe();
   }
 
-  public applyClicked(): void {
-    const dialogRef =
-      this._dialog.open(ConfirmationDialogComponent, {
-        data: {
-          title: 'Azure Deployment-01',
-          message: `Apply ${this.deployment.name}?`,
-          okText: this._translateService.instant('action.ok'),
-          cancelText: this._translateService.instant('action.cancel'),
-        }
-      });
+  public applyClicked(deployment: McsTerraformDeployment): void {
+    let dialogRef = this._dialogService.openConfirmation({
+      type: DialogActionType.Warning,
+      title: 'Azure Deployment-01',
+      message: `Apply ${deployment.name}?`,
+      confirmText: this._translateService.instant('action.ok'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
 
-    dialogRef.afterClosed()
-      .pipe(takeUntil(this._dialogSubject))
-      .subscribe(result => {
-        if (result) {
-          this._apply();
-        }
-      });
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this._apply(deployment);
+      })
+    ).subscribe();
   }
 
-  public planAndApplyClicked(): void {
-    const dialogRef =
-      this._dialog.open(ConfirmationDialogComponent, {
-        data: {
-          title: 'Azure Deployment-01',
-          message: `Run a plan and apply against ${this.deployment.name}?`,
-          okText: this._translateService.instant('action.ok'),
-          cancelText: this._translateService.instant('action.cancel'),
-        }
-      });
+  public planAndApplyClicked(deployment: McsTerraformDeployment): void {
+    let dialogRef = this._dialogService.openConfirmation({
+      type: DialogActionType.Warning,
+      title: 'Azure Deployment-01',
+      message: `Run a plan and apply against ${deployment.name}?`,
+      confirmText: this._translateService.instant('action.ok'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
 
-    dialogRef.afterClosed()
-      .pipe(takeUntil(this._dialogSubject))
-      .subscribe(result => {
-        if (result) {
-          this._apply();
-        }
-      });
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this._apply(deployment);
+      })
+    ).subscribe();
   }
 
-  public changeTagClicked(): void {
-    const dialogRef = this._dialog.open(TerraformTagChangeDialogComponent, {
+  public changeTagClicked(deploymentDetails: McsTerraformDeployment): void {
+    let dialogRef = this._dialogService.open(TerraformTagChangeDialogComponent, {
       data: {
-        title: `Change tag for '${this.deployment.name}'`,
-        message: `Existing Tag: ${this.deployment.tagName}?`,
-        deployment: this.deployment,
+        title: `Change tag for '${deploymentDetails.name}'`,
+        message: `Existing Tag: ${deploymentDetails.tagName}?`,
+        deployment: deploymentDetails,
         availableTags: this._availableTags
       }
     });
 
-    dialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
       if (!result || isNullOrEmpty(result)) { return; }
 
       this._saveDeploymentChanges({
-        name: this.deployment.name,
-        tfvars: this.deployment.tfvars,
+        name: deploymentDetails.name,
+        tfvars: deploymentDetails.tfvars,
         tag: result.id
-      });
+      }, deploymentDetails);
     });
   }
 
-  public renameClicked(): void {
-    const dialogRef =
-    this._dialog.open(TerraformDeploymentRenameDialogComponent, {
+  public renameClicked(deploymentDetails: McsTerraformDeployment): void {
+    let dialogRef = this._dialogService.open(TerraformDeploymentRenameDialogComponent, {
       data: {
-        title: `Rename deployment '${this.deployment.name}'`,
-        deployment: this.deployment,
-        newName: this.deployment.name
+        title: `Rename deployment '${deploymentDetails.name}'`,
+        deployment: deploymentDetails,
+        newName: deploymentDetails.name
       }
     });
 
-    dialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        if (!isNullOrEmpty(result) && this.deployment.name !== result) {
+        if (!isNullOrEmpty(result) && deploymentDetails.name !== result) {
           this._saveDeploymentChanges({
             name: result,
-            tfvars: this.deployment.tfvars,
-            tag: this.deployment.tag
-          });
+            tfvars: deploymentDetails.tfvars,
+            tag: deploymentDetails.tag
+          }, deploymentDetails);
         }
       }
     });
   }
 
-  private _plan(): void {
+  private _plan(deployment: McsTerraformDeployment): void {
     let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
       confirm: true,
       type: TerraformDeploymentActivityType.Plan,
       clientReferenceObject: {
-        terraformDeploymentId: this.deployment.id
+        terraformDeploymentId: deployment.id,
+        terraformActivityRefId: Guid.newGuid().toString(),
+        type: TerraformDeploymentActivityType.Plan
       }
     });
 
-    this._apiService.createTerraformDeploymentActivity(this.deployment.id, requestPayload).subscribe();
+    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload).subscribe();
   }
 
-  private _apply(): void {
+  private _apply(deployment: McsTerraformDeployment): void {
     let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
       confirm: true,
       type: TerraformDeploymentActivityType.Apply,
       clientReferenceObject: {
-        terraformDeploymentId: this.deployment.id
+        terraformDeploymentId: deployment.id,
+        terraformActivityRefId: Guid.newGuid().toString(),
+        type: TerraformDeploymentActivityType.Apply
       }
     });
 
-    this._apiService.createTerraformDeploymentActivity(this.deployment.id, requestPayload).subscribe();
+    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload).subscribe();
   }
 
-  private _saveDeploymentChanges(payload: McsTerraformDeploymentUpdate): void {
-    this.deployment.isProcessing = true;
+  private _saveDeploymentChanges(payload: McsTerraformDeploymentUpdate, deployment: McsTerraformDeployment): void {
+    // this.deployment.isProcessing = true;
     this._changeDetector.markForCheck();
 
-    this._apiService.updateTerraformDeployment(this.deployment.id, payload)
-    .pipe(catchError(() => {
-      this.deployment.isProcessing = false;
-      this._changeDetector.markForCheck();
-
-      this._showFailureNotification();
-      return throwError('Terraform deployment update endpoint failed.');
-    }))
-    .subscribe((response: McsTerraformDeployment) => {
-      this.deployment.isProcessing = false;
+    this._apiService.updateTerraformDeployment(deployment.id, payload).pipe(
+      catchError(() => {
+        // this.deployment.isProcessing = false;
+        // this._changeDetector.markForCheck();
+        this._showFailureNotification();
+        return throwError('Terraform deployment update endpoint failed.');
+      })
+    ).subscribe((response: McsTerraformDeployment) => {
+      // this.deployment.isProcessing = false;
       // this.deployment.name = payload.name;
       // this.deployment.tag = payload.tag;
       // this.deployment.tfvars = payload.tfvars;
-      console.log(response);
-      Object.assign(this.deployment, response);
-      this._changeDetector.markForCheck();
-
+      // console.log(response);
+      // Object.assign(deployment, response);
+      // this._changeDetector.markForCheck();
       this._showSaveNotification();
     });
   }
@@ -282,9 +257,8 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
       }),
       tap((deployment) => {
         if (isNullOrEmpty(deployment)) { return; }
-        this.deployment = deployment;
         this._deploymentService.setDeploymentDetails(deployment);
-        this._loadAvailableTags();
+        this._loadAvailableTags(deployment);
       }),
       shareReplay(1)
     );
@@ -311,24 +285,42 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   private _showFailureNotification(): void {
     this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
-    this._translateService.instant('action.ok'),
-    {
-      duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
-    });
+      this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
+      this._translateService.instant('action.ok'),
+      {
+        duration: CommonDefinition.SNACKBAR_ACTIONABLE_DURATION,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: CommonDefinition.SNACKBAR_WARN_CLASS
+      });
   }
 
   private _showSaveNotification(): void {
     this._snackBar.open(
-    this._translateService.instant('snackBar.terraformDeploymentSaveSuccessNotification'),
-    '',
-    {
-      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
+      this._translateService.instant('snackBar.terraformDeploymentSaveSuccessNotification'),
+      '',
+      {
+        duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+  }
+
+  private _loadAvailableTags(deployment: McsTerraformDeployment): void {
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, deployment.companyId]
+    ]);
+
+    let param = new McsTerraformTagQueryParams();
+    param.pageSize = 2000;
+    param.moduleId = deployment.moduleId;
+
+    this._apiService.getTerraformTags(param, optionalHeaders)
+      .pipe(
+        takeUntil(this._destroySubject),
+        map((response) => response && response.collection))
+      .subscribe((response) => {
+        this._availableTags = response;
+      });
   }
 }
