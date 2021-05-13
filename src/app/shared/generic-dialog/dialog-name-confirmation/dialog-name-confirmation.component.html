@@ -14,8 +14,8 @@
     <mat-label>{{ dialogData.placeholder }}</mat-label>
 
     <input matInput type="text" [formControl]="fcName">
-    <mat-error *ngIf="fcName?.required">Name is required.</mat-error>
-    <mat-error *ngIf="fcName?.mismatch">Name inputted mismatched.</mat-error>
+    <!-- <mat-error *ngIf="fcName?.required">Name is required.</mat-error>
+    <mat-error *ngIf="fcName?.mismatch">Name inputted mismatched.</mat-error> -->
   </mat-form-field>
 </div>
 
