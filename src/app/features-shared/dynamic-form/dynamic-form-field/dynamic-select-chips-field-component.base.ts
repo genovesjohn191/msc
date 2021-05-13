@@ -31,7 +31,9 @@ import {
 import {
   catchError,
   concatMap,
+  debounceTime,
   delay,
+  distinctUntilChanged,
   map,
   startWith,
   switchMap,
@@ -129,13 +131,16 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
       .subscribe((response: T[]) => {
         this.collection = response;
         this.filterOptions();
-        this.initializeFiltering();
       });
   }
 
   public filterOptions(): void {
-    this.config.options = this.filter(this.collection);
+    if (this.initialized && !isNullOrEmpty(this.config.value)) {
+      this._setValue([]);
+    }
 
+    this.config.options = this.filter(this.collection);
+    this.initializeFiltering();
     this._endProcess();
   }
 
@@ -173,6 +178,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
   protected initializeFiltering(): void {
     this.filteredOptions = this.inputCtrl.valueChanges.pipe(
       startWith(null as void),
+      debounceTime(500),
       switchMap((option: string | null) => this.search(option)));
   }
 
@@ -200,5 +206,10 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
     this.isLoading = false;
     this.hasError = hasError;
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _setValue(val: any = []): void {
+    this.config.value = val;
+    this.valueChange(this.config.value);
   }
 }

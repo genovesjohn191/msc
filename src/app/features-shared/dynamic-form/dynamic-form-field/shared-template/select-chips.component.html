@@ -9,7 +9,7 @@
   matTooltipPosition="above"
   (focusout)="addToChips(valueInput)"
   [hintLabel]="config.hint">
-  <mat-label [attr.for]="id">{{ label }} {{ required ? ' *' : ''}}</mat-label>
+  <mat-label [attr.for]="id">{{ isLoading ? 'Loading...' : label }} {{ required ? ' *' : ''}}</mat-label>
 
   <mat-chip-list class="chip" #chipList cdkDropList
   cdkDropListOrientation="horizontal"
