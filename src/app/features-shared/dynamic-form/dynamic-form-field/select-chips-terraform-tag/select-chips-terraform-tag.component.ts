@@ -35,13 +35,12 @@ import { DynamicSelectChipsTerraformTagField } from './select-chips-terraform-ta
 import {
   DynamicFormFieldDataChangeEventParam,
   DynamicFormFieldOnChangeEvent,
-  FlatOption,
-  GroupedOption
+  FlatOption
 } from '../../dynamic-form-field-config.interface';
 
 @Component({
   selector: 'mcs-dff-select-chips-terraform-tag-field',
-  templateUrl: '../shared-template/select-chips-group.component.html',
+  templateUrl: '../shared-template/select-chips.component.html',
   styleUrls: [
     '../dynamic-form-field.scss',
     '../shared-template/select-chips.component.scss'
@@ -190,8 +189,8 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
       map((response) => response && response.collection));
   }
 
-  protected filter(collection: McsTerraformTag[]): GroupedOption[] {
-    let groupedOptions: GroupedOption[] = [];
+  protected filter(collection: McsTerraformTag[]): FlatOption[] {
+    let options: FlatOption[] = [];
     this._slugIdMapping.clear();
 
     collection.forEach((item) => {
@@ -203,25 +202,14 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
         this._slugIdMapping.set(item.slugId, item.id);
       }
 
-      let groupName = item.categoryName;
-      let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
+
 
       let key = this.config.useSlugIdAsKey ? item.slugId : item.id;
       let value = item.name;
 
       let option = { key, value } as FlatOption;
 
-      if (existingGroup) {
-        // Add option to existing group
-        existingGroup.options.push(option);
-      } else {
-        // Add option to new group
-        groupedOptions.push({
-          type: 'group',
-          name: groupName,
-          options: [option]
-        });
-      }
+      options.push(option);
     });
 
     if (!isNullOrEmpty(this.config.initialValue)) {
@@ -230,12 +218,12 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
       // Force the form to check the validty of the control
       this.valueChange(this.config.initialValue);
     }
-    return groupedOptions;
+    return options;
   }
 
-  public search(selectedOption: McsTerraformTag | string): Observable<GroupedOption[]> {
+  public search(selectedOption: McsTerraformTag | string): Observable<FlatOption[]> {
     if (typeof selectedOption === 'object') {
-      return of(this.config.options.filter(option => option.name?.indexOf(option.name) === 0));
+      return of(this.config.options.filter(option => option.key.indexOf(option.key) === 0));
     }
 
     this._searchKeyword = selectedOption.toLowerCase();

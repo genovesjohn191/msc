@@ -14,11 +14,9 @@
       [formControl]="filterControl"
       [matAutocomplete]="autoGroup">
     <mat-autocomplete autoActiveFirstOption #autoGroup="matAutocomplete">
-      <mat-optgroup *ngFor="let group of filteredOptions | async" [label]="group.name">
-        <mat-option *ngFor="let option of group.options" [value]="option.value">
-          <small>{{ option.value }}</small>
-        </mat-option>
-      </mat-optgroup>
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.value">
+        <small>{{ option.value }}</small>
+      </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 
