@@ -129,7 +129,7 @@
               <mcs-section>
                 <mcs-item>
                   <h2 auto-width>
-                    {{ 'Deployment Logs (' + activity.tagName + ')' }}
+                    {{ 'Deployment Logs (' + (activity.tagName ? activity.tagName : 'ongoing') + ')' }}
                   </h2>
                   <mcs-icon key="close-black" size="small"
                     mcsCursor="pointer" mcsAlign="end"

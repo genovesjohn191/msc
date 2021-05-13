@@ -85,7 +85,7 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
     bg: '#000',
     newline: true,
     escapeXML: true,
-    stream: false
+    stream: true
   });
 
   public constructor(
@@ -198,7 +198,6 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
       McsEvent.jobReceive, this._onJobUpdatesReceived.bind(this));
 
     if (isNullOrEmpty(this.value)) {
-      this.value = 'Listening to log stream...\n';
       this._changeDetector.markForCheck();
     }
   }
@@ -218,11 +217,11 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
   private appendLogs(taskLogs: McsTaskLog[]): void {
     let startIndex: number = this._logs.length;
     for (let i = startIndex; i < taskLogs.length; ++i) {
-      let taskLog = taskLogs[i];
-
-      this._logs.push(taskLog.message);
-      this.value = this.value + taskLog.message + '\n';
-      this.rawValue = this.rawValue + taskLog.message + '\n';
+      this._logs.push(taskLogs[i].message);
     }
+
+    this.value = this._logs.join('\n');
+    this.rawValue = this._logs.join('\n');
+    this._changeDetector.markForCheck();
   }
 }

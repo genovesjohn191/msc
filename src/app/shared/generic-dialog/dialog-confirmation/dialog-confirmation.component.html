@@ -11,11 +11,11 @@
   </ng-template>
 </div>
 
-<div mat-dialog-actions>
-  <button mat-raised-button (click)="onCancelClick()">
+<div mat-dialog-actions class="space-between">
+  <button mat-button (click)="onCancelClick()">
     {{ cancelText }}
   </button>
-  <button mat-raised-button (click)="onConfirmClick()" cdkFocusInitial color="primary">
+  <button mat-flat-button (click)="onConfirmClick()" cdkFocusInitial color="primary">
     {{ confirmText }}
   </button>
 </div>
