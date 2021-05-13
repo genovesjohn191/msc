@@ -71,7 +71,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       allowCustomInput: true,
       maxItems: 1,
       eventName: 'company-change',
-      dependents: ['tenant', 'subscription', 'module', 'tag']
+      dependents: ['tenant', 'subscription', 'moduleType', 'module', 'tag']
     }),
     new DynamicSelectTenantField({
       key: 'tenant',
@@ -93,13 +93,13 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       placeholder: 'Enter a deployment name',
       validators: { required: true, minlength: 1, maxlength: 50 },
     }),
-    // new DynamicSelectTerraformModuleTypeField({
-    //   key: 'moduleType',
-    //   label: 'Module Type',
-    //   validators: { required: true },
-    //   eventName: 'terraform-module-type-change',
-    //   dependents: ['module']
-    // }),
+    new DynamicSelectTerraformModuleTypeField({
+      key: 'moduleType',
+      label: 'Module Type',
+      validators: { required: true },
+      eventName: 'terraform-module-type-change',
+      dependents: ['module']
+    }),
     new DynamicSelectChipsTerraformModuleField({
       key: 'module',
       label: 'Module',

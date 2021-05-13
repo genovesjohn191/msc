@@ -16,10 +16,7 @@ import {
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
-  McsAvailabilityZone,
   McsQueryParam,
-  McsResource,
-  McsResourceNetwork,
   McsTerraformModule
 } from '@app/models';
 import {
@@ -30,7 +27,13 @@ import {
 import { DynamicSelectTerraformModuleTypeField } from './select-terraform-module-type';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 
-const groupMapping: Map<string, string> = new Map([
+export type TerraformModuleType =
+  | ''
+  | 'TSM'
+  | 'TRM'
+  | 'Custom';
+
+const groupMapping: Map<TerraformModuleType, string> = new Map([
   ['TSM','Azure Solution'],
   ['TRM','Azure Resource'],
   ['Custom','Customer Specific'],
@@ -92,28 +95,28 @@ export class DynamicSelectTerraformModuleTypeComponent extends DynamicSelectFiel
   }
 
   protected filter(collection: McsTerraformModule[]): FlatOption[] {
-    let options: FlatOption[] = [
-      {
-        key: 'TSM', value: groupMapping.get('TSM')
-      },
-      {
-        key: 'TRM', value: groupMapping.get('TRM')
-      },
-      {
-        key: 'Custom', value: groupMapping.get('Custom')
-      }
-    ];
+    let options: FlatOption[] = [];
 
-    // collection.forEach((item) => {
-    //   options.push({ type: 'flat', key: item.id, value: item.name });
-    // });
+    let hasSolutionModuleType = collection.findIndex((item) => item.projectKey === 'TSM') >= 0;
+    let hasResourceModuleType = collection.findIndex((item) => item.projectKey === 'TRM') >= 0;
+    let hasCustomModuleType = collection.findIndex((item) => item.projectKey !== 'TRM' && item.projectKey !== 'TSM') >= 0;
+
+    if (hasSolutionModuleType) {
+      options.push({ type: 'flat', key: 'TSM', value: groupMapping.get('TSM') });
+    }
+    if (hasResourceModuleType) {
+      options.push({ type: 'flat', key: 'TRM', value: groupMapping.get('TRM') });
+    }
+    if (hasCustomModuleType) {
+      options.push({ type: 'flat', key: 'Custom', value: groupMapping.get('Custom') });
+    }
 
     return options;
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
     this.dataChange.emit({
-      value: this.collection.find((item) => item.name === value),
+      value,
       eventName,
       dependents
     });

@@ -254,7 +254,7 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
   }
 
   private _exluded(item: McsTerraformTag): boolean {
-    // Filter no slug ID if slug ID is used as key
+    // Filter no slug ID if it is used as key
     if (this.config.useSlugIdAsKey && isNullOrEmpty(item.slugId)) {
       return true;
     }

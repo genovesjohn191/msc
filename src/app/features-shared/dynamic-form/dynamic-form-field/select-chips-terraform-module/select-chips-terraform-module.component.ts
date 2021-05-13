@@ -38,6 +38,7 @@ import {
   GroupedOption
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectChipsTerraformModuleField } from './select-chips-terraform-module';
+import { TerraformModuleType } from '../select-terraform-module-type/select-terraform-module-type.component';
 
 const groupMapping: Map<string, string> = new Map([
   ['TRM','Resource Modules'],
@@ -73,6 +74,7 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
 
   private _slugIdMapping: Map<string, string> = new Map<string, string>();
   private _searchKeyword: string = '';
+  private _moduleType: TerraformModuleType = '';
 
   constructor(
     private _apiService: McsApiService,
@@ -167,6 +169,11 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
         this._companyId = params.value;
         this.retrieveOptions();
         break;
+
+      case 'terraform-module-type-change':
+        this._moduleType = params.value;
+        this.filterOptions();
+        break;
     }
   }
 
@@ -190,6 +197,7 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
 
   protected filter(collection: McsTerraformModule[]): GroupedOption[] {
     let groupedOptions: GroupedOption[] = [];
+    let otherOptions: FlatOption[] = [];
     this._slugIdMapping.clear();
 
     collection.forEach((item) => {
@@ -201,13 +209,20 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
         this._slugIdMapping.set(item.slugId, item.id);
       }
 
-      let groupName = groupMapping.has(item.projectKey) ? groupMapping.get(item.projectKey) : groupMapping.get('Custom');
+      let groupName = item.categoryName;
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
 
       let key = this.config.useSlugIdAsKey ? item.slugId : item.id;
       let value = item.name;
 
       let option = { key, value } as FlatOption;
+
+      // Create separate group for Other
+      let others = item.categoryName.toLocaleLowerCase().trim() === 'other';
+      if (others) {
+        otherOptions.push(option)
+        return;
+      }
 
       if (existingGroup) {
         // Add option to existing group
@@ -221,6 +236,15 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
         });
       }
     });
+
+    // Add Other at the end
+    if (!isNullOrEmpty(otherOptions)) {
+      groupedOptions.push({
+        type: 'group',
+        name: 'Other',
+        options: otherOptions
+      });
+    }
 
     if (!isNullOrEmpty(this.config.initialValue)) {
       // Force the control to reselect the initial value
@@ -264,8 +288,15 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
   }
 
   private _exluded(item: McsTerraformModule): boolean {
-    // Filter no service ID if service ID is used as key
+    // Filter no slug ID if it is used as key
     if (this.config.useSlugIdAsKey && isNullOrEmpty(item.slugId)) {
+      return true;
+    }
+
+    // Filter by module types
+    let itemModuleType = groupMapping.has(item.projectKey) ? item.projectKey : 'Custom';
+    if (!isNullOrEmpty(this._moduleType)
+    && this._moduleType.toLocaleLowerCase().trim() !== itemModuleType.toLocaleLowerCase().trim()) {
       return true;
     }
 
