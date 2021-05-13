@@ -19,7 +19,6 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
-import { McsTerraformDeployment } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   DialogActionType,
@@ -35,6 +34,10 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 import { AzureDeploymentService } from '../azure-deployment.service';
+import {
+  McsTerraformDeployment,
+  McsTerraformTag
+} from '@app/models';
 
 @Component({
   selector: 'mcs-azure-deployment-overview',
@@ -45,6 +48,8 @@ import { AzureDeploymentService } from '../azure-deployment.service';
 export class AzureDeploymentOverviewComponent implements OnDestroy {
   public deployment$: Observable<McsTerraformDeployment>;
   public variablesEditMode: boolean = false;
+  public templateVariables: string = '';
+  public viewTemplateVariable: boolean = false;
 
   private _variableCache: string;
   private _variableChangesCache: string;
@@ -136,6 +141,17 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
       });
   }
 
+  public contentCopied(): void {
+    this._snackBar.open(
+    this._translateService.instant('snackBar.terraformDeploymentActivitiesLogCopy'),
+    '',
+    {
+      duration: CommonDefinition.SNACKBAR_STANDARD_DURATION,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+  }
+
   private _showFailureNotification(): void {
     this._snackBar.open(
       this._translateService.instant('snackBar.terraformDeploymentSaveFailureNotification'),
@@ -160,19 +176,12 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   }
 
   private _save(deployment: McsTerraformDeployment): void {
-    // this.hasError = false;
-    // this.processing = true;
-    // this.deployment.isProcessing = true;
-
     this._apiService.updateTerraformDeployment(deployment.id, {
       name: deployment.name,
       tfvars: deployment.tfvars,
       tag: deployment.tag
     }).pipe(
       catchError(() => {
-        // this.hasError = true;
-        // this.processing = false;
-        // this.deployment.isProcessing = false;
         this._changeDetector.markForCheck();
 
         this._showFailureNotification();
@@ -180,9 +189,6 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
       })
     ).subscribe((response: McsTerraformDeployment) => {
       this._variableCache = deployment.tfvars;
-      // this.hasError = false;
-      // this.processing = false;
-      // this.deployment.isProcessing = false;
       this.variablesEditMode = false;
       this._changeDetector.markForCheck();
 
@@ -193,8 +199,25 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   private _subscribeToDeploymentDetails(): void {
     this.deployment$ = this._deploymentService.getDeploymentDetails().pipe(
       takeUntil(this._destroySubject),
+      tap((deployment: McsTerraformDeployment) => {
+        this._getTagInfo(deployment);
+      }),
       shareReplay(1)
     );
+  }
+
+  private _getTagInfo(deployment: McsTerraformDeployment): void {
+    this._apiService.getTerraformTag(deployment.tag)
+    .pipe(catchError(() => {
+      this.templateVariables = `Unable to retrieve template variables for ${deployment.tagName}`;
+      this._changeDetector.markForCheck();
+
+      return throwError('Terraform deployment tag details endpoint failed.');
+    }))
+    .subscribe((response: McsTerraformTag) => {
+      this.templateVariables = response.tfvars;
+      this._changeDetector.markForCheck();
+    });
   }
 
   private _watchDeploymentChanges(): void {
