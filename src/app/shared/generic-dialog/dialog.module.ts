@@ -8,10 +8,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogConfirmationComponent2 } from './dialog-confirmation/dialog-confirmation.component';
+import { DialogMatchConfirmationComponent } from './dialog-match-confirmation/dialog-match-confirmation.component';
 import { DialogMessageComponent2 } from './dialog-message/dialog-message.component';
-import { DialogNameConfirmationComponent } from './dialog-name-confirmation/dialog-name-confirmation.component';
 import { DialogService2 } from './dialog.service';
 
 @NgModule({
@@ -21,12 +22,14 @@ import { DialogService2 } from './dialog.service';
   declarations: [
     DialogMessageComponent2,
     DialogConfirmationComponent2,
-    DialogNameConfirmationComponent
+    DialogMatchConfirmationComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule,
+
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -36,7 +39,7 @@ import { DialogService2 } from './dialog.service';
     CommonModule,
     DialogMessageComponent2,
     DialogConfirmationComponent2,
-    DialogNameConfirmationComponent
+    DialogMatchConfirmationComponent
   ]
 })
 export class DialogModule2 { }

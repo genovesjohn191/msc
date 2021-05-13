@@ -78,7 +78,7 @@
       <mcs-grid-column sizeSm="12" sizeLg="12">
         <mcs-presentation-panel mcsId="deployment-tfvars">
           <ng-container mcsPresentationPanelHeader>
-            <mcs-item>
+            <mcs-item [disabled]="deployment.isProcessing">
               <h2>{{ 'label.terraformVariables' | translate }}</h2>
               <a *ngIf="!variablesEditMode && !viewTemplateVariable"
                 mcsCursor="pointer"

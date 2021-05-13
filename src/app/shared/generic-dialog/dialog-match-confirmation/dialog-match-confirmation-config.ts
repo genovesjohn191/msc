@@ -1,9 +1,9 @@
 import { TemplateRef } from '@angular/core';
 
-export class DialogNameConfirmationConfig {
+export class DialogMatchConfirmationConfig {
   public title: string;
   public message: string | TemplateRef<any>;
-  public name: string;
+  public valueToMatch: string;
   public placeholder: string;
 
   public confirmText?: string;

@@ -19,22 +19,22 @@ import {
   DialogResult,
   DialogResultAction
 } from '../models';
-import { DialogNameConfirmationConfig } from './dialog-name-confirmation-config';
+import { DialogMatchConfirmationConfig } from './dialog-match-confirmation-config';
 
 @Component({
-  selector: 'mcs-dialog-name-confirmation',
-  templateUrl: './dialog-name-confirmation.component.html',
+  selector: 'mcs-dialog-match-confirmation',
+  templateUrl: './dialog-match-confirmation.component.html',
 })
-export class DialogNameConfirmationComponent {
-  public fcName: FormControl;
+export class DialogMatchConfirmationComponent {
+  public fcInput: FormControl;
 
   public constructor(
-    public dialogRef: MatDialogRef<DialogNameConfirmationComponent>,
-    @Inject(MAT_DIALOG_DATA) public dialogData: DialogNameConfirmationConfig
+    public dialogRef: MatDialogRef<DialogMatchConfirmationComponent>,
+    @Inject(MAT_DIALOG_DATA) public dialogData: DialogMatchConfirmationConfig
   ) {
-    this.fcName = new FormControl('', [
+    this.fcInput = new FormControl('', [
       Validators.required,
-      this._customValidator(this._matchNameValidator.bind(this), 'mismatch')
+      this._customValidator(this._matchValueValidator.bind(this), 'mismatched')
     ]);
   }
 
@@ -60,12 +60,16 @@ export class DialogNameConfirmationComponent {
   }
 
   public onConfirmClick(): void {
-    let dialogResult = new DialogResult<boolean>(DialogResultAction.Confirm, this.fcName.valid);
+    if (this.fcInput.invalid) {
+      this.fcInput.markAsTouched();
+      return;
+    }
+    let dialogResult = new DialogResult<boolean>(DialogResultAction.Confirm, this.fcInput.valid);
     this.dialogRef.close(dialogResult);
   }
 
-  private _matchNameValidator(input: string): boolean {
-    return input === this.fcName?.value;
+  private _matchValueValidator(input: string): boolean {
+    return input === this.dialogData?.valueToMatch;
   }
 
   public _customValidator(
