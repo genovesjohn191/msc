@@ -4,13 +4,10 @@ import {
   OnInit
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
-  debounceTime,
-  distinctUntilChanged,
   map,
-  startWith,
-  switchMap
+  startWith
 } from 'rxjs/operators';
 
 import {
@@ -39,7 +36,7 @@ export interface TerraformTagChangeDialogData {
   templateUrl: './terraform-tag-change-dialog.component.html'
 })
 export class TerraformTagChangeDialogComponent implements OnInit {
-  public filteredOptions: Observable<GroupedOption[]>;
+  public filteredOptions: Observable<FlatOption[]>;
   public filterControl = new FormControl();
 
   public get valid(): boolean {
@@ -55,8 +52,8 @@ export class TerraformTagChangeDialogComponent implements OnInit {
     this._initializeFiltering();
   }
 
-  private _filter(collection: McsTerraformTag[], searchKeyword: string): GroupedOption[] {
-    let groupedOptions: GroupedOption[] = [];
+  private _filter(collection: McsTerraformTag[], searchKeyword: string): FlatOption[] {
+    let options: FlatOption[] = [];
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
@@ -65,28 +62,12 @@ export class TerraformTagChangeDialogComponent implements OnInit {
         if (noMatch) { return; }
       }
 
-      let groupName = item.categoryName;
-      let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
+      let option = { key: item.id, value: item.name } as FlatOption;
 
-      let key = item.id;
-      let value = item.name;
-
-      let option = { key, value } as FlatOption;
-
-      if (existingGroup) {
-        // Add option to existing group
-        existingGroup.options.push(option);
-      } else {
-        // Add option to new group
-        groupedOptions.push({
-          type: 'group',
-          name: groupName,
-          options: [option]
-        });
-      }
+      options.push(option);
     });
 
-    return groupedOptions;
+    return options;
   }
 
   private _exluded(item: McsTerraformTag): boolean {

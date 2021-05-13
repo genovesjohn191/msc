@@ -4,7 +4,7 @@ import {
   DynamicFormFieldType,
   DynamicFormFieldTemplate,
   DynamicFormControlSettings,
-  GroupedOption
+  FlatOption
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectChipsValue } from '../dynamic-select-chips-field-component.base';
 
@@ -15,7 +15,7 @@ export class DynamicSelectChipsTerraformTagField extends DynamicFormFieldConfigB
   public value?: DynamicSelectChipsValue[];
 
   public allowDuplicates: boolean = false;
-  public options: GroupedOption[] = [];
+  public options: FlatOption[] = [];
   public useSlugIdAsKey: boolean = false;
   public allowCustomInput: boolean = false;
   public maxItems: number = 0; // less than 1 is considered infinite
