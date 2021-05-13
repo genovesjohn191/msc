@@ -80,7 +80,7 @@
           <ng-container mcsPresentationPanelHeader>
             <mcs-item>
               <h2>{{ 'label.terraformVariables' | translate }}</h2>
-              <a *ngIf="!variablesEditMode"
+              <a *ngIf="!variablesEditMode && !viewTemplateVariable"
                 mcsCursor="pointer"
                 display-inline-block
                 orientation="block"
@@ -91,7 +91,7 @@
                 (click)="edit()">
                 {{ 'action.edit' | translate }}
               </a>
-              <a *ngIf="variablesEditMode"
+              <a *ngIf="variablesEditMode && !viewTemplateVariable"
                 mcsCursor="pointer"
                 display-inline-block
                 orientation="block"
@@ -103,7 +103,7 @@
                 (click)="resetVariables(deployment)">
                 {{ 'action.cancel' | translate }}
               </a>
-              <a *ngIf="variablesEditMode"
+              <a *ngIf="variablesEditMode && !viewTemplateVariable"
                 mcsCursor="pointer"
                 display-inline-block
                 orientation="block"
@@ -119,12 +119,40 @@
           </ng-container>
 
           <ng-container>
-            <mcs-code-editor-form-field
-              (onValueChanged)="onVariablesChanged($event)"
-              [(ngModel)]="deployment.tfvars"
-              [disabled]="!variablesEditMode || deployment.isProcessing"
-              [height]="405">
-            </mcs-code-editor-form-field>
+            <div>
+              <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle value="deployment" [checked]="!viewTemplateVariable" (click)="viewTemplateVariable = false">Deployment Variables</mat-button-toggle>
+                <mat-button-toggle value="template" [checked]="viewTemplateVariable" (click)="viewTemplateVariable = true">Template Variables ( v{{ deployment.tagName }} )</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div class="console-wrapper">
+              <div [hidden]="viewTemplateVariable">
+                <p>
+                  Customize the behavior of this deployment by configuring the input variables. Use the <a (click)="viewTemplateVariable = true" mcsCursor="pointer"
+                  display-inline-block
+                  orientation="block">Template Variables</a> to see the list of available variables for the current version of the module.
+                </p>
+                <mcs-code-editor-form-field
+                  (onValueChanged)="onVariablesChanged($event)"
+                  [(ngModel)]="deployment.tfvars"
+                  [disabled]="!variablesEditMode || deployment.isProcessing"
+                  [height]="405">
+                </mcs-code-editor-form-field>
+              </div>
+              <div [hidden]="!viewTemplateVariable">
+                <p>
+                  The default variables for this version of the attached module. Use these variables as a reference when populating or overriding variables in the <a mcsCursor="pointer"
+                  display-inline-block
+                  orientation="block"(click)="viewTemplateVariable = false">Deployment Variables</a>. <a mcsCursor="pointer"
+                  display-inline-block orientation="block" style="float:right"  [cdkCopyToClipboard]="templateVariables" (click)="contentCopied()">{{ 'action.copyToClipboard' | translate }}</a>
+                </p>
+                <mcs-code-editor-form-field
+                  [(ngModel)]="templateVariables"
+                  disabled
+                  [height]="405">
+                </mcs-code-editor-form-field>
+              </div>
+            </div>
           </ng-container>
         </mcs-presentation-panel>
       </mcs-grid-column>

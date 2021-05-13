@@ -228,24 +228,14 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   }
 
   private _saveDeploymentChanges(payload: McsTerraformDeploymentUpdate, deployment: McsTerraformDeployment): void {
-    // this.deployment.isProcessing = true;
     this._changeDetector.markForCheck();
 
     this._apiService.updateTerraformDeployment(deployment.id, payload).pipe(
       catchError(() => {
-        // this.deployment.isProcessing = false;
-        // this._changeDetector.markForCheck();
         this._showFailureNotification();
         return throwError('Terraform deployment update endpoint failed.');
       })
     ).subscribe((response: McsTerraformDeployment) => {
-      // this.deployment.isProcessing = false;
-      // this.deployment.name = payload.name;
-      // this.deployment.tag = payload.tag;
-      // this.deployment.tfvars = payload.tfvars;
-      // console.log(response);
-      // Object.assign(deployment, response);
-      // this._changeDetector.markForCheck();
       this._showSaveNotification();
     });
   }
