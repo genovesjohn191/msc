@@ -1,21 +1,23 @@
-import { Observable } from 'rxjs';
 import {
+  of,
+  Observable
+} from 'rxjs';
+import {
+  finalize,
   map,
+  switchMap,
   tap
 } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Injector,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import {
   CoreRoutes,
-  McsAccessControlService,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -23,12 +25,16 @@ import {
   McsTableEvents,
   McsTableSelection2
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsFilterInfo,
   McsQueryParam,
+  McsStateNotification,
   McsTerraformDeployment,
-  RouteKey
+  McsTerraformDeploymentCreateActivity,
+  RouteKey,
+  TerraformDeploymentActivityType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -42,7 +48,8 @@ import {
 import {
   createObject,
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  Guid
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -51,7 +58,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './azure-deployments.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AzureDeploymentsComponent implements OnInit, OnDestroy {
+export class AzureDeploymentsComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsTerraformDeployment>;
   public readonly dataSelection: McsTableSelection2<McsTerraformDeployment>;
@@ -72,12 +79,11 @@ export class AzureDeploymentsComponent implements OnInit, OnDestroy {
 
   public constructor(
     _injector: Injector,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _accessControlService: McsAccessControlService,
-    private _navigationService: McsNavigationService,
+    private _eventDispatcher: EventBusDispatcherService,
+    private _dialogService: DialogService2,
     private _translateService: TranslateService,
-    private _apiService: McsApiService,
-    private _dialogService: DialogService2
+    private _navigationService: McsNavigationService,
+    private _apiService: McsApiService
   ) {
     this.dataSource = new McsTableDataSource2(this._getDeployments.bind(this));
     this.dataSelection = new McsTableSelection2(this.dataSource, true);
@@ -85,16 +91,6 @@ export class AzureDeploymentsComponent implements OnInit, OnDestroy {
       dataChangeEvent: McsEvent.dataChangeTerraformDeployments,
       dataClearEvent: McsEvent.dataClearTerraformDeployments
     });
-
-    // TODO(apascual):
-    // 1. There are some items in the table that are not in API response (status, subscription, moduletype).
-    // 2. Add Data Activation Class, and change the isProcessing, and statusLabel content on HTML. Should be implemented in deletion.
-    // 3. Status in McsTerraformDeployment model should be set based on actual field name.
-    // 4. Check if we still need the events from terraform deployments, or the data activation class can do the work.
-  }
-
-  public ngOnInit() {
-    // this._setResourcesFlag();
   }
 
   public ngOnDestroy() {
@@ -145,25 +141,69 @@ export class AzureDeploymentsComponent implements OnInit, OnDestroy {
     this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeploymentCreate);
   }
 
-  public onClickDelete(deployment: McsTerraformDeployment): void {
-    if (isNullOrEmpty(deployment)) { return; }
+  public onClickDestroy(): void {
+    // TODO(apascual): As of now based on specs, we won't be supporting multiple destroy of deployment
+    // but soon as part of the improvement we need to support that. In that case, remove this checking
+    if (!this.dataSelection?.hasSingleSelection()) { return; }
 
-    let dialogRef = this._dialogService.openNameConfirmation({
-      name: deployment.name,
-      placeholder: this._translateService.instant('dialog.terraformDeploymentDelete.placeholder'),
-      title: this._translateService.instant('dialog.terraformDeploymentDelete.title'),
-      message: this._translateService.instant('dialog.terraformDeploymentDelete.message', {
-        deploymentUrl: `${CoreRoutes.getNavigationPath(RouteKey.LaunchPadAzureDeployments)}/${deployment.id}`
+    let deployment = this.dataSelection.getSelectedItems()[0];
+    let dialogRef = this._dialogService.openMatchConfirmation({
+      valueToMatch: deployment.name,
+      placeholder: this._translateService.instant('dialog.terraformDeploymentDestroy.placeholder'),
+      title: this._translateService.instant('dialog.terraformDeploymentDestroy.title'),
+      message: this._translateService.instant('dialog.terraformDeploymentDestroy.message', {
+        name: deployment.name
       }),
+      width: '30rem',
       confirmText: this._translateService.instant('action.yes'),
       cancelText: this._translateService.instant('action.cancel')
     });
 
     dialogRef.afterClosed().pipe(
-      tap((result: DialogResult<boolean>) => {
-        if (result?.action !== DialogResultAction.Confirm || !result?.data) { return; }
-        this._apiService.deleteTerraformDeployment(deployment.id).subscribe();
-      })
+      switchMap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
+
+        let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
+          confirm: true,
+          type: TerraformDeploymentActivityType.Destroy,
+          clientReferenceObject: {
+            terraformDeploymentId: deployment.id,
+            terraformActivityRefId: Guid.newGuid().toString(),
+            type: TerraformDeploymentActivityType.Plan
+          }
+        });
+        return this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload);
+      }),
+      finalize(() => this.dataSelection.clearAllSelection())
+    ).subscribe();
+  }
+
+  public onClickDelete(deployment: McsTerraformDeployment): void {
+    if (isNullOrEmpty(deployment)) { return; }
+
+    let dialogRef = this._dialogService.openMatchConfirmation({
+      valueToMatch: deployment.name,
+      placeholder: this._translateService.instant('dialog.terraformDeploymentDelete.placeholder'),
+      title: this._translateService.instant('dialog.terraformDeploymentDelete.title'),
+      message: this._translateService.instant('dialog.terraformDeploymentDelete.message', {
+        name: deployment.name,
+        deploymentUrl: `${CoreRoutes.getNavigationPath(RouteKey.LaunchPadAzureDeployments)}/${deployment.id}`
+      }),
+      width: '30rem',
+      confirmText: this._translateService.instant('action.yes'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
+
+    dialogRef.afterClosed().pipe(
+      switchMap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
+        return this._apiService.deleteTerraformDeployment(deployment.id);
+      }),
+      tap(() =>
+        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+          new McsStateNotification('success', 'message.successfullyDeleted',)
+        )
+      )
     ).subscribe();
   }
 

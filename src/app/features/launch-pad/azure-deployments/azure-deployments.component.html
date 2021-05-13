@@ -22,7 +22,8 @@
       <div class="listing-action-wrapper">
         <mcs-responsive-panel *ngIf="true"> <!-- TODO(apascual): Confirm if action has corresponding permission -->
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            (click)="destroyMultipleDeployments()"
+            [disabled]="!dataSelection?.hasSingleSelection()"
+            (click)="onClickDestroy()"
             mcsId
             mcsEventTracker="destroy"
             mcsEventCategory="launchpad-deployment"

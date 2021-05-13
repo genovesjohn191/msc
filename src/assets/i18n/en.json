@@ -3135,7 +3135,10 @@
     "inputNoteRequired": "Note is required.",
     "noCloudHealthAlertsDisplay": "No CloudHealth Alerts to be displayed.",
     "noDataFound": "No data found.",
-    "deploymentBusy": "This deployment is currently busy and some actions may be temporarily unavailable."
+    "deploymentBusy": "This deployment is currently busy and some actions may be temporarily unavailable.",
+    "fieldIsRequired": "This field is required.",
+    "fieldInputMismatched": "Inputted value mismatched.",
+    "successfullyDeleted": "Successfully deleted."
   },
   "dialog": {
     "mediaDetach": {
@@ -3267,9 +3270,14 @@
       "title": "Terraform Deployment",
       "message": "Save variable changes to <strong>{{deploymentName}}</strong>?"
     },
+    "terraformDeploymentDestroy": {
+      "title": "Destroy Deployment",
+      "message": "Destroying <strong>{{name}}</strong> deployment will remove all of the resources associated with this deployment.\r\n\nThe Deployment definition will remain, so you will be able to recreate the Azure resources at a later time.",
+      "placeholder": "Type the name of the deployment here..."
+    },
     "terraformDeploymentDelete": {
-      "title": "Terraform Deployment",
-      "message": "Deleting a deployment will orphan the deployed resources in Azure.\r\nIf you wish to destroy the associated Azure resources destroy them first from the <a href='{{deploymentUrl}}' target='_blank'>deployment view</a>.?",
+      "title": "Delete Deployment",
+      "message": "Deleting <strong>{{name}}</strong> deployment will orphan the deployed resources in Azure.\r\n\nIf you wish to destroy the associated Azure resources destroy them first from the <a href='{{deploymentUrl}}' target='_blank'>deployment view</a>.?",
       "placeholder": "Type the name of the deployment here..."
     },
     "terraformDeploymentChangeTag": {

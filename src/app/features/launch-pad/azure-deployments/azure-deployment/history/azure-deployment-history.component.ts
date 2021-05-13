@@ -45,13 +45,10 @@ import {
   getSafeProperty,
   getTimeDifference,
   isNullOrEmpty,
-  unsubscribeSafely,
-  Guid
+  unsubscribeSafely
 } from '@app/utilities';
 
 import { AzureDeploymentService } from '../azure-deployment.service';
-
-const NEW_RECORD_GUID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-azure-deployment-history',
@@ -84,7 +81,12 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     private _changeDetector: ChangeDetectorRef
   ) {
     this.dataSource = new McsTableDataSource2<McsTerraformDeploymentActivity>()
-      .registerConfiguration(new McsMatTableConfig(true));
+      .registerConfiguration(new McsMatTableConfig(
+        true,
+        (target, source) =>
+          target.id === source.id ||
+          target.id === source.job?.id)
+      );
   }
 
   public ngOnInit(): void {
@@ -193,24 +195,24 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     if (!activityIsActive) { return; }
 
     let jobTerraformActivityRefId = job?.clientReferenceObject?.terraformActivityRefId;
-    if (isNullOrEmpty(jobTerraformActivityRefId)) { return; }
+    if (isNullOrEmpty(jobTerraformActivityRefId) || isNullOrEmpty(job.tasks)) { return; }
 
     if (!job.inProgress) {
-      this.dataSource.deleteInsertedRecord(item => item.id === jobTerraformActivityRefId);
+      this.dataSource.deleteRecord(item => item.id === job.id);
       this.retryDatasource();
       return;
     }
 
-    let foundRecord = this.dataSource.findRecord(item => item.id === jobTerraformActivityRefId);
+    let foundRecord = this.dataSource.findRecord(item => item.id === job.id);
     if (isNullOrEmpty(foundRecord)) {
       let newRecord = new McsTerraformDeploymentActivity();
-      newRecord.id = jobTerraformActivityRefId;
+      newRecord.id = job.id;
       newRecord.type = job?.clientReferenceObject?.type;
       newRecord.isProcessing = job.inProgress;
       newRecord.processingText = job.summaryInformation;
       newRecord.createdOn = job.startedOn;
       newRecord.job = job;
-      this.dataSource.insertRecord(newRecord);
+      this.dataSource.insertRecord(newRecord, 0);
     }
   }
 

@@ -11,10 +11,10 @@ import {
 
 import { DialogConfirmationConfig2 } from './dialog-confirmation/dialog-confirmation-config';
 import { DialogConfirmationComponent2 } from './dialog-confirmation/dialog-confirmation.component';
+import { DialogMatchConfirmationConfig } from './dialog-match-confirmation/dialog-match-confirmation-config';
+import { DialogMatchConfirmationComponent } from './dialog-match-confirmation/dialog-match-confirmation.component';
 import { DialogMessageConfig2 } from './dialog-message/dialog-message-config';
 import { DialogMessageComponent2 } from './dialog-message/dialog-message.component';
-import { DialogNameConfirmationConfig } from './dialog-name-confirmation/dialog-name-confirmation-config';
-import { DialogNameConfirmationComponent } from './dialog-name-confirmation/dialog-name-confirmation.component';
 
 @Injectable()
 export class DialogService2 {
@@ -28,12 +28,12 @@ export class DialogService2 {
     return this.dialog.open(componentOrTemplateRef, config);
   }
 
-  public openNameConfirmation<T>(
-    dialogData: DialogNameConfirmationConfig
-  ): MatDialogRef<DialogNameConfirmationComponent> {
+  public openMatchConfirmation<T>(
+    dialogData: DialogMatchConfirmationConfig
+  ): MatDialogRef<DialogMatchConfirmationComponent> {
     const dialogSize = this.getSizeByConfigType(dialogData.width);
 
-    return this.open(DialogNameConfirmationComponent, {
+    return this.open(DialogMatchConfirmationComponent, {
       width: dialogSize?.width,
       height: dialogSize?.height,
       data: dialogData

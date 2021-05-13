@@ -65,6 +65,11 @@ export class McsTableSelection2<TEntity> {
     this._dataRecords.length !== this._selectionModel.selected.length;
   }
 
+  public hasSingleSelection(): boolean {
+    if (isNullOrEmpty(this._dataRecords)) { return false; }
+    return this._selectionModel.hasValue() && this._selectionModel.selected?.length === 1;
+  }
+
   public hasSelecion(): boolean {
     if (isNullOrEmpty(this._dataRecords)) { return false; }
     return this._selectionModel.hasValue();
