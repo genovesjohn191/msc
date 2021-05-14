@@ -39,6 +39,7 @@ import {
 import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
+  DialogActionType,
   DialogResult,
   DialogResultAction,
   DialogService2,
@@ -148,6 +149,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
 
     let deployment = this.dataSelection.getSelectedItems()[0];
     let dialogRef = this._dialogService.openMatchConfirmation({
+      type: DialogActionType.Warning,
       valueToMatch: deployment.name,
       placeholder: this._translateService.instant('dialog.terraformDeploymentDestroy.placeholder'),
       title: this._translateService.instant('dialog.terraformDeploymentDestroy.title'),
@@ -182,6 +184,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
     if (isNullOrEmpty(deployment)) { return; }
 
     let dialogRef = this._dialogService.openMatchConfirmation({
+      type: DialogActionType.Warning,
       valueToMatch: deployment.name,
       placeholder: this._translateService.instant('dialog.terraformDeploymentDelete.placeholder'),
       title: this._translateService.instant('dialog.terraformDeploymentDelete.title'),
@@ -197,13 +200,14 @@ export class AzureDeploymentsComponent implements OnDestroy {
     dialogRef.afterClosed().pipe(
       switchMap((result: DialogResult<boolean>) => {
         if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
-        return this._apiService.deleteTerraformDeployment(deployment.id);
-      }),
-      tap(() =>
-        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
-          new McsStateNotification('success', 'message.successfullyDeleted',)
-        )
-      )
+        return this._apiService.deleteTerraformDeployment(deployment.id).pipe(
+          tap(() =>
+            this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+              new McsStateNotification('success', 'message.successfullyDeleted',)
+            )
+          )
+        );
+      })
     ).subscribe();
   }
 

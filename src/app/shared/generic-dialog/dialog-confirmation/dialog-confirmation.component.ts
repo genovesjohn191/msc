@@ -11,6 +11,7 @@ import {
 } from '@angular/material/dialog';
 
 import {
+  DialogActionType,
   DialogResult,
   DialogResultAction
 } from '../models';
@@ -48,6 +49,11 @@ export class DialogConfirmationComponent2 implements OnInit {
 
   public get cancelText(): string {
     return this.dialogData?.cancelText || 'Cancel';
+  }
+
+  public get buttonColor(): string {
+    return this.dialogData.type === DialogActionType.Error ||
+    this.dialogData.type === DialogActionType.Warning ? 'warn' : 'primary';
   }
 
   public onCancelClick(): void {

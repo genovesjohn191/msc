@@ -27,7 +27,7 @@
   <button mat-button (click)="onCancelClick()">
     {{ cancelText }}
   </button>
-  <button mat-flat-button color="primary" cdkFocusInitial (click)="onConfirmClick()">
+  <button mat-flat-button [color]="buttonColor" cdkFocusInitial (click)="onConfirmClick()">
     {{ confirmText }}
   </button>
 </div>
