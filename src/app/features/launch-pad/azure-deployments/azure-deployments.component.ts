@@ -155,7 +155,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
         name: deployment.name
       }),
       width: '30rem',
-      confirmText: this._translateService.instant('action.yes'),
+      confirmText: this._translateService.instant('action.destroy'),
       cancelText: this._translateService.instant('action.cancel')
     });
 
@@ -190,7 +190,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
         deploymentUrl: `${CoreRoutes.getNavigationPath(RouteKey.LaunchPadAzureDeployments)}/${deployment.id}`
       }),
       width: '30rem',
-      confirmText: this._translateService.instant('action.yes'),
+      confirmText: this._translateService.instant('action.delete'),
       cancelText: this._translateService.instant('action.cancel')
     });
 

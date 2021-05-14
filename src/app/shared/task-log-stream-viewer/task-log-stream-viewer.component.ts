@@ -125,13 +125,14 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
     return jobStatusText[status];
   }
 
-  public getStatusIconKey(status: JobStatus): string {
+  public getStatusIconKey(status: string): string {
+
     switch(status) {
-      case JobStatus.Active:
-      case JobStatus.Pending:
+      case jobStatusText[JobStatus.Active]:
+      case jobStatusText[JobStatus.Pending]:
         return CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
 
-      case JobStatus.Completed:
+      case jobStatusText[JobStatus.Completed]:
         return CommonDefinition.ASSETS_SVG_SUCCESS;
 
       default:
@@ -175,8 +176,8 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.job.tasks[0]?.logs?.forEach((task) => {
-      this._logs.push(task.message);
+    this.job.tasks[0]?.logs?.forEach((log) => {
+      this._logs.push(log.message);
     });
 
     let hasExistingLogs = !isNullOrEmpty(this._logs);

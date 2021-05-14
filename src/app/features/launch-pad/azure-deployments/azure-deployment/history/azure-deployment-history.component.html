@@ -6,7 +6,7 @@
         <mcs-presentation-panel mcsId="activity-listing">
           <ng-container mcsPresentationPanelHeader>
             <mcs-item>
-              <h2>Deployment History</h2>
+              <h2>{{ 'launchPadAzureDeployment.header' | translate }}</h2>
             </mcs-item>
           </ng-container>
 
@@ -104,16 +104,16 @@
                   <mcs-loader size="medium"></mcs-loader>
                 </div>
                 <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-                  No record
+                  {{ 'launchPadAzureDeployment.noDeploymentHistory' | translate }}
                 </div>
                 <div *ngIf="dataSource?.hasError$ | async" text-center>
                   <div class="listing-status-wrapper">
-                    <span>Some error occured</span>
+                    <span>{{ 'launchPadAzureDeployment.errorMessage' | translate }}</span>
                     <a (click)="retryDatasource()"
                       mcsId
                       mcsEventTracker="retry-loading-deployment-activity-list"
                       mcsEventCategory="launchpad-deployment-activities"
-                      mcsEventLabel="deployment-listing-page">Retry</a>
+                      mcsEventLabel="deployment-listing-page">{{ 'action.retry' | translate }}</a>
                   </div>
                 </div>
               </mcs-item>
@@ -129,7 +129,7 @@
               <mcs-section>
                 <mcs-item>
                   <h2 auto-width>
-                    {{ 'Deployment Logs (' + (activity.tagName ? activity.tagName : 'ongoing') + ')' }}
+                    {{ 'Deployment Logs (' + (activity.tagName ? activity.tagName : deployment.tagName) + ')' }}
                   </h2>
                   <mcs-icon key="close-black" size="small"
                     mcsCursor="pointer" mcsAlign="end"
