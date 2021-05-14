@@ -122,13 +122,12 @@
           </td>
         </ng-container>
 
-        <!-- Subscription Column :: TODO(apascual): Under confirmation -->
         <ng-container matColumnDef="subscription">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
             {{ 'columnHeader.subscription' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.subscriptionServiceId }}
+            {{ row.subscriptionName }}
           </td>
         </ng-container>
 
