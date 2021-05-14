@@ -105,7 +105,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
 
   public saveVariables(deployment: McsTerraformDeployment): void {
     let dialogRef = this._dialogService.openConfirmation({
-      type: DialogActionType.Warning,
+      type: DialogActionType.Info,
       title: this._translateService.instant('dialog.terraformDeploymentSaveVariables.title'),
       message: this._translateService.instant('dialog.terraformDeploymentSaveVariables.message', {
         deploymentName: deployment.name
