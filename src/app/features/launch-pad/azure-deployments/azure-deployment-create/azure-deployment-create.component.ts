@@ -91,7 +91,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       key: 'name',
       label: 'Deployment Name',
       placeholder: 'Enter a deployment name',
-      validators: { required: true, minlength: 1, maxlength: 50 },
+      validators: { required: true, minlength: 1, maxlength: 255 },
     }),
     new DynamicSelectTerraformModuleTypeField({
       key: 'moduleType',

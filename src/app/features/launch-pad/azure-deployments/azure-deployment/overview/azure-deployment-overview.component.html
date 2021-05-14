@@ -122,7 +122,7 @@
             <div>
               <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
                 <mat-button-toggle value="deployment" [checked]="!viewTemplateVariable" (click)="viewTemplateVariable = false">Deployment Variables</mat-button-toggle>
-                <mat-button-toggle value="template" [checked]="viewTemplateVariable" (click)="viewTemplateVariable = true">Template Variables ( v{{ deployment.tagName }} )</mat-button-toggle>
+                <mat-button-toggle value="template" [checked]="viewTemplateVariable" (click)="viewTemplateVariable = true">Default Variables ( v{{ deployment.tagName }} )</mat-button-toggle>
               </mat-button-toggle-group>
             </div>
             <div class="console-wrapper">
