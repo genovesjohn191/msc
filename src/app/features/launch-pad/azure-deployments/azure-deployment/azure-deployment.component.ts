@@ -106,8 +106,8 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   public planClicked(deployment: McsTerraformDeployment): void {
     let dialogRef = this._dialogService.openConfirmation({
-      title: 'Azure Deployment-01',
-      message: `Run a plan against ${deployment.name}?`,
+      title: `${deployment.name} (${deployment.companyName})`,
+      message: `Run a plan on ${deployment.name} (${deployment.tagName})?`,
       confirmText: this._translateService.instant('action.ok'),
       cancelText: this._translateService.instant('action.cancel')
     });
@@ -122,8 +122,8 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   public applyClicked(deployment: McsTerraformDeployment): void {
     let dialogRef = this._dialogService.openConfirmation({
-      title: 'Azure Deployment-01',
-      message: `Apply ${deployment.name}?`,
+      title: `${deployment.name} (${deployment.companyName})`,
+      message: `Run apply on ${deployment.name} (${deployment.tagName})?`,
       confirmText: this._translateService.instant('action.ok'),
       cancelText: this._translateService.instant('action.cancel')
     });
@@ -138,7 +138,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   public planAndApplyClicked(deployment: McsTerraformDeployment): void {
     let dialogRef = this._dialogService.openConfirmation({
-      title: 'Azure Deployment-01',
+      title: `${deployment.name} (${deployment.companyName})`,
       message: `Run a plan and apply against ${deployment.name}?`,
       confirmText: this._translateService.instant('action.ok'),
       cancelText: this._translateService.instant('action.cancel')
