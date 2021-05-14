@@ -62,6 +62,11 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
     return this._value;
   }
   public set value(val: string) {
+    if (isNullOrEmpty(val)) {
+      this._value = '';
+      return;
+    }
+
     this._value = this._converter.toHtml(val);
   }
 
@@ -125,17 +130,24 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
     return jobStatusText[status];
   }
 
-  public getStatusIconKey(status: string): string {
+  public getStatusIconKey(status: any): string {
+    let jobStatus = status;
+    if (typeof status === 'number') {
+      jobStatus = JobStatus[status];
+    }
 
-    switch(status) {
-      case jobStatusText[JobStatus.Active]:
+    switch(jobStatus) {
       case jobStatusText[JobStatus.Pending]:
+      case jobStatusText[JobStatus.Active]:
         return CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
 
       case jobStatusText[JobStatus.Completed]:
         return CommonDefinition.ASSETS_SVG_SUCCESS;
 
-      default:
+      case jobStatusText[JobStatus.Failed]:
+      case jobStatusText[JobStatus.TimedOut]:
+      case jobStatusText[JobStatus.SessionExpired]:
+      case jobStatusText[JobStatus.Cancelled]:
         return CommonDefinition.ASSETS_SVG_ERROR;
     }
   }
@@ -206,10 +218,13 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
   private _onJobUpdatesReceived(job: McsJob): void {
     let watchedJob = !isNullOrEmpty(job) && job.id === this.job.id;
     if (!watchedJob)  { return; }
-    this._changeDetector.detectChanges();
 
     let taskLogs: McsTaskLog[] = job.tasks[0].logs;
     let noNewLogs = isNullOrEmpty(taskLogs) || taskLogs.length <= this._logs.length;
+    this.job.status = job.status;
+
+    this._changeDetector.detectChanges();
+
     if (noNewLogs) { return; }
 
     this.appendLogs(taskLogs);
