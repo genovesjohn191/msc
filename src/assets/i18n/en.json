@@ -128,6 +128,12 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of azure deployments.",
     "retry": "Try again shortly"
   },
+  "launchPadAzureDeployment": {
+    "header": "Deployment History",
+    "noDeploymentHistory": "There are no deployment activity to display.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the the history for this deployment.",
+    "retry": "Try again shortly"
+  },
   "consolePage": {
     "loading": "Loading VM Console...",
     "sendCtrlAltDelete": "Ctrl + Alt + Del",
@@ -3106,6 +3112,8 @@
     "changeTag": "Change Tag",
     "close": "Close",
     "copyToClipboard": "Copy To Clipboard",
+    "delete": "Delete",
+    "destroy": "Destroy",
     "dismiss": "Dismiss",
     "edit": "Edit",
     "enquireNow": "Enquire Now",
@@ -3117,6 +3125,7 @@
     "plan": "Plan",
     "planAndApply": "Plan & Apply",
     "remove": "Remove",
+    "retry": "Retry",
     "undo": "Undo",
     "update": "Update",
     "upgrade": "Upgrade",
@@ -3277,7 +3286,7 @@
     },
     "terraformDeploymentDelete": {
       "title": "Delete Deployment",
-      "message": "Deleting <strong>{{name}}</strong> deployment will orphan the deployed resources in Azure.\r\n\nIf you wish to destroy the associated Azure resources destroy them first from the <a href='{{deploymentUrl}}' target='_blank'>deployment view</a>.?",
+      "message": "Deleting <strong>{{name}}</strong> deployment will orphan the deployed resources in Azure.\r\n\nIf you wish to destroy the associated Azure resources destroy them first from the <a href='{{deploymentUrl}}' target='_blank'>deployment view</a>?",
       "placeholder": "Type the name of the deployment here..."
     },
     "terraformDeploymentChangeTag": {

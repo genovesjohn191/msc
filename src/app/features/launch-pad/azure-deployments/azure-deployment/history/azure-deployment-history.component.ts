@@ -31,7 +31,9 @@ import {
   McsFilterInfo,
   McsJob,
   McsQueryParam,
+  McsTerraformDeployment,
   McsTerraformDeploymentActivity,
+  McsTerraformDeploymentUpdate,
   TerraformDeploymentStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -67,6 +69,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'tag' })
   ];
   public activity: McsTerraformDeploymentActivity;
+  public deployment: McsTerraformDeployment;
 
   private _destroySubject = new Subject<void>();
   private _createPlanHandler: Subscription;
@@ -149,6 +152,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     this._deploymentService.getDeploymentDetails().pipe(
       takeUntil(this._destroySubject),
       tap(deploymentDetails => {
+        this.deployment = deploymentDetails;
         this.dataSource.updateDatasource(query =>
           this._getDeploymentActivities(query, deploymentDetails.id)
         );

@@ -222,6 +222,7 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
 
   private _watchDeploymentChanges(): void {
     this._eventDispatcher.addEventListener(McsEvent.dataChangeTerraformDeployments, (payload) => {
+      this._getTagInfo(payload[0]);
       this._changeDetector.markForCheck();
     });
   }
