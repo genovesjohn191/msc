@@ -6,7 +6,7 @@ export class DialogConfirmationConfig2 {
   public title: string;
   public message: string | TemplateRef<any>;
 
-  public type?: DialogActionType = DialogActionType.Info;
+  public type?: DialogActionType;
   public confirmText?: string;
   public cancelText?: string;
   public data?: any;

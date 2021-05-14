@@ -8,7 +8,7 @@ export class DialogMatchConfirmationConfig {
   public valueToMatch: string;
   public placeholder: string;
 
-  public type?: DialogActionType = DialogActionType.Info;
+  public type?: DialogActionType;
   public confirmText?: string;
   public cancelText?: string;
   public width?: string | 'auto';
