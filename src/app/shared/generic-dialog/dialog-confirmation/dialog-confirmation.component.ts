@@ -53,7 +53,7 @@ export class DialogConfirmationComponent2 implements OnInit {
 
   public get buttonColor(): string {
     return this.dialogData.type === DialogActionType.Error ||
-    this.dialogData.type === DialogActionType.Warning ? 'warn' : 'primary';
+      this.dialogData.type === DialogActionType.Warning ? 'warn' : 'primary';
   }
 
   public onCancelClick(): void {

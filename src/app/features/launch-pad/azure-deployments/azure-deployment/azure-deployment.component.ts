@@ -41,7 +41,6 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  DialogActionType,
   DialogResult,
   DialogResultAction,
   DialogService2
@@ -107,7 +106,6 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   public planClicked(deployment: McsTerraformDeployment): void {
     let dialogRef = this._dialogService.openConfirmation({
-      type: DialogActionType.Warning,
       title: 'Azure Deployment-01',
       message: `Run a plan against ${deployment.name}?`,
       confirmText: this._translateService.instant('action.ok'),
@@ -124,7 +122,6 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   public applyClicked(deployment: McsTerraformDeployment): void {
     let dialogRef = this._dialogService.openConfirmation({
-      type: DialogActionType.Warning,
       title: 'Azure Deployment-01',
       message: `Apply ${deployment.name}?`,
       confirmText: this._translateService.instant('action.ok'),
@@ -141,7 +138,6 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   public planAndApplyClicked(deployment: McsTerraformDeployment): void {
     let dialogRef = this._dialogService.openConfirmation({
-      type: DialogActionType.Warning,
       title: 'Azure Deployment-01',
       message: `Run a plan and apply against ${deployment.name}?`,
       confirmText: this._translateService.instant('action.ok'),
