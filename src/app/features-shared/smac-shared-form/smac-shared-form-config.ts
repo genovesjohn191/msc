@@ -14,6 +14,7 @@ const TEXTAREA_MAXLENGTH_DEFAULT = 850;
 
 interface SmacSharedContactBase {
   isIncluded: boolean;
+  isRequired?: boolean;
   placeholder?: string;
   label?: string;
   helpText?: string;
@@ -77,7 +78,8 @@ export class SmacSharedFormConfig {
           this._translate.instant('smacShared.form.testCases.label')),
         helpText: getSafeProperty(testCaseConfig, (obj) => obj.helpText,
           this._translate.instant('smacShared.form.testCases.helpText')),
-        validators: getSafeProperty(testCaseConfig, (obj) => obj.validators, [CoreValidators.rangeArray(0, 20)])
+        validators: getSafeProperty(testCaseConfig, (obj) => obj.validators, [CoreValidators.rangeArray(0, 20)]),
+        isRequired: getSafeProperty(testCaseConfig, (obj) => obj.isRequired, false)
       };
       this._validatorsMap.set('fcTestCases', this.testCaseConfig.validators);
     }

@@ -13,6 +13,7 @@ import { SelectResourceDropdownComponent } from './select-resource/select-resour
 import { SelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 import { CheckBoxListComponent } from './checkbox-list/checkbox-list.component';
 import { SelectManagementTagComponent } from './select-management-tag/select-management-tag.component';
+import { SelectColocationDeviceComponent } from './select-colocation-service/select-colocation-service.component';
 
 const exports: any[] | Type<any> = [
   // TODO(apascual): Need to adjust these 3 fields since they need to
@@ -26,6 +27,7 @@ const exports: any[] | Type<any> = [
   CheckBoxListComponent,
   FieldSelectContactComponent,
   FieldInputNoteComponent,
+  SelectColocationDeviceComponent,
   SelectManagementTagComponent
 ];
 

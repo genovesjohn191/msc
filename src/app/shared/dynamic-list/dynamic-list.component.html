@@ -1,7 +1,8 @@
 <ng-container *ngIf="list$ | async as list">
   <div class="dynamic-list-content">
     <mcs-form-field [disabled]="isMaximum(list)">
-      <input mcsInput type="text" #inputItemFc [placeholder]="placeholder" maxlength="140" (keyup.enter)="onEnterAddItem($event, inputItemFc.value, list)">
+      <input mcsInput type="text" #inputItemFc [placeholder]="placeholder" maxlength="140" (keyup.enter)="onEnterAddItem($event, inputItemFc.value, list)"
+      (blur)="onBlur()">
       <mcs-icon [key]="addIconKey" size="small" mcsCursor="pointer" (click)="addListItem(inputItemFc.value, list)"></mcs-icon>
     </mcs-form-field>
 

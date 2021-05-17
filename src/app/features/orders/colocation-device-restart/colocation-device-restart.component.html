@@ -1,0 +1,212 @@
+<mcs-page [header]="'orderColocationDeviceRestart.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to previous URL -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="order-colocation-device-restart">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'action.back' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Details Step-->
+      <mcs-wizard-step id="colocation-device-restart-details-step"
+        [stepTitle]="'orderColocationDeviceRestart.detailsStep.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="fgDeviceRestart" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'colocation-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
+
+          <!-- Colocation Service Selection -->
+          <mcs-select-colocation-service
+            [formControl]="fcColocationService"
+            [description]="serviceDescription"
+            [config]="colocationConfig"
+            [eventLabel]="'order-colocation-device-restart'"
+            [orderItemType]="orderItemType$ | async">
+          </mcs-select-colocation-service>
+
+          <hr/>
+          <span align-self-start>{{'label.deviceDetails' | translate}}</span>
+
+          <!-- Floor Level -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <input mcsInput required
+                [formControl]="fcFloorLevel"
+                mcsId="input-floor-level"
+                mcsEventTracker="input-floor-level"
+                mcsEventCategory="order"
+                mcsEventLabel="order-colocation-device-restart"
+                [placeholder]="'orderColocationDeviceRestart.detailsStep.floorLevelPlaceholder' | translate"
+                [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.floorLevelHelpText' | translate">
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderColocationDeviceRestart.errors.floorLevel' | translate }}
+                </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- Row number and Rack -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <input mcsInput required
+                [formControl]="fcRackNumber"
+                mcsId="input-rack-number"
+                mcsEventTracker="input-rack-number"
+                mcsEventCategory="order"
+                mcsEventLabel="order-colocation-device-restart"
+                [placeholder]="'orderColocationDeviceRestart.detailsStep.rowNumPlaceholder' | translate"
+                [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.rowNumberHelpText' | translate">
+                <mcs-error mcsError errorState="required">
+                   {{ 'orderColocationDeviceRestart.errors.rackNumber' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+          </mcs-item>
+
+          <!-- Location Cabinet -->
+          <mcs-item orientation="block">
+            <mcs-form-field>
+              <mcs-select mcsId="select-cabinet-location"
+                mcsEventTracker="select-cabinet-location"
+                mcsEventCategory="order"
+                mcsEventLabel="order-colocation-device-restart"
+                [formControl]="fcLocationCabinet"
+                [placeholder]="'orderColocationDeviceRestart.detailsStep.locationCabinetPlaceholder' | translate"
+                [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.locationCabinetHelpText' | translate">
+                <mcs-option *ngFor="let location of locationCabinetOptions$ | async" [value]="location.value">
+                  {{ location.text }}
+                </mcs-option>
+              </mcs-select>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderColocationDeviceRestart.errors.location' | translate }}
+              </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- Device make and model -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <input mcsInput required
+                [formControl]="fcDeviceMakeModel"
+                mcsId="input-device-make-and-model"
+                mcsEventTracker="input-device-make-and-model"
+                mcsEventCategory="order"
+                mcsEventLabel="order-colocation-device-restart"
+                [placeholder]="'orderColocationDeviceRestart.detailsStep.makeAndModelPlaceholder' | translate"
+                [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.makeAndModelHelpText' | translate">
+                <mcs-error mcsError errorState="required">
+                   {{ 'orderColocationDeviceRestart.errors.makeAndModel' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+          </mcs-item>
+
+          <!-- Device name and label -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <input mcsInput required
+                [formControl]="fcDeviceNameLabel"
+                mcsId="input-device-name-and-model"
+                mcsEventTracker="input-device-name-and-model"
+                mcsEventCategory="order"
+                mcsEventLabel="order-colocation-device-restart"
+                [placeholder]="'orderColocationDeviceRestart.detailsStep.deviceNameLabelPlaceholder' | translate"
+                [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.deviceNameLabelHelpText' | translate">
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderColocationDeviceRestart.errors.nameAndLabel' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+          </mcs-item>
+
+          <!-- Restart Instructions -->
+          <mcs-item orientation="block">
+            <mcs-form-field>
+              <textarea required
+                mcsId="input-restart-instructions"
+                mcsEventTracker="input-restart-instructions"
+                mcsEventCategory="order"
+                mcsEventLabel="order-colocation-device-restart"
+                mcsInput [rows]="maxRestartInstructionsRows"
+                [formControl]="fcRestartInstruction"
+                [maxlength]="maxRestartInstructionsLength"
+                [placeholder]="'orderColocationDeviceRestart.detailsStep.restartInstructionPlaceholder' | translate"
+                [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.restartInstructionHelpText' | translate">
+              </textarea>
+              <mcs-hint mcsHint align="start">
+                {{ 'shared.formField.hints.maxChar' | translate: { value: maxRestartInstructionsLength } }}
+              </mcs-hint>
+              <mcs-hint mcsHint align="end">
+                {{ fcRestartInstruction?.value?.length }} / {{ maxRestartInstructionsLength }}
+              </mcs-hint>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderColocationDeviceRestart.errors.restartInstruction' | translate }}
+              </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- SMAC Shared Form -->
+          <mcs-item orientation="block">
+            <mcs-smac-shared-form #fgSmacSharedForm
+              [config]="smacSharedFormConfig$ | async"
+              (dataChange)="onChangeSharedForm($event)">
+            </mcs-smac-shared-form>
+          </mcs-item>
+
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              [disabled]="!(formIsValid && fgSmacSharedForm?.isValid())"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="colocation-device-restart">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <mcs-step-order-details [order]="order$ | async"
+          [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async"
+          [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onOrderDetailsDataChange($event)"
+          (submitOrder)="onSubmitOrder($event, fcColocationService?.value.serviceId)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+        <mcs-step-manual-order-completed
+          [order]="order$ | async"
+          [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+        </mcs-step-manual-order-completed>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

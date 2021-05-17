@@ -50,8 +50,8 @@ import {
   RouteKey
 } from '@app/models';
 import {
-  orderRemoteHandsCabinetLocationText,
-  OrderCabinetLocation
+  OrderCabinetLocation,
+  orderCabinetLocationText
 } from '@app/models/enumerations/order-cabinet-location.enum';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -248,7 +248,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
    * Initialize the options for cabinet location control
    */
   private _subscribeToCabinetLocationOptions(): void {
-    this.cabinetLocationOption$ = of(this._mapEnumToOption(this.cabinetLocationEnum, orderRemoteHandsCabinetLocationText));
+    this.cabinetLocationOption$ = of(this._mapEnumToOption(this.cabinetLocationEnum, orderCabinetLocationText));
   }
 
   /**
@@ -323,7 +323,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
             schedule: getCurrentDate().toISOString(),
             properties: {
               floorLevel: this.fcFloorLevel.value,
-              locationWithinCabinet: orderRemoteHandsCabinetLocationText[this.fcCabinetLocation.value],
+              locationWithinCabinet: orderCabinetLocationText[this.fcCabinetLocation.value],
               rackIdentifier: this.fcRackNumber.value,
               remoteHandsInstructions: this.fcInstruction.value,
               testCases: this._smacSharedDetails.testCases,

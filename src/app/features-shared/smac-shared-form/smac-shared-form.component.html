@@ -1,15 +1,21 @@
 <form [formGroup]="fgSmacSharedForm" mcsFormGroup>
   <!-- Test Cases -->
   <mcs-item orientation='block' *ngIf="config?.testCaseConfig?.isIncluded">
-    <mcs-dynamic-list
-      mcsId="list-test-cases"
-      mcsEventTracker="list-test-cases"
-      mcsEventCategory="order"
-      mcsEventLabel="order-shared-smac-form"
-      [placeholder]="config?.testCaseConfig?.placeholder"
-      [mcsContextualHelp]="config?.testCaseConfig.helpText"
-      [formControl]="fcTestCases">
-    </mcs-dynamic-list>
+    <mcs-form-field class="dynamic-list">
+      <mcs-dynamic-list
+        mcsId="list-test-cases"
+        mcsEventTracker="list-test-cases"
+        mcsEventCategory="order"
+        mcsEventLabel="order-shared-smac-form"
+        [placeholder]="config?.testCaseConfig?.placeholder"
+        [mcsContextualHelp]="config?.testCaseConfig.helpText"
+        [required]="config?.testCaseConfig?.isRequired"
+        [formControl]="fcTestCases">
+      </mcs-dynamic-list>
+      <mcs-error mcsError errorState="required">
+        {{ 'smacShared.form.testCases.errors.required' | translate }}
+      </mcs-error>
+    </mcs-form-field>
   </mcs-item>
 
   <!-- Notes -->

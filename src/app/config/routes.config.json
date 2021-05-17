@@ -559,6 +559,14 @@
     "requiredFeatureFlag": "EnableOrderingColocationStaffEscort",
     "documentTitle": "Colocation Staff Escort - Macquarie Cloud Services"
   },
+  "orderColocationDeviceRestart": {
+    "enumKey": "OrderColocationDeviceRestart",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/colocation/device-restart",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingColocationDeviceRestart",
+    "documentTitle": "Colocation Device Restart - Macquarie Cloud Services"
+  },
   "orderAddAntiVirus": {
     "enumKey": "OrderAddAntiVirus",
     "enumCategory": "MakeAChange",

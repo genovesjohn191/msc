@@ -136,8 +136,7 @@
                     mcsEventLabel="colocation-remote-hands"
                     [formControl]="fcCabinetLocation"
                     [placeholder]="'orderRemoteHands.detailsStep.locationPlaceholder' | translate"
-                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.locationDetailsHelpText' | translate"
-                    required>
+                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.locationDetailsHelpText' | translate">
                     <mcs-option *ngFor="let location of cabinetLocationOption$ | async" [value]="location.value">
                       {{ location.text }}
                     </mcs-option>
