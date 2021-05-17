@@ -216,6 +216,22 @@ export class AzureDeploymentsComponent implements OnDestroy {
     this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeploymentDetails, [deployment.id]);
   }
 
+  public getModuleType(projectKey: string) {
+    switch (projectKey) {
+      case('TSM'): {
+        return 'Azure Solution'
+      }
+
+      case('TRM'): {
+        return 'Azure Resource'
+      }
+
+      default: {
+        return 'Customer Specific'
+      }
+    }
+  }
+
   private _getDeployments(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTerraformDeployment>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);

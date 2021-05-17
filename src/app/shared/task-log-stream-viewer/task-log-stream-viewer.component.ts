@@ -26,6 +26,8 @@ import {
 } from '@app/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import stripAnsi from 'strip-ansi';
+
 // NOTE: This component will only read the first tasks in the job.
 
 const ANSI_TO_HTML_CONVERTER = require('ansi-to-html');
@@ -72,6 +74,10 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
 
   public get viewerStyleHeight(): string {
     return this.height ? `height: ${ this.height.toString() }px;` : '';
+  }
+
+  public get strippedCopy(): string {
+    return stripAnsi(this.rawValue);
   }
 
   public rawValue: string = '';
