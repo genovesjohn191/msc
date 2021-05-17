@@ -34,6 +34,7 @@ import { McsPrivateCloudOnlyGuard } from '@app/core/guards/mcs-private-cloud-onl
 import { McsPublicCloudOnlyGuard } from '@app/core/guards/mcs-public-cloud-only.guard';
 import { ChangeInternetPortPlanComponent } from './change-internet-port-plan/change-internet-port-plan.component';
 import { CloudHealthServicesComponent } from './ms-request-change/cloudhealth/cloudhealth-services.component';
+import { ColocationDeviceRestartComponent } from './colocation-device-restart/colocation-device-restart.component';
 
 /**
  * List of services for the main module
@@ -60,6 +61,7 @@ export const ordersComponents: any[] = [
   ServiceCustomChangeComponent,
   HostedDnsChangeComponent,
   ColocationStaffEscortComponent,
+  ColocationDeviceRestartComponent,
   ChangeToApplyComponent,
   AddAntiVirusComponent,
   AddHidsComponent,
@@ -208,7 +210,12 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderColocationStaffEscort },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-
+  {
+    path: 'change/colocation/device-restart',
+    component: ColocationDeviceRestartComponent,
+    data: { routeId: RouteKey.OrderColocationDeviceRestart },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
   {
     path: 'add/anti-virus',
     component: AddAntiVirusComponent,

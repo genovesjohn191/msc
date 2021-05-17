@@ -981,6 +981,45 @@
       "instructions": "Instructions are required"
     }
   },
+  "orderColocationDeviceRestart": {
+    "title": "Request a Device Restart",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "description": "You can use this wizard to request a restart for a physical device you have hosted with us. Please provide the details of the device below.<br/><br/> Our standard lead time of {{leadTimeHours}} hours for this request ensures we have time to get the right engineer for the task.",
+      "colocationServiceHelpText": "Select the linked service you would like to request a device restart for.",
+      "floorLevelHelpText": "Specify which floor level your device is located on.",
+      "rowNumberHelpText": "Specify the row number and rack identifier of your device (e.g. 1D).",
+      "locationCabinetHelpText": "Specify where in the cabinet your device is located.",
+      "makeAndModelHelpText": "Specify the make and model of your device.",
+      "deviceNameLabelHelpText": "Specify your device description or label.",
+      "restartInstructionHelpText": "Specify the exact instructions needed to restart your device correctly.",
+      "testCasesHelpText": "List any test cases you need us to run after restarting the device, in chronological order.",
+      "colocationServicePlaceholder": "Select a service",
+      "floorLevelPlaceholder": "Floor Level",
+      "rowNumPlaceholder": "Row number and rack",
+      "locationCabinetPlaceholder": "Device location within cabinet *",
+      "makeAndModelPlaceholder": "Device make and model",
+      "deviceNameLabelPlaceholder": "Device name and label",
+      "restartInstructionPlaceholder": "Restart instructions",
+      "testCasesPlaceholder": "What test cases would you like us to execute after the restart?"
+    },
+    "errors": {
+      "location": "Cabinet location is required",
+      "floorLevel": "Floor level is required",
+      "rackNumber": "Row and rack number are required",
+      "makeAndModel": "Device make and model are required",
+      "nameAndLabel": "Device name and label are required",
+      "restartInstruction": "Restart instructions is required"
+    },
+    "fallback": {
+      "colocationService": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team"
+    },
+    "provisioning": {
+      "description": "Your request to restart device is being processed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+      "dataInProgress": "Preparing to restart your device. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "serverRequestPatch": {
     "title": "Request a Patch",
     "detailsStep": {
@@ -2058,7 +2097,10 @@
       "testCases": {
         "label": "",
         "placeholder": "What test cases would you like us to execute after the change?",
-        "helpText": "List any test cases you need us to run after this work is completed, in chronological order"
+        "helpText": "List any test cases you need us to run after this work is completed, in chronological order",
+        "errors": {
+          "required": "Test cases is required"
+        }
       },
       "notes": {
         "label": "Request description",
@@ -2091,7 +2133,8 @@
       "description": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team for more information.",
       "raiseTicketPrefix": " or ",
       "raiseTicketLink": "raise a ticket",
-      "raiseTicketSuffix": " if this is unexpected."
+      "raiseTicketSuffix": " if this is unexpected.",
+      "colocationService": "Service is required"
     }
   },
   "media": {
@@ -3087,6 +3130,7 @@
     "company": "Company",
     "created": "Created",
     "description": "Description",
+    "deviceDetails": "Device Details",
     "email": "Email",
     "history": "History",
     "lastDeployment": "Last Deployment",
@@ -3094,6 +3138,7 @@
     "learnMore": "Learn More",
     "name": "Name",
     "none": "None",
+    "notes": "Notes",
     "overview": "Overview",
     "ownership": "Ownership",
     "phone": "Phone",

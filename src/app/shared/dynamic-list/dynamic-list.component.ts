@@ -8,20 +8,20 @@ import {
   EventEmitter,
   Output,
   ViewEncapsulation,
-  forwardRef,
   OnChanges,
   SimpleChanges,
-  Optional
+  Optional,
+  DoCheck,
+  Self
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
   FormControl,
   Validator,
   ValidationErrors,
   NgForm,
-  FormGroupDirective
+  FormGroupDirective,
+  NgControl
 } from '@angular/forms';
 import {
   Observable,
@@ -60,24 +60,15 @@ interface DynamicListItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
-    { provide: McsFormFieldControlBase, useExisting: DynamicListComponent },
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DynamicListComponent),
-      multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => DynamicListComponent),
-      multi: true
-    }
+    { provide: McsFormFieldControlBase, useExisting: DynamicListComponent }
   ],
   host: {
     'class': 'dynamic-list-wrapper'
   }
 })
 
-export class DynamicListComponent extends McsFormFieldControlBase<any> implements ControlValueAccessor, Validator, OnInit, OnChanges {
+export class DynamicListComponent extends McsFormFieldControlBase<any>
+  implements ControlValueAccessor, Validator, OnInit, OnChanges, DoCheck {
 
   public list$: Observable<DynamicListItem[]>;
 
@@ -184,10 +175,14 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
 
   constructor(
     _elementRef: ElementRef,
+    @Optional() @Self() public ngControl: NgControl,
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective
   ) {
     super(_elementRef.nativeElement, _parentFormGroup || _parentForm);
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
     this._templateListChange = new BehaviorSubject([]);
     this.listChange = new EventEmitter();
     this._validators = new Map();
@@ -197,12 +192,18 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
     this._subscribeToListChange();
   }
 
+  public ngDoCheck(): void {
+    if (this.ngControl) {
+      this.updateErrorState();
+    }
+  }
+
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.minimum || changes.maximum) {
       this._validators.set('rangeArray', CoreValidators.rangeArray(this.minimum, this.maximum));
     }
 
-    if (changes.required) {
+    if (changes.required?.currentValue) {
       this._validators.set('required', CoreValidators.requiredArray);
     }
   }
@@ -254,7 +255,16 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
    * On Touched Event implementation of ControlValueAccessor
    * @param fn Function Invoker
    */
-  public registerOnTouched(_fn: any): void { /* Dummy */ }
+  public registerOnTouched(_fn: any): void {
+    this._onTouched = _fn;
+  }
+
+  /**
+   * Event that emits when focus is removed
+   */
+  public onBlur(): void {
+    this._onTouched();
+  }
 
   /**
    * Returns true if list item count is greater than or equal to the declared maximum value, false otherwise
@@ -358,4 +368,6 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
   }
 
   private _propagateChange = (_value: string[]) => { };
+
+  public _onTouched = () => {};
 }

@@ -10,6 +10,7 @@ export enum OrderIdType {
   RaiseInviewLevel = 'servers.inview.raise',
   ServiceCustomChange = 'services.customRequest',
   ColocationStaffEscort = 'colocation.staffEscort',
+  ColocationDeviceRestart = 'colocation.deviceRestart',
   AddAntiVirus = 'hostsecurity.av.provision',
   AddHids = 'hostsecurity.hids.provision',
   AddVmBackup = 'backups.vm.provision',
