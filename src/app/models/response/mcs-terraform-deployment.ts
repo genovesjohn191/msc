@@ -81,6 +81,9 @@ export class McsTerraformDeployment extends McsEntityBase {
   @JsonProperty()
   public moduleName: string = undefined;
 
+  @JsonProperty()
+  public moduleProjectKey: string = undefined;
+
   @JsonProperty({
     serializer: TerraformDeploymentStatusSerialization,
     deserializer: TerraformDeploymentStatusSerialization
