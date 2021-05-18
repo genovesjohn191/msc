@@ -994,14 +994,14 @@
       "deviceNameLabelHelpText": "Specify your device description or label.",
       "restartInstructionHelpText": "Specify the exact instructions needed to restart your device correctly.",
       "testCasesHelpText": "List any test cases you need us to run after restarting the device, in chronological order.",
-      "colocationServicePlaceholder": "Select a service",
+      "colocationServicePlaceholder": "Select a service *",
       "floorLevelPlaceholder": "Floor Level",
       "rowNumPlaceholder": "Row number and rack",
       "locationCabinetPlaceholder": "Device location within cabinet *",
       "makeAndModelPlaceholder": "Device make and model",
       "deviceNameLabelPlaceholder": "Device name and label",
       "restartInstructionPlaceholder": "Restart instructions",
-      "testCasesPlaceholder": "What test cases would you like us to execute after the restart?"
+      "testCasesPlaceholder": "What test cases would you like us to execute after the restart? *"
     },
     "errors": {
       "location": "Cabinet location is required",
