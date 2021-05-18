@@ -1,5 +1,5 @@
 <mcs-page *ngIf="deployment$ | async as deployment"
-  [header]="'[' + deployment.tenantName + '] ' + deployment.name + ' - ' + deployment.moduleName">
+  [header]="deployment.name + ' - ' + deployment.moduleName">
 
   <mcs-content-panel *mcsContentPanelDef>
     <ng-container *ngIf="deployment.isProcessing">
