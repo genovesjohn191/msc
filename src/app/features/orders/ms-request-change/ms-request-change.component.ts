@@ -81,6 +81,10 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { MsRequestChangeService } from './ms-request-change.service';
 import { CloudHealthAlertType } from './cloudhealth/cloudhealth-services';
+import {
+  addNewResourcesText,
+  AzureResources
+} from './ms-request-services.enum';
 
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
@@ -570,6 +574,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
         let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
         let filteredResources = resources.filter((resource) => resource.serviceId === serviceId)
         let resourceOptions: McsOption[] = [];
+        resourceOptions.push(createObject(McsOption, {
+          text: addNewResourcesText[AzureResources.AddNewResources],
+          value: { azureId: addNewResourcesText[AzureResources.AddNewResources]}
+        }));
         filteredResources.forEach((resource) => {
           let textValue = `${resource.name}`;
           resourceOptions.push(createObject(McsOption, { text: textValue, value: resource }));

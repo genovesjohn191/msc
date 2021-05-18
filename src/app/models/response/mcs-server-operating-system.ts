@@ -26,4 +26,10 @@ export class McsServerOperatingSystem extends McsEntityBase {
 
   @JsonProperty()
   public billingCode: string = undefined;
+
+  @JsonProperty()
+  public kickstartRequired: boolean = undefined;
+
+  @JsonProperty()
+  public kickstartAvailable: boolean = undefined;
 }

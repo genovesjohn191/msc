@@ -141,16 +141,21 @@
                       [multiSelectLimit]="maxSelectionLimit"
                       required>
                       <mcs-search mcsSelectSearch></mcs-search>
-                      <mcs-option *ngFor="let resource of azureResourcesOptions$ | async" 
-                        [selected]="(selectedServiceId$ | async)?.azureId === resource.value.azureId"
-                        [value]="resource.value">
-                        <span [ngStyle]="{'pointer-events': 'auto'}"
-                        [mcsTooltip]="resource.value?.azureId"
-                        [mcsTooltipShow]="resource.value?.azureId"
-                        [mcsTooltipPosition]="'right'">
-                        {{ resource.text }}
-                        </span>
-                      </mcs-option>
+                      <ng-container *ngFor="let resource of azureResourcesOptions$ | async">
+                        <mcs-option
+                          [selected]="(selectedServiceId$ | async)?.azureId === resource.value?.azureId"
+                          [value]="resource.value">
+                            <span [ngStyle]="{'pointer-events': 'auto'}"
+                              [mcsTooltip]="resource.value?.azureId"
+                              [mcsTooltipShow]="resource.value?.azureId"
+                              [mcsTooltipPosition]="'right'">
+                              {{ resource.text }}
+                            </span>
+                        </mcs-option>
+                        <ng-container *ngIf="resource.text === 'Add new resource(s)'">
+                          <hr>
+                        </ng-container>
+                      </ng-container>
                     </mcs-select>
                     <ng-container *ngIf="loadingInProgress">
                       <mcs-loader size="small"
