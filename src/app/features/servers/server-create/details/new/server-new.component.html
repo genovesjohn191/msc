@@ -56,8 +56,14 @@
           [label]="platform.key"
           *ngFor="let platform of (operatingSystemsMap$ | async) | mcsMapIterable">
 
-          <mcs-option *ngFor="let os of platform.value" [value]="os">
-            {{ os.name }}
+          <mcs-option *ngFor="let os of platform.value" [value]="os"
+            [disabled]="os.kickstartRequired && !os.kickstartAvailable">
+            <span [ngStyle]="{'pointer-events': 'auto'}"
+              [mcsTooltip]="'serverCreateDetailsStep.newServer.osKickstartTooltip' | translate"
+              [mcsTooltipShow]="os.kickstartRequired && !os.kickstartAvailable"
+              [mcsTooltipPosition]="'right'">
+              {{ os.name }}
+            </span>
           </mcs-option>
         </mcs-option-group>
       </mcs-option-group>

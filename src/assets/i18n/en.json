@@ -1731,6 +1731,7 @@
         "header": "Unable to Create Server",
         "content": "No resources found. You can't create a server at this moment. Please try again later"
       },
+      "osKickstartTooltip": "This OS cannot be used as it requires kickstart for installation, however does not support it. Please raise a ticket if this is unexpected.",
       "fullStorageSpace": "This server cannot be created due to insufficient storage space ({{remaining_memory}} remaining)."
     },
     "cloneServer": {
