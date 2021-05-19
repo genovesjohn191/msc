@@ -16,4 +16,8 @@
   line-height: 1.125rem;
   color: $color-black !important;
   background-color: $color-grey-06 !important;
+
+  &.single {
+    background-color: transparent !important;
+  }
 }
