@@ -71,7 +71,7 @@
               </mcs-item>
 
               <!-- Service Request Type Selection -->
-              <mcs-item orientation="block">
+              <mcs-item orientation="block" [hidden]="!hasCloudHealthRequestAcess()">
                 <span align-self-start>{{ 'label.requestType' | translate }}</span>
                 <mcs-form-field [disabled]="!fcMsService.value">
                   <mcs-select

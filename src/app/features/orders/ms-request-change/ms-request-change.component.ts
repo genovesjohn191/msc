@@ -34,6 +34,7 @@ import {
 import {
   CoreValidators,
   IMcsFormGroup,
+  McsAccessControlService,
   McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
@@ -61,7 +62,8 @@ import {
   OrderIdType,
   azureServiceRequestTypeText,
   AzureServiceRequestType,
-  McsCloudHealthOption
+  McsCloudHealthOption,
+  McsFeatureFlag
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -244,6 +246,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   constructor(
     _injector: Injector,
+    private _accessControlService: McsAccessControlService,
     private _activatedRoute: ActivatedRoute,
     private _apiService: McsApiService,
     private _eventDispatcher: EventBusDispatcherService,
@@ -365,6 +368,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return requestType === AzureServiceRequestType.Custom;
   }
 
+  public hasCloudHealthRequestAcess(): boolean {
+    let hasCloudHealthRequestAccess = this._accessControlService.hasAccessToFeature(McsFeatureFlag.CloudHealthServiceRequest);
+    return hasCloudHealthRequestAccess;
+  }
+
   public onCloudHealthChange(alerts: McsCloudHealthOption[]): void {
     this.cloudHealthService = alerts;
   }
@@ -384,7 +392,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _registerFormGroup(): void {
     this.fcMsService = new FormControl('', [CoreValidators.required]);
-    this.fcMsServiceRequestType = new FormControl('', [CoreValidators.required]);
+    let hasCloudHealthRequestAcess = !this.hasCloudHealthRequestAcess() ? AzureServiceRequestType.Custom : '';
+    this.fcMsServiceRequestType = new FormControl(hasCloudHealthRequestAcess, [CoreValidators.required]);
     this.fcAzureProduct = new FormControl('', [CoreValidators.required]);
     this.fcAzureResource = new FormControl('', [CoreValidators.required]);
 
