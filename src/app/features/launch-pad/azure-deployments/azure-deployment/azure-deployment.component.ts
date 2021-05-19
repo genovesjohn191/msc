@@ -7,8 +7,10 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  finalize,
   map,
   shareReplay,
+  switchMap,
   takeUntil,
   tap
 } from 'rxjs/operators';
@@ -41,6 +43,7 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
+  DialogActionType,
   DialogResult,
   DialogResultAction,
   DialogService2
@@ -136,18 +139,24 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  public planAndApplyClicked(deployment: McsTerraformDeployment): void {
-    let dialogRef = this._dialogService.openConfirmation({
-      title: `${deployment.name} (${deployment.companyName})`,
-      message: `Run a plan and apply against ${deployment.name}?`,
-      confirmText: this._translateService.instant('action.ok'),
+  public destroyClicked(deployment: McsTerraformDeployment): void {
+    let dialogRef = this._dialogService.openMatchConfirmation({
+      type: DialogActionType.Warning,
+      valueToMatch: deployment.name,
+      placeholder: this._translateService.instant('dialog.terraformDeploymentDestroy.placeholder'),
+      title: this._translateService.instant('dialog.terraformDeploymentDestroy.title'),
+      message: this._translateService.instant('dialog.terraformDeploymentDestroy.message', {
+        name: deployment.name
+      }),
+      width: '30rem',
+      confirmText: this._translateService.instant('action.destroy'),
       cancelText: this._translateService.instant('action.cancel')
     });
 
     dialogRef.afterClosed().pipe(
       tap((result: DialogResult<boolean>) => {
-        if (result?.action !== DialogResultAction.Confirm) { return; }
-        this._apply(deployment);
+        if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
+        this._destroy(deployment);
       })
     ).subscribe();
   }
@@ -217,6 +226,20 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
         terraformDeploymentId: deployment.id,
         terraformActivityRefId: Guid.newGuid().toString(),
         type: TerraformDeploymentActivityType.Apply
+      }
+    });
+
+    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload).subscribe();
+  }
+
+  private _destroy(deployment: McsTerraformDeployment): void {
+    let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
+      confirm: true,
+      type: TerraformDeploymentActivityType.Destroy,
+      clientReferenceObject: {
+        terraformDeploymentId: deployment.id,
+        terraformActivityRefId: Guid.newGuid().toString(),
+        type: TerraformDeploymentActivityType.Plan
       }
     });
 

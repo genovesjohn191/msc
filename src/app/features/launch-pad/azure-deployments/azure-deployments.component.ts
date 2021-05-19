@@ -66,7 +66,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
   public readonly dataEvents: McsTableEvents<McsTerraformDeployment>;
 
   public readonly defaultColumnFilters = [
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
+ // createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'deployment' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'tenant' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscription' }),
@@ -140,44 +140,6 @@ export class AzureDeploymentsComponent implements OnDestroy {
 
   public onClickNewDeployment() {
     this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeploymentCreate);
-  }
-
-  public onClickDestroy(): void {
-    // TODO(apascual): As of now based on specs, we won't be supporting multiple destroy of deployment
-    // but soon as part of the improvement we need to support that. In that case, remove this checking
-    if (!this.dataSelection?.hasSingleSelection()) { return; }
-
-    let deployment = this.dataSelection.getSelectedItems()[0];
-    let dialogRef = this._dialogService.openMatchConfirmation({
-      type: DialogActionType.Warning,
-      valueToMatch: deployment.name,
-      placeholder: this._translateService.instant('dialog.terraformDeploymentDestroy.placeholder'),
-      title: this._translateService.instant('dialog.terraformDeploymentDestroy.title'),
-      message: this._translateService.instant('dialog.terraformDeploymentDestroy.message', {
-        name: deployment.name
-      }),
-      width: '30rem',
-      confirmText: this._translateService.instant('action.destroy'),
-      cancelText: this._translateService.instant('action.cancel')
-    });
-
-    dialogRef.afterClosed().pipe(
-      switchMap((result: DialogResult<boolean>) => {
-        if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
-
-        let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
-          confirm: true,
-          type: TerraformDeploymentActivityType.Destroy,
-          clientReferenceObject: {
-            terraformDeploymentId: deployment.id,
-            terraformActivityRefId: Guid.newGuid().toString(),
-            type: TerraformDeploymentActivityType.Plan
-          }
-        });
-        return this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload);
-      }),
-      finalize(() => this.dataSelection.clearAllSelection())
-    ).subscribe();
   }
 
   public onClickDelete(deployment: McsTerraformDeployment): void {

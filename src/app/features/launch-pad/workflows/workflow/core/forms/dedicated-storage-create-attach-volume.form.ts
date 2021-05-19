@@ -30,7 +30,7 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
       options: [
         { key: 'Superior', value: 'Superior'},
         { key: 'Premium2', value: 'Premium 2'},
-        { key: 'SPR', value: 'Performance7000'},
+        { key: 'SPR', value: 'Performance700'},
         { key: 'PR2', value: 'Performance2000'},
         { key: 'PR8', value: 'Performance8000'},
         { key: 'PR16', value: 'Performance16000'}
