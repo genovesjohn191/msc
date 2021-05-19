@@ -33,6 +33,15 @@
             {{ 'action.apply' | translate }}
           </button>
 
+          <button mat-menu-item (click)="destroyClicked(deployment)"
+            mcsId="destroy-deployment"
+            mcsEventTracker="destroy-deployment"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="azure-deployment-details-page"
+            [disabled]="deployment.isProcessing">
+            {{ 'action.destroy' | translate }}
+          </button>
+
           <button mat-menu-item (click)="changeTagClicked(deployment)"
             mcsId="change-deployment-tag"
             mcsEventTracker="change-deployment-tag"

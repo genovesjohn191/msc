@@ -20,18 +20,7 @@
     <!-- Deployment Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <mcs-responsive-panel *ngIf="true"> <!-- TODO(apascual): Confirm if action has corresponding permission -->
-          <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!dataSelection?.hasSingleSelection()"
-            (click)="onClickDestroy()"
-            mcsId
-            mcsEventTracker="destroy"
-            mcsEventCategory="launchpad-deployment"
-            mcsEventLabel="deployment-listing-top-panel">
-            <mcs-icon key="delete"></mcs-icon>
-            <span>{{ 'launchPadAzureDeployments.destroy' | translate }}</span>
-          </mcs-action-item>
-        </mcs-responsive-panel>
+
 
         <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
           <span>{{ totalCount | mcsPlural:
@@ -66,8 +55,8 @@
       <mcs-search *ngIf="isMobile" #search mcsId="deployments-mobile-search"></mcs-search>
 
       <table mat-table [dataSource]="dataSource">
-        <!-- Selection Column -->
-        <ng-container matColumnDef="select">
+        <!-- Selection Column DISABLED TEMPORARILY-->
+        <!-- <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef
             hidden-small text-center class="action-header-cell">
             <mcs-checkbox color="light"
@@ -87,7 +76,7 @@
               (statusChange)="dataSelection?.toggleItemSelection(row)">
             </mcs-checkbox>
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <!-- Deployment Column -->
         <ng-container matColumnDef="deployment">
