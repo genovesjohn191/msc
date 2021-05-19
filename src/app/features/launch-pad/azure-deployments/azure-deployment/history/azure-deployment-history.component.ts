@@ -33,7 +33,6 @@ import {
   McsQueryParam,
   McsTerraformDeployment,
   McsTerraformDeploymentActivity,
-  McsTerraformDeploymentUpdate,
   TerraformDeploymentStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -88,7 +87,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
         true,
         (target, source) =>
           target.id === source.id ||
-          target.id === source.job?.id)
+          target.id === source.job?.clientReferenceObject?.terraformActivityRefId)
       );
   }
 
@@ -202,15 +201,15 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(jobTerraformActivityRefId) || isNullOrEmpty(job.tasks)) { return; }
 
     if (!job.inProgress) {
-      this.dataSource.deleteRecord(item => item.id === job.id);
+      this.dataSource.deleteRecord(item => item.id === jobTerraformActivityRefId);
       this.retryDatasource();
       return;
     }
 
-    let foundRecord = this.dataSource.findRecord(item => item.id === job.id);
+    let foundRecord = this.dataSource.findRecord(item => item.id === jobTerraformActivityRefId);
     if (isNullOrEmpty(foundRecord)) {
       let newRecord = new McsTerraformDeploymentActivity();
-      newRecord.id = job.id;
+      newRecord.id = jobTerraformActivityRefId;
       newRecord.type = job?.clientReferenceObject?.type;
       newRecord.isProcessing = job.inProgress;
       newRecord.processingText = job.summaryInformation;
