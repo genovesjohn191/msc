@@ -7,10 +7,8 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  finalize,
   map,
   shareReplay,
-  switchMap,
   takeUntil,
   tap
 } from 'rxjs/operators';
@@ -239,7 +237,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
       clientReferenceObject: {
         terraformDeploymentId: deployment.id,
         terraformActivityRefId: Guid.newGuid().toString(),
-        type: TerraformDeploymentActivityType.Plan
+        type: TerraformDeploymentActivityType.Destroy
       }
     });
 
