@@ -23,6 +23,7 @@
         <mcs-form-field>
           <mcs-select mcsId="select-type" required
             [placeholder]="'ticketCreate.placeholders.type' | translate"
+            (selectionChange)='onChangeTicketType()'
             [formControl]="fcType"
             [mcsContextualHelp]="'ticketCreate.contextualHelp.type' | translate">
 
@@ -102,6 +103,8 @@
 
           <mcs-form-field>
             <mcs-select mcsId="cta-select-service" [useTags]="true" multiple
+              [multiSelectLimit]="1000"
+              (selectionChange)="onChangeService()"
               [placeholder]="'ticketCreate.placeholders.services' | translate"
               [formControl]="fcService">
 
@@ -201,6 +204,33 @@
               </ng-container>
             </mcs-select>
           </mcs-form-field>
+        </mcs-section>
+
+        <!-- Azure Resource -->
+        <mcs-section>
+          <mcs-form-field *ngIf="showAzureResource">
+            <mcs-select mcsId="select-azure-resource" multiple [multiSelectLimit]="1000" [useTags]="true"
+              [placeholder]="'ticketCreate.placeholders.azureResource' | translate"
+              [formControl]="fcAzureResource">
+
+              <mcs-search mcsSelectSearch></mcs-search>
+              <mcs-option-group *ngFor="let azureResource of azureResources">
+                <ng-container *mcsOptionGroupLabel>
+                  {{ azureResource.groupName }}
+                </ng-container>
+        
+                <mcs-option [value]="option.value" *ngFor="let option of azureResource.options">
+                  {{ option.text }}
+                </mcs-option>
+              </mcs-option-group>
+            </mcs-select>
+            <ng-container *ngIf="loadingInProgress">
+              <mcs-loader size="small" style="padding-right:25px;"></mcs-loader>
+            </ng-container>
+          </mcs-form-field>
+          <ng-container *ngIf="showAzureResourcePermissionError">
+            <span>{{ 'message.noPermissionFallbackText' | translate }}</span>
+          </ng-container>
         </mcs-section>
       </form>
 

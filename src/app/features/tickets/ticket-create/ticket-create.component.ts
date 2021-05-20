@@ -4,7 +4,8 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   FormGroup,
@@ -13,18 +14,23 @@ import {
 import {
   Observable,
   BehaviorSubject,
-  Subscription
+  Subscription,
+  throwError,
+  Subject
 } from 'rxjs';
 import {
   finalize,
   tap,
   map,
   shareReplay,
-  switchMap
+  switchMap,
+  catchError,
+  takeUntil
 } from 'rxjs/operators';
 import {
   CoreValidators,
   IMcsNavigateAwayGuard,
+  McsAccessControlService,
   McsAuthenticationIdentity,
   McsNavigationService
 } from '@app/core';
@@ -33,7 +39,8 @@ import {
   unsubscribeSafely,
   animateFactory,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -46,10 +53,17 @@ import {
   McsTicketCreate,
   McsTicketCreateAttachment,
   McsResource,
-  McsServer
+  McsServer,
+  McsOptionGroup,
+  McsAzureResource,
+  McsPermission,
+  McsApiCollection
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { TicketService } from '../shared';
+import {
+  TicketService,
+  TicketServiceType
+} from '../shared';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -90,6 +104,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
 
+  public azureResources: McsOptionGroup[];
+  public showAzureResource: boolean = false;
+  public loadingInProgress: boolean;
+  public showAzureResourcePermissionError: boolean = false;
+
   // Form variables
   public fgCreateTicket: FormGroup;
   public fcType: FormControl;
@@ -97,18 +116,22 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public fcSummary: FormControl;
   public fcDetails: FormControl;
   public fcService: FormControl;
+  public fcAzureResource: FormControl;
 
   private _fileAttachments: McsFileInfo[];
   private _creatingTicket$ = new BehaviorSubject<boolean>(false);
+  private _resourcesSubject = new Subject<void>();
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   constructor(
+    private _accessControlService: McsAccessControlService,
     private _activatedRoute: ActivatedRoute,
     private _navigateService: McsNavigationService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this._registerFormGroup();
     this._setTicketType();
@@ -142,6 +165,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
 
   public ngOnDestroy() {
     unsubscribeSafely(this.servicesSubscription);
+    unsubscribeSafely(this._resourcesSubject);
   }
 
   public get backIconKey(): string {
@@ -170,6 +194,33 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._fileAttachments = attachments;
   }
 
+  public hasPermissionToAzureResource(): boolean {
+    let hasAzureViewPermission = this._accessControlService.hasPermission([McsPermission.AzureView]);
+
+    return hasAzureViewPermission;
+  }
+
+  public onChangeTicketType(): void {
+    this.isValidToSelectAzureResource();
+  }
+
+  public onChangeService(): void {
+    this.isValidToSelectAzureResource();
+  }
+
+  public isValidToSelectAzureResource(): void {
+    let isTypeTroubleTicket = this.fcType.value === TicketType.TroubleTicket;
+    if (this.fcService.value.length === 0) { this.showAzureResource = false; }
+    let hasSelectedAzureResource = this.fcService.value.find((service) => service.service === TicketServiceType.MicrosoftSubscriptions);
+    let isValidToSelectAzureResource = isTypeTroubleTicket && !isNullOrEmpty(hasSelectedAzureResource);
+    if (!isValidToSelectAzureResource) {
+      this.showAzureResource = false;
+    } else {
+      this._getAzureResources();
+      this.showAzureResource = true;
+    }
+  }
+
   /**
    * Create ticket according to inputs
    */
@@ -185,6 +236,14 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     ticket.description = this.fcDetails.value;
     if (!isNullOrEmpty(this.fcReference.value)) {
       ticket.customerReference = this.fcReference.value;
+    }
+
+    // Set Azure Resources Azure ID
+    if (!isNullOrEmpty(this.fcAzureResource.value)) {
+      ticket.azureResources = new Array();
+      this.fcAzureResource.value.forEach((resource: McsAzureResource) => {
+        ticket.azureResources.push(resource.azureId);
+      });
     }
 
     // Set Converted File Attachments
@@ -241,7 +300,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       CoreValidators.required
     ]);
 
-    this.fcService = new FormControl('', []);
+    this.fcService = new FormControl([], []);
+    this.fcAzureResource = new FormControl([], []);
 
     // Register Form Groups using binding
     this.fgCreateTicket = new FormGroup({
@@ -249,7 +309,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       fcReference: this.fcReference,
       fcSummary: this.fcSummary,
       fcDetails: this.fcDetails,
-      fcService: this.fcService
+      fcService: this.fcService,
+      fcAzureResource: this.fcAzureResource
     });
   }
 
@@ -316,7 +377,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
           .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
           .map((resource) => new TicketService(
             `${serviceTypeText[resource.serviceType]} VDC (${resource.name})`,
-            resource.name
+            resource.name,
+            TicketServiceType.Vdcs
           ));
       })
     );
@@ -333,7 +395,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
           .filter((server) => getSafeProperty(server, (obj) => obj.serviceId))
           .map((server) => new TicketService(
             `${server.name} (${server.serviceId})`,
-            server.serviceId
+            server.serviceId,
+            TicketServiceType.Servers
           ));
       })
     );
@@ -350,7 +413,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
           .filter((firewall) => getSafeProperty(firewall, (obj) => obj.serviceId))
           .map((firewall) => new TicketService(
             `${firewall.managementName} (${firewall.serviceId})`,
-            firewall.serviceId
+            firewall.serviceId,
+            TicketServiceType.Firewalls
           ));
       })
     );
@@ -367,7 +431,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
           .filter((internetPort) => getSafeProperty(internetPort, (obj) => obj.serviceId))
           .map((internetPort) => new TicketService(
             `${internetPort.description} (${internetPort.serviceId})`,
-            internetPort.serviceId
+            internetPort.serviceId,
+            TicketServiceType.Firewalls
           ));
       })
     );
@@ -381,7 +446,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let bats = getSafeProperty(response, (obj) => obj.collection);
         return bats.filter((bat) => getSafeProperty(bat, (obj) => obj.serviceId))
-          .map((bat) => new TicketService(`${bat.description} (${bat.serviceId})`, bat.serviceId));
+          .map((bat) => new TicketService(
+            `${bat.description} (${bat.serviceId})`,
+            bat.serviceId,
+            TicketServiceType.BackupAggregationTargets
+          ));
       })
     );
   }
@@ -395,7 +464,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let licenses = getSafeProperty(response, (obj) => obj.collection);
         return licenses.filter((license) => getSafeProperty(license, (obj) => obj.serviceId))
-          .map((license) => new TicketService(`${license.name} (${license.serviceId})`, license.serviceId));
+          .map((license) => new TicketService(
+            `${license.name} (${license.serviceId})`,
+            license.serviceId,
+            TicketServiceType.Licenses
+          ));
       })
     );
   }
@@ -408,7 +481,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let azureServices = getSafeProperty(response, (obj) => obj.collection);
         return azureServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.friendlyName} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+           `${service.friendlyName} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.MicrosoftSubscriptions
+          ));
       })
     );
   }
@@ -421,7 +498,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let colocationAntennas = getSafeProperty(response, (obj) => obj.collection);
         return colocationAntennas.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.Antennas
+          ));
       })
     );
   }
@@ -434,7 +515,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let colocationCustomDervices = getSafeProperty(response, (obj) => obj.collection);
         return colocationCustomDervices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.CustomDevices
+          ));
       })
     );
   }
@@ -447,7 +532,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let colocationRooms = getSafeProperty(response, (obj) => obj.collection);
         return colocationRooms.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.Rooms
+          ));
       })
     );
   }
@@ -460,7 +549,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let colocationStandardSqms = getSafeProperty(response, (obj) => obj.collection);
         return colocationStandardSqms.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.StandarsSquareMetres
+          ));
       })
     );
   }
@@ -473,7 +566,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let colocationRacks = getSafeProperty(response, (obj) => obj.collection);
         return colocationRacks.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.description} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.description} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.Racks
+          ));
       })
     );
   }
@@ -491,9 +588,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
           this._apiService.getResource(resource.id).subscribe((vdcStorage) => {
             vdcStorage.storage.forEach((storage) => {
               if (isNullOrEmpty(storage?.serviceId)) { return; }
-              vdcStorageGroup.push(
-                new TicketService(`${storage.name} - for ${resource.serviceId} (${storage.serviceId})`
-                  , storage.serviceId)
+              vdcStorageGroup.push(new TicketService(
+                `${storage.name} - for ${resource.serviceId} (${storage.serviceId})`,
+                storage.serviceId,
+                TicketServiceType.VdcStorage
+                )
               );
             });
           })
@@ -511,7 +610,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let servers = getSafeProperty(response, (obj) => obj)
         return servers.filter((server) => server.isDedicated && server.hardware?.type !== 'VM' )
-          .map((service) => new TicketService(`${service.name} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.name} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.DedicatedServers
+          ));
       })
     );
   }
@@ -525,7 +628,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let managementServices = getSafeProperty(response, (obj) => obj.collection);
         return managementServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.description} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.description} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.MicrosoftManagementServices
+          ));
       })
     );
   }
@@ -548,7 +655,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               let serverName = this._getServerName(serverBackup.id, servers);
               serverBackupGroup.push(
                 new TicketService(`Server Backup - ${serverName} (${serverBackup.serviceId})`,
-                  serverBackup.serviceId)
+                  serverBackup.serviceId,
+                  TicketServiceType.ServerBackup
+                )
               );
             })
             return serverBackupGroup;
@@ -576,7 +685,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               let serverName = this._getServerName(vmBackup.id, servers);
               vmBackupGroup.push(
                 new TicketService(`VM Backup - ${serverName} (${vmBackup.serviceId})`,
-                  vmBackup.serviceId)
+                  vmBackup.serviceId,
+                  TicketServiceType.VmBackup
+                )
               );
             })
             return vmBackupGroup;
@@ -604,7 +715,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               let serverName = this._getServerName(av.serverId, servers);
               antiVirusGroup.push(
                 new TicketService(`${av.antiVirus.billingDescription} - ${serverName} (${av.antiVirus.serviceId})`,
-                  av.antiVirus.serviceId)
+                  av.antiVirus.serviceId,
+                  TicketServiceType.AntiVirus
+                )
               );
             })
             return antiVirusGroup;
@@ -632,7 +745,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               let serverName = this._getServerName(hidsDetails.serverId, servers);
               hidsGroup.push(
                 new TicketService(`${hidsDetails.hids.billingDescription} - ${serverName} (${hidsDetails.hids.serviceId})`,
-                  hidsDetails.hids.serviceId)
+                  hidsDetails.hids.serviceId,
+                  TicketServiceType.Hids
+                )
               );
             })
             return hidsGroup;
@@ -662,8 +777,51 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       map((response) => {
         let dns = getSafeProperty(response, (obj) => obj.collection);
         return dns.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.Dns
+          ));
       })
     );
+  }
+
+  private _getAzureResources(): void {
+    this.loadingInProgress = true;
+    this._apiService.getAzureResources()
+      .pipe(
+        catchError((error) => {
+          this.loadingInProgress = false;
+          this.showAzureResource = false;
+          this.showAzureResourcePermissionError = this.hasPermissionToAzureResource() ? false : true;
+          this._changeDetectorRef.markForCheck();
+          return throwError(error);
+        }),
+        takeUntil(this._resourcesSubject),
+        shareReplay(1)
+      )
+      .subscribe((resourcesCollection: McsApiCollection<McsAzureResource>) => {
+        let resourceGroup: McsOptionGroup[] = [];
+        let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
+        let selectedResources = this.fcService.value;
+
+        selectedResources.forEach((selectedResource: McsAzureResource) => {
+          let filteredResources = this._mapResourcesToOptions(resources, selectedResource.id);
+          resourceGroup.push(createObject(McsOptionGroup, { groupName: selectedResource.id, options: filteredResources}));
+        });
+        this.loadingInProgress = false;
+        this.azureResources = resourceGroup;
+        this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  private _mapResourcesToOptions(resources: McsAzureResource[], selectedResource: string): McsOption[] {
+    let options: McsOption[] = [];
+    let filteredResource = resources.filter((resource) => resource.serviceId === selectedResource);
+    filteredResource.forEach((resource) => {
+      options.push(createObject(McsOption, { text: resource.name, value: resource }));
+    });
+
+    return options;
   }
 }
