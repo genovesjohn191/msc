@@ -2350,7 +2350,8 @@
       "reference": "Enter reference number",
       "summary": "Enter ticket summary",
       "details": "Enter ticket details",
-      "services": "Select a service"
+      "services": "Select a service",
+      "azureResource": "Optionally, select one or more resources this request relates to"
     },
     "contextualHelp": {
       "type": "Select the ticket type",
@@ -3193,7 +3194,8 @@
     "deploymentBusy": "This deployment is currently busy and some actions may be temporarily unavailable.",
     "fieldIsRequired": "This field is required.",
     "fieldInputMismatched": "Inputted value mismatched.",
-    "successfullyDeleted": "Successfully deleted."
+    "successfullyDeleted": "Successfully deleted.",
+    "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView."
   },
   "dialog": {
     "mediaDetach": {

@@ -18,6 +18,9 @@ export class McsTicketCreate {
   @JsonProperty()
   public serviceId: string[] = undefined;
 
+  @JsonProperty()
+  public azureResources: string[] = undefined;
+
   @JsonProperty({ target: McsTicketCreateAttachment })
   public attachments: McsTicketCreateAttachment[] = undefined;
 
