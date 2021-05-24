@@ -89,6 +89,7 @@ import {
   McsApiErrorResponse,
   McsApiSuccessResponse,
   McsAvailabilityZone,
+  McsAzureDeploymentsQueryParams,
   McsAzureResource,
   McsAzureService,
   McsAzureServicesRequestParams,
@@ -1942,7 +1943,7 @@ export class McsApiService {
     );
   }
 
-  public getTerraformDeployments(query?: McsQueryParam): Observable<McsApiCollection<McsTerraformDeployment>> {
+  public getTerraformDeployments(query?: McsAzureDeploymentsQueryParams): Observable<McsApiCollection<McsTerraformDeployment>> {
     return this._mapToEntityRecords(this._terraformDeploymentsRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeployments'))
