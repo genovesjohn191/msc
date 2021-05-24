@@ -1,0 +1,10 @@
+@import "../../../styles/shared/base";
+
+.warning {
+  @include display-flex(row);
+  margin-bottom: $space-small;
+
+  small {
+    padding-left: $space-xsmall;
+  }
+}

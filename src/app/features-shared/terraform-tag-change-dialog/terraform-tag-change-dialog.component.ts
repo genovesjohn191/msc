@@ -18,11 +18,8 @@ import {
   McsTerraformDeployment,
   McsTerraformTag
 } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
-import {
-  FlatOption,
-  GroupedOption
-} from '../dynamic-form';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import { FlatOption } from '../dynamic-form';
 
 export interface TerraformTagChangeDialogData {
   title: string;
@@ -33,7 +30,8 @@ export interface TerraformTagChangeDialogData {
 
 @Component({
   selector: 'mcs-terraform-tag-change-dialog.component',
-  templateUrl: './terraform-tag-change-dialog.component.html'
+  templateUrl: './terraform-tag-change-dialog.component.html',
+  styleUrls: ['terraform-tag-change-dialog.component.scss']
 })
 export class TerraformTagChangeDialogComponent implements OnInit {
   public filteredOptions: Observable<FlatOption[]>;
@@ -43,10 +41,14 @@ export class TerraformTagChangeDialogComponent implements OnInit {
     return !isNullOrEmpty(this.data.newTag) && this.data.newTag.id !== this.data.deployment.tag;
   };
 
+  public get warningIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_WARNING;
+  }
+
   public constructor(
     public dialogRef: MatDialogRef<TerraformTagChangeDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: TerraformTagChangeDialogData
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this._initializeFiltering();
@@ -54,9 +56,9 @@ export class TerraformTagChangeDialogComponent implements OnInit {
 
   private _filter(collection: McsTerraformTag[], searchKeyword: string): FlatOption[] {
     let options: FlatOption[] = [];
-
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
+
       if (!isNullOrEmpty(searchKeyword)) {
         let noMatch: boolean = item.name.toLowerCase().indexOf(searchKeyword) < 0;
         if (noMatch) { return; }
@@ -84,9 +86,7 @@ export class TerraformTagChangeDialogComponent implements OnInit {
       startWith(''),
       map((value) => {
         let result = this.data.availableTags.find((tag) => tag.name === value);
-        if (result) {
-          this.data.newTag = result;
-        }
+        this.data.newTag = result;
 
         return this._filter(this.data.availableTags, value);
       })

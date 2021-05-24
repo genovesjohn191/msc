@@ -65,7 +65,8 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'createdOn' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'updatedOn' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'duration' }),
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'tag' })
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'tag' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'updatedBy' })
   ];
   public activity: McsTerraformDeploymentActivity;
   public deployment: McsTerraformDeployment;

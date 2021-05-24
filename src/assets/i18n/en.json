@@ -3339,7 +3339,7 @@
     },
     "terraformDeploymentChangeTag": {
       "title": "Change tag for '{{ deployment }}'",
-      "warning": "Note: The updated module tag will not take effect until you've performed an apply on the deployment.",
+      "warning": "Always check Deployment Variables against a module's Default Variables after modifying the tag.\r\nThe updated module tag will not take effect until you've performed an apply on the deployment.",
       "existingTag": "Existing tag: {{ tag }}"
     }
   },

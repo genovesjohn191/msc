@@ -21,15 +21,13 @@
   </mat-form-field>
 
   <div *ngIf="valid">
-    <p>
+    <div class="warning">
+      <mcs-icon [key]="warningIconKey" size="large"></mcs-icon>
       <small>{{ 'dialog.terraformDeploymentChangeTag.warning' | translate }}</small>
-    </p>
+    </div>
 
-    <mcs-code-editor-form-field
-      [value]="data.newTag.tfvars"
-      >
+    <mcs-code-editor-form-field [value]="data.newTag.tfvars">
     </mcs-code-editor-form-field>
-
   </div>
 
 </div>
