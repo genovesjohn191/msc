@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 
 import {
   McsApiSuccessResponse,
+  McsAzureDeploymentsQueryParams,
   McsJob,
   McsQueryParam,
   McsTerraformDeployment,
@@ -20,7 +21,7 @@ export interface IMcsApiTerraformService {
    * Get Terraform deployments (MCS API Response)
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getDeployments(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformDeployment[]>>;
+  getDeployments(query?: McsAzureDeploymentsQueryParams): Observable<McsApiSuccessResponse<McsTerraformDeployment[]>>;
 
   /**
    * Get Terraform deployment by ID (MCS API Response)

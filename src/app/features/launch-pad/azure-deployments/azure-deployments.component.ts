@@ -1,10 +1,11 @@
 import {
   of,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
-  finalize,
   map,
+  shareReplay,
   switchMap,
   tap
 } from 'rxjs/operators';
@@ -28,13 +29,11 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  McsAzureDeploymentsQueryParams,
   McsFilterInfo,
-  McsQueryParam,
   McsStateNotification,
   McsTerraformDeployment,
-  McsTerraformDeploymentCreateActivity,
-  RouteKey,
-  TerraformDeploymentActivityType
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -50,9 +49,15 @@ import {
   createObject,
   getSafeProperty,
   isNullOrEmpty,
-  Guid
+  unsubscribeSafely
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
+import {
+  DynamicFormFieldConfigBase,
+  DynamicFormFieldDataChangeEventParam,
+  DynamicSelectChipsCompanyField
+} from '@app/features-shared/dynamic-form';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'mcs-azure-deployments',
@@ -64,6 +69,10 @@ export class AzureDeploymentsComponent implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsTerraformDeployment>;
   public readonly dataSelection: McsTableSelection2<McsTerraformDeployment>;
   public readonly dataEvents: McsTableEvents<McsTerraformDeployment>;
+
+  public _companyId: string;
+  private _routerHandler: Subscription;
+  public formConfig$: Observable<DynamicFormFieldConfigBase[]>;
 
   public readonly defaultColumnFilters = [
  // createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
@@ -84,7 +93,8 @@ export class AzureDeploymentsComponent implements OnDestroy {
     private _dialogService: DialogService2,
     private _translateService: TranslateService,
     private _navigationService: McsNavigationService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _activatedRoute: ActivatedRoute
   ) {
     this.dataSource = new McsTableDataSource2(this._getDeployments.bind(this));
     this.dataSelection = new McsTableSelection2(this.dataSource, true);
@@ -92,11 +102,14 @@ export class AzureDeploymentsComponent implements OnDestroy {
       dataChangeEvent: McsEvent.dataChangeTerraformDeployments,
       dataClearEvent: McsEvent.dataClearTerraformDeployments
     });
+
+    this._listenToCompanyChange();
   }
 
   public ngOnDestroy() {
     this.dataSource.disconnect(null);
     this.dataEvents.dispose();
+    unsubscribeSafely(this._routerHandler);
   }
 
   public get routeKeyEnum(): any {
@@ -194,11 +207,51 @@ export class AzureDeploymentsComponent implements OnDestroy {
     }
   }
 
+  public formBeforeDataChanged(params: DynamicFormFieldDataChangeEventParam): void {
+    if (isNullOrEmpty(params)) {
+      return;
+    }
+
+    switch (params.eventName) {
+      case 'company-change':
+        if (!isNullOrEmpty(params.value)) {
+          this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeployments, [], { queryParams: { companyId: params.value }});
+        }
+        break;
+    }
+  }
+
+  private _listenToCompanyChange(): void {
+    this._activatedRoute.queryParams
+    .pipe(
+      map((params) => getSafeProperty(params, (obj) => obj.companyId)),
+      shareReplay(1)
+    ).subscribe((id) => {
+      this._companyId = id;
+      this.formConfig$ = of([
+        new DynamicSelectChipsCompanyField({
+          key: 'company',
+          label: 'Company',
+          value: [{
+            value: id,
+            label: id
+          }],
+          placeholder: 'Search for company name or ID...',
+          allowCustomInput: true,
+          maxItems: 1,
+          eventName: 'company-change',
+        })
+      ])
+      this.retryDatasource();
+    });
+  }
+
   private _getDeployments(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTerraformDeployment>> {
-    let queryParam = new McsQueryParam();
+    let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.companyId = this._companyId;
 
     return this._apiService.getTerraformDeployments(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount))

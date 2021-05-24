@@ -20,8 +20,6 @@
     <!-- Deployment Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-
-
         <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
           <span>{{ totalCount | mcsPlural:
                 ('launchPadAzureDeployments.dataSingular' | translate) : ('launchPadAzureDeployments.dataPlural' | translate) }}
@@ -51,10 +49,12 @@
   <mcs-content-panel *mcsContentPanelDef>
 
     <div class="listing-table-wrapper">
+      <mcs-dynamic-form #form [config]="formConfig$ | async" (beforeDataChange)="formBeforeDataChanged($event)"></mcs-dynamic-form>
+
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="deployments-mobile-search"></mcs-search>
 
-      <table mat-table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource" style="margin-top: 0">
         <!-- Selection Column DISABLED TEMPORARILY-->
         <!-- <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef
