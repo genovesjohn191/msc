@@ -79,7 +79,7 @@
         <mcs-presentation-panel mcsId="deployment-tfvars">
           <ng-container mcsPresentationPanelHeader>
             <mcs-item [disabled]="deployment.isProcessing">
-              <h2>{{ 'label.terraformVariables' | translate }}</h2>
+              <h2>{{ viewTemplateVariable ? ('label.terraformDefaultVariables' | translate) : ('label.terraformDeploymentVariables' | translate) }}</h2>
               <a *ngIf="!variablesEditMode && !viewTemplateVariable"
                 mcsCursor="pointer"
                 display-inline-block
