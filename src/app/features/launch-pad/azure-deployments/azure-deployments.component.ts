@@ -1,12 +1,13 @@
 import {
   of,
   Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
   map,
-  shareReplay,
   switchMap,
+  takeUntil,
   tap
 } from 'rxjs/operators';
 
@@ -15,8 +16,10 @@ import {
   Component,
   Injector,
   OnDestroy,
+  TemplateRef,
   ViewChild
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   CoreRoutes,
   McsMatTableContext,
@@ -29,11 +32,18 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  DynamicFormFieldConfigBase,
+  DynamicFormFieldDataChangeEventParam,
+  DynamicSelectChipsCompanyField
+} from '@app/features-shared/dynamic-form';
+import {
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
   McsStateNotification,
   McsTerraformDeployment,
-  RouteKey
+  McsTerraformDeploymentDelete,
+  RouteKey,
+  TerraformDeploymentActivityType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -49,15 +59,16 @@ import {
   createObject,
   getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  Guid
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  DynamicFormFieldConfigBase,
-  DynamicFormFieldDataChangeEventParam,
-  DynamicSelectChipsCompanyField
-} from '@app/features-shared/dynamic-form';
-import { ActivatedRoute } from '@angular/router';
+
+class AzureDeleteData {
+  constructor(
+    public message: string,
+    public includeDestroy: boolean) { }
+}
 
 @Component({
   selector: 'mcs-azure-deployments',
@@ -70,12 +81,16 @@ export class AzureDeploymentsComponent implements OnDestroy {
   public readonly dataSelection: McsTableSelection2<McsTerraformDeployment>;
   public readonly dataEvents: McsTableEvents<McsTerraformDeployment>;
 
-  public _companyId: string;
+  @ViewChild('deleteDeploymentTemplate', { read: TemplateRef })
+  public deleteDeploymentTemplate: TemplateRef<any>;
+
   private _routerHandler: Subscription;
+  private _destroySubject = new Subject<void>();
+  private _companyId: string;
   public formConfig$: Observable<DynamicFormFieldConfigBase[]>;
 
   public readonly defaultColumnFilters = [
- // createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
+    // createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'deployment' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'tenant' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscription' }),
@@ -103,10 +118,10 @@ export class AzureDeploymentsComponent implements OnDestroy {
       dataClearEvent: McsEvent.dataClearTerraformDeployments
     });
 
-    this._listenToCompanyChange();
+    this._subscribeToQueryParams();
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.dataSource.disconnect(null);
     this.dataEvents.dispose();
     unsubscribeSafely(this._routerHandler);
@@ -158,15 +173,21 @@ export class AzureDeploymentsComponent implements OnDestroy {
   public onClickDelete(deployment: McsTerraformDeployment): void {
     if (isNullOrEmpty(deployment)) { return; }
 
+    let deleteData = new AzureDeleteData(
+      this._translateService.instant('dialog.terraformDeploymentDelete.message', {
+        name: deployment.name,
+        deploymentUrl: `${CoreRoutes.getNavigationPath(RouteKey.LaunchPadAzureDeployments)}/${deployment.id}`
+      }),
+      false
+    );
+
     let dialogRef = this._dialogService.openMatchConfirmation({
       type: DialogActionType.Warning,
       valueToMatch: deployment.name,
       placeholder: this._translateService.instant('dialog.terraformDeploymentDelete.placeholder'),
       title: this._translateService.instant('dialog.terraformDeploymentDelete.title'),
-      message: this._translateService.instant('dialog.terraformDeploymentDelete.message', {
-        name: deployment.name,
-        deploymentUrl: `${CoreRoutes.getNavigationPath(RouteKey.LaunchPadAzureDeployments)}/${deployment.id}`
-      }),
+      message: this.deleteDeploymentTemplate,
+      data: deleteData,
       width: '30rem',
       confirmText: this._translateService.instant('action.delete'),
       cancelText: this._translateService.instant('action.cancel')
@@ -175,7 +196,18 @@ export class AzureDeploymentsComponent implements OnDestroy {
     dialogRef.afterClosed().pipe(
       switchMap((result: DialogResult<boolean>) => {
         if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
-        return this._apiService.deleteTerraformDeployment(deployment.id).pipe(
+
+        let requestPayload = createObject(McsTerraformDeploymentDelete, {
+          confirm: true,
+          destroy: deleteData.includeDestroy,
+          clientReferenceObject: {
+            terraformDeploymentId: deployment.id,
+            terraformActivityRefId: Guid.newGuid().toString(),
+            type: TerraformDeploymentActivityType.Destroy
+          }
+        });
+
+        return this._apiService.deleteTerraformDeployment(deployment.id, requestPayload).pipe(
           tap(() =>
             this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
               new McsStateNotification('success', 'message.successfullyDeleted',)
@@ -193,11 +225,11 @@ export class AzureDeploymentsComponent implements OnDestroy {
 
   public getModuleType(projectKey: string) {
     switch (projectKey) {
-      case('TSM'): {
+      case ('TSM'): {
         return 'Azure Solution'
       }
 
-      case('TRM'): {
+      case ('TRM'): {
         return 'Azure Resource'
       }
 
@@ -215,35 +247,41 @@ export class AzureDeploymentsComponent implements OnDestroy {
     switch (params.eventName) {
       case 'company-change':
         if (!isNullOrEmpty(params.value)) {
-          this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeployments, [], { queryParams: { companyId: params.value }});
+
+          this._navigationService.navigateTo(
+            RouteKey.LaunchPadAzureDeployments, [], {
+            queryParams: {
+              companyId: params.value
+            }
+          });
         }
         break;
     }
   }
 
-  private _listenToCompanyChange(): void {
-    this._activatedRoute.queryParams
-    .pipe(
+  private _subscribeToQueryParams(): void {
+    this._activatedRoute.queryParams.pipe(
+      takeUntil(this._destroySubject),
       map((params) => getSafeProperty(params, (obj) => obj.companyId)),
-      shareReplay(1)
-    ).subscribe((id) => {
-      this._companyId = id;
-      this.formConfig$ = of([
-        new DynamicSelectChipsCompanyField({
-          key: 'company',
-          label: 'Company',
-          value: [{
-            value: id,
-            label: id
-          }],
-          placeholder: 'Search for company name or ID...',
-          allowCustomInput: true,
-          maxItems: 1,
-          eventName: 'company-change',
-        })
-      ])
-      this.retryDatasource();
-    });
+      tap(id => {
+        this._companyId = id;
+        this.formConfig$ = of([
+          new DynamicSelectChipsCompanyField({
+            key: 'company',
+            label: 'Company',
+            value: [{
+              value: id,
+              label: id
+            }],
+            placeholder: 'Search for company name or ID...',
+            allowCustomInput: true,
+            maxItems: 1,
+            eventName: 'company-change',
+          })
+        ]);
+        this.retryDatasource();
+      })
+    ).subscribe();
   }
 
   private _getDeployments(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTerraformDeployment>> {

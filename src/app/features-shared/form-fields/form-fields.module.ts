@@ -5,15 +5,15 @@ import {
 import { McsApiService } from '@app/services';
 import { SharedModule } from '@app/shared';
 
+import { CheckBoxListComponent } from './checkbox-list/checkbox-list.component';
 import { FieldErrorMessageDirective } from './field-directives/field-error-message.directive';
 import { FieldInputNoteComponent } from './field-input-note/field-input-note.component';
 import { FieldSelectContactComponent } from './field-select-contact/field-select-contact.component';
 import { InputInlineEditComponent } from './input-inline-edit/input-inline-edit.component';
+import { SelectColocationDeviceComponent } from './select-colocation-service/select-colocation-service.component';
+import { SelectManagementTagComponent } from './select-management-tag/select-management-tag.component';
 import { SelectResourceDropdownComponent } from './select-resource/select-resource-dropdown.component';
 import { SelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
-import { CheckBoxListComponent } from './checkbox-list/checkbox-list.component';
-import { SelectManagementTagComponent } from './select-management-tag/select-management-tag.component';
-import { SelectColocationDeviceComponent } from './select-colocation-service/select-colocation-service.component';
 
 const exports: any[] | Type<any> = [
   // TODO(apascual): Need to adjust these 3 fields since they need to
