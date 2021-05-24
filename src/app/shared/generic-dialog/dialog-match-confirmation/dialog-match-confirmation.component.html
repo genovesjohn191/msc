@@ -4,7 +4,7 @@
 
 <div mat-dialog-content>
   <ng-container *ngIf="isMessageTemplate; else messageTemplate">
-    <ng-container *ngTemplateOutlet="dialogData?.message"></ng-container>
+    <ng-container *ngTemplateOutlet="dialogData?.message; context: { $implicit: dialogData?.data }"></ng-container>
   </ng-container>
   <ng-template #messageTemplate>
     <span [innerHTML]="dialogData?.message"></span>

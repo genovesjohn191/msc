@@ -49,7 +49,8 @@
   <mcs-content-panel *mcsContentPanelDef>
 
     <div class="listing-table-wrapper">
-      <mcs-dynamic-form #form [config]="formConfig$ | async" (beforeDataChange)="formBeforeDataChanged($event)"></mcs-dynamic-form>
+      <mcs-dynamic-form #form [config]="formConfig$ | async"
+        (beforeDataChange)="formBeforeDataChanged($event)"></mcs-dynamic-form>
 
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="deployments-mobile-search"></mcs-search>
@@ -247,3 +248,13 @@
     </div>
   </mcs-content-panel>
 </mcs-page>
+
+<ng-template #deleteDeploymentTemplate let-data>
+  <section>
+    <span [innerHTML]="data?.message"></span>
+
+    <mcs-checkbox [(ngModel)]="data.includeDestroy">
+      {{ 'dialog.terraformDeploymentDelete.destroyAndDelete' | translate }}
+    </mcs-checkbox>
+  </section>
+</ng-template>

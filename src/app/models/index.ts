@@ -143,6 +143,7 @@ export * from './request/mcs-system-message-validate';
 export * from './request/mcs-terraform-deployment-create';
 export * from './request/mcs-terraform-deployment-update';
 export * from './request/mcs-terraform-deployment-create-activity';
+export * from './request/mcs-terraform-deployment-delete';
 export * from './request/mcs-ticket-create';
 export * from './request/mcs-ticket-create-attachment';
 export * from './request/mcs-ticket-create-comment';

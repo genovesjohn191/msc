@@ -3336,6 +3336,7 @@
     "terraformDeploymentDelete": {
       "title": "Delete Deployment",
       "message": "Deleting <strong>{{name}}</strong> deployment will orphan the deployed resources in Azure.\r\n\nIf you wish to destroy the associated Azure resources destroy them first from the <a href='{{deploymentUrl}}' target='_blank'>deployment view</a>?",
+      "destroyAndDelete": "Destroy + Delete",
       "placeholder": "Type the name of the deployment here..."
     },
     "terraformDeploymentChangeTag": {
