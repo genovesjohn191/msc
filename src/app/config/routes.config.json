@@ -8,7 +8,7 @@
     "enumKey": "LaunchPad",
     "navigationPath": "launch-pad",
     "documentTitle": "LAUNCH Pad",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadSearch": {
@@ -16,7 +16,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/search",
     "documentTitle": "LAUNCH Pad - Search",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadWorkflows": {
@@ -24,7 +24,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/workflows",
     "documentTitle": "LAUNCH Pad - Workflows",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadWorkflowLaunch": {
@@ -32,7 +32,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/workflows/launch",
     "documentTitle": "LAUNCH Pad - Launch",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadAzureDeployments": {
@@ -40,7 +40,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments",
     "documentTitle": "LAUNCH Pad - Azure Deployments",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -49,7 +49,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments/create",
     "documentTitle": "LAUNCH Pad - Create Azure Deployment",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -58,7 +58,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments",
     "documentTitle": "LAUNCH Pad - Azure Deployment Details",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -67,7 +67,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "overview",
     "documentTitle": "LAUNCH Pad - Azure Deployment Overview",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -76,7 +76,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "history",
     "documentTitle": "LAUNCH Pad - Azure Deployment History",
-    "requiredPermissions": ["RawDataView"],
+    "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },

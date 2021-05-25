@@ -86,7 +86,7 @@
               <small>{{ log.message }}</small>
             </mcs-cta-list-action>
           </mcs-cta-list-panel>
-          <div *mcsAccessControl="['RawDataView'];">
+          <div *mcsAccessControl="['InternalEngineerAccess'];">
             <div *ngIf="validReferenceObject(task.referenceObject)">
               <h3>Response</h3>
               <mcs-json-viewer [obj]="clone(task.referenceObject)"></mcs-json-viewer>

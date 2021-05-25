@@ -1,6 +1,6 @@
 export enum McsPermission {
   // Engineer
-  RawDataView = 'RawDataView',
+  InternalEngineerAccess = 'InternalEngineerAccess',
 
   // Cloud VM
   CloudVmAccess = 'CloudVmAccess',

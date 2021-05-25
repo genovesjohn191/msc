@@ -73,7 +73,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
 
   public get showLogs(): boolean {
     let hasAccessToLogs: boolean = !isNullOrEmpty(this._accessControlService)
-      && this._accessControlService.hasPermission([McsPermission.RawDataView]);
+      && this._accessControlService.hasPermission([McsPermission.InternalEngineerAccess]);
     return hasAccessToLogs;
   }
 
