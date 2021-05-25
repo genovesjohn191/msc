@@ -341,6 +341,7 @@ export * from './common/mcs-rightsizing-query-params';
 export * from './common/mcs-vdc-storage-query-params';
 export * from './common/mcs-state-notification';
 export * from './common/mcs-cloudhealth-option';
+export * from './common/mcs-azure-resources-info';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

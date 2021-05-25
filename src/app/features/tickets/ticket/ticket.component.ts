@@ -2,13 +2,17 @@ import { saveAs } from 'file-saver';
 import {
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   finalize,
   map,
-  shareReplay
+  shareReplay,
+  takeUntil
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   ChangeDetectionStrategy,
@@ -30,25 +34,33 @@ import {
   McsTicketAttachment,
   McsTicketCreateAttachment,
   McsTicketCreateComment,
-  TicketType
+  TicketType,
+  McsFeatureFlag,
+  McsAzureResourcesInfo,
+  McsAzureResource
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
+import { McsAccessControlService } from '@app/core';
 
 @Component({
   selector: 'mcs-ticket',
   templateUrl: './ticket.component.html',
+  styleUrls: ['./ticket.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class TicketComponent implements OnInit, OnDestroy {
 
   public selectedTicket$: Observable<McsTicket>;
+  public isAzureResourcesLoading: boolean;
+  public ticketAzureResources: McsAzureResourcesInfo[];
 
   private _downloadingIdList: Set<string>;
   private _ticketDetailsChange = new Subject<void>();
@@ -56,10 +68,12 @@ export class TicketComponent implements OnInit, OnDestroy {
   private _ticketsDataChangeHandler: Subscription;
 
   public constructor(
+    private _accessControlService: McsAccessControlService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _activatedRoute: ActivatedRoute,
     private _apiService: McsApiService,
-    private _eventDispatcher: EventBusDispatcherService
+    private _eventDispatcher: EventBusDispatcherService,
+    private _translateService: TranslateService
   ) {
     this._downloadingIdList = new Set();
   }
@@ -81,6 +95,10 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get resourceNotFoundText(): string {
+    return this._translateService.instant('ticket.resourceNotFound');
   }
 
   /**
@@ -105,6 +123,13 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public isDownloading(attachmentId: string): boolean {
     return this._downloadingIdList.has(attachmentId);
+  }
+
+  public showAzureSlg(azureSlg: string): boolean {
+    let hasAzureSlgFeatureEnabled = this._accessControlService.hasAccessToFeature(McsFeatureFlag.AzureSlgTicket);
+    let hasAzureSlgValue = !isNullOrEmpty(azureSlg);
+    let showAzureSlgLabel =  hasAzureSlgFeatureEnabled && hasAzureSlgValue;
+    return showAzureSlgLabel;
   }
 
   /**
@@ -187,9 +212,52 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   private _subscribeToTicketResolve(): void {
     this.selectedTicket$ = this._activatedRoute.data.pipe(
-      map((resolver) => getSafeProperty(resolver, (obj) => obj.ticket)),
+      map((resolver) => {
+        let ticketDetails = getSafeProperty(resolver, (obj) => obj.ticket);
+        this._getAzureResources(ticketDetails.azureResources)
+        return ticketDetails;
+      }),
       shareReplay(1)
     );
+  }
+
+  private _getAzureResources(ticketResources: string[]): void {
+    if (ticketResources.length === 0)  { return; }
+    this.isAzureResourcesLoading = true;
+    this._apiService.getAzureResources().pipe(
+      catchError((error) => {
+        this.isAzureResourcesLoading = false;
+        this.ticketAzureResources = this._createAzureResourcesObject(ticketResources);
+        this._changeDetectorRef.markForCheck();
+        return throwError(error);
+      }),
+      takeUntil(this._destroySubject),
+      shareReplay(1)
+    ).subscribe((resourcesCollection) => {
+      this.isAzureResourcesLoading = false;
+      let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
+      this.ticketAzureResources = this._createAzureResourcesObject(ticketResources, resources);
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  private _createAzureResourcesObject(ticketResources: string[], resources?: McsAzureResource[]): McsAzureResourcesInfo[] {
+    let azureResources: McsAzureResourcesInfo[] = [];
+    ticketResources.forEach((ticketResource) => {
+      if (!isNullOrEmpty(resources)) {
+        let resourceFound = resources.find((resource) => resource.azureId === ticketResource);
+        azureResources.push(createObject(McsAzureResourcesInfo, {
+          name: resourceFound ? resourceFound.name : ticketResource,
+          resourceGroup: resourceFound ? `Resource Group: ${resourceFound.resourceGroupName}` : this.resourceNotFoundText
+        }));
+      } else {
+        azureResources.push(createObject(McsAzureResourcesInfo, {
+          name: ticketResource, // azure ID
+          resourceGroup: this.resourceNotFoundText
+        }));
+      }
+    })
+    return azureResources;
   }
 
   /**

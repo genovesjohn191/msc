@@ -1,0 +1,23 @@
+@import "../../../../styles/shared/base";
+
+.azure-resource-container {
+  margin-top: $space-medium;
+
+  mcs-item {
+    display: inline-block;
+    word-break: break-word;
+    margin: 0 0 $space-medium 0;
+
+    span {
+      margin: 0;
+
+      &.group-name {
+        display: block;
+      }
+    }
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}

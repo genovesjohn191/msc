@@ -21,7 +21,7 @@
       <!-- Ticket description -->
       <mcs-presentation-panel mcsId="ticket-description">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'ticket.description' | translate }}</h2>
+          <h2>{{ 'label.description' | translate }}</h2>
         </ng-container>
         <p><strong >{{ selectedTicket.shortDescription }}</strong></p>
         <p text-pre-wrap>{{ selectedTicket.description }}</p>
@@ -30,31 +30,31 @@
       <!-- Ticket details -->
       <mcs-presentation-panel mcsId="ticket-details">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'ticket.information' | translate }}</h2>
+          <h2>{{ 'label.information' | translate }}</h2>
         </ng-container>
 
         <mcs-grid>
           <mcs-grid-row>
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ 'ticket.requestor' | translate }}:</span>
+                <span>{{ 'label.requestor' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.requestor | mcsDataLabel"></span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'ticket.createdDate' | translate }}:</span>
+                <span>{{ 'label.createdDate' | translate }}:</span>
                 <span>{{ selectedTicket.createdOn | mcsStdDateFormat }}</span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'ticket.customerReference' | translate }}:</span>
+                <span>{{ 'label.customerReference' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.customerReference | mcsDataLabel: 'None'"></span>
               </mcs-item>
             </mcs-grid-column>
 
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ 'ticket.status' | translate }}:</span>
+                <span>{{ 'label.status' | translate }}:</span>
                 <mcs-icon *ngIf="selectedTicket.resolved" [key]="checkIconKey" size="small"></mcs-icon>
                 <span [innerHTML]="selectedTicket.stateLabel | mcsDataLabel"></span>
                 <span *ngIf="selectedTicket.resolved">
@@ -63,8 +63,13 @@
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'ticket.type' | translate }}:</span>
+                <span>{{ 'label.type' | translate }}:</span>
                 <span>{{ getTicketTypeString(selectedTicket.type) }}</span>
+              </mcs-item>
+
+              <mcs-item *ngIf="showAzureSlg(selectedTicket.azureSlg)">
+                <span>{{ 'label.azureResponseSlg' | translate }}:</span>
+                <span>{{ selectedTicket.azureSlg }}</span>
               </mcs-item>
             </mcs-grid-column>
           </mcs-grid-row>
@@ -74,20 +79,20 @@
       <!-- Ticket closure details -->
       <mcs-presentation-panel *ngIf="selectedTicket.closed" mcsId="ticket-closure-details">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'ticket.closureDetails' | translate }}</h2>
+          <h2>{{ 'label.closureDetails' | translate }}</h2>
         </ng-container>
 
         <mcs-grid>
           <mcs-grid-row>
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ 'ticket.closureDate' | translate }}:</span>
+                <span>{{ 'label.closureDate' | translate }}:</span>
                 <span [innerHTML]="(selectedTicket.closureInformation?.closedAt |
                   mcsStdDateFormat) | mcsDataLabel"></span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'ticket.closureNotes' | translate }}:</span>
+                <span>{{ 'label.closureNotes' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.closureInformation?.closeNotes |
                   mcsDataLabel: 'None'"></span>
               </mcs-item>
@@ -95,13 +100,13 @@
 
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ 'ticket.rootCause' | translate }}:</span>
+                <span>{{ 'label.rootCause' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.closureInformation?.closeProblem |
                   mcsDataLabel: 'None'"></span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'ticket.resolution' | translate }}:</span>
+                <span>{{ 'label.resolution' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.closureInformation?.closeResolution |
                   mcsDataLabel: 'None'"></span>
               </mcs-item>
@@ -116,9 +121,10 @@
           <mcs-grid-column sizeSm="12" mcsId="ticket-services">
             <mcs-presentation-panel>
               <ng-container mcsPresentationPanelHeader>
-                <h2>{{ 'ticket.services' | translate }}</h2>
+                <h2>{{ 'label.services' | translate }}</h2>
               </ng-container>
-
+              
+              <!-- Service ID -->
               <ng-container *ngIf="selectedTicket.serviceId | mcsIsNotNullOrEmpty; else noServices">
                 <mcs-list spacing="auto">
                   <mcs-list-item *ngFor="let service of selectedTicket.serviceId">
@@ -132,13 +138,27 @@
                   {{ 'ticket.missingServicesLabel' | translate }}
                 </mcs-data-status-empty>
               </ng-template>
+
+              <!-- Azure Resources -->
+              <div class="azure-resource-container">
+                <ng-container *ngIf="isAzureResourcesLoading">
+                  <mcs-loader size="small" align="left"></mcs-loader>
+                </ng-container>
+                <ng-container  *ngIf="ticketAzureResources">
+                  <h6>{{ 'label.azureResources' | translate }}</h6>
+                  <mcs-item *ngFor="let azureResource of ticketAzureResources">
+                    <span>{{ azureResource.name }} </span>
+                    <span class="group-name" read-only>({{ azureResource.resourceGroup }})</span>
+                  </mcs-item>
+                </ng-container>
+              </div>
             </mcs-presentation-panel>
           </mcs-grid-column>
 
           <mcs-grid-column sizeSm="12" mcsId="ticket-attachments">
             <mcs-presentation-panel>
               <ng-container mcsPresentationPanelHeader>
-                <h2>{{ 'ticket.attachments' | translate }}</h2>
+                <h2>{{ 'label.attachments' | translate }}</h2>
               </ng-container>
 
               <ng-container *ngIf="selectedTicket.attachments | mcsIsNotNullOrEmpty; else noAttachments">
@@ -171,7 +191,7 @@
             <!-- Ticket Activities -->
             <mcs-presentation-panel mcsId="ticket-activities">
               <ng-container mcsPresentationPanelHeader>
-                <h2>{{ 'ticket.activity' | translate }}</h2>
+                <h2>{{ 'label.activity' | translate }}</h2>
               </ng-container>
 
               <ng-container *mcsAccessControl="['TicketCommentCreate']">

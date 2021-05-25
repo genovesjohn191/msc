@@ -60,6 +60,12 @@ export class McsTicket extends McsEntityBase {
   @JsonProperty()
   public updatedBy: string = undefined;
 
+  @JsonProperty()
+  public azureResources: string[] = undefined;
+
+  @JsonProperty()
+  public azureSlg: string = undefined;
+
   @JsonProperty({ target: McsTicketClosureInformation })
   public closureInformation: McsTicketClosureInformation = undefined;
 
