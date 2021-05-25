@@ -143,8 +143,15 @@
                 <p>
                   The default variables for this version of the attached module. Use these variables as a reference when populating or overriding variables in the <a mcsCursor="pointer"
                   display-inline-block
-                  orientation="block"(click)="viewTemplateVariable = false">Deployment Variables</a>. <a mcsCursor="pointer"
-                  display-inline-block orientation="block" style="float:right"  [cdkCopyToClipboard]="templateVariables" (click)="contentCopied()">{{ 'action.copyToClipboard' | translate }}</a>
+                  orientation="block"(click)="viewTemplateVariable = false">Deployment Variables</a>.
+
+                  <a mcsCursor="pointer"
+                    display-inline-block
+                    orientation="block"
+                    style="float:right"
+                    [cdkCopyToClipboard]="templateVariables"
+                    (click)="contentCopied()">{{ 'action.copyToClipboard' | translate }}
+                  </a>
                 </p>
                 <mcs-code-editor-form-field
                   [(ngModel)]="templateVariables"

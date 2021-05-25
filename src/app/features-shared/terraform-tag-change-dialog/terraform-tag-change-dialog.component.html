@@ -21,13 +21,14 @@
   </mat-form-field>
 
   <div *ngIf="valid">
+    <span>Default variables for tag <strong>{{ data.newTag.name }}</strong></span>
+    <mcs-code-editor-form-field [value]="data.newTag.tfvars" disabled>
+    </mcs-code-editor-form-field>
+    <br />
     <div class="warning">
       <mcs-icon [key]="warningIconKey" size="large"></mcs-icon>
       <small>{{ 'dialog.terraformDeploymentChangeTag.warning' | translate }}</small>
     </div>
-
-    <mcs-code-editor-form-field [value]="data.newTag.tfvars">
-    </mcs-code-editor-form-field>
   </div>
 
 </div>
