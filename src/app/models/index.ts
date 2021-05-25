@@ -96,6 +96,7 @@ export * from './enumerations/terraform-deployment-status.enum';
 export * from './enumerations/azure-service-request-type.enum';
 export * from './enumerations/period-range.enum';
 export * from './enumerations/cloudhealth-management-tag.enum';
+export * from './enumerations/install-base-state.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -150,6 +151,7 @@ export * from './request/mcs-ticket-create-comment';
 export * from './request/mcs-resource-catalog-item-create';
 export * from './request/mcs-workflow-create';
 export * from './request/mcs-catalog-enquiry-request';
+export * from './request/mcs-network-dns-record-request';
 
 /** Response */
 export * from './response/mcs-availability-zone';

@@ -1,19 +1,15 @@
 import { JsonProperty } from '@app/utilities';
-import { McsNetworkDnsBase } from './mcs-network-dns-base';
+
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsNetworkDnsRrSets } from './mcs-network-dns-rrsets';
 
-export class McsNetworkDnsZone extends McsNetworkDnsBase {
+export class McsNetworkDnsZone extends McsEntityBase {
+  @JsonProperty()
+  public name: string = undefined;
 
-    @JsonProperty()
-    public serviceId: string = undefined;
+  @JsonProperty()
+  public ttlSeconds: number = undefined;
 
-    @JsonProperty()
-    public name: string = undefined;
-
-    @JsonProperty()
-    public ttlSeconds: number = undefined;
-
-    @JsonProperty()
-    public rrsets: Array<McsNetworkDnsRrSets> = undefined;
-
+  @JsonProperty({ target: McsNetworkDnsRrSets })
+  public rrsets: McsNetworkDnsRrSets[] = undefined;
 }

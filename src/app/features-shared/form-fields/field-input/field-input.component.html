@@ -1,0 +1,8 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ displayedLabel }}</mat-label>
+
+  <input matInput
+    [formControl]="ngControl?.control">
+
+  <mat-error mcsFieldErrorMessage="input">{{ displayedErrorMessage }}</mat-error>
+</mat-form-field>

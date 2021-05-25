@@ -6,6 +6,7 @@ import { AddOnInviewComponent } from './addon-inview/addon-inview';
 import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
 import { ContextMenuLinkComponent } from './context-menu-link/context-menu-link.component';
 import { ContextualCatalogLinkComponent } from './contextual-catalog-link/mcs-contextual-catalog-link.component';
+import { DnsZoneManageComponent } from './dns-zone-manage/dns-zone-manage.component';
 import { EnquiryFormComponent } from './enquiry-form/enquiry-form.component';
 import { FormFieldsModule } from './form-fields/form-fields.module';
 import { HelpWidgetComponent } from './help-widget/help-widget.component';
@@ -28,9 +29,7 @@ import { StepManualOrderCompletedComponent } from './step-manual-order-completed
 import { StepOrderDetailsComponent } from './step-order-details/step-order-details.component';
 import { StepProvisioningComponent } from './step-provisioning/step-provisioning.component';
 import { SystemMessageFormComponent } from './system-message-form/system-message-form.component';
-import {
-  TerraformDeploymentRenameDialogComponent
-} from './terraform-deployment-rename-dialog/terraform-deployment-rename-dialog.component';
+import { TerraformDeploymentRenameDialogComponent } from './terraform-deployment-rename-dialog/terraform-deployment-rename-dialog.component';
 import { TerraformTagChangeDialogComponent } from './terraform-tag-change-dialog/terraform-tag-change-dialog.component';
 import { VdcManageScaleComponent } from './vdc-manage-scale/vdc-manage-scale.component';
 import { VdcManageStorageComponent } from './vdc-manage-storage/vdc-manage-storage.component';
@@ -64,6 +63,7 @@ const exportedComponents = [
   SmacSharedFormComponent,
   InternetManagePortPlanComponent,
   ContextMenuLinkComponent,
+  DnsZoneManageComponent,
 
   EnquiryFormComponent
 ];

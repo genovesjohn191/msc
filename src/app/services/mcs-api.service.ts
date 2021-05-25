@@ -120,6 +120,8 @@ import {
   McsJobConnection,
   McsKeyValue,
   McsLicense,
+  McsNetworkDnsRecordRequest,
+  McsNetworkDnsRrSetsRecord,
   McsNetworkDnsSummary,
   McsObjectCrispElement,
   McsObjectInstalledService,
@@ -446,6 +448,53 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsById'))
       )
+    );
+  }
+
+  public createNetworkDnsZoneRecord(
+    dnsId: string,
+    zoneId: string,
+    request: McsNetworkDnsRecordRequest
+  ): Observable<McsNetworkDnsRrSetsRecord> {
+    return this._networkDnsApi.createNetworkDnsZoneRecord(dnsId, zoneId, request).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createNetworkDnsZoneRecord'))
+      ),
+      // tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public updateNetworkDnsZoneRecord(
+    dnsId: string,
+    zoneId: string,
+    recordId: string,
+    request: McsNetworkDnsRecordRequest
+  ): Observable<McsNetworkDnsRrSetsRecord> {
+    // this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
+    return this._networkDnsApi.updateNetworkDnsZoneRecord(dnsId, zoneId, recordId, request).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateNetworkDnsZoneRecord'))
+      ),
+      // tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public deleteNetworkDnsZoneRecord(
+    dnsId: string,
+    zoneId: string,
+    recordId: string
+  ): Observable<boolean> {
+    // this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
+    return this._networkDnsApi.deleteNetworkDnsZoneRecord(dnsId, zoneId, recordId).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteNetworkDnsZoneRecord'))
+      ),
+      // tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

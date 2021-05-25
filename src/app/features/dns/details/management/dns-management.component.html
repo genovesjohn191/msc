@@ -6,18 +6,16 @@
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'dnsListing.details.management.dnsProperties.label' | translate }}</h2>
         </ng-container>
-        <ng-container>
+
           <mcs-item>
             <span>{{ 'dnsListing.details.management.dnsProperties.type' | translate }}</span>
-            <span>{{ isPrimary }}</span>
+            <span>{{ isPrimary(selectedDns) }}</span>
           </mcs-item>
-        </ng-container>
-        <ng-container>
+
           <mcs-item>
             <span>{{ 'dnsListing.details.management.dnsProperties.zoneCount' | translate }}</span>
-            <span>{{ zoneCount }}</span>
+            <span>{{ selectedDns.zoneCount }}</span>
           </mcs-item>
-        </ng-container>
       </mcs-presentation-panel>
     </mcs-grid-column>
 
@@ -27,14 +25,12 @@
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'dnsListing.details.management.serviceInformation.label' | translate }}</h2>
         </ng-container>
-        <ng-container>
-          <div>
-            <span>{{ 'dnsListing.details.management.serviceInformation.serviceId' | translate }}</span>
-            <span>{{ selectedDns?.serviceId }}</span>
-          </div>
-        </ng-container>
+
+        <div>
+          <span>{{ 'dnsListing.details.management.serviceInformation.serviceId' | translate }}</span>
+          <span>{{ selectedDns?.serviceId }}</span>
+        </div>
       </mcs-presentation-panel>
     </mcs-grid-column>
   </mcs-grid-row>
 </ng-container>
-  

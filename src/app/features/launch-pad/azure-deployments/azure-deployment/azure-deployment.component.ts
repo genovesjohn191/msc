@@ -259,9 +259,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   private _subscribeToResolve(): void {
     this.deployment$ = this._activatedRoute.data.pipe(
-      map((resolver) => {
-        return getSafeProperty(resolver, (obj) => obj.deployment);
-      }),
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.deployment)),
       tap((deployment) => {
         if (isNullOrEmpty(deployment)) { return; }
         this._deploymentService.setDeploymentDetails(deployment);

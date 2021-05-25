@@ -1,17 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SharedModule } from '@app/shared';
 import { FeaturesSharedModule } from '@app/features-shared';
+import { SharedModule } from '@app/shared';
 
-import { dnsProviders, dnsRoutes } from './dns-listing.constants';
-import { DnsListingComponent } from './dns-listing.component';
 import { DnsDetailsComponent } from './details/dns-details.component';
 import { DnsManagementComponent } from './details/management/dns-management.component';
+import { DnsZonesComponent } from './details/zones/dns-zones.component';
+import { DnsListingComponent } from './dns-listing.component';
+import {
+  dnsProviders,
+  dnsRoutes
+} from './dns-listing.constants';
+
 @NgModule({
   declarations: [
     DnsListingComponent,
     DnsDetailsComponent,
-    DnsManagementComponent
+    DnsManagementComponent,
+    DnsZonesComponent
   ],
   imports: [
     SharedModule,

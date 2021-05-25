@@ -3111,6 +3111,8 @@
     "zoneCount": "Zones"
   },
   "label": {
+    "primary": "Primary",
+    "secondary": "Secondary",
     "activity": "Activity",
     "additionalNotesOptional": "Additional Notes (optional)",
     "attachments": "Attachments",

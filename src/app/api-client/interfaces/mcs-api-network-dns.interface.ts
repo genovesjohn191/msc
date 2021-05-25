@@ -1,8 +1,11 @@
 import { Observable } from 'rxjs';
+
 import {
   McsApiSuccessResponse,
+  McsNetworkDnsRecordRequest,
+  McsNetworkDnsRrSetsRecord,
   McsNetworkDnsSummary,
-  McsQueryParam,
+  McsQueryParam
 } from '@app/models';
 
 export interface IMcsApiNetworkDnsService {
@@ -18,4 +21,23 @@ export interface IMcsApiNetworkDnsService {
    * @param id id of the network dns
    */
   getNetworkDnsById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsSummary>>;
+
+  createNetworkDnsZoneRecord(
+    dnsId: string,
+    zoneId: string,
+    request: McsNetworkDnsRecordRequest
+  ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>>;
+
+  updateNetworkDnsZoneRecord(
+    dnsId: string,
+    zoneId: string,
+    recordId: string,
+    request: McsNetworkDnsRecordRequest
+  ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>>;
+
+  deleteNetworkDnsZoneRecord(
+    dnsId: string,
+    zoneId: string,
+    recordId: string
+  ): Observable<McsApiSuccessResponse<boolean>>;
 }

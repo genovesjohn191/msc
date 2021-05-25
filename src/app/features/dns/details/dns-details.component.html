@@ -1,4 +1,4 @@
-<mcs-page leftPanelExpandedByDefault="true" [header]="pageHeader">
+<mcs-page leftPanelExpandedByDefault="true" [header]="(selectedDns$ | async)?.billingDescription">
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="'dnsListing.leftPanelHeader' | translate">
     <mcs-left-panel-item *mcsLeftPanelItemDef>
@@ -7,19 +7,19 @@
 
         <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
           <ng-container *mcsListPanelContent="let entity">
-              <a *ngIf="entity.billingDescription"
-                [mcsRouterLink]="[routeKeyEnum.DnsDetails, entity.id]"
-                mcsId="select-dns"
-                mcsEventTracker="select-dns"
-                mcsEventCategory="dns"
-                mcsEventLabel="dns-details-panel">
-                <mcs-option [value]="entity"
-                [selected]="selectedDnsId === entity.id">
-                  <mcs-item>
-                    <span>{{ entity.billingDescription }}</span>
-                  </mcs-item>
-                </mcs-option>
-              </a>
+            <a *ngIf="entity.billingDescription"
+              [mcsRouterLink]="[routeKeyEnum.DnsDetails, entity.id]"
+              mcsId="select-dns"
+              mcsEventTracker="select-dns"
+              mcsEventCategory="dns"
+              mcsEventLabel="dns-details-panel">
+
+              <mcs-option [value]="entity" [selected]="selectedDnsId === entity.id">
+                <mcs-item>
+                  <span>{{ entity.billingDescription }}</span>
+                </mcs-item>
+              </mcs-option>
+            </a>
           </ng-container>
         </mcs-list-panel>
       </div>
@@ -28,7 +28,7 @@
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper" *mcsComponentHandler>
-      <ng-container>
+      <ng-container *ngIf="selectedDns$ | async as selectedDns">
 
         <mcs-tab-group>
           <!-- Management Tab -->
@@ -36,38 +36,37 @@
           </mcs-tab>
 
           <!-- Zones Tab -->
-          <!-- <ng-container *ngIf="isPrimaryDns">
-            <mcs-tab [label]="'dnsListing.details.zones.tabName' | translate" id="services">
-            </mcs-tab>
+          <!-- <ng-container *ngIf="selectedDns.isPrimary">
+            <mcs-tab [label]="'dnsListing.details.zones.tabName' | translate" id="services"></mcs-tab>
           </ng-container> -->
 
           <!-- Action tab -->
           <ng-container mcsTabHeaderCustom>
-            <button [hidden]="!hasRequestChangeAndTicketCreateAccess(selectedDns$ | async)"
+            <button [hidden]="!hasRequestChangeAndTicketCreateAccess(selectedDns)"
               mcsButton="icon" mcsId="dns-action"  mcsAlign="end"
               #popoverActionElement="mcsPopover" [autoCalculatePosition]="false"
               mcsPopover placement="bottom" orientation="left"
               theme="light" padding="none" [content]="actionContent">
               <mcs-icon [key]="cogIconKey" size="large"></mcs-icon>
             </button>
+
             <ng-template #actionContent>
-              <ng-container *ngIf="hasServiceChangeAccess(selectedDns$ | async)">
-                  <div *mcsAccessControl="['OrderEdit']"
-                    class="cog-actions-wrapper">
-                    <a mcsButton="basic" color="white" labelPlacement="left"
-                      [href]="onRequestChange(selectedDns$ | async)"
-                      mcsId="dns-details-request-change"
-                      mcsEventTracker="dns-details-request-change"
-                      mcsEventCategory="dnsDetails"
-                      mcsEventLabel="dns-details-page">
-                      {{ 'dnsListing.requestChange' | translate }}
-                    </a>
+              <ng-container *ngIf="hasServiceChangeAccess(selectedDns)">
+                <div class="cog-actions-wrapper">
+                  <a mcsButton="basic" color="white" labelPlacement="left"
+                    [href]="onRequestChange(selectedDns)"
+                    mcsId="dns-details-request-change"
+                    mcsEventTracker="dns-details-request-change"
+                    mcsEventCategory="dnsDetails"
+                    mcsEventLabel="dns-details-page">
+                    {{ 'dnsListing.requestChange' | translate }}
+                  </a>
                 </div>
               </ng-container>
-              <div *mcsAccessControl="['TicketCreate']"
-                class="cog-actions-wrapper">
+
+              <div *mcsAccessControl="['TicketCreate']" class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
-                  [href]="onRaiseTicket(selectedDns$ | async)"
+                  [href]="onRaiseTicket(selectedDns)"
                   mcsId="dns-details-raise-ticket"
                   mcsEventTracker="dns-details-raise-ticket"
                   mcsEventCategory="dnsDetails"
@@ -77,7 +76,6 @@
               </div>
             </ng-template>
           </ng-container>
-
         </mcs-tab-group>
 
         <!-- Tab content for routing tab -->

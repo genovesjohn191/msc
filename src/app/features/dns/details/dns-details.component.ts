@@ -1,4 +1,16 @@
 import {
+  of,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -7,10 +19,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   CoreRoutes,
   McsAccessControlService,
@@ -28,39 +37,27 @@ import {
 import { McsApiService } from '@app/services';
 import { ComponentHandlerDirective } from '@app/shared';
 import {
-  CommonDefinition,
   compareStrings,
   getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  Observable,
-  of,
-  Subject,
-  Subscription
-} from 'rxjs';
-import {
-  map,
-  shareReplay,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
-import { DnsService } from '../dns.service';
+
+import { DnsDetailsService } from './dns-details.service';
 
 type tabGroupType = 'management' | 'zones';
+
 @Component({
   selector: 'mcs-dns-details',
   templateUrl: './dns-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSummary> implements OnInit, OnDestroy {
   public selectedDns$: Observable<McsNetworkDnsSummary>;
   public selectedTabId$: Observable<string>;
-  public isPrimaryDns: boolean;
-  public pageHeader: string;
+
   private _destroySubject = new Subject<void>();
   private _routerHandler: Subscription;
 
@@ -73,7 +70,7 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
     _translate: TranslateService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
-    private _dnsService: DnsService,
+    private _dnsDetailsService: DnsDetailsService,
     private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
   ) {
@@ -89,9 +86,8 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
   }
 
   public ngOnInit() {
-    this._subscribeToParamChange();
+    // this._subscribeToParamChange();
     this._subscribeToDnsResolver();
-    this._subscribeToSelectedDns();
     this.listViewDatasource.registerSortPredicate(this._sortDnsPredicate.bind(this));
   }
 
@@ -104,7 +100,7 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
   public onTabChanged(tab: any) {
     this._navigationService.navigateTo(
       RouteKey.DnsDetails,
-      [this._dnsService.getDnsId(), tab.id as tabGroupType]
+      [this._dnsDetailsService.getDnsDetailsId(), tab.id as tabGroupType]
     );
   }
 
@@ -117,14 +113,14 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
   }
 
   public get selectedDnsId(): string {
-    return this._dnsService.getDnsId();
+    return this._dnsDetailsService.getDnsDetailsId();
   }
 
   public hasServiceChangeAccess(dns: McsNetworkDnsSummary) {
     return (dns.isPrimary && dns.serviceChangeAvailable) &&
-            this._accessControlService.hasPermission([
-              'OrderEdit'
-            ]);
+      this._accessControlService.hasPermission([
+        'OrderEdit'
+      ]);
   }
 
   public hasRequestChangeAndTicketCreateAccess(dns: McsNetworkDnsSummary) {
@@ -162,32 +158,29 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
       map((resolver) => getSafeProperty(resolver, (obj) => obj.dns) as McsNetworkDnsSummary),
       tap((dns) => {
         if (isNullOrEmpty(dns)) { return; }
-        this.isPrimaryDns = dns.isPrimary;
-        this.pageHeader = dns.billingDescription;
-        this._dnsService.setDnsDetails(dns);
+        // this.isPrimaryDns = dns.isPrimary;
+        // this.pageHeader = dns.billingDescription;
+        this._dnsDetailsService.setDnsDetails(dns);
       }),
       shareReplay(1)
     );
   }
 
-  private _subscribeToParamChange(): void {
-    this._activatedRoute.paramMap.pipe(
-      takeUntil(this._destroySubject),
-      tap((params: ParamMap) => {
-        let dnsId = params.get('id');
-        if (isNullOrEmpty(dnsId)) { return; }
-        this._resetManagementState();
-        this._dnsService.setDnsId(dnsId);
-      })
-    ).subscribe();
-  }
+  // private _subscribeToParamChange(): void {
+  //   this._activatedRoute.paramMap.pipe(
+  //     takeUntil(this._destroySubject),
+  //     tap((params: ParamMap) => {
+  //       let dnsId = params.get('id');
+  //       if (isNullOrEmpty(dnsId)) { return; }
+
+  //       this._resetManagementState();
+  //       this._dnsDetailsService.setDnsId(dnsId);
+  //     })
+  //   ).subscribe();
+  // }
 
   private _sortDnsPredicate(first: McsNetworkDnsSummary, second: McsNetworkDnsSummary): number {
     return compareStrings(first.billingDescription, second.billingDescription);
-  }
-
-  private _subscribeToSelectedDns() : void {
-    this.selectedDns$.subscribe();
   }
 
   private _registerEvents(): void {
