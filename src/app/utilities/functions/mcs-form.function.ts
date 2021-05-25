@@ -4,7 +4,11 @@ import {
   FormGroupDirective,
   NgForm
 } from '@angular/forms';
-import { getSafeProperty } from './mcs-object.function';
+
+import {
+  getSafeProperty,
+  isNullOrUndefined
+} from './mcs-object.function';
 
 /**
  * This will validate if the control is valid when it is already touched.
@@ -33,11 +37,15 @@ export function defaultErrorStateMatcher(control: FormControl, form: FormGroupDi
  */
 export function getSafeFormValue<T>(
   formControl: FormControl,
-  predicateOperator: (x: FormControl) => T,
+  predicateOperator?: (x: FormControl) => T,
   valueIfFail: any = null
 ): T {
-  let isFormControlIncluded = formControl && formControl.enabled;
-  return isFormControlIncluded ?
+  let isFormControlEnabled = formControl && formControl.enabled;
+  if (isNullOrUndefined(predicateOperator)) {
+    predicateOperator = obj => obj.value;
+  }
+
+  return isFormControlEnabled ?
     getSafeProperty(formControl, predicateOperator) :
     valueIfFail;
 }

@@ -43,8 +43,16 @@ export abstract class FormFieldBaseComponent2<TValue>
 
   @Input()
   public set size(value: McsSizeType) {
-    this._updateFormControlSize(value);
-    this._oldSize = value;
+    if (this._size === value) { return; }
+    this._size = value;
+    this._updateFormControlState();
+  }
+
+  @Input()
+  public set readonlyElement(value: boolean) {
+    if (this._readonlyElement === value) { return; }
+    this._readonlyElement = value;
+    this._updateFormControlState();
   }
 
   @Input()
@@ -82,6 +90,9 @@ export abstract class FormFieldBaseComponent2<TValue>
   protected destroySubject = new Subject<void>();
 
   private _disabledElement: boolean;
+  private _readonlyElement: boolean;
+  private _size: McsSizeType;
+
   private _oldSize: McsSizeType;
   private _customControls: Array<FormControl>;
   private _customValidators: Array<ValidatorFn>;
@@ -158,6 +169,14 @@ export abstract class FormFieldBaseComponent2<TValue>
     this._disabledElement = isDisabled;
   }
 
+  public registerCustomControls(...controls: FormControl[]): void {
+    this._customControls = controls;
+  }
+
+  public registerCustomValidators(...validatorFn: ValidatorFn[]): void {
+    this._customValidators = validatorFn;
+  }
+
   private _forwardNgControlStateToCustom(): void {
     if (isNullOrEmpty(this.ngControl)) { return; }
 
@@ -181,35 +200,49 @@ export abstract class FormFieldBaseComponent2<TValue>
     });
   }
 
-  private _updateFormControlSize(newSize: McsSizeType): void {
+  private _updateFormControlState(): void {
     let hostElement = this.elementRef.nativeElement;
     if (isNullOrUndefined(hostElement)) { return; }
 
     this.ngZone.onStable.pipe(
       take(1),
       tap(() => {
-        this._updateAssociatedFormFieldSize(hostElement, newSize);
+        let formFields = this._getFormFieldElements(hostElement);
+        if (isNullOrEmpty(formFields)) { return; }
+
+        this._updateAssociatedFormFieldSize(formFields);
+        this._updateAssociatedFormFieldReadonlyState(formFields);
       })
     ).subscribe();
   }
 
-  private _updateAssociatedFormFieldSize(
-    hostElement: HTMLElement,
-    newSize: McsSizeType
-  ): void {
-    let formFields = hostElement.querySelectorAll('mat-form-field');
-    if (isNullOrEmpty(formFields)) { return; }
+  private _getFormFieldElements(hostElement: HTMLElement): NodeListOf<Element> {
+    return hostElement.querySelectorAll('mat-form-field');
+  }
+
+  private _updateAssociatedFormFieldReadonlyState(formFields: NodeListOf<Element>): void {
+    let readonlyClass = `mcs-form-field-readonly`;
 
     formFields.forEach(formField => {
-      let oldClassSize = `mcs-form-field-${this._oldSize}`;
-      let newClassSize = `mcs-form-field-${newSize}`;
-
-      let hasOldClassSize = formField.classList.contains(oldClassSize);
-      if (hasOldClassSize) {
-        formField.classList.replace(oldClassSize, newClassSize);
+      let hasOldSize = formField.classList.contains(readonlyClass);
+      if (hasOldSize && !this._readonlyElement) {
+        formField.classList.replace(readonlyClass, '');
         return;
       }
-      formField.classList.add(newClassSize);
+      if (!this._readonlyElement) { return; }
+      formField.classList.add(readonlyClass);
+    });
+  }
+
+  private _updateAssociatedFormFieldSize(formFields: NodeListOf<Element>): void {
+    let formFieldSizeClass = `mcs-form-field-size`;
+    formFields.forEach(formField => {
+      let hasOldSize = formField.classList.contains(formFieldSizeClass);
+      if (hasOldSize) {
+        formField.classList.replace(formFieldSizeClass, this._size);
+        return;
+      }
+      formField.classList.add(`${formFieldSizeClass}-${this._size}`);
     });
   }
 

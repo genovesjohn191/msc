@@ -13,7 +13,7 @@ $mcs-form-field-sizes: (
 mat-form-field.mat-form-field {
 
   @each $form-size, $form-size-value in $mcs-form-field-sizes {
-    &.mcs-form-field-#{$form-size} {
+    &.mcs-form-field-size-#{$form-size} {
       width: 100%;
       max-width: $form-size-value;
     }

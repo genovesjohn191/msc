@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
-import {
-  Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot
-} from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  Resolve,
+  RouterStateSnapshot
+} from '@angular/router';
 import {
   McsApiErrorContext,
   McsNetworkDnsSummary
@@ -13,7 +14,7 @@ import {
 import { McsApiService } from '@app/services';
 
 @Injectable()
-export class DnsResolver implements Resolve<McsNetworkDnsSummary> {
+export class DnsDetailsResolver implements Resolve<McsNetworkDnsSummary> {
 
   constructor(private _apiService: McsApiService) { }
 

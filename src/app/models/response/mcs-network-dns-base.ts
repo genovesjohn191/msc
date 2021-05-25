@@ -1,8 +1,12 @@
 import { JsonProperty } from '@app/utilities';
+
 import { McsEntityBase } from '../common/mcs-entity.base';
+import {
+  InstallBaseState,
+  InstallBaseStateSerialization
+} from '../enumerations/install-base-state.enum';
 
 export class McsNetworkDnsBase extends McsEntityBase {
-
   @JsonProperty()
   public serviceId: string = undefined;
 
@@ -12,13 +16,12 @@ export class McsNetworkDnsBase extends McsEntityBase {
   @JsonProperty()
   public billingDescription: string = undefined;
 
-  @JsonProperty()
-  public installBaseState: string = undefined;
+  @JsonProperty({
+    serializer: InstallBaseStateSerialization,
+    deserializer: InstallBaseStateSerialization
+  })
+  public installBaseState: InstallBaseState = undefined;
 
   @JsonProperty()
   public serviceChangeAvailable: string = undefined;
-
-  @JsonProperty()
-  public zoneCount: number = undefined;
-
 }

@@ -1,0 +1,33 @@
+<mcs-presentation-panel mcsId="dns-zone" *ngIf="dns$ | async as dns">
+  <mcs-section>
+    <!-- <mcs-form-message #formMessage></mcs-form-message> -->
+
+    <p>
+      Select a zone below to manage its DNS records. <br>
+      Please note, record changes can take up to 72 hours to propagate.
+    </p>
+
+    <!-- Zones -->
+    <mcs-section>
+      <strong>{{ 'label.zones' | translate }}</strong>
+
+      <mcs-tab-group>
+        <ng-container *ngFor="let zone of dns.zones">
+          <mcs-tab [label]="zone.name" [id]="zone.name">
+            <mcs-section>
+              <!-- TODO(apascual): CHange the ttsl in seconds -->
+              <p>The TTL for this zone is 600 seconds. If a TTL is not specified when creating or editing a record below, this TTL will be used instead.</p>
+              <p>When adding or editing a record, all existing records of the same type will inherit that record's TTL.</p>
+
+              <strong>Records</strong>
+              <mcs-dns-zone-manage [dnsId]="dns.id" [zone]="zone"
+                (updateRequest)="onUpdateRequest($event)">
+              </mcs-dns-zone-manage>
+            </mcs-section>
+          </mcs-tab>
+        </ng-container>
+      </mcs-tab-group>
+
+    </mcs-section>
+  </mcs-section>
+</mcs-presentation-panel>
