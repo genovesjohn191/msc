@@ -17,7 +17,7 @@
 <!-- User panel content -->
 <div mcsAlign="end" class="user-panel-wrapper" *mcsExclusiveForAccount="['default', 'impersonator']">
   <ng-container *mcsExclusiveForAccount="['default']">
-    <div class="global-search" *mcsAccessControl="['RawDataView']; feature: ['EnableLaunchPad']">
+    <div class="global-search" *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableLaunchPad']">
       <mat-form-field>
         <mat-label>Search</mat-label>
         <input #searchField type="text"
