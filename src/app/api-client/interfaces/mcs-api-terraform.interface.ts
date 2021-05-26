@@ -9,7 +9,6 @@ import {
   McsTerraformDeploymentActivity,
   McsTerraformDeploymentCreate,
   McsTerraformDeploymentCreateActivity,
-  McsTerraformDeploymentDelete,
   McsTerraformDeploymentUpdate,
   McsTerraformModule,
   McsTerraformTag,
@@ -52,9 +51,8 @@ export interface IMcsApiTerraformService {
   /**
    * Delete Terraform deployment by ID (MCS API Response)
    * @param id Terraform Deployment identification
-   * @param request Terraform Delete Request Data
    */
-  deleteDeployment(id: any, request: McsTerraformDeploymentDelete): Observable<McsApiSuccessResponse<boolean>>;
+  deleteDeployment(id: any): Observable<McsApiSuccessResponse<boolean>>;
 
   /**
    * Get Terraform modules (MCS API Response)

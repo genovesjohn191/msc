@@ -12,7 +12,6 @@ import {
   McsTerraformDeploymentActivity,
   McsTerraformDeploymentCreate,
   McsTerraformDeploymentCreateActivity,
-  McsTerraformDeploymentDelete,
   McsTerraformDeploymentUpdate,
   McsTerraformModule,
   McsTerraformTag,
@@ -133,10 +132,9 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
-  public deleteDeployment(id: any, request: McsTerraformDeploymentDelete): Observable<McsApiSuccessResponse<boolean>> {
+  public deleteDeployment(id: any): Observable<McsApiSuccessResponse<boolean>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/terraform/deployments/${id}`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(request);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .pipe(
