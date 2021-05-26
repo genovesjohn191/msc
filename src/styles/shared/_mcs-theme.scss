@@ -45,7 +45,7 @@ $font-feature-setting: 'liga';
 }
 
 .mcs-overlay-theme {
-  z-index: 1250;
+  z-index: $zindex-overlay;
 }
 
 $custom-typography: mat-typography-config(
