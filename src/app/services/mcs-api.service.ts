@@ -210,7 +210,6 @@ import {
   McsTerraformDeploymentActivity,
   McsTerraformDeploymentCreate,
   McsTerraformDeploymentCreateActivity,
-  McsTerraformDeploymentDelete,
   McsTerraformDeploymentUpdate,
   McsTerraformModule,
   McsTerraformTag,
@@ -2038,10 +2037,10 @@ export class McsApiService {
     );
   }
 
-  public deleteTerraformDeployment(id: any, request: McsTerraformDeploymentDelete): Observable<boolean> {
+  public deleteTerraformDeployment(id: any): Observable<boolean> {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.TerraformDeployment, id, null, true);
 
-    return this._terraformApi.deleteDeployment(id, request).pipe(
+    return this._terraformApi.deleteDeployment(id).pipe(
       catchError((error) => {
         this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.TerraformDeployment, id);
         return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteTerraformDeployment'))

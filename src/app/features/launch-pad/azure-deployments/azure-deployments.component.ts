@@ -41,7 +41,7 @@ import {
   McsFilterInfo,
   McsStateNotification,
   McsTerraformDeployment,
-  McsTerraformDeploymentDelete,
+  McsTerraformDeploymentCreateActivity,
   RouteKey,
   TerraformDeploymentActivityType
 } from '@app/models';
@@ -197,23 +197,27 @@ export class AzureDeploymentsComponent implements OnDestroy {
       switchMap((result: DialogResult<boolean>) => {
         if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
 
-        let requestPayload = createObject(McsTerraformDeploymentDelete, {
+        if (!deleteData.includeDestroy) {
+          return this._apiService.deleteTerraformDeployment(deployment.id).pipe(
+            tap(() =>
+              this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+                new McsStateNotification('success', 'message.successfullyDeleted',)
+              )
+            )
+          );
+        }
+        
+        let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
           confirm: true,
-          destroy: deleteData.includeDestroy,
+          deleteDestroy: true,
+          type: TerraformDeploymentActivityType.Destroy,
           clientReferenceObject: {
             terraformDeploymentId: deployment.id,
             terraformActivityRefId: Guid.newGuid().toString(),
             type: TerraformDeploymentActivityType.Destroy
           }
         });
-
-        return this._apiService.deleteTerraformDeployment(deployment.id, requestPayload).pipe(
-          tap(() =>
-            this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
-              new McsStateNotification('success', 'message.successfullyDeleted',)
-            )
-          )
-        );
+        return this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload);
       })
     ).subscribe();
   }
