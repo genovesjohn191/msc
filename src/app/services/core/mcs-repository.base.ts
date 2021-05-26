@@ -19,6 +19,7 @@ import {
 import {
   addOrUpdateArrayRecord,
   clearArrayRecord,
+  compareJsons,
   deleteArrayRecord,
   isNullOrEmpty,
   mergeArrays
@@ -34,7 +35,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
 
   // Other variables
   private _allRecordsCount: number = 0;
-  private _previouslySearched: string = '';
+  private _previousQuery: McsQueryParam = new McsQueryParam();
   private _detailedItems: Set<string> = new Set();
 
   // Events notifier for live data refresh on the view per subscription
@@ -73,13 +74,18 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   public filterBy(query: McsQueryParam, parentId?: string): Observable<T[]> {
     let filteredRecords: Observable<T[]>;
 
+    // Always set the paging to be the same so it wont be recognized by the comparison
+    this._previousQuery.pageIndex = query.pageIndex;
+    this._previousQuery.pageSize = query.pageSize;
+
     // Filter records by search keyword query and return the record immediately.
     // The searching would always look on the context and not on the cache
-    let searchKeywordIsDifferent = this._previouslySearched !== query.keyword;
-    if (searchKeywordIsDifferent) { this.filteredRecords = new Array(); }
-    this._previouslySearched = query.keyword;
+    let queryIsDifferent = compareJsons(query, this._previousQuery) !== 0;
+    if (queryIsDifferent) { this.filteredRecords = new Array(); }
+    this._previousQuery = Object.assign({}, query);
 
-    let isSearching = !isNullOrEmpty(query.keyword) || searchKeywordIsDifferent;
+
+    let isSearching = !isNullOrEmpty(query.keyword) || queryIsDifferent;
     filteredRecords = isSearching ?
       this._filterRecordsBySearchQuery(query) :
       this._filterRecordsByPageQuery(query, parentId);
