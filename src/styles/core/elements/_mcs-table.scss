@@ -9,6 +9,7 @@ $table-header-background-color: $color-black;
 $table-header-font-color: $dark-bg-text-color;
 $table-header-cell-padding: $space-small $table-cell-side-padding;
 $table-header-font-size: $font-size-default;
+$calendar-table-header-row-size: 2rem;
 
 // Table rows
 $table-data-even-background-color: $color-grey-07;
@@ -188,6 +189,19 @@ table.mcs-basic-table {
 
       td.action-data-row {
         background-color: $hover-bg-color;
+      }
+    }
+  }
+}
+
+table.mat-calendar-table {
+  .mat-calendar-table-header {
+    tr {
+      background-color: transparent;
+      height: $calendar-table-header-row-size;
+
+      &:not(:first-child) {
+        height: auto;
       }
     }
   }
