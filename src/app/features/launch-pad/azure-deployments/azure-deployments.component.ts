@@ -206,7 +206,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
             )
           );
         }
-        
+
         let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
           confirm: true,
           deleteDestroy: true,
