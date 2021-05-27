@@ -1,8 +1,13 @@
 import {
   of,
+  BehaviorSubject,
   Observable
 } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import {
+  finalize,
+  switchMap,
+  tap
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -10,29 +15,40 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   DnsRecordType,
   McsFilterInfo,
   McsNetworkDnsRecordRequest,
-  McsNetworkDnsZone
+  McsNetworkDnsZone,
+  McsStateNotification
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsFormGroupDirective } from '@app/shared';
+import {
+  DialogResult,
+  DialogResultAction,
+  DialogService2,
+  McsFormGroupDirective
+} from '@app/shared';
 import {
   createObject,
   getSafeFormValue,
-  isNullOrUndefined
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -43,9 +59,10 @@ import { DnsZoneViewModel } from './dns-zone-viewmodel';
   templateUrl: 'dns-zone-manage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DnsZoneManageComponent implements OnInit, OnDestroy {
+export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   public readonly dataSource: McsTableDataSource2<DnsZoneViewModel>;
   public readonly addViewModel: DnsZoneViewModel;
+  public readonly processOnGoing$: BehaviorSubject<boolean>;
 
   @Input()
   public dnsId: string;
@@ -61,15 +78,17 @@ export class DnsZoneManageComponent implements OnInit, OnDestroy {
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _formBuilder: FormBuilder,
     private _translateService: TranslateService,
-    private _apiService: McsApiService
+    private _eventDispatcher: EventBusDispatcherService,
+    private _apiService: McsApiService,
+    private _dialogService: DialogService2
   ) {
     this.addViewModel = new DnsZoneViewModel();
-    this.dataSource = new McsTableDataSource2(this._getNetworkDnsZoneRecords.bind(this));
+    this.processOnGoing$ = new BehaviorSubject<boolean>(false);
+    this.dataSource = new McsTableDataSource2();
     this.dataSource.registerColumnsFilterInfo([
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'recordType' }),
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'hostname' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'hostName' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'target' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'ttlSeconds' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'actions' })
@@ -78,10 +97,19 @@ export class DnsZoneManageComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this._validateInputs();
+    this.dataSource.updateDatasource(this._getNetworkDnsZoneRecords.bind(this));
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    let zoneChange = changes['zone'];
+    if (!isNullOrEmpty(zoneChange)) {
+      this.dataSource.updateDatasource(this._getNetworkDnsZoneRecords.bind(this));
+    }
   }
 
   public ngOnDestroy(): void {
     this.dataSource?.disconnect(null);
+    unsubscribeSafely(this.processOnGoing$);
   }
 
   public onClickAddDnsZoneRecord(): void {
@@ -94,32 +122,110 @@ export class DnsZoneManageComponent implements OnInit, OnDestroy {
     zoneRecord.value = getSafeFormValue(this.addViewModel.fcTarget);
     zoneRecord.ttlSeconds = +getSafeFormValue(this.addViewModel.fcTtlSeconds);
 
+    this.processOnGoing$.next(true);
     this._apiService.createNetworkDnsZoneRecord(
       this.dnsId,
       this.zone.id,
       zoneRecord
     ).pipe(
       tap(() => {
+        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+          new McsStateNotification('success', 'message.successfullyCreated')
+        );
         this.formGroup.resetAllControls();
         this.requestUpdate.next();
-      })
+      }),
+      finalize(() => this.processOnGoing$.next(false))
     ).subscribe();
   }
 
   public onClickSaveDnsZoneRecord(record: DnsZoneViewModel): void {
-    // TODO(apascual): We need id here isnt? because we need to pass the record to be updated.
-  }
+    record.validateFields();
+    if (!record.isValid()) { return; }
 
-  public onClickEditDnsZoneRecord(record: DnsZoneViewModel): void {
-    // TODO(apascual): We need id here isnt? because we need to pass the record to be updated.
+    let zoneRecord = new McsNetworkDnsRecordRequest();
+    zoneRecord.type = getSafeFormValue<DnsRecordType>(record.fcHostName);
+    zoneRecord.name = getSafeFormValue(record.fcHostName);
+    zoneRecord.value = getSafeFormValue(record.fcTarget);
+    zoneRecord.ttlSeconds = +getSafeFormValue(record.fcTtlSeconds);
+
+    record.setProgressState(true);
+    this._apiService.updateNetworkDnsZoneRecord(
+      this.dnsId,
+      this.zone.id,
+      record.recordId,
+      zoneRecord
+    ).pipe(
+      tap(() => {
+        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+          new McsStateNotification('success', 'message.successfullyUpdated')
+        );
+        this.requestUpdate.next();
+      }),
+      finalize(() => record.setProgressState(false))
+    ).subscribe();
   }
 
   public onClickDeleteDnsZoneRecord(record: DnsZoneViewModel): void {
-    // TODO(apascual): We need id here isnt? because we need to pass the record to be updated.
+    let dialogRef = this._dialogService.openConfirmation({
+      title: this._translateService.instant('label.deleteZoneRecord'),
+      message: this._translateService.instant('message.deleteZoneRecord', {
+        dnsTarget: record.fcTarget.value || record.fcHostName.value
+      })
+    });
+
+    dialogRef.afterClosed().pipe(
+      switchMap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+
+        record.setProgressState(true);
+        return this._apiService.deleteNetworkDnsZoneRecord(
+          this.dnsId,
+          this.zone.id,
+          record.recordId
+        ).pipe(
+          tap(() => {
+            this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+              new McsStateNotification('success', 'message.successfullyDeleted')
+            );
+            this.requestUpdate.next();
+          }),
+          finalize(() => {
+            record.setProgressState(false);
+            record.updating = false;
+          })
+        );
+      })
+    ).subscribe();
+  }
+
+  public onClickEditDnsZoneRecord(record: DnsZoneViewModel): void {
+    record.updating = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   public onClickCancelEdit(record: DnsZoneViewModel): void {
-    // TODO(apascual): Do we need to display discard changes dialog here before proceeding?
+    if (!record.hasChanges) {
+      record.setDefaultValues();
+      record.updating = false;
+      this._changeDetectorRef.markForCheck();
+      return;
+    }
+
+    // Confirm first if changes has been made
+    let dialogRef = this._dialogService.openConfirmation({
+      title: this._translateService.instant('label.discardChanges'),
+      message: this._translateService.instant('message.discardChanges')
+    });
+
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        record.setDefaultValues();
+        record.updating = false;
+        this._changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
   }
 
   private _validateInputs(): void {
@@ -135,9 +241,28 @@ export class DnsZoneManageComponent implements OnInit, OnDestroy {
   private _getNetworkDnsZoneRecords(
     _param: McsMatTableQueryParam
   ): Observable<McsMatTableContext<DnsZoneViewModel>> {
-    let dataModels = this.zone?.rrsets?.map(record =>
-      new DnsZoneViewModel().updateViewModelData(record)
-    );
+
+    let dataModels = new Array<DnsZoneViewModel>();
+    this.zone?.rrsets.forEach(rrset => {
+      if (isNullOrEmpty(rrset?.records)) { return; }
+
+      rrset.records.forEach(record => {
+        let dnsViewModel = new DnsZoneViewModel(rrset, record);
+        dataModels.push(dnsViewModel);
+      });
+    });
+
+    // TODO(apascual): Remove this when data has been finalized in API side
+    // let newRecord = new McsNetworkDnsRrSets();
+    // newRecord.type = 'AAA';
+    // newRecord.name = '@',
+    // newRecord.ttlSeconds = 600;
+
+    // let dataModels = [
+    //   new DnsZoneViewModel(newRecord, { target: '1.1.1.1' } as any),
+    //   new DnsZoneViewModel(newRecord, { target: '1.1.1.2' } as any),
+    //   new DnsZoneViewModel(newRecord, { target: '1.1.1.3' } as any)
+    // ];
     return of(new McsMatTableContext(dataModels));
   }
 }

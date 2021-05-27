@@ -59,7 +59,7 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
     request: McsNetworkDnsRecordRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zone/${zoneId}/records`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/records`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(request);
 
     return this._apiClientService.post(mcsApiRequestParameter).pipe(
@@ -76,7 +76,7 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
     request: McsNetworkDnsRecordRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zone/${zoneId}/records/${recordId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/records/${recordId}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(request);
 
     return this._apiClientService.put(mcsApiRequestParameter).pipe(
@@ -92,7 +92,7 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
     recordId: string
   ): Observable<McsApiSuccessResponse<boolean>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zone/${zoneId}/records/${recordId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/records/${recordId}`;
 
     return this._apiClientService.delete(mcsApiRequestParameter).pipe(
       map((response) =>

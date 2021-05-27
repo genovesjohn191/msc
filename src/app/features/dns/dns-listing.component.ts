@@ -1,33 +1,42 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
-  ViewChild } from '@angular/core';
+  ViewChild
+} from '@angular/core';
 import {
   CoreRoutes,
   McsAccessControlService,
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
-  McsTableEvents } from '@app/core';
-import { Observable } from 'rxjs';
+  McsTableEvents
+} from '@app/core';
 import { McsEvent } from '@app/events';
 import {
   McsFilterInfo,
   McsNetworkDnsBase,
   McsQueryParam,
-  RouteKey } from '@app/models';
+  RouteKey
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  CommonDefinition,
+  ColumnFilter,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
   createObject,
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
-import { map } from 'rxjs/operators';
-import { ColumnFilter, Paginator, Search } from '@app/shared';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -42,7 +51,7 @@ export class DnsListingComponent {
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'billingDescription' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'isPrimary'}),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'isPrimary' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'zoneCount' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
@@ -56,7 +65,9 @@ export class DnsListingComponent {
     private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
   ) {
-    this.dataSource = new McsTableDataSource2(this._getNetworkDNS.bind(this));
+    this.dataSource = new McsTableDataSource2<McsNetworkDnsBase>(this._getNetworkDNS.bind(this))
+      .registerConfiguration(new McsMatTableConfig(true));
+
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeDnsListing
     });
@@ -131,9 +142,9 @@ export class DnsListingComponent {
 
   public hasServiceChangeAccess(dns: McsNetworkDnsBase) {
     return (dns.isPrimary && dns.serviceChangeAvailable) &&
-            this._accessControlService.hasPermission([
-              'OrderEdit'
-            ]);
+      this._accessControlService.hasPermission([
+        'OrderEdit'
+      ]);
   }
 
   public actionsEnabled(dns: McsNetworkDnsBase) {
@@ -149,4 +160,3 @@ export class DnsListingComponent {
     this._navigationService.navigateTo(RouteKey.DnsDetails, [dns.id]);
   }
 }
-

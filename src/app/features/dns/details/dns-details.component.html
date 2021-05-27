@@ -30,15 +30,15 @@
     <div class="routing-tab-wrapper" *mcsComponentHandler>
       <ng-container *ngIf="selectedDns$ | async as selectedDns">
 
-        <mcs-tab-group>
+        <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
           <!-- Management Tab -->
           <mcs-tab [label]="'dnsListing.details.management.tabName' | translate" id="management">
           </mcs-tab>
 
           <!-- Zones Tab -->
-          <!-- <ng-container *ngIf="selectedDns.isPrimary">
-            <mcs-tab [label]="'dnsListing.details.zones.tabName' | translate" id="services"></mcs-tab>
-          </ng-container> -->
+          <ng-container *ngIf="selectedDns.isPrimary">
+            <mcs-tab [label]="'dnsListing.details.zones.tabName' | translate" id="zones"></mcs-tab>
+          </ng-container>
 
           <!-- Action tab -->
           <ng-container mcsTabHeaderCustom>

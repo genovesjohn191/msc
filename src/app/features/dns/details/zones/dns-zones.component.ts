@@ -4,7 +4,8 @@ import {
 } from 'rxjs';
 import {
   shareReplay,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -14,6 +15,7 @@ import {
   OnInit
 } from '@angular/core';
 import { McsNetworkDnsSummary } from '@app/models';
+import { McsApiService } from '@app/services';
 import { unsubscribeSafely } from '@app/utilities';
 
 import { DnsDetailsService } from '../dns-details.service';
@@ -24,15 +26,14 @@ import { DnsDetailsService } from '../dns-details.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DnsZonesComponent implements OnInit, OnDestroy {
-
   public dns$: Observable<McsNetworkDnsSummary>;
 
   private _destroySubject = new Subject<void>();
 
   public constructor(
-    private _dnsDetailsService: DnsDetailsService
+    private _dnsDetailsService: DnsDetailsService,
+    private _apiService: McsApiService
   ) {
-
   }
 
   public ngOnInit() {
@@ -44,7 +45,9 @@ export class DnsZonesComponent implements OnInit, OnDestroy {
   }
 
   public onUpdateRequest(): void {
-    // TODO(apascual): Need to update the DNS details here
+    this._apiService.getNetworkDnsById(this._dnsDetailsService.getDnsDetailsId()).pipe(
+      tap(details => this._dnsDetailsService.setDnsDetails(details))
+    ).subscribe();
   }
 
   private _subscribeToDnsDetails(): void {
