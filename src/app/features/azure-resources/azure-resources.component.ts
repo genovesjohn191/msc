@@ -181,12 +181,6 @@ export class AzureResourcesComponent {
     this.retryDatasource();
   }
 
-  public onChangeKeyEvent(searchTagName: string, searchTagValue: string): void {
-    this.tagName = searchTagName;
-    this.tagValue = searchTagValue;
-    this.retryDatasource();
-  }
-
   private _getAzureResources(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureResource>> {
     let queryParam = new McsAzureResourceQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
