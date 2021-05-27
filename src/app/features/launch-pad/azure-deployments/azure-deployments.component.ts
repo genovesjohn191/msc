@@ -251,13 +251,15 @@ export class AzureDeploymentsComponent implements OnDestroy {
     switch (params.eventName) {
       case 'company-change':
         if (!isNullOrEmpty(params.value)) {
-
           this._navigationService.navigateTo(
             RouteKey.LaunchPadAzureDeployments, [], {
             queryParams: {
               companyId: params.value
             }
           });
+        }
+        else {
+          this._navigationService.navigateTo(RouteKey.LaunchPadAzureDeployments);
         }
         break;
     }
