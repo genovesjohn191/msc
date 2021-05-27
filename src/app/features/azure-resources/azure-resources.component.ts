@@ -24,6 +24,7 @@ import {
 import { McsEvent } from '@app/events';
 import {
   McsAzureResource,
+  McsAzureResourceQueryParams,
   McsAzureResourceTag,
   McsFilterInfo,
   McsQueryParam,
@@ -171,11 +172,28 @@ export class AzureResourcesComponent {
       });
   }
 
+  public onEnterKeyUpEvent(searchTagName: string, searchTagValue: string): void {
+    let noChange: boolean = searchTagName === this.tagName && searchTagValue === this.tagValue;
+    if (noChange) { return; }
+
+    this.tagName = searchTagName;
+    this.tagValue = searchTagValue;
+    this.retryDatasource();
+  }
+
+  public onChangeKeyEvent(searchTagName: string, searchTagValue: string): void {
+    this.tagName = searchTagName;
+    this.tagValue = searchTagValue;
+    this.retryDatasource();
+  }
+
   private _getAzureResources(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureResource>> {
-    let queryParam = new McsQueryParam();
+    let queryParam = new McsAzureResourceQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.tagName = this.tagName;
+    queryParam.tagValue = this.tagValue;
 
     return this._apiService.getAzureResources(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection,

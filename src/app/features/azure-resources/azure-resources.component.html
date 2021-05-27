@@ -18,16 +18,28 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="azure-resources-desktop-search"></mcs-search>
 
-      <!-- <mcs-grid style="margin-top: 10px;">
+      <mcs-grid style="margin-top: 10px;">
         <mcs-grid-row>
           <mcs-grid-column>
-            <input mcsInput type="text" placeholder="Tag Name" mcsId="tag-name-search-input">
+            <input mcsInput type="text"
+              #searchTagName
+              (keydown.space)="$event.stopPropagation()"
+              (keyup)="onChangeKeyEvent(searchTagName.value, searchTagValue.value)"
+              (keyup.enter)="onEnterKeyUpEvent(searchTagName.value, searchTagValue.value)"
+              placeholder="Tag Name"
+              mcsId="tag-name-search-input">
           </mcs-grid-column>
           <mcs-grid-column>
-            <input mcsInput type="text" placeholder="Tag Value" mcsId="tag-value-search-input">
+            <input mcsInput type="text"
+              #searchTagValue
+              (keydown.space)="$event.stopPropagation()"
+              (keyup)="onChangeKeyEvent(searchTagName.value, searchTagValue.value)"
+              (keyup.enter)="onEnterKeyUpEvent(searchTagName.value, searchTagValue.value)"
+              placeholder="Tag Value"
+              mcsId="tag-value-search-input">
           </mcs-grid-column>
         </mcs-grid-row>
-      </mcs-grid> -->
+      </mcs-grid>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -47,7 +59,6 @@
 
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
-
 
       <!-- Table -->
       <table mat-table [dataSource]="dataSource">

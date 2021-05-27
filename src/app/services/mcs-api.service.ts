@@ -91,6 +91,7 @@ import {
   McsAvailabilityZone,
   McsAzureDeploymentsQueryParams,
   McsAzureResource,
+  McsAzureResourceQueryParams,
   McsAzureService,
   McsAzureServicesRequestParams,
   McsBackUpAggregationTarget,
@@ -1679,7 +1680,7 @@ export class McsApiService {
     );
   }
 
-  public getAzureResources(query?: McsQueryParam): Observable<McsApiCollection<McsAzureResource>> {
+  public getAzureResources(query?: McsAzureResourceQueryParams): Observable<McsApiCollection<McsAzureResource>> {
     let azureResources = isNullOrEmpty(query) ?
       this._azureResourceRepository.getAll() :
       this._azureResourceRepository.filterBy(query);

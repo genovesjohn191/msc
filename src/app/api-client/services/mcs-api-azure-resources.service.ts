@@ -5,7 +5,8 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsAzureResource,
-  McsQueryParam
+  McsQueryParam,
+  McsAzureResourceQueryParams
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -16,13 +17,15 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  public getAzureResources(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsAzureResource[]>> {
+  public getAzureResources(query?: McsAzureResourceQueryParams): Observable<McsApiSuccessResponse<McsAzureResource[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    if (isNullOrEmpty(query)) { query = new McsAzureResourceQueryParams(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('tag_name', query.tagName);
+    searchParams.set('tag_value', query.tagValue);
 
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/resources`;
