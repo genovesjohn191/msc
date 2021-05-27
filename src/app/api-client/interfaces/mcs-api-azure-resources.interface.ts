@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsAzureResource,
-  McsQueryParam
+  McsAzureResourceQueryParams
 } from '@app/models';
 
 export interface IMcsApiAzureResourcesService {
@@ -10,7 +10,7 @@ export interface IMcsApiAzureResourcesService {
   /**
    * Gets all azure resources
    */
-  getAzureResources(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsAzureResource[]>>;
+  getAzureResources(query?: McsAzureResourceQueryParams): Observable<McsApiSuccessResponse<McsAzureResource[]>>;
 
 
   /**
