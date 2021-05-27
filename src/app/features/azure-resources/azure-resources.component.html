@@ -17,6 +17,17 @@
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="azure-resources-desktop-search"></mcs-search>
+
+      <!-- <mcs-grid style="margin-top: 10px;">
+        <mcs-grid-row>
+          <mcs-grid-column>
+            <input mcsInput type="text" placeholder="Tag Name" mcsId="tag-name-search-input">
+          </mcs-grid-column>
+          <mcs-grid-column>
+            <input mcsInput type="text" placeholder="Tag Value" mcsId="tag-value-search-input">
+          </mcs-grid-column>
+        </mcs-grid-row>
+      </mcs-grid> -->
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -37,6 +48,7 @@
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
 
+
       <!-- Table -->
       <table mat-table [dataSource]="dataSource">
         <!-- Name Column -->
@@ -46,6 +58,16 @@
           </th>
           <td mat-cell *matCellDef="let row">
             {{ row.name }}
+          </td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.type' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.typeFriendlyName }}
           </td>
         </ng-container>
 
@@ -86,6 +108,18 @@
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.subscriptionId }}
+          </td>
+        </ng-container>
+
+        <!-- Tags Column -->
+        <ng-container matColumnDef="tags">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.tags' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <span style="cursor: pointer;">
+              <mat-icon [matTooltip]="getTagsList(row.tags)" (mouseover)="getTags(row)">local_offer</mat-icon>
+            </span>
           </td>
         </ng-container>
 

@@ -1692,6 +1692,14 @@ export class McsApiService {
     );
   }
 
+  public getAzureResource(id: string): Observable<McsAzureResource> {
+    return this._azureResourceRepository.getById(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResource'))
+      )
+    );
+  }
+
   public getAzureResourcesBySubscriptionId(subscriptionId?: string): Observable<McsApiCollection<McsAzureResource>> {
     return this._azureResourcesApi.getAzureResourcesBySubscriptionId(subscriptionId).pipe(
       catchError((error) =>

@@ -3087,6 +3087,7 @@
     "status": "Status",
     "storageProfile": "Storage Profile",
     "tag": "Tag",
+    "tags": "Tags",
     "targetComputer": "Target VM",
     "tenant": "Tenant",
     "ticketNumber": "Ticket Number",

@@ -1,5 +1,6 @@
 import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import { McsAzureResourceTag } from './mcs-azure-resource-tag';
 
 export class McsAzureResource extends McsEntityBase {
 
@@ -8,6 +9,9 @@ export class McsAzureResource extends McsEntityBase {
 
   @JsonProperty()
   public type: string = undefined;
+
+  @JsonProperty()
+  public typeFriendlyName: string = undefined;
 
   @JsonProperty()
   public serviceId: string = undefined;
@@ -26,4 +30,7 @@ export class McsAzureResource extends McsEntityBase {
 
   @JsonProperty()
   public resourceGroupName: string = undefined;
+
+  @JsonProperty({ target: McsAzureResourceTag })
+  public tags: McsAzureResourceTag[] = undefined;
 }
