@@ -24,7 +24,7 @@
             <input mcsInput type="text"
               #searchTagName
               (keydown.space)="$event.stopPropagation()"
-              (keyup)="onChangeKeyEvent(searchTagName.value, searchTagValue.value)"
+              (keyup)="onEnterKeyUpEvent(searchTagName.value, searchTagValue.value)"
               (keyup.enter)="onEnterKeyUpEvent(searchTagName.value, searchTagValue.value)"
               placeholder="Tag Name"
               mcsId="tag-name-search-input">
@@ -33,7 +33,7 @@
             <input mcsInput type="text"
               #searchTagValue
               (keydown.space)="$event.stopPropagation()"
-              (keyup)="onChangeKeyEvent(searchTagName.value, searchTagValue.value)"
+              (keyup)="onEnterKeyUpEvent(searchTagName.value, searchTagValue.value)"
               (keyup.enter)="onEnterKeyUpEvent(searchTagName.value, searchTagValue.value)"
               placeholder="Tag Value"
               mcsId="tag-value-search-input">
