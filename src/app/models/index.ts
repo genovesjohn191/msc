@@ -273,6 +273,7 @@ export * from './response/mcs-colocation-room';
 export * from './response/mcs-colocation-standard-sqm';
 export * from './response/mcs-license';
 export * from './response/mcs-account';
+export * from './response/mcs-azure-resource-tag';
 export * from './response/mcs-azure-resource';
 export * from './response/mcs-azure-service';
 export * from './response/mcs-report-cost-recommendations';

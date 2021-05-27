@@ -1,5 +1,11 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -18,6 +24,7 @@ import {
 import { McsEvent } from '@app/events';
 import {
   McsAzureResource,
+  McsAzureResourceTag,
   McsFilterInfo,
   McsQueryParam,
   RouteKey
@@ -46,16 +53,21 @@ export class AzureResourcesComponent {
   public readonly dataEvents: McsTableEvents<McsAzureResource>;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'resourceGroup' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+    createObject(McsFilterInfo, { value: false, exclude: false, id: 'resourceGroup' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscription' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscriptionId' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'tags' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
 
+  public tagName: string;
+  public tagValue: string;
+
   constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
@@ -118,6 +130,44 @@ export class AzureResourcesComponent {
         queryParams: {
           serviceId: resource.serviceId
         }
+      });
+  }
+
+  public getTagsList(tags: McsAzureResourceTag[]): string {
+    let unresolvedTags: boolean = tags === undefined || tags === null;
+    if (unresolvedTags) {
+      return 'Retrieving tags';
+    }
+
+    if (isNullOrEmpty(tags)) {
+      return 'No tags found.';
+    }
+
+    let tagsList: string = '';
+    tags.forEach((tag: McsAzureResourceTag) => {
+      if (tagsList) { tagsList = tagsList + ', '; }
+
+      tagsList = tagsList + `${tag.name}: ${tag.value}`;
+    });
+
+    return tagsList;
+  }
+
+  public getTags(resource: McsAzureResource): void {
+    if (resource.tags !== undefined) { return; }
+    resource.tags = null;
+    this._changeDetectorRef.markForCheck();
+
+    this._apiService.getAzureResource(resource.id)
+      .pipe(
+        catchError((error) => {
+          resource.tags = undefined;
+          this._changeDetectorRef.markForCheck();
+          return throwError('Failed retrieving resource tags');
+        })
+      )
+      .subscribe((response) => {
+        this._changeDetectorRef.markForCheck();
       });
   }
 
