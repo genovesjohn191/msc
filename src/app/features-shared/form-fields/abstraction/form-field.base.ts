@@ -74,11 +74,11 @@ export abstract class FormFieldBaseComponent2<TValue>
   @Input()
   public includeNone: boolean;
 
-  // The value returns from associated control
-  public get value(): TValue { return this.ngControl?.value; }
-
   @ViewChild(FieldErrorMessageDirective)
   public errorMessageTemplate: FieldErrorMessageDirective<any>;
+
+  // The value returns from associated control
+  public get value(): TValue { return this.ngControl?.value; }
 
   public readonly translate: TranslateService;
   public readonly renderer: Renderer2;
@@ -89,11 +89,9 @@ export abstract class FormFieldBaseComponent2<TValue>
 
   protected destroySubject = new Subject<void>();
 
+  private _size: McsSizeType;
   private _disabledElement: boolean;
   private _readonlyElement: boolean;
-  private _size: McsSizeType;
-
-  private _oldSize: McsSizeType;
   private _customControls: Array<FormControl>;
   private _customValidators: Array<ValidatorFn>;
 
@@ -118,6 +116,8 @@ export abstract class FormFieldBaseComponent2<TValue>
   }
 
   public get displayedLabel(): string {
+    if (isNullOrEmpty(this.label)) { return null; }
+
     return this.hasRequiredValidator ?
       `${this.label} *` : this.label;
   }
@@ -226,7 +226,7 @@ export abstract class FormFieldBaseComponent2<TValue>
     formFields.forEach(formField => {
       let hasOldSize = formField.classList.contains(readonlyClass);
       if (hasOldSize && !this._readonlyElement) {
-        formField.classList.replace(readonlyClass, '');
+        formField.classList.remove(readonlyClass);
         return;
       }
       if (!this._readonlyElement) { return; }
@@ -236,6 +236,7 @@ export abstract class FormFieldBaseComponent2<TValue>
 
   private _updateAssociatedFormFieldSize(formFields: NodeListOf<Element>): void {
     let formFieldSizeClass = `mcs-form-field-size`;
+
     formFields.forEach(formField => {
       let hasOldSize = formField.classList.contains(formFieldSizeClass);
       if (hasOldSize) {

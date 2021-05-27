@@ -44,8 +44,9 @@
 <div class="action-items">
   <button mcsButton arrow="right"
     mcsId="add-zone-record"
+    [disabled]="processOnGoing$ | async"
     (click)="onClickAddDnsZoneRecord()">
-    {{ 'action.submit' | translate }}
+    {{ 'action.add' | translate }}
   </button>
 </div>
 
@@ -66,14 +67,14 @@
     </ng-container>
 
     <!-- Hostname Column -->
-    <ng-container matColumnDef="hostname">
+    <ng-container matColumnDef="hostName">
       <th mat-header-cell *matHeaderCellDef>
-        {{ 'columnHeader.hostname' | translate }}
+        {{ 'columnHeader.hostName' | translate }}
       </th>
       <td mat-cell *matCellDef="let row">
         <mcs-field-input size="full"
           [readonlyElement]="!row.updating"
-          [formControl]="viewModel.fcHostName">
+          [formControl]="row.fcHostName">
         </mcs-field-input>
       </td>
     </ng-container>
@@ -86,7 +87,7 @@
       <td mat-cell *matCellDef="let row">
         <mcs-field-input size="full"
           [readonlyElement]="!row.updating"
-          [formControl]="viewModel.fcTarget">
+          [formControl]="row.fcTarget">
         </mcs-field-input>
       </td>
     </ng-container>
@@ -99,13 +100,13 @@
       <td mat-cell *matCellDef="let row">
         <mcs-field-input size="full"
           [readonlyElement]="!row.updating"
-          [formControl]="viewModel.fcTtlSeconds">
+          [formControl]="row.fcTtlSeconds">
         </mcs-field-input>
       </td>
     </ng-container>
 
     <!-- Action Column -->
-    <ng-container matColumnDef="ttlSeconds">
+    <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let row">
         <mcs-item>
@@ -117,8 +118,7 @@
                mcsEventLabel="dns-zone-page">
               {{ 'action.cancel' | translate }}
             </a>
-            <a [disabled]="!server.executable"
-              (click)="onClickSaveDnsZoneRecord(row)"
+            <a (click)="onClickSaveDnsZoneRecord(row)"
               mcsId
               mcsEventTracker="save-dns-zone-record"
               mcsEventCategory="dns-zone"
@@ -129,14 +129,15 @@
 
           <ng-template #readonlyViewTemplate>
             <a (click)="onClickEditDnsZoneRecord(row)"
+               [disabled]="row.inProgress$ | async"
                mcsId
                mcsEventTracker="edit-dns-zone-record"
                mcsEventCategory="dns-zone"
                mcsEventLabel="dns-zone-page">
               {{ 'action.edit' | translate }}
             </a>
-            <a [disabled]="!server.executable"
-              (click)="onClickDeleteDnsZoneRecord(row)"
+            <a (click)="onClickDeleteDnsZoneRecord(row)"
+              [disabled]="row.inProgress$ | async"
               mcsId
               mcsEventTracker="delete-dns-zone-record"
               mcsEventCategory="dns-zone"
@@ -150,7 +151,9 @@
 
     <!-- Header and Data row -->
     <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-    <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+    <tr mat-row
+      [disabled]="row.inProgress$ | async"
+      *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
   </table>
 
   <!-- Table Statuses -->

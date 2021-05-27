@@ -18,4 +18,45 @@ mat-form-field.mat-form-field {
       max-width: $form-size-value;
     }
   }
+
+  &.mcs-form-field-readonly {
+    pointer-events: none;
+
+    .mat-form-field-wrapper {
+      margin: 0;
+      padding: 0;
+
+      .mat-form-field-flex {
+        margin: 0;
+        padding: 0;
+
+        .mat-form-field-outline {
+          opacity: 0;
+
+          &:hover {
+            opacity: 0;
+          }
+        }
+
+        .mat-form-field-infix {
+          cursor: pointer;
+          padding: 0;
+
+          .mat-select {
+            .mat-select-arrow-wrapper {
+              opacity: 0;
+            }
+          }
+
+          .mat-form-field-label-wrapper {
+            opacity: 0;
+          }
+        }
+      }
+
+      .mat-form-field-subscript-wrapper {
+        display: none;
+      }
+    }
+  }
 }

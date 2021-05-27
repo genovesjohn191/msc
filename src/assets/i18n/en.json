@@ -2992,7 +2992,10 @@
     "getCrispElement": "Something went wrong while retrieving CRISP element details. Please try again.",
     "getInstalledServices": "Something went wrong while retrieving installed services. Please try again.",
     "getCloudHealthAlerts": "Something went wrong while retrieving your Cloudhealth Alerts. Please try again.",
-    "getCloudHealthAlert": "Something went wrong while retrieving your Cloudhealth Alert. Please try again."
+    "getCloudHealthAlert": "Something went wrong while retrieving your Cloudhealth Alert. Please try again.",
+    "deleteNetworkDnsZoneRecord": "Something went wrong while deleting dns zone record. Please try again.",
+    "updateNetworkDnsZoneRecord": "Something went wrong while updating dns zone record. Please try again.",
+    "createNetworkDnsZoneRecord": "Something went wrong while creating dns zone record. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3109,9 +3112,29 @@
     "version": "Version",
     "vmName":"VM Name",
     "zone": "Zone",
-    "zoneCount": "Zones"
+    "zoneCount": "Zones",
+    "recordType": "Record Type",
+    "hostName": "Host Name",
+    "target": "Target",
+    "ttlSeconds": "TTL (Seconds)"
   },
   "label": {
+    "a": "A",
+    "aaa": "AAA",
+    "cname": "CNAME",
+    "mx": "MX",
+    "naptr": "NAPTR",
+    "ns": "NS",
+    "ptr": "PTR",
+    "srv": "SRV",
+    "txt": "TXT",
+    "zones": "Zones",
+    "zoneType": "Zone Type",
+    "manageZones": "Manage Zones",
+    "hostName": "Host Name",
+    "records": "Records",
+    "target": "Target",
+    "ttl": "TTL (Seconds)",
     "primary": "Primary",
     "secondary": "Secondary",
     "activity": "Activity",
@@ -3156,9 +3179,12 @@
     "tenant": "Tenant",
     "terraformDeploymentVariables": "Terraform Deployment Variables",
     "terraformDefaultVariables": "Terraform Default Variables",
-    "type": "Type"
+    "type": "Type",
+    "deleteZoneRecord": "Delete Zone Record",
+    "discardChanges": "Discard Changes"
   },
   "action": {
+    "add": "Add",
     "apply": "Apply",
     "back": "Back",
     "cancel": "Cancel",
@@ -3185,6 +3211,10 @@
     "yes": "Yes"
   },
   "message": {
+    "discardChanges": "This will undo all your changes. Do you want to proceed?",
+    "deleteZoneRecord": "This will delete <strong>{{dnsTarget}}</strong> zone record. Do you want to proceed?",
+    "dnsDescription": "Select a zone below to manage its DNS records.\r\nPlease note, record changes can take up to 72 hours to propagate.",
+    "zoneDescription": "The TTL for this zone is {{ttlSeconds}} seconds. If a TTL is not specified when creating or editing a record below, this TTL will be used instead.\r\n\nWhen adding or editing a record, all existing records of the same type will inherit that record's TTL.",
     "noSolutionsDisplay": "No solutions to be displayed.",
     "noProductsDisplay": "No products to be displayed.",
     "productEnquireNow": "Choose your preferred contact method and we'll get in touch to discuss this product more with you.",
@@ -3194,13 +3224,21 @@
     "requestSubmitted": "Request successfully submitted.",
     "thankyouRequest": "Thanks for your request. We'll be in touch soon.",
     "selectContactRequired": "Contact is required.",
+    "selectDnsZoneTypeRequired": "Zone Type is required.",
     "inputNoteRequired": "Note is required.",
+    "inputRequired": "This field is required.",
+    "inputNumeric": "Please enter a valid number.",
+    "inputUrl": "Please enter a valid url.",
     "noCloudHealthAlertsDisplay": "No CloudHealth Alerts to be displayed.",
     "noDataFound": "No data found.",
     "deploymentBusy": "This deployment is currently busy and some actions may be temporarily unavailable.",
     "fieldIsRequired": "This field is required.",
     "fieldInputMismatched": "Inputted value mismatched.",
     "successfullyDeleted": "Successfully deleted.",
+    "successfullyCreated": "Successfully created.",
+    "successfullyUpdated": "Successfully updated.",
+    "noDnsZoneRecords": "There are no records to display for this zone.",
+    "noDnsZones": "There are no zones to display for this service.",
     "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView."
   },
   "dialog": {

@@ -86,7 +86,6 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
   }
 
   public ngOnInit() {
-    // this._subscribeToParamChange();
     this._subscribeToDnsResolver();
     this.listViewDatasource.registerSortPredicate(this._sortDnsPredicate.bind(this));
   }
@@ -158,26 +157,11 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
       map((resolver) => getSafeProperty(resolver, (obj) => obj.dns) as McsNetworkDnsSummary),
       tap((dns) => {
         if (isNullOrEmpty(dns)) { return; }
-        // this.isPrimaryDns = dns.isPrimary;
-        // this.pageHeader = dns.billingDescription;
         this._dnsDetailsService.setDnsDetails(dns);
       }),
       shareReplay(1)
     );
   }
-
-  // private _subscribeToParamChange(): void {
-  //   this._activatedRoute.paramMap.pipe(
-  //     takeUntil(this._destroySubject),
-  //     tap((params: ParamMap) => {
-  //       let dnsId = params.get('id');
-  //       if (isNullOrEmpty(dnsId)) { return; }
-
-  //       this._resetManagementState();
-  //       this._dnsDetailsService.setDnsId(dnsId);
-  //     })
-  //   ).subscribe();
-  // }
 
   private _sortDnsPredicate(first: McsNetworkDnsSummary, second: McsNetworkDnsSummary): number {
     return compareStrings(first.billingDescription, second.billingDescription);
@@ -191,5 +175,4 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
         this.selectedTabId$ = of(tabUrl);
       });
   }
-
 }
