@@ -17,6 +17,7 @@ import {
   DynamicFormComponent,
   DynamicFormFieldConfigBase,
   DynamicFormFieldDataChangeEventParam,
+  DynamicInputTerraformDeploymentNameField,
   DynamicInputTextField,
   DynamicSelectChipsCompanyField,
   DynamicSelectChipsTerraformModuleField,
@@ -71,7 +72,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       allowCustomInput: true,
       maxItems: 1,
       eventName: 'company-change',
-      dependents: ['tenant', 'subscription', 'moduleType', 'module', 'tag']
+      dependents: ['tenant', 'subscription', 'moduleType', 'module', 'tag', 'name']
     }),
     new DynamicSelectTenantField({
       key: 'tenant',
@@ -85,9 +86,10 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       label: 'Subscription',
       validators: { required: true },
       eventName: 'subscription-change',
+      dependents: ['name'],
       useSubscriptionIdAsKey: true
     }),
-    new DynamicInputTextField({
+    new DynamicInputTerraformDeploymentNameField({
       key: 'name',
       label: 'Deployment Name',
       placeholder: 'Enter a deployment name',

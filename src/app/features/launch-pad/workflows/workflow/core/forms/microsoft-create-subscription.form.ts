@@ -1,7 +1,7 @@
 import {
   DynamicInputHiddenField,
   DynamicSelectAvailabilityZoneField,
-  DynamicSelectChipsTenantField
+  DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
@@ -20,14 +20,11 @@ export const microsoftCreateSubscriptionForm: LaunchPadForm = {
       eventName: 'company-change',
       dependents: ['tenant'],
     }),
-    new DynamicSelectChipsTenantField({
+    new DynamicSelectTenantField({
       key: 'tenant',
       label: 'Tenant',
-      placeholder: 'Search for name or tenant ID...',
       validators: { required: true },
-      allowCustomInput: true,
-      useTenantIdAsKey: true,
-      maxItems: 1
+      useTenantIdAsKey: true
     }),
     new DynamicSelectAvailabilityZoneField({
       key: 'location',
