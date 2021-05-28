@@ -42,6 +42,7 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
     searchParams.set('company_id', query.companyId);
+    searchParams.set('name', query.name);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/terraform/deployments';

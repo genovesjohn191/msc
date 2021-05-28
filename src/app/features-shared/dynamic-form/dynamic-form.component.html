@@ -34,6 +34,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-password-field>
 
+        <mcs-dff-input-terraform-deployment-name-field *ngSwitchCase="'input-terraform-deployment-name'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-terraform-deployment-name-field>
+
         <mcs-dff-input-random-field *ngSwitchCase="'input-random'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-random-field>
@@ -57,10 +61,6 @@
         <mcs-dff-select-chips-company-field *ngSwitchCase="'select-chips-company'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-chips-company-field>
-
-        <mcs-dff-select-chips-tenant-field *ngSwitchCase="'select-chips-tenant'"
-          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
-        </mcs-dff-select-chips-tenant-field>
 
         <mcs-dff-select-chips-terraform-tag-field *ngSwitchCase="'select-chips-terraform-tag'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">

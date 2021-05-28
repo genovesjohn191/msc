@@ -97,7 +97,9 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
 
   public onAfterDataChange(): void {
     this.afterDataChange.emit();
+    this.form.updateValueAndValidity();
   }
+
   // Notify all dependent field controls if data has change
   public onDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     this.beforeDataChange.emit(params);

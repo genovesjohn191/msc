@@ -32,6 +32,9 @@ export class DynamicFormValidationService {
     if (control.hasError('ipIsGateway')) {
       return 'This IP address is reserved and cannot be used.';
     }
+    if (control.hasError('unique')) {
+      return 'Value must be unique.';
+    }
     if (control.hasError('domain')) {
       return 'Incorrect domain format';
     }

@@ -9,12 +9,12 @@ import { DynamicInputIpComponent } from './input-ip/input-ip.component';
 import { DynamicInputNumberComponent } from './input-number/input-number.component';
 import { DynamicInputPasswordComponent } from './input-password/input-password.component';
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
+import { DynamicInputTerraformDeploymentNameComponent } from './input-terraform-deployment-name/input-terraform-deployment-name.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
 import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zone/select-availability-zone.component';
 import { DynamicSelectAzureSubscriptionComponent } from './select-azure-subscription/select-azure-subscription.component';
 import { DynamicSelectBatComponent } from './select-bat/select-bat.component';
 import { DynamicSelectChipsCompanyComponent } from './select-chips-company/select-chips-company.component';
-import { DynamicSelectChipsTenantComponent } from './select-chips-tenant/select-chips-tenant.component';
 import { DynamicSelectChipsTerraformModuleComponent } from './select-chips-terraform-module/select-chips-terraform-module.component';
 import { DynamicSelectChipsTerraformTagComponent } from './select-chips-terraform-tag/select-chips-terraform-tag.component';
 import { DynamicSelectChipsVmComponent } from './select-chips-vm/select-chips-vm.component';
@@ -38,13 +38,13 @@ const exports: any[] | Type<any> = [
   DynamicInputIpComponent,
   DynamicInputTextComponent,
   DynamicInputPasswordComponent,
+  DynamicInputTerraformDeploymentNameComponent,
   DynamicInputRandomComponent,
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
   DynamicSelectChipsComponent,
   DynamicSelectChipsCompanyComponent,
-  DynamicSelectChipsTenantComponent,
   DynamicSelectChipsTerraformModuleComponent,
   DynamicSelectChipsTerraformTagComponent,
   DynamicSelectChipsVmComponent,
