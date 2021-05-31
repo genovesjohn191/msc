@@ -127,6 +127,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
           return throwError(`${this.config.key} data retrieval failed.`);
         }))
       .subscribe((response: T[]) => {
+        this._endProcess();
         this.collection = response;
         this.filterOptions();
       });

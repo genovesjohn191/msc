@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import {
   CommonDefinition,
@@ -76,12 +76,14 @@ export class DynamicSelectTenantComponent extends DynamicSelectFieldComponentBas
   }
 
   protected callService(): Observable<McsTenant[]> {
+    if (isNullOrEmpty(this._companyId)) { return of([]); }
+
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
 
     let param = new McsQueryParam();
-    param.pageSize = 100;
+    param.pageSize = 1000;
 
     return this._apiService.getTenants(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),

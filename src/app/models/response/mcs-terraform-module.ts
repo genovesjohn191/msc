@@ -12,6 +12,9 @@ export class McsTerraformModule extends McsEntityBase {
   public name: string = undefined;
 
   @JsonProperty()
+  public friendlyName: string = undefined;
+
+  @JsonProperty()
   public category: string = undefined;
 
   @JsonProperty()
