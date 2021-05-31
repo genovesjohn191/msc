@@ -176,7 +176,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
 
   protected initializeFiltering(): void {
     this.filteredOptions = this.inputCtrl.valueChanges.pipe(
-      startWith(null as void),
+      startWith(''),
       debounceTime(500),
       switchMap((option: string | null) => this.search(option)));
   }
