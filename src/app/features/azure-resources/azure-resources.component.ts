@@ -137,7 +137,7 @@ export class AzureResourcesComponent {
   public getTagsList(tags: McsAzureResourceTag[]): string {
     let unresolvedTags: boolean = tags === undefined || tags === null;
     if (unresolvedTags) {
-      return 'Retrieving tags';
+      return 'Retrieving tags...';
     }
 
     if (isNullOrEmpty(tags)) {
