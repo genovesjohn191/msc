@@ -222,7 +222,7 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
       let option = { key, value } as FlatOption;
 
       // Create separate group for Other
-      let others = item.categoryName.toLocaleLowerCase().trim() === 'other';
+      let others = isNullOrEmpty(item.categoryName) || item.categoryName.toLocaleLowerCase().trim() === 'other';
       if (others) {
         otherOptions.push(option)
         return;

@@ -202,8 +202,6 @@ export class DynamicSelectChipsTerraformTagComponent extends DynamicSelectChipsF
         this._slugIdMapping.set(item.slugId, item.id);
       }
 
-
-
       let key = this.config.useSlugIdAsKey ? item.slugId : item.id;
       let value = item.name;
 
