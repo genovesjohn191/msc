@@ -172,13 +172,13 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
 
       case 'terraform-module-type-change':
         this._moduleType = params.value;
-        this.retrieveOptions();
+        this.filterOptions();
         break;
     }
   }
 
   protected callService(): Observable<McsTerraformModule[]> {
-    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._moduleType)) {
+    if (isNullOrEmpty(this._companyId)) {
       return of([]);
     }
 
@@ -196,6 +196,10 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
   }
 
   protected filter(collection: McsTerraformModule[]): GroupedOption[] {
+    if (isNullOrEmpty(this._moduleType)) {
+      return [];
+    }
+
     let groupedOptions: GroupedOption[] = [];
     let otherOptions: FlatOption[] = [];
     this._slugIdMapping.clear();
@@ -213,7 +217,7 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
 
       let key = this.config.useSlugIdAsKey ? item.slugId : item.id;
-      let value = item.name;
+      let value = item.friendlyName ? item.friendlyName : item.name;
 
       let option = { key, value } as FlatOption;
 
