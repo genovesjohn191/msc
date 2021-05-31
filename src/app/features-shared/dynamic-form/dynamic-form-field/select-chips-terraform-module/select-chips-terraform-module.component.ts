@@ -172,13 +172,13 @@ export class DynamicSelectChipsTerraformModuleComponent extends DynamicSelectChi
 
       case 'terraform-module-type-change':
         this._moduleType = params.value;
-        this.filterOptions();
+        this.retrieveOptions();
         break;
     }
   }
 
   protected callService(): Observable<McsTerraformModule[]> {
-    if (isNullOrEmpty(this._companyId)) {
+    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._moduleType)) {
       return of([]);
     }
 
