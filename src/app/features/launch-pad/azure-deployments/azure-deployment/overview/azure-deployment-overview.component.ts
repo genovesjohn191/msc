@@ -207,7 +207,11 @@ export class AzureDeploymentOverviewComponent implements OnDestroy {
   }
 
   private _getTagInfo(deployment: McsTerraformDeployment): void {
-    this._apiService.getTerraformTag(deployment.tag)
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, deployment.companyId]
+    ]);
+
+    this._apiService.getTerraformTag(deployment.tag, optionalHeaders)
     .pipe(catchError(() => {
       this.templateVariables = `Unable to retrieve template variables for ${deployment.tagName}`;
       this._changeDetector.markForCheck();
