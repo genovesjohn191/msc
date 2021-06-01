@@ -39,6 +39,9 @@
               <mcs-item>
                 <span>{{ 'label.requestor' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.requestor | mcsDataLabel"></span>
+                <span read-only *ngIf="ticketCreatedByDifferentCompanyId(selectedTicket.createdByCompanyId, selectedTicket.requestor)">
+                  {{ 'notifications.account' | translate }}
+                </span>
               </mcs-item>
 
               <mcs-item>
@@ -150,6 +153,12 @@
                     <span>{{ azureResource.name }} </span>
                     <span class="group-name" read-only>({{ azureResource.resourceGroup }})</span>
                   </mcs-item>
+                </ng-container>
+
+                <ng-container *ngIf="selectedTicket.azureResources.length === 0">
+                  <mcs-data-status-empty>
+                    {{ 'ticket.missingAzureResourcesLabel' | translate }}
+                  </mcs-data-status-empty>
                 </ng-container>
               </div>
             </mcs-presentation-panel>

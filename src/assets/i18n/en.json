@@ -2304,6 +2304,7 @@
     "header": "{{ticketType}} #",
     "missingRequestorLabel": "Unknown Requestor",
     "missingServicesLabel": "No services found",
+    "missingAzureResourcesLabel": "No resources to display",
     "missingAttachmentsLabel": "No attachments found",
     "missingActivitiesLabel": "No activities yet",
     "creatingComment": "Adding comment...",
