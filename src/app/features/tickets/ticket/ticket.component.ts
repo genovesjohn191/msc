@@ -37,7 +37,8 @@ import {
   TicketType,
   McsFeatureFlag,
   McsAzureResourcesInfo,
-  McsAzureResource
+  McsAzureResource,
+  McsIdentity
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -47,7 +48,7 @@ import {
   CommonDefinition,
   createObject
 } from '@app/utilities';
-import { McsAccessControlService } from '@app/core';
+import { McsAccessControlService, McsAuthenticationIdentity, McsCookieService } from '@app/core';
 
 @Component({
   selector: 'mcs-ticket',
@@ -69,9 +70,11 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _accessControlService: McsAccessControlService,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _activatedRoute: ActivatedRoute,
     private _apiService: McsApiService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _cookieService: McsCookieService,
     private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService
   ) {
@@ -99,6 +102,21 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public get resourceNotFoundText(): string {
     return this._translateService.instant('ticket.resourceNotFound');
+  }
+
+  public get activeCompanyId(): string {
+    let companyIdHeader: string = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
+    return companyIdHeader ? companyIdHeader : this._authenticationIdentity.user?.companyId;
+  }
+
+  /**
+   * Whether to show attribution text or not in requestor
+   */
+  public ticketCreatedByDifferentCompanyId(createdByCompanyId: string, requestor: string): boolean {
+    let ticketCreatedBySameCompanyId = this.activeCompanyId === createdByCompanyId;
+    let invalidToShowAttributionText = ticketCreatedBySameCompanyId || isNullOrEmpty(createdByCompanyId) || isNullOrEmpty(requestor);
+    if (invalidToShowAttributionText) { return false; }
+    return true;
   }
 
   /**

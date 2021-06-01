@@ -9,6 +9,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  McsAuthenticationIdentity,
+  McsCookieService,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -17,7 +19,9 @@ import {
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
+  McsCompany,
   McsFilterInfo,
+  McsIdentity,
   McsQueryParam,
   McsTicket,
   RouteKey
@@ -53,6 +57,8 @@ export class TicketsComponent {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _cookieService: McsCookieService,
     private _navigationService: McsNavigationService
   ) {
     this.dataSource = new McsTableDataSource2(this._getTickets.bind(this));
@@ -98,6 +104,31 @@ export class TicketsComponent {
 
   public get routeKeyEnum(): any {
     return RouteKey;
+  }
+
+  public get activeCompanyId(): string {
+    let companyIdHeader: string = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
+    return companyIdHeader ? companyIdHeader : this._authenticationIdentity.user?.companyId;
+  }
+
+  /**
+   * Whether to show attribution text or not in logged by column
+   */
+  public ticketCreatedByDifferentCompanyId(createdByCompanyId: string, requestor: string): boolean {
+    let ticketCreatedBySameCompanyId = this.activeCompanyId === createdByCompanyId;
+    let invalidToShowAttributionText = ticketCreatedBySameCompanyId || isNullOrEmpty(createdByCompanyId) || isNullOrEmpty(requestor);
+    if (invalidToShowAttributionText) { return false; }
+    return true;
+  }
+
+  /**
+   * Whether to show attribution text or not in last updated by column
+   */
+  public ticketUpdatedByDifferentCompanyId(updatedByCompanyId: string, updatedBy: string): boolean {
+    let ticketUpdatedBySameCompanyId = this.activeCompanyId === updatedByCompanyId;
+    let invalidToShowAttributionText = ticketUpdatedBySameCompanyId || isNullOrEmpty(updatedBy);
+    if (invalidToShowAttributionText) { return false; }
+    return true;
   }
 
   public navigateToTicket(ticket: McsTicket): void {
