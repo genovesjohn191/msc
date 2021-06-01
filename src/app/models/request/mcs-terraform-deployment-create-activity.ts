@@ -17,7 +17,7 @@ export class McsTerraformDeploymentCreateActivity extends McsApiJobRequestBase<M
   public confirm: boolean = undefined;
 
   @JsonProperty()
-  public deleteDestroy?: boolean = undefined;
+  public deleteDeployment?: boolean = undefined;
 
   @JsonProperty({
     serializer: TerraformDeploymentActivityTypeSerialization,

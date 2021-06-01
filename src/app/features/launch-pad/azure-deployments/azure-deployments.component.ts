@@ -39,6 +39,7 @@ import {
 import {
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
+  McsJob,
   McsStateNotification,
   McsTerraformDeployment,
   McsTerraformDeploymentCreateActivity,
@@ -198,26 +199,10 @@ export class AzureDeploymentsComponent implements OnDestroy {
         if (result?.action !== DialogResultAction.Confirm || !result?.data) { return of(null); }
 
         if (!deleteData.includeDestroy) {
-          return this._apiService.deleteTerraformDeployment(deployment.id).pipe(
-            tap(() =>
-              this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
-                new McsStateNotification('success', 'message.successfullyDeleted',)
-              )
-            )
-          );
+          return this._runDelete(deployment);
         }
 
-        let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
-          confirm: true,
-          deleteDestroy: true,
-          type: TerraformDeploymentActivityType.Destroy,
-          clientReferenceObject: {
-            terraformDeploymentId: deployment.id,
-            terraformActivityRefId: Guid.newGuid().toString(),
-            type: TerraformDeploymentActivityType.Destroy
-          }
-        });
-        return this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload);
+        return this._runDestroyAndDelete(deployment);
       })
     ).subscribe();
   }
@@ -300,5 +285,29 @@ export class AzureDeploymentsComponent implements OnDestroy {
     return this._apiService.getTerraformDeployments(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount))
     );
+  }
+
+  private _runDelete(deployment: McsTerraformDeployment): Observable<boolean> {
+    return this._apiService.deleteTerraformDeployment(deployment.id).pipe(
+      tap(() =>
+        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+          new McsStateNotification('success', 'message.successfullyDeleted',)
+        )
+      )
+    );
+  }
+
+  private _runDestroyAndDelete(deployment: McsTerraformDeployment): Observable<McsJob> {
+    let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
+      confirm: true,
+      deleteDeployment: true,
+      type: TerraformDeploymentActivityType.Destroy,
+      clientReferenceObject: {
+        terraformDeploymentId: deployment.id,
+        terraformActivityRefId: Guid.newGuid().toString(),
+        type: TerraformDeploymentActivityType.Destroy
+      }
+    });
+    return this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload);
   }
 }
