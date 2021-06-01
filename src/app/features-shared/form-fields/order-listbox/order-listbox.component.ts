@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Injector,
   Input,
   Output,
   ViewEncapsulation
 } from '@angular/core';
 import { McsOption } from '@app/models';
+import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
 
 @Component({
   selector: 'mcs-order-listbox',
@@ -19,10 +21,11 @@ import { McsOption } from '@app/models';
   }
 })
 
-export class OrderListBoxComponent {
+export class OrderListBoxComponent extends FormFieldBaseComponent2<McsOption> {
   @Input()
   public get categoryList(): McsOption[] { return this._categoryList; }
   public set categoryList(value: McsOption[]) {
+    this._selectedCategory = null;
     if (this._categoryList !== value) {
       this._categoryList = value;
     }
@@ -33,6 +36,15 @@ export class OrderListBoxComponent {
   public set selectedItemList(value: McsOption[]) {
     if (this._selectedItemList !== value) {
       this._selectedItemList = value;
+    }
+  }
+
+  @Input()
+  public get selectedCategory(): McsOption { return this._selectedCategory; }
+  public set selectedCategory(value: McsOption) {
+    if (this._selectedCategory !== value) {
+      this._selectedCategory = value;
+      this.categoryChange.emit(value);
     }
   }
 
@@ -57,6 +69,9 @@ export class OrderListBoxComponent {
   @Input()
     public eventLabel: string;
 
+  @Input()
+    public noItemsFallbackText: string;
+
   @Output()
     public categoryChange: EventEmitter<McsOption> = new EventEmitter<McsOption>(null);
 
@@ -65,11 +80,15 @@ export class OrderListBoxComponent {
 
   private _categoryList: McsOption[];
   private _selectedItemList: McsOption[];
-  public selectedCategory: string;
+  public _selectedCategory: McsOption;
   public selectedItem: string;
 
+  constructor(_injector: Injector) {
+    super(_injector);
+  }
+
   public onClickCategory(category: McsOption): void {
-    this.selectedCategory = category?.text;
+    this._selectedCategory = category;
     this.selectedItem = '';
     this.categoryChange.emit(category);
   }
@@ -77,5 +96,6 @@ export class OrderListBoxComponent {
   public onClickSelectedItem(item: McsOption): void {
     this.selectedItem = item?.value;
     this.selectedItemChange.emit(item);
+    this.writeValue(item?.value);
   }
 }

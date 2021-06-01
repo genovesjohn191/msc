@@ -96,6 +96,7 @@ export * from './enumerations/terraform-deployment-status.enum';
 export * from './enumerations/azure-service-request-type.enum';
 export * from './enumerations/period-range.enum';
 export * from './enumerations/cloudhealth-management-tag.enum';
+export * from './enumerations/module-type.enum';
 export * from './enumerations/install-base-state.enum';
 
 /** Job References */

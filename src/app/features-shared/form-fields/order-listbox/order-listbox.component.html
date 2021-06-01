@@ -6,7 +6,7 @@
         mcsEventTracker="{{ categoryEventTracker }}"
         mcsEventCategory="{{ eventCategory }}"
         mcsEventLabel="{{ eventLabel }}"
-        [ngClass]="{'active': selectedCategory === category?.text}">
+        [ngClass]="{'active': selectedCategory?.text === category?.text}">
         {{ category.text }}
         <mat-icon color="black" style="float: right">arrow_right</mat-icon>
       </a>
@@ -14,11 +14,11 @@
   </div>
   <div class="right-container">
     <ng-container *ngIf="isProcessing">
-      <mcs-loader style="padding-left: 10px" size="medium"></mcs-loader>
+      <mcs-loader padding-left-small size="medium"></mcs-loader>
     </ng-container>
     <ng-container *ngIf="selectedItemList?.length === 0; else selectedItemListTemplate">
       <mcs-item mcsAlign="center">
-        <span style="padding-left: 10px">{{ 'message.noCloudHealthAlertsDisplay' | translate }}</span>
+        <span padding-left-small>{{ noItemsFallbackText }}</span>
       </mcs-item>
     </ng-container>
     <ng-template #selectedItemListTemplate>
