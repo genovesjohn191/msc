@@ -904,7 +904,7 @@
       "servicePlaceholder": "Select a Service",
       "complexityPlaceholder": "Select Complexity",
       "azureProductPlaceHolder": "Select an Azure Product",
-      "azureResourcesPlaceHolder": "Select an Azure Resource",
+      "azureResourcesPlaceHolder": "Select an Azure Resource *",
       "requestDescriptionPlaceholder": "What change would you like applied?",
       "serviceRequestTypePlaceHolder": "Select an Azure Request Type",
       "moduleTypePlaceholder": "Select Module Type",
