@@ -1,0 +1,90 @@
+<form [formGroup]="fgProvision" mcsFormGroup>
+  <!-- Module Type -->
+  <mcs-item orientation='block' margin-top-medium>
+    <span align-self-start>{{ 'label.moduleType' | translate }}</span>
+    <mcs-form-field>
+      <mcs-select required
+        [formControl]="fcModuleType"
+        mcsId="select-module-type"
+        mcsEventTracker="module-type"
+        mcsEventCategory="order"
+        mcsEventLabel="order-service-request"
+        [placeholder]="'orderMsRequestChange.detailsStep.moduleTypePlaceholder' | translate"
+        [mcsContextualHelp]="'orderMsRequestChange.detailsStep.moduleTypeContextualHelp' | translate"
+        (selectionChange)="onChangeModuleType($event)">
+        <mcs-option *ngFor="let moduleType of moduleType$ | async" [value]="moduleType.value">
+          {{ moduleType.text }}
+        </mcs-option>
+      </mcs-select>
+    </mcs-form-field>
+  </mcs-item>
+
+  <!-- Module ListBox -->
+  <div style="margin-top: 15px">
+    <ng-container *ngIf="loadingInProgress">
+      <mcs-loader size="small"></mcs-loader>
+    </ng-container>
+    <ng-container *ngIf="terraformCategories.length > 0">
+      <mcs-order-listbox
+        [categoryList]="terraformCategories"
+        [selectedItemList]="moduleList"
+        [selectedCategory]="terraformCategories[0]"
+        [categoryId]="'select-terraform-category'"
+        [selectedItemId]="'select-terraform-module'"
+        [categoryEventTracker]="'terraform-category'"
+        [selectedItemEventTracker]="'terraform-module'"
+        [eventCategory]="'provision'"
+        [eventLabel]="'azure-service-request-page'"
+        [noItemsFallbackText]="'message.noTerraformModulesDisplay' | translate"
+        (categoryChange)="onClickCategory($event)"
+        [formControl]="fcTerraformModule">
+      </mcs-order-listbox>
+    </ng-container>
+  </div>
+
+  <!-- Azure Resource Group -->
+  <mcs-item orientation='block'>
+    <span align-self-start>{{ 'label.resourceGroup' | translate }}
+      <ng-container *ngIf="resourceLoadingInProgress">
+        <mcs-loader size="small"></mcs-loader>
+      </ng-container>
+    </span>
+    <mcs-form-field *ngIf="!showAzureResourcePermissionError">
+      <mcs-select
+        [formControl]="fcResourceGroup"
+        mcsId="select-azure-resource-group"
+        mcsEventTracker="azure-resource-group"
+        mcsEventCategory="order"
+        mcsEventLabel="order-service-request"
+        [mcsContextualHelp]="'orderMsRequestChange.detailsStep.resourceGroupContextualHelp' | translate"
+        [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
+        (selectionChange)="onChangeResourceGroup($event)">
+        <mcs-option *ngFor="let azureResource of azureResources" [value]="azureResource.value">
+          {{ azureResource.text }}
+        </mcs-option>
+      </mcs-select>
+      <mcs-error mcsError errorState="required">
+        {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
+      </mcs-error>
+    </mcs-form-field>
+    <ng-container *ngIf="showAzureResourcePermissionError">
+      <span read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
+    </ng-container>
+  </mcs-item>
+
+  <!-- New Resource Group -->
+  <mcs-item orientation='block' *ngIf="isResourceGroupNew">
+    <mcs-form-field>
+      <input mcsInput required
+        [formControl]="fcNewResourceGroupName"
+        mcsId="input-new-resource-group-name"
+        mcsEventTracker="new-resource-group-name"
+        mcsEventCategory="order"
+        mcsEventLabel="order-service-request"
+        [placeholder]="'orderMsRequestChange.detailsStep.newResourceGroupPlaceholder' | translate">
+        <mcs-error mcsError errorState="required">
+          {{ 'orderMsRequestChange.errors.newResourceGroup' | translate }}
+        </mcs-error>
+    </mcs-form-field>
+  </mcs-item>
+</form>

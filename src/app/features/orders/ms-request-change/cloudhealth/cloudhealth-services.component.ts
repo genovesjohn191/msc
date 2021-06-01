@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild
@@ -45,7 +46,8 @@ import {
   getFirstDateOfTheYear,
   getLastDateOfThePreviousYear,
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
@@ -66,9 +68,10 @@ interface CloudHealthPeriodRange {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CloudHealthServicesComponent implements OnInit {
+export class CloudHealthServicesComponent implements OnInit, OnDestroy {
   // Forms control
   public fgCloudhealth: FormGroup;
+  public fcCloudhealth: FormControl;
   public fcDropdown: FormControl;
   public fcCheckbox: FormControl;
 
@@ -118,6 +121,10 @@ export class CloudHealthServicesComponent implements OnInit {
     this._registerFormGroup();
     this._subscribeToCloudhealthPeriodRangeOptions();
     this._subscribeToManagementTagOptions();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._valueChangesSubject);
   }
 
   public get alertManagementTag(): string {
@@ -177,10 +184,12 @@ export class CloudHealthServicesComponent implements OnInit {
    private _registerFormGroup(): void {
     this.fcDropdown = new FormControl([], [CoreValidators.required]);
     this.fcCheckbox = new FormControl([], [CoreValidators.required]);
+    this.fcCloudhealth = new FormControl('', []);
 
     this.fgCloudhealth = this._formBuilder.group({
       fcDropdown: this.fcDropdown,
-      fcCheckbox: this.fcCheckbox
+      fcCheckbox: this.fcCheckbox,
+      fcCloudhealth: this.fcCloudhealth
     });
   }
 
@@ -244,14 +253,14 @@ export class CloudHealthServicesComponent implements OnInit {
         break;
       case PeriodRange.EarlierThisMonth:
         startDate = new Date(getCurrentDate().setDate(getFirstDateOfTheMonth()));
-        // if first date of the week (less 1 day) is equal to yesterday date return true
+        // if first date of the week minus 1 day is equal to yesterday return true
         let monthSameEndDate = getCurrentDate().setDate(getFirstDateOfTheWeek() - 1) === yesterday;
         let reduceDays = monthSameEndDate ? 2 : 1;
         endDate = new Date(getCurrentDate().setDate(getFirstDateOfTheWeek() - reduceDays));
         break;
       case PeriodRange.EarlierThisYear:
         startDate = getFirstDateOfTheYear();
-        // if first date of the month (less 1 day) is equal to yesterday date return true
+        // if first date of the month minus 1 day is equal to yesterday return true
         let yearSameEndDate = getCurrentDate().setDate(getFirstDateOfTheMonth() - 1) === yesterday;
         let setEndDate = yearSameEndDate ? getFirstDateOfTheWeek() : getFirstDateOfTheMonth();
         endDate = new Date(getCurrentDate().setDate(setEndDate - 1));

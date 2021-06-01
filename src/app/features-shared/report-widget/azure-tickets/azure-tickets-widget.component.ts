@@ -138,5 +138,6 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.AwaitingCustomer], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitForRfo], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitingForTaskCompletion], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
+    this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.Resolved], CommonDefinition.ASSETS_SVG_CHECK);
   }
 }

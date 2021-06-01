@@ -11,7 +11,7 @@
           mcsEventCategory="orders"
           mcsEventLabel="ms-service-change-request">
           <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
-          <span>{{ 'orderMsRequestChange.detailsStep.previous' | translate }}</span>
+          <span>{{ 'action.back' | translate }}</span>
         </mcs-action-item>
       </mcs-top-panel-item>
     </mcs-top-panel>
@@ -71,7 +71,7 @@
               </mcs-item>
 
               <!-- Service Request Type Selection -->
-              <mcs-item orientation="block" [hidden]="!hasCloudHealthRequestAcess()">
+              <mcs-item orientation="block" [hidden]="!hasCloudHealthRequestAccess() && !hasProvisionRequestAccess()">
                 <span align-self-start>{{ 'label.requestType' | translate }}</span>
                 <mcs-form-field [disabled]="!fcMsService.value">
                   <mcs-select
@@ -94,7 +94,7 @@
               <ng-container *ngIf="isServiceRequestTypeCustom(fcMsServiceRequestType?.value)">
                 <!-- Azure Product  -->
                 <mcs-item orientation="block">
-                  <span align-self-start>{{ 'orderMsRequestChange.detailsStep.azureProductLabel' | translate }}</span>
+                  <span align-self-start>{{ 'label.azureProduct' | translate }}</span>
                   <mcs-form-field>
                     <mcs-select [formControl]="fcAzureProduct"
                       mcsId="select-ms-service-azure-product"
@@ -121,7 +121,7 @@
             
                 <!-- Azure Resources -->
                 <mcs-item orientation="block">
-                  <span align-self-start>{{ 'orderMsRequestChange.detailsStep.azureResourcesLabel' | translate }}
+                  <span align-self-start>{{ 'label.azureResources' | translate }}
                     <ng-container *ngIf="loadingInProgress">
                       <mcs-loader size="small"
                         [mcsTooltip]="loadingText"
@@ -152,7 +152,7 @@
                               {{ resource.text }}
                             </span>
                         </mcs-option>
-                        <ng-container *ngIf="resource.text === 'Add new resource(s)'">
+                        <ng-container *ngIf="isAddNewResourceSelected(resource.text)">
                           <hr>
                         </ng-container>
                       </ng-container>
@@ -169,11 +169,21 @@
                 </mcs-item>
               </ng-container>
               
-              <!-- Cloudhealth Request Type -->
+              <!-- Cloudhealth -->
               <ng-container *ngIf="isServiceRequestTypeCloudHealth(fcMsServiceRequestType?.value)">
                 <mcs-cloudhealth-services #fgCloudhealthService
                   (dataChange)="onCloudHealthChange($event)">
                 </mcs-cloudhealth-services>
+              </ng-container>
+
+              <!-- Provision -->
+              <ng-container *ngIf="isServiceRequestTypeProvision(fcMsServiceRequestType?.value)">
+                <mcs-provision #fgProvisionService
+                  [azureResources]="azureResourcesOptions$ | async"
+                  [showAzureResourcePermissionError]="showAzureResourcePermissionError"
+                  [resourceLoadingInProgress]="loadingInProgress"
+                  (dataChange)="onChangeProvisionDetails($event)">
+                </mcs-provision>
               </ng-container>
 
               <!-- SMAC Shared Form -->

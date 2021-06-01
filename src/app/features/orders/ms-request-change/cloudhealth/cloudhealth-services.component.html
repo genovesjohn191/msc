@@ -10,7 +10,9 @@
       [eventCategory]="'cloudhealth'"
       [isProcessing]="isChProcessing"
       [eventLabel]="'azure-service-request-page'"
+      [noItemsFallbackText]="'message.noCloudHealthAlertsDisplay' | translate"
       (categoryChange)="onClickPeriodRange($event)"
+      [formControl]="fcCloudhealth"
       (selectedItemChange)="onClickCloudHealthAlert($event)">
     </mcs-order-listbox>
 

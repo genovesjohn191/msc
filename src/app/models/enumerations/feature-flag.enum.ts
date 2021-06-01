@@ -3,7 +3,6 @@ export enum McsFeatureFlag {
   MaintenanceMode = 'EnableMaintenanceMode',
   SystemMessages = 'EnableSystemMessages',
   LaunchPad = 'EnableLaunchPad',
-  CloudHealthServiceRequest = 'EnableCloudHealthServiceRequest',
   ExperimentalFeatures = 'EnableExperimentalFeatures',
 
   AzureSlgTicket = 'EnableTicketingAzureSlg',
@@ -29,4 +28,7 @@ export enum McsFeatureFlag {
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',
   DnsListing = 'enablePrivateCloudNetworkDnsListing',
+
+  CloudHealthServiceRequest = 'EnableCloudHealthServiceRequest',
+  ProvisionServiceRequest = 'EnableProvisionServiceRequest',
 }

@@ -2,12 +2,14 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum AzureServiceRequestType {
   Custom = 0,
-  CloudHealth = 1
+  CloudHealth,
+  Provision
 }
 
 export const azureServiceRequestTypeText = {
   [AzureServiceRequestType.Custom]: 'Custom',
-  [AzureServiceRequestType.CloudHealth]: 'CloudHealth'
+  [AzureServiceRequestType.CloudHealth]: 'CloudHealth',
+  [AzureServiceRequestType.Provision]: 'Provision'
 };
 
 /**
