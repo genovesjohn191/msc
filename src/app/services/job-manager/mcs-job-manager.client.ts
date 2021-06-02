@@ -323,13 +323,16 @@ export class McsJobManagerClient implements McsDisposable {
     );
 
     // Terraform Deployments
-    this._jobEntitiesFactory.set(JobType.TerraformCreatePlan,
+    this._jobEntitiesFactory.set(JobType.TerraformRunPlan,
       new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.TerraformCreateApply,
+    this._jobEntitiesFactory.set(JobType.TerraformRunApply,
       new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.TerraformCreateDestroy,
+    this._jobEntitiesFactory.set(JobType.TerraformRunDestroy,
+      new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.TerraformDeleteDeployment,
       new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
     );
   }

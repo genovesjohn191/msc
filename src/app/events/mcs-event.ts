@@ -65,6 +65,7 @@ import { JobServerSnapshotCreateEvent } from './items/job-server-snapshot-create
 import { JobServerSnapshotDeleteEvent } from './items/job-server-snapshot-delete.event';
 import { JobSuccessfulEvent } from './items/job-successful.event';
 import { JobTerraformCreateApplyEvent } from './items/job-terraform-create-apply.event';
+import { JobTerraformCreateDeleteEvent } from './items/job-terraform-create-delete.event';
 import { JobTerraformCreateDestroyEvent } from './items/job-terraform-create-destroy.event';
 import { JobTerraformCreatePlanEvent } from './items/job-terraform-create-plan.event';
 import { JobVdcScaleEvent } from './items/job-vdc-scale.event';
@@ -182,6 +183,7 @@ export class McsEvent {
   public static jobTerraformCreatePlanEvent = new JobTerraformCreatePlanEvent();
   public static jobTerraformCreateApplyEvent = new JobTerraformCreateApplyEvent();
   public static jobTerraformCreateDestroyEvent = new JobTerraformCreateDestroyEvent();
+  public static jobTerraformCreateDeleteEvent = new JobTerraformCreateDeleteEvent();
 
   public static jobBackupAggregationTargetAddEvent = new JobBackupAggregationTargetAddEvent();
   public static jobVdcScaleEvent = new JobVdcScaleEvent();

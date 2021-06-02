@@ -75,6 +75,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
   private _createPlanHandler: Subscription;
   private _createApplyHandler: Subscription;
   private _createDestroyHandler: Subscription;
+  private _createDeleteHandler: Subscription;
 
   public constructor(
     _injector: Injector,
@@ -188,10 +189,15 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
       McsEvent.jobTerraformCreateDestroyEvent, this._onCreateActivity.bind(this)
     );
 
+    this._createDeleteHandler = this._eventDispatcher.addEventListener(
+      McsEvent.jobTerraformCreateDeleteEvent, this._onCreateActivity.bind(this)
+    );
+
     // Invoke the event initially
     this._eventDispatcher.dispatch(McsEvent.jobTerraformCreatePlanEvent);
     this._eventDispatcher.dispatch(McsEvent.jobTerraformCreateApplyEvent);
     this._eventDispatcher.dispatch(McsEvent.jobTerraformCreateDestroyEvent);
+    this._eventDispatcher.dispatch(McsEvent.jobTerraformCreateDeleteEvent);
   }
 
   private _onCreateActivity(job: McsJob): void {
