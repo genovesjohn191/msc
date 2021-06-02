@@ -40,7 +40,7 @@ export class McsTerraformDeploymentActivity extends McsEntityBase {
   })
   public type: TerraformDeploymentActivityType = undefined;
 
-  @JsonProperty()
+  @JsonProperty({ target: McsJob })
   public job: McsJob = undefined;
 
   @JsonProperty()
