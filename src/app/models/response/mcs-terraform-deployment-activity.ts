@@ -5,7 +5,11 @@ import {
   TerraformDeploymentActivityType,
   TerraformDeploymentActivityTypeSerialization
 } from '../enumerations/terraform-deployment-activity-type.enum';
-import { TerraformDeploymentStatus, TerraformDeploymentStatusSerialization, terraformDeploymentStatusText } from '../enumerations/terraform-deployment-status.enum';
+import {
+  TerraformDeploymentStatus,
+  TerraformDeploymentStatusSerialization,
+  terraformDeploymentStatusText
+} from '../enumerations/terraform-deployment-status.enum';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 import { McsJob } from './mcs-job';
 
@@ -40,7 +44,7 @@ export class McsTerraformDeploymentActivity extends McsEntityBase {
   })
   public type: TerraformDeploymentActivityType = undefined;
 
-  @JsonProperty()
+  @JsonProperty({ target: McsJob})
   public job: McsJob = undefined;
 
   @JsonProperty()
@@ -48,7 +52,7 @@ export class McsTerraformDeploymentActivity extends McsEntityBase {
 
   public get statusIconKey(): string {
     switch (this.status) {
-      case TerraformDeploymentStatus.Unknown:   // Red
+      case TerraformDeploymentStatus.Unknown: // Red
       case TerraformDeploymentStatus.Failed:
         return CommonDefinition.ASSETS_SVG_STATE_STOPPED;
 
