@@ -1,4 +1,7 @@
-import { McsSizeType } from '@app/utilities';
+import {
+  IJsonObject,
+  McsSizeType
+} from '@app/utilities';
 
 export interface IFormField {
   id?: string;
@@ -6,6 +9,7 @@ export interface IFormField {
   readonlyElement?: boolean;
   label?: string;
   size?: McsSizeType;
+  interpolations?: IJsonObject;
 
   includeNone?: boolean;
 }

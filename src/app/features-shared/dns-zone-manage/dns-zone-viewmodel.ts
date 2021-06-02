@@ -55,8 +55,8 @@ export class DnsZoneViewModel {
 
     this.fcTtlSeconds = new FormControl('', [
       CoreValidators.numeric,
-      (control) => CoreValidators.min(DNS_TTLSECONDS_MIN_VALUE)(control),
-      (control) => CoreValidators.max(DNS_TTLSECONDS_MAX_VALUE)(control)
+      (control) => CoreValidators.min(this.ttlMinValue)(control),
+      (control) => CoreValidators.max(this.ttlMaxValue)(control)
     ]);
 
     this.fgDnsZone = new FormGroup({
@@ -68,6 +68,14 @@ export class DnsZoneViewModel {
 
     this._registerRegexMap();
     this.setDefaultValues();
+  }
+
+  public get ttlMinValue(): number {
+    return DNS_TTLSECONDS_MIN_VALUE;
+  }
+
+  public get ttlMaxValue(): number {
+    return DNS_TTLSECONDS_MAX_VALUE;
   }
 
   public get hasChanges(): boolean {
