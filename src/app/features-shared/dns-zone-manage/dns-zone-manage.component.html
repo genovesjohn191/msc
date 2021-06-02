@@ -5,7 +5,7 @@
       <mcs-grid-column sizeLg="12">
         <mcs-field-select-dns-zone-type
           size="full"
-          [label]="'label.zoneType' | translate"
+          [label]="'label.recordType' | translate"
           [formControl]="addViewModel.fcZoneType">
         </mcs-field-select-dns-zone-type>
       </mcs-grid-column>
@@ -33,7 +33,8 @@
       <mcs-grid-column sizeLg="6">
         <mcs-field-input
           size="full"
-          [label]="'label.ttl' | translate"
+          [label]="'label.ttlSeconds' | translate"
+          [interpolations]="{ min_value: addViewModel.ttlMinValue, max_value: addViewModel.ttlMaxValue }"
           [formControl]="addViewModel.fcTtlSeconds">
         </mcs-field-input>
       </mcs-grid-column>
@@ -99,6 +100,7 @@
       </th>
       <td mat-cell *matCellDef="let row">
         <mcs-field-input size="full"
+          [interpolations]="{ min_value: row.ttlMinValue, max_value: row.ttlMaxValue }"
           [readonlyElement]="!row.updating"
           [formControl]="row.fcTtlSeconds">
         </mcs-field-input>

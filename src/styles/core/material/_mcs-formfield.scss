@@ -19,6 +19,13 @@ mat-form-field.mat-form-field {
     }
   }
 
+  .mat-form-field-wrapper {
+    .mat-form-field-subscript-wrapper {
+      white-space: pre-wrap;
+    }
+  }
+
+  // For readonly mode only
   &.mcs-form-field-readonly {
     pointer-events: none;
 

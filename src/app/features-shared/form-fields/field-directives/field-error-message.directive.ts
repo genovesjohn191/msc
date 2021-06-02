@@ -22,7 +22,8 @@ import {
 } from '@angular/material/form-field';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  IJsonObject
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -39,6 +40,7 @@ export class FieldErrorMessageDirective<TInput> implements AfterViewInit, OnDest
 
   private _destroySubject = new Subject<void>();
   private _notifyViewUpdateChange = new Subject<void>();
+  private _interpolations: IJsonObject;
 
   constructor(
     private _injector: Injector,
@@ -65,6 +67,10 @@ export class FieldErrorMessageDirective<TInput> implements AfterViewInit, OnDest
     this._notifyViewUpdateChange.next();
   }
 
+  public registerInterpolations(interpolations: IJsonObject): void {
+    this._interpolations = interpolations;
+  }
+
   private _onUpdateError(state: any): void {
     if (isNullOrEmpty(state) || state === 'VALID') { return; }
 
@@ -86,7 +92,10 @@ export class FieldErrorMessageDirective<TInput> implements AfterViewInit, OnDest
       firstError = firstError?.charAt(0).toUpperCase() + firstError.slice(1);
     }
 
-    this._errorMessage = this._translateService.instant(`message.${this.labelPrefix}${firstError}`);
+    this._errorMessage = this._translateService.instant(
+      `message.${this.labelPrefix}${firstError}`,
+      this._interpolations
+    );
     this._changeDetectorRef.markForCheck();
   }
 

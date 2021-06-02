@@ -27,6 +27,7 @@ import {
 import {
   isNullOrEmpty,
   isNullOrUndefined,
+  IJsonObject,
   McsSizeType
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
@@ -73,6 +74,9 @@ export abstract class FormFieldBaseComponent2<TValue>
 
   @Input()
   public includeNone: boolean;
+
+  @Input()
+  public interpolations: IJsonObject;
 
   @ViewChild(FieldErrorMessageDirective)
   public errorMessageTemplate: FieldErrorMessageDirective<any>;
@@ -158,6 +162,7 @@ export abstract class FormFieldBaseComponent2<TValue>
     // We need to update the form control validators here since ngOnInit does not yet
     // obtain the registered validators.
     this._updateFormControlValidators();
+    this._updateMessageInterpolations();
   }
 
   public registerOnTouched(fn: () => void): void {
@@ -261,5 +266,14 @@ export abstract class FormFieldBaseComponent2<TValue>
       ]);
 
     this.ngControl.control.updateValueAndValidity();
+  }
+
+  private _updateMessageInterpolations(): void {
+    this.ngZone.onStable.pipe(
+      take(1),
+      tap(() => {
+        this.errorMessageTemplate?.registerInterpolations(this.interpolations);
+      })
+    ).subscribe();
   }
 }
