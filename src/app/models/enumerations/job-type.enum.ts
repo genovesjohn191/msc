@@ -83,9 +83,10 @@ export enum JobType {
   LaunchpadManagementToolsUpdate = 102018,
 
   // Terraform
-  TerraformCreatePlan = 104001,
-  TerraformCreateApply = 104002,
-  TerraformCreateDestroy = 104003,
+  TerraformRunPlan = 104001,
+  TerraformRunApply = 104002,
+  TerraformRunDestroy = 104003,
+  TerraformDeleteDeployment = 104004,
 
   // Microsoft License
   PublicCloudLicenseChangeCount = 2000001,
@@ -146,9 +147,10 @@ export const jobTypeText = {
   [JobType.LaunchpadPublicCloudMicrosoftCreateSubscription]: 'Create Microsoft Subscription',
   [JobType.LaunchpadManagementToolsUpdate]: 'Update in Management Tools',
 
-  [JobType.TerraformCreatePlan]: 'Create Terraform Plan',
-  [JobType.TerraformCreateApply]: 'Create Terraform Apply',
-  [JobType.TerraformCreateDestroy]: 'Create Terraform Destroy',
+  [JobType.TerraformRunPlan]: 'Run Terraform Deployment',
+  [JobType.TerraformRunApply]: 'Apply Terraform Deployment',
+  [JobType.TerraformRunDestroy]: 'Destroy Terraform Deployment',
+  [JobType.TerraformDeleteDeployment]: 'Delete Terraform Deployment',
 
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
   [JobType.InternetPortPlanChange]: 'Change Internet Port Plan',
