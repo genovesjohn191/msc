@@ -219,6 +219,7 @@ export class ServerNewComponent
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.manageStorage = serverStorage;
     this.selectedStorage = serverStorage.storage;
+    this._notifyDataChange();
   }
 
   /**
@@ -285,6 +286,13 @@ export class ServerNewComponent
   public getCreationOsType(): Os {
     let imageOsType = getSafeProperty(this.fcImage, (obj) => obj.value.type);
     return imageOsType === 'WIN' ? Os.Windows : Os.Linux;
+  }
+
+  /**
+   * Returns the input storage size of the server
+   */
+  public getCreationStorageSize(): number {
+    return this.manageStorage?.sizeMB;
   }
 
   /**

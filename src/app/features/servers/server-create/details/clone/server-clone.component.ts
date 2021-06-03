@@ -133,6 +133,13 @@ export class ServerCloneComponent
   }
 
   /**
+   * Returns the input storage size of the server
+   */
+  public getCreationStorageSize(): number {
+    return 0;
+  }
+
+  /**
    * Returns the creation form group
    */
   public getCreationForm(): McsFormGroupDirective {

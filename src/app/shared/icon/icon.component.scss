@@ -1,10 +1,61 @@
 @import "../../../styles/shared/base";
 
+$notification-bell-width-no-running-job: 19px;
+$notification-bell-width-with-running-job: 25px;
+$notification-bell-animation: bell-rotate-left-to-right 1.5s infinite ease-in-out;
+$notification-bell-clapper-animation: bell-clapper-rotate-right-to-left 1.5s infinite linear;
+
 .icon-wrapper {
   @include display-inline-flex(row);
   @include align-items(center);
   justify-content: center;
   vertical-align: middle;
+
+  .notification-bell {
+    width: $notification-bell-width-no-running-job;
+    min-width: $notification-bell-width-no-running-job;
+    height: auto;
+  }
+
+  &.active-job {
+    .notification-bell {
+      width: $notification-bell-width-with-running-job;
+      min-width: $notification-bell-width-with-running-job;
+      @include animation($notification-bell-animation);
+    }
+    
+    #clapper-group {
+      transform-origin: top center;
+      @include animation($notification-bell-clapper-animation);
+    }
+    
+    @keyframes bell-rotate-left-to-right {
+      0% {
+        transform: rotate(-30deg)
+      }
+      50% {
+        transform: rotate(30deg)
+      }
+      100% {
+        transform: rotate(-30deg)
+      }
+    }
+    
+    @keyframes bell-clapper-rotate-right-to-left {
+      0% {
+        transform: rotate(0deg)
+      }
+      20% {
+        transform: rotate(20deg)
+      }
+      70% {
+        transform: rotate(-20deg)
+      }
+      100% {
+        transform: rotate(0deg)
+      }
+    }
+  }
 }
 
 .icon-container {

@@ -60,6 +60,9 @@ export class ServerCreateAddOnsComponent
   @Input()
   public osType: Os;
 
+  @Input()
+  public storageSize: number;
+
   @Output()
   public dataChange = new EventEmitter<Array<AddOnDetails<any>>>();
 

@@ -67,7 +67,8 @@
         placement="bottom" orientation="left" theme="light" priority="high"
         [content]="notificationsContent">
 
-        <mcs-icon [key]="bellIconKey" size="medium" color="light" ></mcs-icon>
+        <mcs-icon [key]="bellIconKey" size="medium" color="light"
+          [ngClass]="{'active-job': notifications | mcsIsNotNullOrEmpty}"></mcs-icon>
         <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
       </a>
     </div>

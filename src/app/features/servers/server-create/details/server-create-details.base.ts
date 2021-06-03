@@ -14,6 +14,11 @@ export abstract class ServerCreateDetailsBase<T> {
   public abstract getCreationOsType(): Os;
 
   /**
+   * Returns the creation storage size of the server
+   */
+  public abstract getCreationStorageSize(): number;
+
+  /**
    * Returns the creation form group including form fields
    */
   public abstract getCreationForm(): McsFormGroupDirective;
