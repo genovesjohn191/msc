@@ -2,7 +2,8 @@ import { OrderRequester } from '@app/core';
 import {
   isNullOrEmpty,
   createObject,
-  serializeObjectToJson
+  serializeObjectToJson,
+  convertMbToGb
 } from '@app/utilities';
 import {
   McsResource,
@@ -19,10 +20,13 @@ import { ServerCreateFactory } from './factory/server-create-factory';
 import { ServerCreateService } from './server-create.service';
 import { AddOnDetails } from './addons/addons-model';
 
+const STORAGE_SIZE_PERCENT_BUFFER = .10;
+
 export class ServerCreateBuilder<T> {
   private _resource: McsResource;
   private _serviceType: ServiceType;
   private _serverOsType: Os;
+  private _storageSize: number;
   private _serverDetails: T;
   private _serverCreateInstance: IServerCreate;
   private _serverCreateFactory = new ServerCreateFactory();
@@ -41,6 +45,13 @@ export class ServerCreateBuilder<T> {
    */
   public get osType(): Os {
     return this._serverOsType;
+  }
+
+  /**
+   * Returns true when the target creation is windows platform
+   */
+  public get storageSize(): number {
+    return this._storageSize;
   }
 
   /**
@@ -77,6 +88,17 @@ export class ServerCreateBuilder<T> {
    */
   public setServerOsType(osType: Os): ServerCreateBuilder<T> {
     this._serverOsType = osType;
+    return this;
+  }
+
+  /**
+   * Sets the server storage size
+   */
+  public setServerStorageSize(storageSize: number): ServerCreateBuilder<T> {
+    if (isNullOrEmpty(storageSize)) { return; }
+    let storageSizeTenPercentBuffer = storageSize * STORAGE_SIZE_PERCENT_BUFFER;
+    let storageSizeConvertedToGb = convertMbToGb(storageSize + storageSizeTenPercentBuffer);
+    this._storageSize = Math.round(storageSizeConvertedToGb);
     return this;
   }
 

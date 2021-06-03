@@ -97,6 +97,9 @@ export class ServerManageBackupVmComponent implements
   @Input()
   public aggregationTargets: McsBackUpAggregationTarget[];
 
+  @Input()
+  public storageSize: number;
+
   @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
@@ -129,6 +132,8 @@ export class ServerManageBackupVmComponent implements
     if (!isNullOrEmpty(aggregationTargets)) {
       this._createAggregationTargetOptions();
     }
+
+    this._setDailyQuotaDefaultValue();
   }
 
   public ngOnDestroy() {
@@ -191,6 +196,12 @@ export class ServerManageBackupVmComponent implements
     }));
   }
 
+  private _setDailyQuotaDefaultValue(): void {
+    if (!this.fcDailyQuota.touched) {
+      let defaultValue = !isNullOrEmpty(this.storageSize) ? this.storageSize : null;
+      this.fcDailyQuota.setValue(defaultValue);
+    }
+  }
   /**
    * Returns the collection of aggregation target option as an observable.
    */

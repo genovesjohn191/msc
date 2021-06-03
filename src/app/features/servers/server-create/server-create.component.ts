@@ -57,6 +57,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
   public selectedResource: McsResource;
   public resource$: Observable<McsResource>;
   public selectedServerId: string;
+  public storageSize: number;
   public isSelfManaged: boolean = true;
 
   public get backIconKey(): string {
@@ -110,6 +111,13 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   public get serverCreationOsType(): Os {
     return getSafeProperty(this._serverCreateBuilder, (obj) => obj.osType);
+  }
+
+  /**
+   * Returns true when the server to create is windows
+   */
+  public get serverCreationStorageSize(): number {
+    return getSafeProperty(this._serverCreateBuilder, (obj) => obj.storageSize);
   }
 
   /**
@@ -197,6 +205,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
       this._serverCreateBuilder
         .setServerDetails(serverDetail.getCreationInputs())
         .setServerOsType(serverDetail.getCreationOsType())
+        .setServerStorageSize(serverDetail.getCreationStorageSize())
         .createOrUpdateServer();
     });
   }

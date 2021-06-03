@@ -14,6 +14,7 @@
 
     <mcs-server-manage-backup-vm #fgAddOnBackupVm
       [aggregationTargets]="aggregationTargets$ | async"
+      [storageSize]="storageSize"
       (dataChange)="onChangeVmBackUpDetails($event)">
     </mcs-server-manage-backup-vm>
   </mcs-collapsible-panel>
