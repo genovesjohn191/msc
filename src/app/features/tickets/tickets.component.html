@@ -99,10 +99,11 @@
             {{ 'columnHeader.loggedBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.requestor }}<br>
+            {{ row.requestor }}
+            <!-- <br>
             <span read-only *ngIf="ticketCreatedByDifferentCompanyId(row.createdByCompanyId, row.requestor)">
               {{ 'notifications.account' | translate }}
-            </span>
+            </span> -->
           </td>
         </ng-container>
 
@@ -132,10 +133,11 @@
             {{ 'columnHeader.lastUpdatedBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.updatedBy }}<br>
+            {{ row.updatedBy }}
+            <!-- <br>
             <span read-only *ngIf="ticketUpdatedByDifferentCompanyId(row.updatedByCompanyId, row.updatedBy)">
               {{ 'notifications.account' | translate }}
-            </span>
+            </span> -->
           </td>
         </ng-container>
 
