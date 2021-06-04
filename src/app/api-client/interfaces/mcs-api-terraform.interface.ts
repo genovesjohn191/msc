@@ -36,6 +36,12 @@ export interface IMcsApiTerraformService {
   getDeploymentActivities(id: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTerraformDeploymentActivity[]>>;
 
   /**
+   * Get Terraform deployment activity by activity ID (MCS API Response)
+   * @param id Terraform Deployment activity identification
+   */
+   getDeploymentActivity(id: any): Observable<McsApiSuccessResponse<McsTerraformDeploymentActivity>>;
+
+  /**
    * This will create the new deployment
    * @param deploymentData Deployment data to be created
    */

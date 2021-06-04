@@ -23,16 +23,19 @@ import {
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsNavigationService,
   McsTableDataSource2
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  JobStatus,
   McsFilterInfo,
   McsJob,
   McsQueryParam,
   McsTerraformDeployment,
   McsTerraformDeploymentActivity,
+  RouteKey,
   TerraformDeploymentStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -50,6 +53,8 @@ import {
 } from '@app/utilities';
 
 import { AzureDeploymentService } from '../azure-deployment.service';
+import { ActivatedRoute } from '@angular/router';
+import { L } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'mcs-azure-deployment-history',
@@ -68,6 +73,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'tag' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'updatedBy' })
   ];
+  public targetJobId: string;
   public activity: McsTerraformDeploymentActivity;
   public deployment: McsTerraformDeployment;
 
@@ -76,12 +82,16 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
   private _createApplyHandler: Subscription;
   private _createDestroyHandler: Subscription;
   private _createDeleteHandler: Subscription;
+  private _jobHandler: Subscription;
+
 
   public constructor(
     _injector: Injector,
     private _apiService: McsApiService,
     private _eventDispatcher: EventBusDispatcherService,
     private _deploymentService: AzureDeploymentService,
+    private _activatedRoute: ActivatedRoute,
+    private _navigationService: McsNavigationService,
     private _changeDetector: ChangeDetectorRef
   ) {
     this.dataSource = new McsTableDataSource2<McsTerraformDeploymentActivity>()
@@ -91,6 +101,8 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
           target.id === source.id ||
           target.id === source.job?.clientReferenceObject?.terraformActivityRefId)
       );
+
+    this._subscribeToQueryParams();
   }
 
   public ngOnInit(): void {
@@ -103,6 +115,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     unsubscribeSafely(this._createPlanHandler);
     unsubscribeSafely(this._createApplyHandler);
     unsubscribeSafely(this._createDestroyHandler);
+    unsubscribeSafely(this._jobHandler);
     this.dataSource.disconnect(null);
   }
 
@@ -125,17 +138,21 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
   }
 
   public showActivityDetails(activity: McsTerraformDeploymentActivity): void {
-    // TODO: Add a query parameter on the url
-    // this._navigationService.navigate(RouteKey.LaunchPadAzureDeploymentDetailsHistory,
-    // [this.deployment.id], { queryParams: { activityId: activity.id }});
+    this._navigationService.navigateTo(
+      RouteKey.LaunchPadAzureDeploymentDetails,
+      [this.deployment.id, 'history'], { queryParams: { jobId: activity.job.id } }
+    );
 
-    this.activity = activity;
     this._changeDetector.markForCheck();
   }
 
   public backToListing(): void {
-    this.activity = null;
-    this._changeDetector.markForCheck();
+    this._navigationService.navigateTo(
+      RouteKey.LaunchPadAzureDeploymentDetails,
+      [this.deployment.id, 'history'],
+    );
+
+    this._resetCurrentActivityView();
   }
 
   public isFinished(status: TerraformDeploymentStatus): boolean {
@@ -147,6 +164,33 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
 
     let duration: number = getTimeDifference(startDate, endDate);
     return getFriendlyTimespan(duration);
+  }
+
+  public getActivityLogTitle(): string {
+    let details: string = 'connecting...';
+    if (!isNullOrEmpty(this.activity)) {
+      details = this.activity.tagName ? this.activity.tagName : this.deployment.tagName;
+    }
+    return `Deployment Logs (${details})`;
+  }
+
+  private _resetCurrentActivityView(): void {
+    this.targetJobId = null;
+    this.activity = null;
+    this._changeDetector.markForCheck();
+  }
+
+  private _subscribeToQueryParams(): void {
+    this._activatedRoute.queryParams.pipe(
+      takeUntil(this._destroySubject),
+      map((params) => getSafeProperty(params, (obj) => obj.jobId)),
+      tap(id => {
+        this.targetJobId = id;
+        this.activity = null;
+        this._resolveTargetActivity(id);
+        this._changeDetector.markForCheck();
+      })
+    ).subscribe();
   }
 
   private _subscribeToDeploymentDetails(): void {
@@ -172,8 +216,50 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     queryParam.keyword = '';
 
     return this._apiService.getTerraformDeploymentActivities(deploymentId, queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount))
-    );
+      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
+  }
+
+  private _resolveTargetActivity(jobId: string): void {
+    if (isNullOrEmpty(jobId)) { return; }
+
+    this._apiService.getJob(jobId).subscribe((response) => {
+      let jobIsDone: boolean = response.status >= JobStatus.Completed;
+      if (jobIsDone) {
+        this._setTargetActivity(response.referenceId);
+      } else {
+        this._startListeningTargetJobUpdates();
+      }
+    });
+  }
+
+  private _startListeningTargetJobUpdates(): void {
+    this._jobHandler = this._eventDispatcher.addEventListener(
+      McsEvent.jobReceive, this._resolveActivityJobReference.bind(this));
+  }
+
+  private _resolveActivityJobReference(job: McsJob): void {
+    let watchedJob = !isNullOrEmpty(job) && job.id === this.targetJobId;
+    if (!watchedJob || !isNullOrEmpty(this.activity) || isNullOrEmpty(job.referenceId))  { return; }
+
+    this._setTargetActivity(job.referenceId);
+  }
+
+  private _setTargetActivity(activityId: string): void {
+    if (isNullOrEmpty(activityId)) {
+      this._resetCurrentActivityView();
+      return;
+    }
+
+    this._apiService.getTerraformDeploymentActivity(activityId).subscribe((response) => {
+      let validDeploymentContext = response.deployment === this.deployment.id;
+      if (!validDeploymentContext) {
+        this._resetCurrentActivityView();
+        return;
+      }
+
+      this.activity = response;
+      this._changeDetector.markForCheck();
+    });
   }
 
   private _registerEventHandlers(): void {

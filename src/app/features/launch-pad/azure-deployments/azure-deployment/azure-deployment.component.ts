@@ -21,7 +21,10 @@ import {
   OnInit
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationExtras
+} from '@angular/router';
 import { McsNavigationService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -30,6 +33,7 @@ import {
   TerraformTagChangeDialogComponent
 } from '@app/features-shared';
 import {
+  McsJob,
   McsRouteInfo,
   McsTerraformDeployment,
   McsTerraformDeploymentCreateActivity,
@@ -72,6 +76,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
 
   private _routerHandler: Subscription;
   private _availableTags: McsTerraformTag[] = [];
+  private _targetJobId: string = '';
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
@@ -84,6 +89,7 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     private _changeDetector: ChangeDetectorRef
   ) {
+    this._subscribeToQueryParams();
     this._listenToRouteChange();
     this._watchDeploymentChanges();
   }
@@ -99,9 +105,20 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
   }
 
   public onTabChanged(tab: any, deployment: McsTerraformDeployment): void {
+    let navigationExtras: NavigationExtras = null;
+    let updatingViewToActivityLogs: boolean = tab.id === 'history' && !isNullOrEmpty(this._targetJobId);
+    if (updatingViewToActivityLogs) {
+      navigationExtras = {
+        queryParams: {
+          jobId: this._targetJobId
+        }
+      };
+    }
+
     this._navigationService.navigateTo(
       RouteKey.LaunchPadAzureDeploymentDetails,
-      [deployment.id, tab.id]
+      [deployment.id, tab.id],
+      navigationExtras
     );
   }
 
@@ -202,6 +219,16 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
     });
   }
 
+  private _subscribeToQueryParams(): void {
+    this._activatedRoute.queryParams.pipe(
+      takeUntil(this._destroySubject),
+      map((params) => getSafeProperty(params, (obj) => obj.jobId)),
+      tap(id => {
+        this._targetJobId = id;
+      })
+    ).subscribe();
+  }
+
   private _plan(deployment: McsTerraformDeployment): void {
     let requestPayload = createObject(McsTerraformDeploymentCreateActivity, {
       confirm: true,
@@ -213,7 +240,19 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
       }
     });
 
-    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload).subscribe();
+    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload)
+    .subscribe((response) => {
+      this._showActivityLogs(deployment, response);
+    });
+  }
+
+  private _showActivityLogs(deployment: McsTerraformDeployment, job: McsJob): void {
+    this._navigationService.navigateTo(
+      RouteKey.LaunchPadAzureDeploymentDetails,
+      [deployment.id, 'history'], { queryParams: { jobId: job.id } }
+    );
+
+    this._changeDetector.markForCheck();
   }
 
   private _apply(deployment: McsTerraformDeployment): void {
@@ -227,7 +266,10 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
       }
     });
 
-    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload).subscribe();
+    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload)
+    .subscribe((response) => {
+      this._showActivityLogs(deployment, response);
+    });
   }
 
   private _destroy(deployment: McsTerraformDeployment): void {
@@ -241,7 +283,10 @@ export class AzureDeploymentComponent implements OnInit, OnDestroy {
       }
     });
 
-    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload).subscribe();
+    this._apiService.createTerraformDeploymentActivity(deployment.id, requestPayload)
+    .subscribe((response) => {
+      this._showActivityLogs(deployment, response);
+    });
   }
 
   private _saveDeploymentChanges(payload: McsTerraformDeploymentUpdate, deployment: McsTerraformDeployment): void {

@@ -79,7 +79,7 @@ export const launchPadRoutes: Routes = [
         path: 'history',
         component: AzureDeploymentActivitiesComponent,
         data: { routeId: RouteKey.LaunchPadAzureDeploymentDetailsHistory }
-      },
+      }
     ]
   }
 ];
