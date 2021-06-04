@@ -20,7 +20,10 @@ import {
 } from '@app/features-shared/report-widget';
 import { MonitoringAlertingWidgetConfig } from '@app/features-shared/report-widget/monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
-import { McsReportSubscription } from '@app/models';
+import {
+  McsReportManagementService,
+  McsReportSubscription
+} from '@app/models';
 import {
   MonitoringAlertingPeriod,
   monitoringAlertingPeriodText
@@ -150,6 +153,18 @@ export class ReportInsightsComponent implements OnDestroy {
     return this._performanceSubscriptionIdsFilter;
   }
 
+  public get noDataForOneYear(): boolean {
+    return this.indexOfSelectedMonth === this.monthOptions.length - 1;
+  }
+
+  public get indexOfSelectedMonth(): number {
+    return this.monthOptions.findIndex((options) => options.label === this.selectedResourceCostMonth.label);
+  }
+
+  public get hasManagementService(): boolean {
+    return this._managementServices?.length > 0;
+  }
+
   public _subscriptionIdsFilter: string[] = undefined;
   public _performanceSubscriptionIdsFilter: string = '';
 
@@ -161,8 +176,7 @@ export class ReportInsightsComponent implements OnDestroy {
   public subscriptions: McsReportSubscription[];
   public performanceSubscriptions: McsReportSubscription[] = [{id: '', name: 'All'}];
 
-  public hasManagementService: boolean;
-
+  private _managementServices: McsReportManagementService[] = [];
   private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
   private _performanceSubscriptionFilterChange = new BehaviorSubject<string>('');
   private _selectedResourceCostMonth: PeriodOption;
@@ -204,8 +218,8 @@ export class ReportInsightsComponent implements OnDestroy {
     this.reportService.getManagementServices(false)
     .pipe(
       takeUntil(this._destroySubject))
-    .subscribe((service) => {
-      this.hasManagementService = service.length > 0;
+    .subscribe((services) => {
+      this._managementServices = services;
     });
   }
 
@@ -302,10 +316,8 @@ export class ReportInsightsComponent implements OnDestroy {
     if (!isNullOrEmpty(chartData)) {
       return;
     }
-    let indexOfSelectedMonth = this.monthOptions.findIndex((options) => options.label === this.selectedResourceCostMonth.label);
-    let lastIndexReached = indexOfSelectedMonth === this.monthOptions.length - 1;
-    if (!lastIndexReached) {
-      this.selectedResourceCostMonth = this.monthOptions[indexOfSelectedMonth + 1];
+    if (!this.noDataForOneYear) {
+      this.selectedResourceCostMonth = this.monthOptions[this.indexOfSelectedMonth + 1];
     }
   }
 

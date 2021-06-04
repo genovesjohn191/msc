@@ -138,8 +138,7 @@
                       [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
                       multiple
                       [disabled]="!enableAzureResources"
-                      [multiSelectLimit]="maxSelectionLimit"
-                      required>
+                      [multiSelectLimit]="maxSelectionLimit">
                       <mcs-search mcsSelectSearch></mcs-search>
                       <ng-container *ngFor="let resource of azureResourcesOptions$ | async">
                         <mcs-option

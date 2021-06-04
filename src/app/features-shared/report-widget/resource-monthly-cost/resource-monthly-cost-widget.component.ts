@@ -55,6 +55,9 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
   };
 
   @Input()
+  public noDataForOneYear: boolean;
+
+  @Input()
   public set subscriptionIds(value: string[]) {
     let subscriptionId = !isNullOrEmpty(value) ? value : [];
     let comparisonResult = compareArrays(subscriptionId, this._subscriptionIds);
@@ -118,10 +121,10 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
     }))
     .subscribe((result) => {
       this.chartData = result;
-      this.dataReceived.emit(result);
-      if (!isNullOrEmpty(result)) {
+      if (!isNullOrEmpty(result) || this.noDataForOneYear) {
         this.dataReceived.complete();
       }
+      this.dataReceived.emit(result);
       this.processing = false;
       this._changeDetector.markForCheck();
     });
