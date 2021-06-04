@@ -940,7 +940,7 @@
         "subLabel": "Unchecked IP addresses below will be left as is."
       },
       "unattachedSnapshot" : {
-        "label": "Please remove the following unattached snapshots:",
+        "label": "Please remove the following old snapshots:",
         "subLabel": "Unchecked snapshots below will be left as is."
       }
     },

@@ -31,6 +31,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   ManagementTag,
   managementTagText,
+  McsCloudHealthAlert,
   McsCloudHealthAlertConfigurationItems,
   McsCloudHealthOption,
   McsOption,
@@ -115,6 +116,10 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
 
   public get periodRangeEnum(): any {
     return PeriodRange;
+  }
+
+  public get cloudhealthAlertTypes(): string[] {
+    return Object.values(CloudHealthAlertType);
   }
 
   public ngOnInit(): void {
@@ -297,8 +302,9 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
       }),
       map((cloudHealthCollection) => {
         let cloudHealthAlerts = getSafeProperty(cloudHealthCollection, (obj) => obj.collection) || [];
+        let filteredCloudHealthAlerts = this._filterCloudHealthAlertsByRecognizedTypes(cloudHealthAlerts);
         let options: McsOption[] = [];
-        cloudHealthAlerts.forEach((alert) => {
+        filteredCloudHealthAlerts.forEach((alert) => {
           let timeStarted = this._convertCloudHealthAlertTimeStarted(alert?.createdOn);
           const managementText = this._translateService.instant('orderMsRequestChange.detailsStep.managementTags.text');
           let alertType = alert?.type === CloudHealthAlertType.ManagementTags ? managementText : alert.type;
@@ -310,6 +316,13 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
       }),
       shareReplay(1)
     );
+  }
+
+  private _filterCloudHealthAlertsByRecognizedTypes(cloudHealthAlerts: McsCloudHealthAlert[]): McsCloudHealthAlert[] {
+    return cloudHealthAlerts
+      .filter((cloudHealthAlert) => this.cloudhealthAlertTypes.includes(cloudHealthAlert.type))
+      // sort alerts by date (latest to oldest)
+      .sort((alertA, alertB) => new Date(alertB.createdOn).getTime() - new Date(alertA.createdOn).getTime());
   }
 
   private _getCloudHealthAlertById(id: string): void {
