@@ -17,7 +17,7 @@
               [defaultFilters]="defaultColumnFilters">
             </mcs-column-selector>
 
-            <div class="listing-table-wrapper" [hidden]="activity">
+            <div class="listing-table-wrapper" [hidden]="activity || targetJobId">
               <table mat-table [dataSource]="dataSource">
                 <!-- Type Column -->
                 <ng-container matColumnDef="type">
@@ -135,17 +135,17 @@
             </div>
 
             <!-- Activities Log -->
-            <div *ngIf="activity" class="console-wrapper ">
+            <div *ngIf="activity || targetJobId" class="console-wrapper ">
               <mcs-section>
                 <mcs-item>
                   <h2 auto-width>
-                    {{ 'Deployment Logs (' + (activity.tagName ? activity.tagName : deployment.tagName) + ')' }}
+                    {{ getActivityLogTitle() }}
                   </h2>
                   <mcs-icon key="close-black" size="small"
                     mcsCursor="pointer" mcsAlign="end"
                     (click)="backToListing()"></mcs-icon>
                 </mcs-item>
-                <mcs-task-log-stream-viewer [value]="activity.result" [job]="activity.job" [height]="523"></mcs-task-log-stream-viewer>
+                <mcs-task-log-stream-viewer *ngIf="activity" [value]="activity.result" [job]="activity.job" [height]="523"></mcs-task-log-stream-viewer>
               </mcs-section>
             </div>
           </ng-container>

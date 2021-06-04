@@ -97,6 +97,21 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
       );
   }
 
+  public getDeploymentActivity(id: any): Observable<McsApiSuccessResponse<McsTerraformDeploymentActivity>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/terraform/activities/${id}`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsTerraformDeploymentActivity>(McsTerraformDeploymentActivity, response);
+          return apiResponse;
+        })
+      );
+  }
+
   public createDeployment(deploymentData: McsTerraformDeploymentCreate):
     Observable<McsApiSuccessResponse<McsTerraformDeployment>> {
 

@@ -36,6 +36,9 @@ export class McsTerraformDeploymentActivity extends McsEntityBase {
   public status: TerraformDeploymentStatus = undefined;
 
   @JsonProperty()
+  public deployment: string = undefined;
+
+  @JsonProperty()
   public tagName: string = undefined;
 
   @JsonProperty({

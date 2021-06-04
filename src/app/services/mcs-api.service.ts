@@ -2016,6 +2016,15 @@ export class McsApiService {
     );
   }
 
+  public getTerraformDeploymentActivity(id: any): Observable<McsTerraformDeploymentActivity> {
+    return this._terraformApi.getDeploymentActivity(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformDeploymentActivity'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public createTerraformDeployment(deploymentData: McsTerraformDeploymentCreate): Observable<McsTerraformDeployment> {
     return this._terraformApi.createDeployment(deploymentData).pipe(
       catchError((error) =>

@@ -66,10 +66,9 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
   public set value(val: string) {
     if (isNullOrEmpty(val)) {
       this._value = '';
-      return;
+    } else {
+      this._value = this._converter.toHtml(val);
     }
-
-    this._value = this._converter.toHtml(val);
   }
 
   public get viewerStyleHeight(): string {
