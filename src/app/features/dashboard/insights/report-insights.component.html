@@ -79,7 +79,7 @@
               total cost</a>
               {{ 'reports.insights.costs.resourceCost.subTitle' | translate }}
             </div>
-            <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig" (dataReceived)="resourceMonthDataReceived($event)"></mcs-resource-monthly-cost-widget>
+            <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig" [noDataForOneYear]="noDataForOneYear" (dataReceived)="resourceMonthDataReceived($event)"></mcs-resource-monthly-cost-widget>
             <mat-divider></mat-divider>
 
             <!-- Virtual Machine Breakdown -->
