@@ -233,7 +233,9 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   }
 
   private _setTerraformCategoryOptions(modules: McsTerraformModule[]): McsOption[] {
-    let moduleCategories = modules.map((module) => module.categoryName);
+    let moduleCategories = modules
+      .filter((module) => module.projectKey === this.moduleType) // filter by selected module type
+      .map((module) => module.categoryName);
     let options = moduleCategories
       .filter((item, pos) => moduleCategories.indexOf(item) === pos) // remove duplicate categories
       .sort() // sort modules alphabetically
