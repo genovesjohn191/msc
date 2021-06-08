@@ -106,6 +106,7 @@ export class DnsZoneViewModel {
     this.fcZoneType.markAsTouched();
     this.fcHostName.markAsTouched();
     this.fcTarget.markAsTouched();
+    this.fcTtlSeconds.markAsTouched();
   }
 
   public isValid(): boolean {
