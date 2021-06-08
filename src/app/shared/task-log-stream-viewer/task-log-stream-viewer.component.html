@@ -6,11 +6,21 @@
       <mat-icon>content_copy</mat-icon>
     </button>
   </div>
-  <div class="status-wrapper" *ngIf="job">
-    <mcs-icon [key]="getStatusIconKey(job.status)" color="light" size="medium"></mcs-icon>
-    <span class="status-info"><strong>{{ job.description }}</strong>: {{ getJobStatus(job.status) }}</span>
-    <span *ngIf="job.endedOn"> {{ job.endedOn | mcsStdDateFormat }}</span>
+  <div class="status-wrapper" >
+    <div *ngIf="job;else external">
+      <mcs-icon [key]="getStatusIconKey(job.status)" color="light" size="medium"></mcs-icon>
+      <span class="status-info"><strong>{{ job.description }}</strong>: {{ getJobStatus(job.status) }}</span>
+      <span *ngIf="job.endedOn"> {{ job.endedOn | mcsStdDateFormat }}</span>
+    </div>
+    <ng-template #external>
+      <div *ngIf="jobInfoOverride">
+        <mcs-icon [key]="getStatusIconKey(jobInfoOverride.status)" color="light" size="medium"></mcs-icon>
+        <span class="status-info"><strong>{{ jobInfoOverride.description }}</strong>: {{ getJobStatus(jobInfoOverride.status) }}</span>
+        <span *ngIf="jobInfoOverride.endedOn"> {{ jobInfoOverride.endedOn | mcsStdDateFormat }}</span>
+      </div>
+    </ng-template>
   </div>
+
 </div>
 <div class="task-log-stream-wrapper">
   <div #logViewer class="log-viewer" [style]="viewerStyleHeight" [innerHtml]="value | safeHtml" (scroll)="onScroll()"></div>

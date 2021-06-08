@@ -145,7 +145,10 @@
                     mcsCursor="pointer" mcsAlign="end"
                     (click)="backToListing()"></mcs-icon>
                 </mcs-item>
-                <mcs-task-log-stream-viewer *ngIf="activity" [value]="activity.result" [job]="activity.job" [height]="523"></mcs-task-log-stream-viewer>
+                <mcs-task-log-stream-viewer *ngIf="activity"
+                  [value]="activity.result"
+                  [job]="activity.job"
+                  [jobInfoOverride]="getJobInfoOverride(activity)" [height]="523"></mcs-task-log-stream-viewer>
               </mcs-section>
             </div>
           </ng-container>
