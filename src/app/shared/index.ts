@@ -24,6 +24,7 @@ export * from './overlay';
 export * from './scrollable-link-group';
 export * from './datetimepicker';
 export * from './column-filter';
+export * from './task-log-stream-viewer';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';
