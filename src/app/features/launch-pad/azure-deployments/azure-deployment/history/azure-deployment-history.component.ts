@@ -1,4 +1,5 @@
 import {
+  combineLatest,
   Observable,
   Subject,
   Subscription
@@ -19,6 +20,10 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import {
+  ActivatedRoute,
+  NavigationExtras
+} from '@angular/router';
 import {
   McsMatTableConfig,
   McsMatTableContext,
@@ -41,6 +46,7 @@ import {
 import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
+  JobInfo,
   Paginator
 } from '@app/shared';
 import {
@@ -53,11 +59,6 @@ import {
 } from '@app/utilities';
 
 import { AzureDeploymentService } from '../azure-deployment.service';
-import {
-  ActivatedRoute,
-  NavigationExtras
-} from '@angular/router';
-import { JobInfo } from '@app/shared/task-log-stream-viewer/task-log-stream-viewer.component';
 
 @Component({
   selector: 'mcs-azure-deployment-history',
@@ -81,6 +82,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
   public activity: McsTerraformDeploymentActivity;
   public deployment: McsTerraformDeployment;
 
+  private _activityJobChange = new Subject<McsJob>();
   private _destroySubject = new Subject<void>();
   private _createPlanHandler: Subscription;
   private _createApplyHandler: Subscription;
@@ -104,13 +106,14 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
           target.id === source.id ||
           target.id === source.job?.clientReferenceObject?.terraformActivityRefId)
       );
-
-    this._subscribeToQueryParams();
   }
 
   public ngOnInit(): void {
     this._registerEventHandlers();
+
+    this._subscribeToQueryParams();
     this._subscribeToDeploymentDetails();
+    this._subscribeToActivityJobChange();
   }
 
   public ngOnDestroy(): void {
@@ -118,6 +121,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     unsubscribeSafely(this._createPlanHandler);
     unsubscribeSafely(this._createApplyHandler);
     unsubscribeSafely(this._createDestroyHandler);
+    unsubscribeSafely(this._createDeleteHandler);
     unsubscribeSafely(this._jobHandler);
     this.dataSource.disconnect(null);
   }
@@ -185,7 +189,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
 
   public getJobInfoOverride(activity: McsTerraformDeploymentActivity): JobInfo {
     let status: JobStatus = JobStatus.Active;
-    switch(activity.status) {
+    switch (activity.status) {
       case TerraformDeploymentStatus.Succeeded:
         status = JobStatus.Completed;
         break;
@@ -217,7 +221,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
   private _subscribeToQueryParams(): void {
     this._activatedRoute.queryParams.pipe(
       takeUntil(this._destroySubject)
-    ).subscribe((params)  => {
+    ).subscribe((params) => {
       this.targetJobId = getSafeProperty(params, (obj) => obj.jobId);
       this.targetActivityId = getSafeProperty(params, (obj) => obj.activityId);
       this.activity = null;
@@ -241,6 +245,19 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
         );
       }),
       shareReplay(1)
+    ).subscribe();
+  }
+
+  private _subscribeToActivityJobChange(): void {
+    combineLatest([
+      this.dataSource.isInProgress$,
+      this._activityJobChange
+    ]).pipe(
+      takeUntil(this._destroySubject),
+      tap(([inProgress, job]) => {
+        if (inProgress) { return; }
+        this._updateListingTableByJob(job);
+      })
     ).subscribe();
   }
 
@@ -277,7 +294,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
 
   private _resolveActivityJobReference(job: McsJob): void {
     let watchedJob = !isNullOrEmpty(job) && job.id === this.targetJobId;
-    if (!watchedJob || !isNullOrEmpty(this.activity) || isNullOrEmpty(job.referenceId))  { return; }
+    if (!watchedJob || !isNullOrEmpty(this.activity) || isNullOrEmpty(job.referenceId)) { return; }
 
     this._setTargetActivity(job.referenceId);
   }
@@ -328,19 +345,25 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     let activityIsActive = this._activityIsActiveByJob(job);
     if (!activityIsActive) { return; }
 
-    let jobTerraformActivityRefId = job?.clientReferenceObject?.terraformActivityRefId;
-    if (isNullOrEmpty(jobTerraformActivityRefId) || isNullOrEmpty(job.tasks)) { return; }
-
+    this._activityJobChange.next(job);
     if (!job.inProgress) {
-      this.dataSource.deleteRecord(item => item.id === jobTerraformActivityRefId);
       this.retryDatasource();
       return;
     }
+  }
 
-    let foundRecord = this.dataSource.findRecord(item => item.id === jobTerraformActivityRefId);
+  private _updateListingTableByJob(job: McsJob): void {
+    let activityId = job?.clientReferenceObject?.terraformActivityRefId;
+
+    if (!job.inProgress) {
+      this.dataSource.deleteRecord(item => item.id === activityId);
+      return;
+    }
+
+    let foundRecord = this.dataSource.findRecord(item => item.id === activityId);
     if (isNullOrEmpty(foundRecord)) {
       let newRecord = new McsTerraformDeploymentActivity();
-      newRecord.id = jobTerraformActivityRefId;
+      newRecord.id = activityId;
       newRecord.type = job?.clientReferenceObject?.type;
       newRecord.isProcessing = job.inProgress;
       newRecord.processingText = job.summaryInformation;
@@ -352,7 +375,11 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
 
   private _activityIsActiveByJob(job: McsJob): boolean {
     if (isNullOrEmpty(job) || isNullOrEmpty(this._deploymentService.getDeploymentDetailsId())) { return false; }
-    return getSafeProperty(job, (obj) =>
-      obj.clientReferenceObject.terraformDeploymentId) === this._deploymentService.getDeploymentDetailsId();
+    let deploymentId = job?.clientReferenceObject?.terraformDeploymentId;
+    let activityId = job?.clientReferenceObject?.terraformActivityRefId;
+
+    return deploymentId === this._deploymentService.getDeploymentDetailsId() &&
+      !isNullOrEmpty(activityId) &&
+      !isNullOrEmpty(job?.tasks);
   }
 }
