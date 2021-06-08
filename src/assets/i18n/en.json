@@ -2,11 +2,20 @@
   "navigation": {
     "title": "Macquarie Cloud Services Portal",
     "launchPad": {
-      "label": "LAUNCH Pad",
-      "crispOrders": "CRISP Orders",
-      "workflows": "Workflows",
       "azureDeployments": "Azure Deployments",
-      "reporting": "Reporting"
+      "crispOrders": "CRISP Orders",
+      "label": "LAUNCH Pad",
+      "multicastIps": "Multicast IPs",
+      "networks": "Networks",
+      "networkDb": "Network DB",
+      "reporting": "Reporting",
+      "sites": "Sites",
+      "pods": "PODs",
+      "useCases": "Use Cases",
+      "vlanDb": "VLAN DB",
+      "vlans": "VLANs",
+      "vnis": "VNIs",
+      "workflows": "Workflows"
     },
     "privateCloud": {
       "label": "Private Cloud",

@@ -80,6 +80,69 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
+  "launchPadNetworkDbSites": {
+    "enumKey": "LaunchPadNetworkDbSites",
+    "enumCategory": "LaunchPadNetworkDb",
+    "navigationPath": "launch-pad/network-db/sites",
+    "documentTitle": "LAUNCH Pad - Network DB Sites",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbPods": {
+    "enumKey": "LaunchPadNetworkDbPods",
+    "enumCategory": "LaunchPadNetworkDb",
+    "navigationPath": "launch-pad/network-db/pods",
+    "documentTitle": "LAUNCH Pad - Network DB PODs",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbVlans": {
+    "enumKey": "LaunchPadNetworkDbVlans",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/vlans",
+    "documentTitle": "LAUNCH Pad - VLAN DB VLANs",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbVnis": {
+    "enumKey": "LaunchPadNetworkDbVnis",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/vnis",
+    "documentTitle": "LAUNCH Pad - VLAN DB VNIs",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbUseCases": {
+    "enumKey": "LaunchPadNetworkDbUseCases",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/use-cases",
+    "documentTitle": "LAUNCH Pad - VLAN DB Use Cases",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbMulticastIps": {
+    "enumKey": "LaunchPadNetworkDbMulticastIps",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/multicast-ips",
+    "documentTitle": "LAUNCH Pad - VLAN DB Multicast IPs",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbNetworks": {
+    "enumKey": "LaunchPadNetworkDbNetworks",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/networks",
+    "documentTitle": "LAUNCH Pad - VLAN DB Networks",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
   "reportOverview": {
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",

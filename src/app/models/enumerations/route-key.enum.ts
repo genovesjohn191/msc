@@ -1,5 +1,6 @@
 export enum RouteKey {
   Dashboard = 1,
+
   LaunchPad,
   LaunchPadSearch,
   LaunchPadWorkflows,
@@ -9,6 +10,14 @@ export enum RouteKey {
   LaunchPadAzureDeploymentDetails,
   LaunchPadAzureDeploymentDetailsOverview,
   LaunchPadAzureDeploymentDetailsHistory,
+  LaunchPadNetworkDbSites,
+  LaunchPadNetworkDbPods,
+  LaunchPadNetworkDbVlans,
+  LaunchPadNetworkDbVnis,
+  LaunchPadNetworkDbUseCases,
+  LaunchPadNetworkDbMulticastIps,
+  LaunchPadNetworkDbNetworks,
+
   ReportOverview,
   ReportInsights,
 

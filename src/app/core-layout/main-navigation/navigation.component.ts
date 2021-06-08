@@ -50,6 +50,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _routeHandler: Subscription;
   private _navInitialized: boolean = false;
   private _showLaunchPadMenu: boolean;
+  private _showLaunchPadNetworkDbSubmenu: boolean;
+  private _showLaunchPadVlanDbSubmenu: boolean;
   private _showPrivateCloudMenu: boolean;
   private _showPublicCloudMenu: boolean;
   private _showComputeSubmenu: boolean;
@@ -70,6 +72,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get showLaunchPadMenu(): boolean {
     return this._showLaunchPadMenu;
+  }
+
+  public get showLaunchPadNetworkDbSubmenu(): boolean {
+    return this._showLaunchPadNetworkDbSubmenu;
+  }
+
+  public get showLaunchPadVlanDbSubmenu(): boolean {
+    return this._showLaunchPadVlanDbSubmenu;
   }
 
   public get showPrivateCloudMenu(): boolean {
@@ -177,6 +187,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._routeSettingsService.isPublicCloudRoute;
   }
 
+  public get hasLaunchPadAccess(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad]);
+  }
+
   public get hasPrivateCloudAccess(): boolean {
     return this._authenticationIdentity.platformSettings.hasPrivateCloud;
   }
@@ -249,8 +263,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private initializeNavigation() {
     this._showLaunchPadMenu = (this._navInitialized && this._showLaunchPadMenu)
       ? this._showLaunchPadMenu
-      : this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad])
-      && this.selectedCategory === RouteCategory.LaunchPad;
+      : this.hasLaunchPadAccess && this.selectedCategory === RouteCategory.LaunchPad;
+
+    this._showLaunchPadNetworkDbSubmenu = (this._navInitialized && this._showLaunchPadNetworkDbSubmenu)
+      ? this._showLaunchPadNetworkDbSubmenu
+      : this.selectedCategory === RouteCategory.LaunchPadNetworkDb || this.selectedCategory === RouteCategory.LaunchPadVlanDb;
+
+    this._showLaunchPadVlanDbSubmenu = (this._navInitialized && this._showLaunchPadVlanDbSubmenu)
+      ? this._showLaunchPadVlanDbSubmenu
+      : this.selectedCategory === RouteCategory.LaunchPadVlanDb;
 
     this._showPrivateCloudMenu = (this._navInitialized && this._showPrivateCloudMenu)
       ? this._showPrivateCloudMenu

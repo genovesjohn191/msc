@@ -16,8 +16,8 @@
       <ng-container *ngIf="!isImpersonating">
         <li *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableLaunchPad']" hidden-small>
           <a (click)="toggleThis('showLaunchPadMenu')"
-            [class.active]="selectedCategory === routerCategoryEnum.LaunchPad"
-            mcsId>
+            [class.active]="selectedCategory === routerCategoryEnum.LaunchPad || selectedCategory === routerCategoryEnum.LaunchPadNetworkDb || selectedCategory === routerCategoryEnum.LaunchPadVlanDb"
+            mcsId="launch-pad-link">
             {{ 'navigation.launchPad.label' | translate }}
             <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
           </a>
@@ -43,6 +43,112 @@
                 mcsRouterLinkActive="active">
                 {{ 'navigation.launchPad.azureDeployments' | translate }}
               </a>
+            </li>
+            <!-- Network DB -->
+            <li *mcsAccessControl="[]; feature: ['EnableNetworkDb']">
+              <a (click)="toggleThis('showLaunchPadNetworkDbSubmenu')"
+                [class.active]="selectedCategory === routerCategoryEnum.LaunchPadNetworkDb || selectedCategory === routerCategoryEnum.LaunchPadVlanDb"
+                mcsId="launch-pad-network-db-link">
+                {{ 'navigation.launchPad.networkDb' | translate }}
+                <mcs-icon [key]="showLaunchPadNetworkDbSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+              </a>
+              <ul [class.hidden]="!showLaunchPadNetworkDbSubmenu">
+                <!-- Sites -->
+                <li>
+                  <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbSites"
+                    mcsRouterLinkActive="active"
+                    class="sub-navigation-item unstyled-link"
+                    mcsId="launch-pad-sites-link"
+                    mcsEventTracker="navigate-to-network-db"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">
+                    {{ 'navigation.launchPad.sites' | translate }}
+                  </a>
+                </li>
+                <!-- PODs -->
+                <li>
+                  <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbPods"
+                    mcsRouterLinkActive="active"
+                    class="sub-navigation-item unstyled-link"
+                    mcsId="launch-pad-pods-link"
+                    mcsEventTracker="navigate-to-network-db"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">
+                    {{ 'navigation.launchPad.pods' | translate }}
+                  </a>
+                </li>
+                <!-- VLAN DB -->
+                <li>
+                  <a (click)="toggleThis('showLaunchPadVlanDbSubmenu')"
+                    [class.active]="selectedCategory === routerCategoryEnum.LaunchPadVlanDb"
+                    mcsId="launch-pad-vlan-db-link">
+                    {{ 'navigation.launchPad.vlanDb' | translate }}
+                    <mcs-icon [key]="showLaunchPadVlanDbSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+                  </a>
+                  <ul [class.hidden]="!showLaunchPadVlanDbSubmenu">
+                    <!-- VLANs -->
+                    <li>
+                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbVlans"
+                        mcsRouterLinkActive="active"
+                        class="sub-navigation-item unstyled-link"
+                        mcsId="launch-pad-vlans-link"
+                        mcsEventTracker="navigate-to-network-db"
+                        mcsEventCategory="navigation"
+                        mcsEventLabel="main-nav">
+                        {{ 'navigation.launchPad.vlans' | translate }}
+                      </a>
+                    </li>
+                    <!-- VNIs -->
+                    <li>
+                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbVnis"
+                        mcsRouterLinkActive="active"
+                        class="sub-navigation-item unstyled-link"
+                        mcsId="launch-pad-vnis-link"
+                        mcsEventTracker="navigate-to-network-db"
+                        mcsEventCategory="navigation"
+                        mcsEventLabel="main-nav">
+                        {{ 'navigation.launchPad.vnis' | translate }}
+                      </a>
+                    </li>
+                     <!-- Use Cases -->
+                     <li>
+                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbUseCases"
+                        mcsRouterLinkActive="active"
+                        class="sub-navigation-item unstyled-link"
+                        mcsId="launch-pad-use-cases-link"
+                        mcsEventTracker="navigate-to-network-db"
+                        mcsEventCategory="navigation"
+                        mcsEventLabel="main-nav">
+                        {{ 'navigation.launchPad.useCases' | translate }}
+                      </a>
+                    </li>
+                     <!-- Multicast IPs -->
+                     <li>
+                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbMulticastIps"
+                        mcsRouterLinkActive="active"
+                        class="sub-navigation-item unstyled-link"
+                        mcsId="launch-pad-muticast-ips-link"
+                        mcsEventTracker="navigate-to-network-db"
+                        mcsEventCategory="navigation"
+                        mcsEventLabel="main-nav">
+                        {{ 'navigation.launchPad.multicastIps' | translate }}
+                      </a>
+                    </li>
+                     <!-- Networks -->
+                     <li>
+                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbNetworks"
+                        mcsRouterLinkActive="active"
+                        class="sub-navigation-item unstyled-link"
+                        mcsId="launch-pad-networks-link"
+                        mcsEventTracker="navigate-to-network-db"
+                        mcsEventCategory="navigation"
+                        mcsEventLabel="main-nav">
+                        {{ 'navigation.launchPad.networks' | translate }}
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
             </li>
             <!-- Reporting -->
             <li *ngIf="workflowReportingLink">
