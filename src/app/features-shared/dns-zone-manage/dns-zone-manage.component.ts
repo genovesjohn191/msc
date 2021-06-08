@@ -161,6 +161,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
           new McsStateNotification('success', 'message.successfullyUpdated')
         );
         this.requestUpdate.next();
+        record.updating = false;
       }),
       finalize(() => record.setProgressState(false))
     ).subscribe();

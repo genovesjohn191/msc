@@ -1,20 +1,25 @@
 import {
-  AbstractControl,
-  Validators,
-  ValidatorFn,
-  ValidationErrors,
-  AsyncValidatorFn
-} from '@angular/forms';
-import {
-  Observable,
-  of
+  of,
+  Observable
 } from 'rxjs';
 import {
   catchError,
   map
 } from 'rxjs/operators';
+
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  ValidationErrors,
+  Validators,
+  ValidatorFn
+} from '@angular/forms';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+
 import { IMcsProperty } from './interfaces/mcs-property.interface';
-import { CommonDefinition } from '@app/utilities';
 
 export class CoreValidators {
 
@@ -55,6 +60,7 @@ export class CoreValidators {
    * { 'numeric': true }
    */
   public static numeric(control: AbstractControl): ValidationErrors | null {
+    if (isNullOrEmpty(control.value)) { return null; }
     return CommonDefinition.REGEX_NUMERIC_PATTERN.test(control.value) ? null : { numeric: true };
   }
 

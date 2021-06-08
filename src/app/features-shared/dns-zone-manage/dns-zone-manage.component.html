@@ -2,7 +2,7 @@
 <form [formGroup]="addViewModel.fgDnsZone" mcsFormGroup>
   <mcs-grid>
     <mcs-grid-row>
-      <mcs-grid-column sizeLg="12">
+      <mcs-grid-column sizeXl="12">
         <mcs-field-select-dns-zone-type
           size="full"
           [label]="'label.recordType' | translate"
@@ -12,7 +12,7 @@
     </mcs-grid-row>
 
     <mcs-grid-row>
-      <mcs-grid-column sizeLg="6">
+      <mcs-grid-column sizeLg="6" sizeMd="12">
         <mcs-field-input
           size="full"
           [label]="'label.hostName' | translate"
@@ -20,7 +20,7 @@
         </mcs-field-input>
       </mcs-grid-column>
 
-      <mcs-grid-column sizeLg="6">
+      <mcs-grid-column sizeLg="6" sizeMd="12">
         <mcs-field-input
           size="full"
           [label]="'label.target' | translate"
@@ -30,7 +30,7 @@
     </mcs-grid-row>
 
     <mcs-grid-row>
-      <mcs-grid-column sizeLg="6">
+      <mcs-grid-column sizeLg="6" sizeMd="12">
         <mcs-field-input
           size="full"
           [label]="'label.ttlSeconds' | translate"

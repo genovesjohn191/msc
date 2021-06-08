@@ -10,8 +10,14 @@ $mcs-form-field-sizes: (
   xxlarge: 28rem
 );
 
-mat-form-field.mat-form-field {
+form.form-group-wrapper {
+  // Remove auto adding of interval for forms
+  mcs-grid-row.grid-row-wrapper {
+    margin-top: 0;
+  }
+}
 
+mat-form-field.mat-form-field {
   @each $form-size, $form-size-value in $mcs-form-field-sizes {
     &.mcs-form-field-size-#{$form-size} {
       width: 100%;
@@ -22,6 +28,44 @@ mat-form-field.mat-form-field {
   .mat-form-field-wrapper {
     .mat-form-field-subscript-wrapper {
       white-space: pre-wrap;
+    }
+  }
+
+  // For outline appearance
+  &.mat-form-field-appearance-outline {
+    $mcs-form-label-float-interval: 1.5rem;
+    $mcs-form-suffix-icon-interval: 0.5rem;
+    $mcs-form-top-border-size: 0.45rem;
+    $mcs-form-infix-border-size: 0.8rem;
+    $mcs-form-infix-padding: 0.6rem 0;
+
+    .mat-form-field-outline {
+      top: $mcs-form-top-border-size;
+      color: get-color($color-definitions, dark, base);
+    }
+
+    .mat-form-field-infix {
+      padding: $mcs-form-infix-padding;
+      border-top: $mcs-form-infix-border-size solid transparent;
+
+      .mat-form-field-label-wrapper {
+        top: -$mcs-form-infix-border-size;
+        padding-top: 0.8em;
+
+        label.mat-form-field-empty {
+          top: $mcs-form-label-float-interval;
+        }
+      }
+    }
+
+    &.mat-form-field-can-float.mat-form-field-should-float {
+      label.mat-form-field-label.mat-form-field-empty {
+        top: $mcs-form-label-float-interval;
+      }
+    }
+
+    .mat-form-field-suffix {
+      top: $mcs-form-suffix-icon-interval;
     }
   }
 
@@ -48,6 +92,7 @@ mat-form-field.mat-form-field {
         .mat-form-field-infix {
           cursor: pointer;
           padding: 0;
+          border: 0;
 
           .mat-select {
             .mat-select-arrow-wrapper {
