@@ -53,8 +53,11 @@ import {
 } from '@app/utilities';
 
 import { AzureDeploymentService } from '../azure-deployment.service';
-import { ActivatedRoute } from '@angular/router';
-import { L } from '@angular/cdk/keycodes';
+import {
+  ActivatedRoute,
+  NavigationExtras
+} from '@angular/router';
+import { JobInfo } from '@app/shared/task-log-stream-viewer/task-log-stream-viewer.component';
 
 @Component({
   selector: 'mcs-azure-deployment-history',
@@ -73,6 +76,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'tag' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'updatedBy' })
   ];
+  public targetActivityId: string;
   public targetJobId: string;
   public activity: McsTerraformDeploymentActivity;
   public deployment: McsTerraformDeployment;
@@ -83,7 +87,6 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
   private _createDestroyHandler: Subscription;
   private _createDeleteHandler: Subscription;
   private _jobHandler: Subscription;
-
 
   public constructor(
     _injector: Injector,
@@ -138,9 +141,15 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
   }
 
   public showActivityDetails(activity: McsTerraformDeploymentActivity): void {
+    let extras: NavigationExtras = { queryParams: { activityId: activity.id } };
+
+    if (!isNullOrEmpty(activity.job)) {
+      extras = { queryParams: { jobId: activity.job.id } };
+    }
+
     this._navigationService.navigateTo(
       RouteKey.LaunchPadAzureDeploymentDetails,
-      [this.deployment.id, 'history'], { queryParams: { jobId: activity.job.id } }
+      [this.deployment.id, 'history'], extras
     );
 
     this._changeDetector.markForCheck();
@@ -174,23 +183,52 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     return `Deployment Logs (${details})`;
   }
 
+  public getJobInfoOverride(activity: McsTerraformDeploymentActivity): JobInfo {
+    let status: JobStatus = JobStatus.Active;
+    switch(activity.status) {
+      case TerraformDeploymentStatus.Succeeded:
+        status = JobStatus.Completed;
+        break;
+
+      case TerraformDeploymentStatus.Failed:
+        status = JobStatus.Failed;
+        break;
+
+      case TerraformDeploymentStatus.New:
+      case TerraformDeploymentStatus.Unknown:
+        status = JobStatus.Pending;
+        break;
+    }
+
+    return {
+      status,
+      endedOn: activity.updatedOn,
+      description: `[mcsterra cli] ${activity.type} (${activity.tagName})`
+    };
+  }
+
   private _resetCurrentActivityView(): void {
     this.targetJobId = null;
+    this.targetActivityId = null;
     this.activity = null;
     this._changeDetector.markForCheck();
   }
 
   private _subscribeToQueryParams(): void {
     this._activatedRoute.queryParams.pipe(
-      takeUntil(this._destroySubject),
-      map((params) => getSafeProperty(params, (obj) => obj.jobId)),
-      tap(id => {
-        this.targetJobId = id;
-        this.activity = null;
-        this._resolveTargetActivity(id);
-        this._changeDetector.markForCheck();
-      })
-    ).subscribe();
+      takeUntil(this._destroySubject)
+    ).subscribe((params)  => {
+      this.targetJobId = getSafeProperty(params, (obj) => obj.jobId);
+      this.targetActivityId = getSafeProperty(params, (obj) => obj.activityId);
+      this.activity = null;
+      if (this.targetJobId) {
+        this._resolveTargetActivity(this.targetJobId);
+      } else if (this.targetActivityId) {
+        this._setTargetActivity(this.targetActivityId);
+      }
+
+      this._changeDetector.markForCheck();
+    });
   }
 
   private _subscribeToDeploymentDetails(): void {

@@ -28,6 +28,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import stripAnsi from 'strip-ansi';
 
+export interface JobInfo {
+  description: string;
+  status: JobStatus;
+  endedOn: Date;
+}
 // NOTE: This component will only read the first tasks in the job.
 
 const ANSI_TO_HTML_CONVERTER = require('ansi-to-html');
@@ -45,6 +50,9 @@ export class TaskLogStreamViewerComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   public height: number;
+
+  @Input()
+  public jobInfoOverride: JobInfo;
 
   @Input()
   public get job(): McsJob {
