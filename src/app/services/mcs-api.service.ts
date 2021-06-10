@@ -30,6 +30,7 @@ import {
   IMcsApiLicensesService,
   IMcsApiMediaService,
   IMcsApiMetadataService,
+  IMcsApiNetworkDbService,
   IMcsApiNetworkDnsService,
   IMcsApiOrdersService,
   IMcsApiPlatformService,
@@ -58,6 +59,7 @@ import {
   McsApiLicensesFactory,
   McsApiMediaFactory,
   McsApiMetadataFactory,
+  McsApiNetworkDbFactory,
   McsApiNetworkDnsFactory,
   McsApiOrdersFactory,
   McsApiPlatformFactory,
@@ -121,6 +123,13 @@ import {
   McsJobConnection,
   McsKeyValue,
   McsLicense,
+  McsNetworkDbMulticastIp,
+  McsNetworkDbNetwork,
+  McsNetworkDbPod,
+  McsNetworkDbSite,
+  McsNetworkDbUseCase,
+  McsNetworkDbVlan,
+  McsNetworkDbVni,
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
   McsNetworkDnsSummary,
@@ -292,6 +301,7 @@ export class McsApiService {
   private readonly _licensesApi: IMcsApiLicensesService;
   private readonly _mediaApi: IMcsApiMediaService;
   private readonly _metadataApi: IMcsApiMetadataService;
+  private readonly _networkDbApi: IMcsApiNetworkDbService;
   private readonly _networkDnsApi: IMcsApiNetworkDnsService;
   private readonly _objectsApi: IMcsApiObjectsService;
   private readonly _ordersApi: IMcsApiOrdersService;
@@ -305,6 +315,7 @@ export class McsApiService {
   private readonly _ticketsApi: IMcsApiTicketsService;
   private readonly _toolsService: IMcsApiToolsService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
+
 
   constructor(_injector: Injector) {
     this._translate = _injector.get(TranslateService);
@@ -347,6 +358,7 @@ export class McsApiService {
     this._licensesApi = apiClientFactory.getService(new McsApiLicensesFactory());
     this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
     this._metadataApi = apiClientFactory.getService(new McsApiMetadataFactory());
+    this._networkDbApi = apiClientFactory.getService(new McsApiNetworkDbFactory());
     this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
     this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
@@ -359,6 +371,7 @@ export class McsApiService {
     this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
     this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
+
 
     // Register events
     this._eventDispatcher = _injector.get(EventBusDispatcherService);
@@ -2106,6 +2119,71 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTerraformTag'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getNetworkDbSites(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbSite>> {
+    return this._networkDbApi.getSites(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbSites'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getNetworkDbPods(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbPod>> {
+    return this._networkDbApi.getPods(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbPods'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getNetworkDbVlans(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbVlan>> {
+    return this._networkDbApi.getVlans(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbVlans'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getNetworkDbVnis(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbVni>> {
+    return this._networkDbApi.getVnis(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbVnis'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getNetworkDbUseCases(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsNetworkDbUseCase>> {
+
+    return this._networkDbApi.getUseCases(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbUseCases'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getMulticastIps(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbMulticastIp>> {
+    return this._networkDbApi.getMulticastIps(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getMulticastIps'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getNetworks(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbNetwork>> {
+    return this._networkDbApi.getNetworks(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworks'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

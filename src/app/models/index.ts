@@ -98,6 +98,9 @@ export * from './enumerations/period-range.enum';
 export * from './enumerations/cloudhealth-management-tag.enum';
 export * from './enumerations/module-type.enum';
 export * from './enumerations/install-base-state.enum';
+export * from './enumerations/network-db-pod-type.enum';
+export * from './enumerations/network-db-vni-status.enum';
+export * from './enumerations/network-db-vlan-status.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -305,6 +308,13 @@ export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
 export * from './response/mcs-cloudhealth-alert';
 export * from './response/mcs-cloudhealth-alert-configuration-items';
+export * from './response/mcs-network-db-multicast-ip';
+export * from './response/mcs-network-db-network';
+export * from './response/mcs-network-db-pod';
+export * from './response/mcs-network-db-use-case';
+export * from './response/mcs-network-db-vlan';
+export * from './response/mcs-network-db-vni';
+export * from './response/mcs-network-db-site';
 
 /** Common */
 export * from './common/mcs-api-search-key';
