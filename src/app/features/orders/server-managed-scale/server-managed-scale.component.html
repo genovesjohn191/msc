@@ -39,7 +39,7 @@
           </ng-container>
 
           <p>{{ 'orderServerManagedScale.vm.label' | translate }}</p>
-          <mcs-form-field>
+          <mcs-form-field *ngIf="(serverGroups$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [placeholder]="'orderServerManagedScale.vm.placeholder' | translate"
               mcsId="select-server"
               [formControl]="fcManageServer"
@@ -48,7 +48,7 @@
 
               <mcs-search mcsSelectSearch mcsId="server-managed-scale-search"></mcs-search>
 
-              <mcs-option-group *ngFor="let serverGroup of (serverGroups$ | async)">
+              <mcs-option-group *ngFor="let serverGroup of serverGroups$ | async">
                 <ng-container *mcsOptionGroupLabel>
                   <span>{{ serverGroup.groupName }}</span>
                 </ng-container>
@@ -68,6 +68,7 @@
               </mcs-option-group>
             </mcs-select>
           </mcs-form-field>
+          <span read-only>{{ noServicesFallbackText | translate }}</span>
 
           <div class="action-box" *mcsComponentHandler>
             <mcs-server-manage-scale #fgManageScale

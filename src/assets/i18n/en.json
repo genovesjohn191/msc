@@ -577,7 +577,6 @@
       "dnsService": {
         "placeholder": "Select a DNS service",
         "helptext": "Select a Primary DNS service to request a change for",
-        "fallback": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
         "raiseTicketPrefix": "or ",
         "raiseTicketLink": "raise a ticket",
         "raiseTicketSuffix": " if this is unexpected",
@@ -868,7 +867,6 @@
       "baseLicense": {
         "label": "Base License",
         "placeholder": "Select License",
-        "noLicense": "There are no licenses to display.",
         "helpText": "Select a base license to modify and increase or decrease the license count. You must have at least 1 license. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
         "activeLabel": "This license-based subscription is active and renews on {{renewalDate}}.",
         "activeLabelNoRenewal": "This license-based subscription is active.",
@@ -1110,7 +1108,6 @@
       "firewallService": {
         "placeholder": "Select a firewall service",
         "helptext": "Select a firewall service to request this change for",
-        "fallback": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
         "raiseTicketPrefix": " or ",
         "raiseTicketLink": "raise a ticket",
         "raiseTicketSuffix": "if this is unexpected"
@@ -3285,7 +3282,9 @@
     "successfullyUpdated": "Successfully updated.",
     "noDnsZoneRecords": "There are no records to display for this zone.",
     "noDnsZones": "There are no zones to display for this service.",
-    "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView."
+    "noServiceToDisplay": "There are no applicable services to display.",
+    "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView.",
+    "unknown": "Unknown"
   },
   "dialog": {
     "mediaDetach": {

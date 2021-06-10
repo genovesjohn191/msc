@@ -36,27 +36,26 @@
           </ng-container>
 
           <p>{{ 'changeInternetPortPlan.internetPlan.label' | translate }}</p>
-          <mcs-form-field>
+          <mcs-form-field *ngIf="(internetPorts$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [placeholder]="'changeInternetPortPlan.internetPlan.placeholder' | translate"
               required mcsId="select-internet-port"
               [formControl]="fcInternetPort"
               (selectionChange)="onChangeInternetPort($event)">
 
-              <ng-container *ngIf="internetPorts$ | async as internetPorts">
-                <mcs-option *ngFor="let internetPort of internetPorts"
-                  [value]="internetPort"
-                  [disabled]="!selectedInternetIsValid(internetPort)">
-                  <span
-                      [ngStyle]="{'pointer-events': 'auto'}"
-                      [mcsTooltip]="internetPortToolTipText(internetPort)"
-                      [mcsTooltipShow]="!selectedInternetIsValid(internetPort)"
-                      [mcsTooltipPosition]="'right'">
-                      {{ internetPort.billingDescription }} - {{ internetPort.serviceId }}
-                  </span>
-                </mcs-option>
-              </ng-container>
+              <mcs-option *ngFor="let internetPort of internetPorts$ | async"
+                [value]="internetPort"
+                [disabled]="!selectedInternetIsValid(internetPort)">
+                <span
+                    [ngStyle]="{'pointer-events': 'auto'}"
+                    [mcsTooltip]="internetPortToolTipText(internetPort)"
+                    [mcsTooltipShow]="!selectedInternetIsValid(internetPort)"
+                    [mcsTooltipPosition]="'right'">
+                    {{ internetPort.billingDescription }} - {{ internetPort.serviceId }}
+                </span>
+              </mcs-option>
             </mcs-select>
           </mcs-form-field>
+          <span read-only>{{ noServicesFallbackText | translate }}</span>
 
           <ng-container *ngIf="internetPort$ | async as internetPort">
             <ng-container *ngIf="selectedInternetIsValid(internetPort); else internetPortInvalidTemplate">

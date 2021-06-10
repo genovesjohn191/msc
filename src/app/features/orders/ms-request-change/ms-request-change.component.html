@@ -45,7 +45,7 @@
 
               <!-- Services Selection -->
               <mcs-item orientation="block">
-                <mcs-form-field>
+                <mcs-form-field *ngIf="(azureServices$ | async) | mcsIsNotNullOrEmpty">
                   <mcs-select mcsId="select-service"
                     mcsEventTracker="select-ms-service"
                     mcsEventCategory="order"
@@ -66,8 +66,10 @@
                     </mcs-option>
                   </mcs-select>
                 </mcs-form-field>
-                <span *ngIf="!(fcMsService.pristine)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
-                  translate: { subscriptionId:  (fcMsService?.value.uuid | mcsIsNotNullOrEmpty) ? fcMsService?.value.subscriptionId : fcMsService?.value.id } }}</span>
+                <span *ngIf="(fcMsService?.value | mcsIsNotNullOrEmpty)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
+                  translate: { subscriptionId: (fcMsService?.value.subscriptionId | mcsIsNotNullOrEmpty) ?
+                    fcMsService?.value.subscriptionId : unknownText } }}</span>
+                <span read-only>{{ noServicesFallbackText | translate }}</span>
               </mcs-item>
 
               <!-- Service Request Type Selection -->
@@ -128,7 +130,7 @@
                         mcsTooltipPosition="right"></mcs-loader>
                     </ng-container>
                   </span>
-                  <mcs-form-field>
+                  <mcs-form-field *ngIf="azureResourcesOptions$ | async as azureResourcesOptions">
                     <mcs-select [formControl]="fcAzureResource"
                       mcsId="select-ms-service-azure-resource"
                       mcsEventTracker="select-ms-service-azure-resource"
@@ -137,10 +139,9 @@
                       [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureResourcesContextHelp' | translate"
                       [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
                       multiple
-                      [disabled]="!enableAzureResources"
                       [multiSelectLimit]="maxSelectionLimit">
                       <mcs-search mcsSelectSearch></mcs-search>
-                      <ng-container *ngFor="let resource of azureResourcesOptions$ | async">
+                      <ng-container *ngFor="let resource of azureResourcesOptions">
                         <mcs-option
                           [selected]="(selectedServiceId$ | async)?.azureId === resource.value?.azureId"
                           [value]="resource.value">
@@ -165,6 +166,7 @@
                       {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
                     </mcs-error>
                   </mcs-form-field>
+                  <span read-only>{{ noServicesFallbackText | translate }}</span>
                 </mcs-item>
               </ng-container>
               
@@ -179,7 +181,7 @@
               <ng-container *ngIf="isServiceRequestTypeProvision(fcMsServiceRequestType?.value)">
                 <mcs-provision #fgProvisionService
                   [azureResources]="azureResourcesOptions$ | async"
-                  [showAzureResourcePermissionError]="showAzureResourcePermissionError"
+                  [noServicesFallbackText]="noServicesFallbackText"
                   [resourceLoadingInProgress]="loadingInProgress"
                   (dataChange)="onChangeProvisionDetails($event)">
                 </mcs-provision>

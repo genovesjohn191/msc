@@ -39,7 +39,7 @@
           </ng-container>
 
           <p>{{ 'orderServiceRaiseInview.serviceDetails.service.label' | translate }}</p>
-          <mcs-form-field>
+          <mcs-form-field *ngIf="(managedServers$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [formControl]="fcService" required
               (selectionChange)="onChangeService($event)"
               [placeholder]="'orderServiceRaiseInview.serviceDetails.service.placeholder' | translate"
@@ -73,11 +73,13 @@
 
             </mcs-select>
           </mcs-form-field>
+          <span read-only>{{ noServicesFallbackText | translate }}</span>
+
           <ng-container *ngIf="fcService?.value?.isProcessing; else contentTemplate">
             <p text-center>{{ 'orderServiceRaiseInview.serviceDetails.inview.inProcessing' | translate }}</p>
           </ng-container>
           <ng-template #contentTemplate>
-            <p>{{ inviewLevelLabel(fcService?.value) }}</p>
+            <p *ngIf="fcService?.value">{{ inviewLevelLabel(fcService?.value) }}</p>
             <div class="action-items">
               <button mcsButton arrow="right"
                 mcsWizardStepNext

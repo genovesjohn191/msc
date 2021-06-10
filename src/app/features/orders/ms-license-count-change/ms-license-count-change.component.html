@@ -44,7 +44,7 @@
               <mcs-item>
                 <h2 align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.label' | translate }}</h2>
               </mcs-item>
-              <mcs-form-field *ngIf="(licenses$ | async) | mcsArrayHasElement; else noLicensesTemplate">
+              <mcs-form-field *ngIf="(licenses$ | async) | mcsArrayHasElement">
                 <mcs-select required
                   [formControl]="fcLicenses"
                   [placeholder]="'orderMsLicenseCountChange.detailsStep.baseLicense.placeholder' | translate"
@@ -61,11 +61,7 @@
                   </mcs-option>
                 </mcs-select>
               </mcs-form-field>
-              <ng-template #noLicensesTemplate>
-                <mcs-item>
-                  <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.noLicense' | translate }}</span>
-                </mcs-item>
-              </ng-template>
+              <span read-only>{{ noServicesFallbackText | translate }}</span>
             </mcs-item>
             <ng-container *ngIf="fcLicenses?.value?.serviceId; else licenseNoServiceIdTemplate">
               <mcs-item orientation="block" *ngIf="(licenses$ | async) | mcsArrayHasElement"

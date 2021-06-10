@@ -2,9 +2,11 @@ import {
   zip,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   filter,
   map,
   switchMap,
@@ -48,7 +50,8 @@ import {
   McsServer,
   McsServerHostSecurityHids,
   OrderIdType,
-  ServiceOrderState
+  ServiceOrderState,
+  HttpStatusCode
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -96,6 +99,8 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   private _valueChangesSubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
   private _hidsOrderStateMessageMap = new Map<ServiceOrderState, string>();
+  private _errorStatus: number;
+  private _hidsCount: number;
 
   constructor(
     _injector: Injector,
@@ -138,8 +143,18 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
-  public get hasHidsPermission(): boolean {
-    return getSafeProperty(this.accessControlService, (obj) => obj.hasPermission([McsPermission.HidsView]), false);
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._hidsCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' :
+      'orderAddHids.details.server.serverFallbackLabel';
   }
 
   public onSubmitHidsDetails(server: McsServer): void {
@@ -238,9 +253,14 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
                 )
               );
             });
+            this._hidsCount = serverGroups?.length;
             return serverGroups;
           })
         );
+      }),
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
       })
     );
   }

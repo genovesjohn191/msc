@@ -57,7 +57,7 @@
                       mcsTooltipPosition="right"></mcs-loader>
                   </ng-container>
                   <ng-template #dnsService>
-                    <mcs-form-field *ngIf="!(loadingDNSServices) && networkDnsOptions | mcsArrayHasElement else noNetworkDnsTemplate">
+                    <mcs-form-field *ngIf="!(loadingDNSServices) && networkDnsOptions | mcsArrayHasElement">
                       <mcs-select [formControl]="fcDnsService" required
                         [placeholder]="'orderHostedDnsChange.requestDetails.dnsService.placeholder' | translate"
                         [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.dnsService.helptext' | translate"
@@ -73,18 +73,7 @@
                         {{ 'orderHostedDnsChange.requestDetails.dnsService.errorRequired' | translate }}
                       </mcs-error>
                     </mcs-form-field>
-                    <ng-template #noNetworkDnsTemplate>
-                      <p [mcsGreyedOut]="true"> 
-                        <span>{{ 'orderHostedDnsChange.requestDetails.dnsService.fallback' | translate }}</span>
-                        <ng-container *mcsAccessControl="['TicketCreate']">
-                          <span> {{'orderHostedDnsChange.requestDetails.dnsService.raiseTicketPrefix' | translate }} </span>
-                          <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
-                            mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                            mcsEventLabel="order-hosted-dns-change-page">{{ 'orderHostedDnsChange.requestDetails.dnsService.raiseTicketLink' | translate }}</a>
-                          <span> {{'orderHostedDnsChange.requestDetails.dnsService.raiseTicketSuffix' | translate }}</span>
-                        </ng-container>.
-                      </p>
-                    </ng-template>
+                    <span read-only>{{ noServicesFallbackText | translate }}</span>
                   </ng-template>
                 </mcs-item>
 

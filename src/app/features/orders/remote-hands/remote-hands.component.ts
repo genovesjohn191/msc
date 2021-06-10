@@ -5,9 +5,11 @@ import {
   BehaviorSubject,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   filter,
   map,
   takeUntil,
@@ -41,6 +43,7 @@ import {
 } from '@app/features-shared';
 import {
   DeliveryType,
+  HttpStatusCode,
   McsOption,
   McsOptionGroup,
   McsOrderCreate,
@@ -111,6 +114,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   private _formGroupSubject = new Subject<void>();
   private _selectedRackServiceHandler: Subscription;
   private _smacSharedDetails: SmacSharedDetails;
+  private _errorStatus: number;
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -118,6 +122,15 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
 
   public get formIsValid(): boolean {
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (this.hasServiceToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get cabinetLocationEnum(): any {
@@ -229,7 +242,15 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
           this._apiService.getColocationCustomDevices(),
           this._apiService.getColocationRooms(),
           this._apiService.getColocationStandardSqms()]
-      ).subscribe((response) => {
+      )
+      .pipe(
+        catchError((error) => {
+          this.loadingInProgress = false;
+          this._errorStatus = error?.details?.status;
+          return throwError(error);
+        })
+      )
+      .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
         response.forEach((colocationResponseCollection) => {
           let colocationArray = getSafeProperty(colocationResponseCollection, (obj) => obj.collection);

@@ -57,7 +57,8 @@ import {
   McsOptionGroup,
   McsAzureResource,
   McsPermission,
-  McsApiCollection
+  McsApiCollection,
+  HttpStatusCode
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -103,11 +104,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
 
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
-
   public azureResources: McsOptionGroup[];
-  public showAzureResource: boolean = false;
-  public loadingInProgress: boolean;
-  public showAzureResourcePermissionError: boolean = false;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -120,7 +117,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
 
   private _fileAttachments: McsFileInfo[];
   private _creatingTicket$ = new BehaviorSubject<boolean>(false);
-  private _resourcesSubject = new Subject<void>();
+  private _resourcesSubject = new Subject<void>()
+
+  private _errorStatus: number;
+  private _apiCallInProgress: boolean;
+  private _validToShowAzureResource: boolean;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -172,6 +173,26 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get loadingInProgress(): boolean {
+    return this._apiCallInProgress;
+  }
+
+  public get showAzureResource(): boolean {
+    return this._validToShowAzureResource;
+  }
+
+  public get isTypeTroubleTicket(): boolean {
+    return this.fcType.value === TicketType.TroubleTicket;
+  }
+
+  public get hasSelectedAzureResource(): boolean {
+    return this.fcService.value.find((service) => service.service === TicketServiceType.MicrosoftSubscriptions);
+  }
+
   /**
    * Event that emits when creating a ticket
    */
@@ -209,15 +230,13 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   public isValidToSelectAzureResource(): void {
-    let isTypeTroubleTicket = this.fcType.value === TicketType.TroubleTicket;
-    if (this.fcService.value.length === 0) { this.showAzureResource = false; }
-    let hasSelectedAzureResource = this.fcService.value.find((service) => service.service === TicketServiceType.MicrosoftSubscriptions);
-    let isValidToSelectAzureResource = isTypeTroubleTicket && !isNullOrEmpty(hasSelectedAzureResource);
+    if (this.fcService.value?.length === 0) { this._validToShowAzureResource = false; }
+    let isValidToSelectAzureResource = this.isTypeTroubleTicket && !isNullOrEmpty(this.hasSelectedAzureResource);
     if (!isValidToSelectAzureResource) {
-      this.showAzureResource = false;
+      this._validToShowAzureResource = false;
     } else {
       this._getAzureResources();
-      this.showAzureResource = true;
+      this._validToShowAzureResource = true;
     }
   }
 
@@ -787,13 +806,13 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   private _getAzureResources(): void {
-    this.loadingInProgress = true;
+    this._apiCallInProgress = true;
     this._apiService.getAzureResources()
       .pipe(
         catchError((error) => {
-          this.loadingInProgress = false;
-          this.showAzureResource = false;
-          this.showAzureResourcePermissionError = this.hasPermissionToAzureResource() ? false : true;
+          this._apiCallInProgress = false;
+          this._validToShowAzureResource = false;
+          this._errorStatus = error?.details?.status;
           this._changeDetectorRef.markForCheck();
           return throwError(error);
         }),
@@ -809,7 +828,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
           let filteredResources = this._mapResourcesToOptions(resources, selectedResource.id);
           resourceGroup.push(createObject(McsOptionGroup, { groupName: selectedResource.id, options: filteredResources}));
         });
-        this.loadingInProgress = false;
+        this._apiCallInProgress = false;
         this.azureResources = resourceGroup;
         this._changeDetectorRef.markForCheck();
       });

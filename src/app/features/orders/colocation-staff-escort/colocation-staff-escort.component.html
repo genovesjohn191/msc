@@ -51,11 +51,10 @@
                     mcsTooltipPosition="right"></mcs-loader>
                 </ng-container>
                 <ng-template #serviceTemplate>
-                  <mcs-form-field>
+                  <mcs-form-field *ngIf="hasServiceToDisplay">
                     <mcs-select [formControl]="fcColocationService"
                     [placeholder]="'orderColocationStaffEscort.requestDetails.colocationService.placeholder' | translate"
                     [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.colocationService.helptext' | translate"
-                    [disabled]="!hasServiceToDisplay"
                     mcsId="select-colocation-service"
                     mcsEventTracker="select-colocation-service"
                     mcsEventCategory="order-collocation-staff-escort"
@@ -75,17 +74,7 @@
                           [innerHTML]="('orderColocationStaffEscort.requestDetails.colocationService.error' | translate)">
                     </mcs-error>
                   </mcs-form-field>
-                  <ng-container *ngIf="!hasServiceToDisplay">
-                      <p [mcsGreyedOut]="true"> <span>{{ 'orderColocationStaffEscort.requestDetails.colocationService.fallback' | translate }}</span>
-                        <ng-container *mcsAccessControl="['TicketCreate']">
-                         <span> {{'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketPrefix' | translate }} </span>
-                          <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
-                            mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                            mcsEventLabel="order-colocation-staff-escort-page">{{ 'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketLink' | translate }}</a>
-                          <span> {{'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketSuffix' | translate }}</span>
-                        </ng-container>.
-                      </p>
-                   </ng-container>
+                  <span read-only>{{ noServicesFallbackText | translate }}</span>
                 </ng-template>
             </mcs-item>
           <br><hr><br>

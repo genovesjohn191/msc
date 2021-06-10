@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Injector,
   OnDestroy,
@@ -66,7 +67,8 @@ import {
   AzureServiceRequestType,
   McsCloudHealthOption,
   McsFeatureFlag,
-  McsPermission
+  McsPermission,
+  HttpStatusCode
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -122,14 +124,16 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public cloudHealthService: McsCloudHealthOption[];
 
-  public loadingInProgress: boolean;
-  public showAzureResourcePermissionError: boolean = false;
-
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
   private _selectedServiceHandler: Subscription;
   private _smacSharedDetails: SmacSharedDetails;
   private _provisionDetails: ProvisionDetails;
+
+  private _errorStatus: number;
+  private _loadingInProgress: boolean;
+  private _resourceCount: number;
+  private _serviceCount: number;
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -145,6 +149,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   public get provisionNotesHelpText(): string {
     return this._translateService.instant('orderMsRequestChange.detailsStep.provisionNotesContextualHelp');
+  }
+
+  public get unknownText(): string {
+    return this._translateService.instant('message.unknown');
   }
 
   public get customNotesHelpText(): string {
@@ -175,16 +183,25 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return this.fcAzureProduct.value === AzureProducts.Other;
   }
 
-  public get enableAzureResources(): boolean {
-    return this._enableAzureResources;
-  }
-  public set enableAzureResources(value: boolean) {
-    this._enableAzureResources = value;
-  }
-  private _enableAzureResources: boolean = false;
-
   public get loadingText(): string {
     return LOADING_TEXT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._resourceCount === 0 || this._serviceCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
+  }
+
+  public get loadingInProgress(): boolean {
+    return this._loadingInProgress;
   }
 
   public get requestDescriptionPlaceHolder(): string {
@@ -237,6 +254,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     private _accessControlService: McsAccessControlService,
     private _activatedRoute: ActivatedRoute,
     private _apiService: McsApiService,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _formBuilder: FormBuilder,
     private _msRequestChangeService: MsRequestChangeService,
@@ -571,15 +589,21 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           subscriptionOptions.push(createObject(McsOption,
             { text: textValue, value: subscription }));
         });
+        this._serviceCount = subscriptionOptions?.length;
         return subscriptionOptions;
       }),
       shareReplay(1),
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        this._changeDetectorRef.markForCheck();
+        return throwError(error);
+      }),
       tap(() => this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent))
     );
   }
 
   private _getAzureResources(serviceId: string = null): void {
-    this.loadingInProgress = true;
+    this._loadingInProgress = true;
     this.azureResourcesOptions$ = this._apiService.getAzureResources().pipe(
       map((resourcesCollection) => {
         let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
@@ -593,18 +617,20 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           let textValue = `${resource.name}`;
           resourceOptions.push(createObject(McsOption, { text: textValue, value: resource }));
         });
+        this._resourceCount = resourceOptions?.length;
         return resourceOptions;
       }),
       catchError((error) => {
-        this.loadingInProgress = false;
-        this.showAzureResourcePermissionError = this.hasPermissionToAzureResource() ? false : true;
+        this._loadingInProgress = false;
+        this._errorStatus = error?.details?.status;
+        this._changeDetectorRef.markForCheck();
         return throwError(error);
       }),
       shareReplay(1),
       tap(() => {
         this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent);
-        this.enableAzureResources = true;
-        this.loadingInProgress = false;
+        this._loadingInProgress = false;
+        this._changeDetectorRef.markForCheck();
       })
     );
   }

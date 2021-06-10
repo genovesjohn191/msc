@@ -12,6 +12,7 @@ import {
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
+  HttpStatusCode,
   McsOption,
   McsOptionGroup,
   McsOrderItemType,
@@ -58,11 +59,28 @@ export class SelectColocationDeviceComponent extends FormFieldBaseComponent2<IRa
   public eventLabel: string;
 
   public colocationGroups: McsOptionGroup[] = [];
-  public hasServiceToDisplay: boolean;
-  public loadingInProgress: boolean;
+  private _loadingInProgress: boolean;
+  private _errorStatus: number;
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
+  }
+
+  public get loadingInProgress(): boolean {
+    return this._loadingInProgress;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this.colocationGroups?.length === 0;;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   constructor(
@@ -73,8 +91,9 @@ export class SelectColocationDeviceComponent extends FormFieldBaseComponent2<IRa
     super(_injector);
   }
 
+
   public ngOnInit(): void {
-    this.loadingInProgress = true;
+    this._loadingInProgress = true;
     this._getColocationServices();
   }
 
@@ -90,7 +109,8 @@ export class SelectColocationDeviceComponent extends FormFieldBaseComponent2<IRa
       this._apiService.getColocationStandardSqms()]
     ).pipe(
       catchError((error) => {
-        this.loadingInProgress = false;
+        this._loadingInProgress = false;
+        this._errorStatus = error?.details?.status;
         this._changeDetector.markForCheck();
         return throwError(error);
       })
@@ -98,8 +118,7 @@ export class SelectColocationDeviceComponent extends FormFieldBaseComponent2<IRa
     .subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }
       this._createColocationGroupOptions(response);
-      this.hasServiceToDisplay = this.colocationGroups.length > 0;
-      this.loadingInProgress = false;
+      this._loadingInProgress = false;
       this._changeDetector.markForCheck();
     });
   }

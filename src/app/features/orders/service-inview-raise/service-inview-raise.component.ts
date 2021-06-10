@@ -2,9 +2,11 @@ import {
   of,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   shareReplay,
   switchMap,
   takeUntil
@@ -39,7 +41,8 @@ import {
   McsOrderItemCreate,
   McsOrderWorkflow,
   McsServer,
-  OrderIdType
+  OrderIdType,
+  HttpStatusCode
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -114,6 +117,8 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   private _selectedServerHandler: Subscription;
   private _destroySubject = new Subject<void>();
   private _inviewLevelLabelMap: Map<InviewLevel, string>;
+  private _errorStatus: number;
+  private _serverGroupCount: number;
 
   constructor(
     _injector: Injector,
@@ -136,6 +141,19 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     this._populateInviewLevelLabelMap();
     this._registerFormGroups();
     this._registerEvents();
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._serverGroupCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public ngOnInit(): void {
@@ -243,6 +261,10 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     // Managed servers for now, but eventually all Services
     this.managedServers$ = this._apiService.getServers().pipe(
       switchMap((response) => of(this._createServerArray(response && response.collection))),
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
+      }),
       shareReplay(1)
     );
   }
@@ -251,7 +273,10 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    * Returns an array of servers
    */
   private _createServerArray(servers: McsServer[]): ServiceGroup[] {
-    if (isNullOrEmpty(servers)) { return; }
+    if (isNullOrEmpty(servers)) {
+      this._serverGroupCount = 0;
+      return;
+    }
     let serversGroupArray: ServiceGroup[] = [];
 
     servers.forEach((server) => {
@@ -271,7 +296,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
         serversGroupArray.push(groupedServer);
       }
     });
-
+    this._serverGroupCount = serversGroupArray?.length;
     return serversGroupArray.sort(this._sortByResourceName);
   }
 

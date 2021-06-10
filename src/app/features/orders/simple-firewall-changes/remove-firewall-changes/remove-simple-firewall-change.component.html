@@ -70,21 +70,10 @@
                         {{ 'orderSimpleFirewallChanges.detailsStep.firewallService.errorRequired' | translate }}
                       </mcs-error>
                     </mcs-form-field>
-                    <ng-template #noServicesTemplate>
-                      <p [mcsGreyedOut]="true"> 
-                        <span>{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.fallback' | translate }}</span>
-                        <ng-container *mcsAccessControl="['TicketCreate']">
-                          <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketPrefix' | translate }} </span>
-                          <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
-                            mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                            mcsEventLabel="remove-simple-firewall-change-page">{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketLink' | translate }}</a>
-                          <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketSuffix' | translate }}</span>
-                        </ng-container>.
-                      </p>
-                    </ng-template>
+                    <span read-only>{{ noServicesFallbackText | translate }}</span>
                   </ng-template>
                 </mcs-item>
-                 <mcs-item orientation="block">
+                <mcs-item orientation="block">
                     <div>{{removeRuleLabel}}</div>
                     <div formArrayName="faSharedRuleForm">
                       <mcs-accordion [multi]="true">
@@ -110,7 +99,6 @@
                     </button>
                   </div>
                 </mcs-item>
-
                 <!-- SMAC Shared Form -->
                 <mcs-item orientation="block">
                     <mcs-smac-shared-form #fgSmacSharedForm [config]="smacSharedFormConfig$ | async"

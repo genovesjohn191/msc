@@ -9,7 +9,7 @@
     </mcs-item>
   </ng-container>
   <mcs-item orientation="block">
-    <ng-container *ngIf="hasServiceToDisplay">
+    <ng-container *ngIf="colocationGroups | mcsIsNotNullOrEmpty">
       <mcs-form-field>
         <mcs-select
           mcsId="colocation-service"
@@ -33,18 +33,6 @@
         </mcs-error>
       </mcs-form-field>
     </ng-container>
-    <ng-container *ngIf="!hasServiceToDisplay">
-      <p [mcsGreyedOut]="true"> <span>{{ config.fallbackText }}</span>
-        <ng-container *mcsAccessControl="['TicketCreate']">
-          <span> {{'smacShared.fallback.raiseTicketPrefix' | translate }} </span>
-          <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
-            mcsId="raise-a-ticket"
-            mcsEventTracker="raise-a-ticket"
-            mcsEventCategory="ticket"
-            mcsEventLabel="order-colocation-device-restart-page">{{ 'smacShared.fallback.raiseTicketLink' | translate }}</a>
-          <span> {{'smacShared.fallback.raiseTicketSuffix' | translate }} </span>
-        </ng-container>
-      </p>
-    </ng-container>
+    <span read-only>{{ noServicesFallbackText | translate }}</span>
   </mcs-item>
 </ng-template>

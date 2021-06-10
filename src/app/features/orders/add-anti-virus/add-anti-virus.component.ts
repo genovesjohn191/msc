@@ -1,9 +1,11 @@
 import {
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   map,
   switchMap,
   takeUntil
@@ -34,13 +36,13 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { OrderDetails } from '@app/features-shared';
 import {
+  HttpStatusCode,
   McsEntityProvision,
   McsOption,
   McsOptionGroup,
   McsOrderCreate,
   McsOrderItemCreate,
   McsOrderWorkflow,
-  McsPermission,
   McsServer,
   McsServerHostSecurityAntiVirus,
   OrderIdType,
@@ -84,6 +86,8 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
   private _destroySubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
   private _avOrderStateMessageMap = new Map<ServiceOrderState, string>();
+  private _errorStatus: number;
+  private _avCount: number;
 
   constructor(
     _injector: Injector,
@@ -123,12 +127,22 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
-  public get formIsValid(): boolean {
-    return getSafeProperty(this._formGroup, (obj) => obj.isValid());
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
   }
 
-  public get hasAvPermission(): boolean {
-    return getSafeProperty(this.accessControlService, (obj) => obj.hasPermission([McsPermission.AvView]), false);
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._avCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' :
+      'orderAddAntiVirus.details.server.serverFallbackLabel';
+  }
+
+  public get formIsValid(): boolean {
+    return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
   public isResourcesEmpty(resourcesMap: Map<string, AntiVirusServers[]>): boolean {
@@ -214,9 +228,14 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
                 )
               );
             });
+            this._avCount = serverGroups?.length;
             return serverGroups;
           })
         );
+      }),
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
       })
     );
   }

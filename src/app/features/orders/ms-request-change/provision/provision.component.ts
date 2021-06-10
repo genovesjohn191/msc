@@ -106,7 +106,7 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   public resourceLoadingInProgress: boolean;
 
   @Input()
-  public showAzureResourcePermissionError: boolean;
+  public noServicesFallbackText: string;
 
   @Output()
   public dataChange = new EventEmitter<ProvisionDetails>();

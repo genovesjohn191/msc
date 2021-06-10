@@ -17,13 +17,15 @@ import {
   takeUntil,
   map,
   filter,
-  tap
+  tap,
+  catchError
 } from 'rxjs/operators';
 import {
   Subject,
   Observable,
   zip,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -50,7 +52,8 @@ import {
   McsOption,
   RouteKey,
   OrderIdType,
-  DeliveryType
+  DeliveryType,
+  HttpStatusCode
 } from '@app/models';
 import {
   OrderDetails,
@@ -88,6 +91,9 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
   private _smacSharedDetails: SmacSharedDetails;
   private _routerHandler: Subscription;
+  private _errorStatus: number;
+  private _firewallCount: number;
+
   @ViewChild('fgSmacSharedForm')
   public set fgSmacSharedForm(value: IMcsFormGroup) {
     if (isNullOrEmpty(value)) { return; }
@@ -155,6 +161,20 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   public get modifyRuleLabel(): string {
     return this._translateService.instant('orderSimpleFirewallChanges.detailsStep.modify.label');
   }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._firewallCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
+  }
+
   public isChangeItemRemovable(formArrayLength: number): boolean {
     return formArrayLength > 1;
   }
@@ -276,13 +296,22 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     });
   }
   private _getFirewallServices(): void {
-    this._apiService.getFirewalls().subscribe(
+    this._apiService.getFirewalls()
+    .pipe(
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        this.isLoading = false;
+        return throwError(error);
+      })
+    )
+    .subscribe(
       (response) => {
         let firewalls = getSafeProperty(response, (obj) => obj.collection);
         this.firewallOptions = firewalls.filter((firewall) => getSafeProperty(firewall, (obj) => obj.serviceId))
           .map((firewall) => {
             return new McsOption(firewall, `${firewall.managementName} (${firewall.serviceId})`);
         });
+        this._firewallCount = this.firewallOptions?.length;
         this.isLoading = false;
       }
     );

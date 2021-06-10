@@ -28,7 +28,6 @@ import {
 import {
   CoreValidators,
   IMcsFormGroup,
-  McsErrorHandlerService,
   McsFormGroupService,
   McsOrderWizardBase,
   OrderRequester
@@ -40,6 +39,7 @@ import {
   OrderDetails
 } from '@app/features-shared';
 import {
+  HttpStatusCode,
   InternetPlan,
   McsInternetPort,
   McsOrderCreate,
@@ -101,6 +101,8 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
   private _internetManagePortPlan: InternetManagePortPlan;
   private _destroySubject = new Subject<void>();
   private _selectedInternetResourceHandler: Subscription;
+  private _errorStatus: number;
+  private _internetCount: number;
 
   constructor(
     _injector: Injector,
@@ -109,7 +111,6 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef,
     private _eventDispatcher: EventBusDispatcherService,
-    private _errorHandlerService: McsErrorHandlerService,
     private _formGroupService: McsFormGroupService,
     private _translate: TranslateService,
   ) {
@@ -139,6 +140,19 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._internetCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get formIsValid(): boolean {
@@ -303,9 +317,13 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
   private _getAllInternetPorts(): void {
     this.internetPorts$ = this._apiService.getInternetPorts()
     .pipe(
-    map((response) => getSafeProperty(response, (obj) => obj.collection)),
+    map((response) => {
+      let internetPorts = getSafeProperty(response, (obj) => obj.collection);
+      this._internetCount = internetPorts?.length;
+      return internetPorts;
+    }),
     catchError((error) => {
-      this._errorHandlerService.redirectToErrorPage(error.status);
+      this._errorStatus = error?.details?.status;
       return throwError(error);
     }),
     shareReplay(1)

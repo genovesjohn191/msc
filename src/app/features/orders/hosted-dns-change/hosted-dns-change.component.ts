@@ -18,13 +18,15 @@ import {
   map,
   filter,
   tap,
-  shareReplay
+  shareReplay,
+  catchError
 } from 'rxjs/operators';
 import {
   Subject,
   Observable,
   zip,
-  of
+  of,
+  throwError
 } from 'rxjs';
 import {
   Guid,
@@ -54,7 +56,8 @@ import {
   McsOrderHostedDnsChange,
   McsNetworkDnsSummary,
   DeliveryType,
-  McsAzureServiceQueryParams
+  McsAzureServiceQueryParams,
+  HttpStatusCode
 } from '@app/models';
 import {
   OrderDetails,
@@ -100,6 +103,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     return LOADING_TEXT;
   }
   private _smacSharedDetails: SmacSharedDetails;
+  private _errorStatus: number;
 
   @ViewChild('fgSmacSharedForm')
   public set fgSmacSharedForm(value: IMcsFormGroup) {
@@ -159,6 +163,19 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this.networkDnsOptions?.length === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get formIsValid(): boolean {
@@ -359,7 +376,16 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   private _getNetworkDns(): void {
     this.loadingDNSServices = true;
     this.loadingDNSZones = true;
-    this._apiService.getNetworkDns().subscribe(dnsCollection => {
+    this._apiService.getNetworkDns()
+      .pipe(
+        catchError((error) => {
+          this._errorStatus = error?.details?.status;
+          this.loadingDNSZones = false;
+          this.loadingDNSServices = false;
+          return throwError(error);
+        })
+      )
+      .subscribe(dnsCollection => {
         let dnsList = getSafeProperty(dnsCollection, (obj) => obj.collection) || [];
         let optionList = new Array<McsOption>();
         if(dnsList.length === 0){
@@ -376,7 +402,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
           this._changeDetectionRef.detectChanges();
         }
       }
-    );
+      );
   }
 
   /**

@@ -2,9 +2,11 @@ import {
   zip,
   BehaviorSubject,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   filter,
   takeUntil,
   tap
@@ -37,6 +39,7 @@ import {
 } from '@app/features-shared';
 import {
   DeliveryType,
+  HttpStatusCode,
   McsOption,
   McsOrderCreate,
   McsOrderItemCreate,
@@ -92,9 +95,24 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   private _formGroupSubject = new Subject<void>();
   private _selectedManagedServerHandler: Subscription;
   private _smacSharedDetails: SmacSharedDetails;
+  private _errorStatus: number;
+  private _serverCount: number;
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._serverCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get formIsValid(): boolean {
@@ -298,7 +316,15 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   }
 
   private _subscribeToManagedServer(): void {
-   this._apiService.getServers().subscribe(
+   this._apiService.getServers()
+   .pipe(
+     catchError((error) => {
+      this.loadingInProgress = false;
+      this._errorStatus = error?.details?.status;
+      return throwError(error);
+     })
+   )
+   .subscribe(
       (serversCollection) => {
         let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
         servers.forEach((server) => {
@@ -306,6 +332,7 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
           this.managedServers.push(createObject(McsOption, { text: server.name, value: server }));
         });
         this.loadingInProgress = false;
+        this._serverCount = this.managedServers?.length;
       });
   }
 
