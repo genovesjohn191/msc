@@ -1,4 +1,4 @@
-<mcs-page [header]="'networkDb.pods.header' | translate">
+<mcs-page [header]="'networkDb.vlans.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
@@ -7,7 +7,7 @@
       <div class="listing-action-wrapper">
         <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
           <span>{{ totalCount | mcsPlural:
-                ('networkDb.pods.dataSingular' | translate) : ('networkDb.pods.dataPlural' | translate) }}
+                ('networkDb.vlans.dataSingular' | translate) : ('networkDb.vlans.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -15,16 +15,16 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="'networkDb.pods.leftPanelHeader' | translate">
+  <mcs-left-panel *mcsLeftPanelDef="'networkDb.vlans.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="deployments-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'networkDb.pods.filterColumn' | translate" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'networkDb.vlans.filterColumn' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="network-db-pod"
+        storageKey="network-db-vlans"
         [defaultFilters]="defaultColumnFilters">
       </mcs-column-selector>
     </mcs-left-panel-item>
@@ -35,57 +35,57 @@
 
     <div class="listing-table-wrapper">
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search mcsId="network-db-pods-mobile-search"></mcs-search>
+      <mcs-search *ngIf="isMobile" #search mcsId="network-db-vlans-mobile-search"></mcs-search>
 
       <table mat-table [dataSource]="dataSource" style="margin-top: 0">
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
+        <!-- Number Column -->
+        <ng-container matColumnDef="number">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.name' | translate }}
+            {{ 'columnHeader.number' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.name }}
+            {{ row.number }}
           </td>
         </ng-container>
 
-        <!-- Description Column -->
-        <ng-container matColumnDef="description">
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.description' | translate }}
+            {{ 'columnHeader.status' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.description }}
+            {{ getStatusText(row.status) }}
           </td>
         </ng-container>
 
-        <!-- Type Column -->
-        <ng-container matColumnDef="type">
+        <!-- Infrastructure Flag Column -->
+        <ng-container matColumnDef="isInfrastructure">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.type' | translate }}
+            {{ 'columnHeader.isInfrastructure' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ getTypeText(row.type) }}
+            {{ row.isInfrastructure }}
           </td>
         </ng-container>
 
-        <!-- Code Column -->
-        <ng-container matColumnDef="code">
+        <!-- POD name Column -->
+        <ng-container matColumnDef="podName">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.code' | translate }}
+            {{ 'columnHeader.podName' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.code }}
+            {{ row.podName }}
           </td>
         </ng-container>
 
-        <!-- Code Column -->
-        <ng-container matColumnDef="vxLanGroup">
+        <!-- Network Column -->
+        <ng-container matColumnDef="networkName">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.vxLanGroup' | translate }}
+            {{ 'columnHeader.networkName' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.vxLanGroup }}
+            {{ row.networkName }}
           </td>
         </ng-container>
 
@@ -140,16 +140,16 @@
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-          {{ 'networkDb.pods.noRecordsFound' | translate }}
+          {{ 'networkDb.vlans.noRecordsFound' | translate }}
         </div>
         <div *ngIf="dataSource?.hasError$ | async" text-center>
           <div class="listing-status-wrapper">
-            <span>{{ 'networkDb.pods.errorMessage' | translate }}</span>
+            <span>{{ 'networkDb.vlans.errorMessage' | translate }}</span>
             <a (click)="retryDatasource()"
               mcsId
-              mcsEventTracker="retry-loading-network-db-pod-list"
+              mcsEventTracker="retry-loading-network-db-site-list"
               mcsEventCategory="launchpad-network-db"
-              mcsEventLabel="pod-listing-page">{{ 'networkDb.pods.retry' | translate }}</a>.
+              mcsEventLabel="pod-listing-page">{{ 'networkDb.vlans.retry' | translate }}</a>.
           </div>
         </div>
       </mcs-item>

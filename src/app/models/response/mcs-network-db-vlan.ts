@@ -1,4 +1,8 @@
 import { JsonProperty } from '@app/utilities';
+import {
+  NetworkDbVlanStatus,
+  NetworkDbVlanStatusSerialization
+} from '../enumerations/network-db-vlan-status.enum';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsNetworkDbVlan {
@@ -8,9 +12,11 @@ export class McsNetworkDbVlan {
   @JsonProperty()
   public number: number = undefined;
 
-  // TODO: convert to enum
-  @JsonProperty()
-  public status: string = undefined;
+  @JsonProperty({
+    serializer: NetworkDbVlanStatusSerialization,
+    deserializer: NetworkDbVlanStatusSerialization
+  })
+  public status: NetworkDbVlanStatus = undefined;
 
   @JsonProperty()
   public isInfrastructure: boolean = undefined;

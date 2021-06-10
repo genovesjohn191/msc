@@ -1,9 +1,9 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum NetworkDbVlanStatus {
-  Free = 0,
-  Reserved = 1,
-  Quarantined = 2
+  Free,
+  Reserved,
+  Quarantined
 }
 
 export const networkDbVlanStatusText = {

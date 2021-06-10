@@ -2606,6 +2606,16 @@
       "noRecordsFound": "No PODs to display.",
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of PODs.",
       "retry": "Try again shortly"
+    },
+    "vlans": {
+      "header": "VLANs",
+      "leftPanelHeader": "VLAN Filter",
+      "filterColumn": "Table Filter",
+      "dataSingular": "VLAN",
+      "dataPlural": "VLANs",
+      "noRecordsFound": "No VLANs to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of VLANs.",
+      "retry": "Try again shortly"
     }
   },
   "products": {
@@ -3062,6 +3072,7 @@
     "firmwareVersion": "Firmware Version",
     "hourlyCharge": "Hourly Charge",
     "id": "ID",
+    "isInfrastructure": "Infrastructure",
     "installedBaseState": "Installed Base State",
     "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
@@ -3083,7 +3094,9 @@
     "moduleType": "Module Type",
     "monthlyFee": "Monthly Fee",
     "name": "Name",
+    "networkName": "Network Name",
     "notification": "Notification",
+    "number": "Number",
     "offerId": "Offer ID",
     "oneOffCharge": "One-off Charge",
     "operationName": "Operation Name",
@@ -3091,6 +3104,7 @@
     "osType": "OS Type",
     "parent": "Parent",
     "plan": "Plan",
+    "podName": "POD Name",
     "productId": "Product ID",
     "projectedComputeCost": "Projected Compute Cost",
     "quantity": "Quantity",
