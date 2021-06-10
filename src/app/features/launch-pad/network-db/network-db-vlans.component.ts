@@ -16,9 +16,9 @@ import {
 import {
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
-  McsNetworkDbPod,
-  NetworkDbPodType,
-  networkDbPodTypeText
+  McsNetworkDbVlan,
+  NetworkDbVlanStatus,
+  networkDbVlanStatusText
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -33,20 +33,20 @@ import {
 } from '@app/utilities';
 
 @Component({
-  selector: 'mcs-network-db-pods',
-  templateUrl: './network-db-pods.component.html',
+  selector: 'mcs-network-db-vlans',
+  templateUrl: './network-db-vlans.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbPodsComponent implements OnDestroy {
+export class NetworkDbVlansComponent implements OnDestroy {
 
-  public readonly dataSource: McsTableDataSource2<McsNetworkDbPod>;
+  public readonly dataSource: McsTableDataSource2<McsNetworkDbVlan>;
 
   public readonly defaultColumnFilters = [
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'code' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'vxLanGroup' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'number' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'isInfrastructure' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'podName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'networkName' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),
@@ -89,17 +89,17 @@ export class NetworkDbPodsComponent implements OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
-  public getTypeText(status: NetworkDbPodType): string {
-    return networkDbPodTypeText[status];
+  public getStatusText(status: NetworkDbVlanStatus): string {
+    return networkDbVlanStatusText[status];
   }
 
-  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbPod>> {
+  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbVlan>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
-    return this._apiService.getNetworkDbPods(queryParam).pipe(
+    return this._apiService.getNetworkDbVlans(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount))
     );
   }

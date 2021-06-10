@@ -21,6 +21,7 @@ import {
 import { LaunchPadWorkflowsComponent } from './workflows/workflows.component';
 import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
 import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
+import { NetworkDbVlansComponent } from './network-db/network-db-vlans.component';
 
 /**
  * List of routes for the main module
@@ -95,5 +96,11 @@ export const launchPadRoutes: Routes = [
     component: NetworkDbPodsComponent,
     data: { routeId: RouteKey.LaunchPadNetworkDbPods },
     canActivate: [ LaunchPadGuard ]
-  }
+  },
+  {
+    path: 'network-db/vlan-db/vlans',
+    component: NetworkDbVlansComponent,
+    data: { routeId: RouteKey.LaunchPadNetworkDbVlans },
+    canActivate: [ LaunchPadGuard ]
+  },
 ];

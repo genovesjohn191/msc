@@ -22,6 +22,7 @@ import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-depl
 import { AzureDeploymentService } from './azure-deployments/azure-deployment/azure-deployment.service';
 import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
 import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
+import { NetworkDbVlansComponent } from './network-db/network-db-vlans.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { NetworkDbSitesComponent } from './network-db/network-db-sites.component
     // Network DB
     NetworkDbSitesComponent,
     NetworkDbPodsComponent,
+    NetworkDbVlansComponent,
     // Shared
     ConfirmationDialogComponent
   ],
