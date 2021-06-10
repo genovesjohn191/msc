@@ -2590,7 +2590,18 @@
     "retry": "Try again shortly"
   },
   "networkDb": {
+    "sites": {
+      "header": "Sites",
+      "leftPanelHeader": "Sites Filter",
+      "filterColumn": "Table Filter",
+      "dataSingular": "Site",
+      "dataPlural": "Sites",
+      "noRecordsFound": "No Sites to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of sites.",
+      "retry": "Try again shortly"
+    },
     "pods": {
+      "header": "PODs",
       "leftPanelHeader": "POD Filter",
       "filterColumn": "Table Filter",
       "dataSingular": "Pod",

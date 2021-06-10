@@ -20,6 +20,7 @@ import {
 } from './workflows/workflow-launch.component';
 import { LaunchPadWorkflowsComponent } from './workflows/workflows.component';
 import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
+import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
 
 /**
  * List of routes for the main module
@@ -84,20 +85,15 @@ export const launchPadRoutes: Routes = [
     ]
   },
   {
-    path: 'network-db',
-    canActivate: [ LaunchPadGuard ],
-    children: [
-      {
-        path: 'pods',
-        redirectTo: 'overview',
-        pathMatch: 'full',
-        data: { routeId: RouteKey.LaunchPadNetworkDbPods }
-      },
-      {
-        path: 'pods',
-        component: NetworkDbPodsComponent,
-        data: { routeId: RouteKey.LaunchPadNetworkDbPods }
-      }
-    ]
+    path: 'network-db/sites',
+    component: NetworkDbSitesComponent,
+    data: { routeId: RouteKey.LaunchPadNetworkDbPods },
+    canActivate: [ LaunchPadGuard ]
   },
+  {
+    path: 'network-db/pods',
+    component: NetworkDbPodsComponent,
+    data: { routeId: RouteKey.LaunchPadNetworkDbPods },
+    canActivate: [ LaunchPadGuard ]
+  }
 ];
