@@ -2589,6 +2589,17 @@
     "changeLicenseCount": "Change license count",
     "retry": "Try again shortly"
   },
+  "networkDb": {
+    "pods": {
+      "leftPanelHeader": "POD Filter",
+      "filterColumn": "Table Filter",
+      "dataSingular": "Pod",
+      "dataPlural": "Pods",
+      "noRecordsFound": "No PODs to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of PODs.",
+      "retry": "Try again shortly"
+    }
+  },
   "products": {
     "header": "Product Catalog",
     "leftPanelHeader": "Product Filter",
@@ -3018,6 +3029,7 @@
     "attachedTo": "Attached To",
     "billingDescription": "Description",
     "catalog": "OS Edition",
+    "code": "Code",
     "companyId": "Company ID",
     "companyName": "Company Name",
     "completed": "Completed",
@@ -3115,6 +3127,7 @@
     "type": "Type",
     "unit": "Unit",
     "updatedBy": "Updated By",
+    "updatedOn": "Updated On",
     "uploadedDate": "Uploaded Date",
     "usage": "Usage",
     "user": "User",
@@ -3123,6 +3136,7 @@
     "vdc": "VDC",
     "version": "Version",
     "vmName":"VM Name",
+    "vxLanGroup": "VX Lan Group",
     "zone": "Zone",
     "zoneCount": "Zones",
     "recordType": "Record Type",

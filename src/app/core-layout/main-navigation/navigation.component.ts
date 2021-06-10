@@ -60,7 +60,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _showDashboardSubmenu: boolean;
   private _showAzureSubMenu: boolean;
   private _showOrdersMenu: boolean;
-  private _showDnsListing: boolean;
 
   public get isImpersonating(): boolean {
     return this._authenticationIdentity.isImpersonating;
@@ -136,10 +135,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get macviewOrdersUrl(): string {
     return this._coreConfig.macviewOrdersUrl;
-  }
-
-  public get showDnsListing(): boolean {
-    return this._showDnsListing;
   }
 
   public constructor(
@@ -251,7 +246,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     this.selectedCategory = routeInfo.enumCategory;
     // Expands current route
-    this.initializeNavigation();
+    this._initializeNavigation();
 
     this._changeDetectorRef.markForCheck();
   }
@@ -260,10 +255,28 @@ export class NavigationComponent implements OnInit, OnDestroy {
    * Sets up the initial state of the navigation
    * and expands the current route
    */
-  private initializeNavigation() {
+  private _initializeNavigation(): void {
+    this._initLaunchPadNav();
+    this._initPrivateCloudNav();
+    this._initPublicCloudNav();
+
+    this._showOrdersMenu = (this._navInitialized && this._showOrdersMenu)
+      ? this._showOrdersMenu
+      : this._accessControlService.hasPermission([McsPermission.OrderView])
+        && (this.selectedCategory === RouteCategory.Orders || this.selectedCategory === RouteCategory.MakeAChange);
+
+    this._navInitialized = true;
+  }
+
+  private _initLaunchPadNav(): void {
+    let isLaunchPadCategorySelected = this.hasLaunchPadAccess && (
+      this.selectedCategory === RouteCategory.LaunchPad
+      || this.selectedCategory === RouteCategory.LaunchPadNetworkDb
+      || this.selectedCategory === RouteCategory.LaunchPadVlanDb);
+
     this._showLaunchPadMenu = (this._navInitialized && this._showLaunchPadMenu)
       ? this._showLaunchPadMenu
-      : this.hasLaunchPadAccess && this.selectedCategory === RouteCategory.LaunchPad;
+      : isLaunchPadCategorySelected;
 
     this._showLaunchPadNetworkDbSubmenu = (this._navInitialized && this._showLaunchPadNetworkDbSubmenu)
       ? this._showLaunchPadNetworkDbSubmenu
@@ -272,26 +285,30 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._showLaunchPadVlanDbSubmenu = (this._navInitialized && this._showLaunchPadVlanDbSubmenu)
       ? this._showLaunchPadVlanDbSubmenu
       : this.selectedCategory === RouteCategory.LaunchPadVlanDb;
+  }
 
+  private _initPrivateCloudNav(): void {
     this._showPrivateCloudMenu = (this._navInitialized && this._showPrivateCloudMenu)
-      ? this._showPrivateCloudMenu
-      : this.hasPrivateCloudAccess && this.isPrivateCloudRoute;
+    ? this._showPrivateCloudMenu
+    : this.hasPrivateCloudAccess && this.isPrivateCloudRoute;
 
+  this._showComputeSubmenu = (this._navInitialized && this._showComputeSubmenu)
+    ? this._showComputeSubmenu
+    : this.selectedCategory === RouteCategory.Compute;
+
+  this._showNetworkSubmenu = (this._navInitialized && this._showNetworkSubmenu)
+    ? this._showNetworkSubmenu
+    : this.selectedCategory === RouteCategory.Network;
+
+  this._showStorageSubmenu = (this._navInitialized && this._showStorageSubmenu)
+    ? this._showStorageSubmenu
+    : this.selectedCategory === RouteCategory.Storage;
+  }
+
+  private _initPublicCloudNav(): void {
     this._showPublicCloudMenu = (this._navInitialized && this._showPublicCloudMenu)
       ? this._showPublicCloudMenu
       : this.hasPrivateCloudAccess && this.isPublicCloudRoute;
-
-    this._showComputeSubmenu = (this._navInitialized && this._showComputeSubmenu)
-      ? this._showComputeSubmenu
-      : this.selectedCategory === RouteCategory.Compute;
-
-    this._showNetworkSubmenu = (this._navInitialized && this._showNetworkSubmenu)
-      ? this._showNetworkSubmenu
-      : this.selectedCategory === RouteCategory.Network;
-
-    this._showStorageSubmenu = (this._navInitialized && this._showStorageSubmenu)
-      ? this._showStorageSubmenu
-      : this.selectedCategory === RouteCategory.Storage;
 
     this._showDashboardSubmenu = (this._navInitialized && this._showDashboardSubmenu)
       ? this._showDashboardSubmenu
@@ -300,15 +317,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._showAzureSubMenu = (this._navInitialized && this._showAzureSubMenu)
       ? this._showAzureSubMenu
       : this.selectedCategory === RouteCategory.Azure;
-
-    this._showOrdersMenu = (this._navInitialized && this._showOrdersMenu)
-      ? this._showOrdersMenu
-      : this._accessControlService.hasPermission([McsPermission.OrderView])
-        && (this.selectedCategory === RouteCategory.Orders || this.selectedCategory === RouteCategory.MakeAChange);
-
-    this._showDnsListing = this._accessControlService.hasAccessToFeature([McsFeatureFlag.DnsListing]);
-
-    this._navInitialized = true;
   }
 
   private _updateOnCompanySwitch(): void {

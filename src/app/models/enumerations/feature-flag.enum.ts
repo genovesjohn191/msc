@@ -27,7 +27,7 @@ export enum McsFeatureFlag {
   OrderingServiceCustomChange = 'EnableOrderingServiceCustomRequest',
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',
-  DnsListing = 'enablePrivateCloudNetworkDnsListing',
+  DnsListing = 'EnablePrivateCloudNetworkDnsListing',
 
   CloudHealthServiceRequest = 'EnableCloudHealthServiceRequest',
   ProvisionServiceRequest = 'EnableProvisionServiceRequest',

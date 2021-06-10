@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
     <!-- Deployment Creation -->
-    <ng-container *ngIf="true"> <!-- TODO(apascual): Confirm if creation has corresponding permission -->
+    <ng-container *ngIf="true">
       <mcs-top-panel-item *mcsTopPanelItemDef>
         <mcs-action-item
           (click)="onClickNewDeployment()"
