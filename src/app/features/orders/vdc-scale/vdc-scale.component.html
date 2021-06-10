@@ -39,20 +39,19 @@
             </ng-container>
 
             <p>{{ 'orderVdcScale.vdc.label' | translate }}</p>
-            <mcs-form-field>
+            <mcs-form-field *ngIf="(resources$ | async) | mcsIsNotNullOrEmpty">
               <mcs-select [placeholder]="'orderVdcScale.vdc.placeholder' | translate"
                 required mcsId="select-vdc"
                 [formControl]="fcVdc"
                 (selectionChange)="onChangeVdc($event)"
                 [mcsContextualHelp]="'orderVdcScale.vdc.contextualHelp' | translate">
 
-                <ng-container *ngIf="resources$ | async as resources">
-                  <mcs-option *ngFor="let resource of resources" [value]="resource">
-                    {{ resource.name }}
-                  </mcs-option>
-                </ng-container>
+                <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
+                  {{ resource.name }}
+                </mcs-option>
               </mcs-select>
             </mcs-form-field>
+            <span read-only>{{ noServicesFallbackText | translate }}</span>
 
             <ng-container *ngIf="resourceCompute$ | async as resourceCompute">
               <div class="action-box" *mcsComponentHandler>

@@ -40,72 +40,58 @@
               </mcs-contextual-catalog-link>
             </ng-container>
 
-            <ng-container *ngIf="hasHidsPermission; else permissionFallbackTemplate">
-              <p>{{ 'orderAddHids.details.server.description' | translate }}</p>
+            <p>{{ 'orderAddHids.details.server.description' | translate }}</p>
 
-              <ng-container *ngIf="serverGroups$ | async as serverGroups">
+            <ng-container *ngIf="(serverGroups$ | async) | mcsIsNotNullOrEmpty">
+              <mcs-form-field
+                [mcsContextualHelp]="'orderAddHids.details.server.contextualHelp' | translate">
+                <mcs-select mcsId="add-hids-select-server"
+                  [placeholder]="'orderAddHids.details.server.placeholder' | translate"
+                  [formControl]="fcServer">
 
-                <mcs-form-field [disabled]="!serverGroups"
-                  [mcsContextualHelp]="'orderAddHids.details.server.contextualHelp' | translate">
-                  <mcs-select mcsId="add-hids-select-server"
-                    [placeholder]="'orderAddHids.details.server.placeholder' | translate"
-                    [formControl]="fcServer">
+                  <mcs-search mcsSelectSearch></mcs-search>
 
-                    <mcs-search mcsSelectSearch></mcs-search>
+                  <mcs-option-group *ngFor="let serverGroup of serverGroups$ | async">
+                    <ng-container *mcsOptionGroupLabel>
+                      <span>{{ serverGroup.groupName }}</span>
+                    </ng-container>
 
-                    <mcs-option-group *ngFor="let serverGroup of serverGroups">
-                      <ng-container *mcsOptionGroupLabel>
-                        <span>{{ serverGroup.groupName }}</span>
-                      </ng-container>
+                    <mcs-option *ngFor="let serverBackupDetails of serverGroup.options"
+                      [value]="serverBackupDetails.value?.entity"
+                      [disabled]="serverBackupDetails.value?.disabled">
 
-                      <mcs-option *ngFor="let serverBackupDetails of serverGroup.options"
-                        [value]="serverBackupDetails.value?.entity"
-                        [disabled]="serverBackupDetails.value?.disabled">
+                      <span [ngStyle]="{'pointer-events': 'auto'}"
+                        [mcsTooltip]="serverBackupDetails.value?.message"
+                        [mcsTooltipShow]="serverBackupDetails.value?.message"
+                        [mcsTooltipPosition]="'right'">
+                        {{ serverBackupDetails.text }}
+                      </span>
 
-                        <span [ngStyle]="{'pointer-events': 'auto'}"
-                          [mcsTooltip]="serverBackupDetails.value?.message"
-                          [mcsTooltipShow]="serverBackupDetails.value?.message"
-                          [mcsTooltipPosition]="'right'">
-                          {{ serverBackupDetails.text }}
-                        </span>
+                      <small *ngIf="serverBackupDetails.value?.provisioned" padding-left-small>
+                        {{ 'orderAddHids.details.server.serverProvisioned' | translate }}
+                      </small>
+                    </mcs-option>
+                  </mcs-option-group>
+                </mcs-select>
+              </mcs-form-field>
 
-                        <small *ngIf="serverBackupDetails.value?.provisioned" padding-left-small>
-                          {{ 'orderAddHids.details.server.serverProvisioned' | translate }}
-                        </small>
-                      </mcs-option>
-                    </mcs-option-group>
+              <mcs-item orientation="separated" *ngIf="fcServer?.value">
+                <span>{{ 'orderAddHids.details.protectionLevel.label' | translate }}</span>
+                <mcs-form-field class="form-field-size-medium"
+                  [mcsContextualHelp]="'orderAddHids.details.protectionLevel.contextualHelp' | translate">
+
+                  <mcs-select mcsId="add-hids-select-protection-level"
+                    [formControl]="fcProtectionLevel">
+
+                    <mcs-option *ngFor="let protectionLevel of protectionLevelOptions"
+                      [value]="protectionLevel.value">
+                      {{ protectionLevel.text }}
+                    </mcs-option>
                   </mcs-select>
                 </mcs-form-field>
-
-                <mcs-item orientation="separated" *ngIf="fcServer?.value">
-                  <span>{{ 'orderAddHids.details.protectionLevel.label' | translate }}</span>
-                  <mcs-form-field class="form-field-size-medium"
-                    [mcsContextualHelp]="'orderAddHids.details.protectionLevel.contextualHelp' | translate">
-
-                    <mcs-select mcsId="add-hids-select-protection-level"
-                      [formControl]="fcProtectionLevel">
-
-                      <mcs-option *ngFor="let protectionLevel of protectionLevelOptions"
-                        [value]="protectionLevel.value">
-                        {{ protectionLevel.text }}
-                      </mcs-option>
-                    </mcs-select>
-                  </mcs-form-field>
-                </mcs-item>
-
-                <ng-container *ngIf="!serverGroups">
-                  <mcs-alert type="warning">
-                    <span>{{'orderAddHids.details.server.serverFallbackLabel' | translate }}</span>
-                  </mcs-alert>
-                </ng-container>
-              </ng-container>
+              </mcs-item>
             </ng-container>
-
-            <ng-template #permissionFallbackTemplate>
-              <mcs-data-status-warning>
-                <span>{{ 'orderAddHids.details.server.permissionFallbackLabel' | translate }}</span>
-              </mcs-data-status-warning>
-            </ng-template>
+            <span read-only>{{ noServicesFallbackText | translate }}</span>
 
             <div class="action-items">
               <button mcsButton arrow="right"

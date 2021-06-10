@@ -39,7 +39,7 @@
           </ng-container>
 
           <p>{{ 'orderVdcStorageExpand.vdc.description' | translate }}</p>
-          <mcs-form-field>
+          <mcs-form-field *ngIf="(resources$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [formControl]="fcResource"
               [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
               (selectionChange)="onChangeResource($event)"
@@ -54,6 +54,7 @@
               </mcs-option>
             </mcs-select>
           </mcs-form-field>
+          <span read-only>{{ noServicesFallbackText | translate }}</span>
 
           <ng-container *ngIf="selectedResource$ | async as selectedResource">
               <div class="action-box" *mcsComponentHandler>

@@ -41,7 +41,7 @@
 
           <mcs-item orientation="block">
             <span align-self-start>{{ 'orderAddServerBackup.detailsStep.serverLabel' | translate }}:</span>
-            <mcs-form-field>
+            <mcs-form-field *ngIf="(serverGroups$ | async) | mcsIsNotNullOrEmpty">
               <mcs-select [formControl]="fcServer"
                 [placeholder]="'orderAddServerBackup.detailsStep.serverPlaceholder' | translate"
                 [mcsContextualHelp]="'orderAddServerBackup.detailsStep.serverHelp' | translate"
@@ -75,6 +75,7 @@
                 </mcs-option-group>
               </mcs-select>
             </mcs-form-field>
+            <span read-only>{{ noServicesFallbackText | translate }}</span>
           </mcs-item>
 
           <mcs-item>

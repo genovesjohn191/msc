@@ -438,17 +438,6 @@
           {{ 'accountPanel.tickets' | translate }}
         </a>
       </li>
-      <!-- System Message -->
-      <li *mcsAccessControl="['SystemMessageView']; feature: 'EnableSystemMessages'">
-        <a [mcsRouterLink]="routeKeyEnum.SystemMessages"
-          mcsId="system-message-link"
-          mcsEventTracker="navigate-to-system-messages"
-          mcsEventCategory="navigation"
-          mcsEventLabel="main-nav"
-          mcsRouterLinkActive="active">
-          {{ 'accountPanel.systemMessage' | translate }}
-        </a>
-      </li>
       <!-- Logout -->
       <li>
         <a mcsCursor="pointer" (click)="logout($event)"

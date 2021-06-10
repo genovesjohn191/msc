@@ -51,7 +51,8 @@ import {
   McsOrderWorkflow,
   McsServiceBase,
   OrderIdType,
-  RouteKey
+  RouteKey,
+  HttpStatusCode
 } from '@app/models';
 import { McsOrderColocationStaffEscort } from '@app/models/request/mcs-order-colocation-staff-escort';
 import { McsApiService } from '@app/services';
@@ -136,6 +137,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   private _selectedRackServiceHandler: Subscription;
   private _userAccount: McsAccount = new McsAccount();
   private _company: McsCompany = new McsCompany();
+  private _errorStatus: number;
 
   constructor(
     _injector: Injector,
@@ -179,6 +181,15 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
 
   public get formIsValid(): boolean {
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (this.hasServiceToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get defaultMaxlength(): number {
@@ -454,7 +465,15 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
         this._apiService.getColocationCustomDevices(),
         this._apiService.getColocationRooms(),
         this._apiService.getColocationStandardSqms()]
-    ).subscribe((response) => {
+    )
+    .pipe(
+      catchError((error) => {
+        this.loadingInProgress = false;
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
+      })
+    )
+    .subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }
       response.forEach((colocationResponseCollection) => {
         let colocationArray : Array<IRackService> = getSafeProperty(colocationResponseCollection, (obj) => obj.collection);

@@ -56,7 +56,7 @@
                       mcsTooltipPosition="right"></mcs-loader>
                   </ng-container>
                   <ng-template #firewallService>
-                    <mcs-form-field *ngIf="!(isLoading) && firewallOptions | mcsArrayHasElement else noServicesTemplate">
+                    <mcs-form-field *ngIf="!(isLoading) && firewallOptions | mcsArrayHasElement">
                       <mcs-select [formControl]="fcFirewallServices" required
                         [placeholder]="'orderSimpleFirewallChanges.detailsStep.firewallService.placeholder' | translate"
                         [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.firewallService.helptext' | translate"
@@ -70,18 +70,7 @@
                         {{ 'orderSimpleFirewallChanges.detailsStep.firewallService.errorRequired' | translate }}
                       </mcs-error>
                     </mcs-form-field>
-                    <ng-template #noServicesTemplate>
-                      <p [mcsGreyedOut]="true"> 
-                        <span>{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.fallback' | translate }}</span>
-                        <ng-container *mcsAccessControl="['TicketCreate']">
-                          <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketPrefix' | translate }} </span>
-                          <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
-                            mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                            mcsEventLabel="modify-simple-firewall-change-page">{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketLink' | translate }}</a>
-                          <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketSuffix' | translate }}</span>
-                        </ng-container>.
-                      </p>
-                    </ng-template>
+                    <span read-only>{{ noServicesFallbackText | translate }}</span>
                   </ng-template>
                 </mcs-item>
 

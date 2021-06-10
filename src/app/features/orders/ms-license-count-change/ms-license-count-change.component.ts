@@ -3,9 +3,11 @@ import {
   BehaviorSubject,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   distinctUntilChanged,
   filter,
   map,
@@ -38,6 +40,7 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { OrderDetails } from '@app/features-shared';
 import {
+  HttpStatusCode,
   LicenseStatus,
   McsJob,
   McsLicense,
@@ -99,6 +102,9 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   private _licensesHasValueChange: BehaviorSubject<boolean>;
   private _childLicensesFcConfig: LicenseCountFormControlConfig[] = [];
   private _licenseCache: McsLicense[] = [];
+
+  private _errorStatus: number;
+  private _licenseCount: number;
 
   @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
@@ -171,6 +177,19 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._licenseCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public getFormControl(formControlName: string): AbstractControl {
@@ -403,10 +422,15 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
         licenses.filter((license) => isNullOrEmpty(license.parentId)).forEach((license) => {
           licensesOptions.push(createObject(McsOption, { text: license.name, value: license }));
         });
+        this._licenseCount = licensesOptions?.length;
         return licensesOptions;
       }),
       shareReplay(1),
-      tap(() => this._eventDispatcher.dispatch(McsEvent.licenseCountChangeSelectedEvent))
+      tap(() => this._eventDispatcher.dispatch(McsEvent.licenseCountChangeSelectedEvent)),
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
+      })
     );
   }
 }

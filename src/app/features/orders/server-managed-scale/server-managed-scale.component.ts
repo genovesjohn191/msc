@@ -2,7 +2,8 @@ import {
   EMPTY,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
   catchError,
@@ -46,6 +47,7 @@ import {
   ServerManageScale
 } from '@app/features-shared';
 import {
+  HttpStatusCode,
   McsEntityProvision,
   McsOption,
   McsOptionGroup,
@@ -114,6 +116,9 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   private _resourcesDataChangeHandler: Subscription;
   private _scaleServerOrderStateMessageMap = new Map<ServiceOrderState, string>();
 
+  private _errorStatus: number;
+  private _serverGroupCount: number;
+
   constructor(
     _injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -157,6 +162,19 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    */
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._serverGroupCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   /**
@@ -298,7 +316,12 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
             new McsOptionGroup(platformName, createObject(McsOption, { text: server.name, value: serverDetails }))
           );
         });
+        this._serverGroupCount = serverGroups?.length;
         return serverGroups;
+      }),
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
       })
     );
   }

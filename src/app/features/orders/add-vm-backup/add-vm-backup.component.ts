@@ -2,9 +2,11 @@ import {
   zip,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   filter,
   map,
   switchMap,
@@ -35,6 +37,7 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { OrderDetails } from '@app/features-shared';
 import {
+  HttpStatusCode,
   McsBackUpAggregationTarget,
   McsEntityProvision,
   McsOption,
@@ -82,6 +85,8 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   private _valueChangesSubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
   private _backupProvisionMessageBitMap = new Map<ServiceOrderState, string>();
+  private _errorStatus: number;
+  private _serverGroupCount: number;
 
   @ViewChild('fgManageBackupVm')
   public set fgManageBackupVm(value: IMcsFormGroup) {
@@ -137,6 +142,19 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._serverGroupCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get formIsValid(): boolean {
@@ -233,9 +251,14 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
                 )
               );
             });
+            this._serverGroupCount = serverGroups?.length;
             return serverGroups;
           })
         );
+      }),
+      catchError((error) => {
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
       })
     );
   }

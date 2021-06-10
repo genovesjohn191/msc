@@ -49,7 +49,7 @@
         <mcs-loader size="small"></mcs-loader>
       </ng-container>
     </span>
-    <mcs-form-field *ngIf="!showAzureResourcePermissionError">
+    <mcs-form-field *ngIf="azureResources">
       <mcs-select
         [formControl]="fcResourceGroup"
         mcsId="select-azure-resource-group"
@@ -67,9 +67,7 @@
         {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
       </mcs-error>
     </mcs-form-field>
-    <ng-container *ngIf="showAzureResourcePermissionError">
-      <span read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
-    </ng-container>
+    <span read-only>{{ noServicesFallbackText | translate }}</span>
   </mcs-item>
 
   <!-- New Resource Group -->

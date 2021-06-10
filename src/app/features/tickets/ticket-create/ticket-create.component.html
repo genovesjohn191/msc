@@ -228,8 +228,8 @@
               <mcs-loader size="small" style="padding-right:25px;"></mcs-loader>
             </ng-container>
           </mcs-form-field>
-          <ng-container *ngIf="showAzureResourcePermissionError">
-            <span>{{ 'message.noPermissionFallbackText' | translate }}</span>
+          <ng-container *ngIf="hasSelectedAzureResource && isTypeTroubleTicket && showPermissionErrorFallbackText">
+            <span read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
           </ng-container>
         </mcs-section>
       </form>

@@ -52,41 +52,31 @@
                   </mcs-item>
                 </ng-container>
                 <mcs-item orientation="block">
-                    <mcs-form-field>
-                      <mcs-select mcsId="rack-service"
-                        mcsEventTracker="select-rack-service"
-                        mcsEventCategory="order"
-                        mcsEventLabel="colocation-remote-hands"
-                        [formControl]="fcRackService"
-                        [disabled]="!hasServiceToDisplay"
-                        [placeholder]="'orderRemoteHands.detailsStep.rackServicePlaceholder' | translate"
-                        [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackServiceHelpText' | translate"
-                        required>
-                        <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
-                          <ng-container *mcsOptionGroupLabel>
-                            <span>{{ colocationGroup?.groupName }}</span>
-                          </ng-container>
-                          <mcs-option *ngFor="let service of colocationGroup.options"  [value]="service.value">
-                            {{ service.text }}
-                          </mcs-option>
-                        </mcs-option-group>
-                      </mcs-select>
-                      <mcs-error 
-                            mcsError errorState="required"
-                            [innerHTML]="('orderRemoteHands.errors.rackServiceRequired' | translate)">
-                      </mcs-error>
-                    </mcs-form-field>
-                  <ng-container *ngIf="!hasServiceToDisplay">
-                    <p [mcsGreyedOut]="true"> <span>{{ 'smacShared.fallback.description' | translate }}</span>
-                      <ng-container *mcsAccessControl="['TicketCreate']">
-                        <span> {{'smacShared.fallback.raiseTicketPrefix' | translate }} </span>
-                        <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
-                          mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                          mcsEventLabel="order-remote-hands-page">{{ 'smacShared.fallback.raiseTicketLink' | translate }}</a>
-                        <span> {{'smacShared.fallback.raiseTicketSuffix' | translate }} </span>
-                      </ng-container>
-                    </p>
-                  </ng-container>
+                  <mcs-form-field *ngIf="hasServiceToDisplay">
+                    <mcs-select mcsId="rack-service"
+                      mcsEventTracker="select-rack-service"
+                      mcsEventCategory="order"
+                      mcsEventLabel="colocation-remote-hands"
+                      [formControl]="fcRackService"
+                      [disabled]="!hasServiceToDisplay"
+                      [placeholder]="'orderRemoteHands.detailsStep.rackServicePlaceholder' | translate"
+                      [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackServiceHelpText' | translate"
+                      required>
+                      <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
+                        <ng-container *mcsOptionGroupLabel>
+                          <span>{{ colocationGroup?.groupName }}</span>
+                        </ng-container>
+                        <mcs-option *ngFor="let service of colocationGroup.options"  [value]="service.value">
+                          {{ service.text }}
+                        </mcs-option>
+                      </mcs-option-group>
+                    </mcs-select>
+                    <mcs-error 
+                      mcsError errorState="required"
+                      [innerHTML]="('orderRemoteHands.errors.rackServiceRequired' | translate)">
+                    </mcs-error>
+                  </mcs-form-field>
+                  <span read-only>{{ noServicesFallbackText | translate }}</span>
                 </mcs-item>
               </ng-template>
               <hr/>

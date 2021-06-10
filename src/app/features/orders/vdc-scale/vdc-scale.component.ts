@@ -40,6 +40,7 @@ import {
   VdcManageScale
 } from '@app/features-shared';
 import {
+  HttpStatusCode,
   McsOrderCreate,
   McsOrderItemCreate,
   McsOrderWorkflow,
@@ -99,6 +100,8 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
   private _vdcScale: VdcManageScale;
   private _destroySubject = new Subject<void>();
   private _selectedResourceHandler: Subscription;
+  private _errorStatus: number;
+  private _resourcesCount: number;
 
   constructor(
     _injector: Injector,
@@ -139,6 +142,19 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
    */
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get showPermissionErrorFallbackText(): boolean {
+    return this._errorStatus === HttpStatusCode.Forbidden;
+  }
+
+  public get noServicesToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this._resourcesCount === 0;
+  }
+
+  public get noServicesFallbackText(): string {
+    if (!this.noServicesToDisplay) { return; }
+    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   /**
@@ -260,11 +276,14 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
    */
   private _getAllResources(): void {
     this.resources$ = this._apiService.getResources().pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection)
-        .filter((resource) => !resource.isDedicated)
-      ),
+      map((response) => {
+        let resources = getSafeProperty(response, (obj) => obj.collection)
+        .filter((resource) => !resource.isDedicated);
+        this._resourcesCount = resources?.length;
+        return resources;
+      }),
       catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
+        this._errorStatus = error?.details?.status;
         return throwError(error);
       }),
       shareReplay(1)
