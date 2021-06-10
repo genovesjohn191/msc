@@ -20,6 +20,7 @@ import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/az
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
 import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';
 import { AzureDeploymentService } from './azure-deployments/azure-deployment/azure-deployment.service';
+import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,8 @@ import { AzureDeploymentService } from './azure-deployments/azure-deployment/azu
     AzureDeploymentCreateComponent,
     AzureDeploymentsComponent,
     AzureDeploymentComponent,
+    // Network DB
+    NetworkDbPodsComponent,
     // Shared
     ConfirmationDialogComponent
   ],
