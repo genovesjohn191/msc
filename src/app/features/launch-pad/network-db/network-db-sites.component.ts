@@ -16,7 +16,7 @@ import {
 import {
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
-  McsNetworkDbPod
+  McsNetworkDbSite
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -31,20 +31,17 @@ import {
 } from '@app/utilities';
 
 @Component({
-  selector: 'mcs-network-db-pods',
-  templateUrl: './network-db-pods.component.html',
+  selector: 'mcs-network-db-sites',
+  templateUrl: './network-db-sites.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbPodsComponent implements OnDestroy {
+export class NetworkDbSitesComponent implements OnDestroy {
 
-  public readonly dataSource: McsTableDataSource2<McsNetworkDbPod>;
+  public readonly dataSource: McsTableDataSource2<McsNetworkDbSite>;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'code' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'vxLanGroup' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),
@@ -87,13 +84,13 @@ export class NetworkDbPodsComponent implements OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
-  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbPod>> {
+  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbSite>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
-    return this._apiService.getNetworkDbPods(queryParam).pipe(
+    return this._apiService.getNetworkDbSites(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount))
     );
   }
