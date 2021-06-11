@@ -107,7 +107,7 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/network-db/vlans';
+    mcsApiRequestParameter.endPoint = '/network-db/vnis';
     mcsApiRequestParameter.searchParameters = searchParams;
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
@@ -132,7 +132,7 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/network-db/vnis';
+    mcsApiRequestParameter.endPoint = '/network-db/use-cases';
     mcsApiRequestParameter.searchParameters = searchParams;
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
