@@ -16,7 +16,7 @@ import {
 import {
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
-  McsNetworkDbMulticastIp,
+  McsNetworkDbNetwork,
   McsNetworkDbVni,
   NetworkDbVniStatus,
   networkDbVniStatusText
@@ -34,19 +34,22 @@ import {
 } from '@app/utilities';
 
 @Component({
-  selector: 'mcs-network-db-multicast-ips',
-  templateUrl: './network-db-multicast-ips.component.html',
+  selector: 'mcs-network-db-networks',
+  templateUrl: './network-db-networks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbMulticastIpsComponent implements OnDestroy {
+export class NetworkDbNetworksComponent implements OnDestroy {
 
-  public readonly dataSource: McsTableDataSource2<McsNetworkDbMulticastIp>;
+  public readonly dataSource: McsTableDataSource2<McsNetworkDbNetwork>;
 
   public readonly defaultColumnFilters = [
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'id' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'siteName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'vniId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'useCaseName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'multicastIpAddress' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),
@@ -89,13 +92,13 @@ export class NetworkDbMulticastIpsComponent implements OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
-  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbMulticastIp>> {
+  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbNetwork>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
-    return this._apiService.getNetworkDbMulticastIps(queryParam).pipe(
+    return this._apiService.getNetworkDbNetworks(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount))
     );
   }

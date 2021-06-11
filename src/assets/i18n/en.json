@@ -2646,6 +2646,16 @@
       "noRecordsFound": "No Multicast IPs to display.",
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Multicast IPs.",
       "retry": "Try again shortly"
+    },
+    "networks": {
+      "header": "Networks",
+      "leftPanelHeader": "Network Filter",
+      "filterColumn": "Table Filter",
+      "dataSingular": "Networks",
+      "dataPlural": "Networkss",
+      "noRecordsFound": "No Networkss to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Networkss.",
+      "retry": "Try again shortly"
     }
   },
   "products": {
@@ -3066,7 +3076,14 @@
     "getCloudHealthAlert": "Something went wrong while retrieving your Cloudhealth Alert. Please try again.",
     "deleteNetworkDnsZoneRecord": "Something went wrong while deleting dns zone record. Please try again.",
     "updateNetworkDnsZoneRecord": "Something went wrong while updating dns zone record. Please try again.",
-    "createNetworkDnsZoneRecord": "Something went wrong while creating dns zone record. Please try again."
+    "createNetworkDnsZoneRecord": "Something went wrong while creating dns zone record. Please try again.",
+    "getNetworkDbSites": "Something went wrong while retrieving sites. Please try again.",
+    "getNetworkDbPods": "Something went wrong while retrieving PODs. Please try again.",
+    "getNetworkDbVlans": "Something went wrong while retrieving VLANs. Please try again.",
+    "getNetworkDbVnis": "Something went wrong while retrieving VNIs. Please try again.",
+    "getNetworkDbUseCases": "Something went wrong while retrieving use cases. Please try again.",
+    "getNetworkDbMulticastIps": "Something went wrong while retrieving multicast IPs. Please try again.",
+    "getNetworkDbNetworks": "Something went wrong while retrieving networks. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3123,6 +3140,7 @@
     "module": "Module",
     "moduleType": "Module Type",
     "monthlyFee": "Monthly Fee",
+    "multicastIpAddress": "Multicast IP Address",
     "name": "Name",
     "networkName": "Network Name",
     "notification": "Notification",
@@ -3190,6 +3208,7 @@
     "vdc": "VDC",
     "version": "Version",
     "vmName":"VM Name",
+    "vniId":"VNI ID",
     "vxLanGroup": "VXLAN Group",
     "zone": "Zone",
     "zoneCount": "Zones",
