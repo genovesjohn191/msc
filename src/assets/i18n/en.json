@@ -2616,6 +2616,16 @@
       "noRecordsFound": "No VLANs to display.",
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of VLANs.",
       "retry": "Try again shortly"
+    },
+    "vnis": {
+      "header": "VNIs",
+      "leftPanelHeader": "VNI Filter",
+      "filterColumn": "Table Filter",
+      "dataSingular": "VNI",
+      "dataPlural": "VNIs",
+      "noRecordsFound": "No VNIs to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of VNIs.",
+      "retry": "Try again shortly"
     }
   },
   "products": {
@@ -3158,7 +3168,7 @@
     "vdc": "VDC",
     "version": "Version",
     "vmName":"VM Name",
-    "vxLanGroup": "VX Lan Group",
+    "vxLanGroup": "VXLAN Group",
     "zone": "Zone",
     "zoneCount": "Zones",
     "recordType": "Record Type",
