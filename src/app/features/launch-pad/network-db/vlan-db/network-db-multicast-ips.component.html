@@ -1,0 +1,153 @@
+<mcs-page [header]="'networkDb.multicastIps.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
+
+    <!-- Meta Data -->
+    <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
+      <div class="listing-action-wrapper">
+        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+          <span>{{ totalCount | mcsPlural:
+                ('networkDb.multicastIps.dataSingular' | translate) : ('networkDb.multicastIps.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'networkDb.multicastIps.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="deployments-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'networkDb.multicastIps.filterColumn' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        storageKey="network-db-multicast-ips"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="network-db-multicast-ips-mobile-search"></mcs-search>
+
+      <table mat-table [dataSource]="dataSource" style="margin-top: 0">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.id' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.id }}
+          </td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.description' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.description }}
+          </td>
+        </ng-container>
+
+        <!-- Site Name Column -->
+        <ng-container matColumnDef="siteName">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.siteName' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.siteName }}
+          </td>
+        </ng-container>
+
+        <!-- Use Case Name Column -->
+        <ng-container matColumnDef="useCaseName">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.useCaseName' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.useCaseName }}
+          </td>
+        </ng-container>
+
+        <!-- Updated On Column -->
+        <ng-container matColumnDef="updatedOn">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.updatedOn' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.updatedOn | mcsStdDateFormat }}
+          </td>
+        </ng-container>
+
+        <!-- Created By Column -->
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.createdBy' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.createdBy }}
+          </td>
+        </ng-container>
+
+        <!-- Created On Column -->
+        <ng-container matColumnDef="createdOn">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.createdOn' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.createdOn | mcsStdDateFormat }}
+          </td>
+        </ng-container>
+
+        <!-- Updated By Column -->
+        <ng-container matColumnDef="updatedBy">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.updatedBy' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.updatedBy }}
+          </td>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          {{ 'networkDb.multicastIps.noRecordsFound' | translate }}
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'networkDb.multicastIps.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-loading-network-db-site-list"
+              mcsEventCategory="launchpad-network-db"
+              mcsEventLabel="pod-listing-page">{{ 'networkDb.multicastIps.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

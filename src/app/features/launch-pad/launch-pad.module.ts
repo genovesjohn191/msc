@@ -25,6 +25,7 @@ import { NetworkDbSitesComponent } from './network-db/network-db-sites.component
 import { NetworkDbVlansComponent } from './network-db/vlan-db/network-db-vlans.component';
 import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.component';
 import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
+import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-
     NetworkDbVlansComponent,
     NetworkDbVnisComponent,
     NetworkDbUseCasesComponent,
+    NetworkDbMulticastIpsComponent,
     // Shared
     ConfirmationDialogComponent
   ],

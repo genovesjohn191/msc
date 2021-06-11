@@ -2169,19 +2169,23 @@ export class McsApiService {
     );
   }
 
-  public getMulticastIps(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbMulticastIp>> {
+  public getNetworkDbMulticastIps(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsNetworkDbMulticastIp>> {
+
     return this._networkDbApi.getMulticastIps(query, optionalHeaders).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getMulticastIps'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbMulticastIps'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
-  public getNetworks(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbNetwork>> {
+  public getNetworkDbNetworks(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsNetworkDbNetwork>> {
+
     return this._networkDbApi.getNetworks(query, optionalHeaders).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworks'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
