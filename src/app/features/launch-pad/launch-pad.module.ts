@@ -24,6 +24,7 @@ import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
 import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
 import { NetworkDbVlansComponent } from './network-db/vlan-db/network-db-vlans.component';
 import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.component';
+import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.com
     NetworkDbPodsComponent,
     NetworkDbVlansComponent,
     NetworkDbVnisComponent,
+    NetworkDbUseCasesComponent,
     // Shared
     ConfirmationDialogComponent
   ],
