@@ -2636,6 +2636,16 @@
       "noRecordsFound": "No Use Cases to display.",
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Use Cases.",
       "retry": "Try again shortly"
+    },
+    "multicastIps": {
+      "header": "Multicast IPs",
+      "leftPanelHeader": "Multicast IP Filter",
+      "filterColumn": "Table Filter",
+      "dataSingular": "Multicast IP",
+      "dataPlural": "Multicast IPs",
+      "noRecordsFound": "No Multicast IPs to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Multicast IPs.",
+      "retry": "Try again shortly"
     }
   },
   "products": {
@@ -3144,6 +3154,7 @@
     "service": "Service",
     "serviceId": "Service ID",
     "severity": "Severity",
+    "siteName": "Site Name",
     "size": "Size",
     "source": "Source",
     "sourceInterfaces": "Source Interfaces",
@@ -3172,6 +3183,7 @@
     "updatedOn": "Updated On",
     "uploadedDate": "Uploaded Date",
     "usage": "Usage",
+    "useCaseName": "Use Case Name",
     "user": "User",
     "utilizationThisMonth": "Utilization this Month (Hours)",
     "vApp": "vApp",
