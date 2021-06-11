@@ -23,6 +23,7 @@ import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
 import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
 import { NetworkDbVlansComponent } from './network-db/vlan-db/network-db-vlans.component';
 import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.component';
+import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
 
 /**
  * List of routes for the main module
@@ -108,6 +109,12 @@ export const launchPadRoutes: Routes = [
     path: 'network-db/vlan-db/vnis',
     component: NetworkDbVnisComponent,
     data: { routeId: RouteKey.LaunchPadNetworkDbVnis },
+    canActivate: [ LaunchPadGuard ]
+  },
+  {
+    path: 'network-db/vlan-db/use-cases',
+    component: NetworkDbUseCasesComponent,
+    data: { routeId: RouteKey.LaunchPadNetworkDbUseCases },
     canActivate: [ LaunchPadGuard ]
   },
 ];

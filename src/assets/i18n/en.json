@@ -2626,6 +2626,16 @@
       "noRecordsFound": "No VNIs to display.",
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of VNIs.",
       "retry": "Try again shortly"
+    },
+    "useCases": {
+      "header": "Use Cases",
+      "leftPanelHeader": "Use Case Filter",
+      "filterColumn": "Table Filter",
+      "dataSingular": "Use Case",
+      "dataPlural": "Use Cases",
+      "noRecordsFound": "No Use Cases to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Use Cases.",
+      "retry": "Try again shortly"
     }
   },
   "products": {
