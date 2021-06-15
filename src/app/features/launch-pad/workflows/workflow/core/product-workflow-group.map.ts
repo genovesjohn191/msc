@@ -335,21 +335,11 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     ],
 
     [ ProductType.ManagedStorageLun,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
+      [ ]
     ],
 
     [ ProductType.ManagedStorageSanDisk,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
+      [ ]
     ],
 
     [ ProductType.ManagedSwitch,
@@ -371,12 +361,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     ],
 
     [ ProductType.NasRaidOneDisk,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
+      [ ]
     ],
 
     [ ProductType.NasRaidOneServer,
@@ -389,12 +374,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     ],
 
     [ ProductType.NasRaidSDisk,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
+      [ ]
     ],
 
     [ ProductType.NasRaidSServer,
@@ -484,11 +464,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.DedicatedStorageAttachVolume,
         WorkflowGroupId.DedicatedStorageIncreaseVolumeSize,
         // WorkflowGroupId.DedicatedStorageUnmaskVolume,
-        WorkflowGroupId.DedicatedStorageRemoveZoning,
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        WorkflowGroupId.DedicatedStorageRemoveZoning
       ]
     ],
 
@@ -565,12 +541,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     ],
 
     [ ProductType.StretchedDedicatedStorage,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
+      [ ]
     ],
 
     [ ProductType.TwentyFourPortSwitch,
