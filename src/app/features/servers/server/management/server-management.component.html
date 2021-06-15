@@ -243,9 +243,7 @@
       <mcs-grid-row>
 
         <!-- VM Media -->
-        <mcs-grid-column sizeSm="12" sizeLg="6"
-          *mcsAccessControl="[]; feature: 'enableDedicatedVmMediaView';
-          validateWhen: server.isDedicated">
+        <mcs-grid-column sizeSm="12" sizeLg="6" *ngIf="hassPermissionToViewMediaPanel(server.isDedicated)">
 
           <mcs-presentation-panel mcsId="vm-media">
             <ng-container mcsPresentationPanelHeader>
