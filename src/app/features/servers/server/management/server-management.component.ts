@@ -23,6 +23,7 @@ import {
 } from '@angular/router';
 import {
   CoreRoutes,
+  McsAccessControlService,
   McsNavigationService
 } from '@app/core';
 import { McsEvent } from '@app/events';
@@ -33,6 +34,7 @@ import {
 import {
   CatalogItemType,
   IpAllocationMode,
+  McsFeatureFlag,
   McsJob,
   McsResourceCatalog,
   McsResourceCatalogItem,
@@ -102,6 +104,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService,
     private _translate: TranslateService,
     private _activatedRoute: ActivatedRoute,
@@ -141,6 +144,14 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
   public get ipAllocationModeEnum(): any {
     return IpAllocationMode;
+  }
+
+  public hassPermissionToViewMediaPanel(isServerDedicated: boolean): boolean {
+    let hasAccessToMediaCatalog = this._accessControlService.hasAccessToFeature([McsFeatureFlag.MediaCatalog]);
+    if (!hasAccessToMediaCatalog) { return; }
+    let hasAccessToDedicatedVmMediaView = this._accessControlService.hasAccessToFeature([McsFeatureFlag.DedicatedVmMediaView]);
+    if (!hasAccessToDedicatedVmMediaView && isServerDedicated) { return; }
+    return true;
   }
 
   /**
