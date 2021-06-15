@@ -2,15 +2,15 @@ import {
   ProductType,
   WorkflowType
 } from '@app/models';
-import { managementToolsAddCvmForm } from '../forms';
+import { managementToolsAddForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 
-export class ManagementToolsAddCvmWorkflowGroup implements WorkflowGroup {
+export class ManagementToolsAddWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
-    id: WorkflowType.ManagementToolsAddCvm,
+    id: WorkflowType.ManagementToolsAdd,
     crispProductType: ProductType.VirtualDataCentreVmInstance,
-    title: 'Add CVM to Management Tools',
-    form: managementToolsAddCvmForm
+    title: 'Add to Management Tools',
+    form: managementToolsAddForm
   };
 }

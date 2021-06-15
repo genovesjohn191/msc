@@ -9,7 +9,7 @@ import {
   DedicatedStorageAttachVolumeWorkflowGroup,
   DedicatedStorageRemoveZoningWorkflowGroup,
   DedicatedStorageCreateAndAttachVolumeWorkflowGroup,
-  ManagementToolsAddCvmWorkflowGroup,
+  ManagementToolsAddWorkflowGroup,
   ManagementToolsQueryStatusWorkflowGroup,
   ManagementToolsRemoveWorkflowGroup,
   VdcVmInstanceProvisionWorkflowGroup,
@@ -36,7 +36,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.HostSecurityProvisionAntiVirus, HostSecurityProvisionAntiVirusWorkflowGroup ],
   [ WorkflowGroupId.HostSecurityProvisionHids, HostSecurityProvisionHidsWorkflowGroup ],
 
-  [ WorkflowGroupId.ManagementToolsAdd, ManagementToolsAddCvmWorkflowGroup ],
+  [ WorkflowGroupId.ManagementToolsAdd, ManagementToolsAddWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsQueryStatus, ManagementToolsQueryStatusWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsRemove, ManagementToolsRemoveWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsUpdate, ManagementToolsUpdateWorkflowGroup ],

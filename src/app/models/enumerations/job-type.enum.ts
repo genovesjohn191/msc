@@ -129,7 +129,7 @@ export const jobTypeText = {
   [JobType.ManagedServerProvisionBat]: 'New Backup Aggregation Target',
 
   [JobType.LaunchpadManagedServerCreate]: 'New Managed Server',
-  [JobType.LaunchpadManagementToolsAddCvm]: 'Add CVM to Management Tools',
+  [JobType.LaunchpadManagementToolsAddCvm]: 'Add to Management Tools',
   [JobType.LaunchpadManagementToolsDeleteCvm]: 'Remove from Management Tools',
   [JobType.LaunchpadBackupProvisionServerBackup]: 'Backup Server',
   [JobType.LaunchpadBackupProvisionVmBackup]: 'Backup VM',
