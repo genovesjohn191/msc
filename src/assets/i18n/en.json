@@ -3219,7 +3219,11 @@
     "recordType": "Record Type",
     "hostName": "Host Name",
     "target": "Target",
-    "ttlSeconds": "TTL (Seconds)"
+    "ttlSeconds": "TTL (Seconds)",
+    "message": "Message",
+    "start": "Start",
+    "expiry": "Expiry",
+    "enabled": "Enabled"
   },
   "label": {
     "a": "A",

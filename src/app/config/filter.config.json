@@ -177,49 +177,5 @@
       "text": "Customer ID",
       "value": true
     }
-  },
-  "systemMessageFilter": {
-    "message": {
-      "text": "Message",
-      "value": true,
-      "exclude": true
-    },
-    "start": {
-      "text": "Start",
-      "value": true,
-      "exclude": true
-    },
-    "expiry": {
-      "text": "Expiry",
-      "value": true
-    },
-    "type": {
-      "text": "Type",
-      "value": true
-    },
-    "severity": {
-      "text": "Severity",
-      "value": true
-    },
-    "enabled": {
-      "text": "Enabled",
-      "value": true
-    },
-    "createdOn": {
-      "text": "Created On",
-      "value": true
-    },
-    "createdBy": {
-      "text": "Created By",
-      "value": true
-    },
-    "updatedOn": {
-      "text": "Updated On",
-      "value": true
-    },
-    "updatedBy": {
-      "text": "Updated By",
-      "value": true
-    }
   }
 }
