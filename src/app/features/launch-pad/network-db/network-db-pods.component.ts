@@ -46,6 +46,7 @@ export class NetworkDbPodsComponent implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'code' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'site' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'vxLanGroup' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),

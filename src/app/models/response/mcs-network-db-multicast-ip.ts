@@ -21,6 +21,9 @@ export class McsNetworkDbMulticastIp {
   public useCaseName: string = undefined;
 
   @JsonProperty()
+  public ipAddress: string = undefined;
+
+  @JsonProperty()
   public createdBy: string = undefined;
 
   @JsonProperty({

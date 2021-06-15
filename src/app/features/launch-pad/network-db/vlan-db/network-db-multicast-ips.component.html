@@ -39,13 +39,13 @@
 
       <table mat-table [dataSource]="dataSource" style="margin-top: 0">
 
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.id' | translate }}
+        <!-- IP Address Column -->
+        <ng-container matColumnDef="ipAddress">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.ipAddress' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.id }}
+          <td mat-cell *matCellDef="let row">
+            {{ row.ipAddress }}
           </td>
         </ng-container>
 
@@ -59,20 +59,20 @@
           </td>
         </ng-container>
 
-        <!-- Site Name Column -->
-        <ng-container matColumnDef="siteName">
+        <!-- Site Column -->
+        <ng-container matColumnDef="site">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.siteName' | translate }}
+            {{ 'columnHeader.site' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
             {{ row.siteName }}
           </td>
         </ng-container>
 
-        <!-- Use Case Name Column -->
-        <ng-container matColumnDef="useCaseName">
+        <!-- Use Case Column -->
+        <ng-container matColumnDef="useCase">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.useCaseName' | translate }}
+            {{ 'columnHeader.useCase' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
             {{ row.useCaseName }}

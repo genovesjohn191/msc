@@ -25,6 +25,12 @@ export class McsNetworkDbPod {
   public vxLanGroup: number = undefined;
 
   @JsonProperty()
+  public siteId: number = undefined;
+
+  @JsonProperty()
+  public siteName: string = undefined;
+
+  @JsonProperty()
   public createdBy: string = undefined;
 
   @JsonProperty({
