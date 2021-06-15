@@ -166,7 +166,7 @@
                       {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
                     </mcs-error>
                   </mcs-form-field>
-                  <span read-only>{{ noServicesFallbackText | translate }}</span>
+                  <span read-only>{{ noResourcesFallbackText | translate }}</span>
                 </mcs-item>
               </ng-container>
               
@@ -181,7 +181,7 @@
               <ng-container *ngIf="isServiceRequestTypeProvision(fcMsServiceRequestType?.value)">
                 <mcs-provision #fgProvisionService
                   [azureResources]="azureResourcesOptions$ | async"
-                  [noServicesFallbackText]="noServicesFallbackText"
+                  [noResourcesFallbackText]="noResourcesFallbackText"
                   [resourceLoadingInProgress]="loadingInProgress"
                   (dataChange)="onChangeProvisionDetails($event)">
                 </mcs-provision>

@@ -130,7 +130,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   private _smacSharedDetails: SmacSharedDetails;
   private _provisionDetails: ProvisionDetails;
 
-  private _errorStatus: number;
+  private _resourceErrorStatus: number;
+  private _serviceErrorStatus: number;
   private _loadingInProgress: boolean;
   private _resourceCount: number;
   private _serviceCount: number;
@@ -187,17 +188,24 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return LOADING_TEXT;
   }
 
-  public get showPermissionErrorFallbackText(): boolean {
-    return this._errorStatus === HttpStatusCode.Forbidden;
+  public get noResourcesToDisplay(): boolean {
+    return !isNullOrEmpty(this._resourceErrorStatus) || this._resourceCount === 0;
+  }
+
+  public get noResourcesFallbackText(): string {
+    if (!this.noResourcesToDisplay) { return; }
+    let noPermission = this._resourceErrorStatus === HttpStatusCode.Forbidden;
+    return noPermission ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get noServicesToDisplay(): boolean {
-    return !isNullOrEmpty(this._errorStatus) || this._resourceCount === 0 || this._serviceCount === 0;
+    return !isNullOrEmpty(this._serviceErrorStatus) || this._serviceCount === 0;
   }
 
   public get noServicesFallbackText(): string {
     if (!this.noServicesToDisplay) { return; }
-    return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
+    let noPermission = this._serviceErrorStatus === HttpStatusCode.Forbidden;
+    return noPermission ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
   public get loadingInProgress(): boolean {
@@ -594,7 +602,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
       }),
       shareReplay(1),
       catchError((error) => {
-        this._errorStatus = error?.details?.status;
+        this._serviceErrorStatus = error?.details?.status;
         this._changeDetectorRef.markForCheck();
         return throwError(error);
       }),
@@ -622,7 +630,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
       }),
       catchError((error) => {
         this._loadingInProgress = false;
-        this._errorStatus = error?.details?.status;
+        this._resourceErrorStatus = error?.details?.status;
         this._changeDetectorRef.markForCheck();
         return throwError(error);
       }),
