@@ -41,6 +41,7 @@ export class NetworkDbSitesComponent implements OnDestroy {
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'code' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),

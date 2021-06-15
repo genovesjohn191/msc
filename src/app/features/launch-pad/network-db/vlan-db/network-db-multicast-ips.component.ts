@@ -43,10 +43,10 @@ export class NetworkDbMulticastIpsComponent implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsNetworkDbMulticastIp>;
 
   public readonly defaultColumnFilters = [
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'id' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'ipAddress' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'siteName' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'useCaseName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'site' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'useCase' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),

@@ -9,6 +9,9 @@ export class McsNetworkDbSite {
   public name: string = undefined;
 
   @JsonProperty()
+  public code: string = undefined;
+
+  @JsonProperty()
   public description: string = undefined;
 
   @JsonProperty()

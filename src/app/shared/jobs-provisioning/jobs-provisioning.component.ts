@@ -44,6 +44,7 @@ import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loadin
 @Component({
   selector: 'mcs-jobs-provisioning',
   templateUrl: './jobs-provisioning.component.html',
+  styleUrls: ['jobs-provisioning.component.scss'],
   animations: [
     animateFactory.fadeIn
   ],
@@ -199,6 +200,11 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public onProgressCompleted(): void {
     this._isProgressbarHidden = true;
     this._changeDetectorRef.markForCheck();
+  }
+
+  public getServiceId(job: McsJob): string {
+    let serviceId: string = getSafeProperty(job, (obj) => obj.clientReferenceObject.serviceId);
+    return serviceId ? ` (${serviceId})` : '';
   }
 
   /**

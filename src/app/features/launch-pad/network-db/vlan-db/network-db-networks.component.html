@@ -41,10 +41,10 @@
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef>
             {{ 'columnHeader.name' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row">
             {{ row.name }}
           </td>
         </ng-container>
@@ -79,20 +79,10 @@
           </td>
         </ng-container>
 
-        <!-- VNI ID Column -->
-        <ng-container matColumnDef="vniId">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.vniId' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.vniId }}
-          </td>
-        </ng-container>
-
         <!-- Use Case Name Column -->
-        <ng-container matColumnDef="useCaseName">
+        <ng-container matColumnDef="useCase">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.useCaseName' | translate }}
+            {{ 'columnHeader.useCase' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
             {{ row.useCaseName }}

@@ -10,6 +10,11 @@
           </ng-container>
 
           <mcs-item>
+            <span>{{ 'label.id' | translate }}:</span>
+            <span [innerHTML]="deployment.id | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
             <span>{{ 'label.lastDeployment' | translate }}:</span>
             <mcs-icon size="small" [key]="deployment?.statusIconKey"></mcs-icon>
             <span [innerHTML]="deployment.status | mcsDataLabel"></span>

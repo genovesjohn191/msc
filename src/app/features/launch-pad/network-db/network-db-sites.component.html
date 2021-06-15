@@ -41,11 +41,21 @@
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef>
             {{ 'columnHeader.name' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall>
+          <td mat-cell *matCellDef="let row">
             {{ row.name }}
+          </td>
+        </ng-container>
+
+        <!-- Code Column -->
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.code' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.code }}
           </td>
         </ng-container>
 
