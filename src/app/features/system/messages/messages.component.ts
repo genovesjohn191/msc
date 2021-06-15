@@ -1,28 +1,41 @@
-import {
-  Component,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  Injector
-} from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  ViewChild
+} from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  McsTableListingBase,
   CoreRoutes,
-  McsAccessControlService
+  McsAccessControlService,
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2,
+  McsTableEvents
 } from '@app/core';
-import {
-  RouteKey,
-  McsSystemMessage,
-  McsQueryParam,
-  McsApiCollection,
-  McsPermission
-} from '@app/models';
-import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
 import {
-  CommonDefinition,
-  isNullOrEmpty
+  McsFilterInfo,
+  McsPermission,
+  McsQueryParam,
+  McsSystemMessage,
+  RouteKey
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  ColumnFilter,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 
 @Component({
@@ -33,8 +46,10 @@ import {
     'class': 'block'
   }
 })
-
-export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessage> {
+export class SystemMessagesComponent {
+  public readonly dataSource: McsTableDataSource2<McsSystemMessage>;
+  public readonly dataEvents: McsTableEvents<McsSystemMessage>;
+  public readonly defaultColumnFilters: McsFilterInfo[];
 
   constructor(
     _injector: Injector,
@@ -43,10 +58,23 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
     private _apiService: McsApiService,
     private _router: Router
   ) {
-    super(_injector, _changeDetectorRef, {
+    this.dataSource = new McsTableDataSource2(this._getSystemMessages.bind(this));
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeSystemMessages,
       dataClearEvent: McsEvent.dataClearSystemMessage
     });
+    this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'message' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'start' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'expiry' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'severity' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'enabled' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' })
+    ];
   }
 
   public get routeKeyEnum(): any {
@@ -65,34 +93,47 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
     return this._accessControlService.hasPermission([McsPermission.SystemMessageEdit]);
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_SYSTEM_MESSAGE_LISTING;
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
   }
 
-  /**
-   * Navigate to system message edit page
-   * @param message Message to edit the details
-   */
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
+  }
+
   public navigateToSystemMessage(message: McsSystemMessage): void {
     if (isNullOrEmpty(message)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageEdit), message.id]);
   }
 
-  /**
-   * This will navigate to system message creation page
-   */
   public onClickNewMessage(): void {
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageCreate)]);
   }
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsSystemMessage>> {
-    return this._apiService.getSystemMessages(query);
+  private _getSystemMessages(
+    param: McsMatTableQueryParam
+  ): Observable<McsMatTableContext<McsSystemMessage>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getSystemMessages(queryParam).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
+    );
   }
 }

@@ -36,8 +36,10 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'systemMessages.filterColumn' | translate" offset="medium">
-      <mcs-column-filter [filters]="dataFilters"
-        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+      <mcs-column-selector #columnFilter
+        storageKey="system-message"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -49,147 +51,150 @@
       <mcs-search *ngIf="isMobile" #search mcsId="system-message-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table #table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource">
         <!-- Message Column -->
-        <ng-container mcsColumnDef="message">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.message.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" [mcsTextTruncate]="row.message">
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.message' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" [mcsTextTruncate]="row.message">
             {{ row.message }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Start Date Column -->
-        <ng-container mcsColumnDef="start">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.start.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="start">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.start' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             {{ row.start | mcsStdDateFormat: 'default' }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Expiry Column -->
-        <ng-container mcsColumnDef="expiry">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.expiry.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="expiry">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.expiry' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             {{ row.expiry | mcsStdDateFormat: 'default' }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Type Column -->
-        <ng-container mcsColumnDef="type">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.type.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.type' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.typeLabel }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Severity Column -->
-        <ng-container mcsColumnDef="severity">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.severity.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="severity">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.severity' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.severityLabel }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Enabled Column -->
-        <ng-container mcsColumnDef="enabled">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.enabled.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="enabled">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.enabled' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.enabledLabel }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Created On Column -->
-        <ng-container mcsColumnDef="createdOn">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.createdOn.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="createdOn">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.createdOn' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.createdOn | mcsStdDateFormat: 'default' }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Created By Column -->
-        <ng-container mcsColumnDef="createdBy">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.createdBy.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.createdBy' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.createdBy }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Updated On Column -->
-        <ng-container mcsColumnDef="updatedOn">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.updatedOn.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="updatedOn">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.updatedOn' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.updatedOn | mcsStdDateFormat: 'default' }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Updated By Column -->
-        <ng-container mcsColumnDef="updatedBy">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.updatedBy.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="updatedBy">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.updatedBy' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.updatedBy }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <div class="listing-status-wrapper">
-              <span>{{ 'systemMessages.noRecordsFoundMessage' | translate }} </span>
-              <span *mcsAccessControl="['SystemMessageEdit']">
-              <!--We need to hardcode this instead of putting in the text-config
-                    since it is using link -->
-                Click <a (click)="onClickNewMessage()"
-                mcsId="create-new-message-link"
-                mcsEventTracker="create-new-message"
-                mcsEventCategory="message"
-                mcsEventLabel="empty-message-listing-option">here</a> to create new message.
-              </span>
-            </div>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <div class="listing-status-wrapper">
-              <span>{{ 'systemMessages.errorMessage' | translate }}</span>
-              <a (click)="retryDatasource()" mcsId="retry-message-data-source"
-                mcsEventTracker="retry-loading-message-list" mcsEventCategory="message"
-                mcsEventLabel="message-listing-page">{{ 'systemMessages.retry' | translate }}</a>.
-            </div>
-          </mcs-data-error>
+          </td>
         </ng-container>
 
         <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-          <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-            mcsCursor="pointer"
-            [mcsTriggerCursorIf]="hasSystemMessageEditAccess"
-            (click)="hasSystemMessageEditAccess ? navigateToSystemMessage(row) : null;"
-            mcsId="system-message-row"
-            mcsEventTracker="navigate-to-system-message"
-            mcsEventCategory="system-message"
-            mcsEventLabel="system-message-listing-page"></mcs-data-row>
-      </mcs-table>
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          [mcsTriggerCursorIf]="hasSystemMessageEditAccess"
+          (click)="hasSystemMessageEditAccess ? navigateToSystemMessage(row) : null;"
+          mcsId="system-message-row"
+          mcsEventTracker="navigate-to-system-message"
+          mcsEventCategory="system-message"
+          mcsEventLabel="system-message-listing-page"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          <span>{{ 'systemMessages.noRecordsFoundMessage' | translate }} </span>
+          <span *mcsAccessControl="['SystemMessageEdit']">
+              Click <a (click)="onClickNewMessage()"
+              mcsId="create-new-message-link"
+              mcsEventTracker="create-new-message"
+              mcsEventCategory="message"
+              mcsEventLabel="empty-message-listing-option">here</a> to create new message.
+            </span>
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'systemMessages.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId="retry-message-data-source"
+              mcsEventTracker="retry-loading-message-list"
+              mcsEventCategory="message"
+              mcsEventLabel="message-listing-page">{{ 'media.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
 
       <!-- Paginator -->
-      <mcs-paginator #paginator [hidden]="!hasNextPage" [totalCount]="totalRecordsCount">
+      <mcs-paginator #paginator
+        [hidden]="!hasNextPage"
+        [totalCount]="dataSource?.totalCount$ | async">
       </mcs-paginator>
     </div>
   </mcs-content-panel>
