@@ -98,7 +98,7 @@ export class DnsZoneViewModel {
     this.fcZoneType.setValue(this._mainRrSet.type);
     this.fcHostName.setValue(this._mainRrSet.name);
     this.fcTtlSeconds.setValue(this._mainRrSet.ttlSeconds?.toString());
-    this.fcTarget.setValue(this._subRecord.target);
+    this.fcTarget.setValue(this._subRecord.data);
     return this;
   }
 
