@@ -18,3 +18,5 @@ export * from './management-tools-remove.workflow';
 export * from './management-tools-update.workflow';
 
 export * from './microsoft-create-subscription.workflow';
+export * from './microsoft-reservation-provision.workflow';
+
