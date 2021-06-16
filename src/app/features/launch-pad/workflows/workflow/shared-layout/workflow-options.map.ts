@@ -22,7 +22,8 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.ManagementToolsRemove, 'Remove from management tools.'],
   [WorkflowGroupId.ManagementToolsUpdate, 'Update in management tools.'],
 
-  [WorkflowGroupId.MicrosoftCreateSubscription, 'Create Microsoft subscription for a tenant.'],
+  [WorkflowGroupId.MicrosoftCreateSubscription, 'Provision Microsoft subscription for a tenant.'],
+  [WorkflowGroupId.MicrosoftProvisionReservation, 'Provision Microsoft reservation for a tenant.'],
 
   [WorkflowGroupId.ServerBackupProvision, 'Provision server backup.'],
 

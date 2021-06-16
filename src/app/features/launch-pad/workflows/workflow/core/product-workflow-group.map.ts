@@ -7,6 +7,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.AzureProductConsumption,
       [
         WorkflowGroupId.MicrosoftCreateSubscription
+        // WorkflowGroupId.MicrosoftProvisionReservation
       ]
     ],
 

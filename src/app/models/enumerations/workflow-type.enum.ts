@@ -20,6 +20,7 @@ export enum WorkflowType {
   HostSecurityProvisionHids = 'launchpad.hostsecurity.provisionhids',
 
   MicrosoftCreateSubscription = 'publiccloud.microsoft.createsubscription',
+  MicrosoftReservationProvision = 'publiccloud.microsoft.provisionreservation',
 
   ServerBackupProvision = 'launchpad.serverbackup.provision',
 
