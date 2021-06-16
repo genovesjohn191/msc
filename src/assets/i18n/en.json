@@ -3293,6 +3293,7 @@
     "terraformDefaultVariables": "Terraform Default Variables",
     "type": "Type",
     "deleteZoneRecord": "Delete Zone Record",
+    "addZoneRecord": "Add Zone Record",
     "discardChanges": "Discard Changes"
   },
   "action": {
@@ -3323,6 +3324,7 @@
     "yes": "Yes"
   },
   "message": {
+    "createRecordExist": "Cannot create <strong>{{name}}</strong> record. The Record already exists.",
     "discardChanges": "This will undo all your changes. Do you want to proceed?",
     "deleteZoneRecord": "This will delete <strong>{{dnsTarget}}</strong> zone record. Do you want to proceed?",
     "dnsDescription": "Select a zone below to manage its DNS records.\r\nPlease note, record changes can take up to 72 hours to propagate.",

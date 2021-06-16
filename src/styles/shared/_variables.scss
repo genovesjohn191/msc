@@ -57,56 +57,56 @@ $color-definitions: (
   primary: (
     base: $color-scheme-primary,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-primary),
-    tint: get-color-tint($color-scheme-primary)
+    shade: $color-primary-00,
+    tint: $color-primary-02
   ),
   secondary: (
     base: $color-scheme-secondary,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-secondary),
-    tint: get-color-tint($color-scheme-secondary)
+    shade: $color-black,
+    tint: $color-grey-00
   ),
   tertiary: (
     base: $color-scheme-tertiary,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-tertiary),
-    tint: get-color-tint($color-scheme-tertiary)
+    shade: $color-black,
+    tint: $color-grey-01
   ),
   success: (
     base: $color-scheme-success,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-success),
-    tint: get-color-tint($color-scheme-success)
+    shade: $color-green-00,
+    tint: $color-green-01
   ),
   warning: (
     base: $color-scheme-warning,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-warning),
-    tint: get-color-tint($color-scheme-warning)
+    shade: $color-yellow-00,
+    tint: $color-yellow-01
   ),
   danger: (
     base: $color-scheme-danger,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-danger),
-    tint: get-color-tint($color-scheme-danger)
+    shade: $color-red-00,
+    tint: $color-red-01
   ),
   light: (
     base: $color-scheme-light,
     contrast: $color-black,
-    shade: get-color-shade($color-scheme-light),
-    tint: get-color-tint($color-scheme-light)
+    shade: $color-grey-06,
+    tint: $color-white
   ),
   medium: (
     base: $color-scheme-medium,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-medium),
-    tint: get-color-tint($color-scheme-medium)
+    shade: $color-grey-05,
+    tint: $color-grey-07
   ),
   dark: (
     base: $color-scheme-dark,
     contrast: $color-white,
-    shade: get-color-shade($color-scheme-dark),
-    tint: get-color-tint($color-scheme-dark)
+    shade: $color-black,
+    tint: $color-grey-02
   )
 ) !default;
 

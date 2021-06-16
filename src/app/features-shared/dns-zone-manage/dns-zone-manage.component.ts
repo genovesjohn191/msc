@@ -38,6 +38,7 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
+  DialogActionType,
   DialogResult,
   DialogResultAction,
   DialogService2,
@@ -115,6 +116,23 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   public onClickAddDnsZoneRecord(): void {
     this.formGroup.validateFormControls(true);
     if (!this.formGroup.isValid()) { return; }
+
+    // Validate first if the record exists, otherwise display error message
+    let recordFound = this.dataSource.findRecord(item =>
+      item.fcZoneType?.value === this.addViewModel.fcZoneType?.value &&
+      item.fcHostName?.value === this.addViewModel.fcHostName?.value &&
+      item.fcTarget?.value === this.addViewModel.fcTarget?.value);
+
+    if (recordFound) {
+      this._dialogService.openMessage({
+        type: DialogActionType.Error,
+        title: this._translateService.instant('label.addZoneRecord'),
+        message: this._translateService.instant('message.createRecordExist', {
+          name: this.addViewModel.fcTarget?.value
+        })
+      });
+      return;
+    }
 
     let zoneRecord = new McsNetworkDnsRecordRequest();
     zoneRecord.type = getSafeFormValue<DnsRecordType>(this.addViewModel.fcZoneType);
@@ -252,18 +270,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
         dataModels.push(dnsViewModel);
       });
     });
-
-    // TODO(apascual): Remove this when data has been finalized in API side
-    // let newRecord = new McsNetworkDnsRrSets();
-    // newRecord.type = 'AAA';
-    // newRecord.name = '@',
-    // newRecord.ttlSeconds = 600;
-
-    // let dataModels = [
-    //   new DnsZoneViewModel(newRecord, { target: '1.1.1.1' } as any),
-    //   new DnsZoneViewModel(newRecord, { target: '1.1.1.2' } as any),
-    //   new DnsZoneViewModel(newRecord, { target: '1.1.1.3' } as any)
-    // ];
     return of(new McsMatTableContext(dataModels));
   }
 }
