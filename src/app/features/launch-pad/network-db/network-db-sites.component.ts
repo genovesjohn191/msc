@@ -5,16 +5,11 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import {
-  Observable,
-  Subject
-} from 'rxjs';
-import {
-  map,
-  takeUntil
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2
@@ -55,14 +50,12 @@ export class NetworkDbSitesComponent implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' })
   ];
 
-  private _destroySubject = new Subject<void>();
-  private _data: McsNetworkDbSite[] = [];
-
   public constructor(
     _injector: Injector,
     private _apiService: McsApiService
   ) {
-    this.dataSource = new McsTableDataSource2(this._getTableData.bind(this));
+    this.dataSource = new McsTableDataSource2<McsNetworkDbSite>(this._getTableData.bind(this))
+      .registerConfiguration(new McsMatTableConfig(true));
   }
 
   public ngOnDestroy(): void {
@@ -72,11 +65,6 @@ export class NetworkDbSitesComponent implements OnDestroy {
   @ViewChild('search')
   public set search(value: Search) {
     if (!isNullOrEmpty(value)) {
-      value.searchChangedStream
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((s) => {
-        this._data = [];
-      });
       this.dataSource.registerSearch(value);
     }
   }
@@ -106,9 +94,6 @@ export class NetworkDbSitesComponent implements OnDestroy {
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getNetworkDbSites(queryParam).pipe(
-      map((response) => {
-        this._data = this._data.concat(response?.collection);
-        return new McsMatTableContext(this._data, response?.totalCollectionCount);
-      }));
+      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
   }
 }

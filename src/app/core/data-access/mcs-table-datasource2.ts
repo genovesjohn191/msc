@@ -349,6 +349,9 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   }
 
   private _resetPaginator(): void {
+    if (this._configuration?.applyDefaultPagination) {
+      this._dataRecordsChange.next([]);
+    }
     if (isNullOrEmpty(this._paginator)) { return; }
     this._paginator.reset();
   }
