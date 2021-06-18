@@ -2659,10 +2659,10 @@
       "header": "Networks",
       "leftPanelHeader": "Network Filter",
       "filterColumn": "Table Filter",
-      "dataSingular": "Networks",
-      "dataPlural": "Networkss",
-      "noRecordsFound": "No Networkss to display.",
-      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Networkss.",
+      "dataSingular": "Networs",
+      "dataPlural": "Networks",
+      "noRecordsFound": "No Network to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Networks.",
       "retry": "Try again shortly"
     }
   },
