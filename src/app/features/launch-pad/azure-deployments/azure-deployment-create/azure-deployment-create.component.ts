@@ -18,7 +18,6 @@ import {
   DynamicFormFieldConfigBase,
   DynamicFormFieldDataChangeEventParam,
   DynamicInputTerraformDeploymentNameField,
-  DynamicInputTextField,
   DynamicSelectChipsCompanyField,
   DynamicSelectChipsTerraformModuleField,
   DynamicSelectChipsTerraformTagField,

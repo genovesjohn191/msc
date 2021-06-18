@@ -10,7 +10,8 @@ import {
 import {
   McsTableDataSource2,
   McsMatTableQueryParam,
-  McsMatTableContext
+  McsMatTableContext,
+  McsMatTableConfig
 } from '@app/core';
 import {
   McsObjectCrispElement,
@@ -55,7 +56,6 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
   public set keyword(value: string) {
     if (this._keyword !== value) {
       this._keyword = value;
-      this._data = [];
     }
 
     this.showLoading(true);
@@ -75,10 +75,9 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
 
   public _keyword: string = '';
 
-  private _data: McsObjectCrispElement[] = [];
-
   public constructor(private _changeDetector: ChangeDetectorRef, private _apiService: McsApiService) {
-    this.dataSource = new McsTableDataSource2(this._getData.bind(this));
+    this.dataSource = new McsTableDataSource2<McsObjectCrispElement>(this._getData.bind(this))
+      .registerConfiguration(new McsMatTableConfig(true));
     this.dataSource.registerSearch(this);
   }
 
@@ -96,10 +95,7 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getCrispElements(queryParam).pipe(
-      map((response) => {
-        this._data = this._data.concat(response?.collection);
-        return new McsMatTableContext(this._data, response?.totalCollectionCount);
-      }));
+      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
   }
 
   public retryDatasource(): void {

@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2
@@ -57,7 +58,6 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
   public set keyword(value: string) {
     if (this._keyword !== value) {
       this._keyword = value;
-      this._data = [];
     }
 
     this.showLoading(true);
@@ -77,10 +77,9 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
 
   public _keyword: string = '';
 
-  private _data: McsObjectInstalledService[] = [];
-
   public constructor(private _changeDetector: ChangeDetectorRef, private _apiService: McsApiService) {
-    this.dataSource = new McsTableDataSource2(this._getData.bind(this));
+    this.dataSource = new McsTableDataSource2<McsObjectInstalledService>(this._getData.bind(this))
+      .registerConfiguration(new McsMatTableConfig(true));
     this.dataSource.registerSearch(this);
   }
 
@@ -98,10 +97,7 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getInstalledServices(queryParam).pipe(
-      map((response) => {
-        this._data = this._data.concat(response?.collection);
-        return new McsMatTableContext(this._data, response?.totalCollectionCount);
-      }));
+      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
   }
 
   public retryDatasource(): void {
