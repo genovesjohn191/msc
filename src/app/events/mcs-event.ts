@@ -1,6 +1,7 @@
 import { AccountChangeEvent } from './items/account-change.event';
 import { DataChangeAggregationTargetsEvent } from './items/data-change-aggregation-targets-event';
 import { DataChangeAzureManagedServicesEvent } from './items/data-change-azure-managed-services.event';
+import { DataChangeAzureReservationsEvent } from './items/data-change-azure-reservations.event';
 import { DataChangeAzureResourcesEvent } from './items/data-change-azure-resources.event';
 import { DataChangeCompaniesEvent } from './items/data-change-companies.event';
 import { DataChangeConsoleEvent } from './items/data-change-console.event';
@@ -139,6 +140,7 @@ export class McsEvent {
   public static dataChangeAggregationTargets = new DataChangeAggregationTargetsEvent();
   public static dataChangeAzureResources = new DataChangeAzureResourcesEvent();
   public static dataChangeAzureManagedServices = new DataChangeAzureManagedServicesEvent();
+  public static dataChangeAzureReservations = new DataChangeAzureReservationsEvent();
   public static dataChangeDnsListing = new DnsListingEvent();
   public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
   public static dataChangeTerraformDeployments = new DataChangeTerraformDeploymentsEvent();

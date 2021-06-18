@@ -83,6 +83,11 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () => import('../../features/orders/orders.module').then(m => m.OrdersModule)
       },
       {
+        path: 'azure/reservations',
+        data: { routeId: RouteKey.AzureReservations },
+        loadChildren: () => import('../../features/azure-reservations/azure-reservations.module').then(m => m.AzureReservationsModule)
+      },
+      {
         path: 'azure/resources',
         data: { routeId: RouteKey.AzureResources },
         loadChildren: () => import('../../features/azure-resources/azure-resources.module').then(m => m.AzureResourcesModule)

@@ -16,6 +16,7 @@ import {
 import {
   IMcsApiAccountService,
   IMcsApiAvailabilityZonesService,
+  IMcsApiAzureReservationsService,
   IMcsApiAzureResourcesService,
   IMcsApiAzureServicesService,
   IMcsApiBatsService,
@@ -45,6 +46,7 @@ import {
   IMcsApiWorkflowsService,
   McsApiAccountFactory,
   McsApiAvailabilityZonesFactory,
+  McsApiAzureReservationsFactory,
   McsApiAzureResourceFactory,
   McsApiAzureServicesFactory,
   McsApiBatsFactory,
@@ -92,6 +94,7 @@ import {
   McsApiSuccessResponse,
   McsAvailabilityZone,
   McsAzureDeploymentsQueryParams,
+  McsAzureReservation,
   McsAzureResource,
   McsAzureResourceQueryParams,
   McsAzureService,
@@ -260,6 +263,7 @@ import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
+import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 
 @Injectable()
 @LogClass()
@@ -269,6 +273,7 @@ export class McsApiService {
   private readonly _accountRepository: McsAccountRepository;
   private readonly _azureResourceRepository: McsAzureResourcesRepository;
   private readonly _azureServicesRepository: McsAzureServicesRepository;
+  private readonly _azureReservationsRepository: McsAzureReservationsRepository;
   private readonly _batsRepository: McsBatsRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
   private readonly _consoleRepository: McsConsoleRepository;
@@ -288,6 +293,7 @@ export class McsApiService {
   private readonly _availabilityZonesApi: IMcsApiAvailabilityZonesService;
   private readonly _azureResourcesApi: IMcsApiAzureResourcesService;
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
+  private readonly _azureReservationsApi: IMcsApiAzureReservationsService;
   private readonly _batsApi: IMcsApiBatsService;
   private readonly _catalogService: IMcsApiCatalogService;
   private readonly _cloudHealthAlertApi: IMcsApiCloudHealthAlertService;
@@ -323,6 +329,7 @@ export class McsApiService {
     this._accountRepository = _injector.get(McsAccountRepository);
     this._azureResourceRepository = _injector.get(McsAzureResourcesRepository);
     this._azureServicesRepository = _injector.get(McsAzureServicesRepository);
+    this._azureReservationsRepository = _injector.get(McsAzureReservationsRepository);
     this._batsRepository = _injector.get(McsBatsRepository);
     this._companiesRepository = _injector.get(McsCompaniesRepository);
     this._consoleRepository = _injector.get(McsConsoleRepository);
@@ -345,6 +352,7 @@ export class McsApiService {
     this._availabilityZonesApi = apiClientFactory.getService(new McsApiAvailabilityZonesFactory());
     this._azureResourcesApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
+    this._azureReservationsApi = apiClientFactory.getService(new McsApiAzureReservationsFactory());
     this._batsApi = apiClientFactory.getService(new McsApiBatsFactory());
     this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
     this._cloudHealthAlertApi = apiClientFactory.getService(new McsApiCloudHealthAlertFactory());
@@ -1736,6 +1744,14 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureServices'))
       ),
       map((response) => this._mapToCollection(response, this._azureServicesRepository.getTotalRecordsCount()))
+    );
+  }
+
+  public getAzureReservations(query?: McsQueryParam): Observable<McsApiCollection<McsAzureReservation>> {
+    return this._mapToEntityRecords(this._azureReservationsRepository, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureReservations'))
+      )
     );
   }
 

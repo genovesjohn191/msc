@@ -280,6 +280,7 @@ export * from './response/mcs-account';
 export * from './response/mcs-azure-resource-tag';
 export * from './response/mcs-azure-resource';
 export * from './response/mcs-azure-service';
+export * from './response/mcs-azure-reservation';
 export * from './response/mcs-report-cost-recommendations';
 export * from './response/mcs-report-generic-item';
 export * from './response/mcs-report-integer-data';

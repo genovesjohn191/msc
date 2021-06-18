@@ -180,6 +180,14 @@
     "requiredPermissions": ["AzureView"],
     "requiredFeatureFlag": "EnablePublicCloudResourceListing"
   },
+  "azureReservations": {
+    "enumKey": "AzureReservations",
+    "enumCategory": "Azure",
+    "navigationPath": "azure/reservations",
+    "enumPlatform": "Public",
+    "documentTitle": "Reservations - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnableAzureReservations"
+  },
   "console": {
     "enumPlatform": "Private",
     "enumKey": "Console",

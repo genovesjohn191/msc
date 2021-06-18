@@ -45,7 +45,8 @@
       "azure": {
         "label": "Azure",
         "resources": "Resources",
-        "managedServices": "Managed Services"
+        "managedServices": "Managed Services",
+        "reservations": "Reservations"
       },
       "licenses": "Licenses"
     },
@@ -2536,6 +2537,13 @@
     "retry": "Try again shortly",
     "tableBanner": "Below is a simple overview of your public cloud resources. Head to the Azure portal to manage these in detail."
   },
+  "azureReservations": {
+    "leftPanelHeader": "Reservation Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of reservations.",
+    "filterColumn": "Reservation Filter",
+    "dataSingular": "Reservation",
+    "dataPlural": "Reservations"
+  },
   "dnsListing": {
     "header": "DNS Services",
     "leftPanelHeader": "DNS Service Filter",
@@ -3083,7 +3091,8 @@
     "getNetworkDbVnis": "Something went wrong while retrieving VNIs. Please try again.",
     "getNetworkDbUseCases": "Something went wrong while retrieving use cases. Please try again.",
     "getNetworkDbMulticastIps": "Something went wrong while retrieving multicast IPs. Please try again.",
-    "getNetworkDbNetworks": "Something went wrong while retrieving networks. Please try again."
+    "getNetworkDbNetworks": "Something went wrong while retrieving networks. Please try again.",
+    "getAzureReservations": "Something went wrong while retrieving the list of reservations. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3093,6 +3102,7 @@
     "aggregationTarget": "Aggregation Target",
     "attachedTo": "Attached To",
     "billingDescription": "Description",
+    "billingFrequency": "Billing Frequency",
     "catalog": "OS Edition",
     "code": "Code",
     "companyId": "Company ID",
@@ -3156,17 +3166,20 @@
     "pod": "POD",
     "podName": "POD Name",
     "productId": "Product ID",
+    "productName": "Product Name",
     "projectedComputeCost": "Projected Compute Cost",
     "quantity": "Quantity",
     "recommendation": "Recommendation",
     "possibleSavings": "Possible Savings",
     "region": "Region",
+    "reservationOrderId": "Reservation Order ID",
     "reservedHours": "Reserved Hours",
     "resource": "Resource",
     "resourceGroup": "Resource Group",
     "retentionPeriod": "Retention Period",
     "role": "Role",
     "schedule": "Schedule",
+    "scope": "Scope",
     "select": "Select",
     "sequence": "Sequence",
     "serialNumber": "Serial Number",
@@ -3191,6 +3204,7 @@
     "tags": "Tags",
     "targetComputer": "Target VM",
     "tenant": "Tenant",
+    "term": "Term",
     "ticketNumber": "Ticket Number",
     "tier": "Tier",
     "time": "Time",
@@ -3279,6 +3293,7 @@
     "phone": "Phone",
     "requestType": "Request Type",
     "requestor": "Requestor",
+    "reservations": "Reservations",
     "resolution": "Resolution",
     "resourceGroup": "Resource Group",
     "rootCause": "Root Cause",
@@ -3316,8 +3331,10 @@
     "submit": "Submit",
     "plan": "Plan",
     "planAndApply": "Plan & Apply",
+    "raiseTicket": "Raise a Ticket",
     "remove": "Remove",
     "retry": "Retry",
+    "tryAgainShortly": "Try again shortly",
     "undo": "Undo",
     "update": "Update",
     "upgrade": "Upgrade",
@@ -3360,7 +3377,8 @@
     "noDnsZones": "There are no zones to display for this service.",
     "noServiceToDisplay": "There are no applicable services to display.",
     "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView.",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "noAzureReservations": "There are no reservations to display."
   },
   "dialog": {
     "mediaDetach": {
