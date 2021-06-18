@@ -4,6 +4,7 @@ import { Provider } from '@angular/core';
 import { McsJobManagerClient } from './job-manager/mcs-job-manager.client';
 import { McsApiService } from './mcs-api.service';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
+import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
@@ -42,6 +43,7 @@ export const repositoryProviders: any[] = [
   McsAccountRepository,
   McsAzureResourcesRepository,
   McsAzureServicesRepository,
+  McsAzureReservationsRepository,
   McsTerraformDeploymentsRepository,
   McsApiService
 ];
