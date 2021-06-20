@@ -30,8 +30,11 @@ import {
 } from '@angular/router';
 import {
   McsAuthenticationIdentity,
+  McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
-  McsTableDataSource
+  McsTableDataSource,
+  McsTableDataSource2
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -40,6 +43,7 @@ import {
   DeliveryType,
   ItemType,
   McsCompany,
+  McsFilterInfo,
   McsOrder,
   McsOrderApprover,
   McsOrderItem,
@@ -83,6 +87,10 @@ interface ChargesState {
 })
 
 export class OrderComponent implements OnInit, OnDestroy {
+  public readonly filterPredicate: (filter) => boolean;
+  public readonly dataSource: McsTableDataSource2<McsOrderItem>;
+  public readonly defaultColumnFilters: McsFilterInfo[];
+
   // Order items table
   public order$: Observable<McsOrder>;
   public isOrderTypeChange$: Observable<boolean>;
@@ -95,6 +103,9 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   @ViewChild('submitDialogTemplate')
   private _submitDialogTemplate: TemplateRef<any>;
+
+  private _orderItemsChange = new BehaviorSubject<McsOrderItem[]>(null);
+  private _orderItemsColumnPredicateMap = new Map<string, () => boolean>();
 
   private _orderApprovers: McsOrderApprover[];
   private _destroySubject = new Subject<void>();
@@ -113,19 +124,34 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity
   ) {
+    this.filterPredicate = this._isColumnIncluded.bind(this);
+    this.dataSource = new McsTableDataSource2(this._getOrderItems.bind(this));
+    this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'costCentre' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingSite' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'monthlyCharge' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'hourlyCharge' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'oneOffCharge' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'excessFeePerGB' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'schedule' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'deliveryType' })
+    ];
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters, this.filterPredicate);
+
     this._updateOnCompanySwitch();
     this.orderDetailsView = OrderDetailsView.OrderDetails;
     this.orderItemsDataSource = new McsTableDataSource();
-    this.setOrderItemsColumn();
   }
-  private _hasSchedule: boolean;
-  private _hasDeliveryTypeOptions: boolean;
 
   public ngOnInit() {
     this._subscribeToOrderResolver();
     this._subscribeToParamChange();
-    this._registerOrderDataChangeEvent();
     this._subscribeToChargesStateChange();
+
+    this._registerOrderDataChangeEvent();
+    this._registerOrderItemsColumnMap();
   }
 
   public ngOnDestroy() {
@@ -154,11 +180,13 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public get hasSchedule(): boolean {
-    return this._hasSchedule;
+    return !!this.dataSource?.findRecord(
+      orderItem => !isNullOrEmpty(orderItem.schedule));
   }
 
   public get hasDeliveryTypeOptions(): boolean {
-    return this._hasDeliveryTypeOptions;
+    return !!this.dataSource?.findRecord(
+      orderItem => !isNullOrEmpty(orderItem.deliveryType));
   }
 
   public get isImpersonating(): boolean {
@@ -207,39 +235,9 @@ export class OrderComponent implements OnInit, OnDestroy {
     return companyId && this.activeCompany?.id !== companyId;
   }
 
-  /**
-   * Returns the order items data source
-   * @param order Order on where to get the items that to be displayed on the table
-   */
-  public getOrderItemsDatasource(order: McsOrder): McsTableDataSource<McsOrderItem> {
-    if (isNullOrEmpty(order)) { return undefined; }
-    this._identifyIfDeadlineIsRequired(order.items);
-    this._identifyIfDeliveryTypeIsRequired(order.items);
-    this.orderItemsDataSource.updateDatasource(order.items);
-    return this.orderItemsDataSource;
-  }
-
   private _updateOnCompanySwitch(): void {
     this._eventDispatcher.addEventListener(McsEvent.accountChange, () => {
       this._changeDetectorRef.markForCheck()
-    });
-  }
-
-  private _identifyIfDeadlineIsRequired(orderItems: McsOrderItem[]): void {
-    this._hasSchedule = false;
-    orderItems.forEach(item => {
-      if (!isNullOrEmpty(item.schedule)) {
-        this._hasSchedule = true;
-      }
-    });
-  }
-
-  private _identifyIfDeliveryTypeIsRequired(orderItems: McsOrderItem[]): void {
-    this._hasDeliveryTypeOptions = false;
-    orderItems.forEach(item => {
-      if (!isNullOrEmpty(item.deliveryType)) {
-        this._hasDeliveryTypeOptions = true;
-      }
     });
   }
 
@@ -427,14 +425,12 @@ export class OrderComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Subscribes to order resolver
-   */
   private _subscribeToOrderResolver(): void {
     this.order$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.order)),
-      tap((order) => {
+      tap((order: McsOrder) => {
         this._setChargesState(order);
+        this._orderItemsChange.next(order?.items);
         let workflowState = getSafeProperty(order, (obj) => obj.workflowState);
         this.isInAwaitingApprovalState = (workflowState === WorkflowStatus.AwaitingApproval);
       }),
@@ -459,41 +455,59 @@ export class OrderComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Sets the excess usage fee flag based on order records
-   */
+  private _getOrderItems(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsOrderItem>> {
+    return this._orderItemsChange.pipe(
+      map(response => new McsMatTableContext(response, response?.length))
+    );
+  }
+
   private _setChargesState(order: McsOrder): void {
     let chargesState: ChargesState = { oneOff: false, monthly: false, excessUsagePerGb: false, hourly: false };
     let orderItems = getSafeProperty(order, (obj) => obj.items, []);
 
     orderItems.forEach((orderItem) => {
       if (chargesState.excessUsagePerGb && chargesState.monthly && chargesState.oneOff) { return; }
+
       let excessUsageFee = getSafeProperty(orderItem, (obj) => obj.charges.excessUsageFeePerGB);
       chargesState.excessUsagePerGb = chargesState.excessUsagePerGb ? chargesState.excessUsagePerGb : !isNullOrUndefined(excessUsageFee);
+
       let monthly = getSafeProperty(orderItem, (obj) => obj.charges.monthly);
       chargesState.monthly = chargesState.monthly ? chargesState.monthly : !isNullOrUndefined(monthly);
+
       let oneOff = getSafeProperty(orderItem, (obj) => obj.charges.oneOff);
       chargesState.oneOff = chargesState.oneOff ? chargesState.oneOff : !isNullOrUndefined(oneOff);
+
       let hourly = getSafeProperty(orderItem, (obj) => obj.charges.hourly);
       chargesState.hourly = chargesState.hourly ? chargesState.hourly : !isNullOrUndefined(hourly);
     });
-
     this._chargesStateChange.next(chargesState);
   }
 
-  /**
-   * Gets the order items column definitions from text content
-   */
-  private setOrderItemsColumn(): void {
-    this.orderItemsColumns = Object.keys(this._translate.instant('order.columnHeaders'));
-    this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Registers the order data change event
-   */
   private _registerOrderDataChangeEvent(): void {
     this._orderDataChangeHandler = this._eventDispatcher.addEventListener(
       McsEvent.dataChangeOrders, () => this._changeDetectorRef.markForCheck());
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    let filterFound = this._orderItemsColumnPredicateMap.get(filter.id);
+    return filterFound ? filterFound() : true;
+  }
+
+  private _registerOrderItemsColumnMap(): void {
+    this._orderItemsColumnPredicateMap.set('hourlyCharge',
+      () => this._chargesStateChange.getValue()?.hourly
+    );
+
+    this._orderItemsColumnPredicateMap.set('excessFeePerGB',
+      () => this._chargesStateChange.getValue()?.excessUsagePerGb
+    );
+
+    this._orderItemsColumnPredicateMap.set('schedule',
+      () => this.hasSchedule
+    );
+
+    this._orderItemsColumnPredicateMap.set('deliveryType',
+      () => this.hasDeliveryTypeOptions
+    );
   }
 }

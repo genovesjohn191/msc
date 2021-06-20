@@ -110,7 +110,8 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
 
   public connect(_collectionViewer: CollectionViewer): Observable<TEntity[]> {
     return this._dataRecordsChange.pipe(
-      filter((records) => records !== null)
+      filter((records) => records !== null),
+      tap(() => this._updateDataColumns())
     );
   }
 
@@ -342,6 +343,11 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
       existingRecords.push(...records);
     }
     this._dataRecordsChange.next(existingRecords);
+  }
+
+  private _updateDataColumns(): void {
+    if (isNullOrEmpty(this._columnFilter)) { return; }
+    this._columnFilter.filtersChange.next(this._columnFilter.filters)
   }
 
   private _setTotalRecordsCount(count: number): void {
