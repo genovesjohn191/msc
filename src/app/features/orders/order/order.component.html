@@ -177,136 +177,142 @@
         </mcs-grid>
 
         <!-- Order Items -->
-        <mcs-table [dataSource]="getOrderItemsDatasource(selectedOrder)">
+        <table mat-table [dataSource]="dataSource">
           <!-- Description -->
-          <ng-container mcsColumnDef="description">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.description' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               {{ row.description }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Status -->
-          <ng-container mcsColumnDef="status">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.status' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               <span text-wrap>{{ row.itemProvisioningStatusLabel }}</span>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Cost Centre -->
-          <ng-container mcsColumnDef="costCentre">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="costCentre">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.costCentre' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               <ng-container *ngIf="(isOrderTypeChange$ | async); else costCentreTemplate">
                 <ng-container *ngTemplateOutlet="changeOrderTemplate"></ng-container>
               </ng-container>
               <ng-template #costCentreTemplate>
                 <span>{{ row.costCentre }}</span>
               </ng-template>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Billing Site -->
-          <ng-container mcsColumnDef="billingSite">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="billingSite">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.billingSite' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               <ng-container *ngIf="(isOrderTypeChange$ | async); else billingSiteTemplate">
                 <ng-container *ngTemplateOutlet="changeOrderTemplate"></ng-container>
               </ng-container>
               <ng-template #billingSiteTemplate>
                 <span>{{ row.billingSite }}</span>
               </ng-template>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Monthly Charge Column -->
-          <ng-container mcsColumnDef="monthlyCharge">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="monthlyCharge">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.monthlyCharge' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               {{ row.charges?.monthlyInCurrency }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Hourly Charge Column -->
-          <ng-container mcsColumnDef="hourlyCharge" *ngIf="(chargesState$ | async)?.hourly">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="hourlyCharge">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.hourlyCharge' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               {{ row.charges?.hourlyInCurrency }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- One-off Charge Column -->
-          <ng-container mcsColumnDef="oneOffCharge">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="oneOffCharge">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.oneOffCharge' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               {{ row.charges?.oneOffInCurrency }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Excess Fee Per GB Charge Column -->
-          <ng-container mcsColumnDef="excessFeePerGB" *ngIf="(chargesState$ | async)?.excessUsagePerGb">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="excessFeePerGB">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.excessFeePerGB' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.excessUsageFeePerGB | mcsIsNotNullOrUndefined)">
+            </th>
+            <td mat-cell *matCellDef="let row"
+              [mcsGreyedOut]="!(row.charges?.excessUsageFeePerGB | mcsIsNotNullOrUndefined)">
               {{ row.charges?.excessUsageFeePerGbInCurrency }}
-            </mcs-data-cell>
-          </ng-container>
-
-          <!-- Data Status Integration -->
-          <ng-container mcsDataStatusDef>
-            <mcs-data-empty *mcsDataEmptyDef>
-              <span>{{ 'order.noOrderItems' | translate }}</span>
-            </mcs-data-empty>
-            <mcs-data-error *mcsDataErrorDef>
-              <span>{{ 'order.errorOnOrderItems' | translate }}</span>
-            </mcs-data-error>
+            </td>
           </ng-container>
 
           <!-- Schedule -->
-          <ng-container mcsColumnDef="schedule" *ngIf="hasSchedule">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="schedule">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.schedule' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               <ng-container *ngIf="row.schedule | mcsIsNotNullOrEmpty; else showASAP">
                 <span text-wrap>{{ row.schedule | mcsStdDateFormat }}</span>
               </ng-container>
               <ng-template #showASAP>
                 <span text-wrap>{{ 'order.noSchedule' | translate }}</span>
               </ng-template>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Delivery Type -->
-          <ng-container mcsColumnDef="deliveryType" *ngIf="hasDeliveryTypeOptions">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="deliveryType">
+            <th mat-header-cell *matHeaderCellDef>
               {{ 'order.columnHeaders.deliveryType' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               <span text-wrap>{{ getDeliveryType(row.deliveryType) }}</span>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Header and Data row -->
-          <mcs-header-row *mcsHeaderRowDef="orderItemsColumns"></mcs-header-row>
-          <mcs-data-row *mcsDataRowDef="let row; columns: orderItemsColumns;"></mcs-data-row>
-        </mcs-table>
+          <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+          <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+        </table>
+
+        <!-- Table Statuses -->
+        <mcs-item orientation="block">
+          <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+            <mcs-loader size="medium"></mcs-loader>
+          </div>
+          <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+            <span>{{ 'order.noOrderItems' | translate }}</span>
+          </div>
+          <div *ngIf="dataSource?.hasError$ | async" text-center>
+            <div class="listing-status-wrapper">
+              <span>{{ 'order.errorOnOrderItems' | translate }}</span>
+            </div>
+          </div>
+        </mcs-item>
       </ng-container>
 
       <!-- Order approval -->
