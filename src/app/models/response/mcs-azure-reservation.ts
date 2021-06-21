@@ -16,6 +16,9 @@ export class McsAzureReservation extends McsEntityBase {
   public type: string = undefined;
 
   @JsonProperty()
+  public reservationType: string = undefined;
+
+  @JsonProperty()
   public status: string = undefined;
 
   @JsonProperty()
