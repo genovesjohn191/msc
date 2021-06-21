@@ -18,6 +18,7 @@ export interface CodeEditorFieldContent  {
 @Component({
   selector: 'mcs-code-editor-form-field',
   templateUrl: 'code-editor-form-field.component.html',
+  styleUrls: ['code-editor-form-field.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
