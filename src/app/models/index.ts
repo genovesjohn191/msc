@@ -307,6 +307,7 @@ export * from './response/mcs-report-top-vms-by-cost';
 export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
+export * from './response/mcs-object-crisp-order';
 export * from './response/mcs-cloudhealth-alert';
 export * from './response/mcs-cloudhealth-alert-configuration-items';
 export * from './response/mcs-network-db-multicast-ip';

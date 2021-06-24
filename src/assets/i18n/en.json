@@ -17,6 +17,10 @@
       "vnis": "VNIs",
       "workflows": "Workflows"
     },
+    "crisp": {
+      "label": "CRISP",
+      "orders": "Orders"
+    },
     "privateCloud": {
       "label": "Private Cloud",
       "compute": {
@@ -2580,6 +2584,16 @@
 
     }
   },
+  "crispOrders": {
+    "header": "CRISP Orders Assigned To Me",
+    "leftPanelHeader": "Order Filter",
+    "filterColumn": "Table Filter",
+    "dataSingular": "Order",
+    "dataPlural": "Orders",
+    "noRecordsFound": "No orders to display.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of orders.",
+    "retry": "Try again shortly"
+  },
   "licenses": {
     "header": "Licenses",
     "leftPanelHeader": "License Filter",
@@ -3080,6 +3094,8 @@
     "getCrispElements": "Something went wrong while retrieving CRISP elements. Please try again.",
     "getCrispElement": "Something went wrong while retrieving CRISP element details. Please try again.",
     "getInstalledServices": "Something went wrong while retrieving installed services. Please try again.",
+    "getCrispOrders": "Something went wrong while retrieving CRISP orders. Please try again.",
+    "getCrispOrder": "Something went wrong while retrieving CRISP order details. Please try again.",
     "getCloudHealthAlerts": "Something went wrong while retrieving your Cloudhealth Alerts. Please try again.",
     "getCloudHealthAlert": "Something went wrong while retrieving your Cloudhealth Alert. Please try again.",
     "deleteNetworkDnsZoneRecord": "Something went wrong while deleting dns zone record. Please try again.",
@@ -3100,6 +3116,7 @@
   "columnHeader": {
     "action": "Action",
     "aggregationTarget": "Aggregation Target",
+    "assignee": "Assignee",
     "attachedTo": "Attached To",
     "billingDescription": "Description",
     "billingFrequency": "Billing Frequency",
@@ -3127,6 +3144,7 @@
     "finished": "Finished",
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",
+    "hostingEngineer": "Hosting Engineer",
     "hourlyCharge": "Hourly Charge",
     "id": "ID",
     "isInfrastructure": "Is Infrastructure",

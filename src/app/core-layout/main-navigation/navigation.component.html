@@ -12,6 +12,7 @@
           {{ 'navigation.dashboard' | translate }}
         </a>
       </li>
+
       <!-- LAUNCH Pad -->
       <ng-container *ngIf="!isImpersonating">
         <li *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableLaunchPad']" hidden-small>
@@ -159,6 +160,31 @@
                 mcsEventCategory="navigation"
                 mcsEventLabel="main-nav">
                 {{ 'navigation.launchPad.reporting' | translate }}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+
+      <!-- CRISP -->
+      <ng-container *ngIf="!isImpersonating">
+        <li *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableCrisp']" hidden-small>
+          <a (click)="toggleThis('showCrispMenu')"
+            [class.active]="selectedCategory === routerCategoryEnum.Crisp"
+            mcsId="launch-pad-link">
+            {{ 'navigation.crisp.label' | translate }}
+            <mcs-icon [key]="showCrispMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+          </a>
+          <ul *ngIf="showCrispMenu">
+            <!-- Orders -->
+            <li>
+              <a [mcsRouterLink]="routeKeyEnum.CrispOrders"
+                mcsRouterLinkActive="active"
+                mcsId="crisp-orders-link"
+                mcsEventTracker="navigate-to-crisp-orders"
+                mcsEventCategory="navigation"
+                mcsEventLabel="main-nav">
+                {{ 'navigation.crisp.orders' | translate }}
               </a>
             </li>
           </ul>
