@@ -26,6 +26,7 @@ import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.com
 import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
 import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
 import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
+import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
 
 /**
  * List of routes for the main module
@@ -129,6 +130,12 @@ export const launchPadRoutes: Routes = [
     path: 'network-db/vlan-db/networks',
     component: NetworkDbNetworksComponent,
     data: { routeId: RouteKey.LaunchPadNetworkDbNetworks },
+    canActivate: [ LaunchPadGuard ]
+  },
+  {
+    path: 'crisp/orders',
+    component: CrispOrdersComponent,
+    data: { routeId: RouteKey.LaunchPadCrispOrders },
     canActivate: [ LaunchPadGuard ]
   }
 ];

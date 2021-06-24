@@ -143,13 +143,14 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
-  "crispOrders": {
-    "enumKey": "CrispOrders",
-    "enumCategory": "Crisp",
-    "navigationPath": "crisp/orders",
+  "launchPadCrispOrders": {
+    "enumKey": "LaunchPadCrispOrders",
+    "enumCategory": "LaunchPadCrisp",
+    "navigationPath": "launch-pad/crisp/orders",
     "documentTitle": "CRISP - Orders",
     "requiredPermissions": ["InternalEngineerAccess"],
-    "requiredFeatureFlag": ["EnableCrisp"]
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
+    "requireAllFeatures": true
   },
   "reportOverview": {
     "enumKey": "ReportOverview",
