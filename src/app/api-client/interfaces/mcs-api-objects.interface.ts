@@ -1,6 +1,8 @@
 import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
+  McsObjectCrispOrder,
+  McsObjectCrispOrderQueryParams,
   McsObjectQueryParams
 } from '@app/models';
 import {
@@ -26,4 +28,16 @@ export interface IMcsApiObjectsService {
    * @param query Query predicate that serves as the parameter of the endpoint
    */
   getInstalledServices(query?: McsObjectQueryParams): Observable<McsApiSuccessResponse<McsObjectInstalledService[]>>;
+
+    /**
+   * Get all the CRISP orders from the API
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getCrispOrders(query?: McsObjectCrispOrderQueryParams): Observable<McsApiSuccessResponse<McsObjectCrispOrder[]>>;
+
+  /**
+  * Get detailed information about a CRISP order
+  * @param productId unique idenitifer of the element
+  */
+  getCrispOrder(orderId: string): Observable<McsApiSuccessResponse<McsObjectCrispOrder>>;
 }

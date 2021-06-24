@@ -137,6 +137,8 @@ import {
   McsNetworkDnsRrSetsRecord,
   McsNetworkDnsSummary,
   McsObjectCrispElement,
+  McsObjectCrispOrder,
+  McsObjectCrispOrderQueryParams,
   McsObjectInstalledService,
   McsObjectQueryParams,
   McsOrder,
@@ -2002,6 +2004,25 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInstalledServices'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getCrispOrders(query?: McsObjectCrispOrderQueryParams): Observable<McsApiCollection<McsObjectCrispOrder>> {
+    return this._objectsApi.getCrispOrders(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispOrders'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+
+  public getCrispOrder(orderId: string): Observable<McsObjectCrispOrder> {
+    return this._objectsApi.getCrispOrder(orderId).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispOrder'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

@@ -27,6 +27,11 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () => import('../../features/launch-pad/launch-pad.module').then(m => m.LaunchPadModule)
       },
       {
+        path: 'crisp',
+        data: { routeId: RouteKey.Crisp },
+        loadChildren: () => import('../../features/crisp/crisp.module').then(m => m.CrispModule)
+      },
+      {
         path: 'compute/virtual',
         data: { routeId: RouteKey.Servers },
         loadChildren: () => import('../../features/servers/servers.module').then(m => m.ServersModule)

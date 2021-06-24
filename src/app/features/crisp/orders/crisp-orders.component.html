@@ -1,0 +1,162 @@
+<mcs-page [header]="'crispOrders.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
+
+    <!-- Meta Data -->
+    <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
+      <div class="listing-action-wrapper">
+        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+          <span>{{ totalCount | mcsPlural:
+                ('crispOrders.dataSingular' | translate) : ('crispOrders.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'crispOrders.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="deployments-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'crispOrders.filterColumn' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        storageKey="network-db-pod"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- State Toggle -->
+      <mat-tab-group (selectedTabChange)="selectedTabChange($event)">
+        <mat-tab label="Open">
+        </mat-tab>
+        <mat-tab label="Closed">
+        </mat-tab>
+      </mat-tab-group>
+      <br />
+
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="network-db-pods-mobile-search"></mcs-search>
+
+      <table mat-table [dataSource]="dataSource" style="margin-top: 0">
+
+        <!-- Order ID Column -->
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.orderId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.orderId }}
+          </td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.description' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.description }}
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.status' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.status }}
+          </td>
+        </ng-container>
+
+        <!-- Assignee Column -->
+        <ng-container matColumnDef="assignee">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.assignee' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.assignedTo }}
+          </td>
+        </ng-container>
+
+        <!-- Hosting Engineer Column -->
+        <ng-container matColumnDef="hostingEngineer">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.hostingEngineer' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.hostingEngineer }}
+          </td>
+        </ng-container>
+
+        <!-- Customer Name Column -->
+        <ng-container matColumnDef="customerName">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.customerName' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.companyName }}
+          </td>
+        </ng-container>
+
+        <!-- Customer ID Column -->
+        <ng-container matColumnDef="customerId">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.customerId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.companyId }}
+          </td>
+        </ng-container>
+
+        <!-- Created On Column -->
+        <ng-container matColumnDef="createdOn">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.createdOn' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.createdOn | mcsStdDateFormat }}
+          </td>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          {{ 'crispOrders.noRecordsFound' | translate }}
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'crispOrders.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-loading-network-db-pod-list"
+              mcsEventCategory="launchpad-network-db"
+              mcsEventLabel="pod-listing-page">{{ 'crispOrders.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

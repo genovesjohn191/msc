@@ -50,6 +50,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _routeHandler: Subscription;
   private _navInitialized: boolean = false;
   private _showLaunchPadMenu: boolean;
+  private _showCrispMenu: boolean;
   private _showLaunchPadNetworkDbSubmenu: boolean;
   private _showLaunchPadVlanDbSubmenu: boolean;
   private _showPrivateCloudMenu: boolean;
@@ -71,6 +72,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get showLaunchPadMenu(): boolean {
     return this._showLaunchPadMenu;
+  }
+
+  public get showCrispMenu(): boolean {
+    return this._showCrispMenu;
   }
 
   public get showLaunchPadNetworkDbSubmenu(): boolean {
@@ -186,6 +191,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad]);
   }
 
+  public get hasCrispAccess(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.Crisp]);
+  }
+
   public get hasPrivateCloudAccess(): boolean {
     return this._authenticationIdentity.platformSettings.hasPrivateCloud;
   }
@@ -257,6 +266,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
    */
   private _initializeNavigation(): void {
     this._initLaunchPadNav();
+    this._initCrispNav();
     this._initPrivateCloudNav();
     this._initPublicCloudNav();
 
@@ -285,6 +295,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._showLaunchPadVlanDbSubmenu = (this._navInitialized && this._showLaunchPadVlanDbSubmenu)
       ? this._showLaunchPadVlanDbSubmenu
       : this.selectedCategory === RouteCategory.LaunchPadVlanDb;
+  }
+
+  private _initCrispNav(): void {
+    let isCrispMenuSelected = this.hasCrispAccess && this.selectedCategory === RouteCategory.Crisp;
+
+    this._showCrispMenu = (this._navInitialized && this._showCrispMenu)
+    ? this._showCrispMenu
+    : isCrispMenuSelected;
   }
 
   private _initPrivateCloudNav(): void {
