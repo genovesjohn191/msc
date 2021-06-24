@@ -27,6 +27,7 @@ import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.com
 import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
 import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
 import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
+import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,8 @@ import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-netw
     NetworkDbUseCasesComponent,
     NetworkDbMulticastIpsComponent,
     NetworkDbNetworksComponent,
+    // CRISP
+    CrispOrdersComponent,
     // Shared
     ConfirmationDialogComponent
   ],

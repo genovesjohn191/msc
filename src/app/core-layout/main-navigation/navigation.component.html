@@ -151,6 +151,28 @@
                 </li>
               </ul>
             </li>
+            <!-- CRISP -->
+            <li *mcsAccessControl="[]; feature: ['EnableCrisp']">
+              <a (click)="toggleThis('showLaunchPadCrispSubmenu')"
+                [class.active]="selectedCategory === routerCategoryEnum.LaunchPadCrisp"
+                mcsId="launch-pad-link">
+                {{ 'navigation.launchPad.crisp' | translate }}
+                <mcs-icon [key]="showLaunchPadCrispSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+              </a>
+              <ul *ngIf="showLaunchPadCrispSubmenu">
+                <!-- Orders -->
+                <li>
+                  <a [mcsRouterLink]="routeKeyEnum.LaunchPadCrispOrders"
+                    mcsRouterLinkActive="active"
+                    mcsId="launch-pad-crisp-orders-link"
+                    mcsEventTracker="navigate-to-crisp-orders"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">
+                    {{ 'navigation.launchPad.crispOrders' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </li>
             <!-- Reporting -->
             <li *ngIf="workflowReportingLink">
               <a [href]="workflowReportingLink"
@@ -160,31 +182,6 @@
                 mcsEventCategory="navigation"
                 mcsEventLabel="main-nav">
                 {{ 'navigation.launchPad.reporting' | translate }}
-              </a>
-            </li>
-          </ul>
-        </li>
-      </ng-container>
-
-      <!-- CRISP -->
-      <ng-container *ngIf="!isImpersonating">
-        <li *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableCrisp']" hidden-small>
-          <a (click)="toggleThis('showCrispMenu')"
-            [class.active]="selectedCategory === routerCategoryEnum.Crisp"
-            mcsId="launch-pad-link">
-            {{ 'navigation.crisp.label' | translate }}
-            <mcs-icon [key]="showCrispMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
-          </a>
-          <ul *ngIf="showCrispMenu">
-            <!-- Orders -->
-            <li>
-              <a [mcsRouterLink]="routeKeyEnum.CrispOrders"
-                mcsRouterLinkActive="active"
-                mcsId="crisp-orders-link"
-                mcsEventTracker="navigate-to-crisp-orders"
-                mcsEventCategory="navigation"
-                mcsEventLabel="main-nav">
-                {{ 'navigation.crisp.orders' | translate }}
               </a>
             </li>
           </ul>
@@ -307,6 +304,7 @@
           </li>
         </ul>
       </li>
+
       <!-- Public Cloud -->
       <li *ngIf="hasPublicCloudAccess">
         <a (click)="togglePublicCloud('showPublicCloudMenu')"
@@ -411,6 +409,7 @@
           </li>
         </ul>
       </li>
+
       <!-- Tools -->
       <li hidden-small>
         <a [mcsRouterLink]="routeKeyEnum.OtherTools"
@@ -422,6 +421,7 @@
           {{ 'navigation.tools' | translate }}
         </a>
       </li>
+
       <!-- Catalog -->
       <li hidden-small>
         <a [mcsRouterLink]="routeKeyEnum.Catalog"
@@ -433,6 +433,7 @@
           {{ catalogLinkText }}
         </a>
       </li>
+
       <!-- Orders -->
       <li *mcsAccessControl="['OrderView']">
         <a (click)="toggleThis('showOrdersMenu')"
@@ -465,6 +466,7 @@
           </a>
         </ul>
       </li>
+
       <!-- Tickets -->
       <li *mcsAccessControl="['TicketView']">
         <a [mcsRouterLink]="routeKeyEnum.Tickets"
@@ -476,6 +478,7 @@
           {{ 'accountPanel.tickets' | translate }}
         </a>
       </li>
+
       <!-- Logout -->
       <li>
         <a mcsCursor="pointer" (click)="logout($event)"

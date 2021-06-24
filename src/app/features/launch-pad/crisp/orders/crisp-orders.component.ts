@@ -102,7 +102,6 @@ export class CrispOrdersComponent implements OnDestroy {
   }
 
   public selectedTabChange(tab: MatTabChangeEvent): void {
-    console.log(tab);
     let state: CrispOrderState = tab.index === 0 ? 'OPEN': 'CLOSED';
     if (this._state !== state) {
       this._state = state;
@@ -116,7 +115,7 @@ export class CrispOrdersComponent implements OnDestroy {
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.state = this._state;
-    queryParam.assignee = 'perskine'; // this._identity.user.userId;
+    queryParam.assignee = this._identity.user.userId;
 
     return this._apiService.getCrispOrders(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
