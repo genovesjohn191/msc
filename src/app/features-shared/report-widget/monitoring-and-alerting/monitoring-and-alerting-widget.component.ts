@@ -1,9 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -23,6 +25,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { ReportWidgetBase } from '../report-widget.base';
 
 export interface MonitoringAlertingWidgetConfig {
   period: {
@@ -39,7 +42,7 @@ export interface MonitoringAlertingWidgetConfig {
     'class': 'widget-box'
   }
 })
-export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
+export class MonitoringAndAlertingWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'bar',
     xaxis: {
@@ -74,6 +77,9 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     this.getData();
   }
 
+  @Output()
+  public alertChange= new EventEmitter<number>(null);
+
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public monitoringAlerting: McsReportMonitoringAndAlerting;
@@ -88,7 +94,9 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _reportingService: McsReportingService
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -114,6 +122,10 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     .subscribe((result) => {
       this.processing = false;
       this.monitoringAlerting = result;
+      this.alertChange.emit(this.monitoringAlerting?.totalAlerts);
+      if (isNullOrEmpty(this.monitoringAlerting?.totalAlerts)) {
+        this.updateChartUri('');
+      };
       this.dataBehavior.next(result.alertsChartItem);
       this._changeDetectorRef.markForCheck();
     });

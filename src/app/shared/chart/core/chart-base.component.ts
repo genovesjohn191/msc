@@ -4,7 +4,9 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input
+  Input,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
@@ -99,6 +101,9 @@ export class ChartComponentBase {
   @Input()
   public distributed: boolean;
 
+  @Output()
+  public chartChange = new EventEmitter<any>();
+
   @Input()
   public set config(value: ChartConfig) {
     if (isNullOrEmpty(value) || JSON.stringify(value) === JSON.stringify(this._config)) {
@@ -108,6 +113,11 @@ export class ChartComponentBase {
     this.chart = {
       type: value.type,
       stacked: value.stacked,
+      events: {
+        animationEnd: () =>  {
+          this.getChartUri();
+        }
+      },
       height: isNullOrEmpty(value.height) ? 'auto' : value.height,
       toolbar: {
         show: true,
@@ -292,6 +302,14 @@ export class ChartComponentBase {
 
   public updateChart(): void {
     this.changeDetectorRef.markForCheck();
+  }
+
+  public getChartUri(): void {
+    window.setTimeout(() => {
+      this.chartObject.dataURI().then((uri) => {
+        this.chartChange.emit(uri);
+      });
+    }, 500)
   }
 
   public constructor(

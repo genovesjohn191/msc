@@ -4,7 +4,9 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   of,
@@ -50,6 +52,9 @@ export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
   public get cloudHealthUrl(): string  {
     return CommonDefinition.CLOUD_HEALTH_URL;
   }
+
+  @Output()
+  public dataChange= new EventEmitter<McsReportCostRecommendations>(null);
 
   public processing: boolean = false;
   public hasError: boolean = false;
@@ -124,6 +129,7 @@ export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
     .subscribe((response) => {
       this.processing = false;
       this.costRecommendations = response;
+      this.dataChange.emit(this.costRecommendations);
       this._changeDetectorRef.markForCheck();
     });
   }

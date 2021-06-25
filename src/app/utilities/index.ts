@@ -4,6 +4,7 @@ export * from './tools/tree-source/tree-group';
 export * from './tools/tree-source/tree-item';
 export * from './tools/tree-source/tree-utility';
 export * from './tools/document-utility/document-utility';
+export * from './tools/document-utility/export-to-pdf-utility';
 
 export * from './functions/mcs-crypto.function';
 export * from './functions/mcs-url.function';

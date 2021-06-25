@@ -1,4 +1,26 @@
 <mcs-page header="Insights">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef padding-left-medium class="hide-on-print">
+      <!-- PDF Icon -->
+      <mcs-icon
+        key="pdf-black"
+        size="large"
+        mcsCursor="pointer"
+        [mcsTooltip]="'tooltip.exportPdf' | translate"
+        (click)="onClickExportPdf()">
+      </mcs-icon>
+      <!-- Word Icon -->
+      <mcs-icon padding-left-medium
+        key="word-black"
+        size="large"
+        mcsCursor="pointer"
+        [mcsTooltip]="'tooltip.exportWord' | translate"
+        (click)="onClickExportWord()">
+      </mcs-icon>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <div class="report-wrapper limited-wide-view">
@@ -50,7 +72,7 @@
               historical costs</a>
               {{ 'reports.insights.costs.serviceOverview.subTitle' | translate }}
             </div>
-            <mcs-services-cost-overview-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-services-cost-overview-widget>
+            <mcs-services-cost-overview-widget [subscriptionIds]="subscriptionIdsFilter" (chartChange)="serviceCostUri($event)" class="test"></mcs-services-cost-overview-widget>
 
             <mat-divider></mat-divider>
             <!-- Resource Cost -->
@@ -79,7 +101,9 @@
               total cost</a>
               {{ 'reports.insights.costs.resourceCost.subTitle' | translate }}
             </div>
-            <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig" [noDataForOneYear]="noDataForOneYear" (dataReceived)="resourceMonthDataReceived($event)"></mcs-resource-monthly-cost-widget>
+            <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig" [noDataForOneYear]="noDataForOneYear" (dataReceived)="resourceMonthDataReceived($event)"
+              (chartChange)="monthlyCostUri($event)"
+            ></mcs-resource-monthly-cost-widget>
             <mat-divider></mat-divider>
 
             <!-- Virtual Machine Breakdown -->
@@ -94,7 +118,7 @@
               number of virtual machines</a>
               {{ 'reports.insights.costs.vmBreakdown.subTitle' | translate }}
             </div>
-            <mcs-virtual-machine-usage-breakdown-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-virtual-machine-usage-breakdown-widget>
+            <mcs-virtual-machine-usage-breakdown-widget [subscriptionIds]="subscriptionIdsFilter" (chartChange)="vmBreakdownUri($event)"></mcs-virtual-machine-usage-breakdown-widget>
             <mat-divider></mat-divider>
 
             <!-- Operational Savings -->
@@ -110,7 +134,7 @@
                 mcsEventLabel="vmware-cloudhealth-link">
                 VMware CloudHealth</a>.
             </div>
-            <mcs-operational-monthly-savings-widget></mcs-operational-monthly-savings-widget>
+            <mcs-operational-monthly-savings-widget (dataChange)="operationalSavings($event)"></mcs-operational-monthly-savings-widget>
             <mat-divider></mat-divider>
 
             <!-- VM Rightsizing -->
@@ -126,7 +150,7 @@
                 mcsEventLabel="vmware-cloudhealth-link">
                 VMware CloudHealth</a>.
             </div>
-            <mcs-vm-rightsizing-widget></mcs-vm-rightsizing-widget>
+            <mcs-vm-rightsizing-widget (dataChange)="vmRightSizing($event)" (vmCostChange)="vmCost($event)"></mcs-vm-rightsizing-widget>
             <mat-divider></mat-divider>
             
             <!-- Inefficient VMs -->
@@ -142,7 +166,7 @@
                 mcsEventLabel="vmware-cloudhealth-link">
                 VMware CloudHealth</a>.
             </div>
-            <mcs-inefficient-vms-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-inefficient-vms-widget>
+            <mcs-inefficient-vms-widget [subscriptionIds]="subscriptionIdsFilter" (dataChange)="inefficientVms($event)"></mcs-inefficient-vms-widget>
           </div>
         </section>
         <div #techReview>
@@ -154,7 +178,7 @@
               <div class="sub-section">
                 <!-- Security -->
                 <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.security.title' | translate }}</h2>
-                <mcs-security-widget></mcs-security-widget>
+                <mcs-security-widget (dataChange)="securityScore($event)"></mcs-security-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Compliance -->
@@ -168,7 +192,9 @@
                   mcsEventLabel="compliance-view-link">
                   compliance view</a>
                     {{ 'reports.insights.techReview.compliance.subTitle' | translate }}</div>
-                <mcs-compliance-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-compliance-widget>
+                <mcs-compliance-widget [subscriptionIds]="subscriptionIdsFilter"
+                  (dataChange)="compliance($event)"
+                  (chartChange)="complianceChartUri($event)"></mcs-compliance-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Resource Health -->
@@ -182,7 +208,7 @@
                   mcsEventLabel="azure-security-center-link">
                   Azure Security Center</a>.
                 </div>
-                <mcs-resource-health-widget></mcs-resource-health-widget>
+                <mcs-resource-health-widget (chartChange)="resourceHealthUri($event)"></mcs-resource-health-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Performance and Scalability -->
@@ -212,7 +238,8 @@
                   VM memory, file system and CPU usage,</a>
                   {{ 'reports.insights.techReview.performanceScalability.subTitle' | translate }}
                 </div>
-                <mcs-performance-and-scalability-widget [subscriptionIds]="performanceSubscriptionIdsFilter"></mcs-performance-and-scalability-widget>
+                <mcs-performance-and-scalability-widget [subscriptionIds]="performanceSubscriptionIdsFilter"
+                  (chartChange)="performanceScalabilityUri($event)"></mcs-performance-and-scalability-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Monitoring and Alerting -->
@@ -241,7 +268,8 @@
                   Azure Monitor alerts</a>
                   {{ 'reports.insights.techReview.monitoringAlerting.subTitle' | translate }}
                 </div>
-                <mcs-monitoring-and-alerting-widget [config]="monitoringAlertingConfig" [subscriptionIds]="subscriptionIdsFilter"></mcs-monitoring-and-alerting-widget>
+                <mcs-monitoring-and-alerting-widget [config]="monitoringAlertingConfig" [subscriptionIds]="subscriptionIdsFilter"
+                  (chartChange)="monitoringAlertingUri($event)" (alertChange)="monitoringAlertingTotalAlerts($event)"></mcs-monitoring-and-alerting-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Audit Alerts -->
@@ -269,7 +297,7 @@
                     mcsEventCategory="dashboard-navigation"
                     mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.auditAlerts.viewInAzurePortal' | translate }}</a>.
                 </div>
-                <mcs-audit-alerts-widget [subscriptionIds]="subscriptionIdsFilter" [config]="auditAlertsConfig"></mcs-audit-alerts-widget>
+                <mcs-audit-alerts-widget [subscriptionIds]="subscriptionIdsFilter" [config]="auditAlertsConfig" (dataChange)="auditAlerts($event)"></mcs-audit-alerts-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Update Management -->
@@ -277,7 +305,7 @@
                 <div class="widget-label">
                   {{ 'reports.insights.techReview.updateManagement.subTitle' | translate }}
                 </div>
-                <mcs-update-management-widget></mcs-update-management-widget>
+                <mcs-update-management-widget (dataChange)="updateManagement($event)"></mcs-update-management-widget>
               </div>
             </section>
           </ng-container>

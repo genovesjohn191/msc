@@ -2688,8 +2688,7 @@
     "header": "Catalog",
     "leftPanelHeader": "Catalog",
     "platformLabel": "Platform",
-    "useCase": "Use Case",
-    "exportWord": "Export Word Document"
+    "useCase": "Use Case"
   },
   "tools": {
     "header": "Other Tools",
@@ -3394,6 +3393,10 @@
     "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView.",
     "unknown": "Unknown",
     "noAzureReservations": "There are no reservations to display."
+  },
+  "tooltip": {
+    "exportWord": "Export Word Document",
+    "exportPdf": "Export PDF Document"
   },
   "dialog": {
     "mediaDetach": {

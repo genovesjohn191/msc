@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -56,6 +58,9 @@ export class InefficientVmsWidgetComponent {
     this.retryDatasource();
   }
 
+  @Output()
+  public dataChange= new EventEmitter<McsReportInefficientVms[]>(null);
+
   private _subscriptionIds: string[] = undefined;
   private _period: string = '';
 
@@ -71,8 +76,11 @@ export class InefficientVmsWidgetComponent {
 
   private _getInefficientVms(): Observable<McsMatTableContext<McsReportInefficientVms>> {
     return this._reportingService.getInefficientVms(this._period, this._subscriptionIds).pipe(
-      map(response => new McsMatTableContext(response,
-        response?.length)),
+      map((response) => {
+        let dataSourceContext = new McsMatTableContext(response, response?.length);
+        this.dataChange.emit(dataSourceContext?.dataRecords);
+        return dataSourceContext;
+      }),
       catchError((error) => {
         return throwError(error);
       })

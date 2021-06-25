@@ -23,10 +23,10 @@ export class McsReportUpdateManagement {
   public lastStatus: managementLastStatus = undefined;
 
   @JsonProperty()
-  public lastStartTime: string = undefined;
+  public lastStartTime: Date = undefined;
 
   @JsonProperty()
-  public lastEndTime: string = undefined;
+  public lastEndTime: Date = undefined;
 
   @JsonProperty()
   public error: string = undefined;

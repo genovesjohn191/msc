@@ -20,6 +20,7 @@ import {
 } from '@app/utilities';
 import { McsReportingService } from '@app/core';
 import { catchError } from 'rxjs/operators';
+import { ReportWidgetBase } from '../report-widget.base';
 
 const maxItemToDisplay = 10;
 
@@ -33,7 +34,7 @@ const maxItemToDisplay = 10;
     'class': 'widget-box'
   }
 })
-export class ResourceChangesWidgetComponent implements OnInit {
+export class ResourceChangesWidgetComponent extends ReportWidgetBase implements OnInit {
   public chartConfig: ChartConfig = {
     height: '380px',
     type: 'bar',
@@ -64,7 +65,10 @@ export class ResourceChangesWidgetComponent implements OnInit {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _reportingService: McsReportingService) { }
+    private _reportingService: McsReportingService)
+  {
+    super();
+  }
 
   public ngOnInit() {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -86,6 +90,9 @@ export class ResourceChangesWidgetComponent implements OnInit {
       return throwError('Service changes endpoint failed.');
     }))
     .subscribe((result) => {
+      if (result.length === 0) {
+        this.updateChartUri('');
+      };
       result = result.slice(0, maxItemToDisplay);
       this.empty = isNullOrEmpty(result) ? true : false;
       this.dataBehavior.next(result);

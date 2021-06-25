@@ -4,7 +4,9 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import {
   catchError,
@@ -76,6 +78,12 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
     }
   ];
 
+  @Output()
+  public licenseSubscriptionChange= new EventEmitter<number>();
+
+  @Output()
+  public azureSubscriptionChange= new EventEmitter<number>();
+
   private _baseDestroySubject = new Subject<void>();
 
   public constructor(private _changeDetector: ChangeDetectorRef, private _reportingService: McsReportingService) { }
@@ -110,6 +118,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
         return throwError('Azure subscriptions endpoint failed.');
       }))
     .subscribe((count) => {
+      this.azureSubscriptionChange.emit(count);
       this.servicesInfo[id].count = count;
       this.servicesInfo[id].processing = false;
       this._changeDetector.markForCheck();
@@ -132,6 +141,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
         return throwError('Licenses endpoint failed.');
       }))
     .subscribe((count) => {
+      this.licenseSubscriptionChange.emit(count);
       this.servicesInfo[id].count = count;
       this.servicesInfo[id].processing = false;
       this._changeDetector.markForCheck();

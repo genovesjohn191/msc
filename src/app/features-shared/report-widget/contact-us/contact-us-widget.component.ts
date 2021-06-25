@@ -3,7 +3,9 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   Subject,
@@ -13,7 +15,10 @@ import {
   catchError,
   takeUntil
 } from 'rxjs/operators';
-import { McsCompany } from '@app/models';
+import {
+  McsCompany,
+  McsContactUs
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import { CommonDefinition } from '@app/utilities';
 
@@ -39,6 +44,9 @@ export class ContactUsWidgetComponent implements OnInit {
     return CommonDefinition.ASSETS_SVG_SMALL_PERSON_FAV_BLACK;
   }
 
+  @Output()
+  public dataChange= new EventEmitter<McsContactUs[]>(null);
+
   constructor(
     private _apiService: McsApiService,
     private _changeDetectorRef: ChangeDetectorRef
@@ -62,6 +70,7 @@ export class ContactUsWidgetComponent implements OnInit {
       takeUntil(this._baseDestroySubject))
     .subscribe((response) => {
         this.contactsInfo = response;
+        this.dataChange.emit(this.contactsInfo.contacts);
         this.processing = false;
         this._changeDetectorRef.markForCheck();
     });

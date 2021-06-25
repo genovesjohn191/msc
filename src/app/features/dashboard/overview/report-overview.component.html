@@ -1,32 +1,55 @@
 <mcs-page header="Overview">
+   <!-- Top Panel -->
+   <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef padding-left-medium class="hide-on-print">
+      <!-- PDF Icon -->
+      <mcs-icon
+        key="pdf-black"
+        size="large"
+        mcsCursor="pointer"
+        [mcsTooltip]="'tooltip.exportPdf' | translate"
+        (click)="onClickExportPdf()">
+      </mcs-icon>
+      <!-- Word Icon -->
+      <mcs-icon padding-left-medium
+        key="word-black"
+        size="large"
+        mcsCursor="pointer"
+        [mcsTooltip]="'tooltip.exportWord' | translate"
+        (click)="onClickExportWord()">
+      </mcs-icon>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef class="full-width">
     <div class="report-wrapper">
       <div class="widget-wrapper">
         <ul>
           <li>
-            <mcs-services-overview-widget></mcs-services-overview-widget>
+            <mcs-services-overview-widget (azureSubscriptionChange)="azureSubscription($event)"
+              (licenseSubscriptionChange)="licenseSubscription($event)"></mcs-services-overview-widget>
           </li>
           <li>
-            <mcs-azure-resources-widget></mcs-azure-resources-widget>
+            <mcs-azure-resources-widget (chartChange)="azureResourceUri($event)"></mcs-azure-resources-widget>
           </li>
           <li>
-            <mcs-cost-recommendations-widget></mcs-cost-recommendations-widget>
+            <mcs-cost-recommendations-widget (dataChange)="costRecommendations($event)"></mcs-cost-recommendations-widget>
           </li>
           <li>
             <mcs-change-requests-widget class="hide-on-print" *mcsAccessControl="['OrderEdit'];"></mcs-change-requests-widget>
           </li>
           <li>
-            <mcs-contact-us-widget></mcs-contact-us-widget>
+            <mcs-contact-us-widget (dataChange)="contactUs($event)"></mcs-contact-us-widget>
           </li>
           <li>
-            <mcs-resource-changes-widget></mcs-resource-changes-widget>
+            <mcs-resource-changes-widget (chartChange)="resourceCountUri($event)"></mcs-resource-changes-widget>
           </li>
           <li>
-            <mcs-azure-tickets-widget></mcs-azure-tickets-widget>
+            <mcs-azure-tickets-widget (dataChange)="azureTickets($event)"></mcs-azure-tickets-widget>
           </li>
           <li>
-            <mcs-top-vms-by-cost-widget></mcs-top-vms-by-cost-widget>
+            <mcs-top-vms-by-cost-widget (dataChange)="topVmsByCost($event)"></mcs-top-vms-by-cost-widget>
           </li>
         </ul>
       </div>

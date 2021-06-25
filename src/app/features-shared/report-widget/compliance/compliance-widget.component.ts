@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -27,6 +29,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { ReportWidgetBase } from '../report-widget.base';
 
 @Component({
   selector: 'mcs-compliance-widget',
@@ -38,7 +41,7 @@ import {
     'class': 'widget-box'
   }
 })
-export class ComplianceWidgetComponent implements OnInit, OnDestroy {
+export class ComplianceWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'donut',
     height: '125px',
@@ -59,6 +62,9 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
     this.getResourceCompliance();
   }
 
+  @Output()
+  public dataChange= new EventEmitter<McsReportResourceCompliance>(null);
+
   public statusIconKey: string = CommonDefinition.ASSETS_SVG_INFO;
 
   private _period: string = '';
@@ -78,7 +84,9 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _reportingService: McsReportingService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this._initializePeriod();
@@ -111,6 +119,7 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
       takeUntil(this._destroySubject))
     .subscribe((response) => {
       this.processing = false;
+      this.dataChange.emit(response);
       this.empty = isNullOrEmpty(response) ? true : false;
       if (!this.empty) {
         let series = this.complianceSeries(response.resources);
@@ -118,6 +127,9 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
         this.resources = series;
         this.resourceCompliance = response;
         this.emptyComplianceState = isNullOrEmpty(series) ? true : false;
+        if (this.emptyComplianceState) {
+          this.updateChartUri('');
+        }
       }
       this._changeDetectorRef.markForCheck();
     });
