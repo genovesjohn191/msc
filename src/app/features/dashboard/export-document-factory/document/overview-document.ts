@@ -102,7 +102,7 @@ export class OverviewDocument implements IDashboardExportDocument {
     let costPercentage = budget === 0 ? 0 : Math.ceil((actual / budget) * 100);
     let barColor = this._getBgColorProgressBar(costPercentage);
     let barBgColor = costPercentage >= 85 ? '#ffe0b2' : '#c8e6c9';
-    let costUpdatedOnDate =  !isNullOrEmpty(cost.updatedOn) ? this._formatDate(new Date(cost.updatedOn)) : '';
+    let costUpdatedOnDate =  !isNullOrEmpty(cost.updatedOn) ? this._formatDate(new Date(cost.updatedOn), 'friendly') : '';
     let widgetHtml = `
       <h5>Actual vs Budget</h5>
       <table style="width: 50%; border-collapse: collapse;">
@@ -169,7 +169,7 @@ export class OverviewDocument implements IDashboardExportDocument {
             data.forEach(item => {
               ticketsTable += `
                 <tr style="text-align: left;">
-                  <td>${item.shortDescription}</td>
+                  <td style="white-space: pre-wrap;">${item.shortDescription}</td>
                   <td>${this._formatDate(item.updatedOn, 'friendly')}</td>
                 </tr>
               `;
