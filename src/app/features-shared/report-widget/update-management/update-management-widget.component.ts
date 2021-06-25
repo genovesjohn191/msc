@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -49,6 +51,10 @@ export class UpdateManagementWidgetComponent implements OnInit {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastEndTime' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastStatus' })
   ];
+
+  @Output()
+  public dataChange= new EventEmitter<McsReportUpdateManagement[]>(null);
+
   constructor(
     private _reportingService: McsReportingService,
     private _navigationService: McsNavigationService,
@@ -80,8 +86,11 @@ export class UpdateManagementWidgetComponent implements OnInit {
 
   private _getUpdateManagement(): Observable<McsMatTableContext<McsReportUpdateManagement>> {
     return this._reportingService.getUpdateManagement().pipe(
-      map(response => new McsMatTableContext(response,
-        response?.length)),
+      map((response) => {
+        let dataSourceContext = new McsMatTableContext(response, response?.length);
+        this.dataChange.emit(dataSourceContext?.dataRecords);
+        return dataSourceContext;
+      }),
       catchError((error) => {
         return throwError(error);
       })

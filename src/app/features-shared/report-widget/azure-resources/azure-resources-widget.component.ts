@@ -21,6 +21,7 @@ import {
   CommonDefinition,
   unsubscribeSafely
 } from '@app/utilities';
+import { ReportWidgetBase } from '../report-widget.base';
 
 const maxResourcesToDisplay = 10;
 
@@ -35,7 +36,7 @@ const maxResourcesToDisplay = 10;
   }
 })
 
-export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
+export class AzureResourcesWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'bar',
     height: '380px'
@@ -52,7 +53,10 @@ export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _reportingService: McsReportingService) { }
+    private _reportingService: McsReportingService)
+  {
+    super();
+  }
 
   public ngOnInit() {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -78,6 +82,9 @@ export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
       return throwError('Azure resources endpoint failed.');
     }))
     .subscribe((result) => {
+      if (result.length === 0) {
+        this.updateChartUri('');
+      };
       result = result.slice(0, maxResourcesToDisplay);
       this.dataBehavior.next(result);
       this.processing = false;

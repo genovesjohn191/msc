@@ -11,7 +11,8 @@
         *ngIf="!processing && !hasError"
         [data]="data$ | async"
         [distributed]="true"
-        [config]="chartConfig">
+        [config]="chartConfig"
+        (chartChange)="updateChartUri($event?.imgURI)">
       </mcs-horizontal-bar-chart>
     </ng-template>
   </div>

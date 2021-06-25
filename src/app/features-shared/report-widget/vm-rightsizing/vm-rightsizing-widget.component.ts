@@ -3,7 +3,9 @@ import {
   Component,
   OnDestroy,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   catchError,
@@ -63,6 +65,12 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
     return CommonDefinition.ASSETS_SVG_SMALL_CALCULATOR_CHECK_BLACK;
   }
 
+  @Output()
+  public dataChange= new EventEmitter<McsReportVMRightsizing[]>(null);
+
+  @Output()
+  public vmCostChange= new EventEmitter<string>(null);
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _reportingService: McsReportingService
@@ -108,6 +116,7 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
         vmRightSizing.push(...cloneObject(response));
 
         let dataSourceContext = new McsMatTableContext(vmRightSizing, vmRightSizing.length);
+        this.dataChange.emit(dataSourceContext?.dataRecords);
         return dataSourceContext;
       }),
       catchError((error) => {
@@ -132,6 +141,7 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
     .subscribe((response) => {
       this.processing = false;
       this.potentialRightsizingSavings = this.moneyFormat(response.recommendationSavings);
+      this.vmCostChange.emit(this.potentialRightsizingSavings);
       this._changeDetectorRef.markForCheck();
     });
   }

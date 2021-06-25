@@ -19,6 +19,7 @@ import {
 } from '@app/shared';
 import { unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core';
+import { ReportWidgetBase } from '../report-widget.base';
 
 @Component({
   selector: 'mcs-services-cost-overview-widget',
@@ -30,7 +31,7 @@ import { McsReportingService } from '@app/core';
     'class': 'widget-box'
   }
 })
-export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
+export class ServicesCostOverviewWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'bar',
     stacked: true,
@@ -65,8 +66,13 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   private _subscriptionIds: string[] = undefined;
   private _startPeriod: string = '';
   private _endPeriod: string = '';
+  private _chartUri: string;
 
-  public constructor(private _changeDetector: ChangeDetectorRef, private reportingService: McsReportingService) {
+  public constructor(
+    private _changeDetector: ChangeDetectorRef,
+    private reportingService: McsReportingService)
+  {
+    super();
     this._initializePeriod();
   }
 
@@ -93,6 +99,9 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
     }))
     .subscribe((result) => {
       this.dataBehavior.next(result);
+      if (result.length === 0) {
+        this.updateChartUri('');
+      };
       this.processing = false;
       this._changeDetector.markForCheck();
     });

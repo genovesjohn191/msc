@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Injector,
   OnDestroy,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 
@@ -74,6 +76,9 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
     return CoreRoutes.getNavigationPath(RouteKey.TicketCreate);
   }
 
+  @Output()
+  public dataChange= new EventEmitter<McsTicket[]>(null);
+
   public constructor(
     _injector: Injector,
     private _ticketService: McsApiTicketsService,
@@ -110,6 +115,7 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
         azureTickets.push(...cloneObject(response.content));
 
         let dataSourceContext = new McsMatTableContext(azureTickets, azureTickets.length);
+        this.dataChange.emit(dataSourceContext?.dataRecords);
         return dataSourceContext;
       }),
       catchError(() => {

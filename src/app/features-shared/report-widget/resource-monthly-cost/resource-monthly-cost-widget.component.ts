@@ -24,6 +24,7 @@ import {
   ChartConfig,
   ChartItem
 } from '@app/shared';
+import { ReportWidgetBase } from '../report-widget.base';
 
 export interface ResourceMonthlyCostWidgetConfig {
   period: Date
@@ -37,7 +38,7 @@ export interface ResourceMonthlyCostWidgetConfig {
     'class': 'widget-box'
   }
 })
-export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
+export class ResourceMonthlyCostWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'bar',
     stacked: true,
@@ -97,6 +98,7 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
   public constructor(
     private _changeDetector: ChangeDetectorRef,
     private reportingService: McsReportingService) {
+    super();
     this.dataReceived = new EventEmitter();
   }
 
@@ -121,6 +123,9 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
     }))
     .subscribe((result) => {
       this.chartData = result;
+      if (result.length === 0) {
+        this.updateChartUri ('');
+      };
       if (!isNullOrEmpty(result) || this.noDataForOneYear) {
         this.dataReceived.complete();
       }

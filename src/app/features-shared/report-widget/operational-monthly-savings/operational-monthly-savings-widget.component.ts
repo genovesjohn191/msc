@@ -1,8 +1,10 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   OnDestroy,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -50,6 +52,9 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
     return CommonDefinition.ASSETS_SVG_SMALL_CALCULATOR_CHECK_BLACK;
   }
 
+  @Output()
+  public dataChange= new EventEmitter<McsReportOperationalSavings>(null);
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _reportingService: McsReportingService
@@ -94,6 +99,8 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
       takeUntil(this._destroySubject))
     .subscribe((response) => {
       this.empty = isNullOrEmpty(response) ? true : false;
+      let totalSavings = response.totalSavings > 0 ? response : null;
+      this.dataChange.emit(totalSavings);
       this.totalSavings = response.totalSavings > 0 ? response.totalSavings.toFixed(2) : '0.00';
       this.processing = false;
       this.operationalSavings = response;

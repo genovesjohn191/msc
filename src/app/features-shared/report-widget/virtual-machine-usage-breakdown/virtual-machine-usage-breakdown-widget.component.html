@@ -2,7 +2,8 @@
   <mcs-vertical-bar-chart
     *ngIf="!processing && !hasError"
     [config]="chartConfig"
-    [data]="data$ | async">
+    [data]="data$ | async"
+    (chartChange)="updateChartUri($event?.imgURI)">
   </mcs-vertical-bar-chart>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">

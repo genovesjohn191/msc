@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy, Input
+  OnDestroy,
+  Input
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -18,6 +19,7 @@ import {
 } from '@app/shared';
 import { unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core';
+import { ReportWidgetBase } from '../report-widget.base';
 
 export interface PerformanceAndScalabilityWidgetConfig {
   period: Date,
@@ -34,7 +36,7 @@ export interface PerformanceAndScalabilityWidgetConfig {
     'class': 'widget-box'
   }
 })
-export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestroy {
+export class PerformanceAndScalabilityWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'bar',
     yaxis: {
@@ -73,6 +75,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     private _changeDetectorRef: ChangeDetectorRef,
     private reportingService: McsReportingService)
   {
+    super();
     this._initializePeriod();
   }
 
@@ -98,18 +101,13 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
       return throwError(error);
     }))
     .subscribe((result) => {
+      if (result.length === 0) {
+        this.updateChartUri('');
+      };
       this.dataBehavior.next(result);
       this.processing = false;
       this._changeDetectorRef.markForCheck();
     });
-  }
-
-  private _initializePeriod(): void {
-    let from = new Date(new Date().setMonth(new Date().getMonth() - 12));
-    let until = new Date(new Date().setMonth(new Date().getMonth()));
-
-    this._startPeriod = `${from.getFullYear()}-${from.getMonth() + 1}`;
-    this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
   }
 
   public tooltipYValueFormatter(val: number, opts?: any): string {
@@ -118,5 +116,13 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
 
   public valueYFormatter(val: number): string {
     return !Number.isInteger(val) ? `${val.toFixed(2)}%` : `${val.toFixed()}%`;
+  }
+
+  private _initializePeriod(): void {
+    let from = new Date(new Date().setMonth(new Date().getMonth() - 12));
+    let until = new Date(new Date().setMonth(new Date().getMonth()));
+
+    this._startPeriod = `${from.getFullYear()}-${from.getMonth() + 1}`;
+    this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
   }
 }

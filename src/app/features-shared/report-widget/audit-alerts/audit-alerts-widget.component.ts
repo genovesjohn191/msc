@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -64,6 +66,9 @@ export class AuditAlertsWidgetComponent implements OnInit {
     this.retryDatasource();
   }
 
+  @Output()
+  public dataChange= new EventEmitter<McsReportAuditAlerts[]>(null);
+
   public readonly dataSource: McsTableDataSource2<McsReportAuditAlerts>;
 
   public readonly defaultColumnFilters = [
@@ -96,8 +101,11 @@ export class AuditAlertsWidgetComponent implements OnInit {
 
   private _getAuditAlerts(): Observable<McsMatTableContext<McsReportAuditAlerts>> {
     return this._reportingService.getAuditAlerts(this._startPeriod, this._endPeriod, this._subscriptionIds).pipe(
-      map((response) => new McsMatTableContext(response,
-        response?.length)),
+      map((response) => {
+        let dataSourceContext = new McsMatTableContext(response, response?.length);
+        this.dataChange.emit(dataSourceContext?.dataRecords);
+        return dataSourceContext;
+      }),
       catchError((error) => {
         return throwError(error);
       })

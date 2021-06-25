@@ -2,7 +2,8 @@ import {
   Component,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  Injector
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -21,8 +22,15 @@ import {
 import { MonitoringAlertingWidgetConfig } from '@app/features-shared/report-widget/monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
 import {
+  McsReportAuditAlerts,
+  McsReportInefficientVms,
   McsReportManagementService,
-  McsReportSubscription
+  McsReportOperationalSavings,
+  McsReportResourceCompliance,
+  McsReportSecurityScore,
+  McsReportSubscription,
+  McsReportUpdateManagement,
+  McsReportVMRightsizing
 } from '@app/models';
 import {
   MonitoringAlertingPeriod,
@@ -34,6 +42,9 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { InsightsDocumentDetails } from './report-insights-document';
+import { DashboardExportDocumentManager } from '../export-document-factory/dashboard-export-document-manager';
+import { DashboardExportDocumentType } from '../export-document-factory/dashboard-export-document-type';
 
 interface PeriodOption {
   label: string;
@@ -184,10 +195,12 @@ export class ReportInsightsComponent implements OnDestroy {
   private _selectedMonitoringAlertingPeriod: PeriodOption;
   private _subscriptionSubject = new Subject();
   private _destroySubject = new Subject<void>();
+  private _exportDocumentDetails = new InsightsDocumentDetails();
 
   public constructor(
     private reportService: McsReportingService,
-    private _changeDetector: ChangeDetectorRef
+    private _changeDetector: ChangeDetectorRef,
+    private _injector: Injector
   ) {
     this._getSubscriptions();
     this._identifyNonEssentialManagementServiceExistence();
@@ -200,6 +213,83 @@ export class ReportInsightsComponent implements OnDestroy {
   public ngOnDestroy(): void {
     unsubscribeSafely(this._subscriptionSubject);
     unsubscribeSafely(this._destroySubject);
+  }
+
+  public onClickExportWord(): void {
+    this._exportDocumentDetails.hasManagementService = this.hasManagementService;
+    DashboardExportDocumentManager.initializeFactories()
+      .getCreationFactory(DashboardExportDocumentType.MsWordInsights)
+      .exportDocument(this._exportDocumentDetails, DashboardExportDocumentType.MsWordInsights, this._injector)
+  }
+
+  public onClickExportPdf(): void {
+    this._exportDocumentDetails.hasManagementService = this.hasManagementService;
+    DashboardExportDocumentManager.initializeFactories()
+      .getCreationFactory(DashboardExportDocumentType.MsWordInsights)
+      .exportDocument(this._exportDocumentDetails, DashboardExportDocumentType.PdfInsights, this._injector)
+  }
+
+  public serviceCostUri(uri: string): void { this._exportDocumentDetails.serviceCost = uri; }
+
+  public monthlyCostUri(uri: string): void {
+    this._exportDocumentDetails.monthlyCostUri = uri;
+    this._exportDocumentDetails.monthlyCostselectedMonth = this.selectedResourceCostMonth.label;
+  }
+
+  public vmBreakdownUri(uri: string): void {
+    this._exportDocumentDetails.vmBreakdown = uri;
+  }
+
+  public operationalSavings(data: McsReportOperationalSavings): void {
+    this._exportDocumentDetails.operationalSavings = data;
+  }
+
+  public vmRightSizing(data: McsReportVMRightsizing[]): void {
+    this._exportDocumentDetails.vmRightsizing = data;
+  }
+
+  public vmCost(cost: string): void {
+    this._exportDocumentDetails.vmCost = cost;
+  }
+
+  public inefficientVms(data: McsReportInefficientVms[]): void {
+    this._exportDocumentDetails.inefficientVms = data;
+  }
+
+  public securityScore(uri: McsReportSecurityScore): void {
+    this._exportDocumentDetails.securityScore = uri;
+  }
+
+  public compliance(data: McsReportResourceCompliance): void {
+    this._exportDocumentDetails.compliance = data;
+  }
+
+  public complianceChartUri(uri: string): void {
+    this._exportDocumentDetails.complianceUri = uri;
+  }
+
+  public resourceHealthUri(uri: string): void {
+    this._exportDocumentDetails.resourceHealth = uri;
+  }
+
+  public performanceScalabilityUri(uri: string): void {
+    this._exportDocumentDetails.performanceScalability = uri;
+  }
+
+  public monitoringAlertingTotalAlerts(totalAlerts: number): void {
+    this._exportDocumentDetails.totalAlerts = totalAlerts;
+  }
+
+  public monitoringAlertingUri(uri: string): void {
+    this._exportDocumentDetails.monitoringAlerting = uri;
+  }
+
+  public auditAlerts(data: McsReportAuditAlerts[]): void {
+    this._exportDocumentDetails.auditAlerts = data;
+  }
+
+  public updateManagement(data: McsReportUpdateManagement[]): void {
+    this._exportDocumentDetails.updateManagement = data;
   }
 
   private _getSubscriptions(): void {

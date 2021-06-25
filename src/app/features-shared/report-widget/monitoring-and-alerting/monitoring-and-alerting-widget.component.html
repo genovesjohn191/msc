@@ -14,7 +14,8 @@
       </div>
       <mcs-horizontal-bar-chart
         [data]="data$ | async"
-        [config]="chartConfig">
+        [config]="chartConfig"
+        (chartChange)="updateChartUri($event?.imgURI)">
       </mcs-horizontal-bar-chart>
     </ng-template>
   </div>

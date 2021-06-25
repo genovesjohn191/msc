@@ -4,7 +4,9 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import {
   Subject,
@@ -40,6 +42,9 @@ export class SecurityWidgetComponent implements OnInit, OnDestroy {
   public securityScore: McsReportSecurityScore;
 
   private _destroySubject = new Subject<void>();
+
+  @Output()
+  public dataChange= new EventEmitter<McsReportSecurityScore>(null);
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -96,6 +101,7 @@ export class SecurityWidgetComponent implements OnInit, OnDestroy {
       this.empty = isNullOrEmpty(response) ? true : false;
       this.processing = false;
       this.securityScore = response;
+      this.dataChange.emit(this.securityScore);
       this._changeDetectorRef.markForCheck();
     });
   }

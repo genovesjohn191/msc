@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy, Input
+  OnDestroy,
+  Input
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -18,6 +19,7 @@ import {
 } from '@app/shared';
 import { McsReportingService } from '@app/core';
 import { unsubscribeSafely } from '@app/utilities';
+import { ReportWidgetBase } from '../report-widget.base';
 
 @Component({
   selector: 'mcs-virtual-machine-usage-breakdown-widget',
@@ -29,7 +31,7 @@ import { unsubscribeSafely } from '@app/utilities';
     'class': 'widget-box'
   }
 })
-export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDestroy {
+export class VirtualMachineUsageBreakdownWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'bar',
     stacked: true,
@@ -65,7 +67,11 @@ export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDe
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef, private reportingService: McsReportingService) {
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private reportingService: McsReportingService)
+  {
+    super();
     this._initializePeriod();
   }
 
@@ -91,6 +97,9 @@ export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDe
       return throwError(error);
     }))
     .subscribe((result) => {
+      if (result.length === 0) {
+        this.updateChartUri('');
+      };
       this.dataBehavior.next(result);
       this.processing = false;
       this._changeDetectorRef.markForCheck();

@@ -18,6 +18,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { ReportWidgetBase } from '../report-widget.base';
 
 @Component({
   selector: 'mcs-resource-health-widget',
@@ -29,7 +30,7 @@ import {
     'class': 'widget-box'
   }
 })
-export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
+export class ResourceHealthWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'donut',
     height: '380px',
@@ -50,7 +51,9 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private reportingService: McsReportingService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.getData();

@@ -9,7 +9,8 @@
       <mcs-pie-chart
         [config]="chartConfig"
         [chartLabels]="chartLabels"
-        [data]="chartSeries">
+        [data]="chartSeries"
+        (chartChange)="updateChartUri($event?.imgURI)">
       </mcs-pie-chart>
     </ng-template>
   </div>
