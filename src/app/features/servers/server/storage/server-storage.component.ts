@@ -1,48 +1,62 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewChild,
-  Injector
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import {
+  of,
+  BehaviorSubject,
   Observable,
-  Subscription,
-  of
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
-  shareReplay,
+  filter,
   map,
+  shareReplay,
+  take,
+  takeUntil,
   tap
 } from 'rxjs/operators';
-import { McsTableDataSource } from '@app/core';
+
 import {
-  isNullOrEmpty,
-  animateFactory,
-  unsubscribeSafely,
-  getSafeProperty,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2
+} from '@app/core';
+import { McsEvent } from '@app/events';
+import { ServerManageStorage } from '@app/features-shared';
+import {
+  McsFeatureFlag,
+  McsFilterInfo,
+  McsJob,
+  McsResourceStorage,
+  McsServer,
+  McsServerStorageDevice,
+  McsServerStorageDeviceUpdate
+} from '@app/models';
+import {
+  ComponentHandlerDirective,
+  DialogConfirmation,
+  DialogService
+} from '@app/shared';
+import {
   addOrUpdateArrayRecord,
+  animateFactory,
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely,
   CommonDefinition,
   Guid
 } from '@app/utilities';
-import {
-  ComponentHandlerDirective,
-  DialogService,
-  DialogConfirmation
-} from '@app/shared';
-import {
-  McsJob,
-  McsResourceStorage,
-  McsServerStorageDevice,
-  McsServerStorageDeviceUpdate,
-  McsServer,
-  McsFeatureFlag
-} from '@app/models';
-import { ServerManageStorage } from '@app/features-shared';
-import { McsEvent } from '@app/events';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
@@ -75,12 +89,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
 
-  public disksDataSource: McsTableDataSource<McsServerStorageDevice>;
-  public disksColumns: string[];
+  public readonly disksDataSource: McsTableDataSource2<McsServerStorageDevice>;
+  public readonly disksColumns: McsFilterInfo[];
 
   private _inProgressDisk: string;
   private _newDisk: McsServerStorageDevice;
   private _serverDisksCache: Observable<McsServerStorageDevice[]>;
+  private _destroySubject = new Subject<void>();
+  private _serverDisksChange = new BehaviorSubject<McsServerStorageDevice[]>(null);
 
   private _createDiskHandler: Subscription;
   private _updateDiskHandler: Subscription;
@@ -119,14 +135,20 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     private _dialogService: DialogService
   ) {
     super(_injector, _changeDetectorRef);
-    this.disksColumns = [];
-    this.disksDataSource = new McsTableDataSource();
     this.manageStorage = new ServerManageStorage();
     this.diskMethodType = ServerDiskMethodType.AddDisk;
+
+    this.disksDataSource = new McsTableDataSource2(this._getServerDisks.bind(this));
+    this.disksColumns = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'storageDevice' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'storageProfile' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'capacity' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
+    ];
+    this.disksDataSource.registerColumnsFilterInfo(this.disksColumns);
   }
 
   public ngOnInit() {
-    this._setDataColumns();
     this._registerEvents();
   }
 
@@ -314,7 +336,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         })
       );
     }
-    this.disksDataSource.updateDatasource(tableDataSource);
+
+    tableDataSource.pipe(
+      take(1),
+      tap(dataRecords => this._serverDisksChange.next(dataRecords || []))
+    ).subscribe();
   }
 
   /**
@@ -395,18 +421,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.disksColumns = Object.keys(
-      this._translateService.instant('serverStorage.columnHeaders')
-    );
-    if (isNullOrEmpty(this.disksColumns)) {
-      throw new Error('column definition for disks was not defined');
-    }
-  }
-
-  /**
    * Get the resource storage to the selected server
    */
   private _getResourceStorages(resourceId: string): void {
@@ -415,6 +429,17 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this.resourceStorages$ = this.apiService.getResourceStorages(resourceId).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection)),
       shareReplay(1)
+    );
+  }
+
+  /**
+   * Gets the server disks based on observable
+   */
+   private _getServerDisks(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerStorageDevice>> {
+    return this._serverDisksChange.pipe(
+      takeUntil(this._destroySubject),
+      filter(response => !isNullOrUndefined(response)),
+      map(response => new McsMatTableContext(response, response?.length))
     );
   }
 }

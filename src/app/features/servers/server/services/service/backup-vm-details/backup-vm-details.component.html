@@ -1,95 +1,100 @@
 <mcs-presentation-panel>
-    <ng-container mcsPresentationPanelHeader>
-      <mcs-item orientation="separated" full-width>
-        <h2>{{ 'serverServicesVmBackupDetails.title' | translate }}</h2>
-        <ng-content select="[mcsViewServicesTab]"></ng-content>
-      </mcs-item>
+  <ng-container mcsPresentationPanelHeader>
+    <mcs-item orientation="separated" full-width>
+      <h2>{{ 'serverServicesVmBackupDetails.title' | translate }}</h2>
+      <ng-content select="[mcsViewServicesTab]"></ng-content>
+    </mcs-item>
+  </ng-container>
+  <p>{{ 'serverServicesVmBackupDetails.description' | translate }}</p>
+  <p *ngIf="retentionPeriod">{{ 'serverServicesVmBackupDetails.retentionLabel' | translate: {retention: retentionPeriod} }}</p>
+  <p *ngIf="isInviewPremium">{{ 'serverServicesVmBackupDetails.inviewLabel' | translate }}</p>
+
+  <!-- Table -->
+  <table mat-table [dataSource]="vmBackupLogsDatasource">
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.status' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" text-wrap>
+        <mcs-item>
+          <mcs-icon size="small"
+            [key]="backupStatusTypeIconKey(row.status)"
+            [mcsTooltip]="backupStatusToolTip(row.status)"
+            [mcsTooltipShow]="backupStatusToolTip(row.status)">
+          </mcs-icon>
+          <span>{{backupStatusText(row.status)}}</span>
+        </mcs-item>
+      </td>
     </ng-container>
-    <p>{{ 'serverServicesVmBackupDetails.description' | translate }}</p>
-    <p *ngIf="retentionPeriod">{{ 'serverServicesVmBackupDetails.retentionLabel' | translate: {retention: retentionPeriod} }}</p>
-    <p *ngIf="isInviewPremium">{{ 'serverServicesVmBackupDetails.inviewLabel' | translate }}</p>
 
-    <!-- Table -->
-      <mcs-table [dataSource]="vmBackupLogsDatasource">
-        <!-- Status Column -->
-        <ng-container mcsColumnDef="status">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'serverServicesVmBackupDetails.columnHeaders.status' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-            <mcs-item>
-              <mcs-icon size="small"
-                [key]="backupStatusTypeIconKey(row.status)"
-                [mcsTooltip]="backupStatusToolTip(row.status)"
-                [mcsTooltipShow]="backupStatusToolTip(row.status)">
-              </mcs-icon>
-              <span>{{backupStatusText(row.status)}}</span>
-            </mcs-item>
-          </mcs-data-cell>
-        </ng-container>
+    <!-- Start Date Column -->
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.startDate' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.startedOn | mcsStdDateFormat }}</span>
+      </td>
+    </ng-container>
 
-        <!-- Start Date Column -->
-        <ng-container mcsColumnDef="startDate">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ 'serverServicesVmBackupDetails.columnHeaders.startDate' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-            <span text-wrap>{{ row.startedOn | mcsStdDateFormat }}</span>
-          </mcs-data-cell>
-        </ng-container>
+    <!-- End Date Column -->
+    <ng-container matColumnDef="endDate">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.endDate' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.finishedOn | mcsStdDateFormat }}</span>
+      </td>
+    </ng-container>
 
-        <!-- End Date Column -->
-        <ng-container mcsColumnDef="endDate">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ 'serverServicesVmBackupDetails.columnHeaders.endDate' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-            <span text-wrap>{{ row.finishedOn | mcsStdDateFormat }}</span>
-          </mcs-data-cell>
-        </ng-container>
+    <!-- Duration Column -->
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.duration' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.durationInMinutes }}</span>
+      </td>
+    </ng-container>
 
-        <!-- Duration Column -->
-        <ng-container mcsColumnDef="duration">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ 'serverServicesVmBackupDetails.columnHeaders.duration' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-            <span text-wrap>{{ row.durationInMinutes }}</span>
-          </mcs-data-cell>
-        </ng-container>
+    <!-- MB Modified Column -->
+    <ng-container matColumnDef="mbModified">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.mbModified' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small text-center>
+        <span text-wrap>{{ row.modifiedMB }}</span>
+      </td>
+    </ng-container>
 
-        <!-- MB Modified Column -->
-        <ng-container mcsColumnDef="mbModified">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ 'serverServicesVmBackupDetails.columnHeaders.mbModified' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
-            <span text-wrap>{{ row.modifiedMB }}</span>
-          </mcs-data-cell>
-        </ng-container>
+    <!-- Data Protection Volume Column -->
+    <ng-container matColumnDef="dataProtectionVolume">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.dataProtectionVolume' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small text-center>
+        <span text-wrap>{{ row.dataProtectionVolumeGB }}</span>
+      </td>
+    </ng-container>
 
-        <!-- Data Protection Volume Column -->
-        <ng-container mcsColumnDef="dataProtectionVolume">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ 'serverServicesVmBackupDetails.columnHeaders.dataProtectionVolume' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
-            <span text-wrap>{{ row.dataProtectionVolumeGB }}</span>
-          </mcs-data-cell>
-        </ng-container>
+    <!-- Header and Data row -->
+    <tr mat-header-row *matHeaderRowDef="vmBackupLogsDatasource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: vmBackupLogsDatasource?.dataColumns$ | async;"></tr>
+  </table>
 
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ 'serverServicesVmBackupDetails.noContent' | translate }} </span>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <span>{{ 'serverServicesVmBackupDetails.errorContent' | translate }}</span>
-          </mcs-data-error>
-        </ng-container>
-
-        <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="vmBackupLogsColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: vmBackupLogsColumns;"></mcs-data-row>
-      </mcs-table>
-  </mcs-presentation-panel>
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="vmBackupLogsDatasource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="vmBackupLogsDatasource?.hasNoRecords$ | async" text-center>
+      <span>{{ 'serverServicesVmBackupDetails.noContent' | translate }} </span>
+    </div>
+    <div *ngIf="vmBackupLogsDatasource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
+        <span>{{ 'serverServicesVmBackupDetails.errorContent' | translate }}</span>
+      </div>
+    </div>
+  </mcs-item>
+</mcs-presentation-panel>

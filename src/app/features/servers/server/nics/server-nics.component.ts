@@ -1,56 +1,68 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewChild,
-  Injector,
-  TemplateRef,
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  Subscription,
-  Observable,
   of,
   throwError,
-  Subject
+  BehaviorSubject,
+  Observable,
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
-  shareReplay,
-  tap,
-  map,
   catchError,
-  takeUntil
+  filter,
+  map,
+  shareReplay,
+  take,
+  takeUntil,
+  tap
 } from 'rxjs/operators';
-import { McsTableDataSource } from '@app/core';
+
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  animateFactory,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
+import {
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2
+} from '@app/core';
+import { McsEvent } from '@app/events';
+import { ServerManageNetwork } from '@app/features-shared';
+import {
+  McsApiCollection,
+  McsFeatureFlag,
+  McsFilterInfo,
+  McsJob,
+  McsResourceNetwork,
+  McsServer,
+  McsServerCreateNic,
+  McsServerNic,
+  McsServerSnapshot
+} from '@app/models';
+import {
+  ComponentHandlerDirective,
+  DialogConfirmation,
+  DialogRef,
+  DialogService
+} from '@app/shared';
+import {
   addOrUpdateArrayRecord,
+  animateFactory,
+  createObject,
   getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely,
   CommonDefinition,
   Guid
 } from '@app/utilities';
-import {
-  ComponentHandlerDirective,
-  DialogService,
-  DialogConfirmation,
-  DialogRef
-} from '@app/shared';
-import {
-  McsJob,
-  McsResourceNetwork,
-  McsServerNic,
-  McsServerCreateNic,
-  McsServer,
-  McsFeatureFlag,
-  McsServerSnapshot,
-  McsApiCollection
-} from '@app/models';
-import { McsEvent } from '@app/events';
-import { ServerManageNetwork } from '@app/features-shared';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
@@ -85,11 +97,13 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public selectedNetwork: McsResourceNetwork;
   public selectedNic: McsServerNic;
 
-  public nicsDataSource: McsTableDataSource<McsServerNic>;
-  public nicsColumns: string[];
+  public readonly nicsDataSource: McsTableDataSource2<McsServerNic>;
+  public readonly nicsColumns: McsFilterInfo[];
 
   public isSnapshotProcessing: boolean;
   public dialogRef: DialogRef<any>;
+  public isVMWareToolsInstalled: boolean;
+  public isVMWareToolsRunning: boolean;
 
   @ViewChild('submitDialogTemplate')
   private _submitDialogTemplate: TemplateRef<any>;
@@ -97,15 +111,12 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _newNic: McsServerNic;
   private _inProgressNicId: string;
   private _serverNicsCache: Observable<McsServerNic[]>;
-
   private _destroySubject = new Subject<void>();
+  private _nicsDataChange = new BehaviorSubject<McsServerNic[]>(null);
 
   private _createNicHandler: Subscription;
   private _updateNicHandler: Subscription;
   private _deleteNicHandler: Subscription;
-
-  public isVMWareToolsInstalled: boolean;
-  public isVMWareToolsRunning: boolean;
 
   @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
@@ -152,14 +163,23 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     private _dialogService: DialogService
   ) {
     super(_injector, _changeDetectorRef);
-    this.nicsColumns = [];
-    this.nicsDataSource = new McsTableDataSource();
     this.manageNetwork = new ServerManageNetwork();
     this.nicMethodType = ServerNicMethodType.AddNic;
+
+    this.nicsDataSource = new McsTableDataSource2(this._getServerNics.bind(this));
+    this.nicsColumns = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'nic' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'network' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'primary' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'ipMode' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'ipAddresses' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
+    ];
+    this.nicsDataSource.registerColumnsFilterInfo(this.nicsColumns);
   }
 
   public ngOnInit() {
-    this._setDataColumns();
     this._registerEvents();
   }
 
@@ -420,7 +440,11 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         })
       );
     }
-    this.nicsDataSource.updateDatasource(tableDataSource);
+
+    tableDataSource.pipe(
+      take(1),
+      tap(dataRecords => this._nicsDataChange.next(dataRecords || []))
+    ).subscribe();
   }
 
   /**
@@ -481,18 +505,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.nicsColumns = Object.keys(
-      this._translateService.instant('serverNics.columnHeaders')
-    );
-    if (isNullOrEmpty(this.nicsColumns)) {
-      throw new Error('column definition for nics was not defined');
-    }
-  }
-
-  /**
    * Get the resource networks from the server
    */
   private _getResourceNetworks(resourceId: string): void {
@@ -501,6 +513,17 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.resourceNetworks$ = this.apiService.getResourceNetworks(resourceId).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection)),
       shareReplay(1)
+    );
+  }
+
+  /**
+   * Gets the server nics based on observable
+   */
+  private _getServerNics(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerNic>> {
+    return this._nicsDataChange.pipe(
+      takeUntil(this._destroySubject),
+      filter(response => !isNullOrUndefined(response)),
+      map(response => new McsMatTableContext(response, response?.length))
     );
   }
 }

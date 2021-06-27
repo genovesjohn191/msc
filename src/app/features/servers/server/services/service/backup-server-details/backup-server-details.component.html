@@ -10,106 +10,111 @@
   <p *ngIf="isInviewPremium">{{ 'serverServicesServerBackupDetails.inviewLabel' | translate }}</p>
 
   <!-- Table -->
-    <mcs-table [dataSource]="serverBackupLogsDatasource">
-      <!-- Status Column -->
-      <ng-container mcsColumnDef="status">
-        <mcs-header-cell *mcsHeaderCellDef>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.status' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-          <mcs-item>
-            <mcs-icon size="small"
-              [key]="backupStatusTypeIconKey(row.status)"
-              [mcsTooltip]="backupStatusToolTip(row.status)"
-              [mcsTooltipShow]="backupStatusToolTip(row.status)">
-            </mcs-icon>
-            <span>{{backupStatusText(row.status)}}</span>
-          </mcs-item>
-        </mcs-data-cell>
-      </ng-container>
+  <table mat-table [dataSource]="serverBackupLogsDatasource">
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.status' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" text-wrap>
+        <mcs-item>
+          <mcs-icon size="small"
+            [key]="backupStatusTypeIconKey(row.status)"
+            [mcsTooltip]="backupStatusToolTip(row.status)"
+            [mcsTooltipShow]="backupStatusToolTip(row.status)">
+          </mcs-icon>
+          <span>{{backupStatusText(row.status)}}</span>
+        </mcs-item>
+      </td>
+    </ng-container>
 
-      <!-- Start Date Column -->
-      <ng-container mcsColumnDef="startDate">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.startDate' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.startedOn | mcsStdDateFormat }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Start Date Column -->
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.startDate' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.startedOn | mcsStdDateFormat }}</span>
+      </td>
+    </ng-container>
 
-      <!-- End Date Column -->
-      <ng-container mcsColumnDef="endDate">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.endDate' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.finishedOn | mcsStdDateFormat }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- End Date Column -->
+    <ng-container matColumnDef="endDate">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.endDate' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.finishedOn | mcsStdDateFormat }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Duration Column -->
-      <ng-container mcsColumnDef="duration">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.duration' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.durationInMinutes }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Duration Column -->
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.duration' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.durationInMinutes }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Files Column -->
-      <ng-container mcsColumnDef="files">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.files' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.backedUpFiles }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Files Column -->
+    <ng-container matColumnDef="files">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.files' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.backedUpFiles }}</span>
+      </td>
+    </ng-container>
 
-      <!-- MB Modified Column -->
-      <ng-container mcsColumnDef="mbModified">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.mbModified' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
-          <span text-wrap>{{ row.modifiedMB }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- MB Modified Column -->
+    <ng-container matColumnDef="mbModified">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.mbModified' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small text-center>
+        <span text-wrap>{{ row.modifiedMB }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Data Protection Volume Column -->
-      <ng-container mcsColumnDef="dataProtectionVolume">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.dataProtectionVolume' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
-          <span text-wrap>{{ row.dataProtectionVolumeGB }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Data Protection Volume Column -->
+    <ng-container matColumnDef="dataProtectionVolume">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.dataProtectionVolume' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small text-center>
+        <span text-wrap>{{ row.dataProtectionVolumeGB }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Deduplication Ratio Column -->
-      <ng-container mcsColumnDef="deduplicationRatio">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesServerBackupDetails.columnHeaders.deduplicationRatio' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
-          <span text-wrap>{{ row.deduplicationRatio }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Deduplication Ratio Column -->
+    <ng-container matColumnDef="deduplicationRatio">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.deduplicationRatio' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small text-center>
+        <span text-wrap>{{ row.deduplicationRatio }}</span>
+      </td>
+    </ng-container>
 
-      <!-- Data Status Integration -->
-      <ng-container mcsDataStatusDef>
-        <mcs-data-empty *mcsDataEmptyDef>
-          <span>{{ 'serverServicesServerBackupDetails.noContent' | translate }} </span>
-        </mcs-data-empty>
-        <mcs-data-error *mcsDataErrorDef>
-          <span>{{ 'serverServicesServerBackupDetails.errorContent' | translate }}</span>
-        </mcs-data-error>
-      </ng-container>
+    <!-- Header and Data row -->
+    <tr mat-header-row *matHeaderRowDef="serverBackupLogsDatasource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: serverBackupLogsDatasource?.dataColumns$ | async;"></tr>
+  </table>
 
-      <!-- Header and Data row -->
-      <mcs-header-row *mcsHeaderRowDef="serverBackupLogsColumns"></mcs-header-row>
-      <mcs-data-row *mcsDataRowDef="let row; columns: serverBackupLogsColumns;"></mcs-data-row>
-    </mcs-table>
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="serverBackupLogsDatasource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="serverBackupLogsDatasource?.hasNoRecords$ | async" text-center>
+      <span>{{ 'serverServicesServerBackupDetails.noContent' | translate }} </span>
+    </div>
+    <div *ngIf="serverBackupLogsDatasource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
+        <span>{{ 'serverServicesServerBackupDetails.errorContent' | translate }}</span>
+      </div>
+    </div>
+  </mcs-item>
 </mcs-presentation-panel>
