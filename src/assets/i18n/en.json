@@ -1408,15 +1408,6 @@
     "updateButton": "Update",
     "editHeading": "Edit NIC",
     "editButton": "Update",
-    "columnHeaders": {
-      "nic": "NIC",
-      "network": "Network",
-      "primary": "Primary",
-      "type": "Type",
-      "ipMode": "IP Mode",
-      "ipAddresses": "IP Addresses",
-      "action": ""
-    },
     "noNics": "There are no NICs to display for this server.",
     "warningEditingNic": "This server will be restarted.",
     "errorGettingNics": "Sorry, something’s not right. We weren’t able to retrieve the list of NICs for this server.",
@@ -1594,31 +1585,14 @@
     "description": "Server Anti-Virus provides both real-time and on-demand protection against threats such as viruses, trojans and spyware. \r \nThe table below lists recent threat detection events and their severities (where 1 is the lowest and 6 is the highest).",
     "noContent": "No threats have been identified for this server.",
     "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Anti-Virus information for this server.",
-    "viewInTrendDsmLabel": "View in Trend DSM",
-    "columnHeaders": {
-      "threat": "Threat",
-      "date": "Date",
-      "path": "Path",
-      "scanType": "Scan Type",
-      "actionTaken": "Action Taken"
-    }
+    "viewInTrendDsmLabel": "View in Trend DSM"
   },
   "serverServicesHidsDetails": {
     "title": "Host Intrusion Detection",
     "description": "Host Based Intrusion Prevention rules examines payload in the session and application layers of packets (such as DNS, HTTP, SSL, and SMTP), as well as the sequence of those packets according to those higher-layer protocols. \r \nWhen traffic matches a rule or contains content that signals an attack, the Host Intrusion Detection handles it as a possible or confirmed attack, and performs the configured action.",
     "noContent": "No intrusion attempts have been detected for this server.",
     "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Host Intrusion Detection information for this server.",
-    "viewInTrendDsmLabel": "View in Trend DSM",
-    "columnHeaders": {
-      "threat": "Threat",
-      "date": "Date",
-      "applicationType": "Application Type",
-      "interface": "Interface",
-      "sourceIp": "Source IP",
-      "destinationIp": "Destination IP",
-      "actionTaken": "Action Taken",
-      "severity": "Severity"
-    }
+    "viewInTrendDsmLabel": "View in Trend DSM"
   },
   "serverServicesVmBackupDetails": {
     "title": "VM Backup",
@@ -1626,15 +1600,7 @@
     "retentionLabel": "The data retention period for this backup service is {{retention}}.",
     "inviewLabel": "This service has InView Premium, which grants access to more detailed statistics and graphs.",
     "noContent": "No backups have been attempted for this server yet. If this server is newly created, you may need to wait until the next scheduled backup.",
-    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the VM Backup details for this server.",
-    "columnHeaders": {
-      "status": "Status",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "duration": "Duration",
-      "mbModified": "MB Modified",
-      "dataProtectionVolume": "Data Protection Volume"
-    }
+    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the VM Backup details for this server."
   },
   "serverServicesServerBackupDetails": {
     "title": "Server Backup",
@@ -1642,17 +1608,7 @@
     "retentionLabel": "The data retention period for this backup service is {{retention}}.",
     "inviewLabel": "This service has InView Premium, which grants access to more detailed statistics and graphs.",
     "noContent": "No backups have been attempted for this server yet. If this server is newly created, you may need to wait until the next scheduled backup.",
-    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Server Backup details for this server.",
-    "columnHeaders": {
-      "status": "Status",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "duration": "Duration",
-      "files": "Files",
-      "mbModified": "MB Modified",
-      "dataProtectionVolume": "Data Protection Volume",
-      "deduplicationRatio": "Deduplication Ratio"
-    }
+    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Server Backup details for this server."
   },
   "serverStorage": {
     "label": "Storage",
@@ -1673,12 +1629,6 @@
     "deleteStorageLink": "Delete",
     "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
     "expandStorageLimit": "This disk cannot be expanded due to insufficient storage space (0 GB remaining).",
-    "columnHeaders": {
-      "storageDevice": "Storage Device",
-      "storageProfile": "Storage Profile",
-      "capacity": "Capacity",
-      "action": ""
-    },
     "noDisks": "All disks have been removed from this server, rendering it inoperable. New disks cannot be added at this time.",
     "errorGettingDisks": "Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
     "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
@@ -3110,6 +3060,27 @@
     "inProgress": "Processing request..."
   },
   "columnHeader": {
+    "files": "Files",
+    "deduplicationRatio": "Deduplication Ratio",
+    "storageDevice": "Storage Device",
+    "nic": "NIC",
+    "primary": "Primary",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "mbModified": "MB Modified",
+    "dataProtectionVolume": "Data Protection Volume",
+    "applicationType": "Application Type",
+    "interface": "Interface",
+    "sourceIp": "Source IP",
+    "destinationIp": "Destination IP",
+    "ipMode": "IP Mode",
+    "ipAddresses": "IP Addresses",
+    "capacity": "Capacity",
+    "threat": "Threat",
+    "date": "Date",
+    "path": "Path",
+    "scanType": "Scan Type",
+    "actionTaken": "Action Taken",
     "action": "Action",
     "aggregationTarget": "Aggregation Target",
     "assignee": "Assignee",

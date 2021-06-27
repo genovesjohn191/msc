@@ -33,100 +33,104 @@
   </mcs-grid>
 
    <!-- Table -->
-  <mcs-table [dataSource]="hidsDatasource">
+  <table mat-table [dataSource]="hidsDatasource">
     <!-- Threat Column -->
-    <ng-container mcsColumnDef="threat">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ 'serverServicesHidsDetails.columnHeaders.threat' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+    <ng-container matColumnDef="threat">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.threat' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" text-wrap>
         <span text-wrap>{{ row.description }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Date Column -->
-    <ng-container mcsColumnDef="date">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.date' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.date' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.detectedOn | mcsStdDateFormat }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Application Type Column -->
-    <ng-container mcsColumnDef="applicationType">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.applicationType' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="applicationType">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.applicationType' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.applicationType }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Interface Type Column -->
-    <ng-container mcsColumnDef="interface">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.interface' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="interface">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.interface' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.interface }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Source Ip Column -->
-    <ng-container mcsColumnDef="sourceIp">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.sourceIp' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="sourceIp">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.sourceIp' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.sourceIpAddress }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Destination Ip Column -->
-    <ng-container mcsColumnDef="destinationIp">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.destinationIp' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="destinationIp">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.destinationIp' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.destinationIpAddress }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Action Taken Column -->
-    <ng-container mcsColumnDef="actionTaken">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.actionTaken' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="actionTaken">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.actionTaken' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.actionTaken }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Severity Column -->
-    <ng-container mcsColumnDef="severity">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.severity' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="severity">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.severity' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ severityLabel(row.severity) }}</span>
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Data Status Integration -->
-    <ng-container mcsDataStatusDef>
-      <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ 'serverServicesHidsDetails.noContent' | translate }} </span>
-      </mcs-data-empty>
-      <mcs-data-error *mcsDataErrorDef>
-        <span>{{ 'serverServicesHidsDetails.errorContent' | translate }}</span>
-      </mcs-data-error>
+      </td>
     </ng-container>
 
     <!-- Header and Data row -->
-    <mcs-header-row *mcsHeaderRowDef="hidsColumns"></mcs-header-row>
-    <mcs-data-row *mcsDataRowDef="let row; columns: hidsColumns;"></mcs-data-row>
-  </mcs-table>
+    <tr mat-header-row *matHeaderRowDef="hidsDatasource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: hidsDatasource?.dataColumns$ | async;"></tr>
+  </table>
 
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="hidsDatasource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="hidsDatasource?.hasNoRecords$ | async" text-center>
+      <span>{{ 'serverServicesHidsDetails.noContent' | translate }} </span>
+    </div>
+    <div *ngIf="hidsDatasource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
+        <span>{{ 'serverServicesHidsDetails.errorContent' | translate }}</span>
+      </div>
+    </div>
+  </mcs-item>
 </mcs-presentation-panel>

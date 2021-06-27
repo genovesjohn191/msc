@@ -7,11 +7,13 @@ import {
 } from 'rxjs';
 import {
   concatMap,
+  filter,
   finalize,
   map,
   shareReplay,
   switchMap,
   take,
+  takeUntil,
   tap
 } from 'rxjs/operators';
 
@@ -33,7 +35,6 @@ import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
-  McsTableDataSource,
   McsTableDataSource2
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
@@ -95,7 +96,6 @@ export class OrderComponent implements OnInit, OnDestroy {
   public order$: Observable<McsOrder>;
   public isOrderTypeChange$: Observable<boolean>;
   public orderItemsColumns: string[];
-  public orderItemsDataSource: McsTableDataSource<McsOrderItem>;
   public orderDetailsView: OrderDetailsView;
   public dialogRef: DialogRef<TemplateRef<any>>;
   public chargesState$: Observable<ChargesState>;
@@ -142,7 +142,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 
     this._updateOnCompanySwitch();
     this.orderDetailsView = OrderDetailsView.OrderDetails;
-    this.orderItemsDataSource = new McsTableDataSource();
   }
 
   public ngOnInit() {
@@ -430,7 +429,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       map((resolver) => getSafeProperty(resolver, (obj) => obj.order)),
       tap((order: McsOrder) => {
         this._setChargesState(order);
-        this._orderItemsChange.next(order?.items);
+        this._orderItemsChange.next(order?.items || []);
         let workflowState = getSafeProperty(order, (obj) => obj.workflowState);
         this.isInAwaitingApprovalState = (workflowState === WorkflowStatus.AwaitingApproval);
       }),
@@ -457,6 +456,8 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   private _getOrderItems(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsOrderItem>> {
     return this._orderItemsChange.pipe(
+      takeUntil(this._destroySubject),
+      filter(response => !isNullOrUndefined(response)),
       map(response => new McsMatTableContext(response, response?.length))
     );
   }

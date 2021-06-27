@@ -15,13 +15,13 @@
     <mcs-section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk">
 
       <!-- DISKs Table -->
-      <mcs-table [dataSource]="disksDataSource">
+      <table mat-table [dataSource]="disksDataSource">
         <!-- Storage Device Column -->
-        <ng-container mcsColumnDef="storageDevice">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'serverStorage.columnHeaders.storageDevice' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+        <ng-container matColumnDef="storageDevice">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.storageDevice' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" text-wrap>
             <mcs-item>
               <ng-container *ngIf="diskIsInProgress(row); else defaultStorageIconTemplate">
                 <mcs-loader size="small"
@@ -33,34 +33,34 @@
               </ng-template>
               <span [innerHTML]="row.name | mcsDataLabel"></span>
             </mcs-item>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Storage Profile Column -->
-        <ng-container mcsColumnDef="storageProfile">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ 'serverStorage.columnHeaders.storageProfile' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-wrap>
+        <ng-container matColumnDef="storageProfile">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.storageProfile' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small text-wrap>
             <span [innerHTML]="row.storageProfile | mcsDataLabel"></span>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Capacity Column -->
-        <ng-container mcsColumnDef="capacity">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'serverStorage.columnHeaders.capacity' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="capacity">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.capacity' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             <span [innerHTML]="(row.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Action Column -->
-        <ng-container mcsColumnDef="action" *mcsAccessControl="serverPermission.vmEdit">
-          <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="action" *mcsAccessControl="serverPermission.vmEdit">
+          <th mat-header-cell *matHeaderCellDef class="action-header-cell">
+          </th>
+          <td mat-cell *matCellDef="let row">
             <mcs-item *ngIf="(resource$ | async)?.hasStorage">
               <a [disabled]="!server.executable"
                   (click)="openExpandDiskWindow(row)"
@@ -80,23 +80,28 @@
                 {{ 'serverStorage.deleteStorageLink' | translate }}
               </a>
             </mcs-item>
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ 'serverStorage.noDisks' | translate }} </span>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <span>{{ 'serverStorage.errorGettingDisks' | translate }}</span>
-          </mcs-data-error>
+          </td>
         </ng-container>
 
         <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="disksColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: disksColumns;"></mcs-data-row>
-      </mcs-table>
+        <tr mat-header-row *matHeaderRowDef="disksDataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: disksDataSource?.dataColumns$ | async;"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="disksDataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="disksDataSource?.hasNoRecords$ | async" text-center>
+          <span>{{ 'serverStorage.noDisks' | translate }} </span>
+        </div>
+        <div *ngIf="disksDataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'serverStorage.errorGettingDisks' | translate }}</span>
+          </div>
+        </div>
+      </mcs-item>
 
       <!-- Adding Disk -->
       <ng-container *mcsAccessControl="serverPermission.vmEdit">
@@ -155,15 +160,15 @@
 
         <ng-template #diskDetailsTemplate>
           <mcs-item>
-            <strong>{{ 'serverStorage.columnHeaders.storageDevice' | translate }}:</strong>
+            <strong>{{ 'columnHeader.storageDevice' | translate }}:</strong>
             <span>{{ selectedDisk.name }}</span>
           </mcs-item>
           <mcs-item>
-            <strong>{{ 'serverStorage.columnHeaders.storageProfile' | translate }}:</strong>
+            <strong>{{ 'columnHeader.storageProfile' | translate }}:</strong>
             <span>{{ selectedDisk.storageProfile }}</span>
           </mcs-item>
           <mcs-item>
-            <strong>{{ 'serverStorage.columnHeaders.capacity' | translate }}:</strong>
+            <strong>{{ 'columnHeader.capacity' | translate }}:</strong>
             <span>{{ selectedDisk.sizeMB | mcsDataSize: 'MB' }}</span>
           </mcs-item>
         </ng-template>

@@ -1,37 +1,49 @@
 import {
-  Component,
-  Input,
-  ChangeDetectorRef,
-  SimpleChanges,
-  OnInit,
-  OnChanges
-} from '@angular/core';
-import {
+  of,
+  BehaviorSubject,
   Observable,
-  of
+  Subject
 } from 'rxjs';
 import {
+  filter,
   map,
+  takeUntil,
   tap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { McsTableDataSource } from '@app/core';
-import { McsApiService } from '@app/services';
+
 import {
-  isNullOrEmpty,
-  getSafeProperty,
-  CommonDefinition
-} from '@app/utilities';
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges
+} from '@angular/core';
 import {
-  McsServerBackupVmLog,
-  McsServerBackupVmDetails,
-  InviewLevel,
-  BackupStatus,
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2
+} from '@app/core';
+import {
   backupStatusLabel,
   backupStatusTypeMap,
+  backupStatusTypeText,
+  BackupStatus,
   BackupStatusType,
-  backupStatusTypeText
+  InviewLevel,
+  McsFilterInfo,
+  McsServerBackupVmDetails,
+  McsServerBackupVmLog
 } from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-service-backup-vm-details',
@@ -40,28 +52,33 @@ import {
     'class': 'block'
   }
 })
-export class ServiceBackupVmDetailsComponent implements OnInit, OnChanges {
+export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
 
   @Input()
   public serverId: string;
 
-  public vmBackupLogsDatasource: McsTableDataSource<McsServerBackupVmLog>;
-  public vmBackupLogsColumns: string[];
+  public readonly vmBackupLogsDatasource: McsTableDataSource2<McsServerBackupVmLog>;
+  public readonly vmBackupLogsColumns: McsFilterInfo[];
 
   private _vmBackupLogsCache: Observable<McsServerBackupVmLog[]>;
   private _vmBackupDetails: McsServerBackupVmDetails;
+  private _vmBackupChange = new BehaviorSubject<McsServerBackupVmLog[]>(null);
+  private _destroySubject = new Subject<void>();
 
   constructor(
-    private _translateService: TranslateService,
     private _apiService: McsApiService,
     private _changeDetector: ChangeDetectorRef
   ) {
-    this.vmBackupLogsColumns = [];
-    this.vmBackupLogsDatasource = new McsTableDataSource();
-  }
-
-  public ngOnInit(): void {
-    this._setDataColumns();
+    this.vmBackupLogsDatasource = new McsTableDataSource2(this._getVmBackups.bind(this));
+    this.vmBackupLogsColumns = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'startDate' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'endDate' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'duration' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'mbModified' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'dataProtectionVolume' })
+    ];
+    this.vmBackupLogsDatasource.registerColumnsFilterInfo(this.vmBackupLogsColumns);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -69,6 +86,10 @@ export class ServiceBackupVmDetailsComponent implements OnInit, OnChanges {
     if (!isNullOrEmpty(serverId)) {
       this._updateTableDataSource(this.serverId);
     }
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get ellipsisKey(): string {
@@ -118,18 +139,6 @@ export class ServiceBackupVmDetailsComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.vmBackupLogsColumns = Object.keys(
-      this._translateService.instant('serverServicesVmBackupDetails.columnHeaders')
-    );
-    if (isNullOrEmpty(this.vmBackupLogsColumns)) {
-      throw new Error('column definition for VM Backup was not defined');
-    }
-  }
-
-  /**
    * Initializes the data source of the vm backup logs table
    */
   private _updateTableDataSource(serverid: string): void {
@@ -148,7 +157,15 @@ export class ServiceBackupVmDetailsComponent implements OnInit, OnChanges {
 
     let tableDataSource = isNullOrEmpty(this._vmBackupLogsCache) ?
       vmBackupApiSource : this._vmBackupLogsCache;
-    this.vmBackupLogsDatasource.updateDatasource(tableDataSource);
+    tableDataSource.subscribe(records => this._vmBackupChange.next(records || []));
     this._changeDetector.markForCheck();
+  }
+
+  private _getVmBackups(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerBackupVmLog>> {
+    return this._vmBackupChange.pipe(
+      takeUntil(this._destroySubject),
+      filter(response => !isNullOrUndefined(response)),
+      map(response => new McsMatTableContext(response, response?.length))
+    );
   }
 }

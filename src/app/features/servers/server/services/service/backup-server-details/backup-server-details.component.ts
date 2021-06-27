@@ -1,37 +1,49 @@
 import {
-  Component,
-  Input,
-  ChangeDetectorRef,
-  SimpleChanges,
-  OnInit,
-  OnChanges
-} from '@angular/core';
-import {
+  of,
+  BehaviorSubject,
   Observable,
-  of
+  Subject
 } from 'rxjs';
 import {
+  filter,
   map,
+  takeUntil,
   tap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { McsTableDataSource } from '@app/core';
-import { McsApiService } from '@app/services';
+
 import {
-  isNullOrEmpty,
-  getSafeProperty,
-  CommonDefinition
-} from '@app/utilities';
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges
+} from '@angular/core';
 import {
-  InviewLevel,
-  BackupStatus,
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2
+} from '@app/core';
+import {
   backupStatusLabel,
   backupStatusTypeMap,
-  BackupStatusType,
   backupStatusTypeText,
-  McsServerBackupServerLog,
-  McsServerBackupServerDetails
+  BackupStatus,
+  BackupStatusType,
+  InviewLevel,
+  McsFilterInfo,
+  McsServerBackupServerDetails,
+  McsServerBackupServerLog
 } from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-service-backup-server-details',
@@ -40,28 +52,36 @@ import {
     'class': 'block'
   }
 })
-export class ServiceBackupServerDetailsComponent implements OnInit, OnChanges {
+export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy {
 
   @Input()
   public serverId: string;
 
-  public serverBackupLogsDatasource: McsTableDataSource<McsServerBackupServerLog>;
-  public serverBackupLogsColumns: string[];
-
   private _serverBackupLogsCache: Observable<McsServerBackupServerLog[]>;
   private _serverBackupDetails: McsServerBackupServerDetails;
 
+  public readonly serverBackupLogsDatasource: McsTableDataSource2<McsServerBackupServerLog>;
+  public readonly serverBackupLogsColumns: McsFilterInfo[];
+
+  private _serverBackupsChange = new BehaviorSubject<McsServerBackupServerLog[]>(null);
+  private _destroySubject = new Subject<void>();
+
   constructor(
-    private _translateService: TranslateService,
     private _apiService: McsApiService,
     private _changeDetector: ChangeDetectorRef
   ) {
-    this.serverBackupLogsColumns = [];
-    this.serverBackupLogsDatasource = new McsTableDataSource();
-  }
-
-  public ngOnInit(): void {
-    this._setDataColumns();
+    this.serverBackupLogsDatasource = new McsTableDataSource2(this._getServerBackups.bind(this));
+    this.serverBackupLogsColumns = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'startDate' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'endDate' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'duration' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'files' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'mbModified' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'dataProtectionVolume' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'deduplicationRatio' })
+    ];
+    this.serverBackupLogsDatasource.registerColumnsFilterInfo(this.serverBackupLogsColumns);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -69,6 +89,10 @@ export class ServiceBackupServerDetailsComponent implements OnInit, OnChanges {
     if (!isNullOrEmpty(serverId)) {
       this._updateTableDataSource(this.serverId);
     }
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get ellipsisKey(): string {
@@ -118,18 +142,6 @@ export class ServiceBackupServerDetailsComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.serverBackupLogsColumns = Object.keys(
-      this._translateService.instant('serverServicesServerBackupDetails.columnHeaders')
-    );
-    if (isNullOrEmpty(this.serverBackupLogsColumns)) {
-      throw new Error('column definition for Server Backup was not defined');
-    }
-  }
-
-  /**
    * Initializes the data source of the server backup logs table
    */
   private _updateTableDataSource(serverid: string): void {
@@ -148,7 +160,15 @@ export class ServiceBackupServerDetailsComponent implements OnInit, OnChanges {
 
     let tableDataSource = isNullOrEmpty(this._serverBackupLogsCache) ?
       serverBackupApiSource : this._serverBackupLogsCache;
-    this.serverBackupLogsDatasource.updateDatasource(tableDataSource);
+    tableDataSource.subscribe(records => this._serverBackupsChange.next(records || []));
     this._changeDetector.markForCheck();
+  }
+
+  private _getServerBackups(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerBackupServerLog>> {
+    return this._serverBackupsChange.pipe(
+      takeUntil(this._destroySubject),
+      filter(response => !isNullOrUndefined(response)),
+      map(response => new McsMatTableContext(response, response?.length))
+    );
   }
 }
