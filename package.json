@@ -13,7 +13,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "output:styling": "gulp",
-    "build:prod": "node --max_old_space_size=3000 ./node_modules/@angular/cli/bin/ng build --configuration=production && yarn run output:styling"
+    "build:prod": "node --max_old_space_size=4000 ./node_modules/@angular/cli/bin/ng build --configuration=production && yarn run output:styling"
   },
   "private": true,
   "dependencies": {
