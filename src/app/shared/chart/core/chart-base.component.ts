@@ -27,8 +27,16 @@ import {
 import { ChartDataService } from '../chart-data.service';
 import { ChartItem } from '../chart-item.interface';
 
+export type ChartDataLabelsStyle = {
+  colors?: (opts?: any) => string,
+  fontSize?: string,
+  fontFamily?: string,
+  fontWeight?: string
+}
+
 export type ChartDataLabels = {
   enabled?: boolean;
+  style?: ChartDataLabelsStyle,
   formatter?: (val: number, opts?: any) => string | number;
 }
 
@@ -156,6 +164,9 @@ export class ChartComponentBase {
     if (!isNullOrEmpty(value.dataLabels)) {
       this.dataLabels = {
         enabled: value.dataLabels.enabled,
+        style: {
+          colors: [(opts) => { return '#000' }]
+        },
         formatter: value.dataLabels.formatter
       };
     }
