@@ -282,7 +282,7 @@ export class InsightsDocument implements IDashboardExportDocument {
       <span>${compliance.compliantResources} of ${compliance.totalResources}</span>
 
       <h4 style="padding-top: 10px;">Resources by Compliance State</h4>
-      ${this._chartHtml(insightDetails.complianceUri, '300', '100')}
+      ${this._chartHtml(insightDetails.complianceUri, '400', '120')}
 
       <h4 style="padding-top: 10px;">Non-compliant Initiatives</h4>
       <span style="font-size: 24pt"><strong>${compliance.nonCompliantInitiatives}</strong></span>
