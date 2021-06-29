@@ -47,7 +47,8 @@
         "label": "Azure",
         "resources": "Resources",
         "managedServices": "Managed Services",
-        "reservations": "Reservations"
+        "reservations": "Reservations",
+        "softwareSubscriptions": "Software Subscriptions"
       },
       "licenses": "Licenses"
     },
@@ -2495,6 +2496,13 @@
     "dataSingular": "Reservation",
     "dataPlural": "Reservations"
   },
+  "azureSoftwareSubscriptions": {
+    "leftPanelHeader": "Software Subscription Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of software subscriptions.",
+    "filterColumn": "Software Subscription Filter",
+    "dataSingular": "Software Subscription",
+    "dataPlural": "Software Subscriptions"
+  },
   "dnsListing": {
     "header": "DNS Services",
     "leftPanelHeader": "DNS Service Filter",
@@ -3054,7 +3062,8 @@
     "getNetworkDbUseCases": "Something went wrong while retrieving use cases. Please try again.",
     "getNetworkDbMulticastIps": "Something went wrong while retrieving multicast IPs. Please try again.",
     "getNetworkDbNetworks": "Something went wrong while retrieving networks. Please try again.",
-    "getAzureReservations": "Something went wrong while retrieving the list of reservations. Please try again."
+    "getAzureReservations": "Something went wrong while retrieving the list of reservations. Please try again.",
+    "getAzureSoftwareSubscriptions": "Something went wrong while retrieving the list of software subscriptions. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3087,11 +3096,13 @@
     "attachedTo": "Attached To",
     "billingDescription": "Description",
     "billingFrequency": "Billing Frequency",
+    "billingTerm": "Billing Term",
     "catalog": "OS Edition",
     "code": "Code",
     "companyId": "Company ID",
     "companyName": "Company Name",
     "completed": "Completed",
+    "cost": "Cost",
     "createdBy": "Created By",
     "createdOn": "Created On",
     "cpuScore": "CPU Score",
@@ -3285,6 +3296,7 @@
     "selectContact": "Select Contact",
     "selectStorage": "Select Storage",
     "services": "Services",
+    "softwareSubscriptions": "Software Subscriptions",
     "status": "Status",
     "subscription": "Subscription",
     "tag": "Tag",
@@ -3363,7 +3375,8 @@
     "noServiceToDisplay": "There are no applicable services to display.",
     "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView.",
     "unknown": "Unknown",
-    "noAzureReservations": "There are no reservations to display."
+    "noAzureReservations": "There are no reservations to display.",
+    "noAzureSoftwareSubscriptions": "There are no software subscriptions to display."
   },
   "tooltip": {
     "exportWord": "Export Word Document",

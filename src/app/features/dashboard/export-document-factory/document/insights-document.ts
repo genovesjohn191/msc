@@ -246,7 +246,7 @@ export class InsightsDocument implements IDashboardExportDocument {
     let barColor = this._getBgColorProgressBar(securePercentage);
     let widgetHtml = `
       <span style="font-size: 24pt">
-        <strong>${security.currentScore}</strong> / ${this._convertNumber(security.maxScore)}
+        <strong>${this._convertNumber(security.currentScore)}</strong> / ${this._convertNumber(security.maxScore)}
       </span>
       <table style="width: 27%; border-collapse: collapse;">
         <tr style="height: 6pt;">
@@ -376,7 +376,7 @@ export class InsightsDocument implements IDashboardExportDocument {
           data.forEach(item => {
             updateManagementTable += `
               <tr style="text-align: left;">
-                <td>${item.targetComputer}</td>
+                <td>${item.targetComputer ? item.targetComputer : 'Unavailable'}</td>
                 <td>${item.osType ? item.osType : 'Unavailable'}</td>
                 <td>${item.subscription ? item.subscription : 'Unavailable'}</td>
                 <td>${item.resourceGroup ? item.resourceGroup : 'Unavailable'}</td>

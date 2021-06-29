@@ -99,6 +99,12 @@ export const defaultPageRoutes: Routes = [
           import('../../features/azure-managed-services/azure-managed-services.module').then(m => m.AzureManagedServicesModule)
       },
       {
+        path: 'azure/software-subscriptions',
+        data: { routeId: RouteKey.AzureSoftwareSubscriptions },
+        loadChildren: () => import('../../features/azure-software-subscriptions/azure-software-subscriptions.module')
+          .then(m => m.AzureSoftwareSubscriptionsModule)
+      },
+      {
         path: 'licenses',
         data: { routeId: RouteKey.Licenses },
         loadChildren: () => import('../../features/licenses/licenses.module').then(m => m.LicensesModule)
