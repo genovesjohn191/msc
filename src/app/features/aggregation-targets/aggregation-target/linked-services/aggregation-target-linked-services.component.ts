@@ -1,39 +1,48 @@
 import {
-  Component,
+  of,
+  BehaviorSubject,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  filter,
+  map,
+  take,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Component,
   OnInit
 } from '@angular/core';
 import {
-  Observable,
-  of
-} from 'rxjs';
-import {
-  tap,
-  map
-} from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  McsBatLinkedService,
-  McsBackUpAggregationTarget,
-  RouteKey,
-  McsPermission,
-  McsFeatureFlag,
-  BatLinkedServiceType
-} from '@app/models';
-import {
-  McsTableDataSource,
-  McsNavigationService,
   CoreRoutes,
-  McsAccessControlService
+  McsAccessControlService,
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsNavigationService,
+  McsTableDataSource2
 } from '@app/core';
+import {
+  McsBackUpAggregationTarget,
+  McsBatLinkedService,
+  McsFilterInfo,
+  McsPermission,
+  RouteKey
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
+  createObject,
+  getSafeProperty,
   isNullOrEmpty,
-  getSafeProperty
+  isNullOrUndefined
 } from '@app/utilities';
-import { AggregationTargetService } from '../aggregation-target.service';
+
 import { AggregationTargetDetailsBase } from '../aggregation-target.base';
+import { AggregationTargetService } from '../aggregation-target.service';
 
 @Component({
   selector: 'mcs-aggregation-target-linked-services',
@@ -43,26 +52,34 @@ import { AggregationTargetDetailsBase } from '../aggregation-target.base';
 
 export class AggregationTargetLinkedServicesComponent extends AggregationTargetDetailsBase implements OnInit {
 
-  public batLinkedServicesDatasource: McsTableDataSource<McsBatLinkedService>;
-  public batLinkedServicesColumns: string[];
+  public readonly batLinkedServicesDatasource: McsTableDataSource2<McsBatLinkedService>;
+  public readonly batLinkedServicesColumns: McsFilterInfo[];
+
   private _batLinkedServicesCache: Observable<McsBatLinkedService[]>;
+  private _batLinkedServicesChange = new BehaviorSubject<McsBatLinkedService[]>(null);
+  private _destroySubject = new Subject<void>();
 
   constructor(
     _aggregationTargetService: AggregationTargetService,
     private _apiService: McsApiService,
-    private _translateService: TranslateService,
     private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_aggregationTargetService);
-    this.batLinkedServicesColumns = [];
-    this.batLinkedServicesDatasource = new McsTableDataSource();
+
+    this.batLinkedServicesDatasource = new McsTableDataSource2(this._getBatLinkedServices.bind(this));
+    this.batLinkedServicesColumns = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'associatedServer' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceType' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'dailySchedule' })
+    ];
+    this.batLinkedServicesDatasource.registerColumnsFilterInfo(this.batLinkedServicesColumns);
   }
 
   public ngOnInit() {
     this.initializeBase();
-    this._setDataColumns();
   }
 
   public get routeKeyEnum(): typeof RouteKey {
@@ -107,18 +124,6 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
   }
 
   /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.batLinkedServicesColumns = Object.keys(
-      this._translateService.instant('aggregationTarget.linkedServices.columnHeaders')
-    );
-    if (isNullOrEmpty(this.batLinkedServicesColumns)) {
-      throw new Error('column definition for Backup Aggregation Target Linked Services was not defined');
-    }
-  }
-
-  /**
    * Initializes the data source of the bat linked services table
    */
   private _updateTableDataSource(batId: string): void {
@@ -134,7 +139,19 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
 
     let tableDataSource = isNullOrEmpty(this._batLinkedServicesCache) ?
       batLinkedServicesApiSource : this._batLinkedServicesCache;
-    this.batLinkedServicesDatasource.updateDatasource(tableDataSource);
+
+    tableDataSource.pipe(
+      take(1),
+      tap(dataRecords => this._batLinkedServicesChange.next(dataRecords || []))
+    ).subscribe();
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _getBatLinkedServices(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsBatLinkedService>> {
+    return this._batLinkedServicesChange.pipe(
+      takeUntil(this._destroySubject),
+      filter(response => !isNullOrUndefined(response)),
+      map(response => new McsMatTableContext(response, response?.length))
+    );
   }
 }

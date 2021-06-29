@@ -1,12 +1,17 @@
 import {
   of,
   throwError,
+  BehaviorSubject,
   Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
   catchError,
+  filter,
   map,
+  take,
+  takeUntil,
   tap
 } from 'rxjs/operators';
 
@@ -17,10 +22,15 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { McsTableDataSource } from '@app/core';
+import {
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2
+} from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  McsFilterInfo,
   McsJob,
   McsResourceMedia,
   McsResourceMediaServer,
@@ -33,9 +43,11 @@ import {
 } from '@app/shared';
 import {
   addOrUpdateArrayRecord,
+  createObject,
   deleteArrayRecord,
   getSafeProperty,
   isNullOrEmpty,
+  isNullOrUndefined,
   unsubscribeSafely,
   Guid
 } from '@app/utilities';
@@ -54,15 +66,19 @@ const SERVER_MEDIA_NEW_ID = Guid.newGuid().toString();
 })
 
 export class MediumServersComponent extends MediumDetailsBase implements OnInit, OnDestroy {
-  public serversColumns: string[];
-  public serversDataSource: McsTableDataSource<McsResourceMediaServer>;
+  public readonly serversDataSource: McsTableDataSource2<McsResourceMediaServer>;
+  public readonly serversColumns: McsFilterInfo[];
+
   public manageServers: MediaManageServers;
 
   private _newAttachServer: McsResourceMediaServer;
   private _detachedServer: McsResourceMediaServer;
   private _inProgressServerId: string;
-  private _serverDatasourceCache: Observable<McsResourceMediaServer[]>;
   private _mediaInProgressByJob: boolean = false;
+
+  private _destroySubject = new Subject<void>();
+  private _serverDatasourceChange = new BehaviorSubject<McsResourceMediaServer[]>(null);
+  private _serverDatasourceCache: Observable<McsResourceMediaServer[]>;
 
   private _attachMediaHandler: Subscription;
   private _detachMediaHandler: Subscription;
@@ -76,9 +92,13 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     private _translateService: TranslateService,
   ) {
     super(_mediumService);
-    this.serversColumns = [];
-    this.serversDataSource = new McsTableDataSource();
-    this._setDataColumns();
+
+    this.serversDataSource = new McsTableDataSource2(this._getMediaServers.bind(this));
+    this.serversColumns = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'name' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
+    ];
+    this.serversDataSource.registerColumnsFilterInfo(this.serversColumns);
   }
 
   public ngOnInit() {
@@ -158,18 +178,6 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    */
   protected mediumSelectionChange(medium: McsResourceMedia): void {
     this._updateTableDataSource(medium);
-  }
-
-  /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.serversColumns = Object.keys(
-      this._translateService.instant('mediaServers.columnHeaders')
-    );
-    if (isNullOrEmpty(this.serversColumns)) {
-      throw new Error('column definition for disks was not defined');
-    }
   }
 
   /**
@@ -321,7 +329,11 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     if (hasDetachedRecord) {
       tableDataSource = this._removeDetachedServerInDataSource(tableDataSource);
     }
-    this.serversDataSource.updateDatasource(tableDataSource);
+
+    tableDataSource.pipe(
+      take(1),
+      tap(dataRecords => this._serverDatasourceChange.next(dataRecords || []))
+    ).subscribe();
   }
 
   private _addAttachedServerInDataSource(tableDataSource: Observable<McsResourceMediaServer[]>):
@@ -342,6 +354,14 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
         servers = deleteArrayRecord(servers, (item) => item.id === this._detachedServer.id);
         return servers;
       })
+    );
+  }
+
+  private _getMediaServers(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsResourceMediaServer>> {
+    return this._serverDatasourceChange.pipe(
+      takeUntil(this._destroySubject),
+      filter(response => !isNullOrUndefined(response)),
+      map(response => new McsMatTableContext(response, response?.length))
     );
   }
 }

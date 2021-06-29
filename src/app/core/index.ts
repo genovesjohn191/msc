@@ -44,7 +44,6 @@ export * from './providers/mcs-assets.provider';
 export * from './base/mcs-form-field-control.base';
 export * from './base/mcs-status-settings.base';
 export * from './base/mcs-wizard.base';
-export * from './base/mcs-table-listing.base';
 export * from './base/mcs-listview-listing.base';
 
 /** Authentication */
@@ -73,8 +72,6 @@ export * from './factory/ordering/mcs-order.director';
 
 // Data Access Layer
 export * from './data-access/mcs-listview-datasource';
-export * from './data-access/mcs-table-datasource';
-export * from './data-access/mcs-table-selection';
 export * from './data-access/mcs-table-datasource2';
 export * from './data-access/mcs-table-selection2';
 export * from './data-access/mcs-table-events';

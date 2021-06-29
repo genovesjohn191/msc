@@ -1,32 +1,46 @@
 import {
-  Component,
-  Output,
-  EventEmitter,
-  ChangeDetectorRef,
+  of,
+  Observable
+} from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Injector
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Injector,
+  OnDestroy,
+  Output,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {
-  Observable,
-  of
-} from 'rxjs';
-import { McsTableListingBase } from '@app/core';
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2,
+  McsTableEvents
+} from '@app/core';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  getEnumString,
-  CommonDefinition
-} from '@app/utilities';
-import {
-  McsCompany,
   CompanyStatus,
   DataStatus,
-  McsQueryParam,
-  McsApiCollection
+  McsCompany,
+  McsQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import {
+  Paginator,
+  Search
+} from '@app/shared';
+import {
+  getEnumString,
+  getSafeProperty,
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+
 import { SwitchAccountService } from './switch-account.service';
-import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-switch-account',
@@ -38,11 +52,13 @@ import { McsEvent } from '@app/events';
     'class': 'switch-account-wrapper'
   }
 })
-
-export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
+export class SwitchAccountComponent implements OnDestroy {
 
   @Output()
   public selectionChanged: EventEmitter<any>;
+
+  public readonly dataSource: McsTableDataSource2<McsCompany>;
+  public readonly dataEvents: McsTableEvents<McsCompany>;
 
   constructor(
     _injector: Injector,
@@ -50,8 +66,30 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
     private _switchAccountService: SwitchAccountService,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeCompanies });
+    this.dataSource = new McsTableDataSource2(this._getCompanies.bind(this));
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
+      dataChangeEvent: McsEvent.dataChangeCompanies
+    });
     this.selectionChanged = new EventEmitter();
+  }
+
+  public ngOnDestroy(): void {
+    this.dataSource.disconnect(null);
+    this.dataEvents.dispose();
+  }
+
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
+  }
+
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
   }
 
   // Others
@@ -61,10 +99,6 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
 
   public get dataStatusEnum(): any {
     return DataStatus;
-  }
-
-  public get filteredRecordCount(): number {
-    return this.dataSource && this.dataSource.dataRecords.length;
   }
 
   // Icons
@@ -134,19 +168,17 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
     this.selectionChanged.emit(account);
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
-  public get columnSettingsKey(): string {
-    return null;
-  }
+  private _getCompanies(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsCompany>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsCompany>> {
     if (!this._switchAccountService.hasRequiredPermission()) { return of(null); }
-    return this._apiService.getCompanies(query);
+
+    return this._apiService.getCompanies(queryParam).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
+    );
   }
 }
