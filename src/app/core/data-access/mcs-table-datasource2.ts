@@ -80,6 +80,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   public hasError$: Observable<boolean>;
   public dataRecords$: Observable<TEntity[]>;
   public totalCount$: Observable<number>;
+  public displayedCount$: Observable<number>;
 
   private _columnFilter: ColumnFilter;
   private _search: Search;
@@ -104,6 +105,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
     this._subscribeToHasNoRecordsFlag();
     this._subscribeToHasErrorFlag();
     this._subscribeToTotalCountChange();
+    this._subscribeToDisplayedCountChange();
     this._subscribeToDataRecordsChange();
     this._subscribeToDataColumnsChange();
   }
@@ -411,6 +413,14 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
     this.totalCount$ = this._dataCountChange.pipe(
       takeUntil(this._destroySubject),
       distinctUntilChanged(),
+      shareReplay(1)
+    );
+  }
+
+  private _subscribeToDisplayedCountChange(): void {
+    this.displayedCount$ = this._dataRecordsChange.pipe(
+      takeUntil(this._destroySubject),
+      map(records => records?.length || 0),
       shareReplay(1)
     );
   }

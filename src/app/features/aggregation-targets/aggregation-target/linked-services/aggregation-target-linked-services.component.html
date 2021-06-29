@@ -5,60 +5,59 @@
   <p>{{ 'aggregationTarget.linkedServices.description' | translate }}</p>
 
   <!-- Table -->
-  <mcs-table [dataSource]="batLinkedServicesDatasource">
+  <table mat-table [dataSource]="batLinkedServicesDatasource">
     <!-- Associated Server Column -->
-    <ng-container mcsColumnDef="associatedServer">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ 'aggregationTarget.linkedServices.columnHeaders.associatedServer' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-      <ng-container *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']; else: plainServerLabelTemplate">
-        <a *ngIf="(row.associatedServer?.name | mcsIsNotNullOrEmpty); else plainServerLabelTemplate"
-          [mcsRouterLink]="[routeKeyEnum.ServerDetails, row.associatedServer?.id]"
-          mcsStopPropagation
-          mcsId="bat-associated-server"
-          mcsEventTracker="bat-associated-server"
-          mcsEventCategory="bat"
-          mcsEventLabel="bat-linked-services">{{ row.associatedServer?.name }}</a>
-      </ng-container>
+    <ng-container matColumnDef="associatedServer">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.associatedServer' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" text-wrap>
+        <ng-container *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']; else: plainServerLabelTemplate">
+          <a *ngIf="(row.associatedServer?.name | mcsIsNotNullOrEmpty); else plainServerLabelTemplate"
+            [mcsRouterLink]="[routeKeyEnum.ServerDetails, row.associatedServer?.id]"
+            mcsStopPropagation
+            mcsId="bat-associated-server"
+            mcsEventTracker="bat-associated-server"
+            mcsEventCategory="bat"
+            mcsEventLabel="bat-linked-services">{{ row.associatedServer?.name }}</a>
+        </ng-container>
 
-      <ng-template #plainServerLabelTemplate>
-        <span [mcsGreyedOut]="!(row.associatedServer?.name | mcsIsNotNullOrEmpty)">
-          {{ linkedServicePropertyLabel(row.associatedServer?.name) }}
-        </span>
-      </ng-template>
-
-      </mcs-data-cell>
+        <ng-template #plainServerLabelTemplate>
+          <span [mcsGreyedOut]="!(row.associatedServer?.name | mcsIsNotNullOrEmpty)">
+            {{ linkedServicePropertyLabel(row.associatedServer?.name) }}
+          </span>
+        </ng-template>
+      </td>
     </ng-container>
 
     <!-- Service Type Column -->
-    <ng-container mcsColumnDef="serviceType">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'aggregationTarget.linkedServices.columnHeaders.serviceType' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="serviceType">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.serviceType' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.serviceTypeLabel }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Service ID Column -->
-    <ng-container mcsColumnDef="serviceId">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'aggregationTarget.linkedServices.columnHeaders.serviceId' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="serviceId">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.serviceId' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap>{{ row.serviceId }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Daily Schedule Column -->
-    <ng-container mcsColumnDef="dailySchedule">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'aggregationTarget.linkedServices.columnHeaders.dailySchedule' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="dailySchedule">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.dailySchedule' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span text-wrap [mcsGreyedOut]="!(row.dailySchedule | mcsIsNotNullOrEmpty)">{{ linkedServicePropertyLabel(row.dailySchedule) }}</span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Data Status Integration -->
@@ -72,15 +71,29 @@
     </ng-container>
 
     <!-- Header and Data row -->
-    <mcs-header-row *mcsHeaderRowDef="batLinkedServicesColumns"></mcs-header-row>
-    <mcs-data-row *mcsDataRowDef="let row; columns: batLinkedServicesColumns;"
+    <tr mat-header-row *matHeaderRowDef="batLinkedServicesDatasource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: batLinkedServicesDatasource?.dataColumns$ | async;"
       mcsCursor="pointer"
       [mcsTriggerCursorIf]="hasAccessToService(row) && row?.associatedServer?.id | mcsIsNotNullOrEmpty"
       (click)="navigateToAssociatedServer(row)"
       mcsId="bat-linked-service-row"
       mcsEventTracker="bat-linked-service-row"
       mcsEventCategory="bat"
-      mcsEventLabel="bat-linked-services"></mcs-data-row>
-  </mcs-table>
+      mcsEventLabel="bat-linked-services"></tr>
+  </table>
 
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="batLinkedServicesDatasource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="batLinkedServicesDatasource?.hasNoRecords$ | async" text-center>
+      <span>{{ 'aggregationTarget.linkedServices.noContent' | translate }} </span>
+    </div>
+    <div *ngIf="batLinkedServicesDatasource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
+        <span>{{ 'aggregationTarget.linkedServices.errorContent' | translate }}</span>
+      </div>
+    </div>
+  </mcs-item>
 </mcs-presentation-panel>

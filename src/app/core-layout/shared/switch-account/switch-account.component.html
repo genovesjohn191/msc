@@ -26,13 +26,16 @@
     <ng-container *mcsListHeader>
       <mcs-item read-only full-width>
         <span mcsAlign="start">Company Accounts</span>
-        <ng-container *ngIf="dataSource?.dataStatus !== dataStatusEnum.Error">
-          <span>{{ filteredRecordCount }}/{{ totalRecordsCount }}</span>
+
+        <ng-container *ngIf="dataSource?.totalCount$ | async as totalCount">
+          <ng-container *ngIf="dataSource?.displayedCount$ | async as displayedCount">
+            <span>{{ displayedCount }}/{{ totalCount }}</span>
+          </ng-container>
         </ng-container>
       </mcs-item>
     </ng-container>
 
-    <mcs-list-item *ngFor="let item of dataSource?.dataRecords; trackBy: trackByFn"
+    <mcs-list-item *ngFor="let item of (dataSource?.dataRecords$ | async); trackBy: trackByFn"
       (click)="selectAccount(item)" mcsCursor="pointer"
       mcsId="switch-to-account"
       mcsEventTracker="switch-to-account"
@@ -48,16 +51,16 @@
     </mcs-list-item>
   </mcs-list>
 
-  <!-- Data obtainment status -->
-  <ng-container *ngIf="dataSource?.dataStatus !== dataStatusEnum.Success">
-    <mcs-item [ngSwitch]="dataSource?.dataStatus" mcsAlignContent="middle-center">
-      <div *ngSwitchCase="dataStatusEnum.Active">
-        <mcs-loader size="small"></mcs-loader>
-      </div>
-      <div *ngSwitchCase="dataStatusEnum.Empty">
-        <span>{{ 'switchAccount.noCompanies' | translate }}</span>
-      </div>
-      <div *ngSwitchCase="dataStatusEnum.Error">
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+      <span>{{ 'switchAccount.noCompanies' | translate }}</span>
+    </div>
+    <div *ngIf="dataSource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
         <span>{{ 'switchAccount.errorMessage' | translate }}</span>
         <a (click)="retryDatasource()"
           mcsId
@@ -65,12 +68,11 @@
           mcsEventCategory="navigation"
           mcsEventLabel="switch-account-panel"> {{ 'switchAccount.retry' | translate }}</a>
       </div>
-    </mcs-item>
-  </ng-container>
+    </div>
+  </mcs-item>
 
   <!-- Paginator that displays when data obtainment was success -->
   <mcs-paginator #paginator
-    [hidden]="dataSource?.dataStatus !== dataStatusEnum.Success"
-    [totalCount]="totalRecordsCount">
+    [totalCount]="dataSource?.totalCount$ | async">
   </mcs-paginator>
 </mcs-section>

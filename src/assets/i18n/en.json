@@ -2139,10 +2139,6 @@
     "attachServersHeader": "Attach to Server",
     "attachAction": "Attach",
     "detachAction": "Detach",
-    "columnHeaders": {
-      "name": "Name",
-      "action": ""
-    },
     "detachDialog": {
       "title": "Detach From Server",
       "message": "Are you sure you want to detach <b>{{server_name}}</b>?"
@@ -2451,12 +2447,6 @@
     "linkedServices": {
       "label": "Linked Services",
       "description": "Please note that new services may take a few minutes to appear here after initial provisioning.",
-      "columnHeaders": {
-        "associatedServer": "Associated Server",
-        "serviceType": "Service Type",
-        "serviceId": "Service ID",
-        "dailySchedule": "Daily Schedule"
-      },
       "noContent": "No linked services have been identified for this Backup Aggregation Target.",
       "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the linked services for this Backup Aggregation Target."
     }
@@ -3069,6 +3059,9 @@
     "inProgress": "Processing request..."
   },
   "columnHeader": {
+    "associatedServer": "Associated Server",
+    "serviceType": "Service Type",
+    "dailySchedule": "Daily Schedule",
     "files": "Files",
     "deduplicationRatio": "Deduplication Ratio",
     "storageDevice": "Storage Device",
