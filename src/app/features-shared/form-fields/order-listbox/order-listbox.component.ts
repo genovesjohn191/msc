@@ -78,6 +78,9 @@ export class OrderListBoxComponent extends FormFieldBaseComponent2<McsOption> {
   @Output()
     public selectedItemChange: EventEmitter<McsOption> = new EventEmitter<McsOption>(null);
 
+  @Output()
+    public hoveredItemChange: EventEmitter<McsOption> = new EventEmitter<McsOption>(null);
+
   private _categoryList: McsOption[];
   private _selectedItemList: McsOption[];
   public _selectedCategory: McsOption;
@@ -85,6 +88,10 @@ export class OrderListBoxComponent extends FormFieldBaseComponent2<McsOption> {
 
   constructor(_injector: Injector) {
     super(_injector);
+  }
+
+  public selectedItemOnHover(item: McsOption): void {
+    this.hoveredItemChange.emit(item);
   }
 
   public onClickCategory(category: McsOption): void {
