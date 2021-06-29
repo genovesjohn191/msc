@@ -19,6 +19,7 @@ import {
   IMcsApiAzureReservationsService,
   IMcsApiAzureResourcesService,
   IMcsApiAzureServicesService,
+  IMcsApiAzureSoftwareSubscriptionsService,
   IMcsApiBatsService,
   IMcsApiCatalogService,
   IMcsApiCloudHealthAlertService,
@@ -49,6 +50,7 @@ import {
   McsApiAzureReservationsFactory,
   McsApiAzureResourceFactory,
   McsApiAzureServicesFactory,
+  McsApiAzureSoftwareSubscriptionsFactory,
   McsApiBatsFactory,
   McsApiCatalogFactory,
   McsApiClientFactory,
@@ -99,6 +101,7 @@ import {
   McsAzureResourceQueryParams,
   McsAzureService,
   McsAzureServicesRequestParams,
+  McsAzureSoftwareSubscription,
   McsBackUpAggregationTarget,
   McsBatLinkedService,
   McsBilling,
@@ -266,6 +269,7 @@ import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
+import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
 
 @Injectable()
 @LogClass()
@@ -276,6 +280,7 @@ export class McsApiService {
   private readonly _azureResourceRepository: McsAzureResourcesRepository;
   private readonly _azureServicesRepository: McsAzureServicesRepository;
   private readonly _azureReservationsRepository: McsAzureReservationsRepository;
+  private readonly _azureSoftwareSubscriptionsRepository: McsAzureSoftwareSubscriptionsRepository;
   private readonly _batsRepository: McsBatsRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
   private readonly _consoleRepository: McsConsoleRepository;
@@ -296,6 +301,7 @@ export class McsApiService {
   private readonly _azureResourcesApi: IMcsApiAzureResourcesService;
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
   private readonly _azureReservationsApi: IMcsApiAzureReservationsService;
+  private readonly _azureSoftwareSubscriptionsApi: IMcsApiAzureSoftwareSubscriptionsService;
   private readonly _batsApi: IMcsApiBatsService;
   private readonly _catalogService: IMcsApiCatalogService;
   private readonly _cloudHealthAlertApi: IMcsApiCloudHealthAlertService;
@@ -332,6 +338,7 @@ export class McsApiService {
     this._azureResourceRepository = _injector.get(McsAzureResourcesRepository);
     this._azureServicesRepository = _injector.get(McsAzureServicesRepository);
     this._azureReservationsRepository = _injector.get(McsAzureReservationsRepository);
+    this._azureSoftwareSubscriptionsRepository = _injector.get(McsAzureSoftwareSubscriptionsRepository);
     this._batsRepository = _injector.get(McsBatsRepository);
     this._companiesRepository = _injector.get(McsCompaniesRepository);
     this._consoleRepository = _injector.get(McsConsoleRepository);
@@ -355,6 +362,7 @@ export class McsApiService {
     this._azureResourcesApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
     this._azureReservationsApi = apiClientFactory.getService(new McsApiAzureReservationsFactory());
+    this._azureSoftwareSubscriptionsApi = apiClientFactory.getService(new McsApiAzureSoftwareSubscriptionsFactory());
     this._batsApi = apiClientFactory.getService(new McsApiBatsFactory());
     this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
     this._cloudHealthAlertApi = apiClientFactory.getService(new McsApiCloudHealthAlertFactory());
@@ -1753,6 +1761,14 @@ export class McsApiService {
     return this._mapToEntityRecords(this._azureReservationsRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureReservations'))
+      )
+    );
+  }
+
+  public getAzureSoftwareSubscriptions(query?: McsQueryParam): Observable<McsApiCollection<McsAzureSoftwareSubscription>> {
+    return this._mapToEntityRecords(this._azureSoftwareSubscriptionsRepository, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureSoftwareSubscriptions'))
       )
     );
   }

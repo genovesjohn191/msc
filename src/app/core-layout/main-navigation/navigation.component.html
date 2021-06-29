@@ -358,6 +358,18 @@
               <mcs-icon [key]="showAzureSubMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
             </a>
             <ul [class.hidden]="!showAzureSubMenu">
+              <!-- Software Subscriptions -->
+              <li *mcsAccessControl="[]; feature: 'EnablePublicCloudSoftwareSubscriptionListing'">
+                <a [mcsRouterLink]="routeKeyEnum.AzureSoftwareSubscriptions"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="software-subscriptions-link"
+                  mcsEventTracker="navigate-to-azure-software-subscriptions"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.publicCloud.azure.softwareSubscriptions' | translate }}
+                </a>
+              </li>
               <!-- Managed Services -->
               <li>
                 <a [mcsRouterLink]="routeKeyEnum.AzureManagedServices"

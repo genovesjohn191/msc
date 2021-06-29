@@ -38,6 +38,7 @@ import { McsApiTenantsService } from './services/mcs-api-tenants.service';
 import { McsApiTerraformService } from './services/mcs-api-terraform.service';
 import { McsApiCloudHealthAlertService } from './services/mcs-api-cloudhealth-alert.service';
 import { McsApiNetworkDbService } from './services/mcs-api-network-db.service';
+import { McsApiAzureSoftwareSubscriptionsService } from './services/mcs-api-azure-software-subscriptions.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
@@ -48,6 +49,7 @@ export const apiClientProviders: Provider[] = [
   McsApiAzureResourcesService,
   McsApiAzureServicesService,
   McsApiAzureReservationsService,
+  McsApiAzureSoftwareSubscriptionsService,
   McsApiBatsService,
   McsApiCatalogService,
   McsApiCloudHealthAlertService,

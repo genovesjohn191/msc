@@ -23,6 +23,7 @@ export enum RouteKey {
   ReportInsights,
 
   Azure,
+  AzureSoftwareSubscriptions,
   AzureManagedServices,
   AzureResources,
   AzureReservations,

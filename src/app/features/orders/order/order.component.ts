@@ -489,8 +489,8 @@ export class OrderComponent implements OnInit, OnDestroy {
       McsEvent.dataChangeOrders, () => this._changeDetectorRef.markForCheck());
   }
 
-  private _isColumnIncluded(filter: McsFilterInfo): boolean {
-    let filterFound = this._orderItemsColumnPredicateMap.get(filter.id);
+  private _isColumnIncluded(filterInfo: McsFilterInfo): boolean {
+    let filterFound = this._orderItemsColumnPredicateMap.get(filterInfo.id);
     return filterFound ? filterFound() : true;
   }
 

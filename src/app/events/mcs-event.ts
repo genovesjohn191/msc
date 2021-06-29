@@ -3,6 +3,7 @@ import { DataChangeAggregationTargetsEvent } from './items/data-change-aggregati
 import { DataChangeAzureManagedServicesEvent } from './items/data-change-azure-managed-services.event';
 import { DataChangeAzureReservationsEvent } from './items/data-change-azure-reservations.event';
 import { DataChangeAzureResourcesEvent } from './items/data-change-azure-resources.event';
+import { DataChangeAzureSoftwareSubscriptionsEvent } from './items/data-change-azure-software-subscriptions.event';
 import { DataChangeCompaniesEvent } from './items/data-change-companies.event';
 import { DataChangeConsoleEvent } from './items/data-change-console.event';
 import { DnsDetailsChangeEvent } from './items/data-change-dns-details.event';
@@ -141,6 +142,7 @@ export class McsEvent {
   public static dataChangeAzureResources = new DataChangeAzureResourcesEvent();
   public static dataChangeAzureManagedServices = new DataChangeAzureManagedServicesEvent();
   public static dataChangeAzureReservations = new DataChangeAzureReservationsEvent();
+  public static dataChangeAzureSoftwareSubscriptions = new DataChangeAzureSoftwareSubscriptionsEvent();
   public static dataChangeDnsListing = new DnsListingEvent();
   public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
   public static dataChangeTerraformDeployments = new DataChangeTerraformDeploymentsEvent();

@@ -7,6 +7,7 @@ import { McsAccountRepository } from './repositories/mcs-account.repository';
 import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
+import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
@@ -44,6 +45,7 @@ export const repositoryProviders: any[] = [
   McsAzureResourcesRepository,
   McsAzureServicesRepository,
   McsAzureReservationsRepository,
+  McsAzureSoftwareSubscriptionsRepository,
   McsTerraformDeploymentsRepository,
   McsApiService
 ];

@@ -8,6 +8,7 @@ export enum McsFeatureFlag {
 
   AzureSlgTicket = 'EnableTicketingAzureSlg',
   AzureReservations = 'EnableAzureReservations',
+  AzureSoftwareSubscriptions = 'EnablePublicCloudSoftwareSubscriptionListing',
 
   PublicCloudDashboard = 'EnablePublicCloudDashboard',
 

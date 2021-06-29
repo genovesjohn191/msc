@@ -173,6 +173,14 @@
     "navigationPath": "azure",
     "documentTitle": "Azure - Macquarie Cloud Services"
   },
+  "azureSoftwareSubscriptions": {
+    "enumKey": "AzureSoftwareSubscriptions",
+    "enumCategory": "Azure",
+    "navigationPath": "azure/software-subscriptions",
+    "enumPlatform": "Public",
+    "documentTitle": "Software Subscriptions - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnablePublicCloudSoftwareSubscriptionListing"
+  },
   "azureManagedServices": {
     "enumKey": "AzureManagedServices",
     "enumCategory": "Azure",
