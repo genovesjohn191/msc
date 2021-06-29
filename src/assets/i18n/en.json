@@ -1780,11 +1780,11 @@
       "costCenterHelp": "Select the correct billing cost centre.",
       "costCenterRequired": "You must select a cost center."
     },
+    "orderDescription": {
+      "header": "Order Description",
+      "contextualHelp": "A custom description for your order."
+    },
     "orderDetails": {
-      "header": "Order Details",
-      "orderName": {
-        "contextualHelp": "A custom description for your order."
-      },
       "description": "Review the charges for this order below.",
       "totalLabel": "<strong>TOTAL</strong>",
       "noLineItems": "No items to display.",
