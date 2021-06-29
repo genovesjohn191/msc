@@ -1,12 +1,22 @@
 <div class="limited-view">
   <div class="contextual-help-page-wrapper">
 
-    <!-- Billing Details -->
     <form [formGroup]="fgOrderBilling" mcsFormGroup>
       <section>
         <h2>{{ 'orderDetailsStep.header' | translate }}</h2>
         <p>{{ 'orderDetailsStep.description' | translate }}</p>
 
+        <!-- Order Description -->
+        <section>
+          <h3>{{ 'orderDetailsStep.orderDescription.header' | translate }}</h3>
+          <mcs-form-field [mcsContextualHelp]="'orderDetailsStep.orderDescription.contextualHelp' | translate">
+            <input type="text" mcsInput [formControl]="fcDescription" #orderDescription
+              [placeholder]="'orderDetailsStep.orderDescription.header' | translate"
+              (focus)="onDescriptionFocus(orderDescription)">
+          </mcs-form-field>
+        </section>
+
+        <!-- Billing Details -->
         <section>
           <h3>{{ 'orderDetailsStep.billingDetails.header' | translate }}</h3>
 
@@ -90,11 +100,6 @@
 
       <!-- Order Details -->
       <section margin-top-xlarge>
-        <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
-        <mcs-form-field [mcsContextualHelp]="'orderDetailsStep.orderDetails.orderName.contextualHelp' | translate">
-          <input type="text" mcsInput [formControl]="fcDescription" #orderDescription
-            (focus)="onDescriptionFocus(orderDescription)">
-        </mcs-form-field>
         <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
 
         <!-- Loading animation -->
