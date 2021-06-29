@@ -26,6 +26,7 @@
     </ng-container>
     <ng-container *ngIf="terraformCategories.length > 0">
       <mcs-order-listbox
+        [mcsContextualHelp]="moduleHelpText"
         [categoryList]="terraformCategories"
         [selectedItemList]="moduleList"
         [selectedCategory]="terraformCategories[0]"
@@ -37,6 +38,7 @@
         [eventLabel]="'azure-service-request-page'"
         [noItemsFallbackText]="'message.noTerraformModulesDisplay' | translate"
         (categoryChange)="onClickCategory($event)"
+        (hoveredItemChange)="setModuleHelpText($event)"
         [formControl]="fcTerraformModule">
       </mcs-order-listbox>
     </ng-container>
@@ -71,7 +73,7 @@
   </mcs-item>
 
   <!-- New Resource Group -->
-  <mcs-item orientation='block' *ngIf="isResourceGroupNew">
+  <mcs-item orientation='block' *ngIf="resourceGroupNew">
     <mcs-form-field>
       <input mcsInput required
         [formControl]="fcNewResourceGroupName"

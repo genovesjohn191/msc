@@ -22,7 +22,8 @@
       </mcs-item>
     </ng-container>
     <ng-template #selectedItemListTemplate>
-      <mcs-item *ngFor="let item of selectedItemList">
+      <mcs-item *ngFor="let item of selectedItemList"
+        (mouseover)="selectedItemOnHover(item.value)">
         <a (click)="onClickSelectedItem(item)"
           mcsId="{{ selectedItemId }}"
           mcsEventTracker="{{ selectedItemEventTracker }}"

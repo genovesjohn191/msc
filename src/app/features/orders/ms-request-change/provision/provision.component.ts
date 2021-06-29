@@ -75,11 +75,12 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   public terraformModules: McsTerraformModule[] = [];
   public moduleType$: Observable<McsOption[]>;
   public moduleList: McsOption[];
-  public isResourceGroupNew: boolean;
-  public loadingInProgress: boolean;
   public moduleType: string;
 
+  private _loadingInProgress: boolean;
+  private _isResourceGroupNew: boolean;
   private _azureResources: McsOption[];
+  private _moduleHelpText: string;
 
   private _formGroup: McsFormGroupDirective;
   private _valueChangesSubject = new Subject<void>();
@@ -123,6 +124,18 @@ export class ProvisionComponent implements OnInit, OnDestroy {
     return this._translateService.instant('orderMsRequestChange.detailsStep.newResourceGroupNameLabel');
   }
 
+  public get moduleHelpText(): string {
+    return this._moduleHelpText;
+  }
+
+  public get resourceGroupNew(): boolean {
+    return this._isResourceGroupNew;
+  }
+
+  public get loadingInProgress(): boolean {
+    return this._loadingInProgress;
+  }
+
   constructor(
     private _apiService: McsApiService,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -138,6 +151,10 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     unsubscribeSafely(this._valueChangesSubject);
     unsubscribeSafely(this._terraformSubject);
+  }
+
+  public setModuleHelpText(module: McsTerraformModule): void {
+    this._moduleHelpText = module.description;
   }
 
   public getFormGroup(): McsFormGroupDirective {
@@ -163,7 +180,7 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   public onChangeResourceGroup(resource: McsAzureResource) {
     let isSelectedResourceAddNewGroup = resource?.azureId === NewResourceGroup.AddNewResourceGroup;
     this._updateResourceGroupNameState(isSelectedResourceAddNewGroup);
-    this.isResourceGroupNew = isSelectedResourceAddNewGroup ? true : false;
+    this._isResourceGroupNew = isSelectedResourceAddNewGroup ? true : false;
   }
 
   private _resetValues(): void {
@@ -213,12 +230,12 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   }
 
   private _getTerraformModules(): void {
-    this.loadingInProgress = true;
+    this._loadingInProgress = true;
     this._apiService.getTerraformModules().pipe(
       shareReplay(1),
       takeUntil(this._terraformSubject),
       catchError((error) => {
-        this.loadingInProgress = false;
+        this._loadingInProgress = false;
         this._changeDetectorRef.markForCheck();
         return throwError(error);
       })
@@ -227,7 +244,7 @@ export class ProvisionComponent implements OnInit, OnDestroy {
       let modules = getSafeProperty(terraformModules, (obj) => obj.collection) || [];
       this.terraformCategories = this._setTerraformCategoryOptions(modules);
       this.terraformModules = modules;
-      this.loadingInProgress = false;
+      this._loadingInProgress = false;
       this._changeDetectorRef.markForCheck();
     });
   }
