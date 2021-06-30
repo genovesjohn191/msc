@@ -226,7 +226,7 @@
       },
       "topVmsByCostWidget": {
         "title": "Top VMs by Cost",
-        "subTitle": "A list of your 5 most expensive VMs, along with their uptime and any reserved hours that have been applied to them (month to date).",
+        "subTitle": "A list of your 5 most expensive VMs, along with their uptime and any reserved hours that have been applied to them (month to date). This data is refreshed on the first week of each month.",
         "cloudHealthLinkLabel": "View in CloudHealth",
         "noDataFound": "No VMs or no cost data to display."
       }

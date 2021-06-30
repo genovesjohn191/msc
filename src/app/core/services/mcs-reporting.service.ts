@@ -164,7 +164,13 @@ export class McsReportingService {
   }
 
   public getUpdateManagement(period?: string): Observable<McsReportUpdateManagement[]> {
-    return this._apiService.getUpdateManagement(period);
+    return this._apiService.getUpdateManagement(period).pipe(
+      map((response) => {
+        return response.sort(
+          (updateA, updateB) => new Date(updateB.lastStartTime).getTime() - new Date(updateA.lastStartTime).getTime()
+        );
+      })
+    );
   }
 
   public getAuditAlerts(
