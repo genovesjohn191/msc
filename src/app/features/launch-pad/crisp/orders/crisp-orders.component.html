@@ -130,7 +130,13 @@
 
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          (click)="navigateToOrderDetails(row)"
+          mcsId="crisp-order-{{ row.name }}"
+          mcsEventTracker="navigate-to-crisp-order-details"
+          mcsEventCategory="launchpad-crisp"
+          mcsEventLabel="crisp-order-listing-page"></tr>
       </table>
 
       <!-- Table Statuses -->
@@ -146,9 +152,9 @@
             <span>{{ 'crispOrders.errorMessage' | translate }}</span>
             <a (click)="retryDatasource()"
               mcsId
-              mcsEventTracker="retry-loading-network-db-pod-list"
-              mcsEventCategory="launchpad-network-db"
-              mcsEventLabel="pod-listing-page">{{ 'crispOrders.retry' | translate }}</a>.
+              mcsEventTracker="retry-loading-crisp-orders-list"
+              mcsEventCategory="launchpad-crisp-order"
+              mcsEventLabel="crisp-orders-listing-page">{{ 'crispOrders.retry' | translate }}</a>.
           </div>
         </div>
       </mcs-item>

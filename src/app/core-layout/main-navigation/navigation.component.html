@@ -17,7 +17,10 @@
       <ng-container *ngIf="!isImpersonating">
         <li *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableLaunchPad']" hidden-small>
           <a (click)="toggleThis('showLaunchPadMenu')"
-            [class.active]="selectedCategory === routerCategoryEnum.LaunchPad || selectedCategory === routerCategoryEnum.LaunchPadNetworkDb || selectedCategory === routerCategoryEnum.LaunchPadVlanDb"
+            [class.active]="selectedCategory === routerCategoryEnum.LaunchPad
+            || selectedCategory === routerCategoryEnum.LaunchPadNetworkDb
+            || selectedCategory === routerCategoryEnum.LaunchPadVlanDb
+            || selectedCategory === routerCategoryEnum.LaunchPadCrisp"
             mcsId="launch-pad-link">
             {{ 'navigation.launchPad.label' | translate }}
             <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>

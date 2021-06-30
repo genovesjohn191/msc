@@ -37,6 +37,12 @@ export class McsObjectCrispElement extends McsObjectCrispElementService {
   public orderId: string = undefined;
 
   @JsonProperty()
+  public assignedTo: string = undefined;
+
+  @JsonProperty()
+  public hostingEngineer: string = undefined;
+
+  @JsonProperty()
   public status: string = undefined;
 
   @JsonProperty()

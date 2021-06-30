@@ -37,7 +37,15 @@ export interface IMcsApiObjectsService {
 
   /**
    * Get detailed information about a CRISP order
-   * @param productId unique idenitifer of the element
+   * @param orderId unique idenitifer of the element
    */
   getCrispOrder(orderId: string): Observable<McsApiSuccessResponse<McsObjectCrispOrder>>;
+
+  /**
+   * Get all the CRISP orders from the API
+   * @param orderId unique idenitifer of the element
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getCrispOrderElements(orderId: string, query?: McsObjectCrispOrderQueryParams):
+  Observable<McsApiSuccessResponse<McsObjectCrispElement[]>>;
 }
