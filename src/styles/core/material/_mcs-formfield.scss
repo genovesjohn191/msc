@@ -40,6 +40,7 @@ mat-form-field.mat-form-field {
     $mcs-form-infix-padding: 0.6rem 0;
     $mcs-form-border-radius: 2px;
     $mcs-form-border-thickness: 1px;
+    $mcs-form-field-line-height: 1rem;
 
     .mat-form-field-outline,
     .mat-form-field-outline-thick {
@@ -66,6 +67,7 @@ mat-form-field.mat-form-field {
     }
 
     .mat-form-field-infix {
+      line-height: $mcs-form-field-line-height;
       padding: $mcs-form-infix-padding;
       border-top: $mcs-form-infix-border-size solid transparent;
 
