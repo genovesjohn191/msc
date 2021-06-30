@@ -14,7 +14,8 @@ export class HtmlToPdfUtility {
       margin: [10, 5, 10, 5],
       filename: fileName,
       image:  { type: 'png' },
-      jsPDF: { orientation: 'landscape' }
+      jsPDF: { orientation: 'landscape' },
+      pagebreak: { mode: ['avoid-all', 'css'] }
     };
 
     html2pdf().set(properties).from(element).save();
