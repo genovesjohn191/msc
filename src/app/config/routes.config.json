@@ -152,6 +152,24 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
   },
+  "launchPadCrispOrder": {
+    "enumKey": "LaunchPadCrispOrderDetails",
+    "enumCategory": "LaunchPadCrisp",
+    "navigationPath": "launch-pad/crisp/orders",
+    "documentTitle": "CRISP - Order Details",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
+    "requireAllFeatures": true
+  },
+  "launchPadCrispOrderDetailsElements": {
+    "enumKey": "LaunchPadCrispOrderDetailsElements",
+    "enumCategory": "LaunchPadCrisp",
+    "navigationPath": "elements",
+    "documentTitle": "CRISP - Order Elements",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
+    "requireAllFeatures": true
+  },
   "reportOverview": {
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",

@@ -281,7 +281,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     let isLaunchPadCategorySelected = this.hasLaunchPadAccess && (
       this.selectedCategory === RouteCategory.LaunchPad
       || this.selectedCategory === RouteCategory.LaunchPadNetworkDb
-      || this.selectedCategory === RouteCategory.LaunchPadVlanDb);
+      || this.selectedCategory === RouteCategory.LaunchPadVlanDb
+      || this.selectedCategory === RouteCategory.LaunchPadCrisp);
 
     this._showLaunchPadMenu = (this._navInitialized && this._showLaunchPadMenu)
       ? this._showLaunchPadMenu

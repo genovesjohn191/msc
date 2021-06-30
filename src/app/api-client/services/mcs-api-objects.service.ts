@@ -101,9 +101,9 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
       );
   }
 
-  public getCrispOrder(productId: string): Observable<McsApiSuccessResponse<McsObjectCrispOrder>> {
+  public getCrispOrder(orderId: string): Observable<McsApiSuccessResponse<McsObjectCrispOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/objects/crisp-orders/${productId}`;
+    mcsApiRequestParameter.endPoint = `/objects/crisp-orders/${orderId}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -111,6 +111,30 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse.deserializeResponse<McsObjectCrispOrder>(McsObjectCrispOrder, response);
           return apiResponse;
+        })
+      );
+  }
+
+  public getCrispOrderElements(orderId: string, query?: McsObjectCrispOrderQueryParams):
+  Observable<McsApiSuccessResponse<McsObjectCrispElement[]>> {
+
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+    searchParams.set('assignee', query.assignee);
+    searchParams.set('state', query.state);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/objects/crisp-orders/${orderId}/elements`;
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          return McsApiSuccessResponse.deserializeResponse<McsObjectCrispElement[]>(McsObjectCrispElement, response);
         })
       );
   }

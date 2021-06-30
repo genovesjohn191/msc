@@ -13,16 +13,15 @@ import {
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsNavigationService,
   McsTableDataSource2
 } from '@app/core';
 import {
   CrispOrderState,
   McsFilterInfo,
-  McsIdentity,
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
-  NetworkDbPodType,
-  networkDbPodTypeText
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -61,7 +60,8 @@ export class CrispOrdersComponent implements OnDestroy {
   public constructor(
     _injector: Injector,
     private _apiService: McsApiService,
-    private _identity: McsAuthenticationIdentity
+    private _identity: McsAuthenticationIdentity,
+    private _navigationService: McsNavigationService
   ) {
     this.dataSource = new McsTableDataSource2<McsObjectCrispOrder>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
@@ -97,16 +97,16 @@ export class CrispOrdersComponent implements OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
-  public getTypeText(status: NetworkDbPodType): string {
-    return networkDbPodTypeText[status];
-  }
-
   public selectedTabChange(tab: MatTabChangeEvent): void {
     let state: CrispOrderState = tab.index === 0 ? 'OPEN': 'CLOSED';
     if (this._state !== state) {
       this._state = state;
       this.retryDatasource();
     }
+  }
+
+  public navigateToOrderDetails(crispOrder: McsObjectCrispOrder): void {
+    this._navigationService.navigateTo(RouteKey.LaunchPadCrispOrderDetails, [crispOrder.orderId.toString()]);
   }
 
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectCrispOrder>> {

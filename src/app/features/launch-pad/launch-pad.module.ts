@@ -28,6 +28,10 @@ import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-
 import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
 import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
 import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
+import { CrispOrderDetailsComponent } from './crisp/orders/order/crisp-order-details.component';
+import { CrispOrderElementsComponent } from './crisp/orders/order/elements/crisp-order-elements.component';
+import { CrispOrderService } from './crisp/orders/order/crisp-order.service';
+import { CrispOrderResolver } from './crisp/orders/order/crisp-order.resolver';
 
 @NgModule({
   declarations: [
@@ -53,12 +57,15 @@ import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
     NetworkDbNetworksComponent,
     // CRISP
     CrispOrdersComponent,
+    CrispOrderDetailsComponent,
+    CrispOrderElementsComponent,
     // Shared
     ConfirmationDialogComponent
   ],
   exports: [
     AzureDeploymentActivitiesComponent,
     AzureDeploymentOverviewComponent,
+    CrispOrderElementsComponent,
     ConfirmationDialogComponent
   ],
   entryComponents: [
@@ -76,7 +83,9 @@ import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
     LaunchPadGuard,
     DynamicFormModule,
     AzureDeploymentResolver,
-    AzureDeploymentService
+    AzureDeploymentService,
+    CrispOrderResolver,
+    CrispOrderService
   ]
 })
 

@@ -2032,13 +2032,23 @@ export class McsApiService {
     );
   }
 
-
   public getCrispOrder(orderId: string): Observable<McsObjectCrispOrder> {
     return this._objectsApi.getCrispOrder(orderId).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispOrder'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getCrispOrderElements(orderId: string, query?: McsObjectCrispOrderQueryParams):
+  Observable<McsApiCollection<McsObjectCrispElement>> {
+
+    return this._objectsApi.getCrispOrderElements(orderId, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispOrderElements'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

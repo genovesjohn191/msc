@@ -2539,6 +2539,10 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of orders.",
     "retry": "Try again shortly"
   },
+  "crispOrder": {
+    "backToCrispOrders": "Back To CRISP Orders"
+  },
+
   "licenses": {
     "header": "Licenses",
     "leftPanelHeader": "License Filter",
@@ -3040,6 +3044,7 @@
     "getInstalledServices": "Something went wrong while retrieving installed services. Please try again.",
     "getCrispOrders": "Something went wrong while retrieving CRISP orders. Please try again.",
     "getCrispOrder": "Something went wrong while retrieving CRISP order details. Please try again.",
+    "getCrispOrderElements": "Something went wrong while retrieving CRISP order elements. Please try again.",
     "getCloudHealthAlerts": "Something went wrong while retrieving your Cloudhealth Alerts. Please try again.",
     "getCloudHealthAlert": "Something went wrong while retrieving your Cloudhealth Alert. Please try again.",
     "deleteNetworkDnsZoneRecord": "Something went wrong while deleting dns zone record. Please try again.",
@@ -3246,6 +3251,7 @@
     "records": "Records",
     "target": "Target",
     "ttlSeconds": "TTL (Seconds) - 600",
+    "elements": "Elements",
     "primary": "Primary",
     "secondary": "Secondary",
     "activity": "Activity",
@@ -3315,6 +3321,7 @@
     "edit": "Edit",
     "enquireNow": "Enquire Now",
     "ok": "OK",
+    "openInCrisp": "Open in CRISP",
     "rename": "Rename",
     "reset": "Reset",
     "save": "Save",
