@@ -190,7 +190,7 @@ export class InsightsDocument implements IDashboardExportDocument {
                 <td>${item.cpuScore}</td>
                 <td>${item.memoryScore}</td>
                 <td>${item.diskScore}</td>
-                <td>${item.efficiency ? item.efficiency : 'No data'}</td>
+                <td>${item.efficiency ? item.efficiency : 'No Data'}</td>
                 <td>${item.totalScore}</td>
               </tr>
             `;
@@ -327,7 +327,7 @@ export class InsightsDocument implements IDashboardExportDocument {
   private _createAuditAlertsHtml(data: McsReportAuditAlerts[]): string {
     let title = this._translate('reports.insights.techReview.auditAlerts.title');
     let subTitle = `
-      <p>${this._translate('reports.insights.techReview.auditAlerts.subTitle')}</p>`;
+      ${this._translate('reports.insights.techReview.auditAlerts.subTitle')}`;
     let auditAlertsTable = '';
     auditAlertsTable += `
       <table style="width: 100%">
@@ -358,8 +358,7 @@ export class InsightsDocument implements IDashboardExportDocument {
 
   private _createUpdateManagementHtml(data: McsReportUpdateManagement[]): string {
     let title = this._translate('reports.insights.techReview.updateManagement.title');
-    let subTitle = `
-      <p>${this._translate('reports.insights.techReview.updateManagement.subTitle')}</p>`
+    let subTitle = `${this._translate('reports.insights.techReview.updateManagement.subTitle')}`
     let updateManagementTable = '';
     updateManagementTable += `
       <table style="border-collapse: collapse; width: 100%" width="100%">
@@ -404,7 +403,7 @@ export class InsightsDocument implements IDashboardExportDocument {
     if (subTitle) {
       actualResponse += `<p>${subTitle}</p>`;
     }
-    actualResponse += `${widgetHtml}<div>`;
+    actualResponse += `${widgetHtml}</div>`;
     return actualResponse;
   }
 
