@@ -114,7 +114,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public ticketCreatedByDifferentCompanyId(createdByCompanyId: string, requestor: string): boolean {
     let ticketCreatedBySameCompanyId = this.activeCompanyId === createdByCompanyId;
-    let invalidToShowAttributionText = ticketCreatedBySameCompanyId || isNullOrEmpty(createdByCompanyId) || isNullOrEmpty(requestor);
+    let invalidToShowAttributionText = ticketCreatedBySameCompanyId || isNullOrEmpty(requestor);
     if (invalidToShowAttributionText) { return false; }
     return true;
   }
