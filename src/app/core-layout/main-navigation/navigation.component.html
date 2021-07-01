@@ -26,6 +26,28 @@
             <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
           </a>
           <ul *ngIf="showLaunchPadMenu">
+            <!-- CRISP -->
+            <li *mcsAccessControl="[]; feature: ['EnableCrisp']">
+              <a (click)="toggleThis('showLaunchPadCrispSubmenu')"
+                [class.active]="selectedCategory === routerCategoryEnum.LaunchPadCrisp"
+                mcsId="launch-pad-link">
+                {{ 'navigation.launchPad.crisp' | translate }}
+                <mcs-icon [key]="showLaunchPadCrispSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+              </a>
+              <ul *ngIf="showLaunchPadCrispSubmenu">
+                <!-- Orders -->
+                <li>
+                  <a [mcsRouterLink]="routeKeyEnum.LaunchPadCrispOrders"
+                    mcsRouterLinkActive="active"
+                    mcsId="launch-pad-crisp-orders-link"
+                    mcsEventTracker="navigate-to-crisp-orders"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">
+                    {{ 'navigation.launchPad.crispOrders' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </li>
             <!-- Workflows -->
             <li>
               <a [mcsRouterLink]="routeKeyEnum.LaunchPadWorkflows"
@@ -46,6 +68,17 @@
                 mcsEventLabel="main-nav"
                 mcsRouterLinkActive="active">
                 {{ 'navigation.launchPad.azureDeployments' | translate }}
+              </a>
+            </li>
+            <!-- Reporting -->
+            <li *ngIf="workflowReportingLink">
+              <a [href]="workflowReportingLink"
+                target="_blank"
+                mcsId="launch-pad-reporting-link"
+                mcsEventTracker="navigate-to-launch-pad-workflows-reporting"
+                mcsEventCategory="navigation"
+                mcsEventLabel="main-nav">
+                {{ 'navigation.launchPad.reporting' | translate }}
               </a>
             </li>
             <!-- Network DB -->
@@ -90,6 +123,18 @@
                     <mcs-icon [key]="showLaunchPadVlanDbSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
                   </a>
                   <ul [class.hidden]="!showLaunchPadVlanDbSubmenu">
+                    <!-- Networks -->
+                    <li>
+                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbNetworks"
+                        mcsRouterLinkActive="active"
+                        class="sub-navigation-item unstyled-link"
+                        mcsId="launch-pad-networks-link"
+                        mcsEventTracker="navigate-to-network-db"
+                        mcsEventCategory="navigation"
+                        mcsEventLabel="main-nav">
+                        {{ 'navigation.launchPad.networks' | translate }}
+                      </a>
+                    </li>
                     <!-- VLANs -->
                     <li>
                       <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbVlans"
@@ -114,20 +159,8 @@
                         {{ 'navigation.launchPad.vnis' | translate }}
                       </a>
                     </li>
-                     <!-- Use Cases -->
-                     <li>
-                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbUseCases"
-                        mcsRouterLinkActive="active"
-                        class="sub-navigation-item unstyled-link"
-                        mcsId="launch-pad-use-cases-link"
-                        mcsEventTracker="navigate-to-network-db"
-                        mcsEventCategory="navigation"
-                        mcsEventLabel="main-nav">
-                        {{ 'navigation.launchPad.useCases' | translate }}
-                      </a>
-                    </li>
-                     <!-- Multicast IPs -->
-                     <li>
+                    <!-- Multicast IPs -->
+                    <li>
                       <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbMulticastIps"
                         mcsRouterLinkActive="active"
                         class="sub-navigation-item unstyled-link"
@@ -138,55 +171,23 @@
                         {{ 'navigation.launchPad.multicastIps' | translate }}
                       </a>
                     </li>
-                     <!-- Networks -->
-                     <li>
-                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbNetworks"
+                    <!-- Use Cases -->
+                    <li>
+                      <a [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbUseCases"
                         mcsRouterLinkActive="active"
                         class="sub-navigation-item unstyled-link"
-                        mcsId="launch-pad-networks-link"
+                        mcsId="launch-pad-use-cases-link"
                         mcsEventTracker="navigate-to-network-db"
                         mcsEventCategory="navigation"
                         mcsEventLabel="main-nav">
-                        {{ 'navigation.launchPad.networks' | translate }}
+                        {{ 'navigation.launchPad.useCases' | translate }}
                       </a>
                     </li>
                   </ul>
                 </li>
               </ul>
             </li>
-            <!-- CRISP -->
-            <li *mcsAccessControl="[]; feature: ['EnableCrisp']">
-              <a (click)="toggleThis('showLaunchPadCrispSubmenu')"
-                [class.active]="selectedCategory === routerCategoryEnum.LaunchPadCrisp"
-                mcsId="launch-pad-link">
-                {{ 'navigation.launchPad.crisp' | translate }}
-                <mcs-icon [key]="showLaunchPadCrispSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
-              </a>
-              <ul *ngIf="showLaunchPadCrispSubmenu">
-                <!-- Orders -->
-                <li>
-                  <a [mcsRouterLink]="routeKeyEnum.LaunchPadCrispOrders"
-                    mcsRouterLinkActive="active"
-                    mcsId="launch-pad-crisp-orders-link"
-                    mcsEventTracker="navigate-to-crisp-orders"
-                    mcsEventCategory="navigation"
-                    mcsEventLabel="main-nav">
-                    {{ 'navigation.launchPad.crispOrders' | translate }}
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <!-- Reporting -->
-            <li *ngIf="workflowReportingLink">
-              <a [href]="workflowReportingLink"
-                target="_blank"
-                mcsId="launch-pad-reporting-link"
-                mcsEventTracker="navigate-to-launch-pad-workflows-reporting"
-                mcsEventCategory="navigation"
-                mcsEventLabel="main-nav">
-                {{ 'navigation.launchPad.reporting' | translate }}
-              </a>
-            </li>
+
           </ul>
         </li>
       </ng-container>
@@ -361,18 +362,6 @@
               <mcs-icon [key]="showAzureSubMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
             </a>
             <ul [class.hidden]="!showAzureSubMenu">
-              <!-- Software Subscriptions -->
-              <li *mcsAccessControl="[]; feature: 'EnablePublicCloudSoftwareSubscriptionListing'">
-                <a [mcsRouterLink]="routeKeyEnum.AzureSoftwareSubscriptions"
-                  mcsRouterLinkActive="active"
-                  class="sub-navigation-item unstyled-link"
-                  mcsId="software-subscriptions-link"
-                  mcsEventTracker="navigate-to-azure-software-subscriptions"
-                  mcsEventCategory="navigation"
-                  mcsEventLabel="main-nav">
-                  {{ 'navigation.publicCloud.azure.softwareSubscriptions' | translate }}
-                </a>
-              </li>
               <!-- Managed Services -->
               <li>
                 <a [mcsRouterLink]="routeKeyEnum.AzureManagedServices"
@@ -383,6 +372,18 @@
                   mcsEventCategory="navigation"
                   mcsEventLabel="main-nav">
                   {{ 'navigation.publicCloud.azure.managedServices' | translate }}
+                </a>
+              </li>
+              <!-- Resources -->
+              <li *mcsAccessControl="['AzureView']; feature: 'EnablePublicCloudResourceListing'">
+                <a [mcsRouterLink]="routeKeyEnum.AzureResources"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="resources-link"
+                  mcsEventTracker="navigate-to-azure-resources"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.publicCloud.azure.resources' | translate }}
                 </a>
               </li>
               <!-- Reservations -->
@@ -397,16 +398,16 @@
                   {{ 'navigation.publicCloud.azure.reservations' | translate }}
                 </a>
               </li>
-              <!-- Resources -->
-              <li *mcsAccessControl="['AzureView']; feature: 'EnablePublicCloudResourceListing'">
-                <a [mcsRouterLink]="routeKeyEnum.AzureResources"
+              <!-- Software Subscriptions -->
+              <li *mcsAccessControl="[]; feature: 'EnablePublicCloudSoftwareSubscriptionListing'">
+                <a [mcsRouterLink]="routeKeyEnum.AzureSoftwareSubscriptions"
                   mcsRouterLinkActive="active"
                   class="sub-navigation-item unstyled-link"
-                  mcsId="resources-link"
-                  mcsEventTracker="navigate-to-azure-resources"
+                  mcsId="software-subscriptions-link"
+                  mcsEventTracker="navigate-to-azure-software-subscriptions"
                   mcsEventCategory="navigation"
                   mcsEventLabel="main-nav">
-                  {{ 'navigation.publicCloud.azure.resources' | translate }}
+                  {{ 'navigation.publicCloud.azure.softwareSubscriptions' | translate }}
                 </a>
               </li>
             </ul>
