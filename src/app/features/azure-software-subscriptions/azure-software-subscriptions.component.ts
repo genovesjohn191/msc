@@ -52,8 +52,7 @@ export class AzureSoftwareSubscriptionsComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'quantity' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscriptionId' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'cost' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingTerm' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })

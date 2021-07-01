@@ -76,23 +76,13 @@
           </td>
         </ng-container>
 
-        <!-- Subscription ID Column -->
-        <ng-container matColumnDef="subscriptionId">
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>
-            {{ 'columnHeader.subscriptionId' | translate }}
+            {{ 'columnHeader.id' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.subscriptionId }}
-          </td>
-        </ng-container>
-
-        <!-- Cost Column -->
-        <ng-container matColumnDef="cost">
-          <th mat-header-cell *matHeaderCellDef>
-            {{ 'columnHeader.cost' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let row">
-            {{ row.costCents }}
+            {{ row.alternateId }}
           </td>
         </ng-container>
 
