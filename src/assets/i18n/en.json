@@ -46,7 +46,7 @@
       "azure": {
         "label": "Azure",
         "resources": "Resources",
-        "managedServices": "Managed Services",
+        "subscriptions": "Subscriptions",
         "reservations": "Reservations",
         "softwareSubscriptions": "Software Subscriptions"
       },
@@ -2451,14 +2451,14 @@
       "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the linked services for this Backup Aggregation Target."
     }
   },
-  "azureManagedServices": {
-    "header": "Managed Services",
-    "leftPanelHeader": "Managed Services Filter",
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of managed services.",
-    "noRecordsFoundMessage": "There are no managed services to display.",
-    "filterColumn": "Managed Services Filter",
-    "dataSingular": "Managed Service",
-    "dataPlural": "Managed Services",
+  "azureSubscriptions": {
+    "header": "Subscriptions",
+    "leftPanelHeader": "Subscriptions Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of subscriptions.",
+    "noRecordsFoundMessage": "There are no subscriptions to display.",
+    "filterColumn": "Subscriptions Filter",
+    "dataSingular": "Subscription",
+    "dataPlural": "Subscriptions",
     "raiseTicket": "Raise a Ticket",
     "serviceRequest": "Place a Service Request",
     "accessCloudHealth": "Access CloudHealth",
