@@ -26,6 +26,7 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
     searchParams.set('search_keyword', query.keyword);
     searchParams.set('tag_name', query.tagName);
     searchParams.set('tag_value', query.tagValue);
+    searchParams.set('subscription_id', query.subscriptionId);
 
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/resources`;

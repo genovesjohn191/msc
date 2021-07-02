@@ -68,7 +68,8 @@ import {
   McsCloudHealthOption,
   McsFeatureFlag,
   McsPermission,
-  HttpStatusCode
+  HttpStatusCode,
+  McsAzureResourceQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -347,12 +348,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.fcMsService.setValue(service);
   }
 
-  private _resetAzureResources(service: McsAzureService): void {
-    this._getAzureResources(service?.serviceId);
-  }
-
-  public onServiceChange(service: McsAzureService): void {
-    this._resetAzureResources(service);
+  public onServiceChange(): void {
+    this._getAzureResources();
   }
 
   public onRequestTypeChange(requestType: AzureServiceRequestType): void {
@@ -610,18 +607,20 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     );
   }
 
-  private _getAzureResources(serviceId: string = null): void {
+  private _getAzureResources(): void {
     this._loadingInProgress = true;
-    this.azureResourcesOptions$ = this._apiService.getAzureResources().pipe(
+    let queryParam = new McsAzureResourceQueryParams();
+    queryParam.subscriptionId = this.fcMsService.value?.id;
+
+    this.azureResourcesOptions$ = this._apiService.getAzureResources(queryParam).pipe(
       map((resourcesCollection) => {
         let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
-        let filteredResources = resources.filter((resource) => resource.serviceId === serviceId)
         let resourceOptions: McsOption[] = [];
         resourceOptions.push(createObject(McsOption, {
           text: addNewResourcesText[AzureResources.AddNewResources],
           value: { azureId: addNewResourcesText[AzureResources.AddNewResources]}
         }));
-        filteredResources.forEach((resource) => {
+        resources.forEach((resource) => {
           let textValue = `${resource.name}`;
           resourceOptions.push(createObject(McsOption, { text: textValue, value: resource }));
         });
@@ -665,7 +664,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           if (!isNullOrEmpty(params.azureId)) {
             this.fcMsServiceRequestType.setValue(AzureServiceRequestType.Custom);
           }
-          this._getAzureResources(params.serviceId);
+          this._getAzureResources();
         }
       }),
       shareReplay(1)
