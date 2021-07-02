@@ -362,16 +362,16 @@
               <mcs-icon [key]="showAzureSubMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
             </a>
             <ul [class.hidden]="!showAzureSubMenu">
-              <!-- Managed Services -->
+              <!-- Subscriptions -->
               <li>
-                <a [mcsRouterLink]="routeKeyEnum.AzureManagedServices"
+                <a [mcsRouterLink]="routeKeyEnum.AzureSubscriptions"
                   mcsRouterLinkActive="active"
                   class="sub-navigation-item unstyled-link"
-                  mcsId="managed-services-link"
-                  mcsEventTracker="navigate-to-azure-managed-services"
+                  mcsId="subscriptions-link"
+                  mcsEventTracker="navigate-to-azure-subscriptions"
                   mcsEventCategory="navigation"
                   mcsEventLabel="main-nav">
-                  {{ 'navigation.publicCloud.azure.managedServices' | translate }}
+                  {{ 'navigation.publicCloud.azure.subscriptions' | translate }}
                 </a>
               </li>
               <!-- Resources -->

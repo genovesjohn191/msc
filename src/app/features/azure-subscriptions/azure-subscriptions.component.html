@@ -1,11 +1,11 @@
-<mcs-page [header]="'azureManagedServices.header' | translate">
+<mcs-page [header]="'azureSubscriptions.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <div class="total-record-count"  *ngIf="dataSource?.totalCount$ | async as totalCount">
           <span>{{ totalCount | mcsPlural:
-                ('azureManagedServices.dataSingular' | translate) : ('azureManagedServices.dataPlural' | translate) }}
+                ('azureSubscriptions.dataSingular' | translate) : ('azureSubscriptions.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -13,16 +13,16 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="'azureManagedServices.leftPanelHeader' | translate">
+  <mcs-left-panel *mcsLeftPanelDef="'azureSubscriptions.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
-      <mcs-search *ngIf="!isMobile" #search mcsId="azure-managed-services-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="azure-subscriptions-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureManagedServices.filterColumn' | translate" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureSubscriptions.filterColumn' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="azureManagedServices"
+        storageKey="azureSubscriptions"
         [defaultFilters]="defaultColumnFilters">
       </mcs-column-selector>
     </mcs-left-panel-item>
@@ -67,7 +67,7 @@
                 <span> {{  row.parentSubscriptionServiceId | uppercase }}</span>
               </ng-container>
               <ng-template #NoParentId>
-                  <span>{{'azureManagedServices.noParentSubscriptionIdLabel' | translate}}</span>
+                  <span>{{'azureSubscriptions.noParentSubscriptionIdLabel' | translate}}</span>
               </ng-template>
             </mcs-item>
           </td>
@@ -86,33 +86,33 @@
                 class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
                   (click)="onRaiseTicket(row)"
-                  mcsId="azure-managed-service-raise-ticket"
-                  mcsEventTracker="azure-managed-service-raise-ticket"
-                  mcsEventCategory="azure managed service"
-                  mcsEventLabel="azure-managed-service-listing-page">
-                  {{ 'azureManagedServices.raiseTicket' | translate }}
+                  mcsId="azure-subscriptions-raise-ticket"
+                  mcsEventTracker="azure-subscriptions-raise-ticket"
+                  mcsEventCategory="azure subscriptions"
+                  mcsEventLabel="azure-subscriptions-listing-page">
+                  {{ 'azureSubscriptions.raiseTicket' | translate }}
                 </a>
               </div>
               <div *mcsAccessControl="['OrderEdit']"
                 class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
                   (click)="azureServiceRequestLink(row)"
-                  mcsId="azure-managed-service-request"
-                  mcsEventTracker="azure-managed-service-request"
-                  mcsEventCategory="azure managed service"
-                  mcsEventLabel="azure-managed-service-listing-page">
-                  {{ 'azureManagedServices.serviceRequest' | translate }}
+                  mcsId="azure-subscriptions-request"
+                  mcsEventTracker="azure-subscriptions-request"
+                  mcsEventCategory="azure subscriptions"
+                  mcsEventLabel="azure-subscriptions-listing-page">
+                  {{ 'azureSubscriptions.serviceRequest' | translate }}
                 </a>
               </div>
               <div *ngIf="row.cloudHealthPortalUrl" class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
                   href="{{ row.cloudHealthPortalUrl }}"
                   target="_blank"
-                  mcsId="azure-managed-service-access-cloudhealth"
-                  mcsEventTracker="azure-managed-service-access-cloudhealth"
-                  mcsEventCategory="azure managed service"
-                  mcsEventLabel="azure-managed-service-listing-page">
-                  {{ 'azureManagedServices.accessCloudHealth' | translate }}
+                  mcsId="azure-subscriptions-access-cloudhealth"
+                  mcsEventTracker="azure-subscriptions-access-cloudhealth"
+                  mcsEventCategory="azure subscriptions"
+                  mcsEventLabel="azure-subscriptions-listing-page">
+                  {{ 'azureSubscriptions.accessCloudHealth' | translate }}
                 </a>
               </div>
             </ng-template>
@@ -130,16 +130,16 @@
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-          <span>{{ 'azureManagedServices.noRecordsFoundMessage' | translate }}</span>
+          <span>{{ 'azureSubscriptions.noRecordsFoundMessage' | translate }}</span>
         </div>
         <div *ngIf="dataSource?.hasError$ | async" text-center>
           <div class="listing-status-wrapper">
-            <span>{{ 'azureManagedServices.errorMessage' | translate }}</span>
+            <span>{{ 'azureSubscriptions.errorMessage' | translate }}</span>
             <a (click)="retryDatasource()"
               mcsId
-              mcsEventTracker="retry-azure-managed-service-list"
-              mcsEventCategory="azure-managed-service"
-              mcsEventLabel="azure-managed-service-listing-page">{{ 'azureManagedServices.retry' | translate }}</a>.
+              mcsEventTracker="retry-azure-subscriptions-list"
+              mcsEventCategory="azure-subscriptions"
+              mcsEventLabel="azure-subscriptions-listing-page">{{ 'azureSubscriptions.retry' | translate }}</a>.
           </div>
         </div>
       </mcs-item>

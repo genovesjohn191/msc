@@ -20,7 +20,6 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import {
-  CoreRoutes,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -36,11 +35,11 @@ import {
 } from '@app/shared';
 
 @Component({
-  selector: 'mcs-azure-managed-services',
-  templateUrl: './azure-managed-services.component.html',
+  selector: 'mcs-azure-subscriptions',
+  templateUrl: './azure-subscriptions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AzureManagedServicesComponent {
+export class AzureSubscriptionsComponent {
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
