@@ -51,7 +51,7 @@
         <mcs-loader size="small"></mcs-loader>
       </ng-container>
     </span>
-    <mcs-form-field *ngIf="azureResources">
+    <mcs-form-field *ngIf="azureResources && !resourceLoadingInProgress">
       <mcs-select
         [formControl]="fcResourceGroup"
         mcsId="select-azure-resource-group"

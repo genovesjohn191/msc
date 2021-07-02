@@ -51,7 +51,7 @@
                     mcsEventCategory="order"
                     mcsEventLabel="ms-service-change-request"
                     [formControl]="fcMsService"
-                    (selectionChange)="onServiceChange($event)"
+                    (selectionChange)="onServiceChange()"
                     [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
                     <mcs-option *ngFor="let azureService of azureServices$ | async"
                       [selected]="(selectedServiceId$ | async)?.serviceId === azureService.value.serviceId"
