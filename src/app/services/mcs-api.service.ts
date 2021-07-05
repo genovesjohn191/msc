@@ -131,6 +131,7 @@ import {
   McsLicense,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
+  McsNetworkDbNetworkCreate,
   McsNetworkDbPod,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
@@ -2251,6 +2252,16 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public createNetworkDbNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsNetworkDbNetwork> {
+    return this._networkDbApi.createNetwork(payload).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createNetworkDbNetwork'))
+      ),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.TerraformDeployment)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

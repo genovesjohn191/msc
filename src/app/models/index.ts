@@ -154,6 +154,7 @@ export * from './request/mcs-ticket-create-comment';
 export * from './request/mcs-resource-catalog-item-create';
 export * from './request/mcs-workflow-create';
 export * from './request/mcs-catalog-enquiry-request';
+export * from './request/mcs-network-db-network-create';
 export * from './request/mcs-network-dns-record-request';
 
 /** Response */

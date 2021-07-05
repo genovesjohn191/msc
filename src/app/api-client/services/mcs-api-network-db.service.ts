@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
 import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
+  McsNetworkDbNetworkCreate,
   McsNetworkDbPod,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
@@ -197,4 +198,23 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
         })
       );
   }
+
+  public createNetwork(payload: McsNetworkDbNetworkCreate):
+    Observable<McsApiSuccessResponse<McsNetworkDbNetwork>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/networks`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(payload);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsNetworkDbNetwork>(McsNetworkDbNetwork, response);
+          return apiResponse;
+        })
+      );
+  }
+
 }

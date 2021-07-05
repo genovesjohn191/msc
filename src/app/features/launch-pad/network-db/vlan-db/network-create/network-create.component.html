@@ -1,0 +1,76 @@
+<mcs-page header="Create a New Network">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <mat-vertical-stepper [linear]="true" #stepper>
+      <!-- Deployment Details -->
+
+      <mat-step [editable]="!creationSuccessful && (!processing && !hasError)" [completed]="false">
+        <ng-template matStepLabel>Deployment Details</ng-template>
+        <div *ngIf="!processing && !hasError">
+          <mcs-dynamic-form #form [config]="formConfig"></mcs-dynamic-form>
+
+          <br />
+          <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!isValidPayload"
+          (click)="createNetwork()">
+            <mat-icon>chevron_right</mat-icon>
+            Create
+          </button>
+        </div>
+
+        <div *ngIf="processing">
+          <mcs-status-message type="info">
+            Please wait while we create your network.
+          </mcs-status-message>
+          <br />
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+
+        <div *ngIf="hasError">
+          <mcs-status-message type="error">
+            An unexpected server error has occured.<a style="margin-left: 5px;" mcsId (click)="retryCreation()">Go back</a>
+          </mcs-status-message>
+        </div>
+
+      </mat-step>
+
+      <!-- Go -->
+      <mat-step [editable]="creationSuccessful" [completed]="false">
+        <ng-template matStepLabel>Go</ng-template>
+
+        <h2>New Network Creation</h2>
+
+        <mcs-list>
+          <mcs-item orientation="block">
+            <mcs-item>
+              <mcs-icon [key]="successIconKey" size="medium"></mcs-icon>
+              <span><strong>{{ payload?.name }}</strong> successfully created</span>
+            </mcs-item>
+          </mcs-item>
+          <mcs-item orientation="block">
+            <mcs-item>
+              <a
+                mcsCursor="pointer"
+                [mcsRouterLink]="[routeKeyEnum.LaunchPadNetworkDbNetworkDetails, id]"
+                mcsId="go-to-network-details-link"
+                mcsEventTracker="navigate-to-network-details"
+                mcsEventCategory="network-db-networks"
+                mcsEventLabel="network-db-network-creation">
+                Go to your Network
+              </a>
+            </mcs-item>
+          </mcs-item>
+        </mcs-list>
+
+      </mat-step>
+
+    </mat-vertical-stepper>
+
+  </mcs-content-panel>
+</mcs-page>
+
+
+
+
