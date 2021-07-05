@@ -5,7 +5,7 @@
       <!-- Deployment Details -->
 
       <mat-step [editable]="!creationSuccessful && (!processing && !hasError)" [completed]="false">
-        <ng-template matStepLabel>Deployment Details</ng-template>
+        <ng-template matStepLabel>Network Details</ng-template>
         <div *ngIf="!processing && !hasError">
           <mcs-dynamic-form #form [config]="formConfig"></mcs-dynamic-form>
 

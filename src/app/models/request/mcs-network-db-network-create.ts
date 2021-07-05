@@ -14,5 +14,5 @@ export class McsNetworkDbNetworkCreate {
   public description: string = undefined;
 
   @JsonProperty()
-  public useCase: string = undefined;
+  public useCaseId: number = undefined;
 }
