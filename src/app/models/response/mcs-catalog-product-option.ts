@@ -9,7 +9,7 @@ export class McsCatalogProductOption {
   public type: string = undefined;
 
   @JsonProperty()
-  public displayOrder: string = undefined;
+  public displayOrder: number = undefined;
 
   @JsonProperty()
   public listOptions: string[] = undefined;

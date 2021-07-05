@@ -98,6 +98,11 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () =>
           import('../../features/azure-subscriptions/azure-subscriptions.module').then(m => m.AzureSubscriptionsModule)
       },
+      // Deprecated - FUSION-5845: redirect the old path of azure subscriptions
+      {
+        path: 'azure/managed-services',
+        redirectTo: 'azure/subscriptions'
+      },
       {
         path: 'azure/software-subscriptions',
         data: { routeId: RouteKey.AzureSoftwareSubscriptions },

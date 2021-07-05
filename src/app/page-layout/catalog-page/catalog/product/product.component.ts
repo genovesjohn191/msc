@@ -153,6 +153,11 @@ export class ProductComponent implements OnInit {
       this._getPropertiesDefaultFormat(productOption.properties);
   }
 
+  public sortProductOptions(productOptions: McsCatalogProductOption[]): McsCatalogProductOption[] {
+    // sort product options displayOrder in ascending order
+    return productOptions.sort((productOptionA, productOptionB) => productOptionA.displayOrder - productOptionB.displayOrder);
+  }
+
   private _onShowEnquiryPanel(): void {
     this.showEnquiryForm = true;
     this._changeDetectorRef.markForCheck();
