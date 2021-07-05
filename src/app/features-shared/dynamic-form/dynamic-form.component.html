@@ -90,6 +90,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-network-field>
 
+        <mcs-dff-select-network-db-use-case-field *ngSwitchCase="'select-network-db-use-case'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-network-db-use-case-field>
+
         <mcs-dff-select-os-field *ngSwitchCase="'select-os'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-os-field>

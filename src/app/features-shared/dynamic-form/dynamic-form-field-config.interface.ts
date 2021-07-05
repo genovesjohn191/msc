@@ -20,7 +20,7 @@ export interface DynamicFormFieldConfig {
 
 export interface FlatOption {
   type?: 'flat';
-  key: string;
+  key: any;
   value: string;
   disabled?: boolean;
 }
@@ -75,6 +75,7 @@ export type DynamicFormFieldType =
   | 'select-group'
   | 'select-multiple'
   | 'select-network'
+  | 'select-network-db-use-case'
   | 'select-os'
   | 'select-retention-period'
   | 'select-storage-profile'
@@ -105,6 +106,7 @@ export type DynamicFormFieldTemplate =
   | 'select-group'
   | 'select-multiple'
   | 'select-network'
+  | 'select-network-db-use-case'
   | 'select-os'
   | 'select-retention-period'
   | 'select-storage-profile'

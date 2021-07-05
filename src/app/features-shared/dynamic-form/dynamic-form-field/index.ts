@@ -20,6 +20,7 @@ export * from './select-chips-vm/select-chips-vm';
 export * from './select-group/select-group';
 export * from './select-multiple/select-multiple';
 export * from './select-network/select-network';
+export * from './select-network-db-usecase/select-network-db-use-case';
 export * from './select-os/select-os';
 export * from './select-retention-period/select-retention-period';
 export * from './select-storage-profile/select-storage-profile';

@@ -14,6 +14,7 @@ import {
   DynamicFormFieldConfigBase,
   DynamicInputTextField,
   DynamicSelectChipsCompanyField,
+  DynamicSelectNetworkDbUseCaseField as DynamicSelectNetworkDbUseCaseField,
 } from '@app/features-shared/dynamic-form';
 import {
   McsNetworkDbNetwork,
@@ -49,8 +50,7 @@ export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
       validators: { required: true },
       allowCustomInput: true,
       maxItems: 1,
-      eventName: 'company-change',
-      dependents: ['useCase']
+      eventName: 'company-change'
     }),
     new DynamicInputTextField({
       key: 'name',
@@ -64,12 +64,17 @@ export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
       placeholder: 'Enter a service ID',
       validators: { maxlength: 30 },
     }),
+    new DynamicSelectNetworkDbUseCaseField({
+      key: 'useCaseId',
+      label: 'Use Case',
+      validators: { required: true }
+    }),
     new DynamicInputTextField({
       key: 'description',
       label: 'Description',
       placeholder: 'Enter a description',
       validators: { maxlength: 1024 },
-    }),
+    })
   ]
 
   public get payload(): McsNetworkDbNetworkCreate {
@@ -82,7 +87,7 @@ export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
       name: properties.name,
       description: properties.description,
       serviceId: properties.serviceId,
-      useCase: properties.useCase
+      useCaseId: Number(properties.useCaseId)
     }
   }
 
