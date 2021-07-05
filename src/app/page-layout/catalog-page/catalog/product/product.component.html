@@ -146,7 +146,7 @@
       <div class="product-catalog-item" *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
         <h2>Product Options</h2>
 
-        <table mat-table [dataSource]="selectedProduct.productOptions" class="limited-view">
+        <table mat-table [dataSource]="sortProductOptions(selectedProduct.productOptions)" class="limited-view">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>
               Name
