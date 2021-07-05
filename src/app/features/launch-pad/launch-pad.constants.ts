@@ -30,6 +30,7 @@ import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
 import { CrispOrderDetailsComponent } from './crisp/orders/order/crisp-order-details.component';
 import { CrispOrderElementsComponent } from './crisp/orders/order/elements/crisp-order-elements.component';
 import { CrispOrderResolver } from './crisp/orders/order/crisp-order.resolver';
+import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
 
 /**
  * List of routes for the main module
@@ -134,6 +135,13 @@ export const launchPadRoutes: Routes = [
     component: NetworkDbNetworksComponent,
     data: { routeId: RouteKey.LaunchPadNetworkDbNetworks },
     canActivate: [ LaunchPadGuard ]
+  },
+  {
+    path: 'network-db/vlan-db/networks/create',
+    component: NetworkDbNetworkCreateComponent,
+    data: { routeId: RouteKey.LaunchPadNetworkDbNetworkCreate },
+    canActivate: [ LaunchPadGuard ],
+    canDeactivate: [ McsNavigateAwayGuard ],
   },
   {
     path: 'crisp/orders',

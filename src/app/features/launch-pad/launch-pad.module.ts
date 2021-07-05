@@ -32,6 +32,7 @@ import { CrispOrderDetailsComponent } from './crisp/orders/order/crisp-order-det
 import { CrispOrderElementsComponent } from './crisp/orders/order/elements/crisp-order-elements.component';
 import { CrispOrderService } from './crisp/orders/order/crisp-order.service';
 import { CrispOrderResolver } from './crisp/orders/order/crisp-order.resolver';
+import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { CrispOrderResolver } from './crisp/orders/order/crisp-order.resolver';
     NetworkDbUseCasesComponent,
     NetworkDbMulticastIpsComponent,
     NetworkDbNetworksComponent,
+    NetworkDbNetworkCreateComponent,
     // CRISP
     CrispOrdersComponent,
     CrispOrderDetailsComponent,

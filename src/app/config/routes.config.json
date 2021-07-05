@@ -143,6 +143,15 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
+  "launchPadNetworkDbNetworkCreate": {
+    "enumKey": "LaunchPadNetworkDbNetworkCreate",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/networks/create",
+    "documentTitle": "LAUNCH Pad - Create a Network",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
   "launchPadCrispOrders": {
     "enumKey": "LaunchPadCrispOrders",
     "enumCategory": "LaunchPadCrisp",
