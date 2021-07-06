@@ -1,0 +1,72 @@
+<ng-container *ngIf="network$ | async as network" class="limited-view">
+
+  <mcs-grid>
+    <mcs-grid-row>
+      <!-- Network DB Properties -->
+      <mcs-grid-column sizeSm="12">
+        <mcs-presentation-panel mcsId="network-properties">
+          <ng-container mcsPresentationPanelHeader>
+            <h2>Basic Information</h2>
+          </ng-container>
+
+          <mcs-item>
+            <span>{{ 'label.name' | translate }}:</span>
+            <span [innerHTML]="network.name | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.description' | translate }}:</span>
+            <span [innerHTML]="network?.description | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.company' | translate }}:</span>
+            <span *ngIf="network?.companyName" [innerHTML]="network?.companyName | mcsDataLabel"></span>
+            <span *ngIf="network?.companyId">({{ network?.companyId | mcsDataLabel }})</span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.serviceId' | translate }}:</span>
+            <span [innerHTML]="network?.serviceId | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.useCase' | translate }}:</span>
+            <span [innerHTML]="network?.useCaseName | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.vni' | translate }}:</span>
+            <span [innerHTML]="network?.vni | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.multicastIpAddress' | translate }}:</span>
+            <span [innerHTML]="network?.multicastIpAddress | mcsDataLabel"></span>
+          </mcs-item>
+          
+          <mcs-item>
+            <span>{{ 'label.createdBy' | translate }}:</span>
+            <span [innerHTML]="network?.createdBy | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.createdDate' | translate }}:</span>
+            <span [innerHTML]="network?.createdOn | mcsDataLabel | mcsStdDateFormat"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.updatedBy' | translate }}:</span>
+            <span [innerHTML]="network?.updatedBy | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'label.lastUpdated' | translate }}:</span>
+            <span [innerHTML]="network?.updatedOn | mcsDataLabel | mcsStdDateFormat"></span>
+          </mcs-item>
+          
+        </mcs-presentation-panel>
+      </mcs-grid-column>
+    </mcs-grid-row>
+  </mcs-grid>
+</ng-container>

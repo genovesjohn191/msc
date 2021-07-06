@@ -30,7 +30,10 @@ import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
 import { CrispOrderDetailsComponent } from './crisp/orders/order/crisp-order-details.component';
 import { CrispOrderElementsComponent } from './crisp/orders/order/elements/crisp-order-elements.component';
 import { CrispOrderResolver } from './crisp/orders/order/crisp-order.resolver';
+import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/network-db-network.component';
+import { NetworkDbNetworkDetailsResolver } from './network-db/vlan-db/network/network-db-network.resolver';
 import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
+import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/overview/network-db-network-overview.component';
 
 /**
  * List of routes for the main module
@@ -142,6 +145,28 @@ export const launchPadRoutes: Routes = [
     data: { routeId: RouteKey.LaunchPadNetworkDbNetworkCreate },
     canActivate: [ LaunchPadGuard ],
     canDeactivate: [ McsNavigateAwayGuard ],
+  },
+  {
+    path: 'network-db/vlan-db/networks/:id',
+    component: NetworkDbNetworkDetailsComponent,
+    data: { routeId: RouteKey.LaunchPadNetworkDbNetworkDetails },
+    canActivate: [ LaunchPadGuard ],
+    resolve: {
+      network: NetworkDbNetworkDetailsResolver
+    },
+    children: [
+      {
+        path: '',
+        redirectTo: 'overview',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.LaunchPadNetworkDbNetworkDetailsOverview }
+      },
+      {
+        path: 'overview',
+        component: NetworkDbNetworkOverviewComponent,
+        data: { routeId: RouteKey.LaunchPadNetworkDbNetworkDetailsOverview }
+      }
+    ]
   },
   {
     path: 'crisp/orders',

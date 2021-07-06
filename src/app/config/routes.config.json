@@ -142,6 +142,24 @@
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
+  },  
+  "launchPadNetworkDbNetworkDetails": {
+    "enumKey": "LaunchPadNetworkDbNetworkDetails",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/networks",
+    "documentTitle": "LAUNCH Pad - Network Details",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbNetworkDetailsOverview": {
+    "enumKey": "LaunchPadNetworkDbNetworkDetailsOverview",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "overview",
+    "documentTitle": "LAUNCH Pad - Network Overview",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
   },
   "launchPadNetworkDbNetworkCreate": {
     "enumKey": "LaunchPadNetworkDbNetworkCreate",

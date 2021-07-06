@@ -2255,6 +2255,15 @@ export class McsApiService {
     );
   }
 
+  public getNetworkDbNetwork(id: string): Observable<McsNetworkDbNetwork> {
+    return this._networkDbApi.getNetwork(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
+      ),
+      map((response) => response.content)
+    );
+  }
+
   public createNetworkDbNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsNetworkDbNetwork> {
     return this._networkDbApi.createNetwork(payload).pipe(
       catchError((error) =>

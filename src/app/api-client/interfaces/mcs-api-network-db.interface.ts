@@ -58,6 +58,12 @@ export interface IMcsApiNetworkDbService {
   getNetworks(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbNetwork[]>>;
 
   /**
+   * Get network by ID (MCS API Response)
+   * @param id Network identification
+   */
+  getNetwork(id: string): Observable<McsApiSuccessResponse<McsNetworkDbNetwork>>;
+
+  /**
    * This will create the new network
    * @param payload Network data to be created
    */

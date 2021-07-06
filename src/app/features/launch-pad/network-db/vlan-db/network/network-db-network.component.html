@@ -1,0 +1,38 @@
+<mcs-page *ngIf="network$ | async as network" [header]="network.name">
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <!-- <ng-container *ngIf="network.isProcessing"> -->
+    <!-- <ng-container>
+      <mcs-busy-ribbon theme="dark" margin-bottom-small>
+        <span>{{ 'message.deploymentBusy' | translate }}</span>
+      </mcs-busy-ribbon>
+    </ng-container> -->
+
+    <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event, network)">
+      <mcs-tab [label]="'label.overview' | translate" id="overview"></mcs-tab>
+
+      <!-- Action tab -->
+      <ng-container mcsTabHeaderCustom>
+        <mat-menu #actionMenu="matMenu" mcsAlign="end">
+
+          <button mat-menu-item mcsId="edit-db-network" mcsEventTracker="edit-db-network"
+            mcsEventCategory="launchpad-db-network" mcsEventLabel="db-network-details-page" disabled>
+            Edit
+          </button>
+          <button mat-menu-item mcsId="delete-db-network" mcsEventTracker="delete-db-network"
+            mcsEventCategory="launchpad-db-network" mcsEventLabel="db-network-details-page" disabled>
+            Delete
+          </button>
+
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+          <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+        </button>
+      </ng-container>
+    </mcs-tab-group>
+
+    <div class="routing-tab-content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </mcs-content-panel>
+</mcs-page>
