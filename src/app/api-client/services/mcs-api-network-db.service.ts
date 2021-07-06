@@ -199,6 +199,14 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
       );
   }
 
+  public getNetwork(id: string): Observable<McsApiSuccessResponse<McsNetworkDbNetwork>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/networks/${id}`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+
+  }
+
   public createNetwork(payload: McsNetworkDbNetworkCreate):
     Observable<McsApiSuccessResponse<McsNetworkDbNetwork>> {
 
@@ -216,5 +224,4 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
         })
       );
   }
-
 }

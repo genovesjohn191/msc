@@ -18,6 +18,8 @@ export enum RouteKey {
   LaunchPadNetworkDbMulticastIps,
   LaunchPadNetworkDbNetworks,
   LaunchPadNetworkDbNetworkCreate,
+  LaunchPadNetworkDbNetworkDetails,
+  LaunchPadNetworkDbNetworkDetailsOverview,
   LaunchPadCrispOrders,
   LaunchPadCrispOrderDetails,
   LaunchPadCrispOrderDetailsElements,

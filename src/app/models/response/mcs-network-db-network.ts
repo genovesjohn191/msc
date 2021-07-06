@@ -1,5 +1,6 @@
 import { JsonProperty } from '@app/utilities';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
+import { McsNetworkDbVlan } from './mcs-network-db-vlan';
 
 export class McsNetworkDbNetwork {
   @JsonProperty()
@@ -13,6 +14,9 @@ export class McsNetworkDbNetwork {
 
   @JsonProperty()
   public companyId: string = undefined;
+
+  @JsonProperty()
+  public companyName: string = undefined;
 
   @JsonProperty()
   public serviceId: string = undefined;
@@ -46,4 +50,11 @@ export class McsNetworkDbNetwork {
     deserializer: McsDateSerialization
   })
   public updatedOn: Date = undefined;
+
+  @JsonProperty()
+  public multicastIpAddressId: string = undefined;
+
+  @JsonProperty({ target: McsNetworkDbVlan })
+  public vlans: McsNetworkDbVlan[] = undefined;
+
 }

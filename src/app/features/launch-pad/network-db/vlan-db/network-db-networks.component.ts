@@ -17,7 +17,8 @@ import {
 import {
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
-  McsNetworkDbNetwork
+  McsNetworkDbNetwork,
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -98,5 +99,9 @@ export class NetworkDbNetworksComponent implements OnDestroy {
 
     return this._apiService.getNetworkDbNetworks(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
+  }
+
+  public getRouteUrl(id: any): any[] {
+    return [RouteKey.LaunchPadNetworkDbNetworks, id];
   }
 }
