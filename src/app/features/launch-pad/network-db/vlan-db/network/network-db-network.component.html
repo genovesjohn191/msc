@@ -1,4 +1,19 @@
 <mcs-page *ngIf="network$ | async as network" [header]="network.name">
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <ng-container>
+        
+      </ng-container>
+      <mcs-action-item mcsId mcsAlign="end"
+        [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbNetworks" 
+        mcsEventTracker="navigate-to-network-db-listing"
+        mcsEventCategory="network-db" mcsEventLabel="network-db-details-page">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'networkDb.backToNetworks' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
 
   <mcs-content-panel *mcsContentPanelDef>
     <!-- <ng-container *ngIf="network.isProcessing"> -->
