@@ -16,7 +16,7 @@ import {
   McsRouteInfo,
   RouteKey,
 } from '@app/models';
-import { getSafeProperty, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import { CommonDefinition, getSafeProperty, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { Observable, of, Subject, Subscription } from 'rxjs';
 import { map, shareReplay, takeUntil, tap } from 'rxjs/operators';
 import { NetworkDbNetworkDetailsService } from './network-db-network.service';
@@ -106,5 +106,13 @@ export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
         }
         this.selectedTabId$ = of(tabUrl);
       });
+  }
+
+  public get backIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 }

@@ -2558,6 +2558,7 @@
     "retry": "Try again shortly"
   },
   "networkDb": {
+    "backToNetworks": "Back To Networks",
     "sites": {
       "header": "Sites",
       "leftPanelHeader": "Sites Filter",

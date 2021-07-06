@@ -102,6 +102,6 @@ export class NetworkDbNetworksComponent implements OnDestroy {
   }
 
   public getRouteUrl(id: any): any[] {
-    return [RouteKey.LaunchPadNetworkDbNetworks, id];
+    return [RouteKey.LaunchPadNetworkDbNetworks, id.toString()];
   }
 }
