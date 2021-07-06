@@ -27,6 +27,8 @@ export class JsonViewerComponent {
   public _process<T>(sourceObject: T): void {
     this.table = '';
     let convert = (source: any) => {
+      if (isNullOrEmpty(source)) { return; }
+
       let objectKeys = Object.keys(source);
       this.table += '<table class="mcs-compact-table">';
       objectKeys.forEach((fieldKey) => {
