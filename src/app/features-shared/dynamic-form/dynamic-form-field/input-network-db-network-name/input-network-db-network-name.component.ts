@@ -8,24 +8,20 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { McsIpValidatorService } from '@app/core';
-import {
-  McsAzureDeploymentsQueryParams,
-  McsAzureService
-} from '@app/models';
+import { McsNetworkDbNetworkQueryParams } from '@app/models';
 import { McsApiService } from '@app/services';
-import { isNullOrEmpty } from '@app/utilities';
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextComponent } from '../input-text/input-text.component';
-import { DynamicInputTerraformDeploymentNameField } from './input-terraform-deployment-name';
+import { DynamicInputNetworkDbNetworkNameField } from './input-network-db-network-name';
 
 @Component({
-  selector: 'mcs-dff-input-terraform-deployment-name-field',
+  selector: 'mcs-dff-input-network-db-network-name-field',
   templateUrl: '../shared-template/input-text.component.html',
   styleUrls: [ '../dynamic-form-field.scss' ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DynamicInputTerraformDeploymentNameComponent),
+      useExisting: forwardRef(() => DynamicInputNetworkDbNetworkNameComponent),
       multi: true
     },
     McsIpValidatorService
@@ -34,12 +30,11 @@ import { DynamicInputTerraformDeploymentNameField } from './input-terraform-depl
     '(blur)': 'onTouched()'
   }
 })
-export class DynamicInputTerraformDeploymentNameComponent extends DynamicInputTextComponent {
-  public config: DynamicInputTerraformDeploymentNameField;
+export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextComponent {
+  public config: DynamicInputNetworkDbNetworkNameField;
 
   // Filter variables
   private _companyId: string = '';
-  private _subscription: McsAzureService;
   private _unique: boolean = true;
 
   public constructor(
@@ -56,10 +51,6 @@ export class DynamicInputTerraformDeploymentNameComponent extends DynamicInputTe
         this._configureValidators();
         this.focusOut(this.config.value);
         break;
-      case 'subscription-change':
-        this._subscription = params.value;
-        this.focusOut(this.config.value);
-        break;
     }
   }
 
@@ -68,14 +59,8 @@ export class DynamicInputTerraformDeploymentNameComponent extends DynamicInputTe
   }
 
   public focusOut(inputValue: string): void {
-    if (isNullOrEmpty(this._subscription)) {
-      this._unique = true;
-      this.valueChange(inputValue);
-      return;
-    }
-
     // Check if name is whitelisted
-    let isWhiteListedName = this.config.whitelist.find((item) => item.toLowerCase().trim() === inputValue.toLowerCase().trim());
+    let isWhiteListedName = this.config.whitelist.find((item) => item.trim() === inputValue.trim());
 
     if (isWhiteListedName) {
       this._unique = true;
@@ -85,25 +70,25 @@ export class DynamicInputTerraformDeploymentNameComponent extends DynamicInputTe
 
     this.isLoading = true;
 
-    let queryParam = new McsAzureDeploymentsQueryParams();
+    let queryParam = new McsNetworkDbNetworkQueryParams();
     queryParam.pageSize = 1;
     queryParam.companyId = this._companyId;
     queryParam.name = inputValue;
 
-    this._apiService.getTerraformDeployments(queryParam)
+    this._apiService.getNetworkDbNetworks(queryParam)
     .pipe(
       catchError((error) => {
         this.isLoading = false;
         this._unique = true;
         this.valueChange(inputValue);
-        return throwError('Failed to validate for deployment name.');
+        return throwError('Failed to validate for network name.');
     }))
     .subscribe((result) => {
       this.isLoading = false;
       let match: boolean = result.totalCollectionCount > 0;
-      let matchSubscription: boolean = match && result.collection[0].subscriptionId === this._subscription.subscriptionId;
-      let matchName = match && result.collection[0].name.toLowerCase().trim() === inputValue.toLowerCase().trim();
-      this._unique = !match || !matchSubscription || !matchName;
+
+      let matchName = match && result.collection[0].name.trim() === inputValue.trim();
+      this._unique = !matchName;
       this.valueChange(inputValue);
     })
   }

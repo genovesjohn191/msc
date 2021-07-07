@@ -8,10 +8,10 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextField } from '../input-text/input-text';
 
-export class DynamicInputTerraformDeploymentNameField extends DynamicInputTextField {
+export class DynamicInputNetworkDbNetworkNameField extends DynamicInputTextField {
   // Overrides
-  public type: DynamicFormFieldType = 'textbox-terraform-deployment-name';
-  public template: DynamicFormFieldTemplate = 'input-terraform-deployment-name';
+  public type: DynamicFormFieldType = 'textbox-network-db-network-name';
+  public template: DynamicFormFieldTemplate = 'input-network-db-network-name';
 
   public whitelist: Array<string> = [];
   public nameUniquenessValidator?: (inputValue: any) => boolean = () => true;

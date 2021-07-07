@@ -46,6 +46,8 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
 
   public disabled: boolean = false;
 
+  public isLoading: boolean = false;
+
   private _hasInitializedOnVisibilityUpdate: boolean = false;
 
   public ngOnInit(): void {
@@ -70,6 +72,8 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
   }
 
   public abstract onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
+
+  public focusOut(inputValue: string): void {}
 
   public clearFormField(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.config.settings && this.config.settings.preserve;

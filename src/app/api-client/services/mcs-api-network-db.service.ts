@@ -8,6 +8,7 @@ import {
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
+  McsNetworkDbNetworkQueryParams,
   McsNetworkDbPod,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
@@ -174,7 +175,8 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
       );
   }
 
-  public getNetworks(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbNetwork[]>> {
+  public getNetworks(query?: McsNetworkDbNetworkQueryParams, optionalHeaders?: Map<string, any>):
+  Observable<McsApiSuccessResponse<McsNetworkDbNetwork[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -182,6 +184,8 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('name', query.name);
+    searchParams.set('company_id', query.companyId);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/networks';

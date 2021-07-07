@@ -132,6 +132,7 @@ import {
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
+  McsNetworkDbNetworkQueryParams,
   McsNetworkDbPod,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
@@ -2244,7 +2245,7 @@ export class McsApiService {
     );
   }
 
-  public getNetworkDbNetworks(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+  public getNetworkDbNetworks(query?: McsNetworkDbNetworkQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiCollection<McsNetworkDbNetwork>> {
 
     return this._networkDbApi.getNetworks(query, optionalHeaders).pipe(

@@ -26,6 +26,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-ip-field>
 
+        <mcs-dff-input-network-db-network-name-field *ngSwitchCase="'input-network-db-network-name'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-network-db-network-name-field>
+
         <mcs-dff-input-number-field *ngSwitchCase="'input-number'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-number-field>
