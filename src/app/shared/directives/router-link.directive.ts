@@ -1,18 +1,18 @@
 import {
-  Directive,
-  Input,
   AfterViewChecked,
   Attribute,
-  Renderer2,
-  ElementRef
+  Directive,
+  ElementRef,
+  Input,
+  Renderer2
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { CoreRoutes } from '@app/core';
 import { RouteKey } from '@app/models';
 import {
-  isNullOrEmpty,
+  coerceBoolean,
   compareArrays,
-  coerceBoolean
+  isNullOrEmpty
 } from '@app/utilities';
 
 export interface IParamObject {
@@ -102,9 +102,15 @@ export class RouterLinkDirective implements AfterViewChecked {
     this._routerLinkKey.forEach((link) => {
       if (isNullOrEmpty(link)) { return; }
 
-      let routeKey = (typeof link === 'string') ? RouteKey[link] : link;
+      let routeKey = link;
+      if (typeof link === 'string') {
+        let convertibleToIntId = !isNaN(+link);
+        routeKey = convertibleToIntId ? null : RouteKey[link];
+      }
+
+      let hasDefinedNavigationPath = !isNullOrEmpty(routeKey);
       stringUrls.push(
-        isNullOrEmpty(routeKey) ? link : CoreRoutes.getNavigationPath(routeKey)
+        hasDefinedNavigationPath ? CoreRoutes.getNavigationPath(routeKey) : link
       );
     });
     return this._router.createUrlTree(stringUrls, {

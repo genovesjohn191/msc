@@ -23,5 +23,8 @@ export class McsNetworkDnsBase extends McsEntityBase {
   public installBaseState: InstallBaseState = undefined;
 
   @JsonProperty()
-  public serviceChangeAvailable: string = undefined;
+  public serviceChangeAvailable: boolean = undefined;
+
+  @JsonProperty()
+  public zoneCount: number = undefined;
 }
