@@ -16,7 +16,7 @@ export class McsAzureSoftwareSubscription extends McsEntityBase {
   public offerId: string = undefined;
 
   @JsonProperty()
-  public alternateId: string = undefined;
+  public alternativeId: string = undefined;
 
   @JsonProperty()
   public costCents: number = undefined;
