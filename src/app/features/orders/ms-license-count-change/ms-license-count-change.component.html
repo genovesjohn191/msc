@@ -117,10 +117,14 @@
                   <mcs-form-field class="form-field-size-medium"
                     [disabled]="!fcLicenses?.value?.isChangeable">
                     <input mcsInput [formControl]="fcLicenseCount"
+                      type="number"
+                      min="{{ baseLicenseCountMin }}"
+                      max="{{ baseLicenseCountMax }}"
                       mcsId="input-ms-license-count"
                       mcsEventTracker="input-ms-license-count"
                       mcsEventCategory="order"
-                      mcsEventLabel="ms-license-count-change">
+                      mcsEventLabel="ms-license-count-change"
+                      class="button-arrows">
 
                     <mcs-suffix mcsSuffix>{{  fcLicenses?.value?.unit }}</mcs-suffix>
                     <mcs-error mcsError errorState="required">
@@ -138,6 +142,12 @@
                     <mcs-error text-wrap mcsError errorState="step">
                         {{ 'orderMsLicenseCountChange.detailsStep.licenseCountValid' | translate: { step: baseLicenseCountStep } }}
                     </mcs-error>
+                    <mcs-hint mcsHint align="start">
+                      <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
+                       {{ fcLicenses.value?.quantity }} {{ convertUnit(fcLicenses.value?.unit, fcLicenses.value?.quantity)}}
+                       {{ fcLicenses.value?.updateQuantityLabel }}
+                      </span>
+                    </mcs-hint>
                   </mcs-form-field>
                 </mcs-item>
               </mcs-item>
@@ -203,10 +213,14 @@
                           <mcs-form-field class="form-field-size-medium"
                             [disabled]="!childLicensesFcItem?.license?.isChangeable">
                             <input mcsInput [formControl]="getFormControl(childLicensesFcItem?.childFormControlName)"
+                              type="number"
+                              min="{{ baseLicenseCountMin }}"
+                              max="{{ baseLicenseCountMax }}"
                               mcsId="input-ms-license-count"
                               mcsEventTracker="input-ms-license-count"
                               mcsEventCategory="order"
-                              mcsEventLabel="ms-license-count-change">
+                              mcsEventLabel="ms-license-count-change"
+                              class="button-arrows">
 
                             <mcs-suffix mcsSuffix>{{  childLicensesFcItem?.license?.unit }}</mcs-suffix>
                             <mcs-error mcsError errorState="required">
@@ -224,6 +238,13 @@
                             <mcs-error text-wrap mcsError errorState="step">
                                 {{ 'orderMsLicenseCountChange.detailsStep.licenseCountValid' | translate: { step: baseLicenseCountStep } }}
                             </mcs-error>
+                            <mcs-hint mcsHint align="start">
+                              <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
+                               {{ childLicensesFcItem?.license?.quantity }}
+                               {{ convertUnit(childLicensesFcItem?.license?.unit, childLicensesFcItem?.license?.quantity) }}
+                               {{ childLicensesFcItem.updateQuantityLabel }}
+                              </span>
+                            </mcs-hint>
                           </mcs-form-field>
                         </mcs-item>
                       </mcs-item>

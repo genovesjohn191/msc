@@ -85,6 +85,7 @@ export * from './enumerations/route-platform.enum';
 export * from './enumerations/license-status.enum';
 export * from './enumerations/license-category.enum';
 export * from './enumerations/license-complexity.enum';
+export * from './enumerations/license-unit.enum';
 export * from './enumerations/delivery-type.enum';
 export * from './enumerations/form-response.enum';
 export * from './enumerations/dns-record-type.enum';
