@@ -32,6 +32,8 @@ $input-text-color: $color-black;
 $input-placeholder-text-color: $color-grey-02;
 $input-border-radius: $border-radius-small;
 $input-padding: $space-small $space-medium;
+$input-number-with-button-arrows-padding: $space-xlarge;
+$input-number-button-arrows-width: 25px;
 
 input,
 textarea,
@@ -62,3 +64,18 @@ select.form-control {
 input::-ms-clear{
   display: none;
 }
+
+input.button-arrows {
+  padding-left: $input-number-with-button-arrows-padding !important;
+}
+
+input.button-arrows::-webkit-inner-spin-button,
+input.button-arrows::-webkit-outer-spin-button {
+  opacity: 1;
+  width: $input-number-button-arrows-width;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+}
+

@@ -870,6 +870,7 @@
       "baseLicense": {
         "label": "Base License",
         "placeholder": "Select License",
+        "hint": "Current:",
         "helpText": "Select a base license to modify and increase or decrease the license count. You must have at least 1 license. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
         "activeLabel": "This license-based subscription is active and renews on {{renewalDate}}.",
         "activeLabelNoRenewal": "This license-based subscription is active.",
