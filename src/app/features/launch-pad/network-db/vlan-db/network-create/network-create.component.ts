@@ -12,9 +12,10 @@ import { IMcsNavigateAwayGuard } from '@app/core';
 import {
   DynamicFormComponent,
   DynamicFormFieldConfigBase,
+  DynamicInputNetworkDbNetworkNameField,
   DynamicInputTextField,
   DynamicSelectChipsCompanyField,
-  DynamicSelectNetworkDbUseCaseField as DynamicSelectNetworkDbUseCaseField,
+  DynamicSelectNetworkDbUseCaseField
 } from '@app/features-shared/dynamic-form';
 import {
   McsNetworkDbNetwork,
@@ -50,19 +51,20 @@ export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
       validators: { required: true },
       allowCustomInput: true,
       maxItems: 1,
-      eventName: 'company-change'
+      eventName: 'company-change',
+      dependents: ['name']
     }),
-    new DynamicInputTextField({
+    new DynamicInputNetworkDbNetworkNameField({
       key: 'name',
       label: 'Network Name',
       placeholder: 'Enter a network name',
-      validators: { required: true, maxlength: 255 },
+      validators: { required: true, maxlength: 255 }
     }),
     new DynamicInputTextField({
       key: 'serviceId',
       label: 'Service ID',
       placeholder: 'Enter a service ID',
-      validators: { maxlength: 30 },
+      validators: { maxlength: 30 }
     }),
     new DynamicSelectNetworkDbUseCaseField({
       key: 'useCaseId',
@@ -73,9 +75,9 @@ export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
       key: 'description',
       label: 'Description',
       placeholder: 'Enter a description',
-      validators: { maxlength: 1024 },
+      validators: { maxlength: 1024 }
     })
-  ]
+  ];
 
   public get payload(): McsNetworkDbNetworkCreate {
     if (isNullOrEmpty(this.form)) { return new McsNetworkDbNetworkCreate(); }

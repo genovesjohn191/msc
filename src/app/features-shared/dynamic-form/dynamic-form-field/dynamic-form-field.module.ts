@@ -6,6 +6,7 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { DynamicInputHiddenComponent } from './input-hidden/input-hidden.component';
 import { DynamicInputIpComponent } from './input-ip/input-ip.component';
+import { DynamicInputNetworkDbNetworkNameComponent } from './input-network-db-network-name/input-network-db-network-name.component';
 import { DynamicInputNumberComponent } from './input-number/input-number.component';
 import { DynamicInputPasswordComponent } from './input-password/input-password.component';
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
@@ -37,6 +38,7 @@ const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
   DynamicInputHiddenComponent,
   DynamicInputIpComponent,
+  DynamicInputNetworkDbNetworkNameComponent,
   DynamicInputTextComponent,
   DynamicInputPasswordComponent,
   DynamicInputTerraformDeploymentNameComponent,
