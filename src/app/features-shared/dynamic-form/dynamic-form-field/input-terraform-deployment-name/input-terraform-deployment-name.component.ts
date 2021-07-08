@@ -68,7 +68,7 @@ export class DynamicInputTerraformDeploymentNameComponent extends DynamicInputTe
   }
 
   public focusOut(inputValue: string): void {
-    if (isNullOrEmpty(this._subscription)) {
+    if (isNullOrEmpty(this._subscription) || isNullOrEmpty(inputValue)) {
       this._unique = true;
       this.valueChange(inputValue);
       return;

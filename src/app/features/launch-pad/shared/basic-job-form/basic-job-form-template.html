@@ -2,27 +2,25 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <mat-vertical-stepper [linear]="true" #stepper>
-      <!-- Deployment Details -->
-
+      <!-- Form Details -->
       <mat-step [editable]="!creationSuccessful && (!processing && !hasError)" [completed]="false">
-        <ng-template matStepLabel>Network Details</ng-template>
+        <ng-template matStepLabel>{{ settings.title }}</ng-template>
         <div *ngIf="!processing && !hasError">
           <mcs-dynamic-form #form [config]="formConfig"></mcs-dynamic-form>
-
           <br />
           <button
           mat-raised-button
           color="primary"
           [disabled]="!isValidPayload"
-          (click)="createNetwork()">
+          (click)="submit()">
             <mat-icon>chevron_right</mat-icon>
-            Create
+            {{ settings.submitButtonText }}
           </button>
         </div>
 
         <div *ngIf="processing">
           <mcs-status-message type="info">
-            Please wait while we create your network.
+            {{ settings.inProgressMessage }}
           </mcs-status-message>
           <br />
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -30,35 +28,36 @@
 
         <div *ngIf="hasError">
           <mcs-status-message type="error">
-            An unexpected server error has occured.<a style="margin-left: 5px;" mcsId (click)="retryCreation()">Go back</a>
+            {{ watchedJob?.errorMessage || settings.failedSendingRequestMessage }}
+            <a *ngIf="watchedJob" style="margin-left: 5px; margin-right: 5px;" mcsId [mcsRouterLink]="getNotificationRoute()" target="_blank">View Logs</a>
+            <a style="margin-left: 5px;" mcsId (click)="retry()">Go back</a>
           </mcs-status-message>
         </div>
-
       </mat-step>
 
       <!-- Go -->
       <mat-step [editable]="creationSuccessful" [completed]="false">
         <ng-template matStepLabel>Go</ng-template>
 
-        <h2>New Network Creation</h2>
+        <h2>{{  settings.successful.title }}</h2>
 
         <mcs-list>
           <mcs-item orientation="block">
             <mcs-item>
               <mcs-icon [key]="successIconKey" size="medium"></mcs-icon>
-              <span><strong>{{ payload?.name }}</strong> successfully created</span>
+              <span [innerHtml]="successMessage"></span>
             </mcs-item>
           </mcs-item>
           <mcs-item orientation="block">
             <mcs-item>
               <a
                 mcsCursor="pointer"
-                [mcsRouterLink]="[routeKeyEnum.LaunchPadNetworkDbNetworkDetails, id]"
-                mcsId="go-to-network-details-link"
-                mcsEventTracker="navigate-to-network-details"
-                mcsEventCategory="network-db-networks"
-                mcsEventLabel="network-db-network-creation">
-                Go to your Network
+                [mcsRouterLink]="routerLinkSettings"
+                [mcsId]="settings.successful.newObjectLink.id"
+                [mcsEventTracker]="settings.successful.newObjectLink.eventTracker"
+                [mcsEventCategory]="settings.successful.newObjectLink.eventCategory"
+                [mcsEventLabel]="settings.successful.newObjectLink.eventLabel">
+                {{ settings.successful.newObjectLink.text }}
               </a>
             </mcs-item>
           </mcs-item>

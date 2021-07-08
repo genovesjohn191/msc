@@ -1,14 +1,10 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
-  ViewChild
+  Component
 } from '@angular/core';
-import { MatVerticalStepper } from '@angular/material/stepper';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { IMcsNavigateAwayGuard } from '@app/core';
 import {
   DynamicFormComponent,
   DynamicFormFieldConfigBase,
@@ -18,32 +14,46 @@ import {
   DynamicSelectNetworkDbUseCaseField
 } from '@app/features-shared/dynamic-form';
 import {
+  McsJob,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
-  McsTerraformDeploymentCreate,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  cloneDeep,
-  CommonDefinition,
-  isNullOrEmpty
-} from '@app/utilities';
+  BasicJobFormComponentBase,
+  BasicFormConfig
+} from '@app/features/launch-pad/shared/basic-job-form/basic-job-form.component.base';
+import { EventBusDispatcherService } from '@app/event-bus';
 
 @Component({
   selector: 'mcs-network-db-network-create',
-  templateUrl: './network-create.component.html',
-  styleUrls: [ ],
+  templateUrl: '../../../shared/basic-job-form/basic-job-form-template.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
-  @ViewChild('form')
-  public form: DynamicFormComponent;
+export class NetworkDbNetworkCreateComponent extends BasicJobFormComponentBase<McsNetworkDbNetworkCreate> {
 
-  @ViewChild('stepper')
-  protected stepper: MatVerticalStepper;
+  public settings: BasicFormConfig = {
+    title: 'Network Details',
+    inProgressMessage: ' Please wait while we create the network.',
+    failedSendingRequestMessage: 'An unexpected server error has occured.',
+    submitButtonText: 'Create',
 
-  public formConfig: DynamicFormFieldConfigBase[] = [
+    successful: {
+      title: 'New Network Creation',
+
+      newObjectLink: {
+        id: 'go-to-network-details-link',
+        text: 'View network',
+        eventTracker: 'navigate-to-network-details',
+        eventCategory: 'network-db-networks',
+        eventLabel: 'network-db-network-creation'
+      }
+    }
+  };
+
+  public formConfig: DynamicFormFieldConfigBase[] =[
     new DynamicSelectChipsCompanyField({
       key: 'company',
       label: 'Company',
@@ -79,10 +89,10 @@ export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
     })
   ];
 
-  public get payload(): McsNetworkDbNetworkCreate {
-    if (isNullOrEmpty(this.form)) { return new McsNetworkDbNetworkCreate(); }
+  public formatPayload(form: DynamicFormComponent): McsNetworkDbNetworkCreate {
+    if (isNullOrEmpty(form)) { return new McsNetworkDbNetworkCreate(); }
 
-    let properties = this.form.getRawValue();
+    let properties = form.getRawValue();
 
     return {
       companyId: isNullOrEmpty(properties.company) ? null :  properties.company[0].value,
@@ -93,62 +103,23 @@ export class NetworkDbNetworkCreateComponent implements IMcsNavigateAwayGuard {
     }
   }
 
-  public get isValidPayload(): boolean {
-    return this.form && this.form.valid;
+  public constructor(
+    private _apiService: McsApiService,
+    changeDetector: ChangeDetectorRef,
+    eventDispatcher: EventBusDispatcherService) {
+
+    super(changeDetector, eventDispatcher);
   }
 
-  public get successIconKey(): string {
-    return CommonDefinition.ASSETS_SVG_SUCCESS;
+  public send(payload: McsNetworkDbNetworkCreate): Observable<McsJob> {
+    return this._apiService.createNetworkDbNetwork(payload);
   }
 
-  public get routeKeyEnum(): any {
-    return RouteKey;
+  public getNewObjectRouterLinkSettings(newObject: McsJob): any[] {
+    return [RouteKey.LaunchPadNetworkDbNetworkDetails, newObject.tasks[0].referenceObject.id.toString()];
   }
 
-  public id: string;
-  public processing: boolean = false;
-  public hasError: boolean = false;
-  public creationSuccessful: boolean = false
-
-  public constructor(private _apiService: McsApiService, private _changeDetector: ChangeDetectorRef) { }
-
-  public createNetwork(): void {
-    this.hasError = false;
-    this.processing = true;
-
-    this._apiService.createNetworkDbNetwork(this.payload)
-    .pipe(catchError(() => {
-      this.hasError = true;
-      this.processing = false;
-
-      this._changeDetector.markForCheck();
-
-      return throwError('Network creation endpoint failed.');
-    }))
-    .subscribe((response: McsNetworkDbNetwork) => {
-      this.hasError = false;
-      this.processing = false;
-      this.id = response.id.toString();
-      this.creationSuccessful = true;
-
-      this._changeDetector.markForCheck();
-
-      this.stepper.selected.completed = true;
-      this.stepper.next();
-    });
-  }
-
-  public retryCreation(): void {
-    this.hasError = false;
-    this.processing = false;
-    this._changeDetector.markForCheck();
-  }
-
-  public canNavigateAway(): boolean {
-    return true;
-  }
-
-  public clone(data: McsTerraformDeploymentCreate): any {
-    return cloneDeep(data);
+  public getSuccessMessage(newObject: McsJob): string {
+    return `<strong>${newObject.tasks[0].referenceObject.name}</strong> successfully created` ;
   }
 }

@@ -12,6 +12,7 @@ import {
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsNavigationService,
   McsTableDataSource2
 } from '@app/core';
 import {
@@ -56,6 +57,7 @@ export class NetworkDbNetworksComponent implements OnDestroy {
 
   public constructor(
     _injector: Injector,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
     this.dataSource = new McsTableDataSource2<McsNetworkDbNetwork>(this._getTableData.bind(this))
@@ -103,5 +105,9 @@ export class NetworkDbNetworksComponent implements OnDestroy {
 
   public getRouteUrl(id: any): any[] {
     return [RouteKey.LaunchPadNetworkDbNetworks, id.toString()];
+  }
+
+  public onClickNewNetwork() {
+    this._navigationService.navigateTo(RouteKey.LaunchPadNetworkDbNetworkCreate);
   }
 }

@@ -5,6 +5,7 @@ import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
 import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
+  McsJob,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
@@ -213,7 +214,7 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
   }
 
   public createNetwork(payload: McsNetworkDbNetworkCreate):
-    Observable<McsApiSuccessResponse<McsNetworkDbNetwork>> {
+    Observable<McsApiSuccessResponse<McsJob>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/network-db/networks`;
@@ -224,7 +225,7 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsNetworkDbNetwork>(McsNetworkDbNetwork, response);
+            .deserializeResponse<McsJob>(McsJob, response);
           return apiResponse;
         })
       );
