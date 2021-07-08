@@ -37,6 +37,7 @@ import { CrispOrderResolver } from './crisp/orders/order/crisp-order.resolver';
 import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/network-db-network.component';
 import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
 import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/overview/network-db-network-overview.component';
+import { NetworkDbNetworkEventsComponent } from './network-db/vlan-db/network/events/network-db-network-events.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/
     NetworkDbNetworksComponent,
     NetworkDbNetworkDetailsComponent,
     NetworkDbNetworkOverviewComponent,
+    NetworkDbNetworkEventsComponent,
     NetworkDbNetworkCreateComponent,
     // CRISP
     CrispOrdersComponent,

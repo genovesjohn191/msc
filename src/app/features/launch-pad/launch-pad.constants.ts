@@ -34,6 +34,7 @@ import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/n
 import { NetworkDbNetworkDetailsResolver } from './network-db/vlan-db/network/network-db-network.resolver';
 import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
 import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/overview/network-db-network-overview.component';
+import { NetworkDbNetworkEventsComponent } from './network-db/vlan-db/network/events/network-db-network-events.component';
 
 /**
  * List of routes for the main module
@@ -165,6 +166,11 @@ export const launchPadRoutes: Routes = [
         path: 'overview',
         component: NetworkDbNetworkOverviewComponent,
         data: { routeId: RouteKey.LaunchPadNetworkDbNetworkDetailsOverview }
+      },
+      {
+        path: 'events',
+        component: NetworkDbNetworkEventsComponent,
+        data: { routeId: RouteKey.LaunchPadNetworkDbNetworkDetailsEvents }
       }
     ]
   },

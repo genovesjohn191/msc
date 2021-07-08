@@ -1,0 +1,91 @@
+<div class="listing-table-wrapper">
+
+    <table mat-table [dataSource]="dataSource" style="margin-top: 0">
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.action' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+            {{ row.action}}
+        </td>
+    </ng-container>
+
+    <!-- User Column -->
+    <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.user' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.user }}
+        </td>
+    </ng-container>
+
+    <!-- Site Column -->
+    <ng-container matColumnDef="site">
+        <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.site' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.site }}
+        </td>
+    </ng-container>
+
+    <!-- Pod Id Column -->
+    <ng-container matColumnDef="pod">
+        <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.pod' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.pod }}
+        </td>
+    </ng-container>
+
+    <!-- VLAN Column -->
+    <ng-container matColumnDef="vlan">
+        <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.vlan' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.vlanNumber }}
+        </td>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.date' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.date | mcsStdDateFormat }}
+        </td>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+    </table>
+
+    <!-- Table Statuses -->
+    <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+            <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+            {{ 'networkDb.networks.noRecordsFound' | translate }}
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+            <div class="listing-status-wrapper">
+                <span>{{ 'networkDb.networks.errorMessage' | translate }}</span>
+                <a (click)="retryDatasource()" mcsId mcsEventTracker="retry-loading-network-db-site-list"
+                    mcsEventCategory="launchpad-network-db" mcsEventLabel="pod-listing-page">{{
+                    'networkDb.networks.retry' | translate }}</a>.
+            </div>
+        </div>
+    </mcs-item>
+
+    <!-- Paginator -->
+    <mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
+    </mcs-paginator>
+</div>

@@ -161,6 +161,15 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
+  "LaunchPadNetworkDbNetworkDetailsEvents": {
+    "enumKey": "LaunchPadNetworkDbNetworkDetailsEvents",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "events",
+    "documentTitle": "LAUNCH Pad - Network Events",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
   "launchPadNetworkDbNetworkCreate": {
     "enumKey": "LaunchPadNetworkDbNetworkCreate",
     "enumCategory": "LaunchPadVlanDb",

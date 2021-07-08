@@ -28,10 +28,10 @@ export class NetworkDbNetworkOverviewComponent {
   private _destroySubject = new Subject<void>();
   public constructor(
     private _networkDetailService: NetworkDbNetworkDetailsService) {
-    this._subscribeToDeploymentDetails()
+    this._subscribeToNetworkDetails()
   }
 
-  private _subscribeToDeploymentDetails(): void {
+  private _subscribeToNetworkDetails(): void {
     this.network$ = this._networkDetailService.getNetworkDetails().pipe(
       takeUntil(this._destroySubject),
       shareReplay(1)

@@ -315,6 +315,7 @@ export * from './response/mcs-cloudhealth-alert';
 export * from './response/mcs-cloudhealth-alert-configuration-items';
 export * from './response/mcs-network-db-multicast-ip';
 export * from './response/mcs-network-db-network';
+export * from './response/mcs-network-db-network-event';
 export * from './response/mcs-network-db-pod';
 export * from './response/mcs-network-db-use-case';
 export * from './response/mcs-network-db-vlan';

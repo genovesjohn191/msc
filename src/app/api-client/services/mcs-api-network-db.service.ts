@@ -8,6 +8,7 @@ import {
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
+  McsNetworkDbNetworkEvent,
   McsNetworkDbNetworkQueryParams,
   McsNetworkDbPod,
   McsNetworkDbSite,
@@ -224,6 +225,28 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsNetworkDbNetwork>(McsNetworkDbNetwork, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getNetworkEvents(id: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDbNetworkEvent[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/networks/${id}/events`;
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsNetworkDbNetworkEvent[]>(McsNetworkDbNetworkEvent, response);
           return apiResponse;
         })
       );

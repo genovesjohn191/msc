@@ -5,6 +5,7 @@ import {
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
+  McsNetworkDbNetworkEvent,
   McsNetworkDbNetworkQueryParams,
   McsNetworkDbPod,
   McsNetworkDbSite,
@@ -70,4 +71,10 @@ export interface IMcsApiNetworkDbService {
    * @param payload Network data to be created
    */
   createNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsApiSuccessResponse<McsNetworkDbNetwork>>;
+
+  /**
+   * Get all the Networks
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getNetworkEvents(id: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDbNetworkEvent[]>>;
 }

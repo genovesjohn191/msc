@@ -132,6 +132,7 @@ import {
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
+  McsNetworkDbNetworkEvent,
   McsNetworkDbNetworkQueryParams,
   McsNetworkDbPod,
   McsNetworkDbSite,
@@ -2259,7 +2260,7 @@ export class McsApiService {
   public getNetworkDbNetwork(id: string): Observable<McsNetworkDbNetwork> {
     return this._networkDbApi.getNetwork(id).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetwork'))
       ),
       map((response) => response.content)
     );
@@ -2272,6 +2273,15 @@ export class McsApiService {
       ),
       tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.TerraformDeployment)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getNetworkDbNetworkEvents(id: any, query?: McsQueryParam): Observable<McsApiCollection<McsNetworkDbNetworkEvent>> {
+    return this._networkDbApi.getNetworkEvents(id, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworkEvents'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

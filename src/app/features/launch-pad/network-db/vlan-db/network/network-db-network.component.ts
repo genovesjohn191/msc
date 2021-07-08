@@ -59,11 +59,11 @@ export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
 
   public onTabChanged(tab: any, network: McsNetworkDbNetwork): void {
     let navigationExtras: NavigationExtras = null;
-    let updatingViewToActivityLogs: boolean = tab.id === 'history' && !isNullOrEmpty(this._targetId);
+    let updatingViewToActivityLogs: boolean = tab.id === 'events' && !isNullOrEmpty(this._targetId);
     if (updatingViewToActivityLogs) {
       navigationExtras = {
         queryParams: {
-          jobId: this._targetId
+          id: this._targetId
         }
       };
     }

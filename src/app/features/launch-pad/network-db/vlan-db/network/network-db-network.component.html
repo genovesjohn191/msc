@@ -25,6 +25,7 @@
 
     <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event, network)">
       <mcs-tab [label]="'label.overview' | translate" id="overview"></mcs-tab>
+      <mcs-tab [label]="'label.events' | translate" id="events"></mcs-tab>
 
       <!-- Action tab -->
       <ng-container mcsTabHeaderCustom>
