@@ -2266,12 +2266,12 @@ export class McsApiService {
     );
   }
 
-  public createNetworkDbNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsNetworkDbNetwork> {
+  public createNetworkDbNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsJob> {
     return this._networkDbApi.createNetwork(payload).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createNetworkDbNetwork'))
       ),
-      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.TerraformDeployment)),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.NetworkDbNetwork)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

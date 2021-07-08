@@ -13,6 +13,7 @@ import { McsApiService } from '@app/services';
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextComponent } from '../input-text/input-text.component';
 import { DynamicInputNetworkDbNetworkNameField } from './input-network-db-network-name';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-input-network-db-network-name-field',
@@ -62,7 +63,7 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
     // Check if name is whitelisted
     let isWhiteListedName = this.config.whitelist.find((item) => item.trim() === inputValue.trim());
 
-    if (isWhiteListedName) {
+    if (isWhiteListedName || isNullOrEmpty(inputValue)) {
       this._unique = true;
       this.valueChange(inputValue);
       return;

@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 
 import {
   McsApiSuccessResponse,
+  McsJob,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
@@ -70,7 +71,7 @@ export interface IMcsApiNetworkDbService {
    * This will create the new network
    * @param payload Network data to be created
    */
-  createNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsApiSuccessResponse<McsNetworkDbNetwork>>;
+  createNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * Get all the Networks

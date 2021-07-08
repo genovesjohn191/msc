@@ -2622,6 +2622,7 @@
     },
     "networks": {
       "header": "Networks",
+      "newNetwork": "New Network",
       "leftPanelHeader": "Network Filter",
       "filterColumn": "Table Filter",
       "dataSingular": "Networs",

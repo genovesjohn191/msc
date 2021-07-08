@@ -88,6 +88,14 @@ export enum JobType {
   TerraformRunDestroy = 104003,
   TerraformDeleteDeployment = 104004,
 
+  // Network DB
+  NetworkDbCreateNetwork = 105001,
+  NetworkDbUpdateNetwork = 105002,
+  NetworkDbDeleteNetwork = 105003,
+  NetworkDbReserveNetwork = 105004,
+  NetworkDbRecycleVlan = 105005,
+  NetworkDbReclaimVlan = 105006,
+
   // Microsoft License
   PublicCloudLicenseChangeCount = 2000001,
 
@@ -151,6 +159,13 @@ export const jobTypeText = {
   [JobType.TerraformRunApply]: 'Apply Terraform Deployment',
   [JobType.TerraformRunDestroy]: 'Destroy Terraform Deployment',
   [JobType.TerraformDeleteDeployment]: 'Delete Terraform Deployment',
+
+  [JobType.NetworkDbCreateNetwork]: 'Create Network',
+  [JobType.NetworkDbUpdateNetwork]: 'Update Network',
+  [JobType.NetworkDbDeleteNetwork]: 'Delete Network',
+  [JobType.NetworkDbReserveNetwork]: 'Reserve Network',
+  [JobType.NetworkDbRecycleVlan]: 'Recycle VLAN',
+  [JobType.NetworkDbReclaimVlan]: 'Reclaim VLAN',
 
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
   [JobType.InternetPortPlanChange]: 'Change Internet Port Plan',
