@@ -21,7 +21,8 @@ import {
 import {
   isNullOrEmpty,
   CommonDefinition,
-  createObject
+  createObject,
+  animateFactory,
 } from '@app/utilities';
 import {
   McsResourceStorage,
@@ -39,13 +40,19 @@ import { VdcDetailsBase } from '../vdc-details.base';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'block'
-  }
+  },
+  animations: [
+    animateFactory.expansionVertical
+  ]
 })
 
 export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsResourceStorage>;
   public readonly dataEvents: McsTableEvents<McsResourceStorage>;
   public readonly defaultColumnFilters: McsFilterInfo[];
+
+  public expandedElement: McsResourceStorage;
+  public selectedVdcStorageId: string;
 
   constructor(
     _injector: Injector,
@@ -61,6 +68,11 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'tier' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
     ];
+    if (this.hasAccessToStorageProfileBreakdown) {
+      this.defaultColumnFilters.unshift(
+        createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' })
+      )
+    }
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
@@ -85,6 +97,15 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
+  }
+
+  public setExpandedRow(expandedRow: McsResourceStorage, row: McsResourceStorage): any {
+    this.selectedVdcStorageId = row.id;
+    return expandedRow === row ? null : row;
+  }
+
+  public get hasAccessToStorageProfileBreakdown(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.StorageProfileBreakdown]);
   }
 
   public canRequestCustomChange(serviceId: string): boolean {

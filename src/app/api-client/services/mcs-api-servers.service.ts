@@ -47,7 +47,8 @@ import {
   McsServerHostSecurityAntiVirus,
   McsServerHostSecurityHids,
   McsServerBackupVmDetails,
-  McsServerBackupServerDetails
+  McsServerBackupServerDetails,
+  McsServersQueryParams
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
@@ -61,14 +62,15 @@ export class McsApiServersService implements IMcsApiServersService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getServers(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServer[]>> {
+  public getServers(query?: McsServersQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServer[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
+    searchParams.set('storageProfile', query.storageProfile);
+    searchParams.set('expand', query.expand);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/servers';

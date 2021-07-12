@@ -126,6 +126,12 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   })
   private inviewLevel: InviewLevel = undefined;
 
+  @JsonProperty()
+  public diskSizeMB: number = undefined;
+
+  @JsonProperty()
+  public snapshotSizeMB: number = undefined;
+
   /**
    * Returns the inview level
    */
