@@ -579,13 +579,11 @@
   "notifications": {
     "enumKey": "Notifications",
     "navigationPath": "notifications",
-    "requiredPermissions": ["JobView"],
     "documentTitle": "Notifications - Macquarie Cloud Services"
   },
   "notification": {
     "enumKey": "Notification",
     "navigationPath": "notifications",
-    "requiredPermissions": ["JobView"],
     "documentTitle": "Notification - Macquarie Cloud Services"
   },
   "catalog": {

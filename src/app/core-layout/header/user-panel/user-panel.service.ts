@@ -11,10 +11,7 @@ import {
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
-import {
-  McsJob,
-  McsPermission
-} from '@app/models';
+import { McsJob } from '@app/models';
 import {
   addOrUpdateArrayRecord,
   compareDates,
@@ -30,14 +27,11 @@ export class UserPanelService implements McsDisposable {
   private _currentUserJobHandler: Subscription;
 
   constructor(
-    _accessControlService: McsAccessControlService,
     private _eventDispatcher: EventBusDispatcherService,
     private _notificationContext: McsNotificationContextService
   ) {
     this._registerEvents();
-    if (_accessControlService.hasPermission([McsPermission.JobView])) {
-      this._notificationContext.getAllActiveJobs().subscribe();
-    }
+    this._notificationContext.getAllActiveJobs().subscribe();
   }
 
   public dispose() {
