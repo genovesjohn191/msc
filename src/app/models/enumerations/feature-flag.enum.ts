@@ -1,6 +1,7 @@
 export enum McsFeatureFlag {
   OAuthV2 = 'EnableOAuthV2',
   MaintenanceMode = 'EnableMaintenanceMode',
+  BypassSessionInactivityTimeout = 'EnableBypassSessionInactivityTimeout',
   SystemMessages = 'EnableSystemMessages',
   LaunchPad = 'EnableLaunchPad',
   Crisp = 'EnableCrisp',
