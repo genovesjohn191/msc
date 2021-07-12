@@ -99,10 +99,6 @@ export class McsNotificationJobService implements McsDisposable {
    * Gets the connection details from API and connect to web stomp
    */
   private _connectStomp(): void {
-
-    let userHasJobPermission = this._accessControlService.hasPermission([McsPermission.JobView]);
-    if (!userHasJobPermission) { return; }
-
     this._apiSubscription = this._apiService.getJobConnection().pipe(
       tap((connection) => {
         if (isNullOrEmpty(connection)) {

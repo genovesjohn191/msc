@@ -17,8 +17,7 @@ import {
   DataStatus,
   JobStatus,
   JobType,
-  McsJob,
-  McsPermission
+  McsJob
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -48,7 +47,6 @@ export class McsNotificationContextService implements McsDisposable {
   private _notificationsStream: BehaviorSubject<McsJob[]>;
 
   constructor(
-    private _accessControlService: McsAccessControlService,
     private _notificationJobService: McsNotificationJobService,
     private _apiService: McsApiService,
     private _eventDispatcher: EventBusDispatcherService
@@ -79,9 +77,7 @@ export class McsNotificationContextService implements McsDisposable {
    * Initializes the context instance
    */
   public subscribeToActiveJobs(): void {
-    if (this._accessControlService.hasPermission([McsPermission.JobView])) {
-      this.getAllActiveJobs().subscribe();
-    }
+    this.getAllActiveJobs().subscribe();
     this._createFilteredJobList();
     this._listenToJobChanged();
   }

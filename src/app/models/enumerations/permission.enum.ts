@@ -48,9 +48,6 @@ export enum McsPermission {
   OrderEdit = 'OrderEdit',
   OrderApprove = 'OrderApprove',
 
-  // Jobs
-  JobView = 'JobView',
-
   // Accounts
   CompanyView = 'CompanyView',
 

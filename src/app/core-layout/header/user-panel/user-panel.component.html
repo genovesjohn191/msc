@@ -57,22 +57,20 @@
 </ng-template>
 
 <div class="user-panel-wrapper">
-  <ng-container *mcsAccessControl="['JobView']">
-    <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">
-      <a class="icon-content"
-        mcsPopover #notificationsPopover="mcsPopover"
-        [trigger]="'manual'"
-        (onOpen)="onOpenNotificationPanel(notifications)"
-        maxWidth="350px" padding="none"
-        placement="bottom" orientation="left" theme="light" priority="high"
-        [content]="notificationsContent">
+  <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">
+    <a class="icon-content"
+      mcsPopover #notificationsPopover="mcsPopover"
+      [trigger]="'manual'"
+      (onOpen)="onOpenNotificationPanel(notifications)"
+      maxWidth="350px" padding="none"
+      placement="bottom" orientation="left" theme="light" priority="high"
+      [content]="notificationsContent">
 
-        <mcs-icon [key]="bellIconKey" size="medium" color="light"
-          [ngClass]="{'active-job': notifications | mcsIsNotNullOrEmpty}"></mcs-icon>
-        <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
-      </a>
-    </div>
-  </ng-container>
+      <mcs-icon [key]="bellIconKey" size="medium" color="light"
+        [ngClass]="{'active-job': notifications | mcsIsNotNullOrEmpty}"></mcs-icon>
+      <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
+    </a>
+  </div>
 
   <!-- User icon -->
   <div class="user-panel-item user-item">
