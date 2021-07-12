@@ -3,9 +3,11 @@ import {
   BehaviorSubject,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   filter,
   map,
   shareReplay,
@@ -97,6 +99,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _serverDisksCache: Observable<McsServerStorageDevice[]>;
   private _destroySubject = new Subject<void>();
   private _serverDisksChange = new BehaviorSubject<McsServerStorageDevice[]>(null);
+  private _snapshotCount: number;
 
   private _createDiskHandler: Subscription;
   private _updateDiskHandler: Subscription;
@@ -114,6 +117,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   public get serverDiskMethodTypeEnum(): any {
     return ServerDiskMethodType;
+  }
+
+  public get isServerSnapshotEmpty(): boolean {
+    return this._snapshotCount === 0;
   }
 
   /**
@@ -308,6 +315,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmStorageView);
     this._resetStorageValues();
     this._updateTableDataSource(server);
+    this._getServerSnapshots(server);
 
     let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
     this._getResourceStorages(resourceId);
@@ -441,5 +449,15 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       filter(response => !isNullOrUndefined(response)),
       map(response => new McsMatTableContext(response, response?.length))
     );
+  }
+
+  private _getServerSnapshots(server: McsServer): void {
+    this.apiService.getServerSnapshots(server.id).pipe(
+      catchError((error) => {
+        return throwError(error);
+      })
+    ).subscribe((snapshots) => {
+      this._snapshotCount = getSafeProperty(snapshots, (obj) => obj.totalCollectionCount);
+    });
   }
 }

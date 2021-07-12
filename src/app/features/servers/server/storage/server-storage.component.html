@@ -10,6 +10,9 @@
   <ng-template #noEditableDiskTemplate>
     <p>{{ 'serverStorage.noEditableDiskDescription' | translate }}</p>
   </ng-template>
+  <ng-container *ngIf="isServerSnapshotEmpty">
+    <p>{{ 'serverStorage.noServerSnapshots' | translate }}</p>
+  </ng-container>
 
   <ng-container [ngSwitch]="diskMethodType">
     <mcs-section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk">
@@ -62,7 +65,7 @@
           </th>
           <td mat-cell *matCellDef="let row">
             <mcs-item *ngIf="(resource$ | async)?.hasStorage">
-              <a [disabled]="!server.executable"
+              <a [disabled]="!server.executable || isServerSnapshotEmpty"
                   (click)="openExpandDiskWindow(row)"
                   mcsId
                   mcsEventTracker="show-expand-disk"
@@ -71,7 +74,7 @@
                 {{ 'serverStorage.expandStorageLink' | translate }}
               </a>
               <a *ngIf="!row.isPrimary"
-                [disabled]="!server.executable"
+                [disabled]="!server.executable || isServerSnapshotEmpty"
                 (click)="deleteDisk(server, row)"
                 mcsId
                 mcsEventTracker="delete-disk"
@@ -123,7 +126,7 @@
 
             <div class="action-items">
               <button mcsButton arrow="right" size="small"
-                [disabled]="!addDiskEnabled"
+                [disabled]="!addDiskEnabled || isServerSnapshotEmpty"
                 (click)="addDisk(server)"
                 mcsId
                 mcsEventTracker="add-disk"

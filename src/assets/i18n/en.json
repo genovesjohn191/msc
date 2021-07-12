@@ -1623,6 +1623,7 @@
     "title": "Manage Disks",
     "hasEditableDiskDescription": "Manage the disks attached to your server. You can delete or expand existing disks, or you can add a new disk.",
     "noEditableDiskDescription": "View the disks attached to your server.",
+    "noServerSnapshots": "This server's storage cannot be updated at this time. Please remove any existing snapshot(s) for this server first.",
     "primary": "Primary",
     "other": "Other",
     "diskName": "Hard disk",

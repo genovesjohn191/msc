@@ -69,7 +69,7 @@ export class McsApiServersService implements IMcsApiServersService {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
-    searchParams.set('storageProfile', query.storageProfile);
+    searchParams.set('storage_profile', query.storageProfile);
     searchParams.set('expand', query.expand);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
