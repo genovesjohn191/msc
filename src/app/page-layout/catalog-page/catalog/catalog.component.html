@@ -35,13 +35,13 @@
         <mcs-section>
           <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
             <ng-container *ngIf="catalogItemMenu$ | async as catalogItemMenu">
-              <mcs-radio-button-group mcsId="catalog-type" orientation="horizontal" [value]="catalogItemMenu.catalogItem.type">
+              <mcs-radio-button-group mcsId="catalog-type" orientation="horizontal" [value]="catalogItemMenu?.catalogItem.type">
                 <mcs-radio-button *ngFor="let option of catalogOptions" [value]="option.value.type"
                   mcsId="select-catalog-type"
                   mcsEventTracker="catalog-type-option"
                   mcsEventCategory="catalog"
                   mcsEventLabel="catalog-side-menu"
-                  (click)="onCatalogTypeChange(option.value.type, activeCatalogItem.catalogViewType, catalogItemMenu.catalogItem.type)">
+                  (click)="onCatalogTypeChange(option.value.type, activeCatalogItem?.catalogViewType, catalogItemMenu?.catalogItem.type)">
                   {{ option.text }}
                 </mcs-radio-button>
               </mcs-radio-button-group>

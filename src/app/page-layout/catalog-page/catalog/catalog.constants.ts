@@ -33,7 +33,9 @@ export const catalogRoutes: Routes = [
   {
     path: '',
     component: CatalogComponent,
-    resolve: { catalog: CatalogResolver },
+    resolve: {
+      catalog: CatalogResolver
+    },
     children: [
       {
         path: 'solutions',
