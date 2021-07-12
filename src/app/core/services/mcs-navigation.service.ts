@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
-  Router,
-  NavigationExtras
+  NavigationExtras,
+  Router
 } from '@angular/router';
 import { RouteKey } from '@app/models';
 import {
@@ -9,6 +9,7 @@ import {
   isNullOrUndefined
 } from '@app/utilities';
 import { LogClass } from '@peerlancers/ngx-logger';
+
 import { CoreRoutes } from '../core.routes';
 
 @Injectable()

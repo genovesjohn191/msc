@@ -19,9 +19,7 @@ import {
 } from '@angular/core';
 import {
   ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterEvent
+  Router
 } from '@angular/router';
 import {
   CoreRoutes,
@@ -104,7 +102,6 @@ export class CatalogComponent implements OnInit, OnDestroy {
     this._subscribeToCatalogResolver();
     this._subscribeToCatalogItemDetailsChange();
     this._subscribeToCatalogItemMenuChange();
-    this._subscribeToRouterChange();
   }
 
   public ngOnDestroy(): void {
@@ -214,11 +211,15 @@ export class CatalogComponent implements OnInit, OnDestroy {
         return catalogOptions;
       }),
       tap((response) => {
-        // Save the whole catalog options
         this._catalogService.catalogOptionsCached = response;
-        if (this._isBaseCatalogRoute(this._router.url)) {
-          this._navigateToDefaultView(this._catalogService.catalogOptionsCached);
-        }
+
+        // We need to set delay call for the navigation here to make sure
+        // the resolve on the current route was already finished before executing another.
+        setTimeout(() => {
+          if (this._isBaseCatalogRoute(this._router.url)) {
+            this._navigateToDefaultView(this._catalogService.catalogOptionsCached);
+          }
+        }, 1000);
       }),
       shareReplay(1)
     );
@@ -245,19 +246,6 @@ export class CatalogComponent implements OnInit, OnDestroy {
       takeUntil(this._destroySubject),
       shareReplay(1)
     );
-  }
-
-  private _subscribeToRouterChange(): void {
-
-    this._router.events.pipe(
-      tap((event: RouterEvent) => {
-        if (!(event instanceof NavigationEnd)) { return; }
-
-        if (this._isBaseCatalogRoute(event.url)) {
-          this._navigateToDefaultView(this._catalogService.catalogOptionsCached);
-        }
-      })
-    ).subscribe();
   }
 
   private _initializeListViewConfig(): void {
