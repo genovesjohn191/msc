@@ -363,6 +363,7 @@ export * from './common/mcs-state-notification';
 export * from './common/mcs-cloudhealth-option';
 export * from './common/mcs-azure-resources-info';
 export * from './common/mcs-network-db-network-query-params';
+export * from './common/mcs-servers-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

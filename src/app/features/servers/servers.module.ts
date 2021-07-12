@@ -36,6 +36,7 @@ import {
 } from './server-create';
 /** VDC */
 import {
+  DiskPanelComponent,
   VdcComponent,
   VdcOverviewComponent,
   VdcStorageComponent
@@ -71,7 +72,8 @@ import { serversProviders } from './servers.constants';
     ServiceInviewComponent,
     VdcComponent,
     VdcOverviewComponent,
-    VdcStorageComponent
+    VdcStorageComponent,
+    DiskPanelComponent
   ],
   imports: [
     SharedModule,

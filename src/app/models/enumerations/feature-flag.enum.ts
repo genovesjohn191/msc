@@ -35,4 +35,6 @@ export enum McsFeatureFlag {
 
   CloudHealthServiceRequest = 'EnableCloudHealthServiceRequest',
   ProvisionServiceRequest = 'EnableProvisionServiceRequest',
+
+  StorageProfileBreakdown = 'EnableStorageProfileBreakdown',
 }

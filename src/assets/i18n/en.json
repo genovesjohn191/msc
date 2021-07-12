@@ -1301,7 +1301,11 @@
     "loadingContent": "Loading list of storage.",
     "noStorage": "No storage available.",
     "retry": "Try again shortly",
-    "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage."
+    "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage.",
+    "diskPanel": {
+      "noServers": "There are no servers on this storage profile to display.",
+      "errorServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers on this storage profile."
+    }
   },
   "server": {
     "header": "Servers",
@@ -3118,6 +3122,7 @@
     "destination": "Destination",
     "destinationInterfaces": "Destination Interfaces",
     "diskScore": "Disk Score",
+    "diskSize": "Disk Size (incl. swap)",
     "duration": "Duration",
     "efficiency": "Efficiency",
     "efficiencyIndex": "Efficiency Index",
@@ -3190,6 +3195,7 @@
     "site": "Site",
     "siteName": "Site Name",
     "size": "Size",
+    "snapshotSize": "Snapshot Size",
     "source": "Source",
     "sourceInterfaces": "Source Interfaces",
     "speed": "Speed",
@@ -3212,6 +3218,7 @@
     "totalScore": "Total Score",
     "totalCost": "Total Cost",
     "totalHours": "Total Hours",
+    "totalSize": "Total Size",
     "type": "Type",
     "unit": "Unit",
     "updatedBy": "Updated By",
