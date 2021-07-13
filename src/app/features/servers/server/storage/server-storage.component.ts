@@ -119,8 +119,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     return ServerDiskMethodType;
   }
 
-  public get isServerSnapshotEmpty(): boolean {
-    return this._snapshotCount === 0;
+  public get hasServerSnapshot(): boolean {
+    return !isNullOrEmpty(this._snapshotCount);
   }
 
   /**
