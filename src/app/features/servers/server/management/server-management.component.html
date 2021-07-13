@@ -306,7 +306,7 @@
               <span [innerHTML]="server.platform?.resourceName | mcsDataLabel"></span>
             </mcs-item>
 
-            <mcs-item *ngIf="server.serviceId && !server.isDedicated">
+            <mcs-item *ngIf="server.serviceId">
               <span>{{ 'serverManagement.serviceInformation.serviceId' | translate }}:</span>
               <span>{{ server.serviceId }}</span>
             </mcs-item>

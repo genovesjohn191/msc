@@ -110,7 +110,7 @@
       <ng-container *mcsAccessControl="serverPermission.vmEdit">
         <ng-container *ngIf="resourceStorages$ | async as resourceStorages">
           <div class="action-box" *ngIf="canAddDisk(server, resourceStorages)"
-            [@fadeIn] [disabled]="!server.executable">
+            [@fadeIn] [disabled]="!server.executable || hasServerSnapshot">
 
             <mcs-server-manage-storage *mcsComponentHandler
               [storages]="resourceStorages"
@@ -126,7 +126,7 @@
 
             <div class="action-items">
               <button mcsButton arrow="right" size="small"
-                [disabled]="!addDiskEnabled || hasServerSnapshot"
+                [disabled]="!addDiskEnabled"
                 (click)="addDisk(server)"
                 mcsId
                 mcsEventTracker="add-disk"
