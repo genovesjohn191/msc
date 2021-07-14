@@ -18,11 +18,12 @@ import {
   ManagementToolsUpdateWorkflowGroup,
   VdcVmInstanceProvisionComplexWorkflowGroup,
   MicrosoftCreateSubscriptionWorkflowGroup,
-  MicrosoftReservationProvisionWorkflowGroup
+  MicrosoftReservationProvisionWorkflowGroup,
+  MicrosoftSoftwareSubscriptionProvisionWorkflowGroup,
+  ServerBackupProvisionWorkflowGroup,
+  VmBackupProvisionWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
-import { VmBackupProvisionWorkflowGroup } from './workflow-groups/vm-backup-provision.workflow';
-import { ServerBackupProvisionWorkflowGroup } from './workflow-groups/server-backup-provision.workflow';
 
 // Workflow: Assign IDs to workflow groups
 export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new Map([
@@ -44,8 +45,9 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
 
   [ WorkflowGroupId.MicrosoftCreateSubscription, MicrosoftCreateSubscriptionWorkflowGroup ],
   [ WorkflowGroupId.MicrosoftProvisionReservation, MicrosoftReservationProvisionWorkflowGroup ],
+  [ WorkflowGroupId.MicrosoftSoftwareSubscriptionProvision, MicrosoftSoftwareSubscriptionProvisionWorkflowGroup ],
 
-  [ WorkflowGroupId.ServerBackupProvision,  ServerBackupProvisionWorkflowGroup ],
+  [ WorkflowGroupId.ServerBackupProvision, ServerBackupProvisionWorkflowGroup ],
 
   [ WorkflowGroupId.VirtualDataCentreVmInstanceProvision,  VdcVmInstanceProvisionWorkflowGroup ],
   [ WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex, VdcVmInstanceProvisionComplexWorkflowGroup ],

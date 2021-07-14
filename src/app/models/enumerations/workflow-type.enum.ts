@@ -21,6 +21,7 @@ export enum WorkflowType {
 
   MicrosoftCreateSubscription = 'publiccloud.microsoft.createsubscription',
   MicrosoftReservationProvision = 'publiccloud.microsoft.provisionreservation',
+  MicrosoftSoftwareSubscriptionProvision = 'publiccloud.microsoft.provisionsoftwaresubscription',
 
   ServerBackupProvision = 'launchpad.serverbackup.provision',
 

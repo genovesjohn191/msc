@@ -129,6 +129,7 @@ import {
   McsJobConnection,
   McsKeyValue,
   McsLicense,
+  McsSoftwareSubscriptionProductType,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
@@ -2280,6 +2281,15 @@ export class McsApiService {
     return this._networkDbApi.getNetworkEvents(id, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworkEvents'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getSoftwareSubscritionProductTypes(query?: McsQueryParam): Observable<McsApiCollection<McsSoftwareSubscriptionProductType>> {
+    return this._azureSoftwareSubscriptionsApi.getSoftwareSubscriptionProductTypes(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSoftwareSubscritionProductTypes'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );

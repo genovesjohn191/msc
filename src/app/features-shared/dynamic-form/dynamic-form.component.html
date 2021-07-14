@@ -62,6 +62,11 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-chips-field>
 
+        <mcs-dff-select-chips-azure-software-subscription-product-type-tag-field
+        *ngSwitchCase="'select-chips-azure-software-subscription-product-type'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-chips-azure-software-subscription-product-type-tag-field>
+
         <mcs-dff-select-chips-company-field *ngSwitchCase="'select-chips-company'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-chips-company-field>

@@ -174,6 +174,7 @@ export * from './response/mcs-billing';
 export * from './response/mcs-billing-site';
 export * from './response/mcs-billing-cost-centre';
 export * from './response/mcs-key-value';
+export * from './response/mcs-software-subscription-product-type';
 export * from './response/mcs-order';
 export * from './response/mcs-order-charge';
 export * from './response/mcs-order-error';

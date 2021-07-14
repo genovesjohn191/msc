@@ -24,6 +24,7 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
 
   [WorkflowGroupId.MicrosoftCreateSubscription, 'Provision Microsoft subscription for a tenant.'],
   [WorkflowGroupId.MicrosoftProvisionReservation, 'Provision Microsoft reservation for a tenant.'],
+  [WorkflowGroupId.MicrosoftSoftwareSubscriptionProvision, 'Provision Microsoft software subscription for a tenant.'],
 
   [WorkflowGroupId.ServerBackupProvision, 'Provision server backup.'],
 

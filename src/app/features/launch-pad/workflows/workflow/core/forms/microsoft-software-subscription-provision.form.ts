@@ -1,8 +1,8 @@
 import {
   DynamicInputHiddenField,
   DynamicInputNumberField,
-  DynamicSelectAvailabilityZoneField,
   DynamicSelectAzureSubscriptionField,
+  DynamicSelectChipsSoftwareSubscriptionProductTypeField,
   DynamicSelectField,
   DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
@@ -15,13 +15,13 @@ import {
 } from './mapping-helper';
 import { standardContextMapper } from './shared/standard-context-mapper';
 
-export const microsoftReservationProvisionForm: LaunchPadForm = {
+export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
   config: [
     new DynamicInputHiddenField({
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['tenant', 'subscription'],
+      dependents: ['tenant'],
     }),
     new DynamicSelectTenantField({
       key: 'tenant',
@@ -35,12 +35,15 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       key: 'subscription',
       label: 'Subscription',
       validators: { required: true },
-      useSubscriptionIdAsKey: true
+      useServiceIdAsKey: true
     }),
-    new DynamicSelectAvailabilityZoneField({
-      key: 'availabilityZone',
-      label: 'Availability Zone',
-      validators: { required: true }
+    new DynamicSelectChipsSoftwareSubscriptionProductTypeField({
+      key: 'product',
+      label: 'Product',
+      placeholder: 'Search for name, SKU or product ID...',
+      validators: { required: true },
+      allowCustomInput: false,
+      maxItems: 1
     }),
     new DynamicInputNumberField({
       key: 'quantity',
@@ -54,8 +57,8 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       label: 'Term',
       validators: { required: true },
       options: [
-        { key: '1Y', value: '1 Year'},
-        { key: '3Y', value: '1 Years'}
+        { key: '1', value: '1 Year'},
+        { key: '3', value: '1 Years'}
       ]
     }),
   ],
@@ -72,16 +75,11 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
     mappedProperties.push({ key: 'subscription',
     value: findCrispElementAttribute(CrispAttributeNames.LinkedConsService, attributes)?.displayValue } );
 
-    mappedProperties.push({ key: 'instanceType',
-    value: findCrispElementAttribute(CrispAttributeNames.ProductId, attributes)?.displayValue } );
-
     mappedProperties.push({ key: 'quantity',
     value: findCrispElementAttribute(CrispAttributeNames.Quantity, attributes)?.displayValue } );
 
     mappedProperties.push({ key: 'term',
     value: findCrispElementAttribute(CrispAttributeNames.ReservedTerm, attributes)?.displayValue } );
-
-    mappedProperties.push({ key: 'location', value: 'Global' } );
 
     return mappedProperties;
   }
