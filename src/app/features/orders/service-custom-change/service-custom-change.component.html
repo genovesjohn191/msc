@@ -52,7 +52,7 @@
                   mcsEventLabel="order-custom-change-page">{{'shared.links.hereLabel' | translate}}</a>.
               </p>
             </ng-container>
-            <p>{{'orderServiceCustomChange.requestDetails.leadTimeLabel' | translate}}</p>
+            <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
           </mcs-item>
 
           <!-- Service -->

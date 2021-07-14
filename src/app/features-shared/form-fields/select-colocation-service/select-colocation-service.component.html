@@ -3,11 +3,6 @@
     mcsTooltipPosition="right"></mcs-loader>
 </ng-container>
 <ng-template #serviceTemplate>
-  <ng-container>
-    <mcs-item [mcsGreyedOut]="true">
-      <p [innerHTML]="description | mcsNewLines"></p>
-    </mcs-item>
-  </ng-container>
   <mcs-item orientation="block">
     <ng-container *ngIf="colocationGroups | mcsIsNotNullOrEmpty">
       <mcs-form-field>

@@ -39,6 +39,8 @@
               </mcs-contextual-catalog-link>
             </ng-container>
 
+            <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
             <p>{{ 'orderAddAntiVirus.details.server.description' | translate }}</p>
 
             <ng-container *ngIf="(serverGroups$ | async) | mcsIsNotNullOrEmpty">

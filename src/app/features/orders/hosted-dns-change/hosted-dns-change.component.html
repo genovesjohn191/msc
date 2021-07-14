@@ -34,21 +34,11 @@
                 [orderProductId]="orderItemType.productId">
               </mcs-contextual-catalog-link>
             </ng-container>
-
-            <ng-container  *ngIf="loadingLeadTimeHours; else dnsTemplate">
-              <mcs-item orientation="block">
-                <mcs-loader size="small"
-                  [mcsTooltip]="loadingText"
-                  mcsTooltipPosition="right"></mcs-loader>
-              </mcs-item>
-            </ng-container>
-            <ng-template #dnsTemplate>
-                <mcs-item orientation="block">
-                  <p>{{'orderHostedDnsChange.requestDetails.description' | translate}}</p>
-                  <p>{{'orderHostedDnsChange.requestDetails.leadTime' | translate: { lead_time: dnsLeadTimeHours } }}</p>
-                </mcs-item>
-                <hr>
-            </ng-template>
+            <mcs-item orientation="block">
+              <p>{{'orderHostedDnsChange.requestDetails.description' | translate}}</p>
+            </mcs-item>
+            <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+            <hr>
                 <!-- DNS Service -->
                 <mcs-item orientation='block'>
                   <ng-container  *ngIf="loadingDNSServices; else dnsService">

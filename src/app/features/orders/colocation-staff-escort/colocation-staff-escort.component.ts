@@ -114,7 +114,6 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   public fcToolsRequired: FormControl;
   public fcReason: FormControl;
   public fcReferenceNumber: FormControl;
-  public staffEscortStandardLeadTimeHours: number;
   public colocationRacks$: Observable<McsServiceBase[]>;
   public colocationAntennas$: Observable<McsServiceBase[]>;
   public colocationCustomDevices$: Observable<McsServiceBase[]>;
@@ -164,7 +163,6 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   }
 
   public ngOnInit(): void {
-    this._getLeadTimeHours();
     this._getUserIdentityAndAccountDetails();
     this._getEscorteeOptions();
     this._getRackServices();
@@ -532,12 +530,6 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     this.fcJobTitle.setValue('');
     this.fcMobile.setValue('');
     this.fcEmail.setValue('');
-  }
-
-  private _getLeadTimeHours(): void {
-    this.orderItemType$.subscribe(order => {
-      this.staffEscortStandardLeadTimeHours = order.standardLeadTimeHours;
-    });
   }
 
   private _formatMobileNumber(): string {

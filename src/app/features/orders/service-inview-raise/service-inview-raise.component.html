@@ -38,6 +38,8 @@
             </mcs-contextual-catalog-link>
           </ng-container>
 
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
           <p>{{ 'orderServiceRaiseInview.serviceDetails.service.label' | translate }}</p>
           <mcs-form-field *ngIf="(managedServers$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [formControl]="fcService" required

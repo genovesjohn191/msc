@@ -37,14 +37,17 @@
               [orderProductId]="orderItemType.productId">
             </mcs-contextual-catalog-link>
           </ng-container>
+          <mcs-item>
+            <p>{{ 'orderColocationDeviceRestart.detailsStep.description' | translate }}</p>
+          </mcs-item>
+
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
 
           <!-- Colocation Service Selection -->
           <mcs-select-colocation-service
             [formControl]="fcColocationService"
-            [description]="serviceDescription"
             [config]="colocationConfig"
-            [eventLabel]="'order-colocation-device-restart'"
-            [orderItemType]="orderItemType$ | async">
+            [eventLabel]="'order-colocation-device-restart'">
           </mcs-select-colocation-service>
 
           <hr/>

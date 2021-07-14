@@ -540,7 +540,6 @@
       "stepTitle": "Request Details",
       "description": "You can use this wizard to request a custom, non-standard change to your services. Please provide the details of your request below.",
       "raiseTicketLabel": "If you are experiencing issues with your service, raise a ticket",
-      "leadTimeLabel": "Our standard lead time of 120 hours for this request ensures we have time to get the right engineer for the task.",
       "service": {
         "placeholder": "Select a service to change"
       },
@@ -575,7 +574,6 @@
     "requestDetails": {
       "stepTitle": "Request Details",
       "description": "You can use this wizard to request a custom record change to your Primary DNS service.",
-      "leadTime": "Our standard lead time of {{lead_time}} hours for this request ensures we have time to get the right engineer for the task.",
       "notesLabel": "Additional Details",
       "dnsService": {
         "placeholder": "Select a DNS service",
@@ -910,7 +908,7 @@
     "title": "Place a Service Request",
     "detailsStep": {
       "title": "Details",
-      "description": "You can use this wizard to request a custom change to your Azure services. Please provide the details of your request below.\r\n\n Our standard lead time of 24 hours for this request ensures we have time to get the right engineer for the task. For expedited delivery, our accelerated lead time is 4 hours.",
+      "description": "You can use this wizard to request a custom change to your Azure services. Please provide the details of your request below.",
       "serviceSubscriptionId": "Subscription ID: {{subscriptionId}}",
       "servicePlaceholder": "Select a Service",
       "complexityPlaceholder": "Select Complexity",
@@ -970,7 +968,7 @@
     "detailsStep": {
       "stepTitle": "Request Details",
       "previous": "Back",
-      "description": "You can use this wizard to request that physical datacentre activities be carried out by a Macquarie Cloud Services engineer.<br/><br/> Our standard lead time of {{leadTimeHours}} hours for this request ensures we have time to get the right engineer for the task.",
+      "description": "You can use this wizard to request that physical datacentre activities be carried out by a Macquarie Cloud Services engineer.",
       "locationDetailsLabel": "Location Details",
       "notesLabel": "Notes",
       "rackServiceHelpText": "Select the service you would like to request remote hands for",
@@ -998,7 +996,7 @@
     "title": "Request a Device Restart",
     "detailsStep": {
       "stepTitle": "Request Details",
-      "description": "You can use this wizard to request a restart for a physical device you have hosted with us. Please provide the details of the device below.<br/><br/> Our standard lead time of {{leadTimeHours}} hours for this request ensures we have time to get the right engineer for the task.",
+      "description": "You can use this wizard to request a restart for a physical device you have hosted with us. Please provide the details of the device below.",
       "colocationServiceHelpText": "Select the linked service you would like to request a device restart for.",
       "floorLevelHelpText": "Specify which floor level your device is located on.",
       "rowNumberHelpText": "Specify the row number and rack identifier of your device (e.g. 1D).",
@@ -1166,7 +1164,7 @@
       },
       "modify": {
         "tabHeader": "Rule to modify {{index}}",
-        "description": "You can use this wizard to request rule modifications for your firewall service",
+        "description": "You can use this wizard to request rule modifications for your firewall service.",
         "label": "What firewall rules would you like to modify?",
         "helpText": "Enter the details of your existing rule and the parameters for the new rule which will replace it.<br/>Use the Additional Change button to modify multiple.",
         "existingRule": {
@@ -1179,7 +1177,6 @@
         }
       },
       "sharedRuleForm": {
-        "leadTime": "Our standard lead time of {{lead_time}} hours for this request ensures we have time to get the right engineer for the task.",
         "addBtnLabel": "Additional Change",
         "notesLabel": "Additional Details",
         "removeBtnLabel": "Remove Item",
@@ -1769,7 +1766,8 @@
     "header": "Confirm Order",
     "description": "Please confirm the details of your order.",
     "updatingCharges": "Calculating charges. This may take a moment.",
-    "leadTimeNote": "Our standard lead time of {{ standardLeadTimeHours }} hours for this request ensures we have time to get the right engineer for the task.",
+    "standardLeadTimeNote": "Our standard lead time of {{ standardLeadTimeHours }} for this request ensures we have time to get the right engineer for the task.",
+    "acceleratedLeadTimeNote": "For expedited delivery, our accelerated lead time is {{ acceleratedLeadTimeHours }}.",
     "billingDetails": {
       "header": "Billing Details",
       "changeOrderNote": "The contract term and billing details for this service will remain as-is.",
@@ -2869,7 +2867,6 @@
         "maxChar": "Max of {{value}} characters",
         "initialValue": "Initial value: {{initial_value}}{{unit}}"
       },
-      "standardLeadTimeHours": "Our standard lead time of {{leadTimeHours}} hours for this request ensures we have time to get the right engineer for the task.",
       "errors": {
         "required": "Enter value.",
         "numeric": "Please enter a valid number.",

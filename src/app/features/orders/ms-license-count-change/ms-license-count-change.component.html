@@ -39,6 +39,8 @@
               </mcs-contextual-catalog-link>
             </ng-container>
 
+            <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
             <!-- Base License -->
             <mcs-item orientation="block" *ngIf="childLicensesFcConfig$ | async as childLicensesFcConfig">
               <mcs-item>

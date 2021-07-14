@@ -107,7 +107,6 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   public colocationGroups: McsOptionGroup[] = [];
   public cabinetLocationOption$: Observable<McsOption[]>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
-  public remoteHandsStandardLeadTimeHours: number;
   public hasServiceToDisplay: boolean;
 
   private _formGroup: McsFormGroupDirective;
@@ -219,7 +218,6 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   public ngOnInit(): void {
     this.loadingInProgress = true;
     this._registerFormGroup();
-    this._subscribeToLeadTimeHours();
     this._subscribeToRackServices();
     this._subscribeToCabinetLocationOptions();
     this._subscribeToSmacSharedFormConfig();
@@ -428,11 +426,4 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
       targetOptionsArray.push(createObject(McsOption, { text: colocationObj.serviceId, value: colocationObj }));
     });
   }
-
-  private _subscribeToLeadTimeHours(): void {
-    this.orderItemType$.subscribe(order => {
-      this.remoteHandsStandardLeadTimeHours = order.standardLeadTimeHours;
-    });
-  }
-
 }

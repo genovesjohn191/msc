@@ -98,8 +98,6 @@ export class ColocationDeviceRestartComponent extends McsOrderWizardBase impleme
   public fcRestartInstruction: FormControl;
 
   public colocationConfig: ColocationServiceConfig;
-  public serviceDescription: string;
-
   public locationCabinetOptions$: Observable<McsOption[]>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
 
@@ -149,7 +147,6 @@ export class ColocationDeviceRestartComponent extends McsOrderWizardBase impleme
   }
 
   ngOnInit(): void {
-    this._subscribeToLeadTimeHours();
     this._setColocationServiceConfig();
     this._subscribeToCabinetLocationOptions();
     this._subscribeToSmacSharedFormConfig();
@@ -320,14 +317,6 @@ export class ColocationDeviceRestartComponent extends McsOrderWizardBase impleme
       .filter((objValue) => (typeof objValue === 'number'))
       .map(objValue => createObject(McsOption, { text: enumText[objValue], value: objValue }));
     return options;
-  }
-
-  private _subscribeToLeadTimeHours(): void {
-    this.orderItemType$.subscribe(order => {
-      this.serviceDescription = this._translateService.instant('orderColocationDeviceRestart.detailsStep.description',
-        { leadTimeHours: order.standardLeadTimeHours }
-      );
-    });
   }
 
   /**

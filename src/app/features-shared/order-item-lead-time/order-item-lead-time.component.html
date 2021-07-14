@@ -1,3 +1,14 @@
-<mcs-item *ngIf="hasLeadTime">
-    <p>{{ 'orderDetailsStep.leadTimeNote' | translate: {"standardLeadTimeHours": standardLeadTimeHours} }}</p>
+<mcs-item *ngIf="hasStandardTime || hasAcceleratedTime">
+  <p>
+    <span *ngIf="hasStandardTime">
+      {{ 'orderDetailsStep.standardLeadTimeNote' | translate:
+        { "standardLeadTimeHours": (standardLeadTimeHours | mcsPlural: 'hour') }
+      }}
+    </span>
+    <span *ngIf="hasAcceleratedTime">
+      {{ 'orderDetailsStep.acceleratedLeadTimeNote' | translate:
+        { "acceleratedLeadTimeHours" :(acceleratedLeadTimeHours | mcsPlural: 'hour') }
+      }}
+    </span>
+  </p>
 </mcs-item>

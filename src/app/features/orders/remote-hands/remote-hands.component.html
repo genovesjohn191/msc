@@ -38,6 +38,11 @@
                 [orderProductId]="orderItemType.productId">
               </mcs-contextual-catalog-link>
             </ng-container>
+            <mcs-item>
+              <p [innerHTML]="'orderRemoteHands.detailsStep.description' | translate"></p>
+            </mcs-item>
+            <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
 
               <!-- Rack Service Selection -->
               <ng-container *ngIf="loadingInProgress; else serviceTemplate">
@@ -46,11 +51,6 @@
                   mcsTooltipPosition="right"></mcs-loader>
               </ng-container>
               <ng-template #serviceTemplate>
-                <ng-container>
-                  <mcs-item [mcsGreyedOut]="true">
-                    <p [innerHTML]="('orderRemoteHands.detailsStep.description' | translate: { leadTimeHours: remoteHandsStandardLeadTimeHours } ) | mcsNewLines"></p>
-                  </mcs-item>
-                </ng-container>
                 <mcs-item orientation="block">
                   <mcs-form-field *ngIf="hasServiceToDisplay">
                     <mcs-select mcsId="rack-service"

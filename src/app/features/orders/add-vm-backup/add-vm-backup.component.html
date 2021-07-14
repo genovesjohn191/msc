@@ -39,6 +39,8 @@
             </mcs-contextual-catalog-link>
           </ng-container>
 
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
           <mcs-item orientation="block">
             <span align-self-start>{{ 'orderAddVmBackup.detailsStep.serverLabel' | translate }}:</span>
             <mcs-form-field *ngIf="(serverGroups$ | async) | mcsIsNotNullOrEmpty">

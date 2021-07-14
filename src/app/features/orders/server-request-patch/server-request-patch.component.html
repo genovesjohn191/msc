@@ -37,6 +37,10 @@
               [orderProductId]="orderItemType.productId">
             </mcs-contextual-catalog-link>
           </ng-container>
+          <mcs-item>
+            <p [innerHTML]="'serverRequestPatch.detailsStep.description' | translate"></p>
+          </mcs-item>
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
 
           <!-- Managed Servers -->
           <ng-container *ngIf="loadingInProgress; else serverTemplate">
@@ -45,14 +49,6 @@
               mcsTooltipPosition="right"></mcs-loader>
           </ng-container>
           <ng-template #serverTemplate>
-            <ng-container>
-              <mcs-item [mcsGreyedOut]="true">
-                <p [innerHTML]="('serverRequestPatch.detailsStep.description' | translate) | mcsNewLines"></p>
-              </mcs-item>
-              <mcs-item [mcsGreyedOut]="true">
-                <p [innerHTML]="('shared.formField.standardLeadTimeHours' | translate: { leadTimeHours: requestPatchLeadTimeHours })"></p>
-              </mcs-item>
-            </ng-container>
             <mcs-item orientation="block">
               <mcs-form-field *ngIf="managedServers | mcsIsNotNullOrEmpty">
                 <mcs-select mcsId="select-box-location"
