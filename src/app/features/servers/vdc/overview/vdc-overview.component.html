@@ -23,7 +23,7 @@
           <span>/</span>
           <span [innerHTML]="resource?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
           <ng-container *ngIf="resource?.scaleable">
-            <ng-container *mcsAccessControl="['OrderEdit'];">
+            <ng-container *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingVdcComputeScale'];">
               <a (click)="scaleVdc(resource)"
                 mcsId="scale-vdc"
                 mcsEventTracker="vdc-option"

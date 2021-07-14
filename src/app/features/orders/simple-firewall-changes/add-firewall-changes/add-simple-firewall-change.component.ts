@@ -89,7 +89,6 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   public fgAddFirewallRules: FormGroup;
   public fcFirewallServices: FormControl;
   public faSharedRuleForm: FormArray;
-  public leadTimeHours: number;
   public isLoading: boolean;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
   public ruleActionType: RuleAction = RuleAction.Add;
@@ -148,7 +147,6 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this._getLeadTimeHours();
     this._getFirewallServices();
     this._initializeSmacSharedForm();
   }
@@ -325,14 +323,8 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     return sharedRules;
   }
 
-  private _getLeadTimeHours(): void {
-    this.isLoading = true;
-    this.orderItemType$.subscribe(order => {
-      this.leadTimeHours = order.standardLeadTimeHours;
-    });
-  }
-
   private _getFirewallServices(): void {
+    this.isLoading = true;
     this._apiService.getFirewalls()
     .pipe(
       catchError((error) => {

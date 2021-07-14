@@ -24,11 +24,19 @@ export class OrderItemLeadTimeComponent {
   @Input()
   public orderItemType: McsOrderItemType;
 
-  public get hasLeadTime(): boolean {
+  public get hasStandardTime(): boolean {
     return !isNullOrEmpty(this.standardLeadTimeHours);
   }
 
   public get standardLeadTimeHours(): number {
     return getSafeProperty(this.orderItemType, (obj) => obj.standardLeadTimeHours, 0);
+  }
+
+  public get hasAcceleratedTime(): boolean {
+    return !isNullOrEmpty(this.acceleratedLeadTimeHours);
+  }
+
+  public get acceleratedLeadTimeHours(): number {
+    return getSafeProperty(this.orderItemType, (obj) => obj.acceleratedLeadTimeHours, 0);
   }
 }

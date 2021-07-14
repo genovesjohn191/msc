@@ -33,20 +33,10 @@
                 [orderProductId]="orderItemType.productId">
               </mcs-contextual-catalog-link>
             </ng-container>
-
-            <ng-container  *ngIf="isLoading; else dnsTemplate">
-              <mcs-item orientation="block">
-                <mcs-loader size="small"
-                  [mcsTooltip]="loadingText"
-                  mcsTooltipPosition="right"></mcs-loader>
-              </mcs-item>
-            </ng-container>
-            <ng-template #dnsTemplate>
-                <mcs-item orientation="block">
-                  <p>{{'orderSimpleFirewallChanges.detailsStep.modify.description' | translate}}</p>
-                  <p>{{'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.leadTime' | translate: { lead_time: leadTimeHours } }}</p>
-                </mcs-item>
-            </ng-template>
+            <mcs-item orientation="block">
+              <p>{{'orderSimpleFirewallChanges.detailsStep.modify.description' | translate}}</p>
+            </mcs-item>
+            <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
                 <!-- Firewall Services -->
                 <!--TO DO: convert to shared angular material dynamic dropdown for firerwall services-->
                 <mcs-item orientation='block'>

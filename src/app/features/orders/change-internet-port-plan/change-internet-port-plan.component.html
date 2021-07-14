@@ -35,6 +35,8 @@
             </mcs-contextual-catalog-link>
           </ng-container>
 
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
           <p>{{ 'changeInternetPortPlan.internetPlan.label' | translate }}</p>
           <mcs-form-field *ngIf="(internetPorts$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [placeholder]="'changeInternetPortPlan.internetPlan.placeholder' | translate"

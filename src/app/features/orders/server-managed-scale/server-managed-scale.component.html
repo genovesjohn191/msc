@@ -38,6 +38,8 @@
             </mcs-contextual-catalog-link>
           </ng-container>
 
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
           <p>{{ 'orderServerManagedScale.vm.label' | translate }}</p>
           <mcs-form-field *ngIf="(serverGroups$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [placeholder]="'orderServerManagedScale.vm.placeholder' | translate"

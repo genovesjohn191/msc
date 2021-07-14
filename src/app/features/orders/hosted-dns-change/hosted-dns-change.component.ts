@@ -91,8 +91,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   public fcDnsService: FormControl;
   public fcZone: FormControl;
   public faChangeToApply: FormArray;
-  public dnsLeadTimeHours: number;
-  public loadingLeadTimeHours: boolean;
   public loadingDNSServices: boolean;
   public loadingDNSZones: boolean;
   public networkDnsOptions: Array<McsOption> = new Array<McsOption>();
@@ -150,7 +148,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   public ngOnInit(): void {
-    this._getLeadTimeHours();
     this._getNetworkDns();
     this._getPreSelectedNetworkDns();
     this._initializeSmacSharedForm();
@@ -441,14 +438,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     let contactConfig = { isIncluded: true };
     let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
     this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
-  }
-
-  private _getLeadTimeHours(): void {
-    this.loadingLeadTimeHours = true;
-    this.orderItemType$.subscribe(order => {
-      this.dnsLeadTimeHours = order.standardLeadTimeHours;
-      this.loadingLeadTimeHours = false;
-    });
   }
 
   private _getPreSelectedNetworkDns(): void {

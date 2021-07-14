@@ -15,7 +15,6 @@ import {
   HttpStatusCode,
   McsOption,
   McsOptionGroup,
-  McsOrderItemType,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -45,12 +44,6 @@ interface IRackService {
 
 export class SelectColocationDeviceComponent extends FormFieldBaseComponent2<IRackService>
   implements IFieldSelectColocationService, OnInit {
-
-  @Input()
-  public orderItemType: McsOrderItemType;
-
-  @Input()
-  public description: string;
 
   @Input()
   public config: ColocationServiceConfig;

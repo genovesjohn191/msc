@@ -648,6 +648,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/vdc-scale",
     "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": ["EnableOrderingVdcComputeScale"],
     "documentTitle": "Scale VDC - Macquarie Cloud Services"
   },
   "orderVdcStorageExpand": {

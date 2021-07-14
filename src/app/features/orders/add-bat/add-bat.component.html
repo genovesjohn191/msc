@@ -43,6 +43,8 @@
             <p>{{ 'orderAddBat.detailsStep.description' | translate }}</p>
           </mcs-item>
 
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
           <!-- Aggregation Target -->
           <mcs-item orientation="separated">
             <span align-self-start>{{ 'orderAddBat.detailsStep.retentionLabel' | translate }}:</span>

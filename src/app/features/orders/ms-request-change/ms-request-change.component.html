@@ -38,173 +38,173 @@
                 [orderProductId]="orderItemType.productId">
               </mcs-contextual-catalog-link>
             </ng-container>
-
-              <mcs-item>
-                <p [innerHTML]="('orderMsRequestChange.detailsStep.description' | translate) | mcsNewLines"></p>
-              </mcs-item>
-
-              <!-- Services Selection -->
-              <mcs-item orientation="block">
-                <mcs-form-field *ngIf="(azureServices$ | async) | mcsIsNotNullOrEmpty">
-                  <mcs-select mcsId="select-service"
-                    mcsEventTracker="select-ms-service"
-                    mcsEventCategory="order"
-                    mcsEventLabel="ms-service-change-request"
-                    [formControl]="fcMsService"
-                    (selectionChange)="onServiceChange()"
-                    [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
-                    <mcs-option *ngFor="let azureService of azureServices$ | async"
-                      [selected]="(selectedServiceId$ | async)?.serviceId === azureService.value.serviceId"
-                      [value]="azureService.value"
-                      [disabled]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)">
-                        <span [ngStyle]="{'pointer-events': 'auto'}"
-                          [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
-                          [mcsTooltipShow]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)"
-                          [mcsTooltipPosition]="'right'">
-                          {{ azureService.text }}
-                        </span>
-                    </mcs-option>
-                  </mcs-select>
-                </mcs-form-field>
-                <span *ngIf="(fcMsService?.value | mcsIsNotNullOrEmpty)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
-                  translate: { subscriptionId: (fcMsService?.value.subscriptionId | mcsIsNotNullOrEmpty) ?
-                    fcMsService?.value.subscriptionId : unknownText } }}</span>
-                <span read-only>{{ noServicesFallbackText | translate }}</span>
-              </mcs-item>
-
-              <!-- Service Request Type Selection -->
-              <mcs-item orientation="block" [hidden]="!hasCloudHealthRequestAccess() && !hasProvisionRequestAccess()">
-                <span align-self-start>{{ 'label.requestType' | translate }}</span>
-                <mcs-form-field [disabled]="!fcMsService.value">
-                  <mcs-select
-                    mcsId="select-service-request-type"
-                    mcsEventTracker="select-ms-service-request-type"
-                    mcsEventCategory="order"
-                    mcsEventLabel="ms-service-change-request"
-                    [formControl]="fcMsServiceRequestType"
-                    (selectionChange)="onRequestTypeChange($event)"
-                    [placeholder]="'orderMsRequestChange.detailsStep.serviceRequestTypePlaceHolder' | translate">
-                    <mcs-option *ngFor="let serviceRequestType of serviceRequestType$ | async"
-                      [value]="serviceRequestType.value">
-                      {{ serviceRequestType.text }}
-                    </mcs-option>
-                  </mcs-select>
-                </mcs-form-field>
-              </mcs-item>
-
-              <!-- Custom Request Type -->
-              <ng-container *ngIf="isServiceRequestTypeCustom(fcMsServiceRequestType?.value)">
-                <!-- Azure Product  -->
-                <mcs-item orientation="block">
-                  <span align-self-start>{{ 'label.azureProduct' | translate }}</span>
-                  <mcs-form-field>
-                    <mcs-select [formControl]="fcAzureProduct"
-                      mcsId="select-ms-service-azure-product"
-                      mcsEventTracker="select-ms-service-azure-product"
-                      mcsEventCategory="order"
-                      mcsEventLabel="ms-service-change-request"
-                      [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureProductContextualHelp' | translate"
-                      [placeholder]="'orderMsRequestChange.detailsStep.azureProductPlaceHolder' | translate">
-                      <mcs-search mcsSelectSearch></mcs-search>
-                      <mcs-option *ngFor="let product of azureProductOptions$ | async" [value]="product.value">
-                        {{ product.text }}
-                      </mcs-option>
-                    </mcs-select>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderMsRequestChange.errors.category' | translate }}
-                    </mcs-error>
-                  </mcs-form-field>
-                  <ng-container *ngIf="isOtherProductSelected">
-                    <span [mcsGreyedOut]="true"
-                      [innerHTML]="('orderMsRequestChange.detailsStep.otherAdvisoryLabel' | translate)">
-                    </span>
-                  </ng-container>
-                </mcs-item>
             
-                <!-- Azure Resources -->
-                <mcs-item orientation="block">
-                  <span align-self-start>{{ 'label.azureResources' | translate }}
-                    <ng-container *ngIf="loadingInProgress">
-                      <mcs-loader size="small"
-                        [mcsTooltip]="loadingText"
-                        mcsTooltipPosition="right"></mcs-loader>
-                    </ng-container>
-                  </span>
-                  <mcs-form-field *ngIf="azureResourcesOptions$ | async as azureResourcesOptions">
-                    <mcs-select [formControl]="fcAzureResource"
-                      mcsId="select-ms-service-azure-resource"
-                      mcsEventTracker="select-ms-service-azure-resource"
-                      mcsEventCategory="order"
-                      mcsEventLabel="ms-service-change-request"
-                      [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureResourcesContextHelp' | translate"
-                      [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
-                      multiple
-                      [multiSelectLimit]="maxSelectionLimit">
-                      <mcs-search mcsSelectSearch></mcs-search>
-                      <ng-container *ngFor="let resource of azureResourcesOptions">
-                        <mcs-option
-                          [selected]="(selectedServiceId$ | async)?.azureId === resource.value?.azureId"
-                          [value]="resource.value">
-                            <span [ngStyle]="{'pointer-events': 'auto'}"
-                              [mcsTooltip]="resource.value?.azureId"
-                              [mcsTooltipShow]="resource.value?.azureId"
-                              [mcsTooltipPosition]="'right'">
-                              {{ resource.text }}
-                            </span>
-                        </mcs-option>
-                        <ng-container *ngIf="isAddNewResourceSelected(resource.text)">
-                          <hr>
-                        </ng-container>
-                      </ng-container>
-                    </mcs-select>
-                    <ng-container *ngIf="loadingInProgress">
-                      <mcs-loader size="small"
-                        [mcsTooltip]="loadingText"
-                        mcsTooltipPosition="right"></mcs-loader>
-                    </ng-container>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
-                    </mcs-error>
-                  </mcs-form-field>
-                  <span read-only>{{ noResourcesFallbackText | translate }}</span>
-                </mcs-item>
-              </ng-container>
-              
-              <!-- Cloudhealth -->
-              <ng-container *ngIf="isServiceRequestTypeCloudHealth(fcMsServiceRequestType?.value)">
-                <mcs-cloudhealth-services #fgCloudhealthService
-                  (dataChange)="onCloudHealthChange($event)">
-                </mcs-cloudhealth-services>
-              </ng-container>
+            <p [innerHTML]="'orderMsRequestChange.detailsStep.description' | translate"></p>
 
-              <!-- Provision -->
-              <ng-container *ngIf="isServiceRequestTypeProvision(fcMsServiceRequestType?.value)">
-                <mcs-provision #fgProvisionService
-                  [azureResources]="azureResourcesOptions$ | async"
-                  [noResourcesFallbackText]="noResourcesFallbackText"
-                  [resourceLoadingInProgress]="loadingInProgress"
-                  (dataChange)="onChangeProvisionDetails($event)">
-                </mcs-provision>
-              </ng-container>
+            <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
 
-              <!-- SMAC Shared Form -->
+            <!-- Services Selection -->
+            <mcs-item orientation="block">
+              <mcs-form-field *ngIf="(azureServices$ | async) | mcsIsNotNullOrEmpty">
+                <mcs-select mcsId="select-service"
+                  mcsEventTracker="select-ms-service"
+                  mcsEventCategory="order"
+                  mcsEventLabel="ms-service-change-request"
+                  [formControl]="fcMsService"
+                  (selectionChange)="onServiceChange()"
+                  [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
+                  <mcs-option *ngFor="let azureService of azureServices$ | async"
+                    [selected]="(selectedServiceId$ | async)?.serviceId === azureService.value.serviceId"
+                    [value]="azureService.value"
+                    [disabled]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)">
+                      <span [ngStyle]="{'pointer-events': 'auto'}"
+                        [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
+                        [mcsTooltipShow]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)"
+                        [mcsTooltipPosition]="'right'">
+                        {{ azureService.text }}
+                      </span>
+                  </mcs-option>
+                </mcs-select>
+              </mcs-form-field>
+              <span *ngIf="(fcMsService?.value | mcsIsNotNullOrEmpty)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
+                translate: { subscriptionId: (fcMsService?.value.subscriptionId | mcsIsNotNullOrEmpty) ?
+                  fcMsService?.value.subscriptionId : unknownText } }}</span>
+              <span read-only>{{ noServicesFallbackText | translate }}</span>
+            </mcs-item>
+
+            <!-- Service Request Type Selection -->
+            <mcs-item orientation="block" [hidden]="!hasCloudHealthRequestAccess() && !hasProvisionRequestAccess()">
+              <span align-self-start>{{ 'label.requestType' | translate }}</span>
+              <mcs-form-field [disabled]="!fcMsService.value">
+                <mcs-select
+                  mcsId="select-service-request-type"
+                  mcsEventTracker="select-ms-service-request-type"
+                  mcsEventCategory="order"
+                  mcsEventLabel="ms-service-change-request"
+                  [formControl]="fcMsServiceRequestType"
+                  (selectionChange)="onRequestTypeChange($event)"
+                  [placeholder]="'orderMsRequestChange.detailsStep.serviceRequestTypePlaceHolder' | translate">
+                  <mcs-option *ngFor="let serviceRequestType of serviceRequestType$ | async"
+                    [value]="serviceRequestType.value">
+                    {{ serviceRequestType.text }}
+                  </mcs-option>
+                </mcs-select>
+              </mcs-form-field>
+            </mcs-item>
+
+            <!-- Custom Request Type -->
+            <ng-container *ngIf="isServiceRequestTypeCustom(fcMsServiceRequestType?.value)">
+              <!-- Azure Product  -->
               <mcs-item orientation="block">
-                <mcs-smac-shared-form #fgSmacSharedForm
-                  [config]="smacSharedFormConfig$ | async"
-                  (dataChange)="onChangeSharedForm($event)">
-                </mcs-smac-shared-form>
+                <span align-self-start>{{ 'label.azureProduct' | translate }}</span>
+                <mcs-form-field>
+                  <mcs-select [formControl]="fcAzureProduct"
+                    mcsId="select-ms-service-azure-product"
+                    mcsEventTracker="select-ms-service-azure-product"
+                    mcsEventCategory="order"
+                    mcsEventLabel="ms-service-change-request"
+                    [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureProductContextualHelp' | translate"
+                    [placeholder]="'orderMsRequestChange.detailsStep.azureProductPlaceHolder' | translate">
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <mcs-option *ngFor="let product of azureProductOptions$ | async" [value]="product.value">
+                      {{ product.text }}
+                    </mcs-option>
+                  </mcs-select>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderMsRequestChange.errors.category' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+                <ng-container *ngIf="isOtherProductSelected">
+                  <span [mcsGreyedOut]="true"
+                    [innerHTML]="('orderMsRequestChange.detailsStep.otherAdvisoryLabel' | translate)">
+                  </span>
+                </ng-container>
               </mcs-item>
+          
+              <!-- Azure Resources -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'label.azureResources' | translate }}
+                  <ng-container *ngIf="loadingInProgress">
+                    <mcs-loader size="small"
+                      [mcsTooltip]="loadingText"
+                      mcsTooltipPosition="right"></mcs-loader>
+                  </ng-container>
+                </span>
+                <mcs-form-field *ngIf="azureResourcesOptions$ | async as azureResourcesOptions">
+                  <mcs-select [formControl]="fcAzureResource"
+                    mcsId="select-ms-service-azure-resource"
+                    mcsEventTracker="select-ms-service-azure-resource"
+                    mcsEventCategory="order"
+                    mcsEventLabel="ms-service-change-request"
+                    [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureResourcesContextHelp' | translate"
+                    [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
+                    multiple
+                    [multiSelectLimit]="maxSelectionLimit">
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <ng-container *ngFor="let resource of azureResourcesOptions">
+                      <mcs-option
+                        [selected]="(selectedServiceId$ | async)?.azureId === resource.value?.azureId"
+                        [value]="resource.value">
+                          <span [ngStyle]="{'pointer-events': 'auto'}"
+                            [mcsTooltip]="resource.value?.azureId"
+                            [mcsTooltipShow]="resource.value?.azureId"
+                            [mcsTooltipPosition]="'right'">
+                            {{ resource.text }}
+                          </span>
+                      </mcs-option>
+                      <ng-container *ngIf="isAddNewResourceSelected(resource.text)">
+                        <hr>
+                      </ng-container>
+                    </ng-container>
+                  </mcs-select>
+                  <ng-container *ngIf="loadingInProgress">
+                    <mcs-loader size="small"
+                      [mcsTooltip]="loadingText"
+                      mcsTooltipPosition="right"></mcs-loader>
+                  </ng-container>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+                <span read-only>{{ noResourcesFallbackText | translate }}</span>
+              </mcs-item>
+            </ng-container>
+            
+            <!-- Cloudhealth -->
+            <ng-container *ngIf="isServiceRequestTypeCloudHealth(fcMsServiceRequestType?.value)">
+              <mcs-cloudhealth-services #fgCloudhealthService
+                (dataChange)="onCloudHealthChange($event)">
+              </mcs-cloudhealth-services>
+            </ng-container>
 
-              <div class="action-items">
-                <button mcsButton arrow="right"
-                  mcsWizardStepNext
-                  [disabled]="!(formIsValid && fgSmacSharedForm?.isValid())"
-                  mcsId="step-1-next"
-                  mcsEventTracker="step-1-next"
-                  mcsEventCategory="orders"
-                  mcsEventLabel="ms-service-change-request">{{ 'shared.wizard.next' | translate }}</button>
-              </div>
-            </form>
+            <!-- Provision -->
+            <ng-container *ngIf="isServiceRequestTypeProvision(fcMsServiceRequestType?.value)">
+              <mcs-provision #fgProvisionService
+                [azureResources]="azureResourcesOptions$ | async"
+                [noResourcesFallbackText]="noResourcesFallbackText"
+                [resourceLoadingInProgress]="loadingInProgress"
+                (dataChange)="onChangeProvisionDetails($event)">
+              </mcs-provision>
+            </ng-container>
+
+            <!-- SMAC Shared Form -->
+            <mcs-item orientation="block">
+              <mcs-smac-shared-form #fgSmacSharedForm
+                [config]="smacSharedFormConfig$ | async"
+                (dataChange)="onChangeSharedForm($event)">
+              </mcs-smac-shared-form>
+            </mcs-item>
+
+            <div class="action-items">
+              <button mcsButton arrow="right"
+                mcsWizardStepNext
+                [disabled]="!(formIsValid && fgSmacSharedForm?.isValid())"
+                mcsId="step-1-next"
+                mcsEventTracker="step-1-next"
+                mcsEventCategory="orders"
+                mcsEventLabel="ms-service-change-request">{{ 'shared.wizard.next' | translate }}</button>
+            </div>
+          </form>
         </mcs-wizard-step>
 
         <!-- Confirm Step  -->

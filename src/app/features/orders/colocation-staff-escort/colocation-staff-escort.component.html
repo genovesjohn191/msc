@@ -39,44 +39,46 @@
         </ng-container>
 
         <mcs-item orientation="block">
-            <p>{{'orderColocationStaffEscort.requestDetails.description' | translate}}</p>
-            <p>{{'orderColocationStaffEscort.requestDetails.descriptionNote' | translate}}</p>
-          </mcs-item>
+          <p>{{'orderColocationStaffEscort.requestDetails.description' | translate}}</p>
+          <p>{{'orderColocationStaffEscort.requestDetails.descriptionNote' | translate}}</p>
+        </mcs-item>
 
-            <mcs-item orientation="block">
-               <!-- Colocation Service -->
-                <ng-container *ngIf="loadingInProgress; else serviceTemplate">
-                  <mcs-loader size="small"
-                    [mcsTooltip]="loadingText"
-                    mcsTooltipPosition="right"></mcs-loader>
-                </ng-container>
-                <ng-template #serviceTemplate>
-                  <mcs-form-field *ngIf="hasServiceToDisplay">
-                    <mcs-select [formControl]="fcColocationService"
-                    [placeholder]="'orderColocationStaffEscort.requestDetails.colocationService.placeholder' | translate"
-                    [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.colocationService.helptext' | translate"
-                    mcsId="select-colocation-service"
-                    mcsEventTracker="select-colocation-service"
-                    mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page"
-                    required>
-                      <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
-                        <ng-container *mcsOptionGroupLabel>
-                          <span>{{ colocationGroup?.groupName }}</span>
-                        </ng-container>
-                        <mcs-option *ngFor="let service of colocationGroup.options"  [value]="service.value">
-                          {{ service.text }}
-                        </mcs-option>
-                      </mcs-option-group>
-                    </mcs-select>
-                    <mcs-error
-                          mcsError errorState="required"
-                          [innerHTML]="('orderColocationStaffEscort.requestDetails.colocationService.error' | translate)">
-                    </mcs-error>
-                  </mcs-form-field>
-                  <span read-only>{{ noServicesFallbackText | translate }}</span>
-                </ng-template>
-            </mcs-item>
+        <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
+          <mcs-item orientation="block">
+              <!-- Colocation Service -->
+              <ng-container *ngIf="loadingInProgress; else serviceTemplate">
+                <mcs-loader size="small"
+                  [mcsTooltip]="loadingText"
+                  mcsTooltipPosition="right"></mcs-loader>
+              </ng-container>
+              <ng-template #serviceTemplate>
+                <mcs-form-field *ngIf="hasServiceToDisplay">
+                  <mcs-select [formControl]="fcColocationService"
+                  [placeholder]="'orderColocationStaffEscort.requestDetails.colocationService.placeholder' | translate"
+                  [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.colocationService.helptext' | translate"
+                  mcsId="select-colocation-service"
+                  mcsEventTracker="select-colocation-service"
+                  mcsEventCategory="order-collocation-staff-escort"
+                  mcsEventLabel="order-collocation-staff-escort-page"
+                  required>
+                    <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
+                      <ng-container *mcsOptionGroupLabel>
+                        <span>{{ colocationGroup?.groupName }}</span>
+                      </ng-container>
+                      <mcs-option *ngFor="let service of colocationGroup.options"  [value]="service.value">
+                        {{ service.text }}
+                      </mcs-option>
+                    </mcs-option-group>
+                  </mcs-select>
+                  <mcs-error
+                        mcsError errorState="required"
+                        [innerHTML]="('orderColocationStaffEscort.requestDetails.colocationService.error' | translate)">
+                  </mcs-error>
+                </mcs-form-field>
+                <span read-only>{{ noServicesFallbackText | translate }}</span>
+              </ng-template>
+          </mcs-item>
           <br><hr><br>
 
           <!-- Attendance Details -->

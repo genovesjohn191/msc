@@ -88,7 +88,6 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   public fcExclusions: FormControl;
 
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
-  public requestPatchLeadTimeHours: number;
   public managedServers: McsOption[] = [];
 
   private _formGroup: McsFormGroupDirective;
@@ -203,7 +202,6 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   public ngOnInit(): void {
     this.loadingInProgress = true;
     this._registerFormGroup();
-    this._subscribeToLeadTimeHours();
     this._subscribeToManagedServer();
     this._subscribeToSmacSharedFormConfig();
     this._registerEvents();
@@ -335,11 +333,4 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
         this._serverCount = this.managedServers?.length;
       });
   }
-
-  private _subscribeToLeadTimeHours(): void {
-    this.orderItemType$.subscribe(order => {
-      this.requestPatchLeadTimeHours = order.standardLeadTimeHours;
-    });
-  }
-
 }
