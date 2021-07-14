@@ -20,6 +20,7 @@ export enum ProductType {
   AzureProductConsumption,
   AzureProductConsumptionEnterpriseAgreement,
   AzureReservation,
+  AzureSoftwareSubscription,
   BackupAggregationTarget,
   BiztalkEnterpriseServer,
   BizTalkHppaEnterpriseProcessorLicense,

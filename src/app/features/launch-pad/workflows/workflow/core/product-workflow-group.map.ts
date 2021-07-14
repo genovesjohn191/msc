@@ -11,6 +11,12 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
+    [ ProductType.AzureSoftwareSubscription,
+      [
+        WorkflowGroupId.MicrosoftSoftwareSubscriptionProvision
+      ]
+    ],
+
     [ ProductType.BrickFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,

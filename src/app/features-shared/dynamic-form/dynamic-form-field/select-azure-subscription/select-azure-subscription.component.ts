@@ -48,6 +48,7 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   private _tenant: McsTenant;
 
   private _subscriptionIdMapping: Map<string, string> = new Map<string, string>();
+  private _serviceIdMapping: Map<string, string> = new Map<string, string>();
 
   public constructor(
     private _apiService: McsApiService,
@@ -76,6 +77,8 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   public writeValue(obj: any): void {
     if (this._subscriptionIdMapping.has(obj)) {
       obj = this.config.useSubscriptionIdAsKey ? obj : this._subscriptionIdMapping.get(obj);
+    } else if (this._serviceIdMapping.has(obj)) {
+      obj = this.config.useServiceIdAsKey ? obj : this._serviceIdMapping.get(obj);
     }
 
     if (!isNullOrEmpty(obj)) {
@@ -104,6 +107,7 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   protected filter(collection: McsAzureService[]): FlatOption[] {
     let options: FlatOption[] = [];
     this._subscriptionIdMapping.clear();
+    this._serviceIdMapping.clear();
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
@@ -113,8 +117,18 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
       if (uniqueNonEmptySubscriptionId) {
         this._subscriptionIdMapping.set(item.subscriptionId, item.id);
       }
+      // Build a service ID map so we can map with subscription IDs to correct key when initializing the value
+      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.serviceId) && !this._serviceIdMapping.has(item.serviceId);
+      if (uniqueNonEmptyServiceId) {
+        this._serviceIdMapping.set(item.serviceId, item.id);
+      }
 
-      let key = this.config.useSubscriptionIdAsKey ? item.subscriptionId : item.id;
+      let key = item.id;
+      if (this.config.useSubscriptionIdAsKey) {
+        key = item.subscriptionId;
+      } else if (this.config.useServiceIdAsKey) {
+        key = item.serviceId;
+      }
       let subscriptionid = this.shortenGuid(item.subscriptionId);
       let value = `${item.friendlyName} (${subscriptionid})`
       options.push({ type: 'flat', key, value });
@@ -144,8 +158,13 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   }
 
   private _exluded(item: McsAzureService): boolean {
-    // Filter no service ID if service ID is used as key
+    // Filter no subscription ID if subscription ID is used as key
     if (this.config.useSubscriptionIdAsKey && isNullOrEmpty(item.subscriptionId)) {
+      return true;
+    }
+
+    // Filter no servie ID if service ID is used as key
+    if (this.config.useServiceIdAsKey && isNullOrEmpty(item.serviceId)) {
       return true;
     }
 

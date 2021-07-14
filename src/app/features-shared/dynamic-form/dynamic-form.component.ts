@@ -158,6 +158,40 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     this._changeDetectorRef.markForCheck();
   }
 
+  public setFieldProperties(properties: any): void {
+    if (isNullOrEmpty(properties)) {
+      return;
+    }
+
+    // Loop through all of the controls
+    this.controls.forEach(control => {
+      // Check if a control config is being overriden
+      let customProperties = properties[control.config.key];
+
+      if (!isNullOrEmpty(customProperties)) {
+        let objectKeys = Object.keys(customProperties);
+        let value: any = null;
+        // Loop through all the properties in the config that is being overriden
+        objectKeys.forEach((fieldKey) => {
+          let fieldValue = customProperties[fieldKey];
+          control.config[fieldKey] = fieldValue;
+
+          // Take note of value override so we can initialize it later
+          if (fieldKey === 'value' && !isNullOrEmpty(fieldValue)) {
+           value = fieldValue;
+          }
+        })
+
+        // Initialize the value of the control if it's not empty
+        if (!isNullOrEmpty(value)) {
+          control.setInitialValue(value);
+        }
+      }
+    });
+
+    this._changeDetectorRef.markForCheck();
+  }
+
   public isValidField(key: string) {
     if ((!this.form.controls[key].dirty && !this.form.controls[key].touched)) {
       return true;

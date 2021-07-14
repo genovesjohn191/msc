@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsAzureSoftwareSubscription,
+  McsSoftwareSubscriptionProductType,
   McsQueryParam
 } from '@app/models';
 
@@ -16,4 +17,9 @@ export interface IMcsApiAzureSoftwareSubscriptionsService {
    * Gets azure software subscription by id
    */
   getAzureSoftwareSubscriptionById(id: string): Observable<McsApiSuccessResponse<McsAzureSoftwareSubscription>>;
+
+  /**
+   * Gets product types
+   */
+  getSoftwareSubscriptionProductTypes(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsSoftwareSubscriptionProductType[]>>;
 }

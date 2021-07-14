@@ -12,6 +12,7 @@ export class DynamicSelectAzureSubscriptionField extends DynamicFormFieldConfigB
   public template: DynamicFormFieldTemplate = 'select-azure-subscription';
 
   public useSubscriptionIdAsKey: boolean = false;
+  public useServiceIdAsKey: boolean = false;
 
   public constructor(options: {
     key: string;
@@ -25,9 +26,11 @@ export class DynamicSelectAzureSubscriptionField extends DynamicFormFieldConfigB
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
     useSubscriptionIdAsKey?: boolean;
+    useServiceIdAsKey?: boolean;
   }) {
     super(options);
 
     this.useSubscriptionIdAsKey = options.useSubscriptionIdAsKey || false;
+    this.useServiceIdAsKey = options.useServiceIdAsKey || false;
   }
 }

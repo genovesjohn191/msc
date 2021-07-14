@@ -13,6 +13,7 @@ import { DynamicInputRandomComponent } from './input-random/input-random.compone
 import { DynamicInputTerraformDeploymentNameComponent } from './input-terraform-deployment-name/input-terraform-deployment-name.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
 import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zone/select-availability-zone.component';
+import { DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent } from './select-chips-azure-software-subscription-product-type/select-chips-azure-software-subscription-product-type.component';
 import { DynamicSelectAzureSubscriptionComponent } from './select-azure-subscription/select-azure-subscription.component';
 import { DynamicSelectBatComponent } from './select-bat/select-bat.component';
 import { DynamicSelectChipsCompanyComponent } from './select-chips-company/select-chips-company.component';
@@ -47,6 +48,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
   DynamicSelectChipsComponent,
+  DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent,
   DynamicSelectChipsCompanyComponent,
   DynamicSelectChipsTerraformModuleComponent,
   DynamicSelectChipsTerraformTagComponent,

@@ -3067,6 +3067,7 @@
     "getNetworkDbNetworks": "Something went wrong while retrieving networks. Please try again.",
     "getNetworkDbNetwork": "Something went wrong while retrieving network details. Please try again.",
     "getNetworkDbNetworkEvents": "Something went wrong while retrieving network events. Please try again.",
+    "getSoftwareSubscritionProductTypes": "Something went wrong while retrieving software product types. Please try again.",
     "createNetworkDbNetwork": "Something went wrong while creating your network. Please try again.",
     "getAzureReservations": "Something went wrong while retrieving the list of reservations. Please try again.",
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving the list of software subscriptions. Please try again."
