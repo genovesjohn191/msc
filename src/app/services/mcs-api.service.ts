@@ -134,6 +134,8 @@ import {
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
   McsNetworkDbNetworkEvent,
+  McsNetworkDbNetworkUpdate,
+  McsNetworkDbNetworkDelete,
   McsNetworkDbNetworkQueryParams,
   McsNetworkDbPod,
   McsNetworkDbSite,
@@ -274,6 +276,7 @@ import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
+import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-networks.repository';
 
 @Injectable()
 @LogClass()
@@ -299,6 +302,7 @@ export class McsApiService {
   private readonly _systemMessagesRepository: McsSystemMessagesRepository;
   private readonly _ticketsRepository: McsTicketsRepository;
   private readonly _terraformDeploymentsRepository: McsTerraformDeploymentsRepository;
+  private readonly _networkDbNetworksRepository: McsNetworkDbNetworksRepository;
 
   private readonly _accountApi: IMcsApiAccountService;
   private readonly _availabilityZonesApi: IMcsApiAvailabilityZonesService;
@@ -357,6 +361,7 @@ export class McsApiService {
     this._systemMessagesRepository = _injector.get(McsSystemMessagesRepository);
     this._ticketsRepository = _injector.get(McsTicketsRepository);
     this._terraformDeploymentsRepository = _injector.get(McsTerraformDeploymentsRepository);
+    this._networkDbNetworksRepository = _injector.get(McsNetworkDbNetworksRepository);
 
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
@@ -2249,21 +2254,18 @@ export class McsApiService {
 
   public getNetworkDbNetworks(query?: McsNetworkDbNetworkQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiCollection<McsNetworkDbNetwork>> {
-
-    return this._networkDbApi.getNetworks(query, optionalHeaders).pipe(
+    return this._mapToEntityRecords(this._networkDbNetworksRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
-      ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+      )
     );
   }
 
   public getNetworkDbNetwork(id: string): Observable<McsNetworkDbNetwork> {
-    return this._networkDbApi.getNetwork(id).pipe(
+    return this._mapToEntityRecord(this._networkDbNetworksRepository, id).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetwork'))
-      ),
-      map((response) => response.content)
+      )
     );
   }
 
@@ -2273,6 +2275,32 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createNetworkDbNetwork'))
       ),
       tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.NetworkDbNetwork)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public updateNetworkDbNetwork(id: string, payload: McsNetworkDbNetworkUpdate): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbNetwork, id);
+
+    return this._networkDbApi.updateNetwork(id, payload).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.NetworkDbNetwork, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateNetworkDbNetwork'))
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.NetworkDbNetwork, id)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public deleteNetworkDbNetwork(id: string, details: McsNetworkDbNetworkDelete): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbNetwork, id);
+
+    return this._networkDbApi.deleteNetwork(id, details).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.NetworkDbNetwork, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteNetworkDbNetwork'));
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityDeletedEvent, EntityRequester.NetworkDbNetwork, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

@@ -1,0 +1,57 @@
+<mcs-presentation-panel *ngIf="!processing && !hasError" mcsId="network-edit">
+    <ng-container mcsPresentationPanelHeader>
+        <h2>Basic Information</h2>
+    </ng-container>
+    <mcs-dynamic-form #form [config]="formConfig"></mcs-dynamic-form>
+
+    <mcs-item>
+        <span>{{ 'label.vni' | translate }}:</span>
+        <span [innerHTML]="network?.vni | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+        <span>{{ 'label.multicastIpAddress' | translate }}:</span>
+        <span [innerHTML]="network?.multicastIpAddress | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+        <span>{{ 'label.createdBy' | translate }}:</span>
+        <span [innerHTML]="network?.createdBy | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+        <span>{{ 'label.createdDate' | translate }}:</span>
+        <span [innerHTML]="network?.createdOn | mcsDataLabel | mcsStdDateFormat"></span>
+    </mcs-item>
+
+    <mcs-item>
+        <span>{{ 'label.updatedBy' | translate }}:</span>
+        <span [innerHTML]="network?.updatedBy | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+        <span>{{ 'label.lastUpdated' | translate }}:</span>
+        <span [innerHTML]="network?.updatedOn | mcsDataLabel | mcsStdDateFormat"></span>
+    </mcs-item>
+
+    <div *ngIf="!processing && !hasError" style="margin-top: 15px;">
+        <button mat-raised-button color="primary" [disabled]="!isValidPayload" (click)="submit()">
+            <mat-icon>chevron_right</mat-icon>
+            {{ 'action.save' | translate }}
+        </button>
+    </div>
+</mcs-presentation-panel>
+<div *ngIf="processing">
+    <mcs-status-message type="info">
+        {{ 'networkDb.updatingNetwork' | translate }}
+    </mcs-status-message>
+    <br />
+</div>
+<div *ngIf="hasError">
+    <mcs-status-message type="error">
+        {{ watchedJob?.errorMessage || 'An unexpected server error has occured.' }}
+        <a *ngIf="watchedJob" style="margin-left: 5px; margin-right: 5px;" mcsId
+            [mcsRouterLink]="getNotificationRoute()" target="_blank">View Logs</a>
+        <a style="margin-left: 5px;" mcsId (click)="retry()">Go back</a>
+    </mcs-status-message>
+</div>

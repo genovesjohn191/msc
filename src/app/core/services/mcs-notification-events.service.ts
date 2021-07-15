@@ -149,6 +149,8 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.TerraformRunDestroy, McsEvent.jobTerraformCreateDestroyEvent);
     this._jobTypeEventMap.set(JobType.TerraformRunPlan, McsEvent.jobTerraformCreatePlanEvent);
     this._jobTypeEventMap.set(JobType.TerraformDeleteDeployment, McsEvent.jobTerraformCreateDeleteEvent);
+    this._jobTypeEventMap.set(JobType.NetworkDbCreateNetwork, McsEvent.jobNetworkDbNetworkCreateEvent);
+    this._jobTypeEventMap.set(JobType.NetworkDbDeleteNetwork, McsEvent.jobNetworkDbNetworkDeleteEvent);
   }
 
   /**

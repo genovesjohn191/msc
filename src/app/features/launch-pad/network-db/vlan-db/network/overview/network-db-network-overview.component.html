@@ -1,6 +1,5 @@
 <ng-container *ngIf="network$ | async as network" class="limited-view">
-
-  <mcs-grid>
+  <mcs-grid *ngIf="!network.isProcessing">
     <mcs-grid-row>
       <!-- Network DB Properties -->
       <mcs-grid-column sizeSm="12">
@@ -21,13 +20,13 @@
 
           <mcs-item>
             <span>{{ 'label.company' | translate }}:</span>
-            <span *ngIf="network?.companyName" [innerHTML]="network?.companyName | mcsDataLabel"></span>
+            <span [innerHTML]="network?.companyName | mcsDataLabel: 'Unknown'"></span>
             <span *ngIf="network?.companyId">({{ network?.companyId | mcsDataLabel }})</span>
           </mcs-item>
 
           <mcs-item>
             <span>{{ 'label.serviceId' | translate }}:</span>
-            <span [innerHTML]="network?.serviceId | mcsDataLabel"></span>
+            <span [innerHTML]="network?.serviceId | mcsDataLabel: 'None'"></span>
           </mcs-item>
 
           <mcs-item>
@@ -37,12 +36,12 @@
 
           <mcs-item>
             <span>{{ 'label.vni' | translate }}:</span>
-            <span [innerHTML]="network?.vni | mcsDataLabel"></span>
+            <span [innerHTML]="network?.vni | mcsDataLabel: 'None'"></span>
           </mcs-item>
 
           <mcs-item>
             <span>{{ 'label.multicastIpAddress' | translate }}:</span>
-            <span [innerHTML]="network?.multicastIpAddress | mcsDataLabel"></span>
+            <span [innerHTML]="network?.multicastIpAddress | mcsDataLabel: 'None'"></span>
           </mcs-item>
           
           <mcs-item>
@@ -64,9 +63,14 @@
             <span>{{ 'label.lastUpdated' | translate }}:</span>
             <span [innerHTML]="network?.updatedOn | mcsDataLabel | mcsStdDateFormat"></span>
           </mcs-item>
-          
         </mcs-presentation-panel>
       </mcs-grid-column>
     </mcs-grid-row>
   </mcs-grid>
+  <div *ngIf="network.isProcessing">
+    <mcs-status-message type="info">
+        {{ 'networkDb.refreshingNetworkDetails' | translate }}
+    </mcs-status-message>
+    <br />
+</div>
 </ng-container>

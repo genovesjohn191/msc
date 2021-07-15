@@ -17,6 +17,7 @@ import { McsInternetRepository } from './repositories/mcs-internet.repository';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 import { McsMediaRepository } from './repositories/mcs-media.repository';
+import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-networks.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsServersOsRepository } from './repositories/mcs-servers-os.repository';
@@ -47,6 +48,7 @@ export const repositoryProviders: any[] = [
   McsAzureReservationsRepository,
   McsAzureSoftwareSubscriptionsRepository,
   McsTerraformDeploymentsRepository,
+  McsNetworkDbNetworksRepository,
   McsApiService
 ];
 

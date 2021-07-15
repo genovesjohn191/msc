@@ -13,7 +13,9 @@ import {
   McsNetworkDbUseCase,
   McsNetworkDbVlan,
   McsNetworkDbVni,
-  McsQueryParam
+  McsQueryParam,
+  McsNetworkDbNetworkDelete,
+  McsNetworkDbNetworkUpdate
 } from '@app/models';
 
 export interface IMcsApiNetworkDbService {
@@ -72,6 +74,19 @@ export interface IMcsApiNetworkDbService {
    * @param payload Network data to be created
    */
   createNetwork(payload: McsNetworkDbNetworkCreate): Observable<McsApiSuccessResponse<McsJob>>;
+
+  /**
+   * This will edit a network
+   * @param payload Network data to update
+   */
+   updateNetwork(id: string, payload: McsNetworkDbNetworkUpdate): Observable<McsApiSuccessResponse<McsJob>>;
+
+  /**
+   * This will delete an existing network
+   * @param id network id to delete
+   * @param networkDelete Network delete model details
+   */
+  deleteNetwork(id: string, deleteDetails: McsNetworkDbNetworkDelete): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * Get all the Networks

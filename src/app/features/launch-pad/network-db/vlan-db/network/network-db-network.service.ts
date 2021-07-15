@@ -11,7 +11,7 @@ import { McsNetworkDbNetwork } from '@app/models';
 export class NetworkDbNetworkDetailsService{
   private _networkDetails = new BehaviorSubject<McsNetworkDbNetwork>(null);
 
-  public getNetworkDetailsId(): number {
+  public getNetworkDetailsId(): string {
     return this._networkDetails.getValue().id;
   }
 

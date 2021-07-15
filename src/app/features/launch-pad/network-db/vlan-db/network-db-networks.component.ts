@@ -13,7 +13,8 @@ import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
-  McsTableDataSource2
+  McsTableDataSource2,
+  McsTableEvents
 } from '@app/core';
 import {
   McsAzureDeploymentsQueryParams,
@@ -32,6 +33,7 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-network-db-networks',
@@ -41,6 +43,7 @@ import {
 export class NetworkDbNetworksComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbNetwork>;
+  public readonly dataEvents: McsTableEvents<McsNetworkDbNetwork>;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
@@ -61,7 +64,10 @@ export class NetworkDbNetworksComponent implements OnDestroy {
     private _apiService: McsApiService
   ) {
     this.dataSource = new McsTableDataSource2<McsNetworkDbNetwork>(this._getTableData.bind(this))
-     .registerConfiguration(new McsMatTableConfig(true));
+      .registerConfiguration(new McsMatTableConfig(true));
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
+      dataChangeEvent: McsEvent.dataChangeNetworkDbNetworksEvent
+    });
   }
 
   public ngOnDestroy(): void {

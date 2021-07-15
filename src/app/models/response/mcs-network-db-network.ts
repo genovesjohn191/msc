@@ -1,11 +1,9 @@
 import { JsonProperty } from '@app/utilities';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 import { McsNetworkDbVlan } from './mcs-network-db-vlan';
 
-export class McsNetworkDbNetwork {
-  @JsonProperty()
-  public id: number = undefined;
-
+export class McsNetworkDbNetwork extends McsEntityBase {
   @JsonProperty()
   public name: string = undefined;
 

@@ -13,6 +13,7 @@ import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports
 import { DataChangeJobsEvent } from './items/data-change-jobs.event';
 import { DataChangeLicensesEvent } from './items/data-change-licenses.event';
 import { DataChangeMediaEvent } from './items/data-change-media.event';
+import { DataChangeNetworkDbNetworksEvent } from './items/data-change-networks.event';
 import { DataChangeOrdersEvent } from './items/data-change-orders.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
 import { DataChangeServersEvent } from './items/data-change-servers.event';
@@ -37,6 +38,8 @@ import { JobErrorEvent } from './items/job-error.event';
 import { JobInProgressEvent } from './items/job-in-progress.event';
 import { JobInternetChangePortPlanEvent } from './items/job-internet-change-port-plan.event';
 import { JobMsLicenseCountChangeEvent } from './items/job-ms-license-count-change.event';
+import { JobNetworkDbNetworkCreateEvent } from './items/job-network-db-network-create.event';
+import { JobNetworkDbNetworkDeleteEvent } from './items/job-network-db-network-delete.event';
 import { JobReceiveEvent } from './items/job-receive.event';
 import { JobResourceCatalogItemCreateEvent } from './items/job-resource-catalog-item-create.event';
 import { JobServerAvAddEvent } from './items/job-server-av-add.event';
@@ -146,6 +149,7 @@ export class McsEvent {
   public static dataChangeDnsListing = new DnsListingEvent();
   public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
   public static dataChangeTerraformDeployments = new DataChangeTerraformDeploymentsEvent();
+  public static dataChangeNetworkDbNetworksEvent = new DataChangeNetworkDbNetworksEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();
@@ -188,6 +192,9 @@ export class McsEvent {
   public static jobTerraformCreateApplyEvent = new JobTerraformCreateApplyEvent();
   public static jobTerraformCreateDestroyEvent = new JobTerraformCreateDestroyEvent();
   public static jobTerraformCreateDeleteEvent = new JobTerraformCreateDeleteEvent();
+
+  public static jobNetworkDbNetworkCreateEvent = new JobNetworkDbNetworkCreateEvent();
+  public static jobNetworkDbNetworkDeleteEvent = new JobNetworkDbNetworkDeleteEvent();
 
   public static jobBackupAggregationTargetAddEvent = new JobBackupAggregationTargetAddEvent();
   public static jobVdcScaleEvent = new JobVdcScaleEvent();

@@ -16,7 +16,9 @@ import {
   McsNetworkDbUseCase,
   McsNetworkDbVlan,
   McsNetworkDbVni,
-  McsQueryParam
+  McsQueryParam,
+  McsNetworkDbNetworkDelete,
+  McsNetworkDbNetworkUpdate
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiNetworkDbService } from '../interfaces/mcs-api-network-db.interface';
@@ -210,7 +212,14 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
     mcsApiRequestParameter.endPoint = `/network-db/networks/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsNetworkDbNetwork>(McsNetworkDbNetwork, response);
+          return apiResponse;
+        })
+      );
   }
 
   public createNetwork(payload: McsNetworkDbNetworkCreate):
@@ -221,6 +230,42 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
     mcsApiRequestParameter.recordData = serializeObjectToJson(payload);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public updateNetwork(id: string, payload: McsNetworkDbNetworkUpdate):
+    Observable<McsApiSuccessResponse<McsJob>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/networks/${id}`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(payload);
+
+    return this._mcsApiService.put(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public deleteNetwork(id: string, deleteDetails: McsNetworkDbNetworkDelete):
+    Observable<McsApiSuccessResponse<McsJob>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/networks/${id}`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(deleteDetails);
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse

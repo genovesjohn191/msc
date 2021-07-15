@@ -43,6 +43,7 @@ import { McsJobMediaManager } from './entities/mcs-job-media.manager';
 import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobTerraformDeploymentManager } from './entities/mcs-job-terraform-deployment.manager';
+import { McsJobNetworkDbNetworkManager } from './entities/mcs-job-network-db-network.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -334,6 +335,17 @@ export class McsJobManagerClient implements McsDisposable {
     );
     this._jobEntitiesFactory.set(JobType.TerraformDeleteDeployment,
       new McsJobTerraformDeploymentManager(ActionStatus.Update, this._injector)
+    );
+
+    // Network Db
+    this._jobEntitiesFactory.set(JobType.NetworkDbCreateNetwork,
+      new McsJobNetworkDbNetworkManager(ActionStatus.Add, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.NetworkDbDeleteNetwork,
+      new McsJobNetworkDbNetworkManager(ActionStatus.Delete, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.NetworkDbUpdateNetwork,
+      new McsJobNetworkDbNetworkManager(ActionStatus.Update, this._injector)
     );
   }
 }

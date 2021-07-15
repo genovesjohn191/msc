@@ -21,6 +21,7 @@ export enum RouteKey {
   LaunchPadNetworkDbNetworkDetails,
   LaunchPadNetworkDbNetworkDetailsOverview,
   LaunchPadNetworkDbNetworkDetailsEvents,
+  LaunchPadNetworkDbNetworkDetailsEdit,
   LaunchPadCrispOrders,
   LaunchPadCrispOrderDetails,
   LaunchPadCrispOrderDetailsElements,
