@@ -1,57 +1,66 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ChangeDetectorRef,
+  of,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  Injector
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
-  Subject,
-  Observable,
-  Subscription,
-  of
-} from 'rxjs';
-import {
-  takeUntil,
-  tap,
-  shareReplay,
-  map
-} from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  McsServerPermission,
+  McsErrorHandlerService,
+  McsListviewDataSource2,
   McsNavigationService,
-  McsListViewListingBase,
-  McsErrorHandlerService
+  McsServerPermission,
+  McsTableEvents
 } from '@app/core';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition,
-  compareStrings
-} from '@app/utilities';
-import { ComponentHandlerDirective } from '@app/shared';
+  McsListviewContext,
+  McsListviewQueryParam
+} from '@app/core/data-access/mcs-listview-datasource2';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  RouteKey,
-  McsServer,
-  McsServerPlatform,
-  McsApiCollection,
+  HttpStatusCode,
+  JobStatus,
+  McsJob,
   McsQueryParam,
   McsRouteInfo,
-  McsFeatureFlag,
-  McsJob,
-  JobStatus,
-  HttpStatusCode
+  McsServer,
+  McsServerPlatform,
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
+import {
+  ComponentHandlerDirective,
+  Search
+} from '@app/shared';
+import {
+  compareStrings,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerService } from './server.service';
 
 // Add another group type in here if you have addition tab
@@ -70,7 +79,10 @@ interface McsServerGroup {
     'class': 'block'
   }
 })
-export class ServerComponent extends McsListViewListingBase<McsServerGroup> implements OnInit, OnDestroy {
+export class ServerComponent implements OnInit, OnDestroy {
+  public readonly listviewDatasource: McsListviewDataSource2<McsServerGroup>;
+  public readonly dataEvents: McsTableEvents<McsServerGroup>;
+
   public server$: Observable<McsServer>;
   public selectedTabId$: Observable<string>;
   public serverPermission: McsServerPermission;
@@ -87,20 +99,25 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
     _changeDetectorRef: ChangeDetectorRef,
     _translate: TranslateService,
     private _activatedRoute: ActivatedRoute,
+    private _eventDispatcher: EventBusDispatcherService,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _serverService: ServerService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeServers,
-      dataAddEvent: McsEvent.entityCreatedEvent,
-      dataDeleteEvent: McsEvent.entityDeletedEvent,
-      panelSettings: {
-        inProgressText: _translate.instant('servers.loading'),
-        emptyText: _translate.instant('servers.noServers'),
-        errorText: _translate.instant('servers.errorMessage')
+    this.listviewDatasource = new McsListviewDataSource2(
+      this._getServers.bind(this),
+      {
+        sortPredicate: this._sortServerGroupPredicate.bind(this),
+        panelSettings: {
+          inProgressText: _translate.instant('servers.loading'),
+          emptyText: _translate.instant('servers.noMedia'),
+          errorText: _translate.instant('servers.errorMessage')
+        }
       }
+    );
+    this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
+      dataChangeEvent: McsEvent.dataChangeServers as any
     });
     this._registerEvents();
   }
@@ -108,18 +125,26 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
   public ngOnInit() {
     this._subscribeToParamChange();
     this._subscribeToServerResolve();
-    this.listViewDatasource.registerSortPredicate(this._sortServerGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    this.listviewDatasource.disconnect(null);
+    this.dataEvents.dispose();
     unsubscribeSafely(this._serverDeletedHandler);
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
   }
 
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.listviewDatasource.registerSearch(value);
+    }
+  }
+
   private _onServerDelete(job: McsJob): void {
-    let correctServerId: boolean = getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId) === this._serverService.getServerId();
+    let correctServerId: boolean = getSafeProperty(job,
+      (obj) => obj.clientReferenceObject.serverId) === this._serverService.getServerId();
     if (correctServerId && job.status === JobStatus.Completed) {
       this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
     }
@@ -164,8 +189,11 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
   /**
    * Gets the entity listing from API
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsServerGroup>> {
-    return this._apiService.getServers(query).pipe(
+  private _getServers(param: McsListviewQueryParam): Observable<McsListviewContext<McsServerGroup>> {
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getServers(queryParam).pipe(
       map((servers) => {
         let serverGroups = new Array<McsServerGroup>();
         servers.collection.forEach((server) => {
@@ -189,14 +217,11 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
             servers: [server]
           });
         });
-
-        let serverGroupsCollection = new McsApiCollection<McsServerGroup>();
-        serverGroupsCollection.collection = serverGroups;
-        serverGroupsCollection.totalCollectionCount = serverGroups.length;
-        return serverGroupsCollection;
+        return new McsListviewContext<McsServerGroup>(serverGroups);
       })
     );
   }
+
 
   /**
    * Resets the management state
@@ -249,14 +274,14 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
    * Register Event dispatchers
    */
   private _registerEvents(): void {
-    this._routerHandler = this.eventDispatcher.addEventListener(
+    this._routerHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
         let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
         this.selectedTabId$ = of(tabUrl);
       });
 
-    this._serverDeletedHandler = this.eventDispatcher.addEventListener(
+    this._serverDeletedHandler = this._eventDispatcher.addEventListener(
       McsEvent.jobServerDelete, this._onServerDelete.bind(this)
     );
   }

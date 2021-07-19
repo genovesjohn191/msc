@@ -99,7 +99,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   private _pageSubject = new Subject<void>();
   private _columnSelectorSubject = new Subject<void>();
 
-  constructor(dataSource?: DatasourceType<TEntity>, private _fromRepository = true) {
+  constructor(dataSource?: DatasourceType<TEntity>) {
     this.updateDatasource(dataSource);
     this._subscribeToIsInProgressFlag();
     this._subscribeToHasNoRecordsFlag();

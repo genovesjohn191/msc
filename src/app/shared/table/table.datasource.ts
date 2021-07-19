@@ -18,6 +18,10 @@ export class TableDataSource<T> implements McsDataSource<T> {
     this._setDatasourceInstanceByType(dataSource);
   }
 
+  public refreshDataRecords(): void {
+    // Noop
+  }
+
   /**
    * Connects the table to the datasource instance
    */

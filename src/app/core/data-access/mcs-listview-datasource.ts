@@ -27,6 +27,9 @@ import {
 type DatasourceFunc<TEntity> = () => Observable<TEntity[]>;
 type DatasourceType<TEntity> = TEntity[] | Observable<TEntity[]> | DatasourceFunc<TEntity>;
 
+/**
+ * @deprecated Use the McsListviewDataSource2 instead
+ */
 export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
 
   private _dataSource: DatasourceFunc<TEntity>;

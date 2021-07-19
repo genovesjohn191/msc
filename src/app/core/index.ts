@@ -72,6 +72,7 @@ export * from './factory/ordering/mcs-order.director';
 
 // Data Access Layer
 export * from './data-access/mcs-listview-datasource';
+export * from './data-access/mcs-listview-datasource2';
 export * from './data-access/mcs-table-datasource2';
 export * from './data-access/mcs-table-selection2';
 export * from './data-access/mcs-table-events';
