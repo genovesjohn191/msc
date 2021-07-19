@@ -1,51 +1,57 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
+  of,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  ViewChild,
-  Injector
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
-  Subject,
-  Observable,
-  Subscription,
-  of,
-} from 'rxjs';
-import {
-  takeUntil,
-  tap,
-  shareReplay,
-  map
-} from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-
-import {
+  McsListviewContext,
+  McsListviewDataSource2,
+  McsListviewQueryParam,
   McsNavigationService,
-  McsListViewListingBase
+  McsTableEvents
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
+  McsQueryParam,
+  McsResourceMedia,
+  McsRouteInfo,
+  RouteKey
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  ComponentHandlerDirective,
+  Search
+} from '@app/shared';
+import {
+  compareStrings,
+  getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition,
-  compareStrings
+  CommonDefinition
 } from '@app/utilities';
-import {
-  RouteKey,
-  McsResourceMedia,
-  McsQueryParam,
-  McsApiCollection,
-  McsRouteInfo
-} from '@app/models';
-import { ComponentHandlerDirective } from '@app/shared';
-import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
+import { TranslateService } from '@ngx-translate/core';
+
 import { MediumService } from './medium.service';
 
 // Add another group type in here if you have addition tab
@@ -62,7 +68,9 @@ interface McsMediaGroup {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class MediumComponent extends McsListViewListingBase<McsMediaGroup> implements OnInit, OnDestroy {
+export class MediumComponent implements OnInit, OnDestroy {
+  public readonly listviewDatasource: McsListviewDataSource2<McsMediaGroup>;
+  public readonly dataEvents: McsTableEvents<McsMediaGroup>;
   public media$: Observable<McsResourceMedia>;
   public selectedTabId$: Observable<string>;
 
@@ -74,20 +82,26 @@ export class MediumComponent extends McsListViewListingBase<McsMediaGroup> imple
 
   public constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
     _translate: TranslateService,
     private _activatedRoute: ActivatedRoute,
+    private _eventDispatcher: EventBusDispatcherService,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _mediumService: MediumService
   ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeMedia,
-      panelSettings: {
-        inProgressText: _translate.instant('media.loading'),
-        emptyText: _translate.instant('media.noMedia'),
-        errorText: _translate.instant('media.errorMessage')
+    this.listviewDatasource = new McsListviewDataSource2(
+      this._getResourceMedia.bind(this),
+      {
+        sortPredicate: this._sortServerGroupPredicate.bind(this),
+        panelSettings: {
+          inProgressText: _translate.instant('media.loading'),
+          emptyText: _translate.instant('media.noMedia'),
+          errorText: _translate.instant('media.errorMessage')
+        }
       }
+    );
+    this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
+      dataChangeEvent: McsEvent.dataChangeMedia as any
     });
     this._registerEvents();
   }
@@ -95,13 +109,20 @@ export class MediumComponent extends McsListViewListingBase<McsMediaGroup> imple
   public ngOnInit() {
     this._subscribeToParamChange();
     this._subscribeToMediaResolve();
-    this.listViewDatasource.registerSortPredicate(this._sortServerGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    this.listviewDatasource.disconnect(null);
+    this.dataEvents.dispose();
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
+  }
+
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.listviewDatasource.registerSearch(value);
+    }
   }
 
   public get routeKeyEnum(): any {
@@ -137,8 +158,11 @@ export class MediumComponent extends McsListViewListingBase<McsMediaGroup> imple
   /**
    * Gets the entity listing from API
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsMediaGroup>> {
-    return this._apiService.getMedia(query).pipe(
+  private _getResourceMedia(param: McsListviewQueryParam): Observable<McsListviewContext<McsMediaGroup>> {
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getMedia(queryParam).pipe(
       map((mediaList) => {
         let mediaGroups = new Array<McsMediaGroup>();
         mediaList.collection.forEach((media) => {
@@ -153,11 +177,7 @@ export class MediumComponent extends McsListViewListingBase<McsMediaGroup> imple
             media: [media]
           });
         });
-
-        let mediaGroupsCollection = new McsApiCollection<McsMediaGroup>();
-        mediaGroupsCollection.collection = mediaGroups;
-        mediaGroupsCollection.totalCollectionCount = mediaGroups.length;
-        return mediaGroupsCollection;
+        return new McsListviewContext<McsMediaGroup>(mediaGroups);
       })
     );
   }
@@ -202,7 +222,7 @@ export class MediumComponent extends McsListViewListingBase<McsMediaGroup> imple
    * Register Event dispatchers
    */
   private _registerEvents(): void {
-    this._routerHandler = this.eventDispatcher.addEventListener(
+    this._routerHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
         let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));

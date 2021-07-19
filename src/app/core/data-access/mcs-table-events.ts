@@ -11,17 +11,16 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
+  McsDataSource,
   McsDisposable
 } from '@app/utilities';
 
-import { McsTableDataSource2 } from './mcs-table-datasource2';
-
-export interface McsTableEventsConfig<TEntity> {
+export interface McsDataEventsConfig<TEntity> {
   dataChangeEvent?: EventBusState<TEntity[]>;
   dataClearEvent?: EventBusState<void>;
   entityDeleteEvent?: EventBusState<any>;
 }
-
+// TODO(apascual): Rename this to McsDataEvents to consider all datasource binding
 export class McsTableEvents<TEntity> implements McsDisposable {
   private _dataChangeHandler: Subscription;
   private _dataClearHandler: Subscription;
@@ -32,8 +31,8 @@ export class McsTableEvents<TEntity> implements McsDisposable {
 
   constructor(
     _injector: Injector,
-    private _dataSource: McsTableDataSource2<TEntity>,
-    private _dataConfig: McsTableEventsConfig<TEntity>
+    private _dataSource: McsDataSource<TEntity>,
+    private _dataConfig: McsDataEventsConfig<TEntity>
   ) {
     this._changeDetectorRef = _injector.get(ChangeDetectorRef);
     this._eventDispatcher = _injector.get(EventBusDispatcherService);

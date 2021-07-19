@@ -6,4 +6,5 @@ import { DataStatus } from '@app/models';
 export interface McsDataSource<T> extends DataSource<T> {
   onCompletion(data?: T[]): void;
   dataStatusChange(): Observable<DataStatus>;
+  refreshDataRecords(): void;
 }
