@@ -37,4 +37,6 @@ export enum McsFeatureFlag {
   ProvisionServiceRequest = 'EnableProvisionServiceRequest',
 
   StorageProfileBreakdown = 'EnableStorageProfileBreakdown',
+
+  ServerOsUpdates = 'EnableServerOsUpdates',
 }

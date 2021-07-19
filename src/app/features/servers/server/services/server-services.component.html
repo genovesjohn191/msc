@@ -4,7 +4,7 @@
     <!-- Default View -->
     <section [@fadeIn] *ngSwitchCase="serverServicesViewOption.Default">
       <!-- Operating System Updates -->
-      <mcs-presentation-panel *mcsAccessControl="serverPermission.vmPatchManagement;">
+      <mcs-presentation-panel *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'">
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'serverServices.operatingSystemUpdates.title' | translate }}</h2>
         </ng-container>
