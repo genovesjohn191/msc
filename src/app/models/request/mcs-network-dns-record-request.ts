@@ -12,4 +12,19 @@ export class McsNetworkDnsRecordRequest {
 
   @JsonProperty()
   public value: string = undefined;
+
+  @JsonProperty()
+  public service: string = undefined;
+
+  @JsonProperty()
+  public protocol: string = undefined;
+
+  @JsonProperty()
+  public priority: number = undefined;
+
+  @JsonProperty()
+  public weight: number = undefined;
+
+  @JsonProperty()
+  public port: number = undefined;
 }

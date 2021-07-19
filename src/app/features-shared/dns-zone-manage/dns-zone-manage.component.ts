@@ -23,6 +23,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  McsFormGroupService,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2
@@ -45,6 +46,7 @@ import {
   McsFormGroupDirective
 } from '@app/shared';
 import {
+  animateFactory,
   createObject,
   getSafeFormValue,
   isNullOrEmpty,
@@ -58,7 +60,10 @@ import { DnsZoneViewModel } from './dns-zone-viewmodel';
 @Component({
   selector: 'mcs-dns-zone-manage',
   templateUrl: 'dns-zone-manage.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    animateFactory.expansionVertical
+  ]
 })
 export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   public readonly dataSource: McsTableDataSource2<DnsZoneViewModel>;
@@ -82,7 +87,8 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
-    private _dialogService: DialogService2
+    private _dialogService: DialogService2,
+    private _formGroupService: McsFormGroupService
   ) {
     this.addViewModel = new DnsZoneViewModel();
     this.processOnGoing$ = new BehaviorSubject<boolean>(false);
@@ -114,8 +120,9 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onClickAddDnsZoneRecord(): void {
-    this.formGroup.validateFormControls(true);
-    if (!this.formGroup.isValid()) { return; }
+    this._formGroupService.touchAllFormFields(this.addViewModel?.fgDnsZone);
+    let allAreValid = this._formGroupService.allFormFieldsValid(this.addViewModel?.fgDnsZone);
+    if (!allAreValid) { return; }
 
     // Validate first if the record exists, otherwise display error message
     let recordFound = this.dataSource.findRecord(item =>
@@ -139,6 +146,11 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     zoneRecord.name = getSafeFormValue(this.addViewModel.fcHostName);
     zoneRecord.value = getSafeFormValue(this.addViewModel.fcTarget);
     zoneRecord.ttlSeconds = +getSafeFormValue(this.addViewModel.fcTtlSeconds);
+    zoneRecord.service = getSafeFormValue(this.addViewModel.fcService);
+    zoneRecord.protocol = getSafeFormValue(this.addViewModel.fcProtocol);
+    zoneRecord.priority = +getSafeFormValue(this.addViewModel.fcPriority);
+    zoneRecord.weight = +getSafeFormValue(this.addViewModel.fcWeight);
+    zoneRecord.port = +getSafeFormValue(this.addViewModel.fcPort);
 
     this.processOnGoing$.next(true);
     this._apiService.createNetworkDnsZoneRecord(
@@ -158,20 +170,26 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onClickSaveDnsZoneRecord(record: DnsZoneViewModel): void {
-    record.validateFields();
-    if (!record.isValid()) { return; }
+    this._formGroupService.touchAllFormFields(record.fgDnsZone);
+    let allAreValid = this._formGroupService.allFormFieldsValid(record.fgDnsZone);
+    if (!allAreValid) { return; }
 
     let zoneRecord = new McsNetworkDnsRecordRequest();
     zoneRecord.type = getSafeFormValue<DnsRecordType>(record.fcZoneType);
     zoneRecord.name = getSafeFormValue(record.fcHostName);
     zoneRecord.value = getSafeFormValue(record.fcTarget);
     zoneRecord.ttlSeconds = +getSafeFormValue(record.fcTtlSeconds);
+    zoneRecord.service = getSafeFormValue(record.fcService);
+    zoneRecord.protocol = getSafeFormValue(record.fcProtocol);
+    zoneRecord.priority = +getSafeFormValue(record.fcPriority);
+    zoneRecord.weight = +getSafeFormValue(record.fcWeight);
+    zoneRecord.port = +getSafeFormValue(record.fcPort);
 
     record.setProgressState(true);
     this._apiService.updateNetworkDnsZoneRecord(
       this.dnsId,
       this.zone.id,
-      record.recordId,
+      record.recordInfo?.id,
       zoneRecord
     ).pipe(
       tap(() => {
@@ -201,7 +219,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
         return this._apiService.deleteNetworkDnsZoneRecord(
           this.dnsId,
           this.zone.id,
-          record.recordId
+          record.recordInfo?.id
         ).pipe(
           tap(() => {
             this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,

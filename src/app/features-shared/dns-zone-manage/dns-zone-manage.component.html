@@ -38,6 +38,55 @@
           [formControl]="addViewModel.fcTtlSeconds">
         </mcs-field-input>
       </mcs-grid-column>
+
+      <mcs-grid-column sizeLg="6" sizeMd="12" *ngIf="addViewModel.isSrvType || addViewModel.isMxType">
+        <mcs-field-input
+          size="full"
+          [label]="'label.priority' | translate"
+          [interpolations]="{ min_value: addViewModel.intMinValue, max_value: addViewModel.intMaxValue }"
+          [formControl]="addViewModel.fcPriority">
+        </mcs-field-input>
+      </mcs-grid-column>
+    </mcs-grid-row>
+
+    <mcs-grid-row *ngIf="addViewModel.isSrvType">
+      <mcs-grid-column sizeLg="6" sizeMd="12">
+        <mcs-field-input
+          size="full"
+          [label]="'label.service' | translate"
+          [interpolations]="{ max_length: addViewModel.serviceMaxLength }"
+          [formControl]="addViewModel.fcService">
+        </mcs-field-input>
+      </mcs-grid-column>
+
+      <mcs-grid-column sizeLg="6" sizeMd="12">
+        <mcs-field-input
+          size="full"
+          [label]="'label.protocol' | translate"
+          [interpolations]="{ max_length: addViewModel.protocolMaxLength }"
+          [formControl]="addViewModel.fcProtocol">
+        </mcs-field-input>
+      </mcs-grid-column>
+    </mcs-grid-row>
+
+    <mcs-grid-row *ngIf="addViewModel.isSrvType">
+      <mcs-grid-column sizeLg="6" sizeMd="12">
+        <mcs-field-input
+          size="full"
+          [label]="'label.weight' | translate"
+          [interpolations]="{ min_value: addViewModel.intMinValue, max_value: addViewModel.intMaxValue }"
+          [formControl]="addViewModel.fcWeight">
+        </mcs-field-input>
+      </mcs-grid-column>
+
+      <mcs-grid-column sizeLg="6" sizeMd="12">
+        <mcs-field-input
+          size="full"
+          [label]="'label.port' | translate"
+          [interpolations]="{ min_value: addViewModel.intMinValue, max_value: addViewModel.intMaxValue }"
+          [formControl]="addViewModel.fcPort">
+        </mcs-field-input>
+      </mcs-grid-column>
     </mcs-grid-row>
   </mcs-grid>
 </form>
@@ -53,17 +102,14 @@
 
 <!-- Zone Records Table -->
 <div class="listing-table-wrapper">
-  <table mat-table [dataSource]="dataSource">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
     <!-- Record Type Column -->
     <ng-container matColumnDef="recordType">
       <th mat-header-cell *matHeaderCellDef>
         {{ 'columnHeader.recordType' | translate }}
       </th>
-      <td mat-cell *matCellDef="let row">
-        <mcs-field-select-dns-zone-type size="full"
-          [readonlyElement]="!row.updating"
-          [formControl]="row.fcZoneType">
-        </mcs-field-select-dns-zone-type>
+      <td mat-cell *matCellDef="let row" text-top>
+        {{ row.recordInfo?.zoneType }}
       </td>
     </ng-container>
 
@@ -72,11 +118,8 @@
       <th mat-header-cell *matHeaderCellDef>
         {{ 'columnHeader.hostName' | translate }}
       </th>
-      <td mat-cell *matCellDef="let row">
-        <mcs-field-input size="full"
-          [readonlyElement]="!row.updating"
-          [formControl]="row.fcHostName">
-        </mcs-field-input>
+      <td mat-cell *matCellDef="let row" text-top>
+        {{ row.recordInfo?.hostName }}
       </td>
     </ng-container>
 
@@ -85,11 +128,8 @@
       <th mat-header-cell *matHeaderCellDef>
         {{ 'columnHeader.target' | translate }}
       </th>
-      <td mat-cell *matCellDef="let row">
-        <mcs-field-input size="full"
-          [readonlyElement]="!row.updating"
-          [formControl]="row.fcTarget">
-        </mcs-field-input>
+      <td mat-cell *matCellDef="let row" text-top>
+        {{ row.recordInfo?.target }}
       </td>
     </ng-container>
 
@@ -98,19 +138,15 @@
       <th mat-header-cell *matHeaderCellDef>
         {{ 'columnHeader.ttlSeconds' | translate }}
       </th>
-      <td mat-cell *matCellDef="let row">
-        <mcs-field-input size="full"
-          [interpolations]="{ min_value: row.ttlMinValue, max_value: row.ttlMaxValue }"
-          [readonlyElement]="!row.updating"
-          [formControl]="row.fcTtlSeconds">
-        </mcs-field-input>
+      <td mat-cell *matCellDef="let row" text-top>
+        {{ row.recordInfo?.ttlSeconds }}
       </td>
     </ng-container>
 
     <!-- Action Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> </th>
-      <td mat-cell *matCellDef="let row">
+      <td mat-cell *matCellDef="let row" text-top>
         <mcs-item>
           <ng-container *ngIf="row.updating; else readonlyViewTemplate">
             <a (click)="onClickCancelEdit(row)"
@@ -151,11 +187,116 @@
       </td>
     </ng-container>
 
+    <!-- Expanded row content -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="5">
+        <div [@expansionVertical]="row.updating ? 'expanded' : 'collapsed'">
+          <form [formGroup]="row.fgDnsZone">
+            <mcs-grid>
+              <mcs-grid-row>
+                <mcs-grid-column sizeXl="12">
+                  <mcs-field-select-dns-zone-type
+                    size="full"
+                    [label]="'label.recordType' | translate"
+                    [formControl]="row.fcZoneType">
+                  </mcs-field-select-dns-zone-type>
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row>
+                <mcs-grid-column sizeLg="6" sizeMd="12">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.hostName' | translate"
+                    [formControl]="row.fcHostName">
+                  </mcs-field-input>
+                </mcs-grid-column>
+
+                <mcs-grid-column sizeLg="6" sizeMd="12">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.target' | translate"
+                    [formControl]="row.fcTarget">
+                  </mcs-field-input>
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row>
+                <mcs-grid-column sizeLg="6" sizeMd="12">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.ttlSeconds' | translate"
+                    [interpolations]="{ min_value: row.ttlMinValue, max_value: row.ttlMaxValue }"
+                    [formControl]="row.fcTtlSeconds">
+                  </mcs-field-input>
+                </mcs-grid-column>
+
+                <mcs-grid-column sizeLg="6" sizeMd="12" *ngIf="row.isSrvType || row.isMxType">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.priority' | translate"
+                    [interpolations]="{ min_value: row.intMinValue, max_value: row.intMaxValue }"
+                    [formControl]="row.fcPriority">
+                  </mcs-field-input>
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row *ngIf="row.isSrvType">
+                <mcs-grid-column sizeLg="6" sizeMd="12">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.service' | translate"
+                    [interpolations]="{ max_length: row.serviceMaxLength }"
+                    [formControl]="row.fcService">
+                  </mcs-field-input>
+                </mcs-grid-column>
+
+                <mcs-grid-column sizeLg="6" sizeMd="12">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.protocol' | translate"
+                    [interpolations]="{ max_length: row.protocolMaxLength }"
+                    [formControl]="row.fcProtocol">
+                  </mcs-field-input>
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row *ngIf="row.isSrvType">
+                <mcs-grid-column sizeLg="6" sizeMd="12">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.weight' | translate"
+                    [interpolations]="{ min_value: row.intMinValue, max_value: row.intMaxValue }"
+                    [formControl]="row.fcWeight">
+                  </mcs-field-input>
+                </mcs-grid-column>
+
+                <mcs-grid-column sizeLg="6" sizeMd="12">
+                  <mcs-field-input
+                    size="full"
+                    [label]="'label.port' | translate"
+                    [interpolations]="{ min_value: row.intMinValue, max_value: row.intMaxValue }"
+                    [formControl]="row.fcPort">
+                  </mcs-field-input>
+                </mcs-grid-column>
+              </mcs-grid-row>
+            </mcs-grid>
+          </form>
+        </div>
+      </td>
+    </ng-container>
+
     <!-- Header and Data row -->
     <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-    <tr mat-row
-      [disabled]="row.inProgress$ | async"
-      *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+
+    <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+      class="expandable-row"
+      [class.expandable-row-expanded]="row.updating"
+      [disabled]="row.inProgress$ | async"></tr>
+
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']"
+      [class.expandable-detail-row-collapsed]="!row.updating"
+      [disabled]="row.inProgress$ | async"></tr>
   </table>
 
   <!-- Table Statuses -->
