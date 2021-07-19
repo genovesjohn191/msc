@@ -15,8 +15,16 @@ import {
   McsTableDataSource2
 } from '@app/core';
 
-import { McsAzureDeploymentsQueryParams, McsFilterInfo, McsNetworkDbNetwork, McsNetworkDbNetworkEvent, McsQueryParam } from '@app/models';
-import { createObject, getSafeProperty, isNullOrEmpty } from '@app/utilities';
+import {
+  McsFilterInfo,
+  McsNetworkDbNetworkEvent,
+  McsNetworkDbNetworkQueryParams
+} from '@app/models';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { NetworkDbNetworkDetailsService } from '../network-db-network.service';
 import { ColumnFilter, Paginator } from '@app/shared';
@@ -71,7 +79,7 @@ export class NetworkDbNetworkEventsComponent implements OnDestroy {
   }
 
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbNetworkEvent>> {
-    let queryParam = new McsAzureDeploymentsQueryParams();
+    let queryParam = new McsNetworkDbNetworkQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
 

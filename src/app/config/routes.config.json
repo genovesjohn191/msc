@@ -170,6 +170,15 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
+  "LaunchPadNetworkDbNetworkDetailsVlans": {
+    "enumKey": "LaunchPadNetworkDbNetworkDetailsVlans",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "vlans",
+    "documentTitle": "LAUNCH Pad - Network Vlans",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
   "LaunchPadNetworkDbNetworkDetailsEdit": {
     "enumKey": "LaunchPadNetworkDbNetworkDetailsEdit",
     "enumCategory": "LaunchPadVlanDb",
