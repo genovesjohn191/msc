@@ -16,7 +16,6 @@ export class DynamicSelectChipsSoftwareSubscriptionProductTypeField extends Dyna
 
   public allowDuplicates: boolean = false;
   public options: FlatOption[] = [];
-  public useSkuIdAsKey: boolean = false;
   public allowCustomInput: boolean = false;
   public maxItems: number = 0; // less than 1 is considered infinite
 
@@ -40,6 +39,5 @@ export class DynamicSelectChipsSoftwareSubscriptionProductTypeField extends Dyna
 
     this.allowCustomInput = options.allowCustomInput || false;
     this.maxItems = options.maxItems || 0;
-    this.useSkuIdAsKey = options.useSlugIdAsKey || false;
   }
 }

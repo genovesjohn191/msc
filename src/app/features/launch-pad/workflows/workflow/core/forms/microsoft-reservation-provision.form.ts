@@ -43,6 +43,30 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       validators: { required: true }
     }),
     new DynamicInputNumberField({
+      key: 'diskSizeInGB',
+      label: 'Disk Size',
+      placeholder: 'Enter disk size',
+      validators: { required: true, min: 1, max: 99999  },
+      hint: 'Allowed value is 1 - 99999 ',
+      suffix: 'GB'
+    }),
+    new DynamicInputNumberField({
+      key: 'ramInGB',
+      label: 'RAM',
+      placeholder: 'Enter RAM size',
+      validators: { required: true, min: 1, max: 99999  },
+      hint: 'Allowed value is 1 - 99999 ',
+      suffix: 'GB'
+    }),
+    new DynamicInputNumberField({
+      key: 'vCpu',
+      label: 'vCPU',
+      placeholder: 'Enter vCPU count',
+      validators: { required: true, min: 1, max: 99999  },
+      hint: 'Allowed value is 1 - 99999 ',
+      suffix: 'vCPU'
+    }),
+    new DynamicInputNumberField({
       key: 'quantity',
       label: 'Quantity',
       placeholder: 'Enter quantity',
@@ -66,18 +90,23 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
+    console.log('tenant', findCrispElementAttribute(CrispAttributeNames.LinkedMsTenant, attributes));
     mappedProperties.push({ key: 'tenant',
     value: findCrispElementAttribute(CrispAttributeNames.LinkedMsTenant, attributes)?.displayValue } );
 
+    console.log('subscription', findCrispElementAttribute(CrispAttributeNames.LinkedConsService, attributes));
     mappedProperties.push({ key: 'subscription',
     value: findCrispElementAttribute(CrispAttributeNames.LinkedConsService, attributes)?.displayValue } );
 
+    console.log('instanceType', findCrispElementAttribute(CrispAttributeNames.ProductId, attributes));
     mappedProperties.push({ key: 'instanceType',
     value: findCrispElementAttribute(CrispAttributeNames.ProductId, attributes)?.displayValue } );
 
+    console.log('quantity', findCrispElementAttribute(CrispAttributeNames.Quantity, attributes));
     mappedProperties.push({ key: 'quantity',
     value: findCrispElementAttribute(CrispAttributeNames.Quantity, attributes)?.displayValue } );
 
+    console.log('term', findCrispElementAttribute(CrispAttributeNames.ReservedTerm, attributes));
     mappedProperties.push({ key: 'term',
     value: findCrispElementAttribute(CrispAttributeNames.ReservedTerm, attributes)?.displayValue } );
 

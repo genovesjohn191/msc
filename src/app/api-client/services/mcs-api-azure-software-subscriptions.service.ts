@@ -7,7 +7,8 @@ import {
   McsApiRequestParameter,
   McsQueryParam,
   McsAzureSoftwareSubscription,
-  McsSoftwareSubscriptionProductType
+  McsSoftwareSubscriptionProductType,
+  McsSoftwareSubscriptionProductTypeQueryParams
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiAzureSoftwareSubscriptionsService } from '../interfaces/mcs-api-software-subscriptions.interface';
@@ -54,7 +55,7 @@ export class McsApiAzureSoftwareSubscriptionsService implements IMcsApiAzureSoft
     );
   }
 
-  public getSoftwareSubscriptionProductTypes(query?: McsQueryParam):
+  public getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams):
   Observable<McsApiSuccessResponse<McsSoftwareSubscriptionProductType[]>> {
 
     // Set default values if null
@@ -63,6 +64,8 @@ export class McsApiAzureSoftwareSubscriptionsService implements IMcsApiAzureSoft
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('sku_id', query.skuId);
+    searchParams.set('product_id', query.productId);
 
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/software-subscriptions/products/types`;

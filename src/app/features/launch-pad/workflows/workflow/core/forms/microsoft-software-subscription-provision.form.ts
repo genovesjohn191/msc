@@ -1,9 +1,7 @@
 import {
   DynamicInputHiddenField,
   DynamicInputNumberField,
-  DynamicSelectAzureSubscriptionField,
   DynamicSelectChipsSoftwareSubscriptionProductTypeField,
-  DynamicSelectField,
   DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
@@ -23,6 +21,18 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       eventName: 'company-change',
       dependents: ['tenant'],
     }),
+    new DynamicInputHiddenField({
+      key: 'skuId',
+      value: '',
+      eventName: 'subscription-sku-id-change',
+      dependents: ['product'],
+    }),
+    new DynamicInputHiddenField({
+      key: 'productId',
+      value: '',
+      eventName: 'subscription-product-id-change',
+      dependents: ['product'],
+    }),
     new DynamicSelectTenantField({
       key: 'tenant',
       label: 'Tenant',
@@ -31,20 +41,6 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       eventName: 'tenant-change',
       dependents: ['subscription']
     }),
-    new DynamicSelectAzureSubscriptionField({
-      key: 'subscription',
-      label: 'Subscription',
-      validators: { required: true },
-      useServiceIdAsKey: true
-    }),
-    new DynamicSelectChipsSoftwareSubscriptionProductTypeField({
-      key: 'product',
-      label: 'Product',
-      placeholder: 'Search for name, SKU or product ID...',
-      validators: { required: true },
-      allowCustomInput: false,
-      maxItems: 1
-    }),
     new DynamicInputNumberField({
       key: 'quantity',
       label: 'Quantity',
@@ -52,15 +48,15 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       validators: { required: true, min: 1, max: 9999},
       hint: 'Allowed value is 1 - 9999'
     }),
-    new DynamicSelectField({
-      key: 'term',
-      label: 'Term',
+    new DynamicSelectChipsSoftwareSubscriptionProductTypeField({
+      key: 'product',
+      label: 'Product',
+      placeholder: 'Search for name, SKU or product ID...',
       validators: { required: true },
-      options: [
-        { key: '1', value: '1 Year'},
-        { key: '3', value: '1 Years'}
-      ]
-    }),
+      settings: { readonly: true },
+      allowCustomInput: false,
+      maxItems: 1
+    })
   ],
 
   mapContext: standardContextMapper,
@@ -69,17 +65,14 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'tenant',
-    value: findCrispElementAttribute(CrispAttributeNames.LinkedMsTenant, attributes)?.displayValue } );
+    mappedProperties.push({ key: 'skuId',
+    value: findCrispElementAttribute(CrispAttributeNames.SkuId, attributes)?.value } );
 
-    mappedProperties.push({ key: 'subscription',
-    value: findCrispElementAttribute(CrispAttributeNames.LinkedConsService, attributes)?.displayValue } );
+    mappedProperties.push({ key: 'productId',
+    value: findCrispElementAttribute(CrispAttributeNames.ProductId, attributes)?.value } );
 
     mappedProperties.push({ key: 'quantity',
     value: findCrispElementAttribute(CrispAttributeNames.Quantity, attributes)?.displayValue } );
-
-    mappedProperties.push({ key: 'term',
-    value: findCrispElementAttribute(CrispAttributeNames.ReservedTerm, attributes)?.displayValue } );
 
     return mappedProperties;
   }

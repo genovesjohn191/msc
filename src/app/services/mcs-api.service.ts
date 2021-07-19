@@ -246,7 +246,8 @@ import {
   McsTicketCreateComment,
   McsTicketQueryParams,
   McsValidation,
-  McsWorkflowCreate
+  McsWorkflowCreate,
+  McsSoftwareSubscriptionProductTypeQueryParams
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2314,7 +2315,7 @@ export class McsApiService {
     );
   }
 
-  public getSoftwareSubscritionProductTypes(query?: McsQueryParam): Observable<McsApiCollection<McsSoftwareSubscriptionProductType>> {
+  public getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams): Observable<McsApiCollection<McsSoftwareSubscriptionProductType>> {
     return this._azureSoftwareSubscriptionsApi.getSoftwareSubscriptionProductTypes(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSoftwareSubscritionProductTypes'))
