@@ -46,6 +46,7 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   // Filter variables
   private _companyId: string = '';
   private _tenant: McsTenant;
+  private _linkedServiceId: string;
 
   private _subscriptionIdMapping: Map<string, string> = new Map<string, string>();
   private _serviceIdMapping: Map<string, string> = new Map<string, string>();
@@ -68,6 +69,11 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
 
       case 'tenant-change':
         this._tenant = params.value as McsTenant;
+        this.retrieveOptions();
+        break;
+
+      case 'linked-service-id-change':
+        this._linkedServiceId = params.value;
         this.retrieveOptions();
         break;
     }
@@ -108,6 +114,18 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
     let options: FlatOption[] = [];
     this._subscriptionIdMapping.clear();
     this._serviceIdMapping.clear();
+
+    // Artificially initialize via linked Service ID
+    if (!isNullOrEmpty(this._linkedServiceId)) {
+      let subscription = collection.find((item) => item.serviceId === this._linkedServiceId)
+      if (!isNullOrEmpty(subscription)) {
+        this.config.initialValue = this.config.useSubscriptionIdAsKey
+        ? subscription.subscriptionId
+        : this.config.useServiceIdAsKey
+          ? subscription.serviceId
+          : subscription.id;
+      }
+    }
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
