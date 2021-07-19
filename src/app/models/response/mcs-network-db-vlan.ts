@@ -50,4 +50,10 @@ export class McsNetworkDbVlan {
     deserializer: McsDateSerialization
   })
   public updatedOn: Date = undefined;
+
+  @JsonProperty()
+  public podSiteId?: number = undefined;
+
+  @JsonProperty()
+  public podSiteName?: string = undefined;
 }

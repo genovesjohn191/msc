@@ -39,6 +39,7 @@ import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-cr
 import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/overview/network-db-network-overview.component';
 import { NetworkDbNetworkEventsComponent } from './network-db/vlan-db/network/events/network-db-network-events.component';
 import { NetworkDbNetworkEditComponent } from './network-db/vlan-db/network/edit/network-edit.component';
+import { NetworkDbNetworkVlansComponent } from './network-db/vlan-db/network/vlans/network-db-network-vlans.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { NetworkDbNetworkEditComponent } from './network-db/vlan-db/network/edit
     NetworkDbNetworkEventsComponent,
     NetworkDbNetworkCreateComponent,
     NetworkDbNetworkEditComponent,
+    NetworkDbNetworkVlansComponent,
     // CRISP
     CrispOrdersComponent,
     CrispOrderDetailsComponent,

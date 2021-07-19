@@ -92,19 +92,9 @@ export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
   }
 
   public onTabChanged(tab: any, network: McsNetworkDbNetwork): void {
-    let navigationExtras: NavigationExtras = null;
-    let updatingViewToActivityLogs: boolean = tab.id === 'events' && !isNullOrEmpty(this._targetId);
-    if (updatingViewToActivityLogs) {
-      navigationExtras = {
-        queryParams: {
-          id: this._targetId
-        }
-      };
-    }
     this._navigationService.navigateTo(
       RouteKey.LaunchPadNetworkDbNetworkDetails,
-      [network.id.toString(), tab.id],
-      navigationExtras
+      [network.id.toString(), tab.id]
     );
   }
 
@@ -152,16 +142,9 @@ export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
   }
 
   public editClicked(networkId: string): void {
-    let navigationExtras = {
-      queryParams: {
-        id: this._targetId
-      }
-    };
-
     this._navigationService.navigateTo(
       RouteKey.LaunchPadNetworkDbNetworkDetails,
-      [networkId, 'edit'],
-      navigationExtras
+      [networkId, 'edit']
     );
   }
 

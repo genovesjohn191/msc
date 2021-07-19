@@ -2,23 +2,13 @@
 
     <table mat-table [dataSource]="dataSource" style="margin-top: 0">
 
-    <!-- Action Column -->
-    <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>
-            {{ 'columnHeader.action' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let row">
-            {{ row.action}}
-        </td>
-    </ng-container>
-
-    <!-- User Column -->
-    <ng-container matColumnDef="user">
+    <!-- Number Column -->
+    <ng-container matColumnDef="number">
         <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.user' | translate }}
+            {{ 'columnHeader.number' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.user }}
+            {{ row.number }}
         </td>
     </ng-container>
 
@@ -27,8 +17,7 @@
         <th mat-header-cell *matHeaderCellDef hidden-xsmall>
             {{ 'columnHeader.site' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.site }}
+        <td mat-cell *matCellDef="let row" hidden-xsmall [innerHTML]="row.podSiteName | mcsDataLabel">
         </td>
     </ng-container>
 
@@ -38,27 +27,17 @@
             {{ 'columnHeader.pod' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.pod }}
+            {{ row.podId }}
         </td>
     </ng-container>
 
-    <!-- VLAN Column -->
-    <ng-container matColumnDef="vlan">
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.vlan' | translate }}
+            {{ 'columnHeader.status' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.vlanNumber }}
-        </td>
-    </ng-container>
-
-    <!-- Date Column -->
-    <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef hidden-small>
-            {{ 'columnHeader.date' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.date | mcsStdDateFormat }}
+            {{ row.status }}
         </td>
     </ng-container>
 
@@ -73,19 +52,15 @@
             <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-            {{ 'networkDb.events.noRecordsFound' | translate }}
+            {{ 'networkDb.vlans.noRecordsFound' | translate }}
         </div>
         <div *ngIf="dataSource?.hasError$ | async" text-center>
             <div class="listing-status-wrapper">
-                <span>{{ 'networkDb.events.errorMessage' | translate }}</span>
+                <span>{{ 'networkDb.vlans.errorMessage' | translate }}</span>
                 <a (click)="retryDatasource()" mcsId mcsEventTracker="retry-loading-network-db-site-list"
                     mcsEventCategory="launchpad-network-db" mcsEventLabel="pod-listing-page">{{
-                    'networkDb.events.retry' | translate }}</a>.
+                    'networkDb.vlans.retry' | translate }}</a>.
             </div>
         </div>
     </mcs-item>
-
-    <!-- Paginator -->
-    <mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
-    </mcs-paginator>
 </div>
