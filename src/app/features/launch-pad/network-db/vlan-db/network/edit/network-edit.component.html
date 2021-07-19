@@ -6,12 +6,12 @@
 
     <mcs-item>
         <span>{{ 'label.vni' | translate }}:</span>
-        <span [innerHTML]="network?.vni | mcsDataLabel"></span>
+        <span [innerHTML]="network?.vni | mcsDataLabel: 'None'"></span>
     </mcs-item>
 
     <mcs-item>
         <span>{{ 'label.multicastIpAddress' | translate }}:</span>
-        <span [innerHTML]="network?.multicastIpAddress | mcsDataLabel"></span>
+        <span [innerHTML]="network?.multicastIpAddress | mcsDataLabel: 'None'"></span>
     </mcs-item>
 
     <mcs-item>

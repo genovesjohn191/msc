@@ -54,25 +54,15 @@ import { NetworkDbNetworkDetailsService } from './network-db-network.service';
 export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
   public network$: Observable<McsNetworkDbNetwork>;
   public selectedTabId$: Observable<string>;
-  public onEditMode = false;
-
-  private _dialogSubject = new Subject<void>();
   private _destroySubject = new Subject<void>();
-
   private _routerHandler: Subscription;
   private _targetId: string = '';
-
-  public watchedJob: McsJob;
-  private _jobEventHandler: Subscription;
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _networkDetailService: NetworkDbNetworkDetailsService,
     private _navigationService: McsNavigationService,
     private _eventDispatcher: EventBusDispatcherService,
-    private _dialogService: DialogService2,
-    private _translateService: TranslateService,
-    private _apiService: McsApiService,
     private _changeDetector: ChangeDetectorRef
     ) {
       this._subscribeToQueryParams();
@@ -85,10 +75,8 @@ export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this._dialogSubject);
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
-    unsubscribeSafely(this._jobEventHandler);
   }
 
   public onTabChanged(tab: any, network: McsNetworkDbNetwork): void {
@@ -128,7 +116,6 @@ export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
         if (paramsIndex >= 0) {
           tabUrl = tabUrl.substr(0, paramsIndex);
         }
-        this.onEditMode = tabUrl === 'edit';
         this.selectedTabId$ = of(tabUrl);
       });
   }
@@ -139,61 +126,6 @@ export class NetworkDbNetworkDetailsComponent implements OnInit, OnDestroy {
 
   public get routeKeyEnum(): any {
     return RouteKey;
-  }
-
-  public editClicked(networkId: string): void {
-    this._navigationService.navigateTo(
-      RouteKey.LaunchPadNetworkDbNetworkDetails,
-      [networkId, 'edit']
-    );
-  }
-
-  public deleteClicked(network: McsNetworkDbNetwork): void {
-    let dialogRef = this._dialogService.openConfirmation({
-      title: this._translateService.instant('networkDb.deleteDialog.title'),
-      type: DialogActionType.Warning,
-      message: this._translateService.instant('networkDb.deleteDialog.message'),
-      confirmText: this._translateService.instant('action.delete'),
-      cancelText: this._translateService.instant('action.cancel')
-    });
-
-    dialogRef.afterClosed().pipe(
-      tap((result: DialogResult<boolean>) => {
-        if (result?.action !== DialogResultAction.Confirm) { return; }
-        this._delete(network);
-      })
-    ).subscribe();
-  }
-
-  private _delete(network: McsNetworkDbNetwork): void {
-    let deleteDetails = createObject(McsNetworkDbNetworkDelete, {
-      clientReferenceObject: {
-        networkId: network.id
-      }
-    });
-
-    this._changeDetector.markForCheck();
-    this._apiService.deleteNetworkDbNetwork(network.id, deleteDetails).pipe(
-      map(response =>{
-        this._watchThisJob(response);
-      })
-    ).subscribe();
-  }
-
-  private _watchThisJob(job: McsJob): void {
-    this.watchedJob = job;
-    this._jobEventHandler = this._eventDispatcher.addEventListener(
-      McsEvent.jobReceive, this._onJobUpdatesReceived.bind(this));
-  }
-
-  private _onJobUpdatesReceived(job: McsJob): void {
-    let watchedJob = !isNullOrEmpty(job) && job.id === this.watchedJob.id;
-    if (!watchedJob)  { return; }
-    this.watchedJob = job;
-    // Successful
-    if (job.status === JobStatus.Completed) {
-      this._navigationService.navigateTo(RouteKey.LaunchPadNetworkDbNetworks);
-    }
   }
 
   private _watchNetworkDbChanges(): void {

@@ -6,6 +6,27 @@
         <mcs-presentation-panel mcsId="network-properties">
           <ng-container mcsPresentationPanelHeader>
             <h2>Basic Information</h2>
+            
+            <!-- Action tab -->
+            <ng-container mcsTabHeaderCustom>
+              <mat-menu #actionMenu="matMenu" mcsAlign="end">
+
+                <button mat-menu-item mcsId="edit-db-network" (click)="editClicked(network.id)"
+                  mcsEventTracker="edit-db-network" mcsEventCategory="launchpad-db-network"
+                  mcsEventLabel="db-network-details-page" [disabled]="network.isProcessing || onEditMode">
+                  {{ 'networkDb.editDetails' | translate }}
+                </button>
+                <button mat-menu-item mcsId="delete-db-network" (click)="deleteClicked(network)"
+                  mcsEventTracker="delete-db-network" mcsEventCategory="launchpad-db-network"
+                  mcsEventLabel="db-network-details-page" [disabled]="network.isProcessing">
+                  {{ 'networkDb.delete' | translate }}
+                </button>
+
+              </mat-menu>
+              <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+                <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+              </button>
+            </ng-container>
           </ng-container>
 
           <mcs-item>
@@ -43,7 +64,7 @@
             <span>{{ 'label.multicastIpAddress' | translate }}:</span>
             <span [innerHTML]="network?.multicastIpAddress | mcsDataLabel: 'None'"></span>
           </mcs-item>
-          
+
           <mcs-item>
             <span>{{ 'label.createdBy' | translate }}:</span>
             <span [innerHTML]="network?.createdBy | mcsDataLabel"></span>
@@ -69,8 +90,8 @@
   </mcs-grid>
   <div *ngIf="network.isProcessing">
     <mcs-status-message type="info">
-        {{ 'networkDb.refreshingNetworkDetails' | translate }}
+      {{ 'networkDb.refreshingNetworkDetails' | translate }}
     </mcs-status-message>
     <br />
-</div>
+  </div>
 </ng-container>
