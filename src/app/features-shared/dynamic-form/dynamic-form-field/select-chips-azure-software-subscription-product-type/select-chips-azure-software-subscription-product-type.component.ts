@@ -18,7 +18,7 @@ import {
 } from 'rxjs/operators';
 
 import { isNullOrEmpty } from '@app/utilities';
-import { McsSoftwareSubscriptionProductType } from '@app/models';
+import { McsSoftwareSubscriptionProductType, McsSoftwareSubscriptionProductTypeQueryParams } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   DynamicSelectChipsFieldComponentBase,
@@ -59,8 +59,9 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
 
   public config: DynamicSelectChipsSoftwareSubscriptionProductTypeField;
 
-  private _skuMapping: Map<string, string> = new Map<string, string>();
   private _searchKeyword: string = '';
+  private _skuId: string = '';
+  private _productId: string = '';
 
   constructor(
     private _apiService: McsApiService,
@@ -87,13 +88,8 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
       if (validChip) {
         translatedValue.push(chip);
       } else {
-        // Assumes value is tenant ID and search via map
-        if (this._skuMapping.has(chip.value)) {
-          chip.label = chip.value;
-          chip.value = this.config.useSkuIdAsKey ? chip.value : this._skuMapping.get(chip.value);
-
         // Check if we can allow custom input after service ID search has failed
-        } else if (this.config.allowCustomInput) {
+        if (this.config.allowCustomInput) {
           chip.label = chip.value;
         }
 
@@ -149,10 +145,28 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
+    this._updateBehavior();
+    switch (params.eventName) {
+
+      case 'subscription-sku-id-change':
+        this._skuId = params.value;
+        this.retrieveOptions();
+        break;
+      case 'subscription-product-id-change':
+        this._productId = params.value;
+        this.retrieveOptions();
+        break;
+    }
   }
 
   protected callService(): Observable<McsSoftwareSubscriptionProductType[]> {
-    return this._apiService.getSoftwareSubscritionProductTypes()
+    let queryParam = new McsSoftwareSubscriptionProductTypeQueryParams();
+    queryParam.pageIndex = 1;
+    queryParam.pageSize = 500;
+    queryParam.skuId = this._skuId;
+    queryParam.productId = this._productId;
+
+    return this._apiService.getSoftwareSubscriptionProductTypes(queryParam)
     .pipe(
       takeUntil(this.destroySubject),
       map((response) => response && response.collection));
@@ -160,24 +174,25 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
 
   protected filter(collection: McsSoftwareSubscriptionProductType[]): FlatOption[] {
     let options: FlatOption[] = [];
-    this._skuMapping.clear();
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
 
-      // Build a slug ID map so we can map with service IDs to correct key when initializing the value
-      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.skuId) && !this._skuMapping.has(item.skuId);
-      if (uniqueNonEmptyServiceId) {
-        this._skuMapping.set(item.skuId, item.productId);
-      }
-
-      let key = this.config.useSkuIdAsKey ? item.skuId : item.productId;
+      let key = item.catalogItemId;
       let value = item.skuName;
 
       let option = { key, value } as FlatOption;
 
       options.push(option);
     });
+
+    let initializedArtificially = options.length === 1 && !isNullOrEmpty(this._skuId) && !isNullOrEmpty(this._productId);
+    if (initializedArtificially) {
+      this.config.initialValue = [{
+        label: options[0].value,
+        value: options[0].key
+      }]
+    }
 
     if (!isNullOrEmpty(this.config.initialValue)) {
       // Force the control to reselect the initial value
@@ -202,10 +217,7 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
     let multipleValue: McsSoftwareSubscriptionProductType[] = [];
     if (!isNullOrEmpty(value)) {
       if (this.config.maxItems === 1) {
-        singleValue = this.config.useSkuIdAsKey
-        ? this.collection.find((item) => item.skuId === value[0].value)
-        : this.collection.find((item) => item.productId === value[0].value);
-
+        singleValue = this.collection.find((item) => item.catalogItemId === value[0].value);
       } else {
         value.forEach((item) => {
           multipleValue.push(item.value);
@@ -221,11 +233,6 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
   }
 
   private _exluded(item: McsSoftwareSubscriptionProductType): boolean {
-    // Filter no SKU if it is used as key
-    if (this.config.useSkuIdAsKey && isNullOrEmpty(item.skuId)) {
-      return true;
-    }
-
     // Search filter
     if (!isNullOrEmpty(this._searchKeyword)) {
       let nameHasKeyword: boolean = item.skuName.toLowerCase().indexOf(this._searchKeyword) >= 0;
@@ -256,5 +263,9 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
 
   private _isItemLimitReached(items: DynamicSelectChipsValue[]): boolean {
     return items.length >= Math.trunc(this.config.maxItems) && this.config.maxItems > 0;
+  }
+
+  private _updateBehavior(): void {
+    this.updateReadOnlyState();
   }
 }

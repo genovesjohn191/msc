@@ -343,6 +343,7 @@ export * from './common/mcs-entity-requester';
 export * from './common/mcs-expand-resource-storage';
 export * from './common/mcs-list-panel-item';
 export * from './common/mcs-size';
+export * from './common/mcs-software-subscription-product-type-params';
 export * from './common/mcs-selection';
 export * from './common/mcs-selection-change';
 export * from './common/mcs-file-info';

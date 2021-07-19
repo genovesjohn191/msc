@@ -3,7 +3,8 @@ import {
   McsApiSuccessResponse,
   McsAzureSoftwareSubscription,
   McsSoftwareSubscriptionProductType,
-  McsQueryParam
+  McsQueryParam,
+  McsSoftwareSubscriptionProductTypeQueryParams
 } from '@app/models';
 
 export interface IMcsApiAzureSoftwareSubscriptionsService {
@@ -21,5 +22,5 @@ export interface IMcsApiAzureSoftwareSubscriptionsService {
   /**
    * Gets product types
    */
-  getSoftwareSubscriptionProductTypes(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsSoftwareSubscriptionProductType[]>>;
+  getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams): Observable<McsApiSuccessResponse<McsSoftwareSubscriptionProductType[]>>;
 }

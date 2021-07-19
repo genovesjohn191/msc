@@ -150,4 +150,8 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
       this._hasInitializedOnVisibilityUpdate = true;
     }
   }
+
+  protected updateReadOnlyState(): void {
+    this.disabled = this.config.settings && this.config.settings.readonly;
+  }
 }

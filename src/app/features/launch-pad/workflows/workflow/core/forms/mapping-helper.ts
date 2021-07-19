@@ -24,6 +24,7 @@ export enum CrispAttributeNames {
   Quantity = 'QUANTITY',
   ReservedTerm = 'RESERVED_TERM',
   ServerLink = 'SERVER_LINK',
+  SkuId = 'SKU_ID',
 }
 
 export const findCrispElementAttribute:

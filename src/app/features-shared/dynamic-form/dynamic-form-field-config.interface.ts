@@ -42,6 +42,7 @@ export interface DynamicFormControlValidator {
 
 export interface DynamicFormControlSettings {
   hidden?: boolean;
+  readonly?: boolean;
   preserve?: boolean;
 }
 
@@ -130,6 +131,8 @@ export type DynamicFormFieldOnChangeEvent =
   | 'network-change'
   | 'resource-change'
   | 'subscription-change'
+  | 'subscription-product-id-change'
+  | 'subscription-sku-id-change'
   | 'tenant-change'
   | 'terraform-module-type-change'
   | 'terraform-module-change'
