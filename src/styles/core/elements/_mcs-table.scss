@@ -22,6 +22,9 @@ $table-data-hover-background-color: $color-grey-07;
 $table-cell-divider-color: $color-white;
 $table-cell-divider-opacity: 0.70;
 
+// Table expanded rows
+$table-detail-row-bg-color: rgba($color-grey-08, 0.50);
+
 // Nested Table
 $toggle-arrow-size: 33px;
 $toggle-arrow-transition: all .5s ease;
@@ -99,6 +102,32 @@ table {
 
       td.action-data-row {
         background-color: $hover-bg-color;
+      }
+
+      // For expansion detail row
+      &.expandable-row {
+        &.expandable-row-expanded {
+          border: none;
+
+          td.mat-cell {
+            border: none;
+          }
+        }
+
+        + tr {
+          background-color: $table-detail-row-bg-color;
+
+          &.expandable-detail-row-collapsed {
+            height: 0;
+            border: none;
+
+            td.mat-cell {
+              margin: 0;
+              padding: 0;
+              border: none;
+            }
+          }
+        }
       }
     }
   }
@@ -223,7 +252,7 @@ table.nested-table {
     .arrow-container {
       height: $toggle-arrow-size;
       text-align: center;
-  
+
       .arrow {
         @include transition($toggle-arrow-transition);
         font-size: $toggle-arrow-size;
@@ -236,7 +265,7 @@ table.nested-table {
   tr.expanded-detail-row {
     height: 100%;
     border-bottom: none;
-  
+
     > td {
       border-bottom: none;
       padding: 0 !important;
@@ -248,7 +277,7 @@ table.nested-table {
 
     .nested-table-container {
       overflow: hidden;
-  
+
       &.active {
         padding: 0 15px;
       }

@@ -223,6 +223,8 @@ export class CommonDefinition {
   public static REGEX_MOBILE_NUMBER_PATTERN = /^(\+?\d{1,3}?)?\d{10}$/;
 
   public static REGEX_DNS_HOSTNAME = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]).$|^\*$|^\@$/;
+  public static REGEX_DNS_SERVICE = /_?[a-zA-Z0-9][-a-zA-Z0-9]*[^-]/;
+  public static REGEX_DNS_PROTOCOL = /_?[a-zA-Z0-9][-a-zA-Z0-9]*[^-]/;
   public static REGEX_DNS_TYPE_DEFAULT = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\.?$|^@$/;
   public static REGEX_DNS_TYPE_TXT = /^(([^"]{1,255})( ?)){1,257}$/;
   public static REGEX_DNS_TYPE_A = /\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;

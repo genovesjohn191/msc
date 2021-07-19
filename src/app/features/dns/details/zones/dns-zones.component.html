@@ -10,7 +10,7 @@
     <mcs-section>
       <strong>{{ 'label.zones' | translate }}</strong>
 
-      <ng-container *ngIf="dns.zoneCount > 0; else noZonesTemplate">
+      <ng-container *ngIf="dns.detailZoneCount > 0; else noZonesTemplate">
         <mcs-tab-group>
           <ng-container *ngFor="let zone of dns.zones">
             <mcs-tab [label]="zone.name" [id]="zone.name">

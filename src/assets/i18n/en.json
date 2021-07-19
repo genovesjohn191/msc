@@ -3262,6 +3262,11 @@
     "enabled": "Enabled"
   },
   "label": {
+    "priority": "Priority",
+    "service": "Service",
+    "protocol": "Protocol",
+    "weight": "Weight",
+    "port": "Port",
     "a": "A",
     "aaa": "AAA",
     "cname": "CNAME",
@@ -3395,8 +3400,11 @@
     "inputUrl": "Please enter a valid url.",
     "inputMin": "The minimum value that can be entered is {{min_value}}.",
     "inputMax": "The maximum value that can be entered is {{max_value}}.",
+    "inputMaxlength": "The maximum character can be entered is {{max_length}}",
     "inputInvalidDnsTarget": "Invalid target provided with selected type.",
     "inputInvalidDnsHostName": "Invalid hostname provided.",
+    "inputInvalidDnsService": "Invalid service provided.",
+    "inputInvalidDnsProtocol": "Invalid protocol provided.",
     "noCloudHealthAlertsDisplay": "No CloudHealth Alerts to be displayed.",
     "noTerraformModulesDisplay": "No Terraform Modules to be displayed.",
     "noDataFound": "No data found.",

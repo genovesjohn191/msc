@@ -59,4 +59,7 @@ export class McsNetworkDnsRrSetsRecord extends McsEntityBase {
 
   @JsonProperty()
   public replacement: string = undefined;
+
+  @JsonProperty()
+  public protocol: string = undefined;
 }
