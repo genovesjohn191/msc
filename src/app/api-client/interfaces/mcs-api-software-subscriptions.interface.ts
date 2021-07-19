@@ -22,5 +22,6 @@ export interface IMcsApiAzureSoftwareSubscriptionsService {
   /**
    * Gets product types
    */
-  getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams): Observable<McsApiSuccessResponse<McsSoftwareSubscriptionProductType[]>>;
+  getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams):
+  Observable<McsApiSuccessResponse<McsSoftwareSubscriptionProductType[]>>;
 }

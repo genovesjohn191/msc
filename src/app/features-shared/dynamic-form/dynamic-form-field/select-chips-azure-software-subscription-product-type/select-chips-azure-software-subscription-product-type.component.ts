@@ -148,11 +148,11 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
     this._updateBehavior();
     switch (params.eventName) {
 
-      case 'subscription-sku-id-change':
+      case 'sku-id-change':
         this._skuId = params.value;
         this.retrieveOptions();
         break;
-      case 'subscription-product-id-change':
+      case 'microsoft-product-id-change':
         this._productId = params.value;
         this.retrieveOptions();
         break;

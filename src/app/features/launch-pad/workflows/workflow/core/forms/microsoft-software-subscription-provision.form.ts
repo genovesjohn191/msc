@@ -24,20 +24,19 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
     new DynamicInputHiddenField({
       key: 'skuId',
       value: '',
-      eventName: 'subscription-sku-id-change',
+      eventName: 'sku-id-change',
       dependents: ['product'],
     }),
     new DynamicInputHiddenField({
       key: 'productId',
       value: '',
-      eventName: 'subscription-product-id-change',
+      eventName: 'microsoft-product-id-change',
       dependents: ['product'],
     }),
     new DynamicSelectTenantField({
       key: 'tenant',
       label: 'Tenant',
       validators: { required: true },
-      useTenantIdAsKey: true,
       eventName: 'tenant-change',
       dependents: ['subscription']
     }),
@@ -49,7 +48,7 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       hint: 'Allowed value is 1 - 9999'
     }),
     new DynamicSelectChipsSoftwareSubscriptionProductTypeField({
-      key: 'product',
+      key: 'catalogItem',
       label: 'Product',
       placeholder: 'Search for name, SKU or product ID...',
       validators: { required: true },

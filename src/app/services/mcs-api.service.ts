@@ -2315,7 +2315,9 @@ export class McsApiService {
     );
   }
 
-  public getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams): Observable<McsApiCollection<McsSoftwareSubscriptionProductType>> {
+  public getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams):
+  Observable<McsApiCollection<McsSoftwareSubscriptionProductType>> {
+
     return this._azureSoftwareSubscriptionsApi.getSoftwareSubscriptionProductTypes(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSoftwareSubscritionProductTypes'))
