@@ -24,6 +24,7 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectAzureSubscriptionField } from './select-azure-subscription';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
+import { collectExternalReferences } from '@angular/compiler';
 
 @Component({
   selector: 'mcs-dff-select-azure-subscription-field',
@@ -93,7 +94,7 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   }
 
   protected callService(): Observable<McsAzureService[]> {
-    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._tenant)) {
+    if (isNullOrEmpty(this._companyId) || (this.config.requireTenant && isNullOrEmpty(this._tenant))) {
       return of([]);
     }
 

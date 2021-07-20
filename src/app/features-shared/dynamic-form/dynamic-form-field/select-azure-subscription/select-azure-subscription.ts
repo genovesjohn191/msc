@@ -13,6 +13,7 @@ export class DynamicSelectAzureSubscriptionField extends DynamicFormFieldConfigB
 
   public useSubscriptionIdAsKey: boolean = false;
   public useServiceIdAsKey: boolean = false;
+  public requireTenant: boolean = false;
 
   public constructor(options: {
     key: string;
@@ -27,10 +28,12 @@ export class DynamicSelectAzureSubscriptionField extends DynamicFormFieldConfigB
     settings?: DynamicFormControlSettings;
     useSubscriptionIdAsKey?: boolean;
     useServiceIdAsKey?: boolean;
+    requireTenant?: boolean;
   }) {
     super(options);
 
     this.useSubscriptionIdAsKey = options.useSubscriptionIdAsKey || false;
     this.useServiceIdAsKey = options.useServiceIdAsKey || false;
+    this.useServiceIdAsKey = options.requireTenant || false;
   }
 }

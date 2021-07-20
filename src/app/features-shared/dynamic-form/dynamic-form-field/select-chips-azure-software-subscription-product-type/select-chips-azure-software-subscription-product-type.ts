@@ -33,7 +33,6 @@ export class DynamicSelectChipsSoftwareSubscriptionProductTypeField extends Dyna
     settings?: DynamicFormControlSettings;
     allowCustomInput?: boolean;
     maxItems?: number;
-    useSlugIdAsKey?: boolean;
   }) {
     super(options);
 

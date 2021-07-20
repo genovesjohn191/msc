@@ -2,6 +2,7 @@ import {
   DynamicInputHiddenField,
   DynamicInputNumberField,
   DynamicSelectChipsSoftwareSubscriptionProductTypeField,
+  DynamicSelectSoftwareSubscriptionProductTypeField,
   DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
@@ -25,13 +26,13 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       key: 'skuId',
       value: '',
       eventName: 'sku-id-change',
-      dependents: ['product'],
+      dependents: ['catalogItem'],
     }),
     new DynamicInputHiddenField({
       key: 'productId',
       value: '',
       eventName: 'microsoft-product-id-change',
-      dependents: ['product'],
+      dependents: ['catalogItem'],
     }),
     new DynamicSelectTenantField({
       key: 'tenant',
@@ -47,14 +48,11 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       validators: { required: true, min: 1, max: 9999},
       hint: 'Allowed value is 1 - 9999'
     }),
-    new DynamicSelectChipsSoftwareSubscriptionProductTypeField({
+    new DynamicSelectSoftwareSubscriptionProductTypeField({
       key: 'catalogItem',
       label: 'Product',
-      placeholder: 'Search for name, SKU or product ID...',
       validators: { required: true },
       settings: { readonly: true },
-      allowCustomInput: false,
-      maxItems: 1
     })
   ],
 
