@@ -34,6 +34,9 @@ import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
 import { DynamicSelectVmComponent } from './select-vm/select-vm.component';
 import { DynamicSelectComponent } from './select/select.component';
 import { DynamicSlideToggleComponent } from './slide-toggle/slide-toggle.component';
+import {
+  DynamicSelectSoftwareSubscriptionProductTypeComponent
+} from './select-software-suscription-product-type/select-software-suscription-product-type.component';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -60,6 +63,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectNetworkDbUseCaseComponent,
   DynamicSelectOsComponent,
   DynamicSelectRetentionPeriodComponent,
+  DynamicSelectSoftwareSubscriptionProductTypeComponent,
   DynamicSelectStorageProfileComponent,
   DynamicSelectTenantComponent,
   DynamicSelectTerraformModuleTypeComponent,

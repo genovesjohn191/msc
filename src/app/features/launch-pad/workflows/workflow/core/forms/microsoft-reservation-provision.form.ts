@@ -1,10 +1,10 @@
 import {
   DynamicInputHiddenField,
   DynamicInputNumberField,
-  DynamicSelectAvailabilityZoneField,
+  DynamicInputTextField,
   DynamicSelectAzureSubscriptionField,
-  DynamicSelectChipsSoftwareSubscriptionProductTypeField,
   DynamicSelectField,
+  DynamicSelectSoftwareSubscriptionProductTypeField,
   DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
@@ -22,7 +22,7 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['tenant', 'subscription'],
+      dependents: ['subscription'],
     }),
     new DynamicInputHiddenField({
       key: 'skuId',
@@ -36,13 +36,11 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       eventName: 'microsoft-product-id-change',
       dependents: ['catalogItem'],
     }),
-    new DynamicSelectTenantField({
+    new DynamicInputTextField({
       key: 'tenant',
       label: 'Tenant',
-      validators: { required: true },
-      useTenantIdAsKey: true,
-      eventName: 'tenant-change',
-      dependents: ['subscription']
+      placeholder: 'Enter tenant name',
+      settings: { readonly: true },
     }),
     new DynamicInputHiddenField({
       key: 'linkedService',
@@ -54,6 +52,7 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       key: 'subscription',
       label: 'Subscription',
       validators: { required: true },
+      settings: { readonly: true },
       useSubscriptionIdAsKey: true
     }),
     new DynamicInputNumberField({
@@ -66,10 +65,10 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
     new DynamicSelectField({
       key: 'term',
       label: 'Term',
-      validators: { required: true },
+      settings: { readonly: true },
       options: [
-        { key: '1Y', value: '1 Year'},
-        { key: '3Y', value: '3 Years'}
+        { key: '1', value: '1 Year'},
+        { key: '3', value: '3 Years'}
       ]
     }),
     new DynamicSelectField({
@@ -81,14 +80,11 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
         { key: 'monthly', value: 'Monthly'}
       ]
     }),
-    new DynamicSelectChipsSoftwareSubscriptionProductTypeField({
+    new DynamicSelectSoftwareSubscriptionProductTypeField({
       key: 'catalogItem',
       label: 'Instance Type',
-      placeholder: 'Search for name, SKU or product ID...',
       validators: { required: true },
       settings: { readonly: true },
-      allowCustomInput: false,
-      maxItems: 1
     })
   ],
 
@@ -114,7 +110,7 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
     value: findCrispElementAttribute(CrispAttributeNames.Quantity, attributes)?.displayValue } );
 
     mappedProperties.push({ key: 'term',
-    value: findCrispElementAttribute(CrispAttributeNames.ReservedTerm, attributes)?.displayValue } );
+    value: findCrispElementAttribute(CrispAttributeNames.ReservedTerm, attributes)?.value } );
 
     let billingFrequencyCrispValue = findCrispElementAttribute(CrispAttributeNames.BillFreq, attributes)?.value;
     if (!isNullOrEmpty(billingFrequencyCrispValue)) {

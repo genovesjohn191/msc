@@ -53,6 +53,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
 
   public ngOnInit(): void {
     this._initialize();
+    this.updateReadOnlyState();
   }
 
   public ngOnDestroy(): void {

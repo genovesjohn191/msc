@@ -145,7 +145,6 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
-    this._updateBehavior();
     switch (params.eventName) {
 
       case 'sku-id-change':
@@ -263,9 +262,5 @@ export class DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent
 
   private _isItemLimitReached(items: DynamicSelectChipsValue[]): boolean {
     return items.length >= Math.trunc(this.config.maxItems) && this.config.maxItems > 0;
-  }
-
-  private _updateBehavior(): void {
-    this.updateReadOnlyState();
   }
 }

@@ -86,7 +86,8 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
       validators: { required: true },
       eventName: 'subscription-change',
       dependents: ['name'],
-      useSubscriptionIdAsKey: true
+      useSubscriptionIdAsKey: true,
+      requireTenant: true
     }),
     new DynamicInputTerraformDeploymentNameField({
       key: 'name',

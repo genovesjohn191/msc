@@ -54,6 +54,7 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
     if (!isNullOrUndefined(this.config.initialValue)) {
       this.setInitialValue(this.config.initialValue);
     }
+    this.updateReadOnlyState();
   }
 
   // Can be overriden to modify the value being sent

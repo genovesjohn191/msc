@@ -111,6 +111,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-retention-period-field>
 
+        <mcs-dff-select-software-subscription-product-type-field *ngSwitchCase="'select-software-subscription-product-type'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-software-subscription-product-type-field>
+
         <mcs-dff-select-storage-profile-field *ngSwitchCase="'select-storage-profile'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-storage-profile-field>
@@ -122,7 +126,6 @@
         <mcs-dff-select-terraform-module-type-field *ngSwitchCase="'select-terraform-module-type'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-terraform-module-type-field>
-
 
         <mcs-dff-select-vdc-field *ngSwitchCase="'select-vdc'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
