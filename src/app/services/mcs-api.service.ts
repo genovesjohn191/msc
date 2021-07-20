@@ -129,14 +129,13 @@ import {
   McsJobConnection,
   McsKeyValue,
   McsLicense,
-  McsSoftwareSubscriptionProductType,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
-  McsNetworkDbNetworkEvent,
-  McsNetworkDbNetworkUpdate,
   McsNetworkDbNetworkDelete,
+  McsNetworkDbNetworkEvent,
   McsNetworkDbNetworkQueryParams,
+  McsNetworkDbNetworkUpdate,
   McsNetworkDbPod,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
@@ -225,6 +224,8 @@ import {
   McsServerStorageDeviceUpdate,
   McsServerThumbnail,
   McsServerUpdate,
+  McsSoftwareSubscriptionProductType,
+  McsSoftwareSubscriptionProductTypeQueryParams,
   McsSystemMessage,
   McsSystemMessageCreate,
   McsSystemMessageEdit,
@@ -246,8 +247,7 @@ import {
   McsTicketCreateComment,
   McsTicketQueryParams,
   McsValidation,
-  McsWorkflowCreate,
-  McsSoftwareSubscriptionProductTypeQueryParams
+  McsWorkflowCreate
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -259,8 +259,10 @@ import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsRepository } from './core/mcs-repository.interface';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
+import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
+import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
@@ -269,15 +271,13 @@ import { McsInternetRepository } from './repositories/mcs-internet.repository';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 import { McsMediaRepository } from './repositories/mcs-media.repository';
+import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-networks.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
-import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
-import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
-import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-networks.repository';
 
 @Injectable()
 @LogClass()
@@ -2052,7 +2052,7 @@ export class McsApiService {
   }
 
   public getCrispOrderElements(orderId: string, query?: McsObjectCrispOrderQueryParams):
-  Observable<McsApiCollection<McsObjectCrispElement>> {
+    Observable<McsApiCollection<McsObjectCrispElement>> {
 
     return this._objectsApi.getCrispOrderElements(orderId, query).pipe(
       catchError((error) =>
@@ -2253,14 +2253,14 @@ export class McsApiService {
     );
   }
 
-  public getNetworkDbNetworks(query?: McsNetworkDbNetworkQueryParams, optionalHeaders?: Map<string, any>):
-    Observable<McsApiCollection<McsNetworkDbNetwork>> {
-      return this._networkDbApi.getNetworks(query, optionalHeaders).pipe(
-        catchError((error) =>
-          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
-        ),
-        map((response) => this._mapToCollection(response.content, response.totalCount))
-      );
+  public getNetworkDbNetworks(
+    query?: McsNetworkDbNetworkQueryParams
+  ): Observable<McsApiCollection<McsNetworkDbNetwork>> {
+    return this._mapToEntityRecords(this._networkDbNetworksRepository, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
+      )
+    );
   }
 
   public getNetworkDbNetwork(id: string): Observable<McsNetworkDbNetwork> {
@@ -2317,7 +2317,7 @@ export class McsApiService {
   }
 
   public getSoftwareSubscriptionProductTypes(query?: McsSoftwareSubscriptionProductTypeQueryParams):
-  Observable<McsApiCollection<McsSoftwareSubscriptionProductType>> {
+    Observable<McsApiCollection<McsSoftwareSubscriptionProductType>> {
 
     return this._azureSoftwareSubscriptionsApi.getSoftwareSubscriptionProductTypes(query).pipe(
       catchError((error) =>

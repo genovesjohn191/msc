@@ -1,19 +1,20 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  forwardRef,
-} from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+import {
+  forwardRef,
+  ChangeDetectorRef,
+  Component
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { McsIpValidatorService } from '@app/core';
 import { McsNetworkDbNetworkQueryParams } from '@app/models';
 import { McsApiService } from '@app/services';
+import { isNullOrEmpty } from '@app/utilities';
+
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextComponent } from '../input-text/input-text.component';
 import { DynamicInputNetworkDbNetworkNameField } from './input-network-db-network-name';
-import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-input-network-db-network-name-field',

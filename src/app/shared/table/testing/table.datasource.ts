@@ -33,6 +33,10 @@ export class TableDatasource implements McsDataSource<any> {
     // Disconnect all resources
   }
 
+  public refreshDataRecords(): void {
+    // Do refresh
+  }
+
   public onCompletion(): void {
     this.loading = false;
   }

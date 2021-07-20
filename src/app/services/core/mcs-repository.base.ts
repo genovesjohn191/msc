@@ -84,7 +84,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
     if (queryIsDifferent) { this.filteredRecords = new Array(); }
     this._previousQuery = Object.assign({}, query);
 
-
     let isSearching = !isNullOrEmpty(query.keyword) || queryIsDifferent;
     filteredRecords = isSearching ?
       this._filterRecordsBySearchQuery(query) :
@@ -213,15 +212,18 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   /**
    * Clears the cache data and it will not notify the dataChange event
    */
-  public clearData(): void {
+  public clearData(notifyChanges: boolean = true): void {
     if (this.getTotalRecordsCount() <= 0) { return; }
 
     this._context.totalRecordsCount = 0;
     this._allRecordsCount = 0;
     clearArrayRecord(this.dataRecords);
     clearArrayRecord(this.filteredRecords);
-    this._dataCleared.next();
-    this._notifyDataClearEvent();
+
+    if (notifyChanges) {
+      this._dataCleared.next();
+      this._notifyDataClearEvent();
+    }
   }
 
   /**
@@ -291,6 +293,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * @param query Query on how the records will be filtered
    */
   private _filterRecordsBySearchQuery(query: McsQueryParam, parentId?: string): Observable<T[]> {
+    this.clearData(false);
+
     let searchedRecords = this._context.filterRecords(query, parentId).pipe(
       tap((newFilteredRecords) => {
         this._allRecordsCount = this._context.totalRecordsCount;
