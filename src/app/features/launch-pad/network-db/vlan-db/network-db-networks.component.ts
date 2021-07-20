@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,11 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import {
-  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -33,7 +32,6 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-network-db-networks',
@@ -63,8 +61,7 @@ export class NetworkDbNetworksComponent implements OnDestroy {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
-    this.dataSource = new McsTableDataSource2<McsNetworkDbNetwork>(this._getTableData.bind(this))
-      .registerConfiguration(new McsMatTableConfig(true));
+    this.dataSource = new McsTableDataSource2<McsNetworkDbNetwork>(this._getTableData.bind(this));
   }
 
   public ngOnDestroy(): void {
