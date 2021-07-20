@@ -2255,11 +2255,12 @@ export class McsApiService {
 
   public getNetworkDbNetworks(query?: McsNetworkDbNetworkQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiCollection<McsNetworkDbNetwork>> {
-    return this._mapToEntityRecords(this._networkDbNetworksRepository, query).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
-      )
-    );
+      return this._networkDbApi.getNetworks(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworks'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
   }
 
   public getNetworkDbNetwork(id: string): Observable<McsNetworkDbNetwork> {

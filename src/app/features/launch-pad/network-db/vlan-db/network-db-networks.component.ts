@@ -65,9 +65,6 @@ export class NetworkDbNetworksComponent implements OnDestroy {
   ) {
     this.dataSource = new McsTableDataSource2<McsNetworkDbNetwork>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
-    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
-      dataChangeEvent: McsEvent.dataChangeNetworkDbNetworksEvent
-    });
   }
 
   public ngOnDestroy(): void {
