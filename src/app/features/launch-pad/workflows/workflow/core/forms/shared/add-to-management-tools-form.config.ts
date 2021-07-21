@@ -91,5 +91,12 @@ export const addToManagementToolsFormConfig: DynamicFormFieldConfigBase[] = [
     key: 'password',
     label: 'Password',
     placeholder: 'Enter current password'
-  })
+  }),
+  new DynamicInputTextField({
+    key: 'communityString',
+    label: 'Community String',
+    placeholder: 'Enter community string',
+    validators: { maxlength: 5000 },
+    settings: { hidden: true }
+  }),
 ];

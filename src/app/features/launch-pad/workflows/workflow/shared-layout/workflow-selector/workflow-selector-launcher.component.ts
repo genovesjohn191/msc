@@ -5,7 +5,12 @@ import {
   Output
 } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { LaunchPadWorkflowSelectorComponent, WorkflowSelectorConfig } from './workflow-selector.component';
+import { isNullOrEmpty } from '@app/utilities';
+import { productWorkflowGroupMap } from '../../core/product-workflow-group.map';
+import {
+  LaunchPadWorkflowSelectorComponent,
+  WorkflowSelectorConfig
+} from './workflow-selector.component';
 
 @Component({
   selector: 'mcs-workflow-selector-launcher',
@@ -18,6 +23,10 @@ export class WorkflowSelectorLauncherComponent {
 
   @Output()
   public selected: EventEmitter<WorkflowSelectorConfig>;
+
+  public get hasWorkflows(): boolean {
+    return !isNullOrEmpty(productWorkflowGroupMap.get(this.config?.type));
+  }
 
   public constructor(private _bottomSheet: MatBottomSheet,) {
     this.selected = new EventEmitter();
