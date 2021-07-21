@@ -32,6 +32,7 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-network-db-networks',
@@ -62,10 +63,15 @@ export class NetworkDbNetworksComponent implements OnDestroy {
     private _apiService: McsApiService
   ) {
     this.dataSource = new McsTableDataSource2<McsNetworkDbNetwork>(this._getTableData.bind(this));
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
+      dataChangeEvent: McsEvent.dataChangeNetworkDbNetworksEvent,
+      entityDeleteEvent: McsEvent.entityDeletedEvent
+    });
   }
 
   public ngOnDestroy(): void {
     this.dataSource.disconnect(null);
+    this.dataEvents.dispose();
   }
 
   @ViewChild('search')
