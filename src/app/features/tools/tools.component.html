@@ -4,9 +4,9 @@
     <div class="listing-table-wrapper limited-view">
       <table mat-table [dataSource]="dataSource">
         <!-- Service Column -->
-        <ng-container matColumnDef="name">
+        <ng-container matColumnDef="portal">
           <th mat-header-cell *matHeaderCellDef>
-            {{ 'tools.table.header.name' | translate }}
+            {{ 'columnHeader.portal' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
             {{ row.name }}
@@ -14,9 +14,9 @@
         </ng-container>
 
         <!-- Description Column -->
-        <ng-container matColumnDef="resourceSpecific">
+        <ng-container matColumnDef="description">
           <th mat-header-cell *matHeaderCellDef hidden-small>
-            {{ 'tools.table.header.description' | translate }}
+            {{ 'columnHeader.description' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small text-top>
             {{ toolDescriptionMap.get(row.name) }}
@@ -24,18 +24,30 @@
         </ng-container>
 
         <!-- Access Column -->
-        <ng-container matColumnDef="portalAccess">
+        <ng-container matColumnDef="access">
           <th mat-header-cell *matHeaderCellDef>
-            {{ 'tools.table.header.access' | translate }}
+            {{ 'columnHeader.access' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" text-top>
-            <div *ngFor="let access of row.portalAccess">
-              <a [href]="access.url" target="_blank"
-                mcsId="select-tool"
-                mcsEventTracker="navigate-to-othertools"
-                mcsEventCategory="tools"
-                mcsEventLabel="tools-listing-page">{{ access.name }}</a>
-            </div>
+            <ng-container *ngIf="row.resourceSpecific; else notResourceSpecific">
+              <div *ngFor="let access of row.portalAccess">
+                <a *ngIf="access.name && access.url" [href]="access.url" target="_blank"
+                  mcsId="select-tool"
+                  mcsEventTracker="navigate-to-othertools"
+                  mcsEventCategory="tools"
+                  mcsEventLabel="tools-listing-page">{{ access.name }}</a>
+              </div>
+            </ng-container>
+            <ng-template #notResourceSpecific>
+              <div *ngFor="let access of row.portalAccess">
+                <a *ngIf="access.url" [href]="access.url" target="_blank"
+                  mcsId="select-tool"
+                  mcsEventTracker="navigate-to-othertools"
+                  mcsEventCategory="tools"
+                  mcsEventLabel="tools-listing-page">{{row.name }}</a>
+              </div>
+            </ng-template>
+            
           </td>
         </ng-container>
 

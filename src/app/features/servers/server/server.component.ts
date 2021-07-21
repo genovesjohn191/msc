@@ -111,7 +111,7 @@ export class ServerComponent implements OnInit, OnDestroy {
         sortPredicate: this._sortServerGroupPredicate.bind(this),
         panelSettings: {
           inProgressText: _translate.instant('servers.loading'),
-          emptyText: _translate.instant('servers.noMedia'),
+          emptyText: _translate.instant('servers.noServers'),
           errorText: _translate.instant('servers.errorMessage')
         }
       }

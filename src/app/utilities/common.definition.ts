@@ -193,7 +193,6 @@ export class CommonDefinition {
   /** Filter Selector */
   public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';
   public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
-  public static FILTERSELECTOR_TOOLS_LISTING = 'toolsFilter';
   public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_ORDERS_LISTING = 'launchPadSearchOrdersFilter';
   public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_ELEMENTS_LISTING = 'launchPadSearchElementsFilter';
   public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_SERVICES_LISTING = 'launchPadSearchServicesFilter';
