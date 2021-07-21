@@ -6,16 +6,16 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import {
   CoreConfig,
-  McsFilterService,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2
 } from '@app/core';
 import {
+  McsFilterInfo,
   McsPortal,
   McsPortalAccess,
   McsQueryParam
@@ -24,7 +24,8 @@ import { McsApiService } from '@app/services';
 import {
   cloneObject,
   getSafeProperty,
-  CommonDefinition
+  isNullOrEmpty,
+  createObject
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -34,29 +35,31 @@ import { TranslateService } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ToolsComponent implements OnInit {
+export class ToolsComponent implements OnDestroy {
   public readonly toolDescriptionMap: Map<string, string>;
   public readonly dataSource: McsTableDataSource2<McsPortal>;
+  public readonly defaultColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'portal' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'access' })
+  ];
 
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _coreConfig: CoreConfig,
     private _translateService: TranslateService,
-    private _apiService: McsApiService,
-    private _filterService: McsFilterService
+    private _apiService: McsApiService
   ) {
     this.toolDescriptionMap = new Map<string, string>();
-    this.dataSource = new McsTableDataSource2(this._getPortals.bind(this));
     this._initializeToolDescriptionMap()
+
+    this.dataSource = new McsTableDataSource2(this._getPortals.bind(this));
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
-  public ngOnInit(): void {
-    this._initializeDataColumns();
-  }
-
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_TOOLS_LISTING;
+  public ngOnDestroy() {
+    this.dataSource.disconnect(null);
   }
 
   public retryDatasource(): void {
@@ -92,16 +95,20 @@ export class ToolsComponent implements OnInit {
         macquarieView.portalAccess = Array(macquarieViewPortalAccess);
         macquarieTools.push(macquarieView, ...cloneObject(response.collection));
 
-        let dataItems = macquarieTools.filter((tool) => tool.resourceSpecific);
+        let dataItems = this._filterValidDataItem(macquarieTools);
         let dataSourceContext = new McsMatTableContext(dataItems, dataItems.length);
         return dataSourceContext;
       })
     );
   }
 
-  private _initializeDataColumns(): void {
-    let dataColumns = this._filterService.getFilterSettings(
-      CommonDefinition.FILTERSELECTOR_TOOLS_LISTING);
-    this.dataSource.registerColumnsFilterInfo(dataColumns);
+  private _filterValidDataItem(macquarieTools: McsPortal[]): McsPortal[] {
+    return macquarieTools.filter((tool: McsPortal) => {
+      let portalAccess = getSafeProperty(tool, obj => obj.portalAccess);
+      if (portalAccess.length === 0) { return; }
+      let validPortalAccess = portalAccess.filter((access) => access.name || access.url);
+      let validDataItem = validPortalAccess?.length > 0 && !isNullOrEmpty(tool.name);
+      return validDataItem;
+    })
   }
 }

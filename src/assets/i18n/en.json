@@ -2666,12 +2666,6 @@
     "description": "Macquarie Cloud Services have all the tools you need to manage your compute workloads. Occasionally you may want to do something that's not possible in the Macquarie Cloud Services portal, but available in our partner portals. You have permission to access the following partner portals.",
     "otherServicesTableCaption": "Other services we offer.",
     "table": {
-      "header": {
-        "name": "Portal",
-        "description": "Description",
-        "access": "Access",
-        "order": "Get it now"
-      },
       "descriptions": {
         "macquarieView": {
           "name": "Macquarie View",
@@ -3111,6 +3105,7 @@
     "date": "Date",
     "path": "Path",
     "scanType": "Scan Type",
+    "access": "Access",
     "actionTaken": "Action Taken",
     "action": "Action",
     "aggregationTarget": "Aggregation Target",
@@ -3184,6 +3179,7 @@
     "plan": "Plan",
     "pod": "POD",
     "podName": "POD Name",
+    "portal": "Portal",
     "productId": "Product ID",
     "productName": "Product Name",
     "projectedComputeCost": "Projected Compute Cost",

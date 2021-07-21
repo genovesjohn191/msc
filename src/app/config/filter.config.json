@@ -63,23 +63,6 @@
       "exclude": true
     }
   },
-  "toolsFilter": {
-    "name": {
-      "text": "Portal",
-      "value": true,
-      "exclude": true
-    },
-    "resourceSpecific": {
-      "text": "Description",
-      "value": true,
-      "exclude": true
-    },
-    "portalAccess": {
-      "text": "Access",
-      "value": true,
-      "exclude": true
-    }
-  },
   "launchPadSearchOrdersFilter": {
     "orderId": {
       "text": "Order ID",
