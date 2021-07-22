@@ -51,7 +51,8 @@ import {
   McsOrderWorkflow,
   OrderWorkflowAction,
   RouteKey,
-  WorkflowStatus
+  WorkflowStatus,
+  OrderIdType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -65,9 +66,11 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  convertMbToGb
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
+import { LineProperties } from './order-line-properties';
 
 enum OrderDetailsView {
   OrderDetails = 0,
@@ -100,6 +103,8 @@ export class OrderComponent implements OnInit, OnDestroy {
   public dialogRef: DialogRef<TemplateRef<any>>;
   public chargesState$: Observable<ChargesState>;
   public isInAwaitingApprovalState: boolean;
+  private _lineOrderProperties: string;
+  public orderProperties = new LineProperties(this._translate);
 
   @ViewChild('submitDialogTemplate')
   private _submitDialogTemplate: TemplateRef<any>;
@@ -192,6 +197,13 @@ export class OrderComponent implements OnInit, OnDestroy {
     return this._authenticationIdentity.isImpersonating;
   }
 
+  public get lineOrderProperties(): string {
+    return this._lineOrderProperties;
+  }
+
+  public getOrderProperties(row: McsOrderItem): void {
+    this._lineOrderProperties = this.orderProperties.setLineProperties(row);
+  }
   /**
    * Returns true when there are selected approvers
    */
