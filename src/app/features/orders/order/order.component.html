@@ -296,7 +296,10 @@
 
           <!-- Header and Data row -->
           <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-          <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+          <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+            (mouseover)="getOrderProperties(row)"
+            matTooltipClass="mat-tooltip"
+            matTooltip="{{lineOrderProperties}}"></tr>
         </table>
 
         <!-- Table Statuses -->
