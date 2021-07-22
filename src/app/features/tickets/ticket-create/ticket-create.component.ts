@@ -65,6 +65,7 @@ import {
   TicketService,
   TicketServiceType
 } from '../shared';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -101,6 +102,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public antiVirus$: Observable<TicketService[]>;
   public hids$: Observable<TicketService[]>;
   public dns$: Observable<TicketService[]>;
+  public reservations$: Observable<TicketService[]>;
+  public softwareSubscriptions$: Observable<TicketService[]>;
 
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
@@ -129,10 +132,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   constructor(
     private _accessControlService: McsAccessControlService,
     private _activatedRoute: ActivatedRoute,
-    private _navigateService: McsNavigationService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _navigateService: McsNavigationService,
+    private _translate: TranslateService
   ) {
     this._registerFormGroup();
     this._setTicketType();
@@ -162,6 +166,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToAntiVirus();
     this._subscribesToHids();
     this._subscribesToDns();
+    this._subscribesToAzureReservations();
+    this._subscribesToAzureSoftwareSubscriptions();
   }
 
   public ngOnDestroy() {
@@ -375,9 +381,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to selected serviceId
-   */
   private _subscribesToSelectedService(): void {
     this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
       map((params) => getSafeProperty(params, (obj) => obj.serviceId)),
@@ -385,9 +388,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to vdc services
-   */
   private _subscribesToVdcServices(): void {
     this.vdcServices$ = this.vdcList$.pipe(
       map((response) => {
@@ -403,9 +403,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to servers services
-   */
   private _subscribesToServerServices(): void {
     this.serverServices$ = this.serversList$.pipe(
       map((response) => {
@@ -421,9 +418,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to firewall services
-   */
   private _subscribesToFirewallServices(): void {
     this.firewallServices$ = this._apiService.getFirewalls().pipe(
       map((response) => {
@@ -439,9 +433,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to internet port services
-   */
   private _subscribesToInternetPortServices(): void {
     this.internetPortServices$ = this._apiService.getInternetPorts().pipe(
       map((response) => {
@@ -457,9 +448,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to backup aggregation target services
-   */
   private _subscribesToBatServices(): void {
     this.batServices$ = this._apiService.getBackupAggregationTargets().pipe(
       map((response) => {
@@ -474,9 +462,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to licenses
-   */
   private _subscribesToLicenses(): void {
     if (!this.hasPublicCloudAccess) { return; }
     this.licenses$ = this._apiService.getLicenses().pipe(
@@ -492,9 +477,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to azure services
-   */
   private _subscribesToAzureServices(): void {
     this.azureServices$ = this._apiService.getAzureServices().pipe(
       map((response) => {
@@ -509,9 +491,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to colocation antennas
-   */
   private _subscribesToColocationAntennas(): void {
     this.colocationAntennas$ = this._apiService.getColocationAntennas().pipe(
       map((response) => {
@@ -526,9 +505,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to colocation custom services
-   */
   private _subscribesToColocationCustomDevices(): void {
     this.colocationCustomDevices$ = this._apiService.getColocationCustomDevices().pipe(
       map((response) => {
@@ -543,9 +519,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to colocation rooms
-   */
   private _subscribesToColocationRooms(): void {
     this.colocationRooms$ = this._apiService.getColocationRooms().pipe(
       map((response) => {
@@ -560,9 +533,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to colocation standard square metres
-   */
   private _subscribesToColocationStandardSquareMetres(): void {
     this.colocationStandardSqms$ = this._apiService.getColocationStandardSqms().pipe(
       map((response) => {
@@ -577,9 +547,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to colocation racks
-   */
   private _subscribesToColocationRacks(): void {
     this.colocationRacks$ = this._apiService.getColocationRacks().pipe(
       map((response) => {
@@ -594,9 +561,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to vdc storage
-   */
   private _subscribesToVdcStorage(): void {
     this.vdcStorages$ = this.vdcList$.pipe(
       map((vdcCollection) => {
@@ -621,9 +585,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to dedicated servers
-   */
   private _subscribesToDedicatedServers(): void {
     this.dedicatedServers$ = this.serversList$.pipe(
       map((response) => {
@@ -638,9 +599,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to management services
-   */
   private _subscribesToManagementServices(): void {
     if (!this.hasPublicCloudAccess) { return; }
     this.managementServices$ = this._apiService.getManagementServices().pipe(
@@ -656,9 +614,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to server backup
-   */
   private _subscribesToServerBackup(): void {
     this.serverBackup$ = this._apiService.getServerBackupServers().pipe(
       switchMap((serverBackupsCollection) => {
@@ -686,9 +641,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to vm backup
-   */
   private _subscribesToVmBackup(): void {
     this.vmBackup$ = this._apiService.getServerBackupVms().pipe(
       switchMap((backupsCollection) => {
@@ -716,9 +668,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to anti virus
-   */
   private _subscribesToAntiVirus(): void {
     this.antiVirus$ = this._apiService.getServerHostSecurityAntiVirus().pipe(
       switchMap((antiVirusCollection) => {
@@ -746,9 +695,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  /**
-   * Subscribes to hids
-   */
   private _subscribesToHids(): void {
     this.hids$ = this._apiService.getServerHostSecurityHids().pipe(
       switchMap((hidsCollection) => {
@@ -777,7 +723,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   private _getServerName(serviceServerId: string, servers: McsServer[]): string {
-    let serverName = 'No server linked';
+    let serverName = this._translate.instant('ticketCreate.noServerLinked');
     servers.map((server) => {
       let serviceHasLinkedServer = serviceServerId === server.id;
       if (serviceHasLinkedServer) {
@@ -788,9 +734,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     return serverName;
   }
 
-  /**
-   * Subscribes to DNS
-   */
   private _subscribesToDns(): void {
     this.dns$ = this._apiService.getNetworkDns().pipe(
       map((response) => {
@@ -800,6 +743,34 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             `${service.billingDescription} (${service.serviceId})`,
             service.serviceId,
             TicketServiceType.Dns
+          ));
+      })
+    );
+  }
+
+  private _subscribesToAzureReservations(): void {
+    this.reservations$ = this._apiService.getAzureReservations().pipe(
+      map((response) => {
+        let reservations = getSafeProperty(response, (obj) => obj.collection);
+        return reservations.filter((reservation) => getSafeProperty(reservation, (obj) => obj.serviceId))
+          .map((reservation) => new TicketService(
+            `${reservation.name} (${reservation.serviceId})`,
+            reservation.serviceId,
+            TicketServiceType.Reservations
+          ));
+      })
+    );
+  }
+
+  private _subscribesToAzureSoftwareSubscriptions(): void {
+    this.softwareSubscriptions$ = this._apiService.getAzureSoftwareSubscriptions().pipe(
+      map((response) => {
+        let subscriptions = getSafeProperty(response, (obj) => obj.collection);
+        return subscriptions.filter((subscription) => getSafeProperty(subscription, (obj) => obj.serviceId))
+          .map((subscription) => new TicketService(
+            `${subscription.name} (${subscription.serviceId})`,
+            subscription.serviceId,
+            TicketServiceType.SoftwareSubscriptions
           ));
       })
     );
