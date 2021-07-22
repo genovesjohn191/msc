@@ -2281,6 +2281,7 @@
     "backToTickets": "Back To Tickets",
     "newTicket": "Log Ticket",
     "creatingTicket": "Creating your ticket, this may take a few moments.",
+    "noServerLinked": "No server linked",
     "hints": {
       "reference": "Max of {{max_char}} characters",
       "summary": "Max of {{max_char}} characters",

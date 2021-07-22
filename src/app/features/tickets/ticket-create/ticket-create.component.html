@@ -176,6 +176,10 @@
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (reservations$ | async), serviceTitle: 'Reservations'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (colocationRooms$ | async), serviceTitle: 'Rooms'}">
               </ng-container>
 
@@ -185,6 +189,10 @@
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (serverServices$ | async), serviceTitle: 'Servers'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (softwareSubscriptions$ | async), serviceTitle: 'Software Subscriptions'}">
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
