@@ -28,12 +28,10 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
       label: 'Storage Tier',
       validators: { required: true },
       options: [
-        { key: 'Superior', value: 'Superior'},
-        { key: 'Premium2', value: 'Premium 2'},
-        { key: 'SPR', value: 'Performance700'},
-        { key: 'PR2', value: 'Performance2000'},
-        { key: 'PR8', value: 'Performance8000'},
-        { key: 'PR16', value: 'Performance16000'}
+        { key: 'SPR', value: 'P700'},
+        { key: 'PR2', value: 'P2000'},
+        { key: 'PR8', value: 'P8000'},
+        { key: 'PR16', value: 'P16000'}
       ]
     }),
     new DynamicInputNumberField({
@@ -66,8 +64,16 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'tier',
-      value: findCrispElementAttribute(CrispAttributeNames.Ic2StorageTier, attributes)?.value } );
+    let tierMap: Map<string, string> = new Map([
+      ['PERFORMANCE-700', 'SPR'],
+      ['PERFORMANCE-2000', 'PR2'],
+      ['PERFORMANCE-8000', 'PR8'],
+      ['PERFORMANCE-16000', 'PR16']
+    ]);
+    let crispTierValue = findCrispElementAttribute(CrispAttributeNames.Ic2StorageTier, attributes)?.value;
+    if (!isNullOrEmpty(crispTierValue)) {
+      mappedProperties.push({ key: 'tier', value: tierMap.get(crispTierValue.toString()) });
+    }
 
     mappedProperties.push({ key: 'diskSizeInGB',
       value: findCrispElementAttribute(CrispAttributeNames.Ic2DiskSpace, attributes)?.value } );
