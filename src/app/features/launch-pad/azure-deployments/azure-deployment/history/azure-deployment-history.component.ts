@@ -102,6 +102,7 @@ export class AzureDeploymentActivitiesComponent implements OnInit, OnDestroy {
     this.dataSource = new McsTableDataSource2<McsTerraformDeploymentActivity>()
       .registerConfiguration(new McsMatTableConfig(
         true,
+        false,
         (target, source) =>
           target.id === source.id ||
           target.id === source.job?.clientReferenceObject?.terraformActivityRefId)

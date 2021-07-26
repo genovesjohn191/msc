@@ -1,14 +1,18 @@
-import { Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Injector,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
 import {
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2,
@@ -52,19 +56,20 @@ export enum FirewallPoliciesMode {
     'class': 'block'
   }
 })
-export class FirewallPoliciesComponent {
+export class FirewallPoliciesComponent implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsFirewallPolicy>;
   public readonly dataEvents: McsTableEvents<McsFirewallPolicy>;
   public readonly defaultColumnFilters: McsFilterInfo[];
+  public readonly viewChange$: BehaviorSubject<FirewallPoliciesMode>;
 
   public selectedFirewallPolicy: McsFirewallPolicy;
 
   constructor(
     _injector: Injector,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _firewallService: FirewallService
   ) {
+    this.viewChange$ = new BehaviorSubject(FirewallPoliciesMode.Listing);
     this.selectedFirewallPolicy = new McsFirewallPolicy();
 
     this.dataSource = new McsTableDataSource2(this._getFirewallPolicies.bind(this));
@@ -79,7 +84,13 @@ export class FirewallPoliciesComponent {
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'schedule' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'service' })
     ];
-    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
+    this.dataSource
+      .registerConfiguration(new McsMatTableConfig(false, true))
+      .registerColumnsFilterInfo(this.defaultColumnFilters);
+  }
+
+  public ngOnDestroy(): void {
+    this.dataSource?.dispose();
   }
 
   public get columnFilterIconKey(): string {
@@ -88,15 +99,6 @@ export class FirewallPoliciesComponent {
 
   public get firewallPoliciesModeEnum(): any {
     return FirewallPoliciesMode;
-  }
-
-  private _firewallPoliciesMode: FirewallPoliciesMode = FirewallPoliciesMode.Listing;
-  public get firewallPoliciesMode(): FirewallPoliciesMode { return this._firewallPoliciesMode; }
-  public set firewallPoliciesMode(value: FirewallPoliciesMode) {
-    if (this._firewallPoliciesMode !== value) {
-      this._firewallPoliciesMode = value;
-      this._changeDetectorRef.markForCheck();
-    }
   }
 
   @ViewChild('search')
@@ -122,11 +124,11 @@ export class FirewallPoliciesComponent {
 
   public showFirewallPolicyDetails(policy: McsFirewallPolicy): void {
     this.selectedFirewallPolicy = policy;
-    this.firewallPoliciesMode = FirewallPoliciesMode.Details;
+    this.viewChange$.next(FirewallPoliciesMode.Details);
   }
 
   public hideFirewallPolicyDetails(): void {
-    this.firewallPoliciesMode = FirewallPoliciesMode.Listing;
+    this.viewChange$.next(FirewallPoliciesMode.Listing);
   }
 
   private _getFirewallPolicies(
