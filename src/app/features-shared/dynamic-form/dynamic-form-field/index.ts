@@ -21,6 +21,7 @@ export * from './select-chips-terraform-tag/select-chips-terraform-tag';
 export * from './select-chips-vm/select-chips-vm';
 export * from './select-group/select-group';
 export * from './select-multiple/select-multiple';
+export * from './select-multiple-network-db-pods/select-multiple-network-db-pods';
 export * from './select-network/select-network';
 export * from './select-network-db-usecase/select-network-db-use-case';
 export * from './select-os/select-os';

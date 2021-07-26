@@ -1,0 +1,46 @@
+<mcs-presentation-panel *ngIf="!processing && !hasError" mcsId="form-edit">
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ settings.panelHeader}}</h2>
+  </ng-container>
+  <mcs-dynamic-form #form [config]="formConfig"></mcs-dynamic-form>
+
+  <mcs-item *ngFor="let item of settings?.uneditableFields">
+    <span>{{ item.label }}:</span>
+    <span [innerHTML]="item.value | mcsDataLabel"></span>
+  </mcs-item>
+
+  <mcs-item *ngFor="let item of uneditableFields">
+    <span>{{ item.label }}:</span>
+
+    <span *ngIf="item.fallbackText && item.type === 'text'"
+      [innerHTML]="item.value | mcsDataLabel: item.fallbackText "></span>
+    <span *ngIf="!item.fallbackText && item.type === 'text'" [innerHTML]="item.value | mcsDataLabel "></span>
+
+    <span *ngIf="item.fallbackText && item.type === 'date'"
+      [innerHTML]="item.value | mcsDataLabel | mcsStdDateFormat "></span>
+    <span *ngIf="!item.fallbackText && item.type === 'date'"
+      [innerHTML]="item.value | mcsDataLabel | mcsStdDateFormat "></span>
+
+  </mcs-item>
+
+  <div *ngIf="!processing && !hasError" style="margin-top: 15px;">
+    <button mat-raised-button color="primary" [disabled]="!isValidPayload" (click)="submit()">
+      <mat-icon>chevron_right</mat-icon>
+      {{ settings.submitButtonText }}
+    </button>
+  </div>
+</mcs-presentation-panel>
+<div *ngIf="processing">
+  <mcs-status-message type="info">
+    {{ settings.inProgressMessage }}
+  </mcs-status-message>
+  <br />
+</div>
+<div *ngIf="hasError">
+  <mcs-status-message type="error">
+    {{ watchedJob?.errorMessage || settings.failedSendingRequestMessage }}
+    <a *ngIf="watchedJob" style="margin-left: 5px; margin-right: 5px;" mcsId [mcsRouterLink]="getNotificationRoute()"
+      target="_blank">View Logs</a>
+    <a style="margin-left: 5px;" mcsId (click)="retry()">Go back</a>
+  </mcs-status-message>
+</div>
