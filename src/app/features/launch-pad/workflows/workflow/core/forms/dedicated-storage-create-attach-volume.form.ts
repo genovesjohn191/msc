@@ -72,7 +72,7 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
     ]);
     let crispTierValue = findCrispElementAttribute(CrispAttributeNames.Ic2StorageTier, attributes)?.value;
     if (!isNullOrEmpty(crispTierValue)) {
-      mappedProperties.push({ key: 'tier', value: tierMap.get(crispTierValue.toString()) });
+      mappedProperties.push({ key: 'tier', value: tierMap.get(crispTierValue.toString().toUpperCase()) });
     }
 
     mappedProperties.push({ key: 'diskSizeInGB',
