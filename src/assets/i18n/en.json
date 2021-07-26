@@ -2600,7 +2600,11 @@
       "dataPlural": "VLANs",
       "noRecordsFound": "No VLANs to display.",
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of VLANs.",
-      "retry": "Try again shortly"
+      "retry": "Try again shortly",
+      "actions": {
+        "reclaim": "Reclaim",
+        "recycle": "Recycle"
+      }
     },
     "vnis": {
       "header": "VNIs",

@@ -1,0 +1,41 @@
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [matBadge]="hasError ? '!' : ''"
+  matBadgePosition="before"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  [matTooltip]="hasError ? 'Failed to load options' : ''"
+  matTooltipPosition="above"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
+
+  <mat-select #control multiple
+    [mcsId]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [(value)]="config.value"
+    (selectionChange)="valueChange($event)">
+    <mat-select-trigger>
+      {{config.value ? config.value[0] : ''}}
+      <span *ngIf="config.value?.length > 1" class='more'>
+        (+{{config.value.length - 1}} more)
+      </span>
+    </mat-select-trigger>
+    <mat-optgroup *ngFor="let group of config.options" [label]="group.name" [disabled]="group.disabled">
+      <mat-option *ngFor="let opt of group.options" [value]="opt.key" [disabled]="opt.disabled">
+        {{opt.value}}
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+
+  <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+
+  <button mat-icon-button matSuffix
+    (click)="retrieveOptions()"
+    *ngIf="hasError"
+    matTooltip="Retry"
+    matTooltipPosition="above">
+    <mat-icon color="primary">refresh</mat-icon>
+  </button>
+</mat-form-field>

@@ -1,16 +1,10 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  ViewChild
+  Component
 } from '@angular/core';
-import {
-  Subject,
-  Subscription,
-  throwError
-} from 'rxjs';
+import { Observable } from 'rxjs';
+
 import {
   DynamicFormComponent,
   DynamicFormFieldConfigBase,
@@ -20,46 +14,38 @@ import {
   DynamicSelectNetworkDbUseCaseField
 } from '@app/features-shared/dynamic-form';
 import {
-  JobStatus,
   McsJob,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkUpdate,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import { createObject, isNullOrEmpty } from '@app/utilities';
 import {
-  compareJsons,
-  createObject,
-  getSafeProperty,
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
+  BasicJobEditComponentBase,
+  BasicFormConfig,
+  UneditableField
+} from '../../../../shared/basic-job-edit/basic-job-edit.component.base';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { NetworkDbNetworkDetailsService } from '../network-db-network.service';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
-import { McsEvent } from '@app/events';
 import { McsNavigationService } from '@app/core';
-import { ActivatedRoute } from '@angular/router';
+import { NetworkDbNetworkDetailsService } from '../network-db-network.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'mcs-network-db-network-edit',
-  templateUrl: './network-edit.component.html',
+  templateUrl: '../../../../shared/basic-job-edit/basic-job-edit-template.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbNetworkEditComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('form')
-  public form: DynamicFormComponent;
+export class NetworkDbNetworkEditComponent extends BasicJobEditComponentBase<McsNetworkDbNetworkUpdate> {
+
   public network: McsNetworkDbNetwork;
-  public unchangedPayload: McsNetworkDbNetworkUpdate;
-
-  public processing: boolean = false;
-  public hasError: boolean = false;
-
-  public watchedJob: McsJob;
-  private _jobEventHandler: Subscription;
-
-  private _destroySubject = new Subject<void>();
-  private _targetId: string = '';
+  public settings: BasicFormConfig = {
+    title: 'Network Details',
+    panelHeader: 'Basic Information',
+    inProgressMessage: ' Please wait while we update the network.',
+    failedSendingRequestMessage: 'An unexpected server error has occured.',
+    submitButtonText: 'Save'
+  };
 
   public formConfig: DynamicFormFieldConfigBase[] = [
     new DynamicInputNetworkDbNetworkNameField({
@@ -97,138 +83,10 @@ export class NetworkDbNetworkEditComponent implements AfterViewInit, OnDestroy {
     })
   ];
 
-  public constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _apiService: McsApiService,
-    private _networkDetailService: NetworkDbNetworkDetailsService,
-    private _navigationService: McsNavigationService,
-    private _changeDetector: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService
-    ) {
-      this._subscribeToQueryParams();
-      this._networkDetailService.getNetworkDetails().pipe(
-        map(network => {
-          this.network = network;
-        })
-      ).subscribe();
-  }
+  public formatPayload(form: DynamicFormComponent): McsNetworkDbNetworkUpdate {
+    if (isNullOrEmpty(form)) { return new McsNetworkDbNetworkUpdate(); }
 
-  public ngAfterViewInit(): void {
-    if (!isNullOrEmpty(this.network)) {
-      this.setFormValues(this.network);
-    }
-  }
-
-  public ngOnDestroy(): void {
-    unsubscribeSafely(this._destroySubject);
-    unsubscribeSafely(this._jobEventHandler);
-  }
-
-  public get isValidPayload(): boolean {
-    return this.form && this.form.valid && this.isDirty;
-  }
-
-  private get isDirty(): boolean {
-    return compareJsons(this.getPayload(), this.unchangedPayload) === 0 ? false : true;
-  }
-
-  private setFormValues(network: McsNetworkDbNetwork): void {
-    this.form.setFieldProperties({
-      name: {
-        value: network.name,
-        whitelist: [network.name]
-      },
-      description: { value: network.description },
-      company: { value: [{ value: network.companyId, label: network.companyName }] },
-      serviceId: { value: network.serviceId },
-      useCaseId: { value: network.useCaseId.toString() }
-    });
-
-    this.unchangedPayload = this.getPayload();
-  }
-
-  public submit(): void {
-    this.hasError = false;
-    this.processing = true;
-
-    this._apiService.updateNetworkDbNetwork(this.network.id,this.getPayload())
-      .pipe(catchError(() => {
-        this.hasError = true;
-        this.processing = false;
-
-        this._changeDetector.markForCheck();
-        return throwError('Network update endpoint failed.');
-      }))
-      .subscribe((response: McsJob) => {
-        this._watchThisJob(response);
-      });
-  }
-
-  private _watchThisJob(job: McsJob): void {
-    this.watchedJob = job;
-    this._jobEventHandler = this._eventDispatcher.addEventListener(
-      McsEvent.jobReceive, this._onJobUpdatesReceived.bind(this));
-  }
-
-  private _onJobUpdatesReceived(job: McsJob): void {
-    let watchedJob = !isNullOrEmpty(job) && job.id === this.watchedJob.id;
-    if (!watchedJob)  { return; }
-    this.watchedJob = job;
-
-    // Successful
-    if (job.status === JobStatus.Completed) {
-      this.hasError = false;
-      this.processing = false;
-
-      this._changeDetector.markForCheck();
-      this.refreshNetworkDetails(job?.clientReferenceObject?.networkId);
-
-      this.navigateToOverview();
-    }
-    // Failed
-    else if (job.status > JobStatus.Completed) {
-      this.hasError = true;
-      this.processing = false;
-      this._changeDetector.markForCheck();
-    }
-  }
-
-  private refreshNetworkDetails(id: string): void {
-    this._apiService.getNetworkDbNetwork(id).pipe(
-      map((network) => {
-        if (isNullOrEmpty(network)) { return; }
-        this._networkDetailService.setNetworkDetails(network);
-      }
-    )).subscribe();
-  }
-
-  private navigateToOverview(): void {
-    let navigationExtras = {
-      queryParams: {
-        id: this._targetId
-      }
-    };
-
-    this._navigationService.navigateTo(
-      RouteKey.LaunchPadNetworkDbNetworkDetails,
-      [this.network.id.toString()],
-      navigationExtras
-    );
-  }
-
-  public retry(): void {
-    this.hasError = false;
-    this.processing = false;
-    this._changeDetector.markForCheck();
-  }
-
-  public getNotificationRoute(): any[] {
-    return [RouteKey.Notification, this.watchedJob.id];
-  }
-
-  public getPayload(): McsNetworkDbNetworkUpdate {
-    if (isNullOrEmpty(this.form)) { return new McsNetworkDbNetworkUpdate(); }
-    let properties = this.form.getRawValue();
+    let properties = form.getRawValue();
 
     return createObject(McsNetworkDbNetworkUpdate, {
       clientReferenceObject: {
@@ -242,13 +100,67 @@ export class NetworkDbNetworkEditComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private _subscribeToQueryParams(): void {
-    this._activatedRoute.queryParams.pipe(
-      takeUntil(this._destroySubject),
-      map((params) => getSafeProperty(params, (obj) => obj.id)),
-      tap(id => {
-        this._targetId = id;
+  public constructor(
+    private _apiService: McsApiService,
+    private _networkDetailService: NetworkDbNetworkDetailsService,
+    private _navigationService: McsNavigationService,
+    _changeDetector: ChangeDetectorRef,
+    _eventDispatcher: EventBusDispatcherService
+  ) {
+    super(_changeDetector, _eventDispatcher);
+    this._networkDetailService.getNetworkDetails().pipe(
+      map(network => {
+        this.network = network;
       })
     ).subscribe();
+  }
+
+  public getUneditableFields(): UneditableField[] {
+    return [
+      { type: 'text', label: 'VNI', value: this.network.vniId, fallbackText: 'None' },
+      { type: 'text', label: 'Multicast IP Address', value: this.network.multicastIpAddress, fallbackText: 'None' },
+      { type: 'text', label: 'Created By', value: this.network.createdBy },
+      { type: 'date', label: 'Created Date', value: this.network.createdOn },
+      { type: 'text', label: 'Updated By', value: this.network.updatedBy },
+      { type: 'date', label: 'Last Updated', value: this.network.updatedOn }
+    ];
+  }
+
+  public send(payload: McsNetworkDbNetworkUpdate): Observable<McsJob> {
+    return this._apiService.updateNetworkDbNetwork(this.network.id, payload);
+  }
+
+  public onJobComplete(job: McsJob) {
+    this.refreshObjectDetails(job);
+      this.navigateToPrevious();
+  }
+
+  private refreshObjectDetails(job: McsJob): void {
+    let id = job?.clientReferenceObject?.networkId;
+    this._apiService.getNetworkDbNetwork(id).pipe(
+      map((network) => {
+        if (isNullOrEmpty(network)) { return; }
+        this._networkDetailService.setNetworkDetails(network);
+      }
+      )).subscribe();
+  }
+
+  private navigateToPrevious(): void {
+    this._navigationService.navigateTo(
+      RouteKey.LaunchPadNetworkDbNetworkDetails,
+      [this.network.id.toString()]);
+  }
+
+  public setFormValues(): void {
+    this.form.setFieldProperties({
+      name: {
+        value: this.network.name,
+        whitelist: [this.network.name]
+      },
+      description: { value: this.network.description },
+      company: { value: [{ value: this.network.companyId, label: this.network.companyName }] },
+      serviceId: { value: this.network.serviceId },
+      useCaseId: { value: this.network.useCaseId.toString() }
+    });
   }
 }

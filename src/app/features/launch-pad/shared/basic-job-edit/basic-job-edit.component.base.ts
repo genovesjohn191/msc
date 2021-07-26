@@ -1,49 +1,51 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { MatVerticalStepper } from '@angular/material/stepper';
 import { Observable, Subscription, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { IMcsNavigateAwayGuard } from '@app/core';
 import {
   DynamicFormComponent,
   DynamicFormFieldConfigBase
 } from '@app/features-shared/dynamic-form';
-import { CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
-import { DataStatus, McsJob, RouteKey } from '@app/models';
+import {
+  compareJsons,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
+import {
+  DataStatus,
+  McsJob,
+  RouteKey
+} from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 
+export interface UneditableField {
+  label: string;
+  value: any;
+  fallbackText?: string;
+  type: string;
+}
+
 export interface BasicFormConfig {
   title: string;
+  panelHeader: string;
   inProgressMessage: string;
   failedSendingRequestMessage: string;
   submitButtonText: string;
-
-  successful: {
-    title: string;
-
-    newObjectLink: {
-      id: string;
-      text: string;
-      eventTracker: string;
-      eventCategory: string;
-      eventLabel: string;
-    }
-  };
 }
 
 @Component({ template: '' })
-export abstract class BasicJobFormComponentBase<TPayload> implements IMcsNavigateAwayGuard, OnDestroy {
+export abstract class BasicJobEditComponentBase<TPayload> implements OnDestroy, AfterViewInit {
   @ViewChild('form')
   public form: DynamicFormComponent;
-
-  @ViewChild('stepper')
-  protected stepper: MatVerticalStepper;
+  public unchangedPayload: TPayload;
+  public uneditableFields: UneditableField[];
 
   public abstract settings: BasicFormConfig;
 
@@ -51,52 +53,55 @@ export abstract class BasicJobFormComponentBase<TPayload> implements IMcsNavigat
 
   public processing: boolean = false;
   public hasError: boolean = false;
-  public creationSuccessful: boolean = false
-  public routerLinkSettings: any[];
-  public successMessage: string;
   public watchedJob: McsJob;
 
-  public get isValidPayload(): boolean {
-    return this.form && this.form.valid;
-  }
-
-  public get successIconKey(): string {
-    return CommonDefinition.ASSETS_SVG_SUCCESS;
-  }
   private _jobEventHandler: Subscription;
+
+  public get isValidPayload(): boolean {
+    return this.form && this.form.valid && this.isDirty;
+  }
 
   public constructor(
     private _changeDetector: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService) { }
+    private _eventDispatcher: EventBusDispatcherService
+    ) { }
+
+  public ngAfterViewInit(): void {
+    this.setFormValues();
+    this.setUnchangedPayload();
+    this.uneditableFields = this.getUneditableFields();
+  }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._jobEventHandler);
   }
 
+  public abstract setFormValues(): void;
+
   public abstract formatPayload(form: DynamicFormComponent): TPayload;
 
   public abstract send(payload: TPayload): Observable<McsJob>;
 
-  public abstract getNewObjectRouterLinkSettings(newObject: McsJob): any[];
+  public abstract onJobComplete(job: McsJob): void;
 
-  public abstract getSuccessMessage(newObject: McsJob): string;
+  public abstract getUneditableFields(): UneditableField[];
 
   public submit(): void {
     this.hasError = false;
     this.processing = true;
 
     this.send(this.formatPayload(this.form))
-    .pipe(catchError(() => {
-      this.hasError = true;
-      this.processing = false;
+      .pipe(catchError(() => {
+        this.hasError = true;
+        this.processing = false;
 
-      this._changeDetector.markForCheck();
+        this._changeDetector.markForCheck();
 
-      return throwError('Network creation endpoint failed.');
-    }))
-    .subscribe((response: McsJob) => {
-      this._watchThisJob(response);
-    });
+        return throwError('Update endpoint failed.');
+      }))
+      .subscribe((response: McsJob) => {
+        this._watchThisJob(response);
+      });
   }
 
   public getNotificationRoute(): any[] {
@@ -109,8 +114,8 @@ export abstract class BasicJobFormComponentBase<TPayload> implements IMcsNavigat
     this._changeDetector.markForCheck();
   }
 
-  public canNavigateAway(): boolean {
-    return !this.form.form.valid;
+  private get isDirty(): boolean {
+    return compareJsons(this.formatPayload(this.form), this.unchangedPayload) !== 0;
   }
 
   private _watchThisJob(job: McsJob): void {
@@ -121,7 +126,7 @@ export abstract class BasicJobFormComponentBase<TPayload> implements IMcsNavigat
 
   private _onJobUpdatesReceived(job: McsJob): void {
     let watchedJob = !isNullOrEmpty(job) && job.id === this.watchedJob.id;
-    if (!watchedJob)  { return; }
+    if (!watchedJob) { return; }
 
     this.watchedJob = job;
 
@@ -137,13 +142,13 @@ export abstract class BasicJobFormComponentBase<TPayload> implements IMcsNavigat
     if (job.dataStatus === DataStatus.Success) {
       this.hasError = false;
       this.processing = false;
-      this.creationSuccessful = true;
 
-      this.routerLinkSettings = this.getNewObjectRouterLinkSettings(job);
-      this.successMessage = this.getSuccessMessage(job);
       this._changeDetector.markForCheck();
-      this.stepper.selected.completed = true;
-      this.stepper.next();
+      this.onJobComplete(job);
     }
+  }
+
+  public setUnchangedPayload(): void {
+    this.unchangedPayload = this.formatPayload(this.form);
   }
 }

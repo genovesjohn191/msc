@@ -19,7 +19,9 @@ import {
   McsFilterInfo,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkQueryParams,
-  McsNetworkDbVlan
+  McsNetworkDbVlan,
+  NetworkDbVniStatus,
+  networkDbVniStatusText
 } from '@app/models';
 import {
   createObject,
@@ -42,7 +44,8 @@ export class NetworkDbNetworkVlansComponent implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'number' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'site' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'pod' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' })
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
   ];
 
   public constructor(
@@ -67,6 +70,10 @@ export class NetworkDbNetworkVlansComponent implements OnDestroy {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
+  }
+
+  public getStatusText(status: NetworkDbVniStatus): string {
+    return networkDbVniStatusText[status];
   }
 
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbVlan>> {
