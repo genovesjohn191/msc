@@ -37,12 +37,21 @@ import {
   isNullOrUndefined,
   unsubscribeSafely,
   CommonDefinition,
-  McsDataSource
+  McsDataSource,
+  McsDisposable
 } from '@app/utilities';
 
 export class McsMatTableConfig<TEntity> {
+
+  /**
+   * Constructor
+   * @param applyDefaultPagination Include next page from previous page, default to false.
+   * @param manualDispose Manually dispose the datasource class, default to false
+   * @param recordMatchPredicate Matching predicate for each record
+   */
   constructor(
-    public applyDefaultPagination: boolean, // Set to true if you want to auto include next page from previous page
+    public applyDefaultPagination?: boolean,
+    public manualDispose?: boolean,
     public recordMatchPredicate?: (source: TEntity, target: TEntity) => boolean
   ) { }
 }
@@ -73,7 +82,7 @@ type DelegateSource<TEntity> = (param?: McsMatTableQueryParam) =>
 type DatasourceType<TEntity> = McsMatTableContext<TEntity> |
   Observable<McsMatTableContext<TEntity>> | DelegateSource<TEntity>;
 
-export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
+export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, McsDisposable {
   public dataColumns$: Observable<string[]>;
   public isInProgress$: Observable<boolean>;
   public hasNoRecords$: Observable<boolean>;
@@ -118,6 +127,11 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   }
 
   public disconnect(_collectionViewer: CollectionViewer): void {
+    if (this._configuration?.manualDispose) { return; }
+    this.dispose();
+  }
+
+  public dispose(): void {
     unsubscribeSafely(this._destroySubject);
 
     unsubscribeSafely(this._dataRecordsChange);
@@ -334,7 +348,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
     }
 
     let existingRecords = this._dataRecordsChange.getValue() || [];
-    if (this._configuration.recordMatchPredicate) {
+    if (this._configuration?.recordMatchPredicate) {
       records?.forEach(record => {
         if (isNullOrEmpty(record)) { return; }
         addOrUpdateArrayRecord(existingRecords, record, false,

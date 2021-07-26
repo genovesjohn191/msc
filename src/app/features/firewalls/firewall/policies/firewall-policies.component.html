@@ -3,7 +3,7 @@
     <h2>{{ 'firewall.policies.header' | translate }}</h2>
   </ng-container>
 
-  <ng-container [ngSwitch]="firewallPoliciesMode">
+  <ng-container *ngIf="viewChange$ | async as viewChange" [ngSwitch]="viewChange">
     <!-- Firewall Policies Listing  -->
     <div [@fadeIn] *ngSwitchCase="firewallPoliciesModeEnum.Listing">
       <div class="listing-table-wrapper">
