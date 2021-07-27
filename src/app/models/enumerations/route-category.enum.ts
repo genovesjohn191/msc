@@ -4,7 +4,7 @@ export enum RouteCategory {
   LaunchPad,
   LaunchPadNetworkDb,
   LaunchPadVlanDb,
-  LaunchPadCrisp,
+  LaunchPadDashboard,
   Compute,
   Colocation,
   Network,

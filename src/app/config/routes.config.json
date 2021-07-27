@@ -197,10 +197,19 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
+  "launchPadDashboardProjects": {
+    "enumKey": "LaunchPadDashboardProjects",
+    "enumCategory": "LaunchPadDashboard",
+    "navigationPath": "launch-pad/dashboard/projects",
+    "documentTitle": "Dashboard - My Projects",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableLaunchPadDashboardProjects"],
+    "requireAllFeatures": true
+  },
   "launchPadCrispOrders": {
     "enumKey": "LaunchPadCrispOrders",
-    "enumCategory": "LaunchPadCrisp",
-    "navigationPath": "launch-pad/crisp/orders",
+    "enumCategory": "LaunchPadDashboard",
+    "navigationPath": "launch-pad/dashboard/orders",
     "documentTitle": "CRISP - Orders",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
@@ -208,8 +217,8 @@
   },
   "launchPadCrispOrder": {
     "enumKey": "LaunchPadCrispOrderDetails",
-    "enumCategory": "LaunchPadCrisp",
-    "navigationPath": "launch-pad/crisp/orders",
+    "enumCategory": "LaunchPadDashboard",
+    "navigationPath": "launch-pad/dashboard/orders",
     "documentTitle": "CRISP - Order Details",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
@@ -217,7 +226,7 @@
   },
   "launchPadCrispOrderDetailsElements": {
     "enumKey": "LaunchPadCrispOrderDetailsElements",
-    "enumCategory": "LaunchPadCrisp",
+    "enumCategory": "LaunchPadDashboard",
     "navigationPath": "elements",
     "documentTitle": "CRISP - Order Elements",
     "requiredPermissions": ["InternalEngineerAccess"],

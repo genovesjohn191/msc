@@ -18,3 +18,12 @@ export class McsObjectCrispOrderQueryParams extends McsQueryParam {
     super();
   }
 }
+
+export class McsObjectProjectsQueryParams extends McsQueryParam {
+  public state?: CrispOrderState;
+  public companyId?: string;
+
+  constructor() {
+    super();
+  }
+}

@@ -148,6 +148,8 @@ import {
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
   McsObjectInstalledService,
+  McsObjectProjects,
+  McsObjectProjectsQueryParams,
   McsObjectQueryParams,
   McsOrder,
   McsOrderApprover,
@@ -2059,6 +2061,24 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispOrderElements'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiCollection<McsObjectProjects>> {
+    return this._objectsApi.getProjects(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProjects'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getProjectTasks(projectId: string): Observable<McsObjectProjects> {
+    return this._objectsApi.getProjectTasks(projectId).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProject'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

@@ -1,0 +1,154 @@
+<mcs-page [header]="'dashboardProjects.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
+
+    <!-- Meta Data -->
+    <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
+      <div class="listing-action-wrapper">
+        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+          <span>{{ totalCount | mcsPlural:
+                ('dashboardProjects.dataSingular' | translate) : ('dashboardProjects.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'dashboardProjects.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="dashboard-projects-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'dashboardProjects.filterColumn' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        storageKey="dashboardProjects"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- State Toggle -->
+      <mat-tab-group (selectedTabChange)="selectedTabChange($event)">
+        <mat-tab label="Open">
+        </mat-tab>
+        <mat-tab label="Closed">
+        </mat-tab>
+      </mat-tab-group>
+      <br />
+
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="dashboard-projects-mobile-search"></mcs-search>
+
+      <table mat-table [dataSource]="dataSource" style="margin-top: 0">
+
+        <!-- Number Column -->
+        <ng-container matColumnDef="number">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.number' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.number }}
+          </td>
+        </ng-container>
+
+        <!-- Temperature Column -->
+        <ng-container matColumnDef="temperature">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.temperature' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall  style="text-align: center">
+            <mcs-icon [key]="row.temperatureIconKey" size="small"></mcs-icon>
+          </td>
+        </ng-container>
+
+        <!-- Customer Name Column -->
+        <ng-container matColumnDef="customerName">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.customerName' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.companyName }}
+          </td>
+        </ng-container>
+
+        <!-- Short Description Column -->
+        <ng-container matColumnDef="shortDescription">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.shortDescription' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.shortDescription }}
+          </td>
+        </ng-container>
+
+        <!-- Primary Crisp Order Column -->
+        <ng-container matColumnDef="primaryCrispOrder">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.primaryCrispOrder' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall
+            mcsCursor="pointer"
+            (click)="navigateToCrispOrder(row, routeKeyEnum.LaunchPadCrispOrderDetailsElements)">
+            {{ row.primaryCrispOrderId }}
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.status' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.status }}
+          </td>
+        </ng-container>
+
+        <!-- Project Manager Column -->
+        <ng-container matColumnDef="projectManager">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.projectManager' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.projectManager }}
+          </td>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          {{ 'dashboardProjects.noRecordsFound' | translate }}
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'dashboardProjects.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-loading-dashboard-projects-list"
+              mcsEventCategory="launchpad-dashboard-project"
+              mcsEventLabel="dashboard-projects-listing-page">{{ 'action.tryAgainShortly' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>
