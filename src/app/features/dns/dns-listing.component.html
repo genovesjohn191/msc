@@ -4,11 +4,11 @@
   <mcs-top-panel *mcsTopPanelDef>
    <mcs-top-panel-item *mcsTopPanelItemDef>
      <div class="listing-action-wrapper">
-       <div class="total-record-count">
-         <span>{{ totalRecordsCount | mcsPlural:
-               ('dnsListing.dataSingular' | translate) : ('dnsListing.dataPlural' | translate) }}
-         </span>
-       </div>
+       <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+        <span>{{ totalCount | mcsPlural:
+              ('dnsListing.dataSingular' | translate) : ('dnsListing.dataPlural' | translate) }}
+        </span>
+      </div>
      </div>
    </mcs-top-panel-item>
  </mcs-top-panel>
@@ -37,7 +37,7 @@
    <div class="listing-table-wrapper">
      <!-- Table -->
      <table mat-table  #table [dataSource]="dataSource">
-      
+
       <!-- Description Column -->
       <ng-container matColumnDef="billingDescription">
         <th mat-header-cell *matHeaderCellDef hidden-small>
@@ -57,7 +57,7 @@
           [innerHtml]="isPrimary(row.isPrimary) | mcsDataLabel: unavailableText">
         </td>
       </ng-container>
-  
+
       <!-- ServiceID Column -->
       <ng-container matColumnDef="serviceId">
         <th mat-header-cell *matHeaderCellDef hidden-small>
@@ -115,7 +115,7 @@
           </ng-template>
          </td>
        </ng-container>
- 
+
        <!-- Header and Data row -->
        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
@@ -146,7 +146,7 @@
          </div>
        </div>
      </mcs-item>
- 
+
        <!-- Paginator -->
        <mcs-paginator #paginator
          [hidden]="!hasNextPage"
