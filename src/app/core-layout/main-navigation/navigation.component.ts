@@ -50,7 +50,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _routeHandler: Subscription;
   private _navInitialized: boolean = false;
   private _showLaunchPadMenu: boolean;
-  private _showLaunchPadCrispSubmenu: boolean;
+  private _showLaunchPadDashboardSubmenu: boolean;
   private _showLaunchPadNetworkDbSubmenu: boolean;
   private _showLaunchPadVlanDbSubmenu: boolean;
   private _showPrivateCloudMenu: boolean;
@@ -74,8 +74,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._showLaunchPadMenu;
   }
 
-  public get showLaunchPadCrispSubmenu(): boolean {
-    return this._showLaunchPadCrispSubmenu;
+  public get showLaunchPadDashboardSubmenu(): boolean {
+    return this._showLaunchPadDashboardSubmenu;
   }
 
   public get showLaunchPadNetworkDbSubmenu(): boolean {
@@ -282,7 +282,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.selectedCategory === RouteCategory.LaunchPad
       || this.selectedCategory === RouteCategory.LaunchPadNetworkDb
       || this.selectedCategory === RouteCategory.LaunchPadVlanDb
-      || this.selectedCategory === RouteCategory.LaunchPadCrisp);
+      || this.selectedCategory === RouteCategory.LaunchPadDashboard);
 
     this._showLaunchPadMenu = (this._navInitialized && this._showLaunchPadMenu)
       ? this._showLaunchPadMenu
@@ -296,9 +296,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
       ? this._showLaunchPadVlanDbSubmenu
       : this.selectedCategory === RouteCategory.LaunchPadVlanDb;
 
-    this._showLaunchPadCrispSubmenu = (this._navInitialized && this._showLaunchPadCrispSubmenu)
-      ? this._showLaunchPadCrispSubmenu
-      : this.selectedCategory === RouteCategory.LaunchPadCrisp;
+    this._showLaunchPadDashboardSubmenu = (this._navInitialized && this._showLaunchPadDashboardSubmenu)
+      ? this._showLaunchPadDashboardSubmenu
+      : this.selectedCategory === RouteCategory.LaunchPadDashboard;
   }
 
   private _initPrivateCloudNav(): void {

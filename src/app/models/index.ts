@@ -102,6 +102,7 @@ export * from './enumerations/install-base-state.enum';
 export * from './enumerations/network-db-pod-type.enum';
 export * from './enumerations/network-db-vni-status.enum';
 export * from './enumerations/network-db-vlan-status.enum';
+export * from './enumerations/temperature.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -314,6 +315,7 @@ export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
 export * from './response/mcs-object-crisp-order';
+export * from './response/mcs-object-projects';
 export * from './response/mcs-cloudhealth-alert';
 export * from './response/mcs-cloudhealth-alert-configuration-items';
 export * from './response/mcs-network-db-multicast-ip';

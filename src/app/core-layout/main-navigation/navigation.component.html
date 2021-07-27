@@ -20,30 +20,42 @@
             [class.active]="selectedCategory === routerCategoryEnum.LaunchPad
             || selectedCategory === routerCategoryEnum.LaunchPadNetworkDb
             || selectedCategory === routerCategoryEnum.LaunchPadVlanDb
-            || selectedCategory === routerCategoryEnum.LaunchPadCrisp"
+            || selectedCategory === routerCategoryEnum.LaunchPadDashboard"
             mcsId="launch-pad-link">
             {{ 'navigation.launchPad.label' | translate }}
             <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
           </a>
           <ul *ngIf="showLaunchPadMenu">
-            <!-- CRISP -->
+            <!-- Dashboard -->
             <li *mcsAccessControl="[]; feature: ['EnableCrisp']">
-              <a (click)="toggleThis('showLaunchPadCrispSubmenu')"
-                [class.active]="selectedCategory === routerCategoryEnum.LaunchPadCrisp"
+              <a (click)="toggleThis('showLaunchPadDashboardSubmenu')"
+                [class.active]="selectedCategory === routerCategoryEnum.LaunchPadDashboard"
                 mcsId="launch-pad-link">
-                {{ 'navigation.launchPad.crisp' | translate }}
-                <mcs-icon [key]="showLaunchPadCrispSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+                {{ 'navigation.launchPad.dashboard' | translate }}
+                <mcs-icon [key]="showLaunchPadDashboardSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
               </a>
-              <ul *ngIf="showLaunchPadCrispSubmenu">
-                <!-- Orders -->
+              <ul *ngIf="showLaunchPadDashboardSubmenu">
+                <!-- My Projects -->
+                <li *mcsAccessControl="[]; feature: ['EnableLaunchPadDashboardProjects']">
+                  <a [mcsRouterLink]="routeKeyEnum.LaunchPadDashboardProjects"
+                    mcsRouterLinkActive="active"
+                    class="sub-navigation-item unstyled-link"
+                    mcsId="launch-pad-dashboard-projects-link"
+                    mcsEventTracker="navigate-to-dashboard-projects"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">
+                    {{ 'navigation.launchPad.myProjects' | translate }}
+                  </a>
+                </li>
+                <!-- My Orders -->
                 <li>
                   <a [mcsRouterLink]="routeKeyEnum.LaunchPadCrispOrders"
                     mcsRouterLinkActive="active"
-                    mcsId="launch-pad-crisp-orders-link"
-                    mcsEventTracker="navigate-to-crisp-orders"
+                    mcsId="launch-pad-dashboard-orders-link"
+                    mcsEventTracker="navigate-to-dashboard-orders"
                     mcsEventCategory="navigation"
                     mcsEventLabel="main-nav">
-                    {{ 'navigation.launchPad.crispOrders' | translate }}
+                    {{ 'navigation.launchPad.myOrders' | translate }}
                   </a>
                 </li>
               </ul>

@@ -26,10 +26,11 @@ import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.com
 import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
 import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
 import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
-import { CrispOrdersComponent } from './crisp/orders/crisp-orders.component';
-import { CrispOrderDetailsComponent } from './crisp/orders/order/crisp-order-details.component';
-import { CrispOrderElementsComponent } from './crisp/orders/order/elements/crisp-order-elements.component';
-import { CrispOrderResolver } from './crisp/orders/order/crisp-order.resolver';
+import { DashboardProjectsComponent } from './dashboard/projects/dashboard-projects.component';
+import { CrispOrdersComponent } from './dashboard/orders/crisp-orders.component';
+import { CrispOrderDetailsComponent } from './dashboard/orders/order/crisp-order-details.component';
+import { CrispOrderElementsComponent } from './dashboard/orders/order/elements/crisp-order-elements.component';
+import { CrispOrderResolver } from './dashboard/orders/order/crisp-order.resolver';
 import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/network-db-network.component';
 import { NetworkDbNetworkDetailsResolver } from './network-db/vlan-db/network/network-db-network.resolver';
 import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
@@ -187,13 +188,24 @@ export const launchPadRoutes: Routes = [
     ]
   },
   {
+    path: 'dashboard/projects',
+    component: DashboardProjectsComponent,
+    data: { routeId: RouteKey.LaunchPadDashboardProjects },
+    canActivate: [ LaunchPadGuard ]
+  },
+  // Deprecated - redirect to new path
+  {
     path: 'crisp/orders',
+    redirectTo: 'dashboard/orders'
+  },
+  {
+    path: 'dashboard/orders',
     component: CrispOrdersComponent,
     data: { routeId: RouteKey.LaunchPadCrispOrders },
     canActivate: [ LaunchPadGuard ]
   },
   {
-    path: 'crisp/orders/:id',
+    path: 'dashboard/orders/:id',
     component: CrispOrderDetailsComponent,
     data: { routeId: RouteKey.LaunchPadCrispOrderDetails },
     resolve: {

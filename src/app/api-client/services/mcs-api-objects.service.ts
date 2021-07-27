@@ -10,7 +10,9 @@ import {
   McsApiRequestParameter,
   McsObjectQueryParams,
   McsObjectCrispOrder,
-  McsObjectCrispOrderQueryParams
+  McsObjectCrispOrderQueryParams,
+  McsObjectProjectsQueryParams,
+  McsObjectProjects
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { IMcsApiObjectsService } from '../interfaces/mcs-api-objects.interface';
@@ -135,6 +137,42 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsObjectCrispElement[]>(McsObjectCrispElement, response);
+        })
+      );
+  }
+
+  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProjects[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+    searchParams.set('companyId', query.companyId);
+    searchParams.set('state', query.state);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/objects/projects';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          return McsApiSuccessResponse.deserializeResponse<McsObjectProjects[]>(McsObjectProjects, response);
+        })
+      );
+  }
+
+  public getProjectTasks(projectId: string): Observable<McsApiSuccessResponse<McsObjectProjects>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/objects/projects/${projectId}/tasks`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsObjectProjects>(McsObjectProjects, response);
+          return apiResponse;
         })
       );
   }
