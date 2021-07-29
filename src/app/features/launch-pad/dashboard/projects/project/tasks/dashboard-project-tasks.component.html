@@ -1,0 +1,110 @@
+<div class="listing-table-wrapper">
+  <!-- State Toggle -->
+  <mat-button-toggle-group>
+    <mat-button-toggle value="open" [checked]="state === 'OPEN'" (click)="reloadProjectTasks('OPEN')">
+      {{ 'action.open' | translate }}
+    </mat-button-toggle>
+    <mat-button-toggle value="closed" [checked]="state === 'CLOSED'" (click)="reloadProjectTasks('CLOSED')">
+      {{ 'action.closed' | translate }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+  
+  <!-- Project Tasks Table -->
+  <table mat-table [dataSource]="dataSource">
+    <!-- Order ID Column -->
+    <ng-container matColumnDef="orderId">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.orderId' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <ng-container *ngIf="row.orderId; else noOrderIdTemplate">
+          <a (click)="navigateToCrispOrder(row, routeKeyEnum.LaunchPadCrispOrderDetailsElements)"
+            mcsId mcsStopPropagation
+            mcsEventTracker="navigate-to-crisp-order"
+            mcsEventCategory="launchpad-dashboard-project-tasks"
+            mcsEventLabel="dashboard-project-tasks-listing-page">
+            {{ row.orderId }}
+          </a>
+        </ng-container>
+        <ng-template #noOrderIdTemplate>N/A</ng-template>
+      </td>
+    </ng-container>
+
+    <!-- Service ID Column -->
+    <ng-container matColumnDef="serviceId">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.serviceId' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mcs-workflow-selector-launcher [config]="getLauncherConfig(row)">
+          {{ row.serviceId || 'N/A' }}
+        </mcs-workflow-selector-launcher>
+      </td>
+    </ng-container>
+
+    <!-- Crisp Product Type Column -->
+    <ng-container matColumnDef="productType">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.productType' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.crispProductType || 'N/A' }}
+      </td>
+    </ng-container>
+
+    <!-- Short Description Column -->
+    <ng-container matColumnDef="shortDescription">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.shortDescription' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.shortDescription }}
+      </td>
+    </ng-container>
+
+    <!-- Assigned To Column -->
+    <ng-container matColumnDef="assignedTo">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.assignedTo' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.assignedTo }}
+      </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.status' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.status }}
+      </td>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+      [mcsContextualHelp]="row.description"></tr>
+  </table>
+
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+      {{ 'projectTasks.noRecordsFound' | translate }}
+    </div>
+    <div *ngIf="dataSource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
+        <span>{{ 'projectTasks.errorMessage' | translate }}</span>
+        <a (click)="retryDatasource()"
+          mcsId
+          mcsEventTracker="retry-loading-dashboard-project-tasks-list"
+          mcsEventCategory="launchpad-dashboard-project"
+          mcsEventLabel="dashboard-project-tasks-listing-page">{{ 'action.tryAgainShortly' | translate }}</a>.
+      </div>
+    </div>
+  </mcs-item>
+</div>

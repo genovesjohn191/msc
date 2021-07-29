@@ -206,6 +206,24 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableLaunchPadDashboardProjects"],
     "requireAllFeatures": true
   },
+  "launchPadDashboardProject": {
+    "enumKey": "LaunchPadDashboardProjectDetails",
+    "enumCategory": "LaunchPadDashboard",
+    "navigationPath": "launch-pad/dashboard/projects",
+    "documentTitle": "Dashboard - My Projects Details",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableLaunchPadDashboardProjects"],
+    "requireAllFeatures": true
+  },
+  "launchPadDashboardProjectDetailsTasks": {
+    "enumKey": "LaunchPadDashboardProjectDetailsTasks",
+    "enumCategory": "LaunchPadDashboard",
+    "navigationPath": "tasks",
+    "documentTitle": "Dashboard - Project Tasks",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableLaunchPadDashboardProjects"],
+    "requireAllFeatures": true
+  },
   "launchPadCrispOrders": {
     "enumKey": "LaunchPadCrispOrders",
     "enumCategory": "LaunchPadDashboard",

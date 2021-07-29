@@ -3,8 +3,9 @@ import {
   McsApiSuccessResponse,
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
-  McsObjectProjects,
+  McsObjectProject,
   McsObjectProjectsQueryParams,
+  McsObjectProjectTasks,
   McsObjectQueryParams
 } from '@app/models';
 import {
@@ -55,11 +56,17 @@ export interface IMcsApiObjectsService {
    * Get all the object projects from the API
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProjects[]>>;
+  getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProject[]>>;
 
   /**
    * Get all the project tasks from the API
    * @param projectId unique identifier of the element
    */
-   getProjectTasks(projectId: string): Observable<McsApiSuccessResponse<McsObjectProjects>>;
+   getProject(projectId: string): Observable<McsApiSuccessResponse<McsObjectProject>>;
+
+  /**
+   * Get all the project tasks from the API
+   * @param projectId unique identifier of the element
+   */
+   getProjectTasks(projectId: string, query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProjectTasks[]>>;
 }

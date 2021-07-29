@@ -93,10 +93,14 @@
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
             {{ 'columnHeader.primaryCrispOrder' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-xsmall
-            mcsCursor="pointer"
-            (click)="navigateToCrispOrder(row, routeKeyEnum.LaunchPadCrispOrderDetailsElements)">
-            {{ row.primaryCrispOrderId }}
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            <a (click)="navigateToCrispOrder(row, routeKeyEnum.LaunchPadCrispOrderDetailsElements)"
+              mcsId mcsStopPropagation
+              mcsEventTracker="navigate-to-crisp-order"
+              mcsEventCategory="launchpad-dashboard-project"
+              mcsEventLabel="dashboard-projects-listing-page">
+              {{ row.primaryCrispOrderId }}
+            </a>
           </td>
         </ng-container>
 
@@ -122,7 +126,13 @@
 
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          (click)="navigateToProjectDetails(row)"
+          mcsId="dashboard-project-{{ row.number }}"
+          mcsEventTracker="navigate-to-dashboard-project-details"
+          mcsEventCategory="launchpad-dashboard-project"
+          mcsEventLabel="dashboard-project-listing-page"></tr>
       </table>
 
       <!-- Table Statuses -->

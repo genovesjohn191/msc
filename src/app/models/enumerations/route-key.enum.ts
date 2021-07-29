@@ -27,6 +27,8 @@ export enum RouteKey {
   LaunchPadCrispOrderDetails,
   LaunchPadCrispOrderDetailsElements,
   LaunchPadDashboardProjects,
+  LaunchPadDashboardProjectDetails,
+  LaunchPadDashboardProjectDetailsTasks,
 
   ReportOverview,
   ReportInsights,

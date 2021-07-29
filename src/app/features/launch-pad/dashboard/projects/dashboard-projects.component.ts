@@ -21,7 +21,7 @@ import {
 import {
   CrispOrderState,
   McsFilterInfo,
-  McsObjectProjects,
+  McsObjectProject,
   McsObjectProjectsQueryParams,
   RouteKey
 } from '@app/models';
@@ -44,7 +44,7 @@ import {
 })
 export class DashboardProjectsComponent implements OnDestroy {
 
-  public readonly dataSource: McsTableDataSource2<McsObjectProjects>;
+  public readonly dataSource: McsTableDataSource2<McsObjectProject>;
   private _state: CrispOrderState = 'OPEN';
 
   public readonly defaultColumnFilters = [
@@ -63,7 +63,7 @@ export class DashboardProjectsComponent implements OnDestroy {
     private _identity: McsAuthenticationIdentity,
     private _navigationService: McsNavigationService
   ) {
-    this.dataSource = new McsTableDataSource2<McsObjectProjects>(this._getTableData.bind(this))
+    this.dataSource = new McsTableDataSource2<McsObjectProject>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
   }
 
@@ -108,13 +108,17 @@ export class DashboardProjectsComponent implements OnDestroy {
     }
   }
 
-  public navigateToCrispOrder(orderId: McsObjectProjects, keyRoute: RouteKey): void {
+  public navigateToCrispOrder(project: McsObjectProject, keyRoute: RouteKey): void {
     this._navigationService.navigateTo(RouteKey.LaunchPadCrispOrderDetails,
-      [orderId.primaryCrispOrderId, CoreRoutes.getNavigationPath(keyRoute)]
+      [project.primaryCrispOrderId, CoreRoutes.getNavigationPath(keyRoute)]
     );
   }
 
-  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectProjects>> {
+  public navigateToProjectDetails(project: McsObjectProject): void {
+    this._navigationService.navigateTo(RouteKey.LaunchPadDashboardProjectDetails, [project.id.toString()]);
+  }
+
+  private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectProject>> {
     let queryParam = new McsObjectProjectsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);

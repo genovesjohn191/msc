@@ -29,18 +29,22 @@ import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-
 import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
 import { NetworkDbNetworkDetailsService } from './network-db/vlan-db/network/network-db-network.service';
 import { NetworkDbNetworkDetailsResolver } from './network-db/vlan-db/network/network-db-network.resolver';
-import { CrispOrdersComponent } from './dashboard/orders/crisp-orders.component';
-import { CrispOrderDetailsComponent } from './dashboard/orders/order/crisp-order-details.component';
-import { CrispOrderElementsComponent } from './dashboard/orders/order/elements/crisp-order-elements.component';
-import { CrispOrderService } from './dashboard/orders/order/crisp-order.service';
-import { CrispOrderResolver } from './dashboard/orders/order/crisp-order.resolver';
 import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/network-db-network.component';
 import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
 import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/overview/network-db-network-overview.component';
 import { NetworkDbNetworkEventsComponent } from './network-db/vlan-db/network/events/network-db-network-events.component';
 import { NetworkDbNetworkEditComponent } from './network-db/vlan-db/network/edit/network-edit.component';
 import { NetworkDbNetworkVlansComponent } from './network-db/vlan-db/network/vlans/network-db-network-vlans.component';
+import { CrispOrdersComponent } from './dashboard/orders/crisp-orders.component';
+import { CrispOrderDetailsComponent } from './dashboard/orders/order/crisp-order-details.component';
+import { CrispOrderElementsComponent } from './dashboard/orders/order/elements/crisp-order-elements.component';
+import { CrispOrderService } from './dashboard/orders/order/crisp-order.service';
+import { CrispOrderResolver } from './dashboard/orders/order/crisp-order.resolver';
 import { DashboardProjectsComponent } from './dashboard/projects/dashboard-projects.component';
+import { DashboardProjectDetailsComponent } from './dashboard/projects/project/dashboard-project-details.component';
+import { DashboardProjectTasksComponent } from './dashboard/projects/project/tasks/dashboard-project-tasks.component';
+import { DashboardProjectResolver } from './dashboard/projects/project/dashboard-project.resolver';
+import { DashboardProjectService } from './dashboard/projects/project/dashboard-project.service';
 
 @NgModule({
   declarations: [
@@ -72,6 +76,8 @@ import { DashboardProjectsComponent } from './dashboard/projects/dashboard-proje
     NetworkDbNetworkVlansComponent,
     // Dashboard
     DashboardProjectsComponent,
+    DashboardProjectDetailsComponent,
+    DashboardProjectTasksComponent,
     CrispOrdersComponent,
     CrispOrderDetailsComponent,
     CrispOrderElementsComponent,
@@ -103,7 +109,9 @@ import { DashboardProjectsComponent } from './dashboard/projects/dashboard-proje
     NetworkDbNetworkDetailsService,
     NetworkDbNetworkDetailsResolver,
     CrispOrderResolver,
-    CrispOrderService
+    CrispOrderService,
+    DashboardProjectResolver,
+    DashboardProjectService,
   ]
 })
 

@@ -1,0 +1,30 @@
+<mcs-page *ngIf="dashboardProject$ | async as dashboardProject"
+  [header]="'dashboardProject.header' | translate: { projectNumber: dashboardProject.number }">
+
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to Projects -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <mcs-action-item mcsAlign="end" mcsId
+        mcsRouterLink="LaunchPadDashboardProjects"
+        mcsEventTracker="navigate-to-dashboard-projects-listing"
+        mcsEventCategory="launch-pad"
+        mcsEventLabel="launch-pad-dashboard-projects-details-page">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'dashboardProject.backToProjects' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-tab-group [selectedTabId]="selectedTabId$ | async">
+      <mcs-tab [label]="'label.tasks' | translate" id="tasks"></mcs-tab>
+    </mcs-tab-group>
+
+    <div class="routing-tab-content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

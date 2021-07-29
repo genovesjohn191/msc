@@ -12,7 +12,8 @@ import {
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
   McsObjectProjectsQueryParams,
-  McsObjectProjects
+  McsObjectProject,
+  McsObjectProjectTasks
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { IMcsApiObjectsService } from '../interfaces/mcs-api-objects.interface';
@@ -141,7 +142,7 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
       );
   }
 
-  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProjects[]>> {
+  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProject[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
@@ -158,21 +159,44 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
-          return McsApiSuccessResponse.deserializeResponse<McsObjectProjects[]>(McsObjectProjects, response);
+          return McsApiSuccessResponse.deserializeResponse<McsObjectProject[]>(McsObjectProject, response);
         })
       );
   }
 
-  public getProjectTasks(projectId: string): Observable<McsApiSuccessResponse<McsObjectProjects>> {
+  public getProject(projectId: string): Observable<McsApiSuccessResponse<McsObjectProject>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/objects/projects/${projectId}/tasks`;
+    mcsApiRequestParameter.endPoint = `/objects/projects/${projectId}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsObjectProjects>(McsObjectProjects, response);
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsObjectProject>(McsObjectProject, response);
           return apiResponse;
+        })
+      );
+  }
+
+  public getProjectTasks(projectId: string, query?: McsObjectProjectsQueryParams):
+    Observable<McsApiSuccessResponse<McsObjectProjectTasks[]>> {
+
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+    searchParams.set('state', query.state);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/objects/projects/${projectId}/tasks`;
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          return McsApiSuccessResponse.deserializeResponse<McsObjectProjectTasks[]>(McsObjectProjectTasks, response);
         })
       );
   }
