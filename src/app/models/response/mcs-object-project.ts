@@ -7,7 +7,7 @@ import {
   temperatureText
 } from '../enumerations/temperature.enum';
 
-export class McsObjectProjects extends McsEntityBase {
+export class McsObjectProject extends McsEntityBase {
   @JsonProperty()
   public number: string = undefined;
 

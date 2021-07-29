@@ -26,11 +26,14 @@ import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.com
 import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
 import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
 import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
-import { DashboardProjectsComponent } from './dashboard/projects/dashboard-projects.component';
 import { CrispOrdersComponent } from './dashboard/orders/crisp-orders.component';
 import { CrispOrderDetailsComponent } from './dashboard/orders/order/crisp-order-details.component';
 import { CrispOrderElementsComponent } from './dashboard/orders/order/elements/crisp-order-elements.component';
 import { CrispOrderResolver } from './dashboard/orders/order/crisp-order.resolver';
+import { DashboardProjectsComponent } from './dashboard/projects/dashboard-projects.component';
+import { DashboardProjectResolver } from './dashboard/projects/project/dashboard-project.resolver';
+import { DashboardProjectDetailsComponent } from './dashboard/projects/project/dashboard-project-details.component';
+import { DashboardProjectTasksComponent } from './dashboard/projects/project/tasks/dashboard-project-tasks.component';
 import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/network-db-network.component';
 import { NetworkDbNetworkDetailsResolver } from './network-db/vlan-db/network/network-db-network.resolver';
 import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
@@ -192,6 +195,28 @@ export const launchPadRoutes: Routes = [
     component: DashboardProjectsComponent,
     data: { routeId: RouteKey.LaunchPadDashboardProjects },
     canActivate: [ LaunchPadGuard ]
+  },
+  {
+    path: 'dashboard/projects/:id',
+    component: DashboardProjectDetailsComponent,
+    data: { routeId: RouteKey.LaunchPadDashboardProjectDetails },
+    resolve: {
+      dashboardProject: DashboardProjectResolver
+    },
+    canActivate: [ LaunchPadGuard ],
+    children: [
+      {
+        path: '',
+        redirectTo: 'tasks',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.LaunchPadDashboardProjectDetailsTasks }
+      },
+      {
+        path: 'tasks',
+        component: DashboardProjectTasksComponent,
+        data: { routeId: RouteKey.LaunchPadDashboardProjectDetailsTasks }
+      }
+    ]
   },
   // Deprecated - redirect to new path
   {

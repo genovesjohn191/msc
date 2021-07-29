@@ -2544,6 +2544,14 @@
     "noRecordsFound": "There are no projects to display.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of projects."
   },
+  "dashboardProject": {
+    "header": "Project # {{projectNumber}}",
+    "backToProjects": "Back To Projects"
+  },
+  "projectTasks": {
+    "noRecordsFound": "There are no tasks to display.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tasks."
+  },
   "crispOrders": {
     "header": "Orders Assigned To Me",
     "leftPanelHeader": "Order Filter",
@@ -3070,6 +3078,7 @@
     "getCrispElement": "Something went wrong while retrieving CRISP element details. Please try again.",
     "getInstalledServices": "Something went wrong while retrieving installed services. Please try again.",
     "getProjects": "Something went wrong while retrieving projects. Please try again.",
+    "getProject": "Something went wrong while retrieving project details. Please try again.",
     "getProjectTasks": "Something went wrong while retrieving project tasks. Please try again.",
     "getCrispOrders": "Something went wrong while retrieving CRISP orders. Please try again.",
     "getCrispOrder": "Something went wrong while retrieving CRISP order details. Please try again.",
@@ -3126,6 +3135,7 @@
     "actionTaken": "Action Taken",
     "action": "Action",
     "aggregationTarget": "Aggregation Target",
+    "assignedTo": "Assigned To",
     "assignee": "Assignee",
     "attachedTo": "Attached To",
     "billingDescription": "Description",
@@ -3204,6 +3214,7 @@
     "quantity": "Quantity",
     "recommendation": "Recommendation",
     "possibleSavings": "Possible Savings",
+    "productType": "Product Type",
     "projectManager": "Project Manager",
     "region": "Region",
     "reservationOrderId": "Reservation Order ID",
@@ -3353,6 +3364,7 @@
     "status": "Status",
     "subscription": "Subscription",
     "tag": "Tag",
+    "tasks": "Tasks",
     "tenant": "Tenant",
     "terraformDeploymentVariables": "Terraform Deployment Variables",
     "terraformDefaultVariables": "Terraform Default Variables",
@@ -3372,6 +3384,7 @@
     "cancel": "Cancel",
     "changeTag": "Change Tag",
     "close": "Close",
+    "closed": "Closed",
     "copyToClipboard": "Copy To Clipboard",
     "delete": "Delete",
     "destroy": "Destroy",
@@ -3379,6 +3392,7 @@
     "edit": "Edit",
     "enquireNow": "Enquire Now",
     "ok": "OK",
+    "open": "Open",
     "openInCrisp": "Open in CRISP",
     "rename": "Rename",
     "reset": "Reset",

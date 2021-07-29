@@ -148,8 +148,9 @@ import {
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
   McsObjectInstalledService,
-  McsObjectProjects,
+  McsObjectProject,
   McsObjectProjectsQueryParams,
+  McsObjectProjectTasks,
   McsObjectQueryParams,
   McsOrder,
   McsOrderApprover,
@@ -2064,7 +2065,7 @@ export class McsApiService {
     );
   }
 
-  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiCollection<McsObjectProjects>> {
+  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiCollection<McsObjectProject>> {
     return this._objectsApi.getProjects(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProjects'))
@@ -2073,12 +2074,22 @@ export class McsApiService {
     );
   }
 
-  public getProjectTasks(projectId: string): Observable<McsObjectProjects> {
-    return this._objectsApi.getProjectTasks(projectId).pipe(
+  public getProject(projectId: string): Observable<McsObjectProject> {
+    return this._objectsApi.getProject(projectId).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProject'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getProjectTasks(projectId: string, query?: McsObjectProjectsQueryParams):
+    Observable<McsApiCollection<McsObjectProjectTasks>> {
+    return this._objectsApi.getProjectTasks(projectId, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProjectTasks'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
