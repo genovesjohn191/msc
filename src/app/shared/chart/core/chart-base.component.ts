@@ -8,7 +8,11 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { isNullOrEmpty } from '@app/utilities';
+import { ActivatedRoute } from '@angular/router';
+import {
+  coerceBoolean,
+  isNullOrEmpty
+} from '@app/utilities';
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -122,7 +126,7 @@ export class ChartComponentBase {
       type: value.type,
       stacked: value.stacked,
       events: {
-        animationEnd: () =>  {
+        mounted: () =>  {
           this.getChartUri();
         }
       },
@@ -276,16 +280,7 @@ export class ChartComponentBase {
   private _chart: ApexChart = {
     type: 'bar',
     height: 'auto',
-    animations: {
-      speed: 10,
-      animateGradually: {
-        enabled: false
-      },
-      dynamicAnimation: {
-        enabled: true,
-        speed: 10
-      }
-    }
+    animations: this._setAnimation()
   };
 
   private _dataLabels: ApexDataLabels = {
@@ -323,7 +318,28 @@ export class ChartComponentBase {
     }, 500)
   }
 
+  private _setAnimation(): any {
+    // Temporary: (FUSION-6402) for testing purposes only
+    let enableAnimation = coerceBoolean(this.route.snapshot.queryParams?.animation || true);
+    if (!enableAnimation) {
+      return {
+        enabled: false
+      };
+    }
+    return {
+      speed: 10,
+      animateGradually: {
+        enabled: false
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 10
+      }
+    };
+  }
+
   public constructor(
     protected chartDataService: ChartDataService,
-    protected changeDetectorRef: ChangeDetectorRef) {}
+    protected changeDetectorRef: ChangeDetectorRef,
+    private route: ActivatedRoute) {}
 }

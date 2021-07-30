@@ -6,6 +6,7 @@ import {
   OnInit,
   Input
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ChartItem } from '@app/shared';
 import { isNullOrEmpty } from '@app/utilities';
 import { ChartData, ChartDataService } from '../chart-data.service';
@@ -41,9 +42,10 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
 
   public constructor(
     chartDataService: ChartDataService,
-    changeDetector: ChangeDetectorRef
+    changeDetector: ChangeDetectorRef,
+    route: ActivatedRoute,
   ) {
-    super(chartDataService, changeDetector);
+    super(chartDataService, changeDetector, route);
   }
 
   public ngOnInit(): void {

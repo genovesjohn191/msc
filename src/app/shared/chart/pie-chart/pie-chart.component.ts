@@ -6,6 +6,7 @@ import {
   OnInit,
   Input
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { isNullOrEmpty } from '@app/utilities';
 import { ChartDataService, PieChartData } from '../chart-data.service';
 import { ChartComponentBase } from '../core/chart-base.component';
@@ -50,9 +51,10 @@ export class PieChartComponent extends ChartComponentBase implements OnInit {
 
   public constructor(
     chartDataService: ChartDataService,
-    changeDetector: ChangeDetectorRef
+    changeDetector: ChangeDetectorRef,
+    route: ActivatedRoute,
   ) {
-    super(chartDataService, changeDetector);
+    super(chartDataService, changeDetector, route);
   }
 
   public ngOnInit(): void {
