@@ -231,6 +231,21 @@ export class DnsZoneViewModel {
     return getSafeFormValue<DnsRecordType>(this.fcZoneType) === DnsRecordType.TXT;
   }
 
+  public get targetForCreate(): boolean {
+    return isNullOrUndefined(this._mainRrSet) && isNullOrUndefined(this._subRecord);
+  }
+
+  public get targetOrDataValue(): string {
+    if (isNullOrUndefined(this.recordInfo)) { return ''; }
+
+    let hasTargetValue = !isNullOrUndefined(this.recordInfo?.target);
+    if (hasTargetValue) { return this.recordInfo?.target; }
+
+    return this.dataFieldIsArray ?
+      this.recordInfo?.data?.join(', ') :
+      this.recordInfo?.data;
+  }
+
   public get hasChanges(): boolean {
     return this.fcTarget.dirty ||
       this.fcHostName.dirty ||
@@ -239,7 +254,7 @@ export class DnsZoneViewModel {
   }
 
   public setDefaultValues(): DnsZoneViewModel {
-    if (isNullOrUndefined(this._mainRrSet) && isNullOrUndefined(this._subRecord)) {
+    if (this.targetForCreate) {
       setTimeout(() => { this.fcZoneType.setValue(DnsRecordType.A); });
       return this;
     }
@@ -265,6 +280,7 @@ export class DnsZoneViewModel {
     } as DnsZoneModel;
 
     setTimeout(() => {
+      this.fcZoneType.setValue(this.recordInfo.zoneType);
       this.fcHostName.setValue(this.recordInfo.hostName);
       this.fcTtlSeconds.setValue(this.recordInfo.ttlSeconds);
       this.fcTarget.setValue(this.recordInfo.target);
@@ -278,9 +294,6 @@ export class DnsZoneViewModel {
       this.fcFlags.setValue(this.recordInfo.flags);
       this.fcRegex.setValue(this.recordInfo.regex);
       this.fcReplacement.setValue(this.recordInfo.replacement);
-
-      this.fcZoneType.setValue(this.recordInfo.zoneType);
-      this.fcZoneType.disable();
     });
     return this;
   }
@@ -354,7 +367,7 @@ export class DnsZoneViewModel {
       'fcZoneType', 'fcHostName', 'fcTtlSeconds', 'fcData'));
 
     this._formFieldsStateMap.set(DnsRecordType.MX, this._updateFormFieldsState.bind(this,
-      'fcZoneType', 'fcHostName', 'fcTtlSeconds', 'fcData', 'this.fcPriority'));
+      'fcZoneType', 'fcHostName', 'fcTtlSeconds', 'fcData', 'fcPriority'));
 
     this._formFieldsStateMap.set(DnsRecordType.NAPTR, this._updateFormFieldsState.bind(this,
       'fcZoneType', 'fcHostName', 'fcTtlSeconds', 'fcService', 'fcOrder',

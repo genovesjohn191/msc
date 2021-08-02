@@ -19,8 +19,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
-  ViewChild
+  SimpleChanges
 } from '@angular/core';
 import {
   McsFormGroupService,
@@ -42,8 +41,7 @@ import {
   DialogActionType,
   DialogResult,
   DialogResultAction,
-  DialogService2,
-  McsFormGroupDirective
+  DialogService2
 } from '@app/shared';
 import {
   animateFactory,
@@ -78,9 +76,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public requestUpdate = new EventEmitter<void>();
-
-  @ViewChild(McsFormGroupDirective)
-  public formGroup: McsFormGroupDirective;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -152,7 +147,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
         this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
           new McsStateNotification('success', 'message.successfullyCreated')
         );
-        this.formGroup.resetAllControls();
+        this._formGroupService.resetAllControls(this.addViewModel?.fgDnsZone);
         this.requestUpdate.next();
       }),
       finalize(() => this.processOnGoing$.next(false))
@@ -277,16 +272,16 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     let zoneRecord = new McsNetworkDnsRecordRequest();
     zoneRecord.name = getSafeFormValue(viewModel.fcHostName);
     zoneRecord.type = getSafeFormValue<DnsRecordType>(viewModel.fcZoneType);
-    zoneRecord.ttlSeconds = +getSafeFormValue(viewModel.fcTtlSeconds);
     zoneRecord.data = getSafeFormValue(viewModel.fcData);
     zoneRecord.target = getSafeFormValue(viewModel.fcTarget);
     zoneRecord.service = getSafeFormValue(viewModel.fcService);
+    zoneRecord.ttlSeconds = +getSafeFormValue(viewModel.fcTtlSeconds) || null;
     zoneRecord.protocol = getSafeFormValue(viewModel.fcProtocol);
-    zoneRecord.priority = +getSafeFormValue(viewModel.fcPriority);
-    zoneRecord.weight = +getSafeFormValue(viewModel.fcWeight);
-    zoneRecord.port = +getSafeFormValue(viewModel.fcPort);
-    zoneRecord.order = +getSafeFormValue(viewModel.fcOrder);
-    zoneRecord.preference = +getSafeFormValue(viewModel.fcPreference);
+    zoneRecord.priority = +getSafeFormValue(viewModel.fcPriority) || null;
+    zoneRecord.weight = +getSafeFormValue(viewModel.fcWeight) || null;
+    zoneRecord.port = +getSafeFormValue(viewModel.fcPort) || null;
+    zoneRecord.order = +getSafeFormValue(viewModel.fcOrder) || null;
+    zoneRecord.preference = +getSafeFormValue(viewModel.fcPreference) || null;
     zoneRecord.flags = getSafeFormValue(viewModel.fcFlags);
     zoneRecord.regexp = getSafeFormValue(viewModel.fcRegex);
     zoneRecord.replacement = getSafeFormValue(viewModel.fcReplacement);
