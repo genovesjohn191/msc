@@ -141,17 +141,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    let zoneRecord = new McsNetworkDnsRecordRequest();
-    zoneRecord.type = getSafeFormValue<DnsRecordType>(this.addViewModel.fcZoneType);
-    zoneRecord.name = getSafeFormValue(this.addViewModel.fcHostName);
-    zoneRecord.value = getSafeFormValue(this.addViewModel.fcTarget);
-    zoneRecord.ttlSeconds = +getSafeFormValue(this.addViewModel.fcTtlSeconds);
-    zoneRecord.service = getSafeFormValue(this.addViewModel.fcService);
-    zoneRecord.protocol = getSafeFormValue(this.addViewModel.fcProtocol);
-    zoneRecord.priority = +getSafeFormValue(this.addViewModel.fcPriority);
-    zoneRecord.weight = +getSafeFormValue(this.addViewModel.fcWeight);
-    zoneRecord.port = +getSafeFormValue(this.addViewModel.fcPort);
-
+    let zoneRecord = this._createRequestPayloadByViewModel(this.addViewModel);
     this.processOnGoing$.next(true);
     this._apiService.createNetworkDnsZoneRecord(
       this.dnsId,
@@ -174,17 +164,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     let allAreValid = this._formGroupService.allFormFieldsValid(record.fgDnsZone);
     if (!allAreValid) { return; }
 
-    let zoneRecord = new McsNetworkDnsRecordRequest();
-    zoneRecord.type = getSafeFormValue<DnsRecordType>(record.fcZoneType);
-    zoneRecord.name = getSafeFormValue(record.fcHostName);
-    zoneRecord.value = getSafeFormValue(record.fcTarget);
-    zoneRecord.ttlSeconds = +getSafeFormValue(record.fcTtlSeconds);
-    zoneRecord.service = getSafeFormValue(record.fcService);
-    zoneRecord.protocol = getSafeFormValue(record.fcProtocol);
-    zoneRecord.priority = +getSafeFormValue(record.fcPriority);
-    zoneRecord.weight = +getSafeFormValue(record.fcWeight);
-    zoneRecord.port = +getSafeFormValue(record.fcPort);
-
+    let zoneRecord = this._createRequestPayloadByViewModel(record);
     record.setProgressState(true);
     this._apiService.updateNetworkDnsZoneRecord(
       this.dnsId,
@@ -289,5 +269,27 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
       });
     });
     return of(new McsMatTableContext(dataModels));
+  }
+
+  private _createRequestPayloadByViewModel(
+    viewModel: DnsZoneViewModel
+  ): McsNetworkDnsRecordRequest {
+    let zoneRecord = new McsNetworkDnsRecordRequest();
+    zoneRecord.name = getSafeFormValue(viewModel.fcHostName);
+    zoneRecord.type = getSafeFormValue<DnsRecordType>(viewModel.fcZoneType);
+    zoneRecord.ttlSeconds = +getSafeFormValue(viewModel.fcTtlSeconds);
+    zoneRecord.data = getSafeFormValue(viewModel.fcData);
+    zoneRecord.target = getSafeFormValue(viewModel.fcTarget);
+    zoneRecord.service = getSafeFormValue(viewModel.fcService);
+    zoneRecord.protocol = getSafeFormValue(viewModel.fcProtocol);
+    zoneRecord.priority = +getSafeFormValue(viewModel.fcPriority);
+    zoneRecord.weight = +getSafeFormValue(viewModel.fcWeight);
+    zoneRecord.port = +getSafeFormValue(viewModel.fcPort);
+    zoneRecord.order = +getSafeFormValue(viewModel.fcOrder);
+    zoneRecord.preference = +getSafeFormValue(viewModel.fcPreference);
+    zoneRecord.flags = getSafeFormValue(viewModel.fcFlags);
+    zoneRecord.regexp = getSafeFormValue(viewModel.fcRegex);
+    zoneRecord.replacement = getSafeFormValue(viewModel.fcReplacement);
+    return zoneRecord;
   }
 }

@@ -22,6 +22,7 @@ import {
 } from '@angular/material/form-field';
 import {
   isNullOrEmpty,
+  isNullOrUndefined,
   unsubscribeSafely,
   IJsonObject
 } from '@app/utilities';
@@ -76,9 +77,10 @@ export class FieldErrorMessageDirective<TInput> implements AfterViewInit, OnDest
 
     let formControl = this.controlRef.ngControl.control;
     let firstError = this._getFirstErrorProperty(formControl);
+    if (isNullOrUndefined(firstError)) { return; }
 
     // It means the provided validator is custom
-    if (firstError.split('.')?.length > 1) {
+    if (firstError?.split('.')?.length > 1) {
       this._errorMessage = this._translateService.instant(firstError);
       this._changeDetectorRef.markForCheck();
       return;
@@ -89,7 +91,7 @@ export class FieldErrorMessageDirective<TInput> implements AfterViewInit, OnDest
     // the label prefix should be defined to separate the message
     // in each dynamic form field
     if (!isNullOrEmpty(this.labelPrefix)) {
-      firstError = firstError?.charAt(0).toUpperCase() + firstError.slice(1);
+      firstError = firstError?.charAt(0).toUpperCase() + firstError?.slice(1);
     }
 
     this._errorMessage = this._translateService.instant(

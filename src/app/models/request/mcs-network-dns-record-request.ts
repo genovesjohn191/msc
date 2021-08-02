@@ -11,7 +11,10 @@ export class McsNetworkDnsRecordRequest {
   public ttlSeconds: number = undefined;
 
   @JsonProperty()
-  public value: string = undefined;
+  public data: any = undefined;
+
+  @JsonProperty()
+  public target: string = undefined;
 
   @JsonProperty()
   public service: string = undefined;
@@ -27,4 +30,19 @@ export class McsNetworkDnsRecordRequest {
 
   @JsonProperty()
   public port: number = undefined;
+
+  @JsonProperty()
+  public order: number = undefined;
+
+  @JsonProperty()
+  public preference: number = undefined;
+
+  @JsonProperty()
+  public flags: string = undefined;
+
+  @JsonProperty()
+  public regexp: string = undefined;
+
+  @JsonProperty()
+  public replacement: string = undefined;
 }

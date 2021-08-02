@@ -51,7 +51,7 @@ export class FieldSelectDnsZoneTypeComponent
     let optionItems = new Array<McsOption>();
 
     optionItems.push(new McsOption(DnsRecordType.A, this.translate.instant('label.a')));
-    optionItems.push(new McsOption(DnsRecordType.AAA, this.translate.instant('label.aaa')));
+    optionItems.push(new McsOption(DnsRecordType.AAAA, this.translate.instant('label.aaaa')));
     optionItems.push(new McsOption(DnsRecordType.CNAME, this.translate.instant('label.cname')));
     optionItems.push(new McsOption(DnsRecordType.MX, this.translate.instant('label.mx')));
     optionItems.push(new McsOption(DnsRecordType.NAPTR, this.translate.instant('label.naptr')));
