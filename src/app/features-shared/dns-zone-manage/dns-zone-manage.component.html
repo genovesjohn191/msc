@@ -1,12 +1,12 @@
 <ng-template #formTemplate let-viewmodel>
-  <form [formGroup]="viewmodel.fgDnsZone" mcsFormGroup>
+  <form [formGroup]="viewmodel.fgDnsZone">
     <mcs-grid>
       <mcs-grid-row>
-        <!-- Host name -->
+        <!-- Host -->
         <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcHostName?.enabled">
           <mcs-field-input
             size="full"
-            [label]="'label.hostName' | translate"
+            [label]="'label.name' | translate"
             [formControl]="viewmodel.fcHostName">
           </mcs-field-input>
         </mcs-grid-column>
@@ -22,7 +22,7 @@
         </mcs-grid-column>
 
         <!-- Zone Type -->
-        <mcs-grid-column sizeWd="6" sizeMd="12">
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.targetForCreate">
           <mcs-field-select-dns-zone-type
             size="full"
             [label]="'label.recordType' | translate"
@@ -192,20 +192,20 @@
     <!-- Hostname Column -->
     <ng-container matColumnDef="hostName">
       <th mat-header-cell *matHeaderCellDef>
-        {{ 'columnHeader.hostName' | translate }}
+        {{ 'columnHeader.name' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" text-top>
         {{ row.recordInfo?.hostName }}
       </td>
     </ng-container>
 
-    <!-- Target Column -->
+    <!-- Target / Data Column -->
     <ng-container matColumnDef="target">
       <th mat-header-cell *matHeaderCellDef>
-        {{ 'columnHeader.target' | translate }}
+        {{ 'columnHeader.value' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" text-top>
-        {{ row.recordInfo?.target }}
+        {{ row.recordInfo?.targetOrDataValue }}
       </td>
     </ng-container>
 

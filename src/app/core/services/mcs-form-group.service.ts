@@ -74,6 +74,19 @@ export class McsFormGroupService {
   }
 
   /**
+   * Resets all controls
+   */
+  public resetAllControls(formGroup: FormGroup): void {
+    let formControls = this.getFormControls(formGroup);
+    let formsAreMissing = isNullOrEmpty(formGroup) || isNullOrEmpty(formControls);
+    if (formsAreMissing) { return; }
+
+    formControls.map((formField) => {
+      formField.reset();
+    });
+  }
+
+  /**
    * This will mark the form control as invalid
    * @param formControl Form control to be marked
    */

@@ -3108,6 +3108,7 @@
     "inProgress": "Processing request..."
   },
   "columnHeader": {
+    "value": "Value",
     "associatedServer": "Associated Server",
     "serviceType": "Service Type",
     "dailySchedule": "Daily Schedule",
@@ -3290,6 +3291,7 @@
     "enabled": "Enabled"
   },
   "label": {
+    "value": "Value",
     "data": "Data",
     "order": "Order",
     "preference": "Preference",
@@ -3314,7 +3316,7 @@
     "zoneType": "Zone Type",
     "recordType": "Record Type",
     "manageZones": "Manage Zones",
-    "hostName": "Host Name",
+    "host": "Host",
     "records": "Records",
     "target": "Target",
     "ttlSeconds": "TTL (Seconds) - 600",
@@ -3419,8 +3421,8 @@
     "createRecordExist": "Cannot create <strong>{{name}}</strong> record. The Record already exists.",
     "discardChanges": "This will undo all your changes. Do you want to proceed?",
     "deleteZoneRecord": "This will delete <strong>{{dnsTarget}}</strong> zone record. Do you want to proceed?",
-    "dnsDescription": "Select a zone below to manage its DNS records.\r\nPlease note, record changes can take up to 72 hours to propagate.",
-    "zoneDescription": "The TTL for this zone is {{ttlSeconds}} seconds. If a TTL is not specified when creating or editing a record below, this TTL will be used instead.\r\n\nWhen adding or editing a record, all existing records of the same type will inherit that record's TTL.",
+    "dnsDescription": "Select a zone below to manage its DNS records. Please note, record changes can take up to 72 hours to propagate.",
+    "zoneDescription": "The TTL for this zone is {{ttlSeconds}} seconds. If a TTL is not specified when creating or editing a record below, this TTL will be used instead. When adding or editing a record, all existing records of the same type will inherit that record's TTL.<br><br>If a domain name or value is specified with a trailing period, it will be interpreted as fully-qualified.",
     "noSolutionsDisplay": "No solutions to be displayed.",
     "noProductsDisplay": "No products to be displayed.",
     "productEnquireNow": "Choose your preferred contact method and we'll get in touch to discuss this product more with you.",
