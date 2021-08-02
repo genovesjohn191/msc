@@ -1,6 +1,6 @@
 export enum DnsRecordType {
   A = 'A',
-  AAA = 'AAA',
+  AAAA = 'AAAA',
   CNAME = 'CNAME',
   MX = 'MX',
   NAPTR = 'NAPTR',

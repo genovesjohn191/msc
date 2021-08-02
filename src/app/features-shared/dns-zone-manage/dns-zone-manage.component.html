@@ -1,95 +1,171 @@
-<!-- Add Zone Record Panel -->
-<form [formGroup]="addViewModel.fgDnsZone" mcsFormGroup>
-  <mcs-grid>
-    <mcs-grid-row>
-      <mcs-grid-column sizeXl="12">
-        <mcs-field-select-dns-zone-type
-          size="full"
-          [label]="'label.recordType' | translate"
-          [formControl]="addViewModel.fcZoneType">
-        </mcs-field-select-dns-zone-type>
-      </mcs-grid-column>
-    </mcs-grid-row>
+<ng-template #formTemplate let-viewmodel>
+  <form [formGroup]="viewmodel.fgDnsZone" mcsFormGroup>
+    <mcs-grid>
+      <mcs-grid-row>
+        <!-- Host name -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcHostName?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.hostName' | translate"
+            [formControl]="viewmodel.fcHostName">
+          </mcs-field-input>
+        </mcs-grid-column>
 
-    <mcs-grid-row>
-      <mcs-grid-column sizeLg="6" sizeMd="12">
-        <mcs-field-input
-          size="full"
-          [label]="'label.hostName' | translate"
-          [formControl]="addViewModel.fcHostName">
-        </mcs-field-input>
-      </mcs-grid-column>
+        <!-- TTL -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcTtlSeconds?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.ttlSeconds' | translate"
+            [interpolations]="{ min_value: viewmodel.ttlMinValue, max_value: viewmodel.ttlMaxValue }"
+            [formControl]="viewmodel.fcTtlSeconds">
+          </mcs-field-input>
+        </mcs-grid-column>
 
-      <mcs-grid-column sizeLg="6" sizeMd="12">
-        <mcs-field-input
-          size="full"
-          [label]="'label.target' | translate"
-          [formControl]="addViewModel.fcTarget">
-        </mcs-field-input>
-      </mcs-grid-column>
-    </mcs-grid-row>
+        <!-- Zone Type -->
+        <mcs-grid-column sizeWd="6" sizeMd="12">
+          <mcs-field-select-dns-zone-type
+            size="full"
+            [label]="'label.recordType' | translate"
+            [formControl]="viewmodel.fcZoneType">
+          </mcs-field-select-dns-zone-type>
+        </mcs-grid-column>
 
-    <mcs-grid-row>
-      <mcs-grid-column sizeLg="6" sizeMd="12">
-        <mcs-field-input
-          size="full"
-          [label]="'label.ttlSeconds' | translate"
-          [interpolations]="{ min_value: addViewModel.ttlMinValue, max_value: addViewModel.ttlMaxValue }"
-          [formControl]="addViewModel.fcTtlSeconds">
-        </mcs-field-input>
-      </mcs-grid-column>
+        <!-- Data -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcData?.enabled">
+          <mcs-field-input *ngIf="!viewmodel.dataFieldIsArray; else dataFieldArrayTemplate"
+            size="full"
+            [label]="'label.data' | translate"
+            [formControl]="viewmodel.fcData">
+          </mcs-field-input>
 
-      <mcs-grid-column sizeLg="6" sizeMd="12" *ngIf="addViewModel.isSrvType || addViewModel.isMxType">
-        <mcs-field-input
-          size="full"
-          [label]="'label.priority' | translate"
-          [interpolations]="{ min_value: addViewModel.intMinValue, max_value: addViewModel.intMaxValue }"
-          [formControl]="addViewModel.fcPriority">
-        </mcs-field-input>
-      </mcs-grid-column>
-    </mcs-grid-row>
+          <!-- TODO(apascual): Improve this dynamic list and move to mcs-field-input -->
+          <ng-template #dataFieldArrayTemplate>
+            <mcs-form-field class="dynamic-list" [ngStyle]="{'margin-top': '8px'}">
+              <mcs-dynamic-list
+                [placeholder]="'label.data' | translate"
+                [required]="true"
+                [formControl]="viewmodel.fcData">
+              </mcs-dynamic-list>
 
-    <mcs-grid-row *ngIf="addViewModel.isSrvType">
-      <mcs-grid-column sizeLg="6" sizeMd="12">
-        <mcs-field-input
-          size="full"
-          [label]="'label.service' | translate"
-          [interpolations]="{ max_length: addViewModel.serviceMaxLength }"
-          [formControl]="addViewModel.fcService">
-        </mcs-field-input>
-      </mcs-grid-column>
+              <mcs-error mcsError errorState="required">
+                Data field is required
+              </mcs-error>
+            </mcs-form-field>
+          </ng-template>
+        </mcs-grid-column>
 
-      <mcs-grid-column sizeLg="6" sizeMd="12">
-        <mcs-field-input
-          size="full"
-          [label]="'label.protocol' | translate"
-          [interpolations]="{ max_length: addViewModel.protocolMaxLength }"
-          [formControl]="addViewModel.fcProtocol">
-        </mcs-field-input>
-      </mcs-grid-column>
-    </mcs-grid-row>
+        <!-- Priority -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcPriority?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.priority' | translate"
+            [interpolations]="{ min_value: viewmodel.intMinValue, max_value: viewmodel.intMaxValue }"
+            [formControl]="viewmodel.fcPriority">
+          </mcs-field-input>
+        </mcs-grid-column>
 
-    <mcs-grid-row *ngIf="addViewModel.isSrvType">
-      <mcs-grid-column sizeLg="6" sizeMd="12">
-        <mcs-field-input
-          size="full"
-          [label]="'label.weight' | translate"
-          [interpolations]="{ min_value: addViewModel.intMinValue, max_value: addViewModel.intMaxValue }"
-          [formControl]="addViewModel.fcWeight">
-        </mcs-field-input>
-      </mcs-grid-column>
+        <!-- Service -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcService?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.service' | translate"
+            [interpolations]="{ max_length: viewmodel.serviceMaxLength }"
+            [formControl]="viewmodel.fcService">
+          </mcs-field-input>
+        </mcs-grid-column>
 
-      <mcs-grid-column sizeLg="6" sizeMd="12">
-        <mcs-field-input
-          size="full"
-          [label]="'label.port' | translate"
-          [interpolations]="{ min_value: addViewModel.intMinValue, max_value: addViewModel.intMaxValue }"
-          [formControl]="addViewModel.fcPort">
-        </mcs-field-input>
-      </mcs-grid-column>
-    </mcs-grid-row>
-  </mcs-grid>
-</form>
+        <!-- Protocol -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcProtocol?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.protocol' | translate"
+            [interpolations]="{ max_length: viewmodel.protocolMaxLength }"
+            [formControl]="viewmodel.fcProtocol">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Target -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcTarget?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.target' | translate"
+            [formControl]="viewmodel.fcTarget">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Weight -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcWeight?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.weight' | translate"
+            [interpolations]="{ min_value: viewmodel.intMinValue, max_value: viewmodel.intMaxValue }"
+            [formControl]="viewmodel.fcWeight">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Port -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcPort?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.port' | translate"
+            [interpolations]="{ min_value: viewmodel.intMinValue, max_value: viewmodel.intMaxValue }"
+            [formControl]="viewmodel.fcPort">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Order -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcOrder?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.order' | translate"
+            [formControl]="viewmodel.fcOrder">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Preference -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcPreference?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.preference' | translate"
+            [formControl]="viewmodel.fcPreference">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Flags -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcFlags?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.flags' | translate"
+            [formControl]="viewmodel.fcFlags">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Regex -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcRegex?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.regularExpression' | translate"
+            [formControl]="viewmodel.fcRegex">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Replacement -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcReplacement?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.replacement' | translate"
+            [formControl]="viewmodel.fcReplacement">
+          </mcs-field-input>
+        </mcs-grid-column>
+      </mcs-grid-row>
+    </mcs-grid>
+  </form>
+</ng-template>
+
+<!-- Add View Model -->
+<ng-container *ngTemplateOutlet="formTemplate;
+  context: { $implicit: addViewModel }">
+</ng-container>
 
 <div class="action-items">
   <button mcsButton arrow="right"
@@ -191,97 +267,11 @@
     <ng-container matColumnDef="expandedDetail">
       <td mat-cell *matCellDef="let row" [attr.colspan]="5">
         <div [@expansionVertical]="row.updating ? 'expanded' : 'collapsed'">
-          <form [formGroup]="row.fgDnsZone">
-            <mcs-grid>
-              <mcs-grid-row>
-                <mcs-grid-column sizeXl="12">
-                  <mcs-field-select-dns-zone-type
-                    size="full"
-                    [label]="'label.recordType' | translate"
-                    [formControl]="row.fcZoneType">
-                  </mcs-field-select-dns-zone-type>
-                </mcs-grid-column>
-              </mcs-grid-row>
-
-              <mcs-grid-row>
-                <mcs-grid-column sizeLg="6" sizeMd="12">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.hostName' | translate"
-                    [formControl]="row.fcHostName">
-                  </mcs-field-input>
-                </mcs-grid-column>
-
-                <mcs-grid-column sizeLg="6" sizeMd="12">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.target' | translate"
-                    [formControl]="row.fcTarget">
-                  </mcs-field-input>
-                </mcs-grid-column>
-              </mcs-grid-row>
-
-              <mcs-grid-row>
-                <mcs-grid-column sizeLg="6" sizeMd="12">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.ttlSeconds' | translate"
-                    [interpolations]="{ min_value: row.ttlMinValue, max_value: row.ttlMaxValue }"
-                    [formControl]="row.fcTtlSeconds">
-                  </mcs-field-input>
-                </mcs-grid-column>
-
-                <mcs-grid-column sizeLg="6" sizeMd="12" *ngIf="row.isSrvType || row.isMxType">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.priority' | translate"
-                    [interpolations]="{ min_value: row.intMinValue, max_value: row.intMaxValue }"
-                    [formControl]="row.fcPriority">
-                  </mcs-field-input>
-                </mcs-grid-column>
-              </mcs-grid-row>
-
-              <mcs-grid-row *ngIf="row.isSrvType">
-                <mcs-grid-column sizeLg="6" sizeMd="12">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.service' | translate"
-                    [interpolations]="{ max_length: row.serviceMaxLength }"
-                    [formControl]="row.fcService">
-                  </mcs-field-input>
-                </mcs-grid-column>
-
-                <mcs-grid-column sizeLg="6" sizeMd="12">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.protocol' | translate"
-                    [interpolations]="{ max_length: row.protocolMaxLength }"
-                    [formControl]="row.fcProtocol">
-                  </mcs-field-input>
-                </mcs-grid-column>
-              </mcs-grid-row>
-
-              <mcs-grid-row *ngIf="row.isSrvType">
-                <mcs-grid-column sizeLg="6" sizeMd="12">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.weight' | translate"
-                    [interpolations]="{ min_value: row.intMinValue, max_value: row.intMaxValue }"
-                    [formControl]="row.fcWeight">
-                  </mcs-field-input>
-                </mcs-grid-column>
-
-                <mcs-grid-column sizeLg="6" sizeMd="12">
-                  <mcs-field-input
-                    size="full"
-                    [label]="'label.port' | translate"
-                    [interpolations]="{ min_value: row.intMinValue, max_value: row.intMaxValue }"
-                    [formControl]="row.fcPort">
-                  </mcs-field-input>
-                </mcs-grid-column>
-              </mcs-grid-row>
-            </mcs-grid>
-          </form>
+          <ng-container *ngIf="row.updating">
+            <ng-container *ngTemplateOutlet="formTemplate;
+              context: { $implicit: row }">
+            </ng-container>
+          </ng-container>
         </div>
       </td>
     </ng-container>
