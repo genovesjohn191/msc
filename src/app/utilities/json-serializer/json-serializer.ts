@@ -46,7 +46,8 @@ function serializeProperty(targetInstance: any, propertyKey: string): any {
   }
 
   if (isArray(propertyValue)) {
-    let propertyArray = new Array(...propertyValue);
+    let propertyArray = new Array();
+    propertyValue?.forEach(record => propertyArray.push(record));
     return propertyArray.map((propItem: any) =>
       !propItem || isPrimitiveType(propItem) ? propItem : serializeObject(propItem)
     );

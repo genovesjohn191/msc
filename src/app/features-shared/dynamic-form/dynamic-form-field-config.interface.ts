@@ -23,6 +23,7 @@ export interface FlatOption {
   key: any;
   value: string;
   disabled?: boolean;
+  hint?: string;
 }
 
 export interface GroupedOption {

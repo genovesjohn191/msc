@@ -13,6 +13,9 @@ export class DynamicSelectMultipleNetworkDbPodsField extends DynamicFormFieldCon
   public template: DynamicFormFieldTemplate = 'select-multiple-network-db-pods';
   public options: GroupedOption[];
 
+  public excludePods?: number[];
+  public isMazAa: boolean;
+
   public constructor(options: {
     key: string;
     label: string;
@@ -23,7 +26,12 @@ export class DynamicSelectMultipleNetworkDbPodsField extends DynamicFormFieldCon
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; };
+    excludePods?: number [];
+    isMazAa: boolean;
   }) {
     super(options);
+
+    this.excludePods = options.excludePods || [];
+    this.isMazAa = options.isMazAa || false;
   }
 }

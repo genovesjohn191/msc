@@ -18,7 +18,11 @@ import {
   McsNetworkDbVni,
   McsQueryParam,
   McsNetworkDbNetworkDelete,
-  McsNetworkDbNetworkUpdate
+  McsNetworkDbNetworkUpdate,
+  McsNetworkDbVlanAction,
+  McsNetworkDbNetworkReserve,
+  McsNetworkDbMazAaQueryParams,
+  McsNetworkDbPodMazAa
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiNetworkDbService } from '../interfaces/mcs-api-network-db.interface';
@@ -293,6 +297,82 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsNetworkDbNetworkEvent[]>(McsNetworkDbNetworkEvent, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getMazAaAvailablePods(query: McsNetworkDbMazAaQueryParams):
+    Observable<McsApiSuccessResponse<McsNetworkDbPodMazAa>> {
+
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsNetworkDbMazAaQueryParams(); }
+    searchParams.set('pod_ids', query.podIds);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/pods/availability/maz-aa`;
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsNetworkDbPodMazAa>(McsNetworkDbPodMazAa, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public recycleNetworkVlan(id: string, payload: McsNetworkDbVlanAction):
+    Observable<McsApiSuccessResponse<McsJob>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/vlans/${id}/recycle`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(payload);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public reclaimNetworkVlan(id: string, payload: McsNetworkDbVlanAction):
+    Observable<McsApiSuccessResponse<McsJob>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/vlans/${id}/reclaim`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(payload);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public reserveNetworkVlan(id: string, payload: McsNetworkDbNetworkReserve):
+    Observable<McsApiSuccessResponse<McsJob>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/networks/${id}/reserve`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(payload);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
           return apiResponse;
         })
       );

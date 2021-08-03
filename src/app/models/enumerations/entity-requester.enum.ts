@@ -12,5 +12,6 @@ export enum EntityRequester {
   License,
   Internet,
   TerraformDeployment,
-  NetworkDbNetwork
+  NetworkDbNetwork,
+  NetworkDbVlan
 }
