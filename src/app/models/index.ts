@@ -160,6 +160,8 @@ export * from './request/mcs-network-db-network-create';
 export * from './request/mcs-network-dns-record-request';
 export * from './request/mcs-network-db-network-delete';
 export * from './request/mcs-network-db-network-update'
+export * from './request/mcs-network-db-network-reserve';
+export * from './request/mcs-network-db-vlan-action';
 
 /** Response */
 export * from './response/mcs-availability-zone';
@@ -327,6 +329,7 @@ export * from './response/mcs-network-db-use-case';
 export * from './response/mcs-network-db-vlan';
 export * from './response/mcs-network-db-vni';
 export * from './response/mcs-network-db-site';
+export * from './response/mcs-network-db-pod-maz-aa';
 
 /** Common */
 export * from './common/mcs-api-search-key';
@@ -371,6 +374,7 @@ export * from './common/mcs-cloudhealth-option';
 export * from './common/mcs-azure-resources-info';
 export * from './common/mcs-network-db-network-query-params';
 export * from './common/mcs-servers-query-params';
+export * from './common/mcs-network-db-maz-aa-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

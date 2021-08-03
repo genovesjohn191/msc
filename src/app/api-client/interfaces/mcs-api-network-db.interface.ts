@@ -15,7 +15,11 @@ import {
   McsNetworkDbVni,
   McsQueryParam,
   McsNetworkDbNetworkDelete,
-  McsNetworkDbNetworkUpdate
+  McsNetworkDbNetworkUpdate,
+  McsNetworkDbVlanAction,
+  McsNetworkDbNetworkReserve,
+  McsNetworkDbMazAaQueryParams,
+  McsNetworkDbPodMazAa
 } from '@app/models';
 
 export interface IMcsApiNetworkDbService {
@@ -84,7 +88,7 @@ export interface IMcsApiNetworkDbService {
   /**
    * This will delete an existing network
    * @param id network id to delete
-   * @param networkDelete Network delete model details
+   * @param deleteDetails Network delete model details
    */
   deleteNetwork(id: string, deleteDetails: McsNetworkDbNetworkDelete): Observable<McsApiSuccessResponse<McsJob>>;
 
@@ -93,4 +97,31 @@ export interface IMcsApiNetworkDbService {
    * @param query Query predicate that serves as the parameter of the endpoint
    */
   getNetworkEvents(id: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDbNetworkEvent[]>>;
+
+  /**
+   * Get all the Networks
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getMazAaAvailablePods(query: McsNetworkDbMazAaQueryParams): Observable<McsApiSuccessResponse<McsNetworkDbPodMazAa>>;
+
+  /**
+   * Recycle a network vlan
+   * @param id vlan id to recycle
+   * @param payload client reference object data
+   */
+  recycleNetworkVlan(id: string, payload: McsNetworkDbVlanAction): Observable<McsApiSuccessResponse<McsJob>>;
+
+  /**
+   * Recycle a network vlan
+   * @param id vlan id to recycle
+   * @param payload client reference object data
+   */
+  reclaimNetworkVlan(id: string, payload: McsNetworkDbVlanAction): Observable<McsApiSuccessResponse<McsJob>>;
+
+  /**
+   * Reserve a network vlan
+   * @param id vlan id to recycle
+   * @param payload client reference object data
+   */
+   reserveNetworkVlan(id: string, payload: McsNetworkDbNetworkReserve): Observable<McsApiSuccessResponse<McsJob>>;
 }

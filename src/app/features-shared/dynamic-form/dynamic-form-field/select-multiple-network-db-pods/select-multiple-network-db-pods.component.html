@@ -15,16 +15,19 @@
     [required]="required"
     [disabled]="disabled"
     [(value)]="config.value"
-    (selectionChange)="valueChange($event)">
+    (selectionChange)="valueChange($event); onChange($event);">
     <mat-select-trigger>
-      {{config.value ? config.value[0] : ''}}
-      <span *ngIf="config.value?.length > 1" class='more'>
-        (+{{config.value.length - 1}} more)
-      </span>
+      <mat-chip-list>
+        <mat-chip *ngFor="let item of config.value"
+          [removable]="true" (removed)="onItemRemoved(item)">
+          {{item.value ? item.value : ''}}
+        </mat-chip>
+      </mat-chip-list>
     </mat-select-trigger>
     <mat-optgroup *ngFor="let group of config.options" [label]="group.name" [disabled]="group.disabled">
-      <mat-option *ngFor="let opt of group.options" [value]="opt.key" [disabled]="opt.disabled">
-        {{opt.value}}
+      <mat-option *ngFor="let opt of group.options" [value]="opt" [disabled]="opt.disabled">
+        {{opt.value}} 
+        <span *ngIf="opt.hint"><i> - {{ opt.hint }}</i></span>
       </mat-option>
     </mat-optgroup>
   </mat-select>

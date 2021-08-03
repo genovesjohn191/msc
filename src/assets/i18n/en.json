@@ -2586,6 +2586,10 @@
       "title": "Delete Network",
       "message": "Are you sure you wish to delete this network? <br>This cannot be undone."
     },
+    "multicastIpAddressChangedDialog": {
+      "title": "Multicast IP Changed",
+      "message": "The multicast IP address for this network has changed as a result of your newly reserved VLAN(s)."
+    },
     "delete": "Delete",
     "editDetails": "Edit Details",
     "updatingNetwork": "Please wait while we update the network.",
@@ -2621,7 +2625,19 @@
       "retry": "Try again shortly",
       "actions": {
         "reclaim": "Reclaim",
-        "recycle": "Recycle"
+        "recycle": "Recycle",
+        "reserve": "Reserve"
+      },
+      "noVlansAssigned": "There are no VLANs assigned to this network.",
+      "reserveAVlan": "Reserve a VLAN",
+      "reserveErrorMessage": "Sorry, something’s not right. There was an error reserving pods.",
+      "reserveInProgress": "Reserving network VLAN.",
+      "reserveHints": {
+        "mazAaNotAvailable": "Maz-AA: This POD does not have any free VLANs that match the other PODs selected.",
+        "noFreeVlans": "This POD has no free VLANs.",
+        "vxlanMismatch": "This POD does not match the required VXLAN group.",
+        "alreadyAssigned": "Network already has a VLAN assigned in this POD.",
+        "reserveDisabled": "This network has VLANs reserved in PODs with differing VXLAN groups. Additional VLANs cannot currently be reserved for this network."
       }
     },
     "vnis": {

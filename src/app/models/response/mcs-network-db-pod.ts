@@ -47,4 +47,13 @@ export class McsNetworkDbPod {
     deserializer: McsDateSerialization
   })
   public updatedOn: Date = undefined;
+
+  @JsonProperty()
+  public totalVlans: number = undefined;
+
+  @JsonProperty()
+  public freeVlans: number = undefined;
+
+  @JsonProperty()
+  public quarantinedVlans: number = undefined;
 }

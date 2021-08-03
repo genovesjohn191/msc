@@ -129,17 +129,21 @@ import {
   McsJobConnection,
   McsKeyValue,
   McsLicense,
+  McsNetworkDbMazAaQueryParams,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
   McsNetworkDbNetworkDelete,
   McsNetworkDbNetworkEvent,
   McsNetworkDbNetworkQueryParams,
+  McsNetworkDbNetworkReserve,
   McsNetworkDbNetworkUpdate,
   McsNetworkDbPod,
+  McsNetworkDbPodMazAa,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
   McsNetworkDbVlan,
+  McsNetworkDbVlanAction,
   McsNetworkDbVni,
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
@@ -2344,6 +2348,54 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworkEvents'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getMazAaAvailablePods(query: McsNetworkDbMazAaQueryParams): Observable<McsNetworkDbPodMazAa> {
+    return this._networkDbApi.getMazAaAvailablePods(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbNetworkEvents'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public reserveNetworkVlan(networkId: string, payload: McsNetworkDbNetworkReserve) : Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbNetwork, networkId);
+
+    return this._networkDbApi.reserveNetworkVlan(networkId, payload).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.NetworkDbNetwork, networkId);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateNetworkDbNetwork'))
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.NetworkDbNetwork, networkId)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public recycleNetworkVlan(id: string, payload: McsNetworkDbVlanAction) : Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbVlan, id);
+
+    return this._networkDbApi.recycleNetworkVlan(id, payload).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.NetworkDbVlan, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateNetworkDbNetwork'))
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.NetworkDbVlan, id)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public reclaimNetworkVlan(id: string, payload: McsNetworkDbVlanAction) : Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbVlan, id);
+
+    return this._networkDbApi.reclaimNetworkVlan(id, payload).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.NetworkDbVlan, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateNetworkDbNetwork'))
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.NetworkDbVlan, id)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
