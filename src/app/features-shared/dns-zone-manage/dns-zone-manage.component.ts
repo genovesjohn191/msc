@@ -259,7 +259,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
       if (isNullOrEmpty(rrset?.records)) { return; }
 
       rrset.records.forEach(record => {
-        let dnsViewModel = new DnsZoneViewModel(rrset, record);
+        let dnsViewModel = new DnsZoneViewModel(this.zone, rrset, record);
         dataModels.push(dnsViewModel);
       });
     });
