@@ -17,7 +17,8 @@ import { CoreValidators } from '@app/core';
 import {
   DnsRecordType,
   McsNetworkDnsRrSets,
-  McsNetworkDnsRrSetsRecord
+  McsNetworkDnsRrSetsRecord,
+  McsNetworkDnsZone
 } from '@app/models';
 import {
   compareStrings,
@@ -81,6 +82,7 @@ export class DnsZoneViewModel {
   private readonly _formFieldsStateMap = new Map<DnsRecordType, () => void>();
 
   constructor(
+    private _zone?: McsNetworkDnsZone,
     private _mainRrSet?: McsNetworkDnsRrSets,
     private _subRecord?: McsNetworkDnsRrSetsRecord
   ) {
@@ -227,12 +229,22 @@ export class DnsZoneViewModel {
     return DNS_STRING_MAX_LENGTH;
   }
 
+  public get isNaptr(): boolean {
+    return getSafeFormValue<DnsRecordType>(this.fcZoneType) === DnsRecordType.NAPTR;
+  }
+
+  public get isTtlSecondsFromZone(): boolean {
+    return isNullOrUndefined(this._mainRrSet?.ttlSeconds);
+  }
+
   public get dataFieldIsArray(): boolean {
     return getSafeFormValue<DnsRecordType>(this.fcZoneType) === DnsRecordType.TXT;
   }
 
   public get targetForCreate(): boolean {
-    return isNullOrUndefined(this._mainRrSet) && isNullOrUndefined(this._subRecord);
+    return isNullOrUndefined(this._zone) &&
+      isNullOrUndefined(this._mainRrSet) &&
+      isNullOrUndefined(this._subRecord);
   }
 
   public get targetOrDataValue(): string {
@@ -265,7 +277,7 @@ export class DnsZoneViewModel {
       id: this._subRecord.id,
       zoneType: this._mainRrSet.type,
       hostName: this._subRecord.name,
-      ttlSeconds: this._mainRrSet.ttlSeconds,
+      ttlSeconds: this._mainRrSet.ttlSeconds || this._zone.ttlSeconds,
       target: this._subRecord.target,
       data: this._subRecord.data,
       service: this._subRecord.service,

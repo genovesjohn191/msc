@@ -3434,6 +3434,8 @@
     "yes": "Yes"
   },
   "message": {
+    "editToView": "Edit to view",
+    "dataFieldRequired": "Data field is required.",
     "createRecordExist": "Cannot create <strong>{{name}}</strong> record. The Record already exists.",
     "discardChanges": "This will undo all your changes. Do you want to proceed?",
     "deleteZoneRecord": "This will delete <strong>{{dnsTarget}}</strong> zone record. Do you want to proceed?",
