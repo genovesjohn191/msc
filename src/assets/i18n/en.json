@@ -3434,6 +3434,7 @@
     "yes": "Yes"
   },
   "message": {
+    "noRecordsFound": "No records found.",
     "editToView": "Edit to view",
     "dataFieldRequired": "Data field is required.",
     "createRecordExist": "Cannot create <strong>{{name}}</strong> record. The Record already exists.",

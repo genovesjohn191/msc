@@ -12,6 +12,7 @@ import { FieldInputUrlComponent } from './field-input-url/field-input-url.compon
 import { FieldInputComponent } from './field-input/field-input.component';
 import { FieldSelectContactComponent } from './field-select-contact/field-select-contact.component';
 import { FieldSelectDnsZoneTypeComponent } from './field-select-dns-zone-type/field-select-dns-zone-type.component';
+import { FieldSelectTreeViewComponent } from './field-select-tree-view/field-select-tree-view.component';
 import { InputInlineEditComponent } from './input-inline-edit/input-inline-edit.component';
 import { OrderListBoxComponent } from './order-listbox/order-listbox.component';
 import { SelectColocationDeviceComponent } from './select-colocation-service/select-colocation-service.component';
@@ -34,6 +35,7 @@ const exports: any[] | Type<any> = [
   FieldInputUrlComponent,
   FieldSelectContactComponent,
   FieldSelectDnsZoneTypeComponent,
+  FieldSelectTreeViewComponent,
   OrderListBoxComponent,
   SelectColocationDeviceComponent,
   SelectManagementTagComponent
