@@ -1,0 +1,81 @@
+<!-- Input Field -->
+<mat-form-field appearance="outline" #viewFormField class="mcs-tree-dropdown-trigger">
+  <mat-label>{{ treeViewLabel }}</mat-label>
+
+  <input matInput
+    (click)="onTogglePanel()"
+    (blur)="onBlurInput()"
+    (keydown)="onKeyDown($event)"
+    [formControl]="fcTreeSearch">
+
+  <mcs-icon class="mcs-tree-dropdown-trigger-icon" size="small" key="chevron-down" matSuffix></mcs-icon>
+  <mat-error mcsFieldErrorMessage="selectTreeView">{{ displayedErrorMessage }}</mat-error>
+</mat-form-field>
+
+<div cdkOverlayOrigin #viewOverlayTrigger="cdkOverlayOrigin">
+  <!-- Template for tree view -->
+  <ng-template cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="viewOverlayTrigger"
+    [cdkConnectedOverlayMinWidth]="itemWidthInPx"
+    [cdkConnectedOverlayOpen]="panelOpen">
+
+    <div *ngIf="panelOpen" role="tree"
+      class="mcs-tree-node-panel"
+      [tabindex]="0">
+
+      <cdk-virtual-scroll-viewport #viewPortScroll
+        [itemSize]="itemHeightInPx"
+        [style.height]="viewportHeight"
+        class="mcs-tree-scroll-container">
+
+        <ng-container *cdkVirtualFor="let node of treeDatasource; let i = index">
+          <mcs-option role="treeitem"
+            (click)="onClickItem($event, node)"
+            [style.padding-left]="node.level * 12 + 'px'">
+
+            <!-- Non-expandable view by default -->
+            <ng-container *ngIf="!node.expandable; else expandableTemplate">
+              <div class="mcs-node-expand-trigger" disabled></div>
+
+              <ng-container *ngIf="node.selectable; else nonSelectableView">
+                <mcs-checkbox
+                  [checked]="itemIsChecked(node)">
+                  <span [innerHTML]="node.name"></span>
+                </mcs-checkbox>
+              </ng-container>
+
+              <ng-template #nonSelectableView>
+                <span [innerHTML]="node.name"></span>
+              </ng-template>
+            </ng-container>
+
+            <!-- For Expandable view -->
+            <ng-template #expandableTemplate>
+              <div class="mcs-node-expand-trigger" (click)="onToggleNode($event, node)">
+                <div [@rotate45]="itemIsExpanded(node) ? 'rotate' : 'void'">
+                  <mcs-icon size="small" key="chevron-right"></mcs-icon>
+                </div>
+              </div>
+
+              <ng-container *ngIf="node.selectable; else nonSelectableView">
+                <mcs-checkbox
+                  [indeterminate]="itemIsInDeterminate(node)"
+                  [checked]="itemIsChecked(node)">
+                  <span [innerHTML]="node.name"></span>
+                </mcs-checkbox>
+              </ng-container>
+
+              <ng-template #nonSelectableView>
+                <span [innerHTML]="node.name"></span>
+              </ng-template>
+            </ng-template>
+          </mcs-option>
+        </ng-container>
+      </cdk-virtual-scroll-viewport>
+
+      <div padding-small *ngIf="treeControl?.dataNodes?.length === 0">
+        {{ 'message.noRecordsFound' | translate }}
+      </div>
+    </div>
+  </ng-template>
+</div>

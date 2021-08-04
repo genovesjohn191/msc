@@ -1,0 +1,38 @@
+.field-select-tree-view {
+  .mcs-tree-dropdown-trigger {
+    cursor: pointer;
+
+    .mcs-tree-dropdown-trigger-icon {
+      top: -0.45rem;
+      position: relative;
+    }
+  }
+
+  @at-root {
+    .mcs-tree-node-panel {
+      border-radius: 2px;
+      padding: 0;
+      max-height: 20rem;
+      width: 100%;
+      overflow: hidden;
+      margin-top: -1.3rem;
+      border: 1px solid lightgrey;
+
+      cdk-virtual-scroll-viewport.mcs-tree-scroll-container {
+        height: 100%;
+        background-color: white;
+
+        .cdk-virtual-scroll-content-wrapper {
+          width: 100%;
+        }
+
+        .mcs-node-expand-trigger {
+          display: inline-block;
+          height: 100%;
+          width: 1.5rem;
+          text-align: center;
+        }
+      }
+    }
+  }
+}

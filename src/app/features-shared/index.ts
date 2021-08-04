@@ -70,3 +70,5 @@ export * from './form-fields/field-select-contact/field-select-contact';
 export * from './form-fields/field-select-contact/field-select-contact.component';
 export * from './form-fields/field-select-dns-zone-type/field-select-dns-zone-type';
 export * from './form-fields/field-select-dns-zone-type/field-select-dns-zone-type.component';
+export * from './form-fields/field-select-tree-view/field-select-tree-view';
+export * from './form-fields/field-select-tree-view/field-select-tree-view.component';
