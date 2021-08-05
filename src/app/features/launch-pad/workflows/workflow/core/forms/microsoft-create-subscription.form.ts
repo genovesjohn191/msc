@@ -23,12 +23,14 @@ export const microsoftCreateSubscriptionForm: LaunchPadForm = {
     new DynamicSelectTenantField({
       key: 'tenant',
       label: 'Tenant',
+      contextualHelp: 'Select an Azure tenant to create this subscription for.',
       validators: { required: true },
       useTenantIdAsKey: true
     }),
     new DynamicSelectAvailabilityZoneField({
       key: 'location',
       label: 'Location',
+      contextualHelp: 'Select an availability zone to create this subscription for. This will be used to set the location of the Log Analytics workspace that will be created. ',
       validators: { required: true }
     }),
   ],
