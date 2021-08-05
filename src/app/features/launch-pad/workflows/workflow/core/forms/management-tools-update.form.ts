@@ -27,6 +27,7 @@ export const updateInManagementToolsForm: LaunchPadForm = {
       placeholder: 'Enter community string',
       contextualHelp: 'If the device\'s community string is incorrect in CMDB, enter it here. Please note that this will not update the community string in CMDB; it will merely be used to run this workflow.',
       validators: { maxlength: 2000 },
+      settings: { hidden: true }
     }),
     new DynamicSelectField({
       key: 'osType',
@@ -57,14 +58,16 @@ export const updateInManagementToolsForm: LaunchPadForm = {
         { key: 'UNK', value: 'UNKNOWN'},
         { key: 'UCSM', value: 'UCSM'}
       ],
-    contextualHelp: 'If the device\'s OS type is incorrect in CMDB, enter it here. Please note that this will not update the OS type in CMDB; it will merely be used to run this workflow.'
-    }),
+    contextualHelp: 'If the device\'s OS type is incorrect in CMDB, enter it here. Please note that this will not update the OS type in CMDB; it will merely be used to run this workflow.',
+    settings: { hidden: true }
+  }),
     new DynamicInputTextField({
       key: 'dnsVisibility',
       label: 'DNS Visibility',
       placeholder: 'Enter DNS visibility',
       contextualHelp: 'If the device\'s DNS visibility is incorrect in CMDB, enter it here. Please note that this will not update the DNS visibility in CMDB; it will merely be used to run this workflow.',
       validators: { maxlength: 2000 },
+      settings: { hidden: true }
     }),
   ],
 
