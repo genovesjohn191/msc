@@ -1,49 +1,50 @@
 import {
-  Component,
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  Input,
-  OnInit,
-  ViewChild,
+  Component,
+  DoCheck,
   ElementRef,
   EventEmitter,
-  Output,
-  ViewEncapsulation,
+  Input,
   OnChanges,
-  SimpleChanges,
+  OnInit,
   Optional,
-  DoCheck,
-  Self
+  Output,
+  Self,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
-  Validator,
-  ValidationErrors,
-  NgForm,
   FormGroupDirective,
-  NgControl
+  NgControl,
+  NgForm,
+  ValidationErrors,
+  Validator
 } from '@angular/forms';
-import {
-  Observable,
-  BehaviorSubject
-} from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
-import {
-  CommonDefinition,
-  Guid,
-  isNullOrEmpty,
-  isNullOrUndefined,
-  getSafeProperty,
-  moveRecordByIndex,
-  coerceBoolean,
-  isArray,
-  ErrorStateMatcher
-} from '@app/utilities';
 import {
   CoreValidators,
   McsFormFieldControlBase,
   McsUniqueId
 } from '@app/core';
+import {
+  coerceBoolean,
+  getSafeProperty,
+  isArray,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  moveRecordByIndex,
+  CommonDefinition,
+  ErrorStateMatcher,
+  Guid
+} from '@app/utilities';
 
 const DEFAULT_MINIMUM_ITEM = 0;
 const DEFAULT_MAXIMUM_ITEM = 10;
@@ -225,6 +226,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
       let errorInValidator = validationFn(_control);
       errors = { ...errors, ...errorInValidator };
     });
+
     return errors;
   }
 
@@ -233,11 +235,9 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
    * @param value Model binding value
    */
   public writeValue(value: any[]): void {
-    if (isNullOrUndefined(value)) { return; }
-    if (!isArray(value)) { throw new Error('Initial value must be an array'); }
+    if (isNullOrUndefined(value) || !isArray(value)) { return; }
 
     this._listCache = value;
-
     let list: DynamicListItem[] = [];
     value.forEach((item) => list.push(this._createDynamicListItem(item)));
     this._templateListChange.next(list);
@@ -369,5 +369,5 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
 
   private _propagateChange = (_value: string[]) => { };
 
-  public _onTouched = () => {};
+  public _onTouched = () => { };
 }
