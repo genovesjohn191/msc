@@ -233,7 +233,7 @@ export class InsightsDocument implements IDashboardExportDocument {
             `;
           });
         }
-        inefficientVmsTable += `</table><br/>`;
+        inefficientVmsTable += `</table>`;
         if (data?.length === 0) {
           inefficientVmsTable += `<p>No data found</p>`;
         }
