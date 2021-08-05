@@ -1,6 +1,9 @@
 import { Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { McsDateTimeService } from '@app/core';
+import {
+  McsAuthenticationIdentity,
+  McsDateTimeService
+} from '@app/core';
 import {
   McsReportAuditAlerts,
   McsReportInefficientVms,
@@ -25,10 +28,12 @@ const cloudhealthText = 'reports.insights.vmCloudHealthLink';
 export class InsightsDocument implements IDashboardExportDocument {
   private _translateService: TranslateService;
   private _dateTimeService: McsDateTimeService;
+  private _authenticationIdentity: McsAuthenticationIdentity;
 
   public setInjector(injector: Injector): void {
     this._translateService = injector.get(TranslateService);
     this._dateTimeService = injector.get(McsDateTimeService);
+    this._authenticationIdentity = injector.get(McsAuthenticationIdentity);
   }
 
   public exportDocument(itemDetails: InsightsDocumentDetails, docType: number, injector: Injector): void {
@@ -36,7 +41,7 @@ export class InsightsDocument implements IDashboardExportDocument {
     if (isNullOrEmpty(itemDetails)) { return; }
 
     let insightDetails = itemDetails;
-    let htmlDocument = this._createHtmlDocument(insightDetails);
+    let htmlDocument = this._createHtmlDocument(insightDetails, docType);
     let fileName = `report-insights-${Date.now()}`;
 
     switch(docType) {
@@ -44,22 +49,22 @@ export class InsightsDocument implements IDashboardExportDocument {
         DocumentUtility.generateHtmlDocument(`${fileName}.docx`, htmlDocument);
         break;
       case DashboardExportDocumentType.PdfInsights:
-        HtmlToPdfUtility.generateHtmlToPdf(`${fileName}.pdf`, htmlDocument, 'insights');
+        HtmlToPdfUtility.generateHtmlToPdf(`${fileName}.pdf`, htmlDocument, 'Insights', this._authenticationIdentity);
         break;
       default:
         break;
     }
   }
 
-  private _createHtmlDocument(insightDetails: InsightsDocumentDetails): string {
+  private _createHtmlDocument(insightDetails: InsightsDocumentDetails, docType: number): string {
     if (isNullOrEmpty(insightDetails)) { return ``; }
+    let documentTitle = docType === DashboardExportDocumentType.MsWordInsights ? `<h1>Insights</h1>` : '';
     let htmlString = `
       <div id="insights" style="padding: 5px 15px;">
-        <h1>Insights</h1>
+        ${documentTitle}
         <p>${this._translate('reports.insights.subtitle')} ${this._translate(cloudhealthText)}</p>
         <div>
           <h2 style="color: #00bed8;">Costs</h2>
-          <br/>
           ${this._createServiceCostOverviewHtml(insightDetails)}
           ${this._createMonthlyCostHtml(insightDetails)}
           ${this._createVirtualMachineBreakdownHtml(insightDetails)}
@@ -70,9 +75,8 @@ export class InsightsDocument implements IDashboardExportDocument {
 
         if (insightDetails.hasManagementService) {
           htmlString += `
-            <br style="page-break-before: always">
             <div>
-              <h2 style="color: #00bed8;">Tech Review</h2>
+              <h2 style="color: #00bed8;" class="pdf-pagebreak-before">Tech Review</h2>
               ${this._createSecurityHtml(insightDetails.securityScore)}
               ${this._createComplianceHtml(insightDetails)}
               ${this._createResourceHealthHtml(insightDetails)}
@@ -129,8 +133,8 @@ export class InsightsDocument implements IDashboardExportDocument {
             if (!isNullOrEmpty(item.savings)) {
               operationalTable += `
                 <tr>
-                  <th style="text-align: left; background-color: #f0f0f0; padding: 5px;"><h4>${item.description}</h4></th>
-                  <th style="text-align: right; background-color: #f0f0f0; padding: 5px;"><h4>${currencyFormat(item.savings)}</h4></th>
+                  <th style="text-align: left; background-color: #f0f0f0; padding: 5px; color: #000;"><h4>${item.description}</h4></th>
+                  <th style="text-align: right; background-color: #f0f0f0; padding: 5px; color: #000;"><h4>${currencyFormat(item.savings)}</h4></th>
                 </tr>
               `;
               item.subItems.forEach(subItem => {
@@ -163,7 +167,7 @@ export class InsightsDocument implements IDashboardExportDocument {
       <p>Up to <strong>${vmCost}</strong> could be saved by rightsizing virtual machines.</p>`
     let vmRightSizingTable = '';
     vmRightSizingTable += `
-      <table style="width: 100%">
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">
           <th style="text-align: left">VM Name</th>
           <th style="text-align: left">Size</th>
@@ -198,7 +202,7 @@ export class InsightsDocument implements IDashboardExportDocument {
         }
         vmRightSizingTable += `</table>`;
         if (data?.length === 0) {
-          vmRightSizingTable += `<p style="text-align: center;">No data found</p>`;
+          vmRightSizingTable += `<p>No data found</p>`;
         }
     let actualResponse = this._widgetHtml(vmRightSizingTable, false, title, subTitle);
     return actualResponse;
@@ -210,7 +214,7 @@ export class InsightsDocument implements IDashboardExportDocument {
       <p>${this._translate('reports.insights.costs.inefficientVms.secondSubtitle')} ${this._translate(cloudhealthText)}</p>`;
     let inefficientVmsTable = '';
     inefficientVmsTable += `
-      <table style="width: 100%">
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">
           <th style="text-align: left">VM Name</th>
           <th style="text-align: left">Efficiency Index</th>
@@ -231,7 +235,7 @@ export class InsightsDocument implements IDashboardExportDocument {
         }
         inefficientVmsTable += `</table>`;
         if (data?.length === 0) {
-          inefficientVmsTable += `<p style="text-align: center;">No data found</p>`;
+          inefficientVmsTable += `<p>No data found</p>`;
         }
     let actualResponse = this._widgetHtml(inefficientVmsTable, false, title, subTitle);
     return actualResponse;
@@ -239,24 +243,27 @@ export class InsightsDocument implements IDashboardExportDocument {
 
   private _createSecurityHtml(security: McsReportSecurityScore): string {
     let title = this._translate('reports.insights.techReview.security.title');
-    let subTitle = `<h3>${this._translate('reports.insights.techReview.security.overAllSecurityScore')}</h3>
+    let subTitle = `<h4>${this._translate('reports.insights.techReview.security.overAllSecurityScore')}</h4>
         Azure Security Center ${this._translate('reports.insights.techReview.security.subTitle')}
     `;
-    let securePercentage = this._getPercentage(security.currentScore, security.maxScore);
-    let barColor = this._getBgColorProgressBar(securePercentage);
-    let widgetHtml = `
-      <span style="font-size: 24pt">
-        <strong>${this._convertNumber(security.currentScore)}</strong> / ${this._convertNumber(security.maxScore)}
-      </span>
-      <table style="width: 27%; border-collapse: collapse;">
-        <tr style="height: 6pt;">
-          <td style="width: ${securePercentage}%; background-color: ${barColor}"></td>`;
-          if (securePercentage < 100) {
-            widgetHtml += `<td style="width: ${100 - securePercentage}%; background-color: #b2ebf2"></td>`;
-          }
-          widgetHtml += `</tr>
-      </table>
-    `;
+    let widgetHtml = '';
+    if (!isNullOrEmpty(security)) {
+      let securePercentage = this._getPercentage(security.currentScore, security.maxScore);
+      let barColor = this._getBgColorProgressBar(securePercentage);
+      let progressBarWidth = securePercentage > 100 ? 100 : securePercentage;
+      widgetHtml =`<span style="font-size: 24pt">
+          <strong>${this._convertNumber(security.currentScore)}</strong> / ${this._convertNumber(security.maxScore)}
+        </span>
+        <table style="width: 27%; border-collapse: collapse;" data-pdfmake="{'layout': 'noBorders'}">
+          <tr style="height: 6pt; width: auto;">
+            <td style="width: ${progressBarWidth}%; background-color: ${barColor}"></td>`;
+            if (securePercentage < 100) {
+              widgetHtml += `<td style="width: ${100 - securePercentage}%; background-color: #b2ebf2"></td>`;
+            }
+            widgetHtml += `</tr>
+        </table><br/>
+      `;
+    }
     let actualResponse = this._widgetHtml(widgetHtml, false, title, subTitle);
     return actualResponse;
   }
@@ -264,34 +271,36 @@ export class InsightsDocument implements IDashboardExportDocument {
   private _createComplianceHtml(insightDetails: InsightsDocumentDetails): string {
     let title = this._translate('reports.insights.techReview.compliance.title');
     let subTitle = `An overarching compliance view ${this._translate('reports.insights.techReview.compliance.subTitle')}`
-    let compliance = insightDetails.compliance;
-    let compliancePercentage = compliance.resourceCompliancePercentage <= 0
-      ? 0 : coerceNumber(compliance.resourceCompliancePercentage.toFixed());
-    let barColor = this._getBgColorProgressBar(compliancePercentage);
-    let widgetHtml = `
-      <h4>Overall Resource Compliance</h4>
-      <span style="font-size: 24pt"><strong>${this._convertNumber(compliance.resourceCompliancePercentage)}%</strong></span><br/>
-      <table style="width: 27%; border-collapse: collapse;">
-        <tr style="height: 6pt;">
-          <td style="width: ${compliancePercentage}%; background-color: ${barColor}"></td>`;
-          if (compliancePercentage < 100) {
-            widgetHtml += `<td style="width: ${100 - compliancePercentage}%; background-color: #b2ebf2"></td>`;
-          }
-        widgetHtml += `</tr>
-      </table>
-      <span>${compliance.compliantResources} of ${compliance.totalResources}</span>
+    let widgetHtml = '';
+    if (!isNullOrEmpty(insightDetails.compliance)) {
+      let compliance = insightDetails.compliance;
+      let compliancePercentage = compliance.resourceCompliancePercentage <= 0
+        ? 0 : coerceNumber(compliance.resourceCompliancePercentage.toFixed());
+      let barColor = this._getBgColorProgressBar(compliancePercentage);
+      let progressBarWidth = compliancePercentage > 100 ? 100 : compliancePercentage;
+      widgetHtml = `
+        <h4>Overall Resource Compliance</h4>
+        <span style="font-size: 24pt"><strong>${this._convertNumber(compliance.resourceCompliancePercentage)}%</strong></span>
+        <table style="width: 27%; border-collapse: collapse;" data-pdfmake="{'layout': 'noBorders'}">
+          <tr style="height: 6pt;">
+            <td style="width: ${progressBarWidth}%; background-color: ${barColor}"></td>`;
+            if (compliancePercentage < 100) {
+              widgetHtml += `<td style="width: ${100 - compliancePercentage}%; background-color: #b2ebf2"></td>`;
+            }
+          widgetHtml += `</tr>
+        </table>
+        <span>${compliance.compliantResources} of ${compliance.totalResources}</span>
+        <br/>
+        <h4 style="padding-top: 10px;">Resources by Compliance State</h4>
+        ${this._chartHtml(insightDetails.complianceUri, '400', '120')}
 
-      <h4 style="padding-top: 10px;">Resources by Compliance State</h4>
-      ${this._chartHtml(insightDetails.complianceUri, '400', '120')}
+        <h4 style="padding-top: 10px;">Non-compliant Initiatives</h4>
+        <span><strong style="font-size: 24pt">${compliance.nonCompliantInitiatives}</strong> out of ${compliance.totalInitiatives}</span>
 
-      <h4 style="padding-top: 10px;">Non-compliant Initiatives</h4>
-      <span style="font-size: 24pt"><strong>${compliance.nonCompliantInitiatives}</strong></span>
-      <span> out of ${compliance.totalInitiatives}</span>
-
-      <h4 style="padding-top: 15px;">Non-compliant Policies</h4>
-      <span style="font-size: 24pt"><strong>${compliance.nonCompliantPolicies}</strong></span>
-      <span> out of ${compliance.totalPolicies}</span>
-    `;
+        <h4 style="padding-top: 15px;">Non-compliant Policies</h4>
+        <span><strong style="font-size: 24pt">${compliance.nonCompliantPolicies}</strong> out of ${compliance.totalPolicies}</span>
+      `;
+    }
     let actualResponse = this._widgetHtml(widgetHtml, false, title, subTitle);
     return actualResponse;
   }
@@ -318,7 +327,7 @@ export class InsightsDocument implements IDashboardExportDocument {
     let subTitle = `A count of Azure Monitor alerts ${this._translate('reports.insights.techReview.monitoringAlerting.subTitle')}
       <p>
         <strong>Total Alerts</strong><br/>
-        <span style="font-size: 30px; color: #0a97e5;">${insightDetails.totalAlerts}</span>
+        <span style="font-size: 25px; color: #0a97e5;">${insightDetails.totalAlerts}</span>
       </p>`;
     let actualResponse = this._widgetHtml(chartHtml, true, title, subTitle);
     return actualResponse;
@@ -330,7 +339,7 @@ export class InsightsDocument implements IDashboardExportDocument {
       ${this._translate('reports.insights.techReview.auditAlerts.subTitle')}`;
     let auditAlertsTable = '';
     auditAlertsTable += `
-      <table style="width: 100%">
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">
           <th style="text-align: left">Severity</th>
           <th style="text-align: left">Type</th>
@@ -350,7 +359,7 @@ export class InsightsDocument implements IDashboardExportDocument {
         }
         auditAlertsTable += `</table>`;
         if (data?.length === 0) {
-          auditAlertsTable += `<p style="text-align: center;">No data found</p>`;
+          auditAlertsTable += `<p>No data found</p>`;
         }
     let actualResponse = this._widgetHtml(auditAlertsTable, true, title, subTitle);
     return actualResponse;
@@ -361,7 +370,7 @@ export class InsightsDocument implements IDashboardExportDocument {
     let subTitle = `${this._translate('reports.insights.techReview.updateManagement.subTitle')}`
     let updateManagementTable = '';
     updateManagementTable += `
-      <table style="border-collapse: collapse; width: 100%" width="100%">
+      <table style="border-collapse: collapse; width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">
           <th style="text-align: left">Target VM</th>
           <th style="text-align: left">OS Type</th>
@@ -387,7 +396,7 @@ export class InsightsDocument implements IDashboardExportDocument {
         }
         updateManagementTable += `</table>`;
         if (data?.length === 0) {
-          updateManagementTable += `<p style="text-align: center;">No data found</p>`;
+          updateManagementTable += `<p>No data found</p>`;
         }
     let actualResponse = this._widgetHtml(updateManagementTable, false, title, subTitle);
     return actualResponse;
@@ -396,10 +405,8 @@ export class InsightsDocument implements IDashboardExportDocument {
   private _widgetHtml(widget: string, pageBreak: boolean, title: string, subTitle?: string): string {
     let widgetHtml = (isNullOrEmpty(widget)) ? `<p style="text-align: left;">No data found</p>` : widget;
     let actualResponse = '';
-    if (pageBreak) {
-      actualResponse += `<br style="page-break-before: always">`;
-    }
-    actualResponse += `<div><h3>${title}</h3>`;
+    let withPageBreak = pageBreak ? 'class="pdf-pagebreak-before"' : '';
+    actualResponse += `<div><h3 ${withPageBreak}>${title}</h3>`;
     if (subTitle) {
       actualResponse += `<p>${subTitle}</p>`;
     }
@@ -408,8 +415,8 @@ export class InsightsDocument implements IDashboardExportDocument {
   }
 
   private _chartHtml(uri: string, width?: string, height?: string): string {
-    let chartWidth = width ? width : '870';
-    let chartHeight = height ? height : '530';
+    let chartWidth = width ? width : '860';
+    let chartHeight = height ? height : '505';
     return (isNullOrEmpty(uri)) ? `<p style="text-align: left;">No data found</p>` :
       `<img src="${uri}" width="${chartWidth}" height="${chartHeight}">`;
   }

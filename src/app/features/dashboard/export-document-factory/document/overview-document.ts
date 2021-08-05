@@ -1,6 +1,7 @@
 import { Injector } from '@angular/core';
 import {
  McsAccessControlService,
+ McsAuthenticationIdentity,
  McsDateTimeService
 } from '@app/core';
 import {
@@ -25,6 +26,7 @@ export class OverviewDocument implements IDashboardExportDocument {
   private _translateService: TranslateService;
   private _dateTimeService: McsDateTimeService;
   private _accessControlService: McsAccessControlService;
+  private _authenticationIdentity: McsAuthenticationIdentity;
 
   public hasTicketViewPermission(): boolean {
     return this._accessControlService.hasPermission([McsPermission.TicketView]);
@@ -34,6 +36,7 @@ export class OverviewDocument implements IDashboardExportDocument {
     this._translateService = injector.get(TranslateService);
     this._dateTimeService = injector.get(McsDateTimeService);
     this._accessControlService = injector.get(McsAccessControlService);
+    this._authenticationIdentity = injector.get(McsAuthenticationIdentity);
   }
 
   public exportDocument(itemDetails: OverviewDocumentDetails, docType: number, injector: Injector): void {
@@ -41,33 +44,31 @@ export class OverviewDocument implements IDashboardExportDocument {
     if (isNullOrEmpty(itemDetails)) { return; }
 
     let overviewDetails = itemDetails;
-    let htmlDocument = this._createHtmlDocument(overviewDetails);
+    let htmlDocument = this._createHtmlDocument(overviewDetails, docType);
     let fileName = `report-overview-${Date.now()}`;
     switch(docType) {
       case DashboardExportDocumentType.MsWordOverview:
         DocumentUtility.generateHtmlDocument(`${fileName}.docx`, htmlDocument);
         break;
       case DashboardExportDocumentType.PdfOverview:
-        HtmlToPdfUtility.generateHtmlToPdf(`${fileName}.pdf`, htmlDocument, 'overview');
+        HtmlToPdfUtility.generateHtmlToPdf(`${fileName}.pdf`, htmlDocument, 'Overview', this._authenticationIdentity);
         break;
       default:
         break;
     }
   }
 
-  private _createHtmlDocument(overviewDetails: OverviewDocumentDetails): string {
+  private _createHtmlDocument(overviewDetails: OverviewDocumentDetails, docType: number): string {
     if (isNullOrEmpty(overviewDetails)) { return ``; }
-
+    let documentTitle = docType === DashboardExportDocumentType.MsWordOverview ? `<h1>Overview</h1>` : '';
     let htmlString = `
       <div id="overview" style="padding: 5px 15px;">
-        <h1>Overview</h1><br/>
+        ${documentTitle}
         <div>
           ${this._createServiceCostOverviewHtml(overviewDetails)}
           ${this._createAzureResourcesHtml(overviewDetails)}
-          <br style="page-break-before: always">
           ${this._createCostRecommendationHtml(overviewDetails.costRecommendation)}
           ${this._createContactUsHtml(overviewDetails.contactUs)}
-          <br style="page-break-before: always">
           ${this._createResourceChangesHtml(overviewDetails)}
           ${this._createAzureTicketsHtml(overviewDetails.azureTickets)}
           ${this._createTopVmsByCostHtml(overviewDetails.topVms)}
@@ -84,18 +85,19 @@ export class OverviewDocument implements IDashboardExportDocument {
     let licenseSubscriptionLabel = overviewDetails.licenseSubscription === 1 ? 'subscription' : 'subscriptions';
     widgetHtml += `<div>${overviewDetails.licenseSubscription} License ${licenseSubscriptionLabel}</div><br/>`;
 
-    let actualResponse = this._widgetHtml(widgetHtml, title);
+    let actualResponse = this._widgetHtml(widgetHtml, false, title);
     return actualResponse;
   }
 
   private _createAzureResourcesHtml(overviewDetails: OverviewDocumentDetails): string {
     let chartHtml = this._chartHtml(overviewDetails.azureResources);
     let title = this._translate('reports.overview.azureResourcesWidget.title');
-    let actualResponse = this._widgetHtml(chartHtml, title);
+    let actualResponse = this._widgetHtml(chartHtml, false, title);
     return actualResponse;
   }
 
   private _createCostRecommendationHtml(cost: McsReportCostRecommendations): string {
+    if (isNullOrEmpty(cost)) { return ''}
     let title = this._translate('reports.overview.costAndRecommendationsWidget.title');
     let actual = this._convertNumber(cost.actual);
     let budget = this._convertNumber(cost.budget);
@@ -103,24 +105,25 @@ export class OverviewDocument implements IDashboardExportDocument {
     let barColor = this._getBgColorProgressBar(costPercentage);
     let barBgColor = costPercentage >= 85 ? '#ffe0b2' : '#c8e6c9';
     let costUpdatedOnDate =  !isNullOrEmpty(cost.updatedOn) ? this._formatDate(new Date(cost.updatedOn), 'friendly') : '';
+    let progressBarWidth = costPercentage > 100 ? 100 : costPercentage;
     let widgetHtml = `
       <h5>Actual vs Budget</h5>
-      <table style="width: 50%; border-collapse: collapse;">
+      <table style="width: 50%; border-collapse: collapse;" data-pdfmake="{'layout': 'noBorders'}">
         <tr style="height: 10pt;">
-          <td style="width: ${costPercentage}%; background-color: ${barColor}"></td>`;
+          <td style="width: ${progressBarWidth}%; background-color: ${barColor}"></td>`;
           if (costPercentage < 100) {
-            widgetHtml += `<td style="width: ${100 - costPercentage}%; background-color: ${barBgColor}"></td>`;
+            widgetHtml += `<td style="width: ${100 - progressBarWidth}%; background-color: ${barBgColor}"></td>`;
           }
       widgetHtml += `</tr>
         </table>
         <h6>${currencyFormat(actual)} / ${currencyFormat(budget)} (${costPercentage}%)</h6>
-        <small>Refreshed ${costUpdatedOnDate}</small>
+        <small>Refreshed ${costUpdatedOnDate}</small><br/>
 
         <p><h5>Operational Monthly Savings</h5></p>
         <div>Up to ${currencyFormat(cost.potentialOperationalSavings)} could be saved by optimising underutilised resources.</div>
         <div>Up to ${currencyFormat(cost.potentialRightsizingSavings)} could be saved by rightsizing virtual machines.</div><br/>
       `;
-    let actualResponse = this._widgetHtml(widgetHtml, title);
+    let actualResponse = this._widgetHtml(widgetHtml, true, title);
     return actualResponse;
   }
 
@@ -144,14 +147,14 @@ export class OverviewDocument implements IDashboardExportDocument {
       widgetHtml += `</p>`;
     })
 
-    let actualResponse = this._widgetHtml(widgetHtml, title);
+    let actualResponse = this._widgetHtml(widgetHtml, false, title);
     return actualResponse;
   }
 
   private _createResourceChangesHtml(overviewDetails: OverviewDocumentDetails): string {
     let chartHtml = this._chartHtml(overviewDetails.resourceCount);
     let title = this._translate('reports.overview.resourceChangesWidget.title');
-    let actualResponse = this._widgetHtml(chartHtml, title);
+    let actualResponse = this._widgetHtml(chartHtml, true, title);
     return actualResponse;
   }
 
@@ -160,7 +163,7 @@ export class OverviewDocument implements IDashboardExportDocument {
     let ticketsTable = '';
     if (this.hasTicketViewPermission) {
       ticketsTable += `
-        <table style="width: 100%">
+        <table style="width: 100%" data-pdfmake="{'headerRows':1}">
           <tr style="background-color: #000; color: #FFF;">
             <th style="text-align: left">Summary</th>
             <th style="text-align: left">Last Updated Date</th>
@@ -177,12 +180,12 @@ export class OverviewDocument implements IDashboardExportDocument {
           }
       ticketsTable += `</table>`;
       if (data?.length === 0) {
-        ticketsTable += `<p style="text-align: center">No open tickets.</p>`;
+        ticketsTable += `<p>No open tickets.</p>`;
       }
     } else {
-      ticketsTable += `<p style="text-align: center">${this._translate('reports.overview.azureTicketsWidget.noTicketViewPermission')}</p>`;
+      ticketsTable += `<p>${this._translate('reports.overview.azureTicketsWidget.noTicketViewPermission')}</p>`;
     }
-    let actualResponse = this._widgetHtml(ticketsTable, title);
+    let actualResponse = this._widgetHtml(ticketsTable, false, title);
     return actualResponse;
   }
 
@@ -191,7 +194,7 @@ export class OverviewDocument implements IDashboardExportDocument {
     let subTitle = `${this._translate('reports.overview.topVmsByCostWidget.subTitle')}`
     let topVmsByCostTable = '';
     topVmsByCostTable += `
-      <table style="width: 100%">
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">
           <th style="text-align: left">VM Name</th>
           <th style="text-align: left">Total Cost</th>
@@ -212,17 +215,18 @@ export class OverviewDocument implements IDashboardExportDocument {
         }
         topVmsByCostTable += `</table>`;
         if (data?.length === 0) {
-          topVmsByCostTable += `<p style="text-align: center">No VMs or no cost data to display.</p>`;
+          topVmsByCostTable += `<p>No VMs or no cost data to display.</p>`;
         }
-    let actualResponse = this._widgetHtml(topVmsByCostTable, title, subTitle);
+    let actualResponse = this._widgetHtml(topVmsByCostTable, false, title, subTitle);
     return actualResponse;
   }
 
-  private _widgetHtml(widget: string, title: string, subTitle?: string): string {
+  private _widgetHtml(widget: string, pageBreak: boolean, title: string, subTitle?: string): string {
     let widgetHtml = (isNullOrEmpty(widget)) ? `<p>No data found</p>` : widget;
+    let withPageBreak = pageBreak ? 'class="pdf-pagebreak-before"' : '';
     let actualResponse =
       `<div>
-        <h3>${title}</h3>
+        <h3 ${withPageBreak}>${title}</h3>
       `;
     if (subTitle) {
       actualResponse += `<p>${subTitle}</p>`;
@@ -232,7 +236,7 @@ export class OverviewDocument implements IDashboardExportDocument {
   }
 
   private _chartHtml(uri: string, width?: string): string {
-    let chartWidth = width ? width : '450';
+    let chartWidth = width ? width : '500';
     return (isNullOrEmpty(uri)) ? `<p>No data found</p>` : `<img src="${uri}" width="${chartWidth}">`;
   }
 
