@@ -76,7 +76,7 @@ export class InsightsDocument implements IDashboardExportDocument {
         if (insightDetails.hasManagementService) {
           htmlString += `
             <div>
-              <h2 style="color: #00bed8;" class="pdf-pagebreak-before">Tech Review</h2>
+              <h2 style="color: #00bed8;">Tech Review</h2>
               ${this._createSecurityHtml(insightDetails.securityScore)}
               ${this._createComplianceHtml(insightDetails)}
               ${this._createResourceHealthHtml(insightDetails)}
@@ -233,7 +233,7 @@ export class InsightsDocument implements IDashboardExportDocument {
             `;
           });
         }
-        inefficientVmsTable += `</table>`;
+        inefficientVmsTable += `</table><br/>`;
         if (data?.length === 0) {
           inefficientVmsTable += `<p>No data found</p>`;
         }
