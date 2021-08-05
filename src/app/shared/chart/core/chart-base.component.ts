@@ -280,7 +280,9 @@ export class ChartComponentBase {
   private _chart: ApexChart = {
     type: 'bar',
     height: 'auto',
-    animations: this._setAnimation()
+    animations: {
+      enabled: false
+    }
   };
 
   private _dataLabels: ApexDataLabels = {
@@ -311,31 +313,9 @@ export class ChartComponentBase {
   }
 
   public getChartUri(): void {
-    window.setTimeout(() => {
-      this.chartObject.dataURI().then((uri) => {
-        this.chartChange.emit(uri);
-      });
-    }, 500)
-  }
-
-  private _setAnimation(): any {
-    // Temporary: (FUSION-6402) for testing purposes only
-    let enableAnimation = coerceBoolean(this.route.snapshot.queryParams?.animation || true);
-    if (!enableAnimation) {
-      return {
-        enabled: false
-      };
-    }
-    return {
-      speed: 10,
-      animateGradually: {
-        enabled: false
-      },
-      dynamicAnimation: {
-        enabled: true,
-        speed: 10
-      }
-    };
+    this.chartObject.dataURI().then((uri) => {
+      this.chartChange.emit(uri);
+    });
   }
 
   public constructor(
