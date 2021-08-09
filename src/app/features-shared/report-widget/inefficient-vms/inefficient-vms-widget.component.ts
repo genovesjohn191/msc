@@ -75,6 +75,7 @@ export class InefficientVmsWidgetComponent {
   }
 
   private _getInefficientVms(): Observable<McsMatTableContext<McsReportInefficientVms>> {
+    this.dataChange.emit(undefined);
     return this._reportingService.getInefficientVms(this._period, this._subscriptionIds).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
@@ -82,6 +83,7 @@ export class InefficientVmsWidgetComponent {
         return dataSourceContext;
       }),
       catchError((error) => {
+        this.dataChange.emit([]);
         return throwError(error);
       })
     );

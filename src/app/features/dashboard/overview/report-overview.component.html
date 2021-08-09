@@ -3,21 +3,26 @@
    <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef padding-left-medium class="hide-on-print">
       <!-- PDF Icon -->
-      <mcs-icon
-        key="pdf-black"
-        size="large"
-        mcsCursor="pointer"
+      <mcs-action-item mcsResponsivePanelItem hidden-small
+        [disabled]="pdfDownloadInProgress || widgetsLoading()"
         [mcsTooltip]="'tooltip.exportPdf' | translate"
-        (click)="onClickExportPdf()">
-      </mcs-icon>
+        (click)="onClickExportPdf($event)">
+        <mcs-icon key="pdf-black" size="large" mcsCursor="pointer"></mcs-icon>
+     </mcs-action-item>
+
       <!-- Word Icon -->
-      <mcs-icon padding-left-medium
-        key="word-black"
-        size="large"
-        mcsCursor="pointer"
+      <mcs-action-item mcsResponsivePanelItem hidden-small
+        [disabled]="widgetsLoading() || pdfDownloadInProgress"
         [mcsTooltip]="'tooltip.exportWord' | translate"
         (click)="onClickExportWord()">
-      </mcs-icon>
+        <mcs-icon key="word-black" size="large" mcsCursor="pointer"></mcs-icon>
+      </mcs-action-item>
+
+      <ng-container *ngIf="pdfDownloadInProgress">
+        <mcs-loader size="small"
+          [mcsTooltip]="'tooltip.tooltipText' | translate"
+          mcsTooltipPosition="right"></mcs-loader>
+      </ng-container>
     </mcs-top-panel-item>
   </mcs-top-panel>
 

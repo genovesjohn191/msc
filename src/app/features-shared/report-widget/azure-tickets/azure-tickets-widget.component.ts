@@ -106,7 +106,7 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
     queryParam.pageSize = maxTicketsToDisplay;
     queryParam.serviceId = 'AZ';
     queryParam.state = 'open';
-
+    this.dataChange.emit(undefined);
     return this._ticketService.getTickets(queryParam).pipe(
       map((response) => {
         this.hasMore = response.totalCount > maxTicketsToDisplay;
@@ -119,6 +119,7 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
         return dataSourceContext;
       }),
       catchError(() => {
+        this.dataChange.emit([]);
         return throwError('Tickets endpoint failed.');
       })
     );

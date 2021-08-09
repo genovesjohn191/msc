@@ -81,6 +81,7 @@ import { LoaderHideEvent } from './items/loader-hide.event';
 import { LoaderShowEvent } from './items/loader-show.event';
 import { NavToggleEvent } from './items/nav-toggle-event';
 import { NewRecordsRetrievedEvent } from './items/new-records-retrieved.event';
+import { PdfDownloadEvent } from './items/pdf-download.event';
 import { RouteChangeEvent } from './items/route-change.event';
 import { ServerAddAvSelectedEvent } from './items/server-add-av-selected.event';
 import { ServerAddBackupServerSelectedEvent } from './items/server-add-backup-server-selected.event';
@@ -120,6 +121,8 @@ export class McsEvent {
   public static stateNotificationShow = new StateNotificationShowEvent();
   public static systemMessageShow = new SystemMessageShowEvent();
   public static systemMessageHide = new SystemMessageHideEvent();
+
+  public static pdfDownloadEvent = new PdfDownloadEvent();
 
   public static entityActiveEvent = new EntityActiveEvent();
   public static entityClearStateEvent = new EntityClearStateEvent();

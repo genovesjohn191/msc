@@ -69,7 +69,7 @@ export class TopVmsByCostWidgetComponent {
   private _getTopVmsByCost(): Observable<McsMatTableContext<McsReportTopVmsByCost>> {
     let queryParam = new McsQueryParam();
     queryParam.pageSize = maxTopVmsToDisplay;
-
+    this.dataChange.emit(undefined);
     return this._reportingService.getTopVmsByCost(queryParam).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
@@ -77,6 +77,7 @@ export class TopVmsByCostWidgetComponent {
         return dataSourceContext;
       }),
       catchError((error) => {
+        this.dataChange.emit([]);
         return throwError(error);
       })
     );

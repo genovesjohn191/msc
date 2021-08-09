@@ -3,6 +3,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
 import { McsAuthenticationIdentity } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 
 export class HtmlToPdfUtility {
 
@@ -10,7 +12,8 @@ export class HtmlToPdfUtility {
     fileName: string,
     htmlString: string,
     headerTitle: string,
-    identity: McsAuthenticationIdentity): void {
+    identity: McsAuthenticationIdentity,
+    eventDispatcher: EventBusDispatcherService): void {
     if (!htmlString) { return; }
 
     let html = htmlToPdfmake(htmlString, {
@@ -96,6 +99,8 @@ export class HtmlToPdfUtility {
         }
       }
     };
-    pdfMake.createPdf(documentDefinition).download(`${fileName}`);
+    pdfMake.createPdf(documentDefinition).download(`${fileName}`,
+      () => { eventDispatcher.dispatch(McsEvent.pdfDownloadEvent); } // notify once pdf download is done
+    );
   }
 }

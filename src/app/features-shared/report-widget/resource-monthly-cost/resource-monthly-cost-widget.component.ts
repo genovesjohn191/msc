@@ -114,10 +114,12 @@ export class ResourceMonthlyCostWidgetComponent extends ReportWidgetBase impleme
   public getResourceMonthlyCostReport(): void {
     this.hasError = false;
     this.processing = true;
+    this.updateChartUri(undefined);
     this.reportingService.getResourceMonthlyCostReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
     .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
+      this.updateChartUri('');
       this._changeDetector.markForCheck();
       return throwError(error);
     }))

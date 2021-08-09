@@ -100,6 +100,7 @@ export class AuditAlertsWidgetComponent implements OnInit {
   }
 
   private _getAuditAlerts(): Observable<McsMatTableContext<McsReportAuditAlerts>> {
+    this.dataChange.emit(undefined);
     return this._reportingService.getAuditAlerts(this._startPeriod, this._endPeriod, this._subscriptionIds).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
@@ -107,6 +108,7 @@ export class AuditAlertsWidgetComponent implements OnInit {
         return dataSourceContext;
       }),
       catchError((error) => {
+        this.dataChange.emit([]);
         return throwError(error);
       })
     );

@@ -110,6 +110,7 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
   }
 
   private getVMRightsizing(): Observable<McsMatTableContext<McsReportVMRightsizing>> {
+    this.dataChange.emit(undefined);
     return this._reportingService.getVMRightsizing().pipe(
       map((response) => {
         let vmRightSizing: McsReportVMRightsizing[] = [];
@@ -120,6 +121,7 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
         return dataSourceContext;
       }),
       catchError((error) => {
+        this.dataChange.emit([]);
         return throwError(error);
       })
     );

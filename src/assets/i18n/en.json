@@ -3487,7 +3487,8 @@
   },
   "tooltip": {
     "exportWord": "Export Word Document",
-    "exportPdf": "Export PDF Document"
+    "exportPdf": "Export PDF Document",
+    "tooltipText": "Downloading..."
   },
   "dialog": {
     "mediaDetach": {

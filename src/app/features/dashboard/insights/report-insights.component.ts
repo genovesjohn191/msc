@@ -7,9 +7,11 @@ import {
 } from '@angular/core';
 import {
   BehaviorSubject,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
   takeUntil
@@ -45,6 +47,8 @@ import {
 import { InsightsDocumentDetails } from './report-insights-document';
 import { DashboardExportDocumentManager } from '../export-document-factory/dashboard-export-document-manager';
 import { DashboardExportDocumentType } from '../export-document-factory/dashboard-export-document-type';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 
 interface PeriodOption {
   label: string;
@@ -176,6 +180,10 @@ export class ReportInsightsComponent implements OnDestroy {
     return this._managementServices?.length > 0;
   }
 
+  public get pdfDownloadInProgress(): boolean {
+    return this._isPdfDownloadInProgress;
+  }
+
   public _subscriptionIdsFilter: string[] = undefined;
   public _performanceSubscriptionIdsFilter: string = '';
 
@@ -196,12 +204,15 @@ export class ReportInsightsComponent implements OnDestroy {
   private _subscriptionSubject = new Subject();
   private _destroySubject = new Subject<void>();
   private _exportDocumentDetails = new InsightsDocumentDetails();
+  private _isPdfDownloadInProgress: boolean;
 
   public constructor(
     private reportService: McsReportingService,
     private _changeDetector: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
     private _injector: Injector
   ) {
+    this._registerEvents();
     this._getSubscriptions();
     this._identifyNonEssentialManagementServiceExistence();
     this._createMonthOptions();
@@ -216,17 +227,19 @@ export class ReportInsightsComponent implements OnDestroy {
   }
 
   public onClickExportWord(): void {
-    this._exportDocumentDetails.hasManagementService = this.hasManagementService;
     DashboardExportDocumentManager.initializeFactories()
       .getCreationFactory(DashboardExportDocumentType.MsWordInsights)
       .exportDocument(this._exportDocumentDetails, DashboardExportDocumentType.MsWordInsights, this._injector)
   }
 
   public onClickExportPdf(): void {
-    this._exportDocumentDetails.hasManagementService = this.hasManagementService;
-    DashboardExportDocumentManager.initializeFactories()
+    this._isPdfDownloadInProgress = true;
+    this._changeDetector.markForCheck();
+    setTimeout(() => {
+      DashboardExportDocumentManager.initializeFactories()
       .getCreationFactory(DashboardExportDocumentType.MsWordInsights)
       .exportDocument(this._exportDocumentDetails, DashboardExportDocumentType.PdfInsights, this._injector)
+    }, 100);
   }
 
   public serviceCostUri(uri: string): void { this._exportDocumentDetails.serviceCost = uri; }
@@ -292,6 +305,41 @@ export class ReportInsightsComponent implements OnDestroy {
     this._exportDocumentDetails.updateManagement = data;
   }
 
+  public widgetsLoading(): boolean {
+    let isCostsWidgetsLoading = this._isCostsWidgetsLoading();
+    let isTechReviewWidgetsLoading = this.hasManagementService ? this._isTechReviewWidgetsLoading() : false;
+    return isCostsWidgetsLoading || isTechReviewWidgetsLoading;
+  }
+
+  private _isCostsWidgetsLoading(): boolean {
+    return this._exportDocumentDetails.serviceCost === undefined ||
+      this._exportDocumentDetails.monthlyCostUri === undefined ||
+      this._exportDocumentDetails.vmBreakdown === undefined ||
+      this._exportDocumentDetails.operationalSavings === undefined ||
+      this._exportDocumentDetails.vmRightsizing === undefined ||
+      this._exportDocumentDetails.inefficientVms === undefined;
+  }
+
+  private _isTechReviewWidgetsLoading(): boolean {
+    return this._exportDocumentDetails.securityScore === undefined ||
+      this._exportDocumentDetails.complianceUri === undefined ||
+      this._exportDocumentDetails.resourceHealth === undefined ||
+      this._exportDocumentDetails.performanceScalability === undefined ||
+      this._exportDocumentDetails.monitoringAlerting === undefined ||
+      this._exportDocumentDetails.auditAlerts === undefined ||
+      this._exportDocumentDetails.updateManagement  === undefined;
+  }
+
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      McsEvent.pdfDownloadEvent, this._pdfDownloadCompleted.bind(this));
+  }
+
+  private _pdfDownloadCompleted(): void {
+    this._isPdfDownloadInProgress = false;
+    this._changeDetector.markForCheck();
+  }
+
   private _getSubscriptions(): void {
     this.reportService.getSubscriptions()
     .pipe(
@@ -307,9 +355,15 @@ export class ReportInsightsComponent implements OnDestroy {
   private _identifyNonEssentialManagementServiceExistence(): void {
     this.reportService.getManagementServices(false)
     .pipe(
-      takeUntil(this._destroySubject))
+      takeUntil(this._destroySubject),
+      catchError((error) => {
+        this._exportDocumentDetails.hasManagementService = false;
+        return throwError(error);
+      })
+    )
     .subscribe((services) => {
       this._managementServices = services;
+      this._exportDocumentDetails.hasManagementService = services?.length > 0;
     });
   }
 

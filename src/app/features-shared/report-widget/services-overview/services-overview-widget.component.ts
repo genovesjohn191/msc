@@ -106,6 +106,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
     this.servicesInfo[id].count = 0;
     this.servicesInfo[id].processing = true;
     this.servicesInfo[id].hasError = false;
+    this.azureSubscriptionChange.emit(undefined);
     this._changeDetector.markForCheck();
 
     this._reportingService.azureSubscriptionCount
@@ -114,6 +115,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
       catchError(() => {
         this.servicesInfo[id].hasError = true;
         this.servicesInfo[id].processing = false;
+        this.azureSubscriptionChange.emit(0);
         this._changeDetector.markForCheck();
         return throwError('Azure subscriptions endpoint failed.');
       }))
@@ -129,6 +131,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
     this.servicesInfo[id].count = 0;
     this.servicesInfo[id].processing = true;
     this.servicesInfo[id].hasError = false;
+    this.licenseSubscriptionChange.emit(undefined);
     this._changeDetector.markForCheck();
 
     this._reportingService.licenseSubscriptionCount
@@ -137,6 +140,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
       catchError(() => {
         this.servicesInfo[id].hasError = true;
         this.servicesInfo[id].processing = false;
+        this.licenseSubscriptionChange.emit(0);
         this._changeDetector.markForCheck();
         return throwError('Licenses endpoint failed.');
       }))

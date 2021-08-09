@@ -72,12 +72,14 @@ export class AzureResourcesWidgetComponent extends ReportWidgetBase implements O
   public getData(): void {
     this.hasError = false;
     this.processing = true;
+    this.updateChartUri(undefined);
     this._changeDetectorRef.markForCheck();
 
     this._reportingService.getAzureServicesReport()
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;
+      this.updateChartUri('');
       this._changeDetectorRef.markForCheck();
       return throwError('Azure resources endpoint failed.');
     }))

@@ -110,12 +110,14 @@ export class MonitoringAndAlertingWidgetComponent extends ReportWidgetBase imple
   public getData(): void {
     this.hasError = false;
     this.processing = true;
+    this.updateChartUri(undefined);
     this._changeDetectorRef.markForCheck();
 
     this._reportingService.getMonitoringAndAlerting(this._startPeriod, this._endPeriod, this._subscriptionIds)
     .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
+      this.updateChartUri('');
       this._changeDetectorRef.markForCheck();
       return throwError(error);
     }))
