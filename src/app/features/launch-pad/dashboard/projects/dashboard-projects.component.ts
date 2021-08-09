@@ -124,7 +124,6 @@ export class DashboardProjectsComponent implements OnDestroy {
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.state = this._state;
-    queryParam.companyId = this._identity.user.companyId;
 
     return this._apiService.getProjects(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));

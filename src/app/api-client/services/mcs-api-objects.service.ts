@@ -149,7 +149,6 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
-    searchParams.set('companyId', query.companyId);
     searchParams.set('state', query.state);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
