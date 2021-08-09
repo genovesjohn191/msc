@@ -22,6 +22,7 @@ import {
 import { InsightsDocumentDetails } from '../../insights/report-insights-document';
 import { IDashboardExportDocument } from '../dashboard-export-document-interface';
 import { DashboardExportDocumentType } from '../dashboard-export-document-type';
+import { EventBusDispatcherService } from '@app/event-bus';
 
 const cloudhealthText = 'reports.insights.vmCloudHealthLink';
 
@@ -29,11 +30,13 @@ export class InsightsDocument implements IDashboardExportDocument {
   private _translateService: TranslateService;
   private _dateTimeService: McsDateTimeService;
   private _authenticationIdentity: McsAuthenticationIdentity;
+  private _eventDispatcher: EventBusDispatcherService;
 
   public setInjector(injector: Injector): void {
     this._translateService = injector.get(TranslateService);
     this._dateTimeService = injector.get(McsDateTimeService);
     this._authenticationIdentity = injector.get(McsAuthenticationIdentity);
+    this._eventDispatcher = injector.get(EventBusDispatcherService);
   }
 
   public exportDocument(itemDetails: InsightsDocumentDetails, docType: number, injector: Injector): void {
@@ -49,7 +52,8 @@ export class InsightsDocument implements IDashboardExportDocument {
         DocumentUtility.generateHtmlDocument(`${fileName}.docx`, htmlDocument);
         break;
       case DashboardExportDocumentType.PdfInsights:
-        HtmlToPdfUtility.generateHtmlToPdf(`${fileName}.pdf`, htmlDocument, 'Insights', this._authenticationIdentity);
+        HtmlToPdfUtility.generateHtmlToPdf(
+          `${fileName}.pdf`, htmlDocument, 'Insights', this._authenticationIdentity, this._eventDispatcher);
         break;
       default:
         break;

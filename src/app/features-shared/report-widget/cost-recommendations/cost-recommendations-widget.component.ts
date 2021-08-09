@@ -116,12 +116,13 @@ export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
   public getCostRecommendations(): void {
     this.processing = true;
     this.hasError = false;
-
+    this.dataChange.emit(undefined);
     this._reportingService.getCostRecommendations()
     .pipe(
       catchError((error) => {
         this.hasError = true;
         this.processing = false;
+        this.dataChange.emit(null);
         this._changeDetectorRef.markForCheck();
         return throwError(error);
       }),

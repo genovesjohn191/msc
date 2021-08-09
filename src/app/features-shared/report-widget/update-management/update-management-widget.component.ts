@@ -85,6 +85,7 @@ export class UpdateManagementWidgetComponent implements OnInit {
   }
 
   private _getUpdateManagement(): Observable<McsMatTableContext<McsReportUpdateManagement>> {
+    this.dataChange.emit(undefined);
     return this._reportingService.getUpdateManagement().pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
@@ -92,6 +93,7 @@ export class UpdateManagementWidgetComponent implements OnInit {
         return dataSourceContext;
       }),
       catchError((error) => {
+        this.dataChange.emit([]);
         return throwError(error);
       })
     );

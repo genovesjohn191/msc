@@ -80,12 +80,14 @@ export class ResourceChangesWidgetComponent extends ReportWidgetBase implements 
   public getData(): void {
     this.hasError = false;
     this.processing = true;
+    this.updateChartUri(undefined);
     this._changeDetectorRef.markForCheck();
 
     this._reportingService.getServiceChanges()
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;
+      this.updateChartUri('');
       this._changeDetectorRef.markForCheck();
       return throwError('Service changes endpoint failed.');
     }))

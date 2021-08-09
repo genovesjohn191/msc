@@ -59,11 +59,13 @@ export class ContactUsWidgetComponent implements OnInit {
   public getUserContactsInfo(): void {
     this.processing = true;
     this.hasError = false;
+    this.dataChange.emit(undefined);
     this._apiService.getCompanyActiveUser()
     .pipe(
       catchError(() => {
         this.hasError = true;
         this.processing = false;
+        this.dataChange.emit([]);
         this._changeDetectorRef.markForCheck();
         return throwError('Contact Us endpoint failed.');
       }),

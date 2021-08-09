@@ -87,12 +87,13 @@ export class SecurityWidgetComponent implements OnInit, OnDestroy {
   public getSecurityScore(): void {
     this.processing = true;
     this.hasError = false;
-
+    this.dataChange.emit(undefined);
     this._reportingService.getSecurityScore()
     .pipe(
       catchError((error) => {
         this.hasError = true;
         this.processing = false;
+        this.dataChange.emit(null);
         this._changeDetectorRef.markForCheck();
         return throwError(error);
       }),

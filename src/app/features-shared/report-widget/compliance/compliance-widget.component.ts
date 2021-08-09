@@ -107,12 +107,13 @@ export class ComplianceWidgetComponent extends ReportWidgetBase implements OnIni
   public getResourceCompliance(): void {
     this.processing = true;
     this.hasError = false;
-
+    this.updateChartUri(undefined);
     this._reportingService.getResourceCompliance(this._period, this._subscriptionIds)
     .pipe(
       catchError((error) => {
         this.hasError = true;
         this.processing = false;
+        this.updateChartUri('');
         this._changeDetectorRef.markForCheck();
         return throwError(error);
       }),

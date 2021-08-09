@@ -66,12 +66,14 @@ export class ResourceHealthWidgetComponent extends ReportWidgetBase implements O
   public getData(): void {
     this.hasError = false;
     this.processing = true;
+    this.updateChartUri(undefined);
     this._changeDetectorRef.markForCheck();
 
     this.reportingService.getResourceHealth()
     .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
+      this.updateChartUri(null);
       this._changeDetectorRef.markForCheck();
       return throwError(error);
     }))

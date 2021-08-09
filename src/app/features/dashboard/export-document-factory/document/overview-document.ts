@@ -4,6 +4,7 @@ import {
  McsAuthenticationIdentity,
  McsDateTimeService
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsContactUs,
   McsPermission,
@@ -27,6 +28,7 @@ export class OverviewDocument implements IDashboardExportDocument {
   private _dateTimeService: McsDateTimeService;
   private _accessControlService: McsAccessControlService;
   private _authenticationIdentity: McsAuthenticationIdentity;
+  private _eventDispatcher: EventBusDispatcherService;
 
   public hasTicketViewPermission(): boolean {
     return this._accessControlService.hasPermission([McsPermission.TicketView]);
@@ -37,6 +39,7 @@ export class OverviewDocument implements IDashboardExportDocument {
     this._dateTimeService = injector.get(McsDateTimeService);
     this._accessControlService = injector.get(McsAccessControlService);
     this._authenticationIdentity = injector.get(McsAuthenticationIdentity);
+    this._eventDispatcher = injector.get(EventBusDispatcherService);
   }
 
   public exportDocument(itemDetails: OverviewDocumentDetails, docType: number, injector: Injector): void {
@@ -51,7 +54,8 @@ export class OverviewDocument implements IDashboardExportDocument {
         DocumentUtility.generateHtmlDocument(`${fileName}.docx`, htmlDocument);
         break;
       case DashboardExportDocumentType.PdfOverview:
-        HtmlToPdfUtility.generateHtmlToPdf(`${fileName}.pdf`, htmlDocument, 'Overview', this._authenticationIdentity);
+        HtmlToPdfUtility.generateHtmlToPdf(
+          `${fileName}.pdf`, htmlDocument, 'Overview', this._authenticationIdentity, this._eventDispatcher);
         break;
       default:
         break;
