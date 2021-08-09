@@ -21,7 +21,6 @@ export class McsObjectCrispOrderQueryParams extends McsQueryParam {
 
 export class McsObjectProjectsQueryParams extends McsQueryParam {
   public state?: CrispOrderState;
-  public companyId?: string;
 
   constructor() {
     super();
