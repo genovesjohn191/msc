@@ -8,7 +8,7 @@
         <ng-container *ngIf="orderGroup$ | async as orderGroup">
           <mcs-search #search mcsId="order-dashboard-listing-panel-search"></mcs-search>
             <ng-container *ngIf="orderGroup?.orderAvailableItemTypes | mcsArrayHasElement; else noOrderTypesSidePanelTemplate">
-            <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+            <mcs-list-panel [dataSource]="listviewDatasource" [config]="listviewDatasource?.config?.panelSettings">
               <ng-container *mcsListPanelContent="let family">
 
                 <mcs-option-group [label]="family.name">
