@@ -73,7 +73,7 @@ export class ResourceHealthWidgetComponent extends ReportWidgetBase implements O
     .pipe(catchError((error) => {
       this.hasError = true;
       this.processing = false;
-      this.updateChartUri(null);
+      this.updateChartUri('');
       this._changeDetectorRef.markForCheck();
       return throwError(error);
     }))
@@ -82,6 +82,9 @@ export class ResourceHealthWidgetComponent extends ReportWidgetBase implements O
       if (!this.empty) {
         this.chartSeries = this.healthResourceSeries(response.resources);
         this.chartLabels = this.healthResourceLabels(response.resources);
+      }
+      if (isNullOrEmpty(response.totalCount)) {
+        this.updateChartUri('');
       }
       this.processing = false;
       this._changeDetectorRef.markForCheck();
