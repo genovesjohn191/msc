@@ -54,8 +54,9 @@ export enum TerraformModuleType {
   Trm = 'TRM'
 }
 
-export enum NewResourceGroup {
-  AddNewResourceGroup = 'New Resource Group'
+export enum StaticResourceGroupOption {
+  AddNewResourceGroup = 'New Resource Group',
+  NotApplicable = 'Not Applicable'
 }
 
 @Component({
@@ -178,7 +179,7 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   }
 
   public onChangeResourceGroup(resource: McsAzureResource) {
-    let isSelectedResourceAddNewGroup = resource?.azureId === NewResourceGroup.AddNewResourceGroup;
+    let isSelectedResourceAddNewGroup = resource?.azureId === StaticResourceGroupOption.AddNewResourceGroup;
     this._updateResourceGroupNameState(isSelectedResourceAddNewGroup);
     this._isResourceGroupNew = isSelectedResourceAddNewGroup ? true : false;
   }
@@ -211,13 +212,26 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   }
 
   private _filterResourcesByResourceGroup(resources: McsOption[]): McsOption[] {
-    let groupedResources: McsOption[] = [];
-    groupedResources = resources.filter((resource) => resource.value.type === this.microsoftResourceGroup);
-    groupedResources.unshift(createObject(McsOption, {
-      text: NewResourceGroup.AddNewResourceGroup,
-      value: { azureId: NewResourceGroup.AddNewResourceGroup }
+    let resourceGroupOptions: McsOption[] = [];
+    // filtered options from API
+    let dynamicResourceOptions = resources.filter((resource) => resource.value.type === this.microsoftResourceGroup);
+    let staticResourceOptions = this._addStaticOptionInResourceDropdown();
+    resourceGroupOptions = staticResourceOptions.concat(dynamicResourceOptions);
+
+    return resourceGroupOptions;
+  }
+
+  private _addStaticOptionInResourceDropdown(): McsOption[] {
+    let staticOptions: McsOption[] = [];
+    staticOptions.push(createObject(McsOption, {
+      text: StaticResourceGroupOption.NotApplicable,
+      value: { azureId: StaticResourceGroupOption.NotApplicable }
     }));
-    return groupedResources;
+    staticOptions.push(createObject(McsOption, {
+      text: StaticResourceGroupOption.AddNewResourceGroup,
+      value: { azureId: StaticResourceGroupOption.AddNewResourceGroup }
+    }));
+    return staticOptions;
   }
 
   private _setTerraformModuleType(moduleType: number): string {
@@ -309,7 +323,7 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   private _setResourceGroupPayloadValue(): string {
     let selectedResourceGroup = getSafeProperty(this.fcResourceGroup, (obj) => obj.value?.azureId);
     let newResourceGroupName = getSafeProperty(this.fcNewResourceGroupName, (obj) => obj.value);
-    if (selectedResourceGroup === NewResourceGroup.AddNewResourceGroup) {
+    if (selectedResourceGroup === StaticResourceGroupOption.AddNewResourceGroup) {
       return `${this.newResourceGroupNameText}: ${newResourceGroupName}`;
     }
     return selectedResourceGroup;
