@@ -2,13 +2,24 @@
 <mat-form-field appearance="outline" #viewFormField class="mcs-tree-dropdown-trigger">
   <mat-label>{{ treeViewLabel }}</mat-label>
 
-  <input matInput
-    (click)="onTogglePanel()"
-    (blur)="onBlurInput()"
-    (keydown)="onKeyDown($event)"
-    [formControl]="fcTreeSearch">
+  <mat-chip-list #chipList *ngIf="selectedNodes$ | async as selectedNodes">
+    <mat-chip *ngFor="let node of selectedNodes"
+      [selectable]="false"
+      [removable]="false">
+      {{ node.name }}
+    </mat-chip>
 
-  <mcs-icon class="mcs-tree-dropdown-trigger-icon" size="small" key="chevron-down" matSuffix></mcs-icon>
+    <input matInput
+      [placeholder]="displayedLabel"
+      (click)="onTogglePanel()"
+      (blur)="onBlurInput()"
+      (keydown)="onKeyDown($event)"
+      [formControl]="fcTreeSearch"
+      [matChipInputFor]="chipList">
+  </mat-chip-list>
+
+  <!-- TODO(apascual): add loader here -->
+  <mcs-loader margin-bottom-small *ngIf="processOnGoing$ | async" size="small" matSuffix></mcs-loader>
   <mat-error mcsFieldErrorMessage="selectTreeView">{{ displayedErrorMessage }}</mat-error>
 </mat-form-field>
 
@@ -20,8 +31,7 @@
     [cdkConnectedOverlayOpen]="panelOpen">
 
     <div *ngIf="panelOpen" role="tree"
-      class="mcs-tree-node-panel"
-      [tabindex]="0">
+      class="mcs-tree-node-panel" [tabindex]="0">
 
       <cdk-virtual-scroll-viewport #viewPortScroll
         [itemSize]="itemHeightInPx"
@@ -31,6 +41,10 @@
         <ng-container *cdkVirtualFor="let node of treeDatasource; let i = index">
           <mcs-option role="treeitem"
             (click)="onClickItem($event, node)"
+            [ngStyle]="{'pointer-events': 'auto'}"
+            [disabled]="node.disabled"
+            [mcsTooltip]="node.tooltip"
+            [mcsTooltipShow]="node.disabled"
             [style.padding-left]="node.level * 12 + 'px'">
 
             <!-- Non-expandable view by default -->
@@ -39,6 +53,7 @@
 
               <ng-container *ngIf="node.selectable; else nonSelectableView">
                 <mcs-checkbox
+                  [disabled]="node.disabled"
                   [checked]="itemIsChecked(node)">
                   <span [innerHTML]="node.name"></span>
                 </mcs-checkbox>
@@ -59,6 +74,7 @@
 
               <ng-container *ngIf="node.selectable; else nonSelectableView">
                 <mcs-checkbox
+                  [disabled]="node.disabled"
                   [indeterminate]="itemIsInDeterminate(node)"
                   [checked]="itemIsChecked(node)">
                   <span [innerHTML]="node.name"></span>
@@ -75,6 +91,10 @@
 
       <div padding-small *ngIf="treeControl?.dataNodes?.length === 0">
         {{ 'message.noRecordsFound' | translate }}
+      </div>
+
+      <div padding-small *ngIf="processOnGoing$ | async">
+        {{ 'message.loadingItems' | translate }}
       </div>
     </div>
   </ng-template>
