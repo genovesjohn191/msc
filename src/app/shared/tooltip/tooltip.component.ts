@@ -1,16 +1,17 @@
 import {
-  Component,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
-import { AnimationEvent } from '@angular/animations';
-import {
   Observable,
   Subject
 } from 'rxjs';
+
+import { AnimationEvent } from '@angular/animations';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { animateFactory } from '@app/utilities';
 
 /** Tooltips declaration type */

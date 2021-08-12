@@ -8,10 +8,11 @@ import {
 } from 'rxjs/operators';
 
 import {
+  forwardRef,
   AfterViewInit,
   ChangeDetectorRef,
   Directive,
-  Injector,
+  Inject,
   Input,
   OnDestroy
 } from '@angular/core';
@@ -44,15 +45,13 @@ export class FieldErrorMessageDirective<TInput> implements AfterViewInit, OnDest
   private _interpolations: IJsonObject;
 
   constructor(
-    private _injector: Injector,
+    @Inject(forwardRef(() => MatFormField)) private _formFieldHost,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService
   ) { }
 
   public ngAfterViewInit() {
-    let container = this._injector.get(MatFormField);
-    this.controlRef = container._control as any;
-
+    this.controlRef = this._formFieldHost._control as any;
     this._subscribeToStatusChange();
   }
 
@@ -113,6 +112,8 @@ export class FieldErrorMessageDirective<TInput> implements AfterViewInit, OnDest
   }
 
   private _subscribeToStatusChange(): void {
+    if (!this.controlRef?.ngControl) { return; }
+
     merge(
       this.controlRef.ngControl.statusChanges,
       this._notifyViewUpdateChange

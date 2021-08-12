@@ -1,4 +1,10 @@
 import {
+  throwError,
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import {
+  catchError,
   takeUntil,
   tap
 } from 'rxjs/operators';
@@ -42,8 +48,10 @@ interface MatTreeViewModel<TEntity> {
   expandable: boolean;
   level: number;
   selectable: boolean;
+  disabled: boolean;
 
   name: string;
+  tooltip: string;
   data: TEntity;
   checkbox: FormControl
 }
@@ -72,9 +80,11 @@ export class FieldSelectTreeViewComponent<TEntity>
   @Input()
   public singleSelect: boolean;
 
+  public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
   public viewportHeight: string;
   public fcTreeSearch: FormControl;
+  public processOnGoing$ = new BehaviorSubject<boolean>(false);
 
   public readonly treeDatasource: MatTreeFlatDataSource<TreeItem<TEntity>, MatTreeViewModel<TEntity>>;
   public readonly treeControl: FlatTreeControl<MatTreeViewModel<TEntity>>;
@@ -82,6 +92,7 @@ export class FieldSelectTreeViewComponent<TEntity>
   public readonly treeSearch: FieldSelectTreeSearch;
 
   private _clickOutsideHandler = this.onClickOutSide.bind(this);
+  private _selectedNodesChange = new BehaviorSubject<MatTreeViewModel<TEntity>[]>([]);
 
   @ViewChild('viewOverlayTrigger', { read: CdkOverlayOrigin })
   private _viewOverlayTrigger: CdkOverlayOrigin;
@@ -118,6 +129,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       .startSubscription();
     this.dataSource.registerSearch(this.treeSearch);
 
+    this._subscribeToSelectedNodesChange();
     this._subscribeToDataSourceChange();
   }
 
@@ -188,8 +200,8 @@ export class FieldSelectTreeViewComponent<TEntity>
   public onClickItem(event: MouseEvent, node: MatTreeViewModel<TEntity>): void {
     event?.stopPropagation();
 
-    if (!node.selectable) { return; }
-    this._selectItem(node);
+    if (!node.selectable || node.disabled) { return; }
+    this._toggleItem(node);
   }
 
   public itemIsExpanded(node: MatTreeViewModel<TEntity>): boolean {
@@ -216,7 +228,7 @@ export class FieldSelectTreeViewComponent<TEntity>
     return node.checkbox?.value;
   }
 
-  private _selectItem(node: MatTreeViewModel<TEntity>): void {
+  private _toggleItem(node: MatTreeViewModel<TEntity>): void {
     requestAnimationFrame(() => {
       // Change the current selection state of the formcontrols
       const currentValue = node.checkbox?.value;
@@ -232,12 +244,9 @@ export class FieldSelectTreeViewComponent<TEntity>
       }
 
       // Update associated form control
-      const allSelectedItems = this.treeControl.dataNodes
-        ?.filter(dataNode => dataNode.checkbox?.value)
-        ?.map(dataNode => dataNode.data);
-      this.ngControl.control.setValue(allSelectedItems);
-
-      this.changeDetectorRef.markForCheck();
+      const selectedNodes = this.treeControl.dataNodes
+        ?.filter(dataNode => dataNode.checkbox?.value);
+      this._selectedNodesChange.next(selectedNodes);
     });
   }
 
@@ -275,20 +284,40 @@ export class FieldSelectTreeViewComponent<TEntity>
     return {
       expandable: !isNullOrEmpty(treeItem.children),
       level: treeLevel,
-      selectable: treeItem.canSelect,
+      selectable: treeItem.option?.selectable,
+      disabled: treeItem.option?.disableWhen(treeItem.value),
       name: treeItem.text,
+      tooltip: treeItem.option?.tooltip,
       data: treeItem.value,
       checkbox: new FormControl(false)
     } as MatTreeViewModel<TEntity>;
   }
 
   private _subscribeToDataSourceChange(): void {
+    this.processOnGoing$.next(true);
+
     this.dataSource.connect(null).pipe(
       takeUntil(this.destroySubject),
       tap(dataRecords => {
         this.treeDatasource.data = dataRecords;
         this._updateViewPortHeight(dataRecords);
+        this.processOnGoing$.next(false);
+      }),
+      catchError(error => {
+        this.processOnGoing$.next(false);
+        return throwError(() => new Error(error));
       })
     ).subscribe();
+  }
+
+  private _subscribeToSelectedNodesChange(): void {
+    this.selectedNodes$ = this._selectedNodesChange.pipe(
+      tap(selectedNodes => {
+        // Notify changes to form control
+        let dataRecords = selectedNodes?.map(selectedNode => selectedNode.data);
+        this.ngControl.control.setValue(dataRecords);
+        this.changeDetectorRef.markForCheck();
+      })
+    );
   }
 }
