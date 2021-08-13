@@ -1,0 +1,18 @@
+@import "../../../styles/shared/base";
+
+.mat-dialog-content {
+  border-top: 1px solid $color-grey-04;
+  border-bottom: 1px solid $color-grey-04;
+  padding: $space-large $space-xlarge;
+  flex-direction: row;
+}
+
+.mat-dialog-title {
+  margin-bottom: $space-large;
+}
+
+.dialog-content-icon {
+  align-self: flex-start;
+  margin-top: $space-xsmall;
+  margin-right: $space-medium;
+}
