@@ -16,7 +16,7 @@
 
               <mcs-option [value]="entity" [selected]="selectedDnsId === entity.id">
                 <mcs-item>
-                  <span>{{ entity.billingDescription }}</span>
+                  <span>{{ entity.billingDescription | mcsDataLabel }}</span>
                 </mcs-item>
               </mcs-option>
             </a>

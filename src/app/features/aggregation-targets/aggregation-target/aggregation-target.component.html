@@ -18,7 +18,7 @@
                 <mcs-option [value]="aggregationTarget"
                   [selected]="selectedAggregationTarget.id === aggregationTarget.id">
                   <mcs-item>
-                    <span>{{ aggregationTarget.description }}</span>
+                    <span>{{ aggregationTarget.description | mcsDataLabel }}</span>
                   </mcs-item>
                 </mcs-option>
               </a>

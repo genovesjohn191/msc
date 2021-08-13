@@ -33,7 +33,7 @@
 
                 <mcs-option [value]="media" [selected]="(media$ | async)?.id === media.id">
                   <div margin-left-xsmall>
-                    <span text-wrap>{{ media.name }}</span>
+                    <span text-wrap>{{ media.name | mcsDataLabel }}</span>
                   </div>
                 </mcs-option>
               </a>

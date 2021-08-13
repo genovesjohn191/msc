@@ -27,7 +27,7 @@
                     [selected]="(selectedFirewall$ | async)?.id === firewall.id">
                     <mcs-item>
                       <mcs-icon [key]="firewall?.connectionStatusIconKey" size="small"></mcs-icon>
-                      <span>{{ firewall.managementName }}</span>
+                      <span>{{ firewall.managementName | mcsDataLabel }}</span>
                       <span read-only>{{ firewall.haRole }}</span>
                     </mcs-item>
                   </mcs-option>
@@ -48,7 +48,7 @@
                 [selected]="(selectedFirewall$ | async)?.id === firewall.id">
                 <mcs-item>
                   <mcs-icon [key]="firewall?.connectionStatusIconKey"  size="small"></mcs-icon>
-                  <span>{{ firewall.managementName }}</span>
+                  <span>{{ firewall.managementName | mcsDataLabel }}</span>
                 </mcs-item>
               </mcs-option>
               </a>
@@ -87,7 +87,8 @@
                 mcsId
                 mcsEventTracker="view-firewall-in-portal"
                 mcsEventCategory="firewall"
-                mcsEventLabel="firewall-details-page">View in Portal
+                mcsEventLabel="firewall-details-page">
+                {{ 'label.viewInPortal' | translate }}
               </a>
 
               <mcs-context-menu-link
