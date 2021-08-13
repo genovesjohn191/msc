@@ -8,6 +8,7 @@ import { SharedModule } from '@app/shared';
 import { CheckBoxListComponent } from './checkbox-list/checkbox-list.component';
 import { FieldErrorMessageDirective } from './field-directives/field-error-message.directive';
 import { FieldInputNoteComponent } from './field-input-note/field-input-note.component';
+import { FieldInputNumberArrowComponent } from './field-input-number-arrow/field-input-number-arrow.component';
 import { FieldInputUrlComponent } from './field-input-url/field-input-url.component';
 import { FieldInputComponent } from './field-input/field-input.component';
 import { FieldSelectContactComponent } from './field-select-contact/field-select-contact.component';
@@ -32,6 +33,7 @@ const exports: any[] | Type<any> = [
   CheckBoxListComponent,
   FieldInputComponent,
   FieldInputNoteComponent,
+  FieldInputNumberArrowComponent,
   FieldInputUrlComponent,
   FieldSelectContactComponent,
   FieldSelectDnsZoneTypeComponent,
