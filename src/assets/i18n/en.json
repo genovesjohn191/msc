@@ -3307,6 +3307,7 @@
     "enabled": "Enabled"
   },
   "label": {
+    "viewInPortal": "View in Portal",
     "value": "Value",
     "data": "Data",
     "order": "Order",

@@ -60,7 +60,7 @@
                       [mcsTooltip]="server.processingText"
                       mcsTooltipPosition="right"></mcs-loader>
 
-                    <span text-wrap>{{ server.name }}</span>
+                    <span text-wrap>{{ server.name | mcsDataLabel }}</span>
                   </mcs-item>
                 </mcs-option>
               </a>

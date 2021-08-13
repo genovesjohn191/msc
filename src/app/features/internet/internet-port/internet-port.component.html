@@ -26,7 +26,7 @@
                   <mcs-option [value]="internetPort"
                     [selected]="(selectedInternetPort$ | async)?.id === internetPort.id">
                     <mcs-item>
-                      <span>{{ internetPort.description }}</span>
+                      <span>{{ internetPort.description | mcsDataLabel }}</span>
                     </mcs-item>
                   </mcs-option>
                 </a>
@@ -45,7 +45,7 @@
                 <mcs-option [value]="internetPort"
                   [selected]="(selectedInternetPort$ | async)?.id === internetPort.id">
                   <mcs-item>
-                    <span>{{ internetPort.description }}</span>
+                    <span>{{ internetPort.description | mcsDataLabel }}</span>
                   </mcs-item>
                 </mcs-option>
               </a>
