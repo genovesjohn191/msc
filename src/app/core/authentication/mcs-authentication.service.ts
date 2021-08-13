@@ -25,6 +25,7 @@ import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsAccessControlService } from './mcs-access-control.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
+import { McsStorageService } from '../services/mcs-storage.service';
 
 @Injectable()
 export class McsAuthenticationService {
@@ -136,9 +137,9 @@ export class McsAuthenticationService {
   private _getLoginPath(): string {
     let _returnUrl = this._appState.get(CommonDefinition.APPSTATE_RETURN_URL_KEY);
     let _loginUrl = this._coreConfig.loginUrl;
-    if (this._accessControlService.hasAccessToFeature([McsFeatureFlag.OAuthV2])) {
-      // TODO: new login path here
-      // _loginUrl = '';
+
+    if (this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled') {
+      _loginUrl = `${this._coreConfig.apiHost}/auth/login?state=`;
     }
     return `${_loginUrl}${_returnUrl}`;
   }
@@ -147,9 +148,8 @@ export class McsAuthenticationService {
     let _returnUrl = this._appState.get(CommonDefinition.APPSTATE_RETURN_URL_KEY);
     let _logoutUrl = this._coreConfig.logoutUrl;
 
-    if (this._accessControlService.hasAccessToFeature([McsFeatureFlag.OAuthV2])) {
-      // TODO: new logout path here
-      // _logoutUrl = '';
+    if (this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled') {
+      _logoutUrl = `${this._coreConfig.apiHost}/auth/logout`;
     }
 
     return `${_logoutUrl}`;

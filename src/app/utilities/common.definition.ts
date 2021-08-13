@@ -18,6 +18,7 @@ export class CommonDefinition {
   public static COOKIE_SESSION_ID = 'mcsSessionIdentifier';
   public static COOKIE_USER_STATE_ID = 'mcsStateIdentifier';
   public static COOKIE_ACTIVE_MESSAGE = 'mcsActiveMessage';
+  public static OAUTH2_NEW = 'oauthv2';
 
   // Cookies
   public static COOKIE_ENABLE_LOGGER = '_enableMcsObserver';
