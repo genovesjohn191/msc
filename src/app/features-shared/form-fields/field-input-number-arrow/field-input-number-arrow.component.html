@@ -1,0 +1,46 @@
+<mcs-form-field class="form-field-size-medium">
+  <div class="arrow-container">
+    <button type="button"
+      (mousedown)="onArrowUpMouseDownEvent(ngControl?.control?.value)"
+      (click)="onArrowUpClickEvent()"
+      (mouseup)="clearInterval()"
+      (mouseout)="clearInterval()"
+      [disabled]="valueIsmax || inputInvalid(ngControl?.control?.value)">
+      <div class="arrow-up"></div>
+    </button>
+    <button type="button"
+      (mousedown)="onArrowDownMouseDownEvent(ngControl?.control?.value)"
+      (click)="onArrowDownClickEvent()"
+      (mouseup)="clearInterval()"
+      (mouseout)="clearInterval()"
+      [disabled]="valueIsMin || inputInvalid(ngControl?.control?.value)"
+      ><div class="arrow-down"></div>
+    </button>
+  </div>
+  <input mcsInput #numberValue
+    [formControl]="ngControl?.control"
+    (keyup)="onEnterKeyUpEvent(numberValue.value)"
+    min="minValue"
+    max="maxValue"
+    mcsId="{{ mcsId }}"
+    mcsEventTracker="{{ eventTracker }}"
+    mcsEventCategory="{{ eventCategory }}"
+    mcsEventLabel="{{ eventLabel }}">
+
+    <mcs-suffix mcsSuffix>{{ suffix }}</mcs-suffix>
+    <mcs-error mcsError errorState="required">
+      {{ errorMessage.required }}
+    </mcs-error>
+    <mcs-error mcsError errorState="numeric">
+      {{ errorMessage.numeric }}
+    </mcs-error>
+    <mcs-error text-wrap mcsError errorState="min">
+      {{ errorMessage.min }}
+    </mcs-error>
+    <mcs-error text-wrap mcsError errorState="max">
+      {{ errorMessage.max }}
+    </mcs-error>
+    <mcs-error text-wrap mcsError errorState="step">
+      {{ errorMessage.step }}
+    </mcs-error>
+</mcs-form-field>

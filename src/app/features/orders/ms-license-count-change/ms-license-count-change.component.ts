@@ -40,6 +40,7 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { OrderDetails } from '@app/features-shared';
 import {
+  FieldErrorMessage,
   HttpStatusCode,
   LicenseStatus,
   LicenseUnit,
@@ -191,6 +192,19 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   public get noServicesFallbackText(): string {
     if (!this.noServicesToDisplay) { return; }
     return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
+  }
+
+  public get licenseCountQuantityErrorMessages(): FieldErrorMessage {
+    return createObject(FieldErrorMessage, {
+      required: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountRequired'),
+      numeric: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountNumeric'),
+      min: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountMinimum',
+        { min_value: this.baseLicenseCountMin }),
+      max: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountMaximum',
+        { max_value: this.baseLicenseCountMax }),
+      step: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountValid',
+        { step: this.baseLicenseCountStep })
+    });
   }
 
   public getFormControl(formControlName: string): AbstractControl {

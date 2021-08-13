@@ -115,42 +115,26 @@
                     {{ 'orderMsLicenseCountChange.detailsStep.provisioningId' |  translate:  {provisioningId:fcLicenses?.value?.pcSubscriptionId} }}
                   </span>
                 </mcs-item> -->
-                <mcs-item orientation="block">
-                  <mcs-form-field class="form-field-size-medium"
-                    [disabled]="!fcLicenses?.value?.isChangeable">
-                    <input mcsInput [formControl]="fcLicenseCount"
-                      type="number"
-                      min="{{ baseLicenseCountMin }}"
-                      max="{{ baseLicenseCountMax }}"
-                      mcsId="input-ms-license-count"
-                      mcsEventTracker="input-ms-license-count"
-                      mcsEventCategory="order"
-                      mcsEventLabel="ms-license-count-change"
-                      class="button-arrows">
+                <mcs-item orientation="block"
+                  [disabled]="!fcLicenses?.value?.isChangeable">
+                  <mcs-field-input-number-arrow
+                    [formControl]="fcLicenseCount"
+                    [minValue]="baseLicenseCountMin"
+                    [maxValue]="baseLicenseCountMax"
+                    [errorMessage]="licenseCountQuantityErrorMessages"
+                    [suffix]="fcLicenses?.value?.unit"
+                    [mcsId]="'input-ms-license-count'"
+                    [eventCategory]="'order'"
+                    [eventLabel]="'ms-license-count-change'"
+                    [eventTracker]="'input-ms-license-count'">
+                  </mcs-field-input-number-arrow>
 
-                    <mcs-suffix mcsSuffix>{{  fcLicenses?.value?.unit }}</mcs-suffix>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderMsLicenseCountChange.detailsStep.licenseCountRequired' | translate }}
-                    </mcs-error>
-                    <mcs-error mcsError errorState="numeric">
-                      {{ 'orderMsLicenseCountChange.detailsStep.licenseCountNumeric' | translate }}
-                    </mcs-error>
-                    <mcs-error text-wrap mcsError errorState="min">
-                        {{ 'orderMsLicenseCountChange.detailsStep.licenseCountMinimum' | translate: { min_value: baseLicenseCountMin } }}
-                    </mcs-error>
-                    <mcs-error text-wrap mcsError errorState="max">
-                        {{ 'orderMsLicenseCountChange.detailsStep.licenseCountMaximum' | translate: { max_value: baseLicenseCountMax } }}
-                    </mcs-error>
-                    <mcs-error text-wrap mcsError errorState="step">
-                        {{ 'orderMsLicenseCountChange.detailsStep.licenseCountValid' | translate: { step: baseLicenseCountStep } }}
-                    </mcs-error>
-                    <mcs-hint mcsHint align="start">
-                      <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
-                       {{ fcLicenses.value?.quantity }} {{ convertUnit(fcLicenses.value?.unit, fcLicenses.value?.quantity)}}
-                       {{ fcLicenses.value?.updateQuantityLabel }}
-                      </span>
-                    </mcs-hint>
-                  </mcs-form-field>
+                  <mcs-hint mcsHint align="start">
+                    <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
+                     {{ fcLicenses.value?.quantity }} {{ convertUnit(fcLicenses.value?.unit, fcLicenses.value?.quantity)}}
+                     {{ fcLicenses.value?.updateQuantityLabel }}
+                    </span>
+                  </mcs-hint>
                 </mcs-item>
               </mcs-item>
 
@@ -211,43 +195,27 @@
                             {{ 'orderMsLicenseCountChange.detailsStep.provisioningId' |  translate:  {provisioningId:fcLicenses?.value?.pcSubscriptionId} }}
                           </span>
                         </mcs-item> -->
-                        <mcs-item orientation="block">
-                          <mcs-form-field class="form-field-size-medium"
-                            [disabled]="!childLicensesFcItem?.license?.isChangeable">
-                            <input mcsInput [formControl]="getFormControl(childLicensesFcItem?.childFormControlName)"
-                              type="number"
-                              min="{{ baseLicenseCountMin }}"
-                              max="{{ baseLicenseCountMax }}"
-                              mcsId="input-ms-license-count"
-                              mcsEventTracker="input-ms-license-count"
-                              mcsEventCategory="order"
-                              mcsEventLabel="ms-license-count-change"
-                              class="button-arrows">
+                        <mcs-item orientation="block"
+                          [disabled]="!childLicensesFcItem?.license?.isChangeable">
+                          <mcs-field-input-number-arrow
+                            [formControl]="getFormControl(childLicensesFcItem?.childFormControlName)"
+                            [minValue]="baseLicenseCountMin"
+                            [maxValue]="baseLicenseCountMax"
+                            [errorMessage]="licenseCountQuantityErrorMessages"
+                            [suffix]="childLicensesFcItem?.license?.unit"
+                            [mcsId]="'input-ms-license-count'"
+                            [eventCategory]="'order'"
+                            [eventLabel]="'ms-license-count-change'"
+                            [eventTracker]="'input-ms-license-count'">
+                          </mcs-field-input-number-arrow>
 
-                            <mcs-suffix mcsSuffix>{{  childLicensesFcItem?.license?.unit }}</mcs-suffix>
-                            <mcs-error mcsError errorState="required">
-                              {{ 'orderMsLicenseCountChange.detailsStep.licenseCountRequired' | translate }}
-                            </mcs-error>
-                            <mcs-error mcsError errorState="numeric">
-                              {{ 'orderMsLicenseCountChange.detailsStep.licenseCountNumeric' | translate }}
-                            </mcs-error>
-                            <mcs-error text-wrap mcsError errorState="min">
-                                {{ 'orderMsLicenseCountChange.detailsStep.licenseCountMinimum' | translate: { min_value: baseLicenseCountMin } }}
-                            </mcs-error>
-                            <mcs-error text-wrap mcsError errorState="max">
-                                {{ 'orderMsLicenseCountChange.detailsStep.licenseCountMaximum' | translate: { max_value: baseLicenseCountMax } }}
-                            </mcs-error>
-                            <mcs-error text-wrap mcsError errorState="step">
-                                {{ 'orderMsLicenseCountChange.detailsStep.licenseCountValid' | translate: { step: baseLicenseCountStep } }}
-                            </mcs-error>
-                            <mcs-hint mcsHint align="start">
-                              <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
-                               {{ childLicensesFcItem?.license?.quantity }}
-                               {{ convertUnit(childLicensesFcItem?.license?.unit, childLicensesFcItem?.license?.quantity) }}
-                               {{ childLicensesFcItem.updateQuantityLabel }}
-                              </span>
-                            </mcs-hint>
-                          </mcs-form-field>
+                          <mcs-hint mcsHint align="start">
+                            <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
+                             {{ childLicensesFcItem?.license?.quantity }}
+                             {{ convertUnit(childLicensesFcItem?.license?.unit, childLicensesFcItem?.license?.quantity) }}
+                             {{ childLicensesFcItem.updateQuantityLabel }}
+                            </span>
+                          </mcs-hint>
                         </mcs-item>
                       </mcs-item>
                     </ng-container>

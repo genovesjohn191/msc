@@ -1,0 +1,53 @@
+@import "../../../../styles/shared/base";
+
+$triangle-border-left-right-style: 8px solid transparent;
+$triangle-border-top-bottom-style: 8px solid $color-black;
+$triangle-on-hover-border-style: 8px solid $color-primary-01;
+
+.mcs-field-input-number-arrow {
+  .arrow-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    z-index: 1;
+    height: $space-xlarge;;
+
+    button {
+      background: transparent;
+      border: transparent;
+      padding-left: $space-small;
+
+      .arrow-up,
+      .arrow-down {
+        width: 0; 
+        height: 0; 
+        border-left: $triangle-border-left-right-style;
+        border-right: $triangle-border-left-right-style;
+      }
+
+      .arrow-up {
+        border-bottom: $triangle-border-top-bottom-style;
+
+        &:focus,
+        &:active,
+        &:hover {
+          border-bottom: $triangle-on-hover-border-style;
+        }
+      }
+
+      .arrow-down {
+        border-top: $triangle-border-top-bottom-style;
+
+        &:focus,
+        &:active,
+        &:hover {
+          border-top: $triangle-on-hover-border-style;
+        }
+      }
+    }
+  }
+
+  input {
+    padding-left: $space-xxlarge !important;
+  }
+}
