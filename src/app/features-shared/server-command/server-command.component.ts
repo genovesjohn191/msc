@@ -33,8 +33,13 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
+  DialogActionType,
   DialogConfirmation,
-  DialogService
+  DialogConfirmationConfig2,
+  DialogResult,
+  DialogResultAction,
+  DialogService,
+  DialogService2
 } from '@app/shared';
 import {
   createObject,
@@ -78,6 +83,7 @@ export class ServerCommandComponent {
   constructor(
     private _translateService: TranslateService,
     private _dialogService: DialogService,
+    private _dialogService2: DialogService2,
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
@@ -163,13 +169,19 @@ export class ServerCommandComponent {
    * Stops the server
    */
   private _stopServer(): void {
-    this._apiService.sendServerPowerState(
-      this.server.id,
-      createObject(McsServerPowerstateCommand, {
-        command: VmPowerstateCommand.PowerOff,
-        clientReferenceObject: {
-          serverId: this.server.id
-        }
+    let dialogRef = this._dialogService2.openConfirmation(this.getDialogConfig(ServerCommand.Stop));
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this._apiService.sendServerPowerState(
+          this.server.id,
+          createObject(McsServerPowerstateCommand, {
+            command: this.server.vmwareTools.hasTools ? VmPowerstateCommand.Shutdown : VmPowerstateCommand.PowerOff,
+            clientReferenceObject: {
+              serverId: this.server.id
+            }
+          })
+        ).subscribe();
       })
     ).subscribe();
   }
@@ -178,13 +190,19 @@ export class ServerCommandComponent {
    * Restarts the server
    */
   private _restartServer(): void {
-    this._apiService.sendServerPowerState(
-      this.server.id,
-      createObject(McsServerPowerstateCommand, {
-        command: VmPowerstateCommand.Restart,
-        clientReferenceObject: {
-          serverId: this.server.id
-        }
+    let dialogRef = this._dialogService2.openConfirmation(this.getDialogConfig(ServerCommand.Restart));
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this._apiService.sendServerPowerState(
+          this.server.id,
+          createObject(McsServerPowerstateCommand, {
+            command: this.server.vmwareTools.hasTools ? VmPowerstateCommand.Restart : VmPowerstateCommand.Reset,
+            clientReferenceObject: {
+              serverId: this.server.id
+            }
+          })
+        ).subscribe();
       })
     ).subscribe();
   }
@@ -356,9 +374,11 @@ export class ServerCommandComponent {
       return;
     }
     this._navigationService.navigateTo(RouteKey.OrderServerManagedScale, [],
-      { queryParams: {
-        serverId: this.server.id
-      }}
+      {
+        queryParams: {
+          serverId: this.server.id
+        }
+      }
     );
   }
 
@@ -367,5 +387,47 @@ export class ServerCommandComponent {
    */
   private _viewServerInPlatform(): void {
     window.open(this.server.portalUrl);
+  }
+
+  private getDialogConfig(action: number): DialogConfirmationConfig2 {
+    let dialogTitle = '';
+    let dialogMessage = '';
+    let dialogConfirmText = '';
+
+    switch (action) {
+      case ServerCommand.Stop:
+        dialogConfirmText = this._translateService.instant('action.stop');
+
+        if (this.server.vmwareTools?.hasTools) {
+          dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWT.title');
+          dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWT.message');
+        }
+        else {
+          dialogTitle = this._translateService.instant('dialog.serverStopSingleNoVMWT.title');
+          dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWT.message');
+        }
+        break;
+
+      case ServerCommand.Restart:
+        dialogConfirmText = this._translateService.instant('action.restart');
+
+        if (this.server.vmwareTools?.hasTools) {
+          dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWT.title');
+          dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWT.message');
+        }
+        else {
+          dialogTitle = this._translateService.instant('dialog.serverRestartSingleNoVMWT.title');
+          dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWT.message');
+        }
+        break;
+    }
+
+    return {
+      title: dialogTitle,
+      type: DialogActionType.Warning,
+      message: dialogMessage,
+      confirmText: dialogConfirmText,
+      cancelText: this._translateService.instant('action.cancel')
+    }
   }
 }

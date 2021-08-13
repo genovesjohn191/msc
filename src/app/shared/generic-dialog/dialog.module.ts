@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconModule } from '../icon/icon.module';
 
 import { DialogConfirmationComponent2 } from './dialog-confirmation/dialog-confirmation.component';
 import { DialogMatchConfirmationComponent } from './dialog-match-confirmation/dialog-match-confirmation.component';
@@ -29,6 +30,7 @@ import { DialogService2 } from './dialog.service';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    IconModule,
 
     MatDialogModule,
     MatFormFieldModule,
@@ -39,7 +41,8 @@ import { DialogService2 } from './dialog.service';
     CommonModule,
     DialogMessageComponent2,
     DialogConfirmationComponent2,
-    DialogMatchConfirmationComponent
+    DialogMatchConfirmationComponent,
+    IconModule
   ]
 })
 export class DialogModule2 { }

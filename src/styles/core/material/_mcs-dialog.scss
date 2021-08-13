@@ -10,6 +10,8 @@ mat-dialog-container.mat-dialog-container {
   }
 
   @at-root .mat-dialog-container {
+    max-width: 500px;
+
     .mat-dialog-title {
       margin: 0;
     }

@@ -9,6 +9,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
+import { CommonDefinition } from '@app/utilities';
 
 import {
   DialogActionType,
@@ -19,7 +20,8 @@ import { DialogConfirmationConfig2 } from './dialog-confirmation-config';
 
 @Component({
   selector: 'mcs-dialog-confirmation',
-  templateUrl: './dialog-confirmation.component.html'
+  templateUrl: './dialog-confirmation.component.html',
+  styleUrls: ['./../dialog.component.scss']
 })
 export class DialogConfirmationComponent2 implements OnInit {
 
@@ -64,5 +66,20 @@ export class DialogConfirmationComponent2 implements OnInit {
   public onConfirmClick(): void {
     let dialogResult = new DialogResult<boolean>(DialogResultAction.Confirm, this.dialogData.data);
     this.dialogRef.close(dialogResult);
+  }
+
+  public get statusIconKey(): string {
+    switch(this.dialogData.type){
+      case DialogActionType.Info:
+        return CommonDefinition.ASSETS_SVG_INFO;
+      case DialogActionType.Error:
+        return CommonDefinition.ASSETS_SVG_ERROR;
+      case DialogActionType.Warning:
+        return CommonDefinition.ASSETS_SVG_WARNING;
+      case DialogActionType.Success:
+        return CommonDefinition.ASSETS_SVG_SUCCESS;
+      default:
+        return '';
+    }
   }
 }

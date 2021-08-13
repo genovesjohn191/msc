@@ -5,7 +5,8 @@ import {
 } from 'rxjs';
 import {
   concatMap,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -42,8 +43,13 @@ import {
 import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
+  DialogActionType,
   DialogConfirmation,
+  DialogConfirmationConfig2,
+  DialogResult,
+  DialogResultAction,
   DialogService,
+  DialogService2,
   Paginator,
   Search
 } from '@app/shared';
@@ -94,6 +100,7 @@ export class ServersComponent implements OnInit, OnDestroy {
     private _translateService: TranslateService,
     private _apiService: McsApiService,
     private _dialogService: DialogService,
+    private _dialogService2: DialogService2,
     private _serversService: ServersService
   ) {
     this.dataSource = new McsTableDataSource2(this._getServers.bind(this));
@@ -214,29 +221,43 @@ export class ServersComponent implements OnInit, OnDestroy {
   }
 
   public stopMultipleServers(): void {
-    this.dataSelection.getSelectedItems().forEach((server) => {
-      let powerState = new McsServerPowerstateCommand();
-      powerState.command = VmPowerstateCommand.PowerOff;
-      powerState.clientReferenceObject = {
-        serverId: server.id
-      };
+    let dialogRef = this._dialogService2.openConfirmation(this.getDialogConfig(ServerCommand.Stop));
 
-      this._apiService.sendServerPowerState(server.id, powerState).subscribe();
-    });
-    this.dataSelection.clearAllSelection();
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this.dataSelection.getSelectedItems().forEach((server) => {
+          let powerState = new McsServerPowerstateCommand();
+          powerState.command = server.vmwareTools.hasTools ? VmPowerstateCommand.Shutdown : VmPowerstateCommand.PowerOff;
+          powerState.clientReferenceObject = {
+            serverId: server.id
+          };
+
+          this._apiService.sendServerPowerState(server.id, powerState).subscribe();
+        });
+        this.dataSelection.clearAllSelection();
+      })
+    ).subscribe();
   }
 
   public restartMultipleServers(): void {
-    this.dataSelection.getSelectedItems().forEach((server) => {
-      let powerState = new McsServerPowerstateCommand();
-      powerState.command = VmPowerstateCommand.Restart;
-      powerState.clientReferenceObject = {
-        serverId: server.id
-      };
+    let dialogRef = this._dialogService2.openConfirmation(this.getDialogConfig(ServerCommand.Restart));
 
-      this._apiService.sendServerPowerState(server.id, powerState).subscribe();
-    });
-    this.dataSelection.clearAllSelection();
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        this.dataSelection.getSelectedItems().forEach((server) => {
+          let powerState = new McsServerPowerstateCommand();
+          powerState.command = server.vmwareTools.hasTools ? VmPowerstateCommand.Restart : VmPowerstateCommand.Reset;
+          powerState.clientReferenceObject = {
+            serverId: server.id
+          };
+
+          this._apiService.sendServerPowerState(server.id, powerState).subscribe();
+        });
+        this.dataSelection.clearAllSelection();
+      })
+    ).subscribe();
   }
 
   public deleteMultipleServers(): void {
@@ -376,5 +397,89 @@ export class ServersComponent implements OnInit, OnDestroy {
       ]);
     }
     return true;
+  }
+
+  private getDialogConfig(action: number): DialogConfirmationConfig2 {
+    let dialogTitle = '';
+    let dialogMessage = '';
+    let dialogConfirmText = '';
+
+    let isVMWTInstalledValues = this.dataSelection.getSelectedItems().map(item => item.vmwareTools?.hasTools);
+    let isMixed = false;
+    if (!isNullOrEmpty(isVMWTInstalledValues || isVMWTInstalledValues.length > 1)) {
+      isMixed = [...new Set(isVMWTInstalledValues)].length > 1;
+    };
+
+    switch (action) {
+      case ServerCommand.Stop:
+        dialogConfirmText = this._translateService.instant('action.stop');
+
+        if (this.dataSelection.getSelectedItems().length > 1) {
+          if (isMixed) {
+            dialogTitle = this._translateService.instant('dialog.serverStopMultipleMixedVMWT.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopMultipleMixedVMWT.message');
+          }
+          else {
+            if (isVMWTInstalledValues[0]) {
+              dialogTitle = this._translateService.instant('dialog.serverStopMultipleWithVMWT.title');
+              dialogMessage = this._translateService.instant('dialog.serverStopMultipleWithVMWT.message');
+            }
+            else {
+              dialogTitle = this._translateService.instant('dialog.serverStopMultipleNoVMWT.title');
+              dialogMessage = this._translateService.instant('dialog.serverStopMultipleNoVMWT.message');
+            }
+          }
+        }
+        else {
+          if (isVMWTInstalledValues[0]) {
+            dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWT.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWT.message');
+          }
+          else {
+            dialogTitle = this._translateService.instant('dialog.serverStopSingleNoVMWT.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWT.message');
+          }
+        }
+        break;
+
+      case ServerCommand.Restart:
+        dialogConfirmText = this._translateService.instant('action.restart');
+
+        if (this.dataSelection.getSelectedItems().length > 1) {
+          if (isMixed) {
+            dialogTitle = this._translateService.instant('dialog.serverRestartMultipleMixedVMWT.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartMultipleMixedVMWT.message');
+          }
+          else {
+            if (isVMWTInstalledValues[0]) {
+              dialogTitle = this._translateService.instant('dialog.serverRestartMultipleWithVMWT.title');
+              dialogMessage = this._translateService.instant('dialog.serverRestartMultipleWithVMWT.message');
+            }
+            else {
+              dialogTitle = this._translateService.instant('dialog.serverRestartMultipleNoVMWT.title');
+              dialogMessage = this._translateService.instant('dialog.serverRestartMultipleNoVMWT.message');
+            }
+          }
+        }
+        else {
+          if (isVMWTInstalledValues[0]) {
+            dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWT.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWT.message');
+          }
+          else {
+            dialogTitle = this._translateService.instant('dialog.serverRestartSingleNoVMWT.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWT.message');
+          }
+        }
+        break;
+    }
+
+    return {
+      title: dialogTitle,
+      type: DialogActionType.Warning,
+      message: dialogMessage,
+      confirmText: dialogConfirmText,
+      cancelText: this._translateService.instant('action.cancel')
+    }
   }
 }
