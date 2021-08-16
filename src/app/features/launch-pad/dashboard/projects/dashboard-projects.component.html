@@ -94,13 +94,15 @@
             {{ 'columnHeader.primaryCrispOrder' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            <a (click)="navigateToCrispOrder(row, routeKeyEnum.LaunchPadCrispOrderDetailsElements)"
-              mcsId mcsStopPropagation
-              mcsEventTracker="navigate-to-crisp-order"
-              mcsEventCategory="launchpad-dashboard-project"
-              mcsEventLabel="dashboard-projects-listing-page">
-              {{ row.primaryCrispOrderId }}
-            </a>
+            <ng-container *ngIf="row.primaryCrispOrderId">
+              <a (click)="navigateToCrispOrder(row, routeKeyEnum.LaunchPadCrispOrderDetailsElements)"
+                mcsId mcsStopPropagation
+                mcsEventTracker="navigate-to-crisp-order"
+                mcsEventCategory="launchpad-dashboard-project"
+                mcsEventLabel="dashboard-projects-listing-page">
+                {{ row.primaryCrispOrderId }}
+              </a>
+           </ng-container>
           </td>
         </ng-container>
 
