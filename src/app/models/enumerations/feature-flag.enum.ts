@@ -5,6 +5,7 @@ export enum McsFeatureFlag {
   SystemMessages = 'EnableSystemMessages',
   LaunchPad = 'EnableLaunchPad',
   Crisp = 'EnableCrisp',
+  DashboardProjects = 'EnableLaunchPadDashboardProjects',
   ExperimentalFeatures = 'EnableExperimentalFeatures',
 
   AzureSlgTicket = 'EnableTicketingAzureSlg',

@@ -115,7 +115,7 @@
 
                               <mcs-option [value]="product" [selected]="activeCatalogItem.id === product.id">
                                 <div margin-left-xsmall>
-                                  <span text-wrap [mcsGreyedOut]="product.isActiveIncompleteRelease">
+                                  <span text-wrap [mcsGreyedOut]="product?.isActiveIncompleteRelease">
                                     {{ product.name | mcsDataLabel }}
                                   </span>
                                 </div>

@@ -8,26 +8,43 @@ import { Observable } from 'rxjs';
 import {
   McsAccessControlService,
   McsNavigationService,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsCookieService
 } from '@app/core';
 import {
   RouteKey,
-  McsPermission
+  McsPermission,
+  McsFeatureFlag
 } from '@app/models';
+import { CommonDefinition } from '@app/utilities';
 
+const engineeringAccount = '93111';
 @Injectable()
 export class DashboardGuard implements CanActivate {
 
   constructor(
     private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService,
-    private _authenticationIdentity: McsAuthenticationIdentity
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _cookieService: McsCookieService
   ) { }
 
   public canActivate(
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
+
+    // Try Navigate to Launchpad Projects - Default Page for Engineers
+    let activeCompanyId = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT) ||
+      this._authenticationIdentity.user?.companyId;
+    let hasLaunchpadProjectsAccess =
+      this._accessControlService.hasPermission([McsPermission.InternalEngineerAccess]) &&
+      this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad, McsFeatureFlag.DashboardProjects], true) &&
+      activeCompanyId === engineeringAccount;
+    if (hasLaunchpadProjectsAccess) {
+      this._navigationService.navigateTo(RouteKey.LaunchPadDashboardProjects);
+      return false;
+    }
 
     // Try Navigate to Private Cloud Default Page
     let hasPrivateCloudAccess = this._authenticationIdentity.platformSettings.hasPrivateCloud;
