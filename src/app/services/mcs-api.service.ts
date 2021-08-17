@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import {
   IMcsApiAccountService,
+  IMcsApiAuthService,
   IMcsApiAvailabilityZonesService,
   IMcsApiAzureReservationsService,
   IMcsApiAzureResourcesService,
@@ -46,6 +47,7 @@ import {
   IMcsApiToolsService,
   IMcsApiWorkflowsService,
   McsApiAccountFactory,
+  McsApiAuthFactory,
   McsApiAvailabilityZonesFactory,
   McsApiAzureReservationsFactory,
   McsApiAzureResourceFactory,
@@ -314,6 +316,7 @@ export class McsApiService {
 
   private readonly _accountApi: IMcsApiAccountService;
   private readonly _availabilityZonesApi: IMcsApiAvailabilityZonesService;
+  private readonly _authApi: IMcsApiAuthService;
   private readonly _azureResourcesApi: IMcsApiAzureResourcesService;
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
   private readonly _azureReservationsApi: IMcsApiAzureReservationsService;
@@ -376,6 +379,7 @@ export class McsApiService {
 
     this._accountApi = apiClientFactory.getService(new McsApiAccountFactory());
     this._availabilityZonesApi = apiClientFactory.getService(new McsApiAvailabilityZonesFactory());
+    this._authApi = apiClientFactory.getService(new McsApiAuthFactory());
     this._azureResourcesApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
     this._azureReservationsApi = apiClientFactory.getService(new McsApiAzureReservationsFactory());
@@ -2407,6 +2411,15 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSoftwareSubscritionProductTypes'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public extendSession(): Observable<string> {
+    return this._authApi.extendSession().pipe(
+      catchError((error) => {
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.extendSession'));
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
