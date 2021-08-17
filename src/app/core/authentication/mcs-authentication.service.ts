@@ -11,10 +11,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { AppState } from '@app/app.service';
-import {
-  McsFeatureFlag,
-  McsIdentity
-} from '@app/models';
+import { McsIdentity } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
@@ -23,18 +20,19 @@ import {
 
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
-import { McsAccessControlService } from './mcs-access-control.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
-import { McsStorageService } from '../services/mcs-storage.service';
 
 @Injectable()
 export class McsAuthenticationService {
+
+  public get isNewOAuthEnabled(): boolean {
+    return this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled';
+  }
 
   constructor(
     private _appState: AppState,
     private _cookieService: McsCookieService,
     private _apiService: McsApiService,
-    private _accessControlService: McsAccessControlService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _coreConfig: CoreConfig
   ) { }
@@ -108,6 +106,11 @@ export class McsAuthenticationService {
       switchMap(identity => {
         if (isNullOrEmpty(identity)) { return of(null); }
 
+        // Set extension trigger
+        if (this.isNewOAuthEnabled) {
+          this.setExtensionTrigger(identity.expiry);
+        }
+
         this._setUserIdentity(identity);
         if (identity?.isAnonymous) { return of(identity); }
 
@@ -138,20 +141,37 @@ export class McsAuthenticationService {
     let _returnUrl = this._appState.get(CommonDefinition.APPSTATE_RETURN_URL_KEY);
     let _loginUrl = this._coreConfig.loginUrl;
 
-    if (this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled') {
+    if (this.isNewOAuthEnabled) {
       _loginUrl = `${this._coreConfig.apiHost}/auth/login?state=`;
     }
     return `${_loginUrl}${_returnUrl}`;
   }
 
   private _getLogoutPath(): string {
-    let _returnUrl = this._appState.get(CommonDefinition.APPSTATE_RETURN_URL_KEY);
     let _logoutUrl = this._coreConfig.logoutUrl;
 
-    if (this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled') {
+    if (this.isNewOAuthEnabled) {
       _logoutUrl = `${this._coreConfig.apiHost}/auth/logout`;
     }
 
     return `${_logoutUrl}`;
+  }
+
+  private setExtensionTrigger(expiry: Date): void {
+    let refreshTimeInSeconds = (expiry.getTime() - Date.now()) / 1000;
+
+    let willExpiresSoon = refreshTimeInSeconds < 300;
+    if (willExpiresSoon) {
+      // Refresh now
+      refreshTimeInSeconds = 1;
+    } else {
+      // Refresh later
+      refreshTimeInSeconds = refreshTimeInSeconds - 300;
+    }
+    setTimeout(this.extendSession.bind(this), refreshTimeInSeconds * 1000);
+  }
+
+  private extendSession(): void {
+    this._apiService.extendSession().subscribe();
   }
 }

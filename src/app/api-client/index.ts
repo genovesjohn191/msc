@@ -5,6 +5,7 @@ export * from './mcs-api-client.factory';
 
 export * from './interfaces/mcs-api-account.interface';
 export * from './interfaces/mcs-api-availability-zones.interface';
+export * from './interfaces/mcs-api-auth.interface';
 export * from './interfaces/mcs-api-azure-resources.interface';
 export * from './interfaces/mcs-api-azure-services.interface';
 export * from './interfaces/mcs-api-azure-reservations.interface';
@@ -38,6 +39,7 @@ export * from './interfaces/mcs-api-workflows.interface';
 
 export * from './factory/mcs-api-account.factory';
 export * from './factory/mcs-api-availability-zones.factory';
+export * from './factory/mcs-api-auth.factory';
 export * from './factory/mcs-api-azure-resources.factory';
 export * from './factory/mcs-api-azure-services.factory';
 export * from './factory/mcs-api-azure-reservations.factory';
