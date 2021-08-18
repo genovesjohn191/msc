@@ -1,48 +1,53 @@
 import {
-  Component,
+  of,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  OnInit,
+  Component,
+  Injector,
   OnDestroy,
-  ChangeDetectorRef,
-  Injector
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
-  Observable,
-  Subject,
-  of,
-  Subscription
-} from 'rxjs';
-import {
-  map,
-  tap,
-  shareReplay,
-  takeUntil
-} from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-
-import {
+  McsListviewContext,
+  McsListviewDataSource2,
+  McsListviewQueryParam,
   McsNavigationService,
-  McsListViewListingBase
+  McsTableEvents
 } from '@app/core';
-import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
   McsInternetPort,
-  RouteKey,
   McsQueryParam,
-  McsApiCollection,
-  McsRouteInfo
+  McsRouteInfo,
+  RouteKey
 } from '@app/models';
+import { McsApiService } from '@app/services';
+import { Search } from '@app/shared';
 import {
+  compareStrings,
   getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely,
-  compareStrings
+  unsubscribeSafely
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
+import { TranslateService } from '@ngx-translate/core';
+
 import { InternetPortService } from './internet-port.service';
 
 type tabGroupType = 'Management';
@@ -58,7 +63,9 @@ interface McsInternetGroup {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InternetPortComponent extends McsListViewListingBase<McsInternetGroup> implements OnInit, OnDestroy {
+export class InternetPortComponent implements OnInit, OnDestroy {
+  public readonly listviewDatasource: McsListviewDataSource2<McsInternetGroup>;
+  public readonly dataEvents: McsTableEvents<McsInternetGroup>;
   public selectedInternetPort$: Observable<McsInternetPort>;
   public selectedTabId$: Observable<string>;
 
@@ -67,20 +74,26 @@ export class InternetPortComponent extends McsListViewListingBase<McsInternetGro
 
   constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
     _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _internetPortService: InternetPortService,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeInternetPorts,
-      panelSettings: {
-        inProgressText: _translate.instant('internet.loading'),
-        emptyText: _translate.instant('internet.noInternetPorts'),
-        errorText: _translate.instant('internet.errorMessage')
+    this.listviewDatasource = new McsListviewDataSource2(
+      this._getInternetPorts.bind(this),
+      {
+        sortPredicate: this._sortInternetGroupPredicate.bind(this),
+        panelSettings: {
+          inProgressText: _translate.instant('internet.loading'),
+          emptyText: _translate.instant('internet.noInternetPorts'),
+          errorText: _translate.instant('internet.errorMessage')
+        }
       }
+    );
+    this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
+      dataChangeEvent: McsEvent.dataChangeInternetPorts as any
     });
     this._registerEvents();
   }
@@ -88,13 +101,20 @@ export class InternetPortComponent extends McsListViewListingBase<McsInternetGro
   public ngOnInit() {
     this._subscribeToParamChange();
     this._subscribeToInternetPortResolve();
-    this.listViewDatasource.registerSortPredicate(this._sortInternetGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    this.listviewDatasource.disconnect(null);
+    this.dataEvents.dispose();
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
+  }
+
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.listviewDatasource.registerSearch(value);
+    }
   }
 
   public get routeKeyEnum(): typeof RouteKey {
@@ -115,8 +135,11 @@ export class InternetPortComponent extends McsListViewListingBase<McsInternetGro
   /**
    * Gets the entity listing from API
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsInternetGroup>> {
-    return this._apiService.getInternetPorts(query).pipe(
+  private _getInternetPorts(param: McsListviewQueryParam): Observable<McsListviewContext<McsInternetGroup>> {
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getInternetPorts(queryParam).pipe(
       map((internetPorts) => {
         let internetPortGroups = new Array<McsInternetGroup>();
         internetPorts.collection.forEach((internetPort) => {
@@ -131,11 +154,7 @@ export class InternetPortComponent extends McsListViewListingBase<McsInternetGro
             internetPorts: [internetPort]
           });
         });
-
-        let internetGroupsCollection = new McsApiCollection<McsInternetGroup>();
-        internetGroupsCollection.collection = internetPortGroups;
-        internetGroupsCollection.totalCollectionCount = internetPortGroups.length;
-        return internetGroupsCollection;
+        return new McsListviewContext<McsInternetGroup>(internetPortGroups);
       })
     );
   }
@@ -176,7 +195,7 @@ export class InternetPortComponent extends McsListViewListingBase<McsInternetGro
    * Register Event dispatchers
    */
   private _registerEvents(): void {
-    this._routerHandler = this.eventDispatcher.addEventListener(
+    this._routerHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
         let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));

@@ -16,7 +16,7 @@
                     <a mcsButton="basic" mcsId="select-product"
                       [mcsGreyedOut]="product.value?.isActiveIncompleteRelease"
                       labelPlacement="left" text-wrap full-width
-                      (click)="onProductChange(product.value.id)"
+                      (click)="onProductChange(product.value?.id)"
                       mcsEventTracker="select-product"
                       mcsEventCategory="catalog"
                       mcsEventLabel="catalog-product-platform-view">

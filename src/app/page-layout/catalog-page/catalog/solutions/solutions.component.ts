@@ -115,7 +115,7 @@ export class SolutionsComponent implements OnInit {
     return of(TreeUtility.convertEntityToTreemItems(
       details?.groups,
       group => new TreeGroup(group.name, group.id, group.solutions),
-      solution => new TreeGroup(solution.name)
+      solution => new TreeGroup(solution.name, solution)
     ));
   }
 
