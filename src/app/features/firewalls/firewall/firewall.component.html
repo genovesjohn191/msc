@@ -7,7 +7,7 @@
       <div class="listing-panel-wrapper">
         <mcs-search #search mcsId="firewall-listing-panel-search"></mcs-search>
 
-        <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+        <mcs-list-panel [dataSource]="listviewDatasource" [config]="listviewDatasource?.config?.panelSettings">
           <ng-container *mcsListPanelContent="let entity">
             <!-- With ha group -->
             <ng-container *ngIf="entity.groupName | mcsIsNotNullOrEmpty; else standaloneTemplate">

@@ -115,7 +115,7 @@ export class ProductsPlatformComponent implements OnInit {
       details?.families,
       entity => new TreeGroup(entity.name, entity.id, entity.groups),
       group => new TreeGroup(group.name, group.id, group.products),
-      product => new TreeGroup(product.name)
+      product => new TreeGroup(product.name, product)
     ));
   }
 

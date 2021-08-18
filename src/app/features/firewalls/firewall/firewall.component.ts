@@ -1,49 +1,54 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
+  of,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  Injector
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
-  Subject,
-  Observable,
-  of,
-  Subscription
-} from 'rxjs';
-import {
-  takeUntil,
-  tap,
-  shareReplay,
-  map
-} from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-
-import {
+  McsListviewContext,
+  McsListviewDataSource2,
+  McsListviewQueryParam,
   McsNavigationService,
-  McsListViewListingBase
+  McsTableEvents
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition,
-  compareStrings
-} from '@app/utilities';
-import {
-  RouteKey,
   McsFirewall,
   McsQueryParam,
-  McsApiCollection,
-  McsRouteInfo
+  McsRouteInfo,
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
+import { Search } from '@app/shared';
+import {
+  compareStrings,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { FirewallService } from './firewall.service';
 
 // Add another group type in here if you have addition tab
@@ -62,7 +67,9 @@ interface McsFirewallGroup {
     'class': 'block'
   }
 })
-export class FirewallComponent extends McsListViewListingBase<McsFirewallGroup> implements OnInit, OnDestroy {
+export class FirewallComponent implements OnInit, OnDestroy {
+  public readonly listviewDatasource: McsListviewDataSource2<McsFirewallGroup>;
+  public readonly dataEvents: McsTableEvents<McsFirewallGroup>;
   public selectedFirewall$: Observable<McsFirewall>;
   public selectedTabId$: Observable<string>;
 
@@ -71,20 +78,26 @@ export class FirewallComponent extends McsListViewListingBase<McsFirewallGroup> 
 
   constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
     _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _firewallService: FirewallService
   ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeServers,
-      panelSettings: {
-        inProgressText: _translate.instant('firewalls.loading'),
-        emptyText: _translate.instant('firewalls.noFirewalls'),
-        errorText: _translate.instant('firewalls.errorMessage')
+    this.listviewDatasource = new McsListviewDataSource2(
+      this._getFirewalls.bind(this),
+      {
+        sortPredicate: this._sortFirewallGroupPredicate.bind(this),
+        panelSettings: {
+          inProgressText: _translate.instant('firewalls.loading'),
+          emptyText: _translate.instant('firewalls.noFirewalls'),
+          errorText: _translate.instant('firewalls.errorMessage')
+        }
       }
+    );
+    this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
+      dataChangeEvent: McsEvent.dataChangeServers as any
     });
     this._registerEvents();
   }
@@ -92,13 +105,20 @@ export class FirewallComponent extends McsListViewListingBase<McsFirewallGroup> 
   public ngOnInit() {
     this._subscribeToParamChange();
     this._subscribeToFirewallResolve();
-    this.listViewDatasource.registerSortPredicate(this._sortFirewallGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    this.listviewDatasource.disconnect(null);
+    this.dataEvents.dispose();
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
+  }
+
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.listviewDatasource.registerSearch(value);
+    }
   }
 
   public get cogIconKey(): string {
@@ -138,8 +158,11 @@ export class FirewallComponent extends McsListViewListingBase<McsFirewallGroup> 
   /**
    * Gets the entity listing from API
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsFirewallGroup>> {
-    return this._apiService.getFirewalls(query).pipe(
+  private _getFirewalls(param: McsListviewQueryParam): Observable<McsListviewContext<McsFirewallGroup>> {
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getFirewalls(queryParam).pipe(
       map((firewalls) => {
         let firewallGroups = new Array<McsFirewallGroup>();
         firewalls.collection.forEach((firewall) => {
@@ -154,11 +177,7 @@ export class FirewallComponent extends McsListViewListingBase<McsFirewallGroup> 
             firewalls: [firewall]
           });
         });
-
-        let firewallGroupsCollection = new McsApiCollection<McsFirewallGroup>();
-        firewallGroupsCollection.collection = firewallGroups;
-        firewallGroupsCollection.totalCollectionCount = firewallGroups.length;
-        return firewallGroupsCollection;
+        return new McsListviewContext<McsFirewallGroup>(firewallGroups);
       })
     );
   }
@@ -185,7 +204,7 @@ export class FirewallComponent extends McsListViewListingBase<McsFirewallGroup> 
    * Register Event dispatchers
    */
   private _registerEvents(): void {
-    this._routerHandler = this.eventDispatcher.addEventListener(
+    this._routerHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
         let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
