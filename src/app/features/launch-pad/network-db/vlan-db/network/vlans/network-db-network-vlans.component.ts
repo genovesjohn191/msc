@@ -98,7 +98,7 @@ export class NetworkDbNetworkVlansComponent implements OnDestroy {
   public formConfig: DynamicFormFieldConfigBase[] = [
     new DynamicSelectMultipleNetworkDbPodsField({
       key: 'pods',
-      label: 'Select one or more pods',
+      label: this._translateService.instant('networkDb.pods.labelSelect'),
       isMazAa: this.isMazAa
     })
   ];
@@ -331,7 +331,8 @@ export class NetworkDbNetworkVlansComponent implements OnDestroy {
     this.formConfig = [
       new DynamicSelectMultipleNetworkDbPodsField({
         key: 'pods',
-        label: 'Select one or more pods',
+        label: this.isMazAa ? this._translateService.instant('networkDb.pods.labelSelectMazAa')
+          : this._translateService.instant('networkDb.pods.labelSelect'),
         value: [],
         excludePods: this.assignedPodIds,
         isMazAa: this.isMazAa
@@ -359,7 +360,8 @@ export class NetworkDbNetworkVlansComponent implements OnDestroy {
     this.formConfig = [
       new DynamicSelectMultipleNetworkDbPodsField({
         key: 'pods',
-        label: 'Select one or more pods',
+        label: this.isMazAa ? this._translateService.instant('networkDb.pods.labelSelectMazAa')
+          : this._translateService.instant('networkDb.pods.labelSelect'),
         value: [],
         excludePods: this.assignedPodIds,
         isMazAa: this.isMazAa

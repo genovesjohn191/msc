@@ -2606,6 +2606,9 @@
     },
     "pods": {
       "header": "PODs",
+      "labelSelect": "Select one or more PODs",
+      "labelSelectMazAa": "Select two or more PODs",
+      "labelToggleMazAa": "Is MAZ-AA",
       "leftPanelHeader": "POD Filter",
       "filterColumn": "Table Filter",
       "dataSingular": "Pod",
@@ -2633,7 +2636,7 @@
       "reserveErrorMessage": "Sorry, something’s not right. There was an error reserving pods.",
       "reserveInProgress": "Reserving network VLAN.",
       "reserveHints": {
-        "mazAaNotAvailable": "Maz-AA: This POD does not have any free VLANs that match the other PODs selected.",
+        "mazAaNotAvailable": "MAZ-AA: This POD does not have any free VLANs that match the other PODs selected.",
         "noFreeVlans": "This POD has no free VLANs.",
         "vxlanMismatch": "This POD does not match the required VXLAN group.",
         "alreadyAssigned": "Network already has a VLAN assigned in this POD.",
