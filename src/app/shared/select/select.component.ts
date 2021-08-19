@@ -161,6 +161,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public set multiSelectLimit(value: number) { this._multiSelectLimit = coerceNumber(value); }
   private _multiSelectLimit: number = 0;
 
+  @Input()
+  public get autoSelect(): boolean { return this._autoSelect; }
+  public set autoSelect(value: boolean) { this._autoSelect = coerceBoolean(value); }
+  private _autoSelect: boolean = true;
+
   /**
    * Base value implementation of value accessor
    */
@@ -560,23 +565,24 @@ export class SelectComponent extends McsFormFieldControlBase<any>
         }
         return;
       }
+      if (this.autoSelect) {
+        let selectedValue = getSafeProperty(this.ngControl, (obj) => obj.value) || this._value;
+        let isFirstItemSelected = this.required && !isNullOrEmpty(this._options)
+          && !this._options.find((option) => option.value === selectedValue);
 
-      let selectedValue = getSafeProperty(this.ngControl, (obj) => obj.value) || this._value;
-      let isFirstItemSelected = this.required && !isNullOrEmpty(this._options)
-        && !this._options.find((option) => option.value === selectedValue);
-
-      if (isFirstItemSelected) {
-        let firstEnabledOption = this._options.find(option => !option.disabled);
-        if (!isNullOrEmpty(firstEnabledOption)) {
-          this._selectOption(firstEnabledOption);
+        if (isFirstItemSelected) {
+          let firstEnabledOption = this._options.find(option => !option.disabled);
+          if (!isNullOrEmpty(firstEnabledOption)) {
+            this._selectOption(firstEnabledOption);
+          }
+        } else {
+          this._selectOptionByValue(this.ngControl ? this.ngControl.value : this._value);
         }
-      } else {
-        this._selectOptionByValue(this.ngControl ? this.ngControl.value : this._value);
-      }
 
-      let associatedControl = getSafeProperty(this.ngControl, (obj) => obj.control);
-      if (!isNullOrEmpty(associatedControl)) {
-        associatedControl.markAsPristine();
+        let associatedControl = getSafeProperty(this.ngControl, (obj) => obj.control);
+        if (!isNullOrEmpty(associatedControl)) {
+          associatedControl.markAsPristine();
+        }
       }
     });
   }

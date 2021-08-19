@@ -42,7 +42,7 @@
 
           <p>{{ 'orderServiceRaiseInview.serviceDetails.service.label' | translate }}</p>
           <mcs-form-field *ngIf="(managedServers$ | async) | mcsIsNotNullOrEmpty">
-            <mcs-select [formControl]="fcService" required
+            <mcs-select [formControl]="fcService" required autoSelect="false"
               (selectionChange)="onChangeService($event)"
               [placeholder]="'orderServiceRaiseInview.serviceDetails.service.placeholder' | translate"
               [mcsContextualHelp]="'orderServiceRaiseInview.serviceDetails.service.contextualHelp' | translate"

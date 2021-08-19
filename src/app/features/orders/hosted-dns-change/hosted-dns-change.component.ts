@@ -372,12 +372,10 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _getNetworkDns(): void {
     this.loadingDNSServices = true;
-    this.loadingDNSZones = true;
     this._apiService.getNetworkDns()
       .pipe(
         catchError((error) => {
           this._errorStatus = error?.details?.status;
-          this.loadingDNSZones = false;
           this.loadingDNSServices = false;
           return throwError(error);
         })
@@ -386,7 +384,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
         let dnsList = getSafeProperty(dnsCollection, (obj) => obj.collection) || [];
         let optionList = new Array<McsOption>();
         if(dnsList.length === 0){
-            this.loadingDNSZones = false;
             this.loadingDNSServices = false;
             return;
         }
@@ -411,6 +408,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
       return;
     }
 
+    this.loadingDNSZones = true;
     this._apiService.getNetworkDnsById(id).subscribe(response => {
         let zonesList = getSafeProperty(response, (obj) => obj.zones) || [];
         let optionList = new Array<McsOption>();

@@ -61,7 +61,7 @@
                   mcsEventTracker="select-colocation-service"
                   mcsEventCategory="order-collocation-staff-escort"
                   mcsEventLabel="order-collocation-staff-escort-page"
-                  required>
+                  required autoSelect="false">
                     <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
                       <ng-container *mcsOptionGroupLabel>
                         <span>{{ colocationGroup?.groupName }}</span>

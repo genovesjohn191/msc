@@ -61,7 +61,7 @@
                       [disabled]="!hasServiceToDisplay"
                       [placeholder]="'orderRemoteHands.detailsStep.rackServicePlaceholder' | translate"
                       [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackServiceHelpText' | translate"
-                      required>
+                      required autoSelect="false">
                       <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
                         <ng-container *mcsOptionGroupLabel>
                           <span>{{ colocationGroup?.groupName }}</span>

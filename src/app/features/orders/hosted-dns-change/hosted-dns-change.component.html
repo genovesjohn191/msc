@@ -48,7 +48,7 @@
                   </ng-container>
                   <ng-template #dnsService>
                     <mcs-form-field *ngIf="!(loadingDNSServices) && networkDnsOptions | mcsArrayHasElement">
-                      <mcs-select [formControl]="fcDnsService" required
+                      <mcs-select [formControl]="fcDnsService" required autoSelect="false"
                         [placeholder]="'orderHostedDnsChange.requestDetails.dnsService.placeholder' | translate"
                         [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.dnsService.helptext' | translate"
                         mcsId="select-dns-service" mcsEventTracker="select-dns-service" mcsEventCategory="order"
@@ -77,7 +77,7 @@
                   <ng-template #dnsZones>
                     <mcs-form-field *ngIf="!(loadingDNSZones) && 
                                             (networkDnsZoneOptions | mcsArrayHasElement); else noZoneTemplate">
-                      <mcs-select [formControl]="fcZone" required
+                      <mcs-select [formControl]="fcZone" required autoSelect="false"
                         [placeholder]="'orderHostedDnsChange.requestDetails.zones.placeholder' | translate"
                         [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.zones.helptext' | translate"
                         mcsId="select-dns-zones" mcsEventTracker="select-dns-zones" mcsEventCategory="order"

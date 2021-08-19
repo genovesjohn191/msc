@@ -40,7 +40,7 @@
           <p>{{ 'changeInternetPortPlan.internetPlan.label' | translate }}</p>
           <mcs-form-field *ngIf="(internetPorts$ | async) | mcsIsNotNullOrEmpty">
             <mcs-select [placeholder]="'changeInternetPortPlan.internetPlan.placeholder' | translate"
-              required mcsId="select-internet-port"
+              required autoSelect="false" mcsId="select-internet-port"
               [formControl]="fcInternetPort"
               (selectionChange)="onChangeInternetPort($event)">
 

@@ -5,7 +5,7 @@
     <form [formGroup]="fgMediaUpload" mcsFormGroup>
       <!-- Resource Select -->
       <mcs-form-field>
-        <mcs-select [formControl]="fcResources" required
+        <mcs-select [formControl]="fcResources" required autoSelect="false"
           mcsId="select-resource"
           (selectionChange)="onChangeResource($event)"
           [placeholder]="'mediaUpload.mediaStepDetails.selectResources' | translate"
@@ -28,7 +28,7 @@
 
       <!-- Catalog Select -->
       <mcs-form-field>
-        <mcs-select [formControl]="fcCatalogs" required mcsId="select-catalog"
+        <mcs-select [formControl]="fcCatalogs" required mcsId="select-catalog" autoSelect="false"
           [placeholder]="'mediaUpload.mediaStepDetails.selectCatalog' | translate"
           [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectCatalogHelp' | translate">
 
@@ -76,7 +76,7 @@
           </mcs-grid-column>
           <mcs-grid-column sizeLg="2">
             <mcs-form-field>
-              <mcs-select placeholder="ext" [formControl]="fcMediaExtension" required>
+              <mcs-select placeholder="ext" [formControl]="fcMediaExtension" required autoSelect="false">
                 <mcs-option *ngFor="let extension of mediaExtensions$ | async" [value]="extension">
                   {{ extension }}
                 </mcs-option>

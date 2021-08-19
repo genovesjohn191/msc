@@ -48,7 +48,7 @@
                   </ng-container>
                   <ng-template #firewallService>
                     <mcs-form-field *ngIf="!(isLoading) && firewallOptions | mcsArrayHasElement else noServicesTemplate">
-                      <mcs-select [formControl]="fcFirewallServices" required
+                      <mcs-select [formControl]="fcFirewallServices" required autoSelect="false"
                         [placeholder]="'orderSimpleFirewallChanges.detailsStep.firewallService.placeholder' | translate"
                         [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.firewallService.helptext' | translate"
                         mcsId="remove-firewall-services" mcsEventTracker="select-firewall-service" mcsEventCategory="order"

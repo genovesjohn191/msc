@@ -43,6 +43,7 @@
             <p>{{ 'orderVdcScale.vdc.label' | translate }}</p>
             <mcs-form-field *ngIf="(resources$ | async) | mcsIsNotNullOrEmpty">
               <mcs-select [placeholder]="'orderVdcScale.vdc.placeholder' | translate"
+                autoSelect="false"
                 required mcsId="select-vdc"
                 [formControl]="fcVdc"
                 (selectionChange)="onChangeVdc($event)"
