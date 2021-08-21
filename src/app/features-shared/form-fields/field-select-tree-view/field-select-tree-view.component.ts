@@ -56,7 +56,7 @@ interface MatTreeViewModel<TEntity> {
   checkbox: FormControl
 }
 
-const TREE_ITEM_HEIGHT = 32;
+const TREE_ITEM_HEIGHT = 30;
 const TREE_ITEM_MAX_DISPLAY = 10;
 
 @Component({
@@ -75,10 +75,13 @@ export class FieldSelectTreeViewComponent<TEntity>
   implements IFieldSelectTreeView<TEntity>, OnInit, AfterViewInit, OnDestroy {
 
   @Input()
-  public dataSource: TreeDatasource<TEntity>;
+  public multiple: boolean;
 
   @Input()
-  public singleSelect: boolean;
+  public expandFirst: boolean;
+
+  @Input()
+  public dataSource: TreeDatasource<TEntity>;
 
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
@@ -209,7 +212,7 @@ export class FieldSelectTreeViewComponent<TEntity>
   }
 
   public itemIsInDeterminate(node: MatTreeViewModel<TEntity>): boolean {
-    if (!node.expandable || this.singleSelect) { return false; }
+    if (!node.expandable || !this.multiple) { return false; }
 
     const descendants = this.treeControl.getDescendants(node) || [];
     const uncheckedItemFound = descendants.find(descendant => !descendant.checkbox?.value);
@@ -220,7 +223,7 @@ export class FieldSelectTreeViewComponent<TEntity>
   }
 
   public itemIsChecked(node: MatTreeViewModel<TEntity>): boolean {
-    if (node.expandable && !this.singleSelect) {
+    if (node.expandable && this.multiple) {
       const uncheckedItemFound = this.treeControl.getDescendants(node)
         .find(descendant => !descendant.expandable && !descendant.checkbox?.value);
       return !uncheckedItemFound;
@@ -267,13 +270,25 @@ export class FieldSelectTreeViewComponent<TEntity>
     // on the records expanded
     Promise.resolve().then(() => {
       let maxDisplayNodes = Math.min(
-        this._viewPortScroll?.getDataLength() || dataRecords?.length,
+        this._viewPortScroll?.getDataLength() || this.treeControl?.dataNodes?.length,
         maxItemsDisplay
       );
 
       this.viewportHeight = `${maxDisplayNodes * this.itemHeightInPx}px`;
       this._viewPortScroll?.checkViewportSize();
       this.changeDetectorRef.markForCheck();
+    });
+  }
+
+  private _expandFirstRecord(dataRecords: TreeItem<TEntity>[]): void {
+    if (isNullOrEmpty(dataRecords) || !this.expandFirst) { return; }
+
+    dataRecords.forEach(dataRecord => {
+      let dataFound = this.treeControl.dataNodes
+        ?.find(dataNode => dataNode.data === dataRecord.value);
+
+      if (!dataFound?.expandable) { return; }
+      this.treeControl.expand(dataFound);
     });
   }
 
@@ -301,6 +316,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       tap(dataRecords => {
         this.treeDatasource.data = dataRecords;
         this._updateViewPortHeight(dataRecords);
+        this._expandFirstRecord(dataRecords);
         this.processOnGoing$.next(false);
       }),
       catchError(error => {
