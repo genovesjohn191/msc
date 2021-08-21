@@ -12,7 +12,6 @@ import {
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Injector,
   OnDestroy,
@@ -23,19 +22,25 @@ import { ActivatedRoute } from '@angular/router';
 import {
   CoreRoutes,
   McsAccessControlService,
-  McsListViewListingBase,
-  McsNavigationService
+  McsListviewContext,
+  McsListviewDataSource2,
+  McsListviewQueryParam,
+  McsNavigationService,
+  McsTableEvents
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
-  McsApiCollection,
   McsNetworkDnsSummary,
   McsQueryParam,
   McsRouteInfo,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { ComponentHandlerDirective } from '@app/shared';
+import {
+  ComponentHandlerDirective,
+  Search
+} from '@app/shared';
 import {
   compareStrings,
   getSafeProperty,
@@ -54,7 +59,9 @@ type tabGroupType = 'management' | 'zones';
   templateUrl: './dns-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSummary> implements OnInit, OnDestroy {
+export class DnsDetailsComponent implements OnInit, OnDestroy {
+  public readonly listviewDatasource: McsListviewDataSource2<McsNetworkDnsSummary>;
+  public readonly dataEvents: McsTableEvents<McsNetworkDnsSummary>;
   public selectedDns$: Observable<McsNetworkDnsSummary>;
   public selectedTabId$: Observable<string>;
 
@@ -66,32 +73,39 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
 
   public constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
     _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _dnsDetailsService: DnsDetailsService,
     private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
   ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeDnsDetails,
-      panelSettings: {
-        inProgressText: _translate.instant('dnsListing.shared.loading'),
-        emptyText: _translate.instant('dnsListing.shared.noDns'),
-        errorText: _translate.instant('dnsListing.shared.errorMessage')
+    this.listviewDatasource = new McsListviewDataSource2(
+      this._getNetworkDns.bind(this),
+      {
+        sortPredicate: this._sortDnsPredicate.bind(this),
+        panelSettings: {
+          inProgressText: _translate.instant('dnsListing.shared.loading'),
+          emptyText: _translate.instant('dnsListing.shared.noDns'),
+          errorText: _translate.instant('dnsListing.shared.errorMessage')
+        }
       }
+    );
+    this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
+      dataChangeEvent: McsEvent.dataChangeDnsDetails as any
     });
+
     this._registerEvents();
   }
 
   public ngOnInit() {
     this._subscribeToDnsResolver();
-    this.listViewDatasource.registerSortPredicate(this._sortDnsPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    this.listviewDatasource.disconnect(null);
+    this.dataEvents.dispose();
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
   }
@@ -101,6 +115,13 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
       RouteKey.DnsDetails,
       [this._dnsDetailsService.getDnsDetailsId(), tab.id as tabGroupType]
     );
+  }
+
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.listviewDatasource.registerSearch(value);
+    }
   }
 
   public get cogIconKey(): string {
@@ -142,8 +163,17 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
       `${CoreRoutes.getNavigationPath(RouteKey.TicketCreate)}?serviceId=${dns.serviceId}`;
   }
 
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsNetworkDnsSummary>> {
-    return this._apiService.getNetworkDns(query);
+  private _getNetworkDns(
+    param: McsListviewQueryParam
+  ): Observable<McsListviewContext<McsNetworkDnsSummary>> {
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getNetworkDns(queryParam).pipe(
+      map((networkDns) => {
+        return new McsListviewContext<McsNetworkDnsSummary>(networkDns?.collection);
+      })
+    );
   }
 
   private _resetManagementState(): void {
@@ -168,7 +198,7 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
   }
 
   private _registerEvents(): void {
-    this._routerHandler = this.eventDispatcher.addEventListener(
+    this._routerHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
         let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
