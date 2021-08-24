@@ -33,12 +33,17 @@ import {
   McsServerSnapshotCreate,
   McsServerSnapshotDelete,
   McsServerSnapshotRestore,
-  McsServerStorageDevice
+  McsServerStorageDevice,
+  PlatformType
 } from '@app/models';
 import {
+  DialogActionType,
   DialogConfirmation,
   DialogMessageConfig,
+  DialogResult,
+  DialogResultAction,
   DialogService,
+  DialogService2,
   FormMessage,
   StdDateFormatPipe
 } from '@app/shared';
@@ -93,6 +98,7 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
     private _standardDateFormatPipe: StdDateFormatPipe,
+    private _dialogService2: DialogService2,
     private _dialogService: DialogService
   ) {
     super(_injector, _changeDetectorRef);
@@ -208,19 +214,21 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
    * @param server Server on where to create the snapshot
    */
   private _showCreateSnapshotDialog(server: McsServer): void {
-    let dialogData = {
+    let dialogRef = this._dialogService2.openConfirmation({
       data: server,
-      type: 'info',
       title: this._translateService.instant('dialog.snapshotCreate.title'),
-      message: this._translateService.instant('dialog.snapshotCreate.message', { server_name: server.name })
-    } as DialogConfirmation<McsServer>;
-
-    let dialogRef = this._dialogService.openConfirmation(dialogData);
+      type: DialogActionType.Info,
+      message: server.platform?.type === PlatformType.VCenter ?
+        this._translateService.instant('dialog.snapshotCreate.vCenterMessage', { server_name: server.name }) :
+        this._translateService.instant('dialog.snapshotCreate.message', { server_name: server.name }),
+      confirmText: this._translateService.instant('action.confirm'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
 
     dialogRef.afterClosed().pipe(
-      concatMap((dialogResult) => {
-        if (isNullOrEmpty(dialogResult)) { return of(null); }
+      tap((result: DialogResult<boolean>) => {
 
+        if (result?.action !== DialogResultAction.Confirm) { return; }
         let snapshotDetails = new McsServerSnapshotCreate();
         snapshotDetails.preserveMemory = true;
         snapshotDetails.preserveState = true;
@@ -233,7 +241,7 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
             this._showErrorMessageByResponse(httpError);
             return throwError(httpError);
           })
-        );
+        ).subscribe();
       })
     ).subscribe();
   }
