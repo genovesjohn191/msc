@@ -3415,6 +3415,7 @@
     "close": "Close",
     "closed": "Closed",
     "copyToClipboard": "Copy To Clipboard",
+    "confirm": "Confirm",
     "delete": "Delete",
     "destroy": "Destroy",
     "dismiss": "Dismiss",
@@ -3620,7 +3621,8 @@
     },
     "snapshotCreate": {
       "title": "New Server Snapshot",
-      "message": "Capturing a new snapshot will replace any existing snapshots for this server.\r\n\nAre you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?"
+      "message": "Capturing a new snapshot will replace any existing snapshots for this server.\r\n\nAre you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?",
+      "vCenterMessage": "Are you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?"
     },
     "snapshotDelete": {
       "title": "Delete Snapshot",
