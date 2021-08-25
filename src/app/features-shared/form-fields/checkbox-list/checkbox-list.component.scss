@@ -6,6 +6,15 @@ $checkbox-after-border: 2px solid $color-white;
 .checkbox-list-container {
   margin-top: $space-medium;
 
+  div {
+    @include font-size($font-size-default);
+    line-height: normal;
+
+    @include breakpoint(small) {
+      @include font-size($font-size-small);
+    }
+  }
+
   .mat-list-base {
     padding: 0;
     border: $container-border;

@@ -38,7 +38,8 @@ import {
   McsAuthenticationIdentity,
   McsAccessControlService,
   McsMatTableContext,
-  McsTableDataSource2
+  McsTableDataSource2,
+  McsDateTimeService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -48,7 +49,8 @@ import {
   createObject,
   getCurrentDate,
   addHoursToDate,
-  addMonthsToDate
+  addMonthsToDate,
+  addDaysToDate
 } from '@app/utilities';
 import {
   McsOrder,
@@ -65,7 +67,8 @@ import {
   DeliveryType,
   WorkflowStatus,
   McsPermission,
-  McsFilterInfo
+  McsFilterInfo,
+  Day
 } from '@app/models';
 import {
   WizardStepComponent,
@@ -83,10 +86,13 @@ interface ChargesState {
 }
 
 const CURRENT_DATE = getCurrentDate();
-const MIN_DATE = CURRENT_DATE;
 const MAX_DATE = addMonthsToDate(CURRENT_DATE, 6);
+const MIN_TIME = '8:00 AM';
+const MAX_TIME = '6:00 PM';
 const STEP_HOUR: number = 1;
 const STEP_MINUTE: number = 30;
+const BUSINESS_HOUR_END_TIME = 18;
+const BUSINESS_HOUR_START_TIME = 8;
 
 @Component({
   selector: 'mcs-step-order-details',
@@ -124,7 +130,8 @@ export class StepOrderDetailsComponent
   public fcDescription: FormControl;
   public fcDeliveryType: FormControl;
   public fcWorkflowAction: FormControl;
-  public fcSchedule: FormControl;
+  public fcDateSchedule: FormControl;
+  public fcTimeSchedule: FormControl;
 
   // Others
   public contractTerms$: Observable<McsOption[]>;
@@ -140,6 +147,8 @@ export class StepOrderDetailsComponent
   public dataChangeStatus: DataStatus;
   public orderItems: McsOrderItem[] = [];
 
+  private _minTime: string = MIN_TIME;
+
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
@@ -151,6 +160,7 @@ export class StepOrderDetailsComponent
   constructor(
     @Inject(forwardRef(() => WizardStepComponent)) private _wizardStep: WizardStepComponent,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _dateTimeService: McsDateTimeService,
     private _formBuilder: FormBuilder,
     private _translate: TranslateService,
     private _apiService: McsApiService,
@@ -233,13 +243,41 @@ export class StepOrderDetailsComponent
     return STEP_MINUTE;
   }
 
+  public get businessHourEndTime(): number {
+    return BUSINESS_HOUR_END_TIME;
+  }
+
+  public get businessHourStartTime(): number {
+    return BUSINESS_HOUR_START_TIME;
+  }
+
   public get minDate(): Date {
-    return addHoursToDate(new Date(),
-    this.standardLeadTimeHours);
+    let date = this._setDateToBusinessDays(new Date());
+    let minDateHour = date.getHours() + (date.getMinutes()/60);
+    let isTimeOutsideBusinessHours = minDateHour < 8 || minDateHour >= 18;
+    if (isTimeOutsideBusinessHours) {
+      date = this._setTimeToBusinessHours(date, minDateHour);
+    }
+    let minDateTime  = this.addStandarLeadTimeHoursToMinDate(date, this.standardLeadTimeHours);
+    minDateTime = this._adjustDateMinutesByStepMinute(minDateTime);
+    if (minDateTime.getDay() === Day.Saturday) {
+      minDateTime = addHoursToDate(minDateTime, 48);
+    } else if (minDateTime.getDay() === Day.Sunday) {
+      minDateTime = addHoursToDate(minDateTime, 24);
+    }
+    return minDateTime;
   }
 
   public get maxDate(): Date {
     return MAX_DATE;
+  }
+
+  public get minTime(): string {
+    return this._minTime;
+  }
+
+  public get maxTime(): string {
+    return MAX_TIME;
   }
 
   /**
@@ -286,6 +324,49 @@ export class StepOrderDetailsComponent
     let result = (isStandardDelivery && isWorkFlowSubmitOrAwaiting && isSchedulable);
 
     return result;
+  }
+
+  public filteredDates = (d: Date | null): boolean => {
+    const day = (d || new Date()).getDay();
+    // Prevent Saturday and Sunday from being selected.
+    return day !== Day.Saturday && day !== Day.Sunday;
+  }
+
+  public onDateChanged(selectedDate: string): void {
+    let selectedDateIsEqualToMinDate = selectedDate === this.minDate.toDateString();
+    if (selectedDateIsEqualToMinDate) {
+      this._minTime = this._dateTimeService.formatDate(this.minDate, 'shortTime');
+      this.fcTimeSchedule.setValue(this._minTime);
+    } else {
+      this._minTime = MIN_TIME;
+    }
+  }
+
+  public addStandarLeadTimeHoursToMinDate(date: Date, standardLeadTimeHours: number): Date {
+    let minDate = date;
+    let numOfDaysToAdd = Math.floor(standardLeadTimeHours/10);
+    let numOfHoursToAdd =  +(((standardLeadTimeHours/10) % 1)*10).toFixed();
+    if (numOfHoursToAdd > 0) {
+      minDate = new Date(addHoursToDate(minDate, numOfHoursToAdd));
+    }
+    let timeHour = minDate.getHours() + (minDate.getMinutes()/60);
+    let isDateOutsideBusinessHours = (timeHour >= this.businessHourEndTime) || (date.getDate() < minDate.getDate());
+    if (isDateOutsideBusinessHours) {
+      let businessEndTimeAndCurrentHourDifference =  this.businessHourEndTime - date.getHours();
+      let additionalHour = numOfHoursToAdd - businessEndTimeAndCurrentHourDifference;
+      let remainingStandardLeadTimeHourToAdd =  (additionalHour) + (date.getMinutes()/60);
+      let newDate = addDaysToDate(date, 1);
+      minDate = new Date(newDate.setHours(this.businessHourStartTime + remainingStandardLeadTimeHourToAdd));
+    }
+    let count = 0;
+    while(count < numOfDaysToAdd){
+      minDate = new Date(minDate.setDate(minDate.getDate() + 1));
+      let isDateOnWeekend = minDate.getDay() !== Day.Saturday && minDate.getDay() !== Day.Sunday;
+      if(isDateOnWeekend) {
+        count++;
+      }
+    }
+    return new Date(minDate);
   }
 
   /**
@@ -348,9 +429,11 @@ export class StepOrderDetailsComponent
     let orderDetails = new OrderDetails();
     orderDetails.description = this.fcDescription.value;
     orderDetails.workflowAction = this.fcWorkflowAction.value;
+    let dateValue = getSafeProperty(this.fcDateSchedule, (obj) => obj.value, this.minDate.toDateString());
+    let timeValue = getSafeProperty(this.fcTimeSchedule, (obj) => obj.value, this.minDate.toLocaleTimeString());
     if (this.hasLeadTimeOptions) {
       let standardLeadTimeHour = (this.showSchedule === true) ?
-                                  getSafeProperty(this.fcSchedule, (obj) => obj.value as Date, this.minDate).toISOString() :
+                                  this._mergeDateAndTime(dateValue, timeValue) :
                                   this.minDate.toISOString();
 
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
@@ -363,6 +446,10 @@ export class StepOrderDetailsComponent
     orderDetails.billingSiteId = +getSafeProperty(this.fcBillingSite, (obj) => obj.value.id, 0);
     orderDetails.billingCostCentreId = +getSafeProperty(this.fcBillingCostCenter, (obj) => obj.value.id, 0);
     return orderDetails;
+  }
+
+  private _mergeDateAndTime(date: string, time: string): string {
+    return new Date(`${date} ${time}`).toISOString();
   }
 
   /**
@@ -392,7 +479,8 @@ export class StepOrderDetailsComponent
   private _setOrderChangeFormControls(): void {
     this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
     this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
-    this.fgOrderBilling.setControl('fcSchedule', this.fcSchedule);
+    this.fgOrderBilling.setControl('fcDateSchedule', this.fcDateSchedule);
+    this.fgOrderBilling.setControl('fcTimeSchedule', this.fcTimeSchedule);
     this.fgOrderBilling.removeControl('fcContractTerm');
     this.fgOrderBilling.removeControl('fcBillingEntity');
     this.fgOrderBilling.removeControl('fcBillingSite');
@@ -405,7 +493,8 @@ export class StepOrderDetailsComponent
   private _setOrderNewFormControls(): void {
     this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
     this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
-    this.fgOrderBilling.setControl('fcSchedule', this.fcSchedule);
+    this.fgOrderBilling.setControl('fcDateSchedule', this.fcDateSchedule);
+    this.fgOrderBilling.setControl('fcTimeSchedule', this.fcTimeSchedule);
     this.fgOrderBilling.setControl('fcContractTerm', this.fcContractTerm);
     this.fgOrderBilling.setControl('fcBillingEntity', this.fcBillingEntity);
     this.fgOrderBilling.setControl('fcBillingSite', this.fcBillingSite);
@@ -525,7 +614,8 @@ export class StepOrderDetailsComponent
     this.fcDescription = new FormControl('', [CoreValidators.required]);
     this.fcDeliveryType = new FormControl(DeliveryType.Standard, [CoreValidators.required]);
     this.fcWorkflowAction = new FormControl(OrderWorkflowAction.Submitted, [CoreValidators.required]);
-    this.fcSchedule = new FormControl(this.minDate, [CoreValidators.required]);
+    this.fcDateSchedule = new FormControl(this.minDate.toDateString(), [CoreValidators.required]);
+    this.fcTimeSchedule = new FormControl(this.minDate.toLocaleTimeString(), [CoreValidators.required]);
 
     this.fgOrderBilling = this._formBuilder.group([]);
   }
@@ -599,17 +689,52 @@ export class StepOrderDetailsComponent
     this.minimumScheduleDate$ = of(
       this.minDate
     ).pipe(
-      map((date) => {
-        let minutes = new Date().getMinutes() > this.stepMinute ? 0 : this.stepMinute;
-        date.setMinutes(minutes);
-        if (minutes <= 0) {
-          date = addHoursToDate(date, 1);
-        }
-        return date;
-      }),
       tap((date) => {
-        this.fcSchedule.setValue(date);
+        this.fcDateSchedule.setValue(date.toDateString());
+        this._minTime = this._dateTimeService.formatDate(date, 'shortTime')
+        this.fcTimeSchedule.setValue(this._minTime);
       })
     );
   }
+
+  private _setTimeToBusinessHours(date: Date, minDateHour: number): Date {
+    let isTimeBeforeBusinessHours = minDateHour < 8;
+    let isTimeAfterBusinessHours = minDateHour >= 18;
+    if (isTimeBeforeBusinessHours) {
+      return new Date(date.setHours(8,0,0));
+    } else if (isTimeAfterBusinessHours) {
+      return this._adjustDateTimeWithinBusinessHours(date, 1, 8);
+    } else {
+      return date;
+    }
+  }
+
+  private _setDateToBusinessDays(currentDate: Date): Date {
+    let currentHour = currentDate.getHours() + (currentDate.getMinutes()/60);
+    if (currentDate.getDay() === Day.Friday && currentHour >= 18) {
+      return this._adjustDateTimeWithinBusinessHours(currentDate, 3, 8);
+    } else if (currentDate.getDay() === Day.Saturday) {
+      return this._adjustDateTimeWithinBusinessHours(currentDate, 2, 8);
+    } else if (currentDate.getDay() === Day.Sunday) {
+      return this._adjustDateTimeWithinBusinessHours(currentDate, 1, 8);
+    } else {
+      return currentDate;
+    }
+  }
+
+  private _adjustDateTimeWithinBusinessHours(date: Date, daysToAdd: number, hour: number): Date {
+    let adjustedDate = new Date(new Date().setDate(date.getDate() + daysToAdd));
+    return new Date(adjustedDate.setHours(hour, 0, 0));
+  }
+
+  private _adjustDateMinutesByStepMinute(date: Date): Date {
+    if (date.getMinutes() === 0) { return date; }
+    let minutes = new Date().getMinutes() > this.stepMinute ? 0 : this.stepMinute;
+    date.setMinutes(minutes);
+    if (minutes <= 0) {
+      date = addHoursToDate(date, 1);
+    }
+    return date;
+  }
+
 }

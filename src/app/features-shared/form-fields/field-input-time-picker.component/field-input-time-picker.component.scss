@@ -1,0 +1,28 @@
+@import "../../../../styles/shared/base";
+
+$time-picker-toggle-button-margin-right: -4px;
+$time-picker-icon-size: 22px;
+
+.time-picker-wrapper {
+  ngx-material-timepicker-toggle {
+    margin-right: -4px;
+  
+    &.active {
+      button {
+        color: $color-primary-01;
+      }
+    }
+
+    &:not(.active) {
+      button {
+        color: $color-grey-01;
+      }
+    }
+  
+    mat-icon {
+      font-size: $time-picker-icon-size;
+      height: $time-picker-icon-size;
+      width: $time-picker-icon-size;
+    }
+  }
+}

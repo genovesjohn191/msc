@@ -6,6 +6,15 @@ $border: 1px solid $color-black;
 .select-management-tag-container {
   margin-top: $space-medium;
 
+  div {
+    @include font-size($font-size-default);
+    line-height: normal;
+
+    @include breakpoint(small) {
+      @include font-size($font-size-small);
+    }
+  }
+
   .mat-list-base {
     border: $border;
     padding: 0;

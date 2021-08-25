@@ -16,7 +16,7 @@ import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
 @Component({
   selector: 'mcs-select-management-tag',
   templateUrl: './select-management-tag.component.html',
-  styleUrls: ['./select-management-tag.component.scss', './../form-fields.scss'],
+  styleUrls: ['./select-management-tag.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

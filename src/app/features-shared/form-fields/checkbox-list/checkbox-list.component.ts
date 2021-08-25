@@ -15,7 +15,7 @@ type McsOptionType = McsOption[] | McsCloudHealthOption[]
 @Component({
   selector: 'mcs-checkbox-list',
   templateUrl: './checkbox-list.component.html',
-  styleUrls: ['./checkbox-list.component.scss', './../form-fields.scss'],
+  styleUrls: ['./checkbox-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
