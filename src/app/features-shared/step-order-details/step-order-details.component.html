@@ -219,24 +219,42 @@
           </mcs-form-field>
         </mcs-item>
 
-      <!--Schedule-->
-      <mcs-item orientation="separated"
-        *ngIf="(hasLeadTimeOptions && showSchedule)"
-        [disabled]="isUpdatingCharges">
-        <span>{{ 'shared.datetimepicker.label' | translate }}</span>
-        <mcs-form-field [mcsContextualHelp]="'orderDetailsStep.schedule.helptext' | translate">
-          <mcs-datetimepicker
-            [required]="false"
-            [stepHour]="stepHour"
-            [stepMinute]="stepMinute"
-            [formControl]="fcSchedule"
-            [label]="'shared.datetimepicker.datepickerLabel' | translate"
-            [minDate]="minimumScheduleDate$ | async"
-            [maxDate]="maxDate"
-            mcsId="mcs-datetimepicker">
-          </mcs-datetimepicker>
-        </mcs-form-field>
-       </mcs-item>
+        <!-- Schedule -->
+        <mcs-item orientation="separated"
+          *ngIf="(hasLeadTimeOptions && showSchedule)"
+          [disabled]="isUpdatingCharges">
+          <span>{{ 'shared.datetimepicker.label' | translate }}</span>
+          <div>
+            <mcs-field-input-date-picker
+              [mcsContextualHelp]="'orderDetailsStep.schedule.helptext' | translate"
+              [formControl]="fcDateSchedule"
+              [minDate]="minimumScheduleDate$ | async"
+              [maxDate]="maxDate"
+              [defaultDate]="minimumScheduleDate$ | async"
+              [filteredDates]="filteredDates"
+              (onDateChange)="onDateChanged($event)"
+              mcsId="mcs-datepicker">
+            </mcs-field-input-date-picker>
+          </div>
+        </mcs-item>
+
+        <!-- Time -->
+        <mcs-item orientation="separated"
+          *ngIf="(hasLeadTimeOptions && showSchedule)"
+          [disabled]="isUpdatingCharges">
+          <span></span>
+          <div>
+            <mcs-field-input-time-picker
+              [formControl]="fcTimeSchedule"
+              [stepMinute]="stepMinute"
+              [timeFormat]="12"
+              [maxTime]="maxTime"
+              [minTime]="minTime"
+              (timeChange)="onArrivalTimeChange($event)"
+              mcsId="mcs-timepicker">
+            </mcs-field-input-time-picker>
+          </div>
+        </mcs-item>
 
         <ng-container [ngSwitch]="fcWorkflowAction?.value">
           <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.Submitted" orderAgreementType="charges"  wrapAgreement="false"></mcs-order-agreement>

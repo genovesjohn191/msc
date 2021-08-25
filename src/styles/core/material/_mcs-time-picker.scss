@@ -1,0 +1,19 @@
+.timepicker {
+  .timepicker__header {
+    background-color: $color-primary-01 !important;
+  }
+
+  .clock-face__clock-hand {
+    background-color: $color-primary-01 !important;
+  }
+
+  .clock-face__number {
+    > span.active {
+      background-color: $color-primary-01 !important;
+    }
+  }
+
+  button:not(.timepicker-dial__item) {
+    color: $color-primary-01;
+  }
+}

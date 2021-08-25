@@ -1,0 +1,23 @@
+<mat-form-field class="time-container" appearance="outline">
+  <input matInput [ngxTimepicker]="toggleTimepicker"
+    [formControl]="ngControl?.control"
+    [required]="required"
+    [value]="ngControl?.control?.value"
+    [format]="timeFormat"
+    [min]="minTime"
+    [max]="maxTime"
+    disabled>
+  <ngx-material-timepicker-toggle
+    [for]="toggleTimepicker"
+    [class.active]="timePickerActive">
+    <mat-icon ngxMaterialTimepickerToggleIcon  size="large">schedule</mat-icon>
+  </ngx-material-timepicker-toggle>
+  <ngx-material-timepicker #toggleTimepicker
+    [timepickerClass]="'time-picker'"
+    [minutesGap]="stepMinute"
+    (timeSet)="onTimeChanged($event)"
+    (opened)="onTimePickerOpen()"
+    (closed)="onTimePickerClose()"
+    disabled="false">
+  </ngx-material-timepicker>
+</mat-form-field>

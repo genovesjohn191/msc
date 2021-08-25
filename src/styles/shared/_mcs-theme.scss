@@ -44,7 +44,8 @@ $font-feature-setting: 'liga';
   -webkit-font-smoothing: antialiased;
 }
 
-.mcs-overlay-theme {
+.mcs-overlay-theme,
+.cdk-overlay-container {
   z-index: $zindex-overlay;
 }
 

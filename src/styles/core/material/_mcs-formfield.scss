@@ -135,4 +135,53 @@ mat-form-field.mat-form-field {
       }
     }
   }
+
+  $date-time-picker-input-field-width: 200px;
+  $time-picker-field-padding: .6rem 0 .3rem;
+  $date-picker-field-padding: 1.1rem 0 .8rem;
+  $date-picker-toggle-button-margin-right: -5px;
+  $date-time-picker-form-field-suffix-top: 0.3rem;
+
+  &.date-container,
+  &.time-container {
+    width: $date-time-picker-input-field-width;
+
+    .mat-form-field-wrapper {
+      padding: 0;
+      margin: 0;
+
+      .mat-form-field-outline {
+        top: $date-time-picker-form-field-suffix-top;
+      }
+      .mat-form-field-infix {
+        border-top: none;
+
+        input {
+          background-color: transparent;
+          color: $color-black !important;
+          opacity: 1 !important;
+        }
+      }
+
+      .mat-form-field-suffix {
+        top: $date-time-picker-form-field-suffix-top;
+      }
+    }
+  }
+
+  &.date-container {
+    .mat-form-field-infix {
+      padding:  $date-picker-field-padding;
+    }
+    .mat-datepicker-toggle {
+      margin-right: $date-picker-toggle-button-margin-right;
+    }
+  }
+
+  &.time-container {
+    .mat-form-field-infix {
+      padding:  $time-picker-field-padding;
+      display: flex;
+    }
+  }
 }

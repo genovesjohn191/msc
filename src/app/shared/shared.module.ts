@@ -47,6 +47,7 @@ import { ListModule } from './list/list.module';
 import { LoaderModule } from './loader/loader.module';
 import { LoadingModule } from './loading/loading.module';
 import { MaterialModule } from './material.module';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { NoteModule } from './note/note.module';
 import { OptionGroupModule } from './option-group/option-group.module';
 import { OverlayModule } from './overlay/overlay.module';
@@ -121,6 +122,7 @@ const exportedModules = [
   LoaderModule,
   LoadingModule,
   MaterialModule,
+  NgxMaterialTimepickerModule,
   NoteModule,
   OptionGroupModule,
   OverlayModule,
