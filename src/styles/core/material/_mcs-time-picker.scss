@@ -16,4 +16,12 @@
   button:not(.timepicker-dial__item) {
     color: $color-primary-01;
   }
+
+  .timepicker-period__warning:after {
+    content: 'Selected time is invalid in this period.';
+  }
+
+  .timepicker-period__warning p {
+    display: none;
+  }
 }
