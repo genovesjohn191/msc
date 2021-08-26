@@ -12,16 +12,10 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-import {
-  isDevMode,
-  Injectable
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
-import {
-  McsFeatureFlag,
-  McsIdentity
-} from '@app/models';
+import { McsIdentity } from '@app/models';
 import {
   coerceNumber,
   isNullOrEmpty,
@@ -35,7 +29,7 @@ import { LogMethod } from '@peerlancers/ngx-logger';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsCookieService } from './mcs-cookie.service';
-import { McsAccessControlService } from '../authentication/mcs-access-control.service';
+import { McsSessionService } from '../session/session.service';
 
 @Injectable()
 export class McsSessionHandlerService {
@@ -67,29 +61,14 @@ export class McsSessionHandlerService {
    * Returns true if session is currently idle
    */
   public get sessionIsIdle(): boolean {
-    let hasTimeoutBypass =
-      this._accesscontrolService.hasAccessToFeature(McsFeatureFlag.BypassSessionInactivityTimeout) || isDevMode();
-    let isNowIdle = this.idleTimeInSeconds >= CommonDefinition.SESSION_IDLE_TIME_IN_SECONDS
-    || this._sessionIsIdle;
-
-    return !hasTimeoutBypass && isNowIdle;
+    return this._sessionService.sessionIsIdle;
   }
 
   /**
    * Returns true is session has timedout
    */
   public get sessionTimedOut(): boolean {
-    let maxIAllowedIdleTimeInSeconds = CommonDefinition.SESSION_IDLE_TIME_IN_SECONDS
-      + CommonDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS;
-    let sessionIdCookie =
-      this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_SESSION_ID, false);
-
-    let expectedSessionId = this._authIdentity.user.hashedId + this._authIdentity.user.expiry;
-    let hasTimeoutBypass =
-      this._accesscontrolService.hasAccessToFeature(McsFeatureFlag.BypassSessionInactivityTimeout) || isDevMode();
-    let hasTimedOut = this.idleTimeInSeconds >= maxIAllowedIdleTimeInSeconds || sessionIdCookie === expectedSessionId;
-
-    return !hasTimeoutBypass && hasTimedOut;
+    return this._sessionService.sessionTimedOut;
   }
 
   public get sessionActive(): boolean {
@@ -116,7 +95,7 @@ export class McsSessionHandlerService {
     private _cookieService: McsCookieService,
     private _authIdentity: McsAuthenticationIdentity,
     private _authService: McsAuthenticationService,
-    private _accesscontrolService: McsAccessControlService
+    private _sessionService: McsSessionService
   ) {
     this._eventDispatcher.addEventListener(
       McsEvent.userChange, this._onUserChanged.bind(this));
