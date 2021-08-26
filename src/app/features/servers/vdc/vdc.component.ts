@@ -1,10 +1,22 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
+  of,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
+  Component,
   Injector,
+  OnDestroy,
+  OnInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -12,41 +24,35 @@ import {
   ParamMap
 } from '@angular/router';
 import {
-  Subject,
-  Observable,
-  of,
-  Subscription
-} from 'rxjs';
-import {
-  takeUntil,
-  tap,
-  shareReplay,
-  map
-} from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-
-import {
+  McsListviewContext,
+  McsListviewDataSource2,
+  McsListviewQueryParam,
   McsNavigationService,
-  McsListViewListingBase
+  McsTableEvents
 } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty,
-  compareStrings
-} from '@app/utilities';
-import {
+  McsQueryParam,
   McsResource,
-  RouteKey,
+  McsRouteInfo,
   McsServer,
   McsServerPlatform,
-  McsQueryParam,
-  McsApiCollection,
-  McsRouteInfo
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
-import { ComponentHandlerDirective } from '@app/shared';
+import {
+  ComponentHandlerDirective,
+  Search
+} from '@app/shared';
+import {
+  compareStrings,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { VdcService } from './vdc.service';
 
 // Add another group type in here if you have addition tab
@@ -65,7 +71,9 @@ interface McsVdcGroup {
     'class': 'block'
   }
 })
-export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements OnInit, OnDestroy {
+export class VdcComponent implements OnInit, OnDestroy {
+  public readonly listviewDatasource: McsListviewDataSource2<McsVdcGroup>;
+  public readonly dataEvents: McsTableEvents<McsVdcGroup>;
   public selectedResource$: Observable<McsResource>;
   public selectedTabId$: Observable<string>;
 
@@ -77,20 +85,26 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
 
   constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
     _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _vdcService: VdcService
   ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeServers,
-      panelSettings: {
-        inProgressText: _translate.instant('servers.loading'),
-        emptyText: _translate.instant('servers.noServers'),
-        errorText: _translate.instant('servers.errorMessage')
+    this.listviewDatasource = new McsListviewDataSource2(
+      this._getVdcGroups.bind(this),
+      {
+        sortPredicate: this._sortVdcGroupPredicate.bind(this),
+        panelSettings: {
+          inProgressText: _translate.instant('servers.loading'),
+          emptyText: _translate.instant('servers.noServers'),
+          errorText: _translate.instant('servers.errorMessage')
+        }
       }
+    );
+    this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
+      dataChangeEvent: McsEvent.dataChangeServers as any
     });
     this._registerEvents();
   }
@@ -98,13 +112,20 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
   public ngOnInit() {
     this._subscribeToParamChange();
     this._subscribeToVdcResolve();
-    this.listViewDatasource.registerSortPredicate(this._sortVdcGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    this.listviewDatasource.disconnect(null);
+    this.dataEvents.dispose();
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
+  }
+
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.listviewDatasource.registerSearch(value);
+    }
   }
 
   public get routeKeyEnum(): any {
@@ -126,8 +147,11 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
   /**
    * Gets the entity listing from API
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsVdcGroup>> {
-    return this._apiService.getServers(query).pipe(
+   private _getVdcGroups(param: McsListviewQueryParam): Observable<McsListviewContext<McsVdcGroup>> {
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getServers(queryParam).pipe(
       map((servers) => {
         let vdcGroups = new Array<McsVdcGroup>();
         servers.collection.forEach((server) => {
@@ -151,11 +175,7 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
             servers: [server]
           });
         });
-
-        let serverGroupsCollection = new McsApiCollection<McsVdcGroup>();
-        serverGroupsCollection.collection = vdcGroups;
-        serverGroupsCollection.totalCollectionCount = vdcGroups.length;
-        return serverGroupsCollection;
+        return new McsListviewContext<McsVdcGroup>(vdcGroups);
       })
     );
   }
@@ -210,7 +230,7 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
    * Register Event dispatchers
    */
   private _registerEvents(): void {
-    this._routerHandler = this.eventDispatcher.addEventListener(
+    this._routerHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
         let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));

@@ -20,8 +20,8 @@ import {
 
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
-import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { McsSessionService } from '../session/session.service';
+import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
 export class McsAuthenticationService {
@@ -131,8 +131,6 @@ export class McsAuthenticationService {
    * @param identity Currently login user information
    */
   private _setUserIdentity(identity: McsIdentity) {
-    console.log('ACTIVE: IDENTITY UPDATED ', identity);
-    console.log('ACTIVE: NEW EXPIRY ', identity.expiry);
     this._authenticationIdentity.setActiveUser(identity);
     this._cookieService.setItem(CommonDefinition.COOKIE_USER_STATE_ID, identity.hashedId);
   }

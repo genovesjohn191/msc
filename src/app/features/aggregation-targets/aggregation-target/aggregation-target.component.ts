@@ -1,48 +1,54 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  Injector,
-  ChangeDetectorRef,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
-import {
+  of,
   Observable,
   Subject,
-  Subscription,
-  of
+  Subscription
 } from 'rxjs';
 import {
   map,
-  tap,
   shareReplay,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+
 import {
-  McsBackUpAggregationTarget,
-  RouteKey,
-  McsQueryParam,
-  McsApiCollection,
-  McsRouteInfo
-} from '@app/models';
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
+  McsListviewContext,
+  McsListviewDataSource2,
+  McsListviewQueryParam,
   McsNavigationService,
-  McsListViewListingBase
+  McsTableEvents
 } from '@app/core';
-import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  McsBackUpAggregationTarget,
+  McsQueryParam,
+  McsRouteInfo,
+  RouteKey
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import { Search } from '@app/shared';
+import {
+  compareStrings,
   getSafeProperty,
-  unsubscribeSafely,
-  CommonDefinition,
   isNullOrEmpty,
-  compareStrings
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { AggregationTargetService } from './aggregation-target.service';
 
 // Add another group type in here if you have addition tab
@@ -54,8 +60,9 @@ type tabGroupType = 'management';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AggregationTargetComponent extends McsListViewListingBase<McsBackUpAggregationTarget> implements OnInit, OnDestroy {
-
+export class AggregationTargetComponent implements OnInit, OnDestroy {
+  public readonly listviewDatasource: McsListviewDataSource2<McsBackUpAggregationTarget>;
+  public readonly dataEvents: McsTableEvents<McsBackUpAggregationTarget>;
   public selectedAggregationTarget$: Observable<McsBackUpAggregationTarget>;
   public selectedTabId$: Observable<string>;
 
@@ -64,20 +71,26 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsBackUp
 
   constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
     _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _aggregationTargetService: AggregationTargetService
   ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeAggregationTargets,
-      panelSettings: {
-        inProgressText: _translate.instant('aggregationTargets.loading'),
-        emptyText: _translate.instant('aggregationTargets.noData'),
-        errorText: _translate.instant('aggregationTargets.errorMessage')
+    this.listviewDatasource = new McsListviewDataSource2(
+      this._getAggregationTargets.bind(this),
+      {
+        sortPredicate: this._sortAggregationTargetPredicate.bind(this),
+        panelSettings: {
+          inProgressText: _translate.instant('aggregationTargets.loading'),
+          emptyText: _translate.instant('aggregationTargets.noData'),
+          errorText: _translate.instant('aggregationTargets.errorMessage')
+        }
       }
+    );
+    this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
+      dataChangeEvent: McsEvent.dataChangeAggregationTargets as any
     });
     this._registerEvents();
   }
@@ -85,13 +98,20 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsBackUp
   public ngOnInit() {
     this._subscribeToParamChange();
     this._subscribeToAggregationTargetResolve();
-    this.listViewDatasource.registerSortPredicate(this._sortAggregationTargetPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    this.listviewDatasource.disconnect(null);
+    this.dataEvents.dispose();
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
+  }
+
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.listviewDatasource.registerSearch(value);
+    }
   }
 
   public get cogIconKey(): string {
@@ -135,8 +155,19 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsBackUp
   /**
    * Gets the entity listing from API
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
-    return this._apiService.getBackupAggregationTargets(query);
+  private _getAggregationTargets(
+    param: McsListviewQueryParam
+  ): Observable<McsListviewContext<McsBackUpAggregationTarget>> {
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getBackupAggregationTargets(queryParam).pipe(
+      map((aggregationTargets) => {
+        return new McsListviewContext<McsBackUpAggregationTarget>(
+          aggregationTargets?.collection
+        );
+      })
+    );
   }
 
   /**
@@ -161,7 +192,7 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsBackUp
    * Register Event dispatchers
    */
   private _registerEvents(): void {
-    this._routerHandler = this.eventDispatcher.addEventListener(
+    this._routerHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
         let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
