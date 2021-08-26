@@ -318,6 +318,7 @@ export class FieldSelectTreeViewComponent<TEntity>
         this._updateViewPortHeight(dataRecords);
         this._expandFirstRecord(dataRecords);
         this.processOnGoing$.next(false);
+        this.changeDetectorRef.markForCheck();
       }),
       catchError(error => {
         this.processOnGoing$.next(false);
