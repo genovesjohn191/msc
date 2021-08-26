@@ -21,16 +21,17 @@ import {
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
+import { McsSessionService } from '../session/session.service';
 
 @Injectable()
 export class McsAuthenticationService {
-
   public get isNewOAuthEnabled(): boolean {
     return this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled';
   }
 
   constructor(
     private _appState: AppState,
+    private _sessionService: McsSessionService,
     private _cookieService: McsCookieService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
@@ -130,6 +131,8 @@ export class McsAuthenticationService {
    * @param identity Currently login user information
    */
   private _setUserIdentity(identity: McsIdentity) {
+    console.log('ACTIVE: IDENTITY UPDATED ', identity);
+    console.log('ACTIVE: NEW EXPIRY ', identity.expiry);
     this._authenticationIdentity.setActiveUser(identity);
     this._cookieService.setItem(CommonDefinition.COOKIE_USER_STATE_ID, identity.hashedId);
   }
@@ -142,8 +145,9 @@ export class McsAuthenticationService {
     let _loginUrl = this._coreConfig.loginUrl;
 
     if (this.isNewOAuthEnabled) {
-      _loginUrl = `${this._coreConfig.apiHost}/auth/login?state=`;
+      _loginUrl = `${this._coreConfig.apiHost}/auth/login?source=`;
     }
+
     return `${_loginUrl}${_returnUrl}`;
   }
 
@@ -159,19 +163,34 @@ export class McsAuthenticationService {
 
   private setExtensionTrigger(expiry: Date): void {
     let refreshTimeInSeconds = (expiry.getTime() - Date.now()) / 1000;
-
     let willExpiresSoon = refreshTimeInSeconds < 300;
     if (willExpiresSoon) {
-      // Refresh now
+      // Refresh immediately
       refreshTimeInSeconds = 1;
     } else {
-      // Refresh later
+      // Refresh 5 min before expiry
       refreshTimeInSeconds = refreshTimeInSeconds - 300;
     }
-    setTimeout(this.extendSession.bind(this), refreshTimeInSeconds * 1000);
+
+    let refreshTimeInMs = refreshTimeInSeconds * 1000;
+    setTimeout(this.extendSession.bind(this), refreshTimeInMs);
   }
 
-  private extendSession(): void {
-    this._apiService.extendSession().subscribe();
+  private extendSession(): boolean {
+    if (this._sessionService.sessionTimedOut) {
+      return false;
+    }
+
+    if (this._sessionService.sessionIsIdle) {
+      setTimeout(this.extendSession.bind(this), 1000);
+      return false;
+    }
+
+    this._apiService.extendSession().subscribe(()=> {
+        this.authenticateUser().subscribe();
+      }
+    );
+
+    return true;
   }
 }
