@@ -21,7 +21,7 @@
                       mcsEventLabel="order-dashboard-list-panel">
 
                       <mcs-item>
-                        <span padding-left-small>{{ group.name | mcsDataLabel }}</span>
+                        <span padding-left-small [innerHTML]="group.name | mcsDataLabel"></span>
                       </mcs-item>
                     </mcs-option>
                   </ng-container>
