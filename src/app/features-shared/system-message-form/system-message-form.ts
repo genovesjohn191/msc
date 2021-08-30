@@ -12,4 +12,5 @@ export class SystemMessageForm {
   public enabled: boolean;
   public valid: boolean;
   public hasChanged: boolean;
+  public macquarieViewFallback: boolean;
 }

@@ -17,6 +17,7 @@ export class McsSystemMessageMapper {
     systemMessageValidate.type = systemMessage.type;
     systemMessageValidate.severity = systemMessage.severity;
     systemMessageValidate.enabled = systemMessage.enabled;
+    systemMessageValidate.macquarieViewFallback = systemMessage.macquarieViewFallback;
     systemMessageValidate.id = systemMessageId || undefined;
 
     return systemMessageValidate;
@@ -33,6 +34,7 @@ export class McsSystemMessageMapper {
     systemMessageCreate.type = systemMessage.type;
     systemMessageCreate.severity = systemMessage.severity;
     systemMessageCreate.enabled = systemMessage.enabled;
+    systemMessageCreate.macquarieViewFallback = systemMessage.macquarieViewFallback;
     systemMessageCreate.message = systemMessage.message;
 
     return systemMessageCreate;
@@ -50,6 +52,7 @@ export class McsSystemMessageMapper {
     systemMessageEdit.type = systemMessage.type;
     systemMessageEdit.severity = systemMessage.severity;
     systemMessageEdit.enabled = systemMessage.enabled;
+    systemMessageEdit.macquarieViewFallback = systemMessage.macquarieViewFallback;
 
     return systemMessageEdit;
   }

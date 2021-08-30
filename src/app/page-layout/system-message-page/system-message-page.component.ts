@@ -16,6 +16,7 @@ import {
   McsCookieService,
   CoreConfig
 } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-system-message-page',
@@ -36,6 +37,7 @@ export class SystemMessagePageComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _cookieService: McsCookieService,
     private _coreConfig: CoreConfig,
+    private _translate: TranslateService,
   ) { }
 
   public ngOnInit() {
@@ -65,6 +67,13 @@ export class SystemMessagePageComponent implements OnInit {
    */
   public goToMacquarieView(): void {
     window.open(this._coreConfig.macviewUrl);
+  }
+
+  public secondaryLabel(macquarieViewFallback: boolean): string {
+    if (!macquarieViewFallback) {
+      return this._translate.instant('systemMessagePage.secondaryAdvisoryLabelWithoutMacquarieView');
+    }
+    return this._translate.instant('systemMessagePage.secondaryAdvisoryLabelWithMacquarieView', { macViewUrl: this.macviewUrl });
   }
 
   /**

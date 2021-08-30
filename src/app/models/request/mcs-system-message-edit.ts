@@ -13,6 +13,9 @@ export class McsSystemMessageEdit {
   public enabled: boolean = undefined;
 
   @JsonProperty()
+  public macquarieViewFallback: boolean = undefined;
+
+  @JsonProperty()
   public start: string = undefined;
 
   @JsonProperty()
