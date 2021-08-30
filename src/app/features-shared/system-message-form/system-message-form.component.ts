@@ -41,8 +41,7 @@ import {
   compareDates,
   unsubscribeSafely,
   getSafeProperty,
-  getCurrentDate,
-  CommonDefinition
+  getCurrentDate
 } from '@app/utilities';
 import {
   McsFormGroupDirective,
@@ -72,6 +71,7 @@ export class SystemMessageFormComponent
   public fcSeverity: FormControl;
   public fcMessage: FormControl;
   public fcEnabled: FormControl;
+  public fcMacquarieView: FormControl;
 
   // System Message Dropdowns
   public messageTypeList: McsOption[];
@@ -132,6 +132,10 @@ export class SystemMessageFormComponent
     return getCurrentDate();
   }
 
+  public get isSeverityCritical(): boolean {
+    return this.fcSeverity.value === Severity.Critical;
+  }
+
   /**
    * Returns the form group
    */
@@ -156,6 +160,7 @@ export class SystemMessageFormComponent
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
     this._systemMessageForm.enabled = this.fcEnabled.value;
+    this._systemMessageForm.macquarieViewFallback = this.fcMacquarieView.value;
     this._systemMessageForm.valid = this.fgCreateMessage.valid && this._isValidDates;
 
     this._setSystemMessageHasChangedFlag();
@@ -224,6 +229,9 @@ export class SystemMessageFormComponent
     this.fcEnabled = new FormControl(true, [
     ]);
 
+    this.fcMacquarieView = new FormControl(true, [
+    ]);
+
     // Register Form Groups using binding
     this.fgCreateMessage = this._formBuilder.group({
       fcStart: this.fcStart,
@@ -231,7 +239,8 @@ export class SystemMessageFormComponent
       fcType: this.fcType,
       fcSeverity: this.fcSeverity,
       fcMessage: this.fcMessage,
-      fcEnabled: this.fcEnabled
+      fcEnabled: this.fcEnabled,
+      fcMacquarieView: this.fcMacquarieView
     });
 
     this.fcType.valueChanges.pipe(
@@ -295,6 +304,7 @@ export class SystemMessageFormComponent
     this.fcType.setValue(this.message.type);
     this.fcSeverity.setValue(this.message.severity);
     this.fcEnabled.setValue(this.message.enabled);
+    this.fcMacquarieView.setValue(this.message.macquarieViewFallback);
     this.fcMessage.setValue(this.message.message);
     this.hasEditedMessage = true;
   }
@@ -319,8 +329,12 @@ export class SystemMessageFormComponent
     let expiryHasChanged = this.fcExpiry.value !== getSafeProperty(this.message, (obj) => obj.expiry, '');
 
     this._systemMessageForm.hasChanged = this._systemMessageForm.valid &&
-      (this.fcEnabled.value !== this.message.enabled || startHasChanged || expiryHasChanged
-        || this.fcSeverity.value !== this.message.severity || this.fcType.value !== this.message.type);
+      (this.fcEnabled.value !== this.message.enabled ||
+        this.fcMacquarieView.value !== this.message.macquarieViewFallback ||
+        startHasChanged ||
+        expiryHasChanged ||
+        this.fcSeverity.value !== this.message.severity ||
+        this.fcType.value !== this.message.type);
   }
 
   /**

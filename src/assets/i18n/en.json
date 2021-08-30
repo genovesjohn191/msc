@@ -162,7 +162,8 @@
   },
   "systemMessagePage": {
     "title": "The Portal is currently unavailable",
-    "secondaryAdvisoryLabel": "If you have an urgent issue or request, please use <u><a href='{{macViewUrl}}' target='_blank'>MacquarieView</a></u> or contact the <br> HMC for any urgent issues on <strong>1800 789 999</strong>, option 1.",
+    "secondaryAdvisoryLabelWithoutMacquarieView": "If you have an urgent issue or request, please contact the <br> HMC for any urgent issues on <strong>1800 789 999</strong>, option 1.",
+    "secondaryAdvisoryLabelWithMacquarieView": "If you have an urgent issue or request, please use <u><a href='{{macViewUrl}}' target='_blank'>MacquarieView</a></u> or contact the <br> HMC for any urgent issues on <strong>1800 789 999</strong>, option 1.",
     "internalAdvisoryLabel": "Internal users may still access the Portal, although some features may not work as expected.",
     "goToMacquarie": "Go To MacquarieView",
     "proceedToPortal": "Proceed to the Portal"
@@ -2245,7 +2246,8 @@
     "messagePlaceholder": "Portal is currently undergoing maintenance.",
     "messageCreateHelp": "Provide a clear, easy to read message that users will be able to understand.\r\n\n Remember to word this carefully as it will be displayed to all users.",
     "messageEditHelp": "Message content cannot be changed once set.",
-    "enabledLabel": "Enabled "
+    "enabledLabel": "Enabled ",
+    "enableMacquarieView": "Direct users to MacquarieView"
   },
   "tickets": {
     "header": "Tickets",

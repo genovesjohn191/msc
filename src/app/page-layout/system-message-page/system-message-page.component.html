@@ -16,10 +16,10 @@
     </span>
      
     <ng-template #secondaryAdvisoryLabelTemplate>
-      <span [innerHTML]="'systemMessagePage.secondaryAdvisoryLabel' | translate: {macViewUrl: macviewUrl}" text-center></span>
+      <span [innerHTML]="secondaryLabel(systemMessage.macquarieViewFallback)" text-center></span>
     </ng-template>   
 
-    <div>
+    <div *ngIf="systemMessage.macquarieViewFallback">
       <!-- Go to Macquarie Action -->
       <button mcsButton  
         mcsId="go-to-macquarie"

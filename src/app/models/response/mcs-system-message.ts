@@ -26,6 +26,9 @@ export class McsSystemMessage extends McsEntityBase {
   public enabled: boolean = undefined;
 
   @JsonProperty()
+  public macquarieViewFallback: boolean = undefined;
+
+  @JsonProperty()
   public message: string = undefined;
 
   @JsonProperty()

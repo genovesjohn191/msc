@@ -113,6 +113,13 @@
     </mcs-error>
   </mcs-form-field>
 
+  <!-- MacquarieView Fallback -->
+  <mcs-checkbox *ngIf="isSeverityCritical"
+    display-block
+    mcsId="input-macquarieview-enabled"
+    [formControl]="fcMacquarieView">
+    <h2>{{ 'systemMessageForm.enableMacquarieView' | translate }}</h2>
+  </mcs-checkbox>
   <!-- Enabled -->
   <mcs-checkbox
     mcsId="inp-enabled"
