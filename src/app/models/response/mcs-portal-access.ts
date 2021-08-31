@@ -6,4 +6,7 @@ export class McsPortalAccess {
 
   @JsonProperty()
   public url: string = undefined;
+
+  @JsonProperty()
+  public billingDescription: string = undefined;
 }

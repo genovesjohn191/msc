@@ -35,7 +35,9 @@
                   mcsId="select-tool"
                   mcsEventTracker="navigate-to-othertools"
                   mcsEventCategory="tools"
-                  mcsEventLabel="tools-listing-page">{{ access.name }}</a>
+                  mcsEventLabel="tools-listing-page">
+                  <span *ngIf="access.billingDescription">{{ access.billingDescription }} - </span>
+                  {{ access.name }}</a>
               </div>
             </ng-container>
             <ng-template #notResourceSpecific>

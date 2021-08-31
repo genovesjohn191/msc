@@ -91,7 +91,10 @@
                       </mcs-error>
                     </mcs-form-field>
                     <ng-template #noZoneTemplate>
-                      <p [mcsGreyedOut]="true" *ngIf="!(loadingDNSZones) && networkDnsOptions | mcsArrayHasElement">
+                      <p [mcsGreyedOut]="true"
+                        *ngIf="!(loadingDNSZones) &&
+                          fcDnsService?.value &&
+                          networkDnsOptions | mcsArrayHasElement">
                         <span>{{ 'orderHostedDnsChange.requestDetails.zones.fallback' | translate }}</span>
                         <ng-container *mcsAccessControl="['TicketCreate']">
                           <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>
