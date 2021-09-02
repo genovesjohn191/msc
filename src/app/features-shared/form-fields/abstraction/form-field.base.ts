@@ -25,6 +25,7 @@ import {
   ValidatorFn
 } from '@angular/forms';
 import {
+  isArray,
   isNullOrEmpty,
   isNullOrUndefined,
   IJsonObject,
@@ -180,6 +181,43 @@ export abstract class FormFieldBaseComponent2<TValue>
 
   public registerCustomValidators(...validatorFn: ValidatorFn[]): void {
     this._customValidators = validatorFn;
+  }
+
+  protected propagateFormControlChanges(
+    nextValues: TValue | TValue[],
+    multiple?: boolean
+  ): void {
+    // Gets the existing form value and mask it to array
+    let existingFormValues = new Array<TValue>();
+    if (this.ngControl?.control?.value && !isArray(this.ngControl?.control?.value)) {
+      existingFormValues.push(this.ngControl?.control?.value);
+    } else {
+      existingFormValues = this.ngControl?.control?.value;
+    }
+
+    // Check the next form values and mask it to array
+    let nextFormValues = new Array<TValue>();
+    nextValues && isArray(nextValues) ?
+      nextFormValues = nextValues as Array<TValue> :
+      nextFormValues.push(nextValues as TValue);
+
+    // Need to match the changes on form controls so it won't trigger multiple times
+    // because listening to outside form value changes is pain, and it needs a lot of validation
+    // before we could get rid of that infinite loop.
+    let matchCount = 0;
+    if (!isNullOrEmpty(existingFormValues)) {
+      existingFormValues.forEach(formRecord => {
+        let recordFound = nextFormValues?.find(dataRecord => dataRecord === formRecord);
+        matchCount = isNullOrEmpty(recordFound) ? matchCount : matchCount + 1;
+      });
+    }
+    let shouldNotifyChanges = matchCount !== nextFormValues?.length;
+    if (!shouldNotifyChanges) { return; }
+
+    multiple ?
+      this.ngControl.control.setValue(nextFormValues) :
+      this.ngControl.control.setValue(nextFormValues?.length && nextFormValues[0]);
+    this.ngControl.control.markAsTouched();
   }
 
   private _forwardNgControlStateToCustom(): void {

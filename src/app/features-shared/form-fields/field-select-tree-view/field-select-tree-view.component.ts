@@ -5,6 +5,7 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  startWith,
   takeUntil,
   tap
 } from 'rxjs/operators';
@@ -31,7 +32,9 @@ import {
 } from '@angular/material/tree';
 import {
   animateFactory,
+  isArray,
   isNullOrEmpty,
+  refreshView,
   registerEvent,
   unregisterEvent,
   unsubscribeSafely,
@@ -40,6 +43,7 @@ import {
   TreeItem
 } from '@app/utilities';
 
+import { IFormFieldCustomizable } from '../abstraction/form-field-customizable.interface';
 import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
 import { FieldSelectTreeSearch } from './field-select-tree-search';
 import { IFieldSelectTreeView } from './field-select-tree-view';
@@ -72,10 +76,13 @@ const TREE_ITEM_MAX_DISPLAY = 10;
 })
 export class FieldSelectTreeViewComponent<TEntity>
   extends FormFieldBaseComponent2<string>
-  implements IFieldSelectTreeView<TEntity>, OnInit, AfterViewInit, OnDestroy {
+  implements IFieldSelectTreeView<TEntity>, OnInit, AfterViewInit, OnDestroy, IFormFieldCustomizable {
 
   @Input()
   public multiple: boolean;
+
+  @Input()
+  public alwaysShowPanel: boolean;
 
   @Input()
   public expandFirst: boolean;
@@ -132,8 +139,11 @@ export class FieldSelectTreeViewComponent<TEntity>
       .startSubscription();
     this.dataSource.registerSearch(this.treeSearch);
 
-    this._subscribeToSelectedNodesChange();
     this._subscribeToDataSourceChange();
+
+    this.updateValidators();
+    this.subscribeToFormValueChange();
+    this.propagateFormValueChange();
   }
 
   public ngAfterViewInit(): void {
@@ -229,6 +239,47 @@ export class FieldSelectTreeViewComponent<TEntity>
       return !uncheckedItemFound;
     }
     return node.checkbox?.value;
+  }
+
+  public updateValidators(): void {
+    // Noop if we just need to update custom validators.
+  }
+
+  public subscribeToFormValueChange(): void {
+    this.ngControl?.control.valueChanges.pipe(
+      startWith(this.ngControl?.control?.value),
+      takeUntil(this.destroySubject),
+      tap(formValues => {
+        // Notify when no value provided (in case of reset)
+        if (isNullOrEmpty(formValues)) {
+          this._clearSelection();
+          return;
+        }
+
+        let selectedNodes = new Array<MatTreeViewModel<TEntity>>();
+        let formValueArray = isArray(formValues) ?
+          formValues : [formValues];
+
+        (formValueArray as Array<any>)?.forEach(formValue => {
+          let nodeFound = this.treeControl.dataNodes
+            .find(dataNode => dataNode.data === formValue);
+          if (isNullOrEmpty(nodeFound)) { return; }
+          selectedNodes.push(nodeFound);
+        });
+
+        this._selectedNodesChange.next(selectedNodes)
+      })
+    ).subscribe();
+  }
+
+  public propagateFormValueChange(): void {
+    this.selectedNodes$ = this._selectedNodesChange.pipe(
+      tap(selectedNodes => {
+        // Notify changes to form control
+        let dataRecords = selectedNodes?.map(selectedNode => selectedNode.data as any);
+        this.propagateFormControlChanges(dataRecords, true);
+      })
+    );
   }
 
   private _toggleItem(node: MatTreeViewModel<TEntity>): void {
@@ -327,14 +378,14 @@ export class FieldSelectTreeViewComponent<TEntity>
     ).subscribe();
   }
 
-  private _subscribeToSelectedNodesChange(): void {
-    this.selectedNodes$ = this._selectedNodesChange.pipe(
-      tap(selectedNodes => {
-        // Notify changes to form control
-        let dataRecords = selectedNodes?.map(selectedNode => selectedNode.data);
-        this.ngControl.control.setValue(dataRecords);
-        this.changeDetectorRef.markForCheck();
-      })
-    );
+  private _clearSelection(): void {
+    refreshView(() => {
+      this.treeControl?.dataNodes?.forEach(dataNode => {
+        if (!dataNode?.checkbox?.value) { return; }
+        dataNode?.checkbox.setValue(false);
+      });
+    });
+
+    this._selectedNodesChange.next([]);
   }
 }

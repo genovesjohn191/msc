@@ -2,6 +2,10 @@
   .mcs-tree-dropdown-trigger {
     cursor: pointer;
 
+    &.mcs-tree-dropdown-trigger-fullwidth {
+      max-width: 100%;
+    }
+
     .mcs-tree-dropdown-trigger-icon {
       top: -0.45rem;
       position: relative;
@@ -15,11 +19,11 @@
       width: 100%;
       overflow: hidden;
       margin-top: -1.3rem;
-      border: 1px solid lightgrey;
+      border: 1px solid $border-color-light;
 
       cdk-virtual-scroll-viewport.mcs-tree-scroll-container {
         height: 100%;
-        background-color: white;
+        background-color: get-color($color-definitions, light, base);
 
         .cdk-virtual-scroll-content-wrapper {
           width: 100%;
@@ -31,6 +35,11 @@
           width: 1.5rem;
           text-align: center;
         }
+      }
+
+      &.mcs-tree-node-panel-always-open {
+        border: 1px solid get-color($color-definitions, dark, base);
+        border-top: none;
       }
     }
   }
