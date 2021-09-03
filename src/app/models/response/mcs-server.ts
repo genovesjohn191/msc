@@ -15,6 +15,7 @@ import {
 } from '../enumerations/inview-level.enum';
 import { Os } from '../enumerations/os.enum';
 import { PlatformType } from '../enumerations/platform-type.enum';
+import { HardwareType } from '../enumerations/hardware-type.enum';
 import { RunningStatus } from '../enumerations/running-status.enum';
 import { ServiceOrderState } from '../enumerations/service-order-state.enum';
 import {
@@ -163,6 +164,14 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   public get isManagedVCloud(): boolean {
     return this.serviceType === ServiceType.Managed &&
       this.platform.type === PlatformType.VCloud;
+  }
+
+  /**
+   * Returns true when the server is managed and the hardware type is VM
+   */
+   public get isManagedVM(): boolean {
+    return this.serviceType === ServiceType.Managed &&
+      this.hardware.type === HardwareType.VM;
   }
 
   /**

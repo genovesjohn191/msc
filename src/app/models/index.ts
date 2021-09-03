@@ -53,6 +53,7 @@ export * from './enumerations/catalog-view-type.enum';
 export * from './enumerations/colocation-escortee.enum';
 export * from './enumerations/ip-allocation-mode.enum';
 export * from './enumerations/platform-type.enum';
+export * from './enumerations/hardware-type.enum';
 export * from './enumerations/os.enum';
 export * from './enumerations/service-type.enum';
 export * from './enumerations/device-type.enum';

@@ -58,7 +58,8 @@ import {
   McsAzureResource,
   McsPermission,
   McsApiCollection,
-  HttpStatusCode
+  HttpStatusCode,
+  HardwareType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -589,7 +590,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this.dedicatedServers$ = this.serversList$.pipe(
       map((response) => {
         let servers = getSafeProperty(response, (obj) => obj)
-        return servers.filter((server) => server.isDedicated && server.hardware?.type !== 'VM' )
+        return servers.filter((server) => server.isDedicated && server.hardware?.type !== HardwareType.VM )
           .map((service) => new TicketService(
             `${service.name} (${service.serviceId})`,
             service.serviceId,
