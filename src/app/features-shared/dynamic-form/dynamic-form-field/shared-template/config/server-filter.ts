@@ -1,5 +1,5 @@
 import {
-  hardwareType,
+  HardwareType,
   PlatformType,
   ServiceType
 } from '@app/models';
@@ -7,7 +7,7 @@ import {
 export interface ServerFilterConfig {
   hideDedicated?: boolean;
   hideNonDedicated?: boolean;
-  allowedHardwareType?: hardwareType[];
+  allowedHardwareType?: HardwareType[];
   allowedServiceType?: ServiceType[];
   allowedPlatformType?: PlatformType[];
 }

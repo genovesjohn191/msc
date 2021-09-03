@@ -86,7 +86,7 @@
           <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
 
           <!-- Services Tab -->
-          <ng-container *ngIf="server?.isManagedVCloud">
+          <ng-container *ngIf="server?.isManagedVM">
             <mcs-tab [label]="'serverServices.default.label' | translate" id="services">
             </mcs-tab>
           </ng-container>

@@ -1,15 +1,15 @@
 import { JsonProperty } from '@app/utilities';
-
-export type hardwareType =
-  'UN'
-  | 'BO'
-  | 'LO'
-  | 'VM'
-  | 'BL';
+import {
+  HardwareType,
+  HardwareTypeSerialization
+} from '../enumerations/hardware-type.enum';
 
 export class McsServerHardware {
-  @JsonProperty()
-  public type: hardwareType = undefined;
+  @JsonProperty({
+    serializer: HardwareTypeSerialization,
+    deserializer: HardwareTypeSerialization
+  })
+  public type: HardwareType = undefined;
 
   @JsonProperty()
   public vendor: string = undefined;
