@@ -1,18 +1,27 @@
 import {
   DynamicFormFieldConfigBase,
-  DynamicInputFqdnDomainField,
+  DynamicInputHostNameField,
   DynamicInputIpField,
   DynamicInputPasswordField,
   DynamicInputTextField,
+  DynamicSelectChipsManagementDomainField,
   DynamicSelectField
 } from '@app/features-shared/dynamic-form';
 
 export const addToManagementToolsFormConfig: DynamicFormFieldConfigBase[] = [
-  new DynamicInputFqdnDomainField({
-    key: 'managementFqdn',
-    label: 'Management FQDN',
-    placeholder: 'Enter a Management FQDN',
+  new DynamicInputHostNameField({
+    key: 'hostName',
+    label: 'Hostname',
+    placeholder: 'Enter a hostname',
+    validators: { required: true }
+  }),
+  new DynamicSelectChipsManagementDomainField({
+    key: 'managementDomain',
+    label: 'Management Domain',
+    placeholder: 'Select or enter a management domain...',
     validators: { required: true },
+    allowCustomInput: true,
+    maxItems: 1
   }),
   new DynamicInputIpField({
     key: 'ipAddress',

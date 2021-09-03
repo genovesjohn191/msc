@@ -15,6 +15,7 @@ export * from './select-azure-subscription/select-azure-subscription';
 export * from './select-bat/select-bat';
 export * from './select-chips/select-chips';
 export * from './select-chips-azure-software-subscription-product-type/select-chips-azure-software-subscription-product-type';
+export * from './select-chips-management-domain/select-chips-management-domain';
 export * from './select-chips-company/select-chips-company';
 export * from './select-chips-terraform-module/select-chips-terraform-module';
 export * from './select-chips-terraform-tag/select-chips-terraform-tag';
