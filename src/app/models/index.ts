@@ -104,6 +104,7 @@ export * from './enumerations/network-db-pod-type.enum';
 export * from './enumerations/network-db-vni-status.enum';
 export * from './enumerations/network-db-vlan-status.enum';
 export * from './enumerations/temperature.enum';
+export * from './enumerations/management-domain.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
