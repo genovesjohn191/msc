@@ -27,7 +27,7 @@ export class ServerServicesGuard implements CanActivate {
     let serverId = _route.parent.paramMap.get('id');
     return this._apiService.getServer(serverId).pipe(
       map((response) => {
-        if (response.isManagedVCloud) {
+        if (response.isManagedVCloud || response.isManagedVCenter) {
           return true;
         }
         this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
