@@ -3121,6 +3121,7 @@
     "deleteNetworkDbNetwork": "Something went wrong while deleting network db record. Please try again.",
     "updateNetworkDbNetwork": "Something went wrong while updating network db record. Please try again.",
     "getSoftwareSubscritionProductTypes": "Something went wrong while retrieving software product types. Please try again.",
+    "getReservationProductTypes": "Something went wrong while retrieving reservation product types. Please try again.",
     "extendSession": "Something went wrong while extending session. Please try again.",
     "createNetworkDbNetwork": "Something went wrong while creating your network. Please try again.",
     "getAzureReservations": "Something went wrong while retrieving the list of reservations. Please try again.",

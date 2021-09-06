@@ -4,6 +4,7 @@ import {
   DynamicInputTextField,
   DynamicSelectAzureSubscriptionField,
   DynamicSelectField,
+  DynamicSelectReservationProductTypeField,
   DynamicSelectSoftwareSubscriptionProductTypeField,
   DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
@@ -80,7 +81,7 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
         { key: 'monthly', value: 'Monthly'}
       ]
     }),
-    new DynamicSelectSoftwareSubscriptionProductTypeField({
+    new DynamicSelectReservationProductTypeField({
       key: 'catalogItem',
       label: 'Instance Type',
       validators: { required: true },

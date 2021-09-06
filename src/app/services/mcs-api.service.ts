@@ -184,6 +184,8 @@ import {
   McsReportUpdateManagement,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
+  McsReservationProductType,
+  McsReservationProductTypeQueryParams,
   McsResource,
   McsResourceCatalog,
   McsResourceCatalogItem,
@@ -1785,6 +1787,17 @@ export class McsApiService {
       )
     );
   }
+
+  public getAzureReservationProductTypes(query?: McsReservationProductTypeQueryParams):
+    Observable<McsApiCollection<McsReservationProductType>> {
+
+  return this._azureReservationsApi.getAzureReservationProductTypes(query).pipe(
+    catchError((error) =>
+      this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getReservationProductTypes'))
+    ),
+    map((response) => this._mapToCollection(response.content, response.totalCount))
+  );
+}
 
   public getAzureSoftwareSubscriptions(query?: McsQueryParam): Observable<McsApiCollection<McsAzureSoftwareSubscription>> {
     return this._mapToEntityRecords(this._azureSoftwareSubscriptionsRepository, query).pipe(
