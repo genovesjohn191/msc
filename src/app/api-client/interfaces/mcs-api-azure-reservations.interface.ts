@@ -2,7 +2,9 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsAzureReservation,
-  McsQueryParam
+  McsQueryParam,
+  McsReservationProductType,
+  McsReservationProductTypeQueryParams
 } from '@app/models';
 
 export interface IMcsApiAzureReservationsService {
@@ -16,4 +18,10 @@ export interface IMcsApiAzureReservationsService {
    * Gets azure reservation by id
    */
   getAzureReservationById(id: string): Observable<McsApiSuccessResponse<McsAzureReservation>>;
+
+  /**
+   * Gets product types
+   */
+  getAzureReservationProductTypes(query?: McsReservationProductTypeQueryParams):
+    Observable<McsApiSuccessResponse<McsReservationProductType[]>>;
 }

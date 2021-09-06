@@ -182,6 +182,7 @@ export * from './response/mcs-billing-site';
 export * from './response/mcs-billing-cost-centre';
 export * from './response/mcs-key-value';
 export * from './response/mcs-software-subscription-product-type';
+export * from './response/mcs-reservation-product-type';
 export * from './response/mcs-order';
 export * from './response/mcs-order-charge';
 export * from './response/mcs-order-error';
@@ -378,6 +379,7 @@ export * from './common/mcs-network-db-network-query-params';
 export * from './common/mcs-servers-query-params';
 export * from './common/mcs-network-db-maz-aa-query-params';
 export * from './common/mcs-field-error-message';
+export * from './common/mcs-reservation-product-type-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

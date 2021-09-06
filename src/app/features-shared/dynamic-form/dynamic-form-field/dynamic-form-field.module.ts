@@ -39,6 +39,7 @@ import { DynamicSlideToggleComponent } from './slide-toggle/slide-toggle.compone
 import {
   DynamicSelectSoftwareSubscriptionProductTypeComponent
 } from './select-software-suscription-product-type/select-software-suscription-product-type.component';
+import { DynamicSelectReservationProductTypeComponent } from './select-reservation-product-type/select-reservation-product-type.component';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -68,6 +69,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectOsComponent,
   DynamicSelectRetentionPeriodComponent,
   DynamicSelectSoftwareSubscriptionProductTypeComponent,
+  DynamicSelectReservationProductTypeComponent,
   DynamicSelectStorageProfileComponent,
   DynamicSelectTenantComponent,
   DynamicSelectTerraformModuleTypeComponent,
