@@ -1,6 +1,7 @@
 import {
   DynamicInputHiddenField,
   DynamicInputNumberField,
+  DynamicInputTextField,
   DynamicSelectChipsSoftwareSubscriptionProductTypeField,
   DynamicSelectSoftwareSubscriptionProductTypeField,
   DynamicSelectTenantField
@@ -19,8 +20,7 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
     new DynamicInputHiddenField({
       key: 'companyId',
       value: '',
-      eventName: 'company-change',
-      dependents: ['tenant'],
+      eventName: 'company-change'
     }),
     new DynamicInputHiddenField({
       key: 'skuId',
@@ -34,12 +34,11 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       eventName: 'microsoft-product-id-change',
       dependents: ['catalogItem'],
     }),
-    new DynamicSelectTenantField({
+    new DynamicInputTextField({
       key: 'tenant',
       label: 'Tenant',
-      validators: { required: true },
-      eventName: 'tenant-change',
-      dependents: ['subscription']
+      placeholder: 'Enter tenant name',
+      settings: { readonly: true },
     }),
     new DynamicInputNumberField({
       key: 'quantity',
@@ -70,6 +69,9 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
 
     mappedProperties.push({ key: 'quantity',
     value: findCrispElementAttribute(CrispAttributeNames.Quantity, attributes)?.displayValue } );
+
+    mappedProperties.push({ key: 'tenant',
+    value: findCrispElementAttribute(CrispAttributeNames.LinkedMsTenant, attributes)?.displayValue } );
 
     return mappedProperties;
   }
