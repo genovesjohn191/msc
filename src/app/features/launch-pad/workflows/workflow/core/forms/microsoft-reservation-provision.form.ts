@@ -5,8 +5,6 @@ import {
   DynamicSelectAzureSubscriptionField,
   DynamicSelectField,
   DynamicSelectReservationProductTypeField,
-  DynamicSelectSoftwareSubscriptionProductTypeField,
-  DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
