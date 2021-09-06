@@ -60,7 +60,7 @@ interface MatTreeViewModel<TEntity> {
   checkbox: FormControl
 }
 
-const TREE_ITEM_HEIGHT = 30;
+const TREE_ITEM_HEIGHT = 32;
 const TREE_ITEM_MAX_DISPLAY = 10;
 
 @Component({
@@ -319,9 +319,9 @@ export class FieldSelectTreeViewComponent<TEntity>
 
     // We need to update the viewportsize dynamically based
     // on the records expanded
-    Promise.resolve().then(() => {
+    refreshView(() => {
       let maxDisplayNodes = Math.min(
-        this._viewPortScroll?.getDataLength() || this.treeControl?.dataNodes?.length,
+        this._viewPortScroll?.getRenderedRange()?.end || this.treeControl?.dataNodes?.length,
         maxItemsDisplay
       );
 
@@ -334,12 +334,14 @@ export class FieldSelectTreeViewComponent<TEntity>
   private _expandFirstRecord(dataRecords: TreeItem<TEntity>[]): void {
     if (isNullOrEmpty(dataRecords) || !this.expandFirst) { return; }
 
-    dataRecords.forEach(dataRecord => {
-      let dataFound = this.treeControl.dataNodes
-        ?.find(dataNode => dataNode.data === dataRecord.value);
+    refreshView(() => {
+      dataRecords.forEach(dataRecord => {
+        let dataFound = this.treeControl.dataNodes
+          ?.find(dataNode => dataNode.data === dataRecord.value);
 
-      if (!dataFound?.expandable) { return; }
-      this.treeControl.expand(dataFound);
+        if (!dataFound?.expandable) { return; }
+        this.treeControl.expand(dataFound);
+      });
     });
   }
 
