@@ -167,6 +167,14 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   }
 
   /**
+   * Returns true when the server is manage and the platform is VCenter
+   */
+  public get isManagedVCenter(): boolean {
+    return this.serviceType === ServiceType.Managed &&
+      this.platform.type === PlatformType.VCenter;
+  }
+
+  /**
    * Returns true when the server is managed and the hardware type is VM
    */
    public get isManagedVM(): boolean {
@@ -351,6 +359,13 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
    */
   public get isDedicated(): boolean {
     return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCenter;
+  }
+
+  /**
+   * Returns true when the current server is dedicated
+   */
+   public get isVCloud(): boolean {
+    return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCloud;
   }
 
   /**

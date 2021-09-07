@@ -86,9 +86,15 @@
           <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
 
           <!-- Services Tab -->
-          <ng-container *ngIf="server?.isManagedVM">
+          <ng-container *ngIf="server?.isManagedVM && server?.isManagedVCloud">
             <mcs-tab [label]="'serverServices.default.label' | translate" id="services">
             </mcs-tab>
+          </ng-container>
+          <ng-container *ngIf="server?.isManagedVM && server?.isManagedVCenter">
+            <ng-container *mcsAccessControl="[] feature: 'EnableServerOsUpdates'">
+              <mcs-tab [label]="'serverServices.default.label' | translate" id="services">
+              </mcs-tab>
+            </ng-container>
           </ng-container>
 
           <!-- Storage Tab -->
