@@ -2,6 +2,7 @@ import {
   DynamicInputHiddenField,
   DynamicInputNumberField,
   DynamicInputTextField,
+  DynamicSelectAzureSubscriptionField,
   DynamicSelectChipsSoftwareSubscriptionProductTypeField,
   DynamicSelectSoftwareSubscriptionProductTypeField,
   DynamicSelectTenantField
@@ -20,7 +21,8 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
     new DynamicInputHiddenField({
       key: 'companyId',
       value: '',
-      eventName: 'company-change'
+      eventName: 'company-change',
+      dependents: ['subscription']
     }),
     new DynamicInputHiddenField({
       key: 'skuId',
@@ -40,11 +42,25 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       placeholder: 'Enter tenant name',
       settings: { readonly: true },
     }),
+    new DynamicInputHiddenField({
+      key: 'linkedService',
+      value: '',
+      eventName: 'linked-service-id-change',
+      dependents: ['subscription'],
+    }),
+    new DynamicSelectAzureSubscriptionField({
+      key: 'subscription',
+      label: 'Subscription',
+      validators: { required: true },
+      settings: { readonly: true },
+      useSubscriptionIdAsKey: true
+    }),
     new DynamicInputNumberField({
       key: 'quantity',
       label: 'Quantity',
       placeholder: 'Enter quantity',
       validators: { required: true, min: 1, max: 9999},
+      settings: { readonly: true },
       hint: 'Allowed value is 1 - 9999'
     }),
     new DynamicSelectSoftwareSubscriptionProductTypeField({
@@ -66,6 +82,9 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
 
     mappedProperties.push({ key: 'productId',
     value: findCrispElementAttribute(CrispAttributeNames.ProductId, attributes)?.value } );
+
+    mappedProperties.push({ key: 'linkedService',
+    value: findCrispElementAttribute(CrispAttributeNames.LinkedConsService, attributes)?.displayValue } );
 
     mappedProperties.push({ key: 'quantity',
     value: findCrispElementAttribute(CrispAttributeNames.Quantity, attributes)?.displayValue } );
