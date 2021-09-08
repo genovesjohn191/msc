@@ -59,6 +59,7 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       label: 'Quantity',
       placeholder: 'Enter quantity',
       validators: { required: true, min: 1, max: 9999},
+      settings: { readonly: true },
       hint: 'Allowed value is 1 - 9999'
     }),
     new DynamicSelectField({
@@ -74,6 +75,7 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
       key: 'billingCycle',
       label: 'Billing Cycle',
       validators: { required: true },
+      settings: { readonly: true },
       options: [
         { key: 'one_time', value: 'One-Time'},
         { key: 'monthly', value: 'Monthly'}
@@ -120,8 +122,8 @@ export const microsoftReservationProvisionForm: LaunchPadForm = {
           break;
         }
 
-        case 'mopnthly': {
-          billingCycle = 'mopnthly';
+        case 'monthly': {
+          billingCycle = 'monthly';
           break;
         }
       }
