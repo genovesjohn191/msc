@@ -52,7 +52,6 @@ export class CrispOrderElementsComponent implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'assignee' }),
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'assignee' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'hostingEngineer' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' })
   ];
