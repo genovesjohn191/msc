@@ -1227,6 +1227,10 @@
     "dataPlural": "Servers",
     "toolsNotInstalled": "Not Installed",
     "toolsUnavailable": "Some management features may be unavailable.",
+    "tooltip": {
+      "osAutomationUnavailable": "This server's password cannot be reset as OS automation is not available for it.\r\n Please contact your account team for more information.",
+      "vmwareToolsNotRunning": "This server's password cannot be reset as VMware Tools is not running."
+    },
     "columnHeaders": {
       "state": "State",
       "name": "Server",

@@ -287,7 +287,12 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
    * Returns true when server can reset the password
    */
   public get canResetPassword(): boolean {
-    return this.executable && !this.isDedicated;
+    if(this.isSelfManaged){
+      return this.executable && !this.isDedicated && this.isVMWareToolsRunning;
+    }
+    else{
+      return this.executable && !this.isDedicated && this.osAutomationAvailable;
+    }
   }
 
   /**

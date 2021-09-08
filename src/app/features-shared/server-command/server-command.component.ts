@@ -133,6 +133,16 @@ export class ServerCommandComponent {
     return included;
   }
 
+  public getResetPasswordTooltipText(): string {
+    if(!this.server.isSelfManaged && !this.server.osAutomationAvailable){
+      return this._translateService.instant('servers.tooltip.osAutomationUnavailable');
+    }
+    else if(this.server.isSelfManaged && !this.server.isVMWareToolsRunning){
+      return this._translateService.instant('servers.tooltip.vmwareToolsNotRunning');
+    }
+    return null;
+  }
+
   /**
    * Creates action map table
    */
