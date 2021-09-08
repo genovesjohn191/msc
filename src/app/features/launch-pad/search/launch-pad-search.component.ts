@@ -29,6 +29,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 })
 export class LaunchPadSearchComponent implements OnInit, OnDestroy {
   public readonly defaultCrispElementsColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'orderId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'productId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
