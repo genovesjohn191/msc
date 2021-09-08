@@ -1,6 +1,6 @@
 import { Provider } from '@angular/core';
 import { Routes } from '@angular/router';
-import { RouteKey } from '@app/models';
+import { McsPublicCloudOnlyGuard } from '@app/core/guards/mcs-public-cloud-only.guard';
 
 import { LicensesComponent } from './licenses.component';
 import { LicensesResolver } from './licenses.resolver';
@@ -19,8 +19,7 @@ export const licensesRoutes: Routes = [
   {
     path: '',
     component: LicensesComponent,
-    resolve: {
-      licenses: LicensesResolver
-    },
+    resolve: { licenses: LicensesResolver },
+    canActivate: [ McsPublicCloudOnlyGuard ]
   }
 ];
