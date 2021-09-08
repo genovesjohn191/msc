@@ -5,7 +5,14 @@
       <ng-content select="[mcsViewServicesTab]"></ng-content>
     </mcs-item>
   </ng-container>
-  <p>{{ 'serverServicesOsUpdatesApplyNow.description' | translate }}</p>
+  <p>
+    <ng-container *ngIf="validToUpdateOs; else invalidToApplyUpdatesDescription">
+      <span>{{ 'serverServicesOsUpdatesApplyNow.validToUpdatesApplyDescription' | translate }}</span>
+    </ng-container>
+    <ng-template #invalidToApplyUpdatesDescription>
+      <span>{{ 'serverServicesOsUpdatesApplyNow.invalidToUpdatesApplyDescription' | translate }}</span>
+    </ng-template>
+  </p>
   <section>
 
     <!-- Snapshot Options -->
@@ -13,7 +20,8 @@
       <strong>{{ 'serverServicesOsUpdatesApplyNow.snapshotOptionsLabel' | translate }}</strong>
       <p>{{ 'serverServicesOsUpdatesApplyNow.snapshotOptionsDescription' | translate }}</p>
       <mcs-radio-button-group [(ngModel)]="snapshot" [ngModelOptions]="{standalone: true}"
-        mcsId="schedule-snapshot">
+        mcsId="schedule-snapshot"
+        [disabled]="!validToUpdateOs">
         <mcs-radio-button [value]="false">
           {{ 'serverServicesOsUpdatesApplyNow.snapshotOptions.updateWithoutSnapshot' | translate }}
         </mcs-radio-button>
@@ -34,7 +42,7 @@
         mcsEventCategory="server"
         mcsEventLabel="os-updates-apply-updates"
         (click)="applySelectedUpdates()"
-        [disabled]="isApplyButtonDisabled">
+        [disabled]="isApplyButtonDisabled || !validToUpdateOs">
         {{ 'serverServicesOsUpdatesApplyNow.applyUpdatesButton' | translate }}
       </button>
     </mcs-item>
@@ -46,7 +54,8 @@
           <mcs-tree mcsId="tree-view-apply-updates"
             (selectionChange)="onTreeChange($event)"
             [disabled]="selectedServer.isProcessing">
-            <mcs-tree-node-group [label]="'serverServicesOsUpdatesApplyNow.listAllSelection' | translate" checkable>
+            <mcs-tree-node-group [label]="'serverServicesOsUpdatesApplyNow.listAllSelection' | translate"
+              [checkable]="validToUpdateOs">
               <mcs-tree-node *ngFor="let osUpdate of osUpdates" [value]="osUpdate">
                 <mcs-item>
                   <span>{{osUpdate.name}}</span>

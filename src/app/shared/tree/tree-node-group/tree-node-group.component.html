@@ -6,19 +6,12 @@
     </div>
   </button>
 
-  <!-- Checkable Template -->
-  <ng-container *ngIf="checkable; else nonCheckableTemplate">
-    <mcs-checkbox (statusChange)="onTickCheckbox($event)"
-      [indeterminate]="hasSelectedNode && !allNodesAreSelected"
-      [checked]="allNodesAreSelected">
-      <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
-    </mcs-checkbox>
-  </ng-container>
-
-  <!-- Non-checkable Template -->
-  <ng-template #nonCheckableTemplate>
+  <mcs-checkbox (statusChange)="onTickCheckbox($event)"
+    [disabled]="!checkable"
+    [indeterminate]="hasSelectedNode && !allNodesAreSelected"
+    [checked]="allNodesAreSelected">
     <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
-  </ng-template>
+  </mcs-checkbox>
 
   <ng-template #labelContentTemplate>
     <ng-container *ngIf="labelTemplate; else basicLabelTemplate">

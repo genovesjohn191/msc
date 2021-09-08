@@ -72,6 +72,9 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
     return this._job;
   }
 
+  @Input()
+  public validToUpdateOs: boolean;
+
   public serverPermission: McsServerPermission;
   public scheduleStatus$: Observable<OsUpdateScheduleStatus>;
 
@@ -173,6 +176,13 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
    */
   public get updatesScheduleWarningLabel(): string {
     return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.warningLabel);
+  }
+
+  public get configureButtonLabel(): string {
+    if (this.validToUpdateOs) {
+      return this._translateService.instant('serverServices.operatingSystemUpdates.validToUpdateOs.updatesScheduleConfigureLink');
+    }
+    return this._translateService.instant('serverServices.operatingSystemUpdates.invalidToUpdateOs.updatesScheduleConfigureLink');
   }
 
   /**

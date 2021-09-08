@@ -30,7 +30,6 @@ import { TreeNode } from './tree-node';
 })
 
 export class TreeNodeComponent<T> implements AfterViewInit, TreeNode<T> {
-  public checkable: boolean;
   public selectionChange = new EventEmitter<TreeNodeComponent<T>>();
 
   @Input()
@@ -52,6 +51,9 @@ export class TreeNodeComponent<T> implements AfterViewInit, TreeNode<T> {
     }
   }
   private _selected: boolean;
+
+  @Input()
+  public checkable: boolean;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,

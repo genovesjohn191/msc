@@ -1,17 +1,11 @@
 <div class="tree-node-label">
   <button disabled mcsButton="icon"></button>
 
-  <!-- Checkable label -->
-  <ng-container *ngIf="checkable; else nonCheckableTemplate">
-    <mcs-checkbox (statusChange)="onTickCheckbox($event)" [checked]="selected">
-      <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
-    </mcs-checkbox>
-  </ng-container>
-
-  <!-- Non-checkable label -->
-  <ng-template #nonCheckableTemplate>
+  <mcs-checkbox (statusChange)="onTickCheckbox($event)"
+    [checked]="selected"
+    [disabled]="!checkable">
     <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
-  </ng-template>
+  </mcs-checkbox>
 
   <ng-template #labelContentTemplate>
     <ng-content></ng-content>

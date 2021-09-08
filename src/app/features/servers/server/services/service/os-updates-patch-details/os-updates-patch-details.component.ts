@@ -25,7 +25,8 @@ import {
   McsServerOsUpdates,
   McsServer,
   McsServerOsUpdatesRequest,
-  ServerServicesAction
+  ServerServicesAction,
+  PlatformType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -55,6 +56,9 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
 
   @Output()
   public patchUpdates: EventEmitter<ServerServiceActionDetail>;
+
+  @Input()
+  public validToUpdateOs: boolean;
 
   public osUpdates$: Observable<McsServerOsUpdates[]>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdates[]>;
@@ -104,8 +108,8 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
 
     this._apiService.getServerSnapshots(this.selectedServer.id).pipe(
       switchMap((snapshots) => {
-
-        if (snapshots.totalCollectionCount <= 0) {
+        let serverTypeIsNotVcloud = this.selectedServer?.platform?.type !== PlatformType.VCloud;
+        if (snapshots.totalCollectionCount <= 0 || serverTypeIsNotVcloud) {
           this._emitRequest(true);
           return of(undefined);
         }
