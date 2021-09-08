@@ -1429,21 +1429,29 @@
       "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
       "label": "Services",
       "title": "Operating System Updates",
-      "description": "Keep your server protected by applying regular OS updates. Inspect your server below and we'll check for critical and security updates.",
       "osAutomationNotAvailable": "This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
       "updatesStatusTitleLabel": "Status",
       "updatesAnalysisLabel": "Inspect Now",
-      "updatesNowButtonLabel": "Update Now...",
       "updatesScheduleTitleLabel": "Jobs",
       "updatesScheduleConfigureHoverLabel": {
         "updating": "Update in progress.",
         "analysing": "Inspection in progress."
       },
-      "updatesScheduleConfigureLink": "Configure",
       "deleteSuccessMessage": "Schedule deleted",
       "deleteErrorMessage": "Schedule could not be deleted at this time",
       "updateSuccessMessage": "Schedule saved",
-      "updateErrorMessage": "Schedule could not be saved at this time"
+      "updateErrorMessage": "Schedule could not be saved at this time",
+      "noPermissionToUpdateOs": "Your account does not have the necessary permissions to scan for and apply updates for this server, but you can still view its schedule and available updates if any.",
+      "invalidToUpdateOs": {
+        "description": "Your account does not have the necessary permissions to scan for and apply updates for this server, but you can still view its schedule and available updates if any.",
+        "updatesNowButtonLabel": "View Updates...",
+        "updatesScheduleConfigureLink": "View Schedule"
+      },
+      "validToUpdateOs": {
+        "description": "Keep your server protected by applying regular OS updates. Inspect your server below and we'll check for critical and security updates.",
+        "updatesNowButtonLabel": "Update Now...",
+        "updatesScheduleConfigureLink": "Configure"
+      }
     },
     "inview": {
       "title": "InView",
@@ -1522,7 +1530,8 @@
   "serverServicesOsUpdatesApplyNow": {
     "loading": "Loading server OS update information.",
     "title": "Apply Updates",
-    "description": "Select the updates or update categories you would like applied and we will install them on your server for you. Your server will be inspected again after the update process and any newly available updates will be shown.",
+    "validToUpdatesApplyDescription": "Select the updates or update categories you would like applied and we will install them on your server for you. Your server will be inspected again after the update process and any newly available updates will be shown.",
+    "invalidToUpdatesApplyDescription": "Your account does not have the necessary permissions to apply updates for this server, but you can still view its available updates.",
     "snapshotOptionsLabel": "Snapshot Options:",
     "snapshotOptionsDescription": "For added assurance, we can snapshot your server before installing updates. This snapshot will persist for 23 hours after it is captured.",
     "snapshotOptions": {
@@ -1544,7 +1553,8 @@
     "description": {
       "default": "Our system will update the guest OS on this server for you and restart it.",
       "recurring": " Your server has a recurring update schedule set. See the Recurring option below for details.",
-      "runonce": " Your server has a one-time update schedule set. See the Once option below for details."
+      "runonce": " Your server has a one-time update schedule set. See the Once option below for details.",
+      "invalidToUpdateSchedule": "Your account does not have the necessary permissions to configure an update schedule for this server, but you can still view its existing schedule."
     },
     "scheduleTypeLabel": "Schedule Type:",
     "scheduleTypeOption": {

@@ -21,7 +21,10 @@ import {
   map,
   finalize
 } from 'rxjs/operators';
-import { McsDataStatusFactory } from '@app/core';
+import {
+  McsAccessControlService,
+  McsDataStatusFactory
+} from '@app/core';
 import {
   animateFactory,
   unsubscribeSafely,
@@ -43,7 +46,9 @@ import {
   McsServerHostSecurityAntiVirusItem,
   JobType,
   ServerServicesAction,
-  ServiceOrderState
+  ServiceOrderState,
+  McsPermission,
+  PlatformType
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
@@ -93,6 +98,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
     private _translateService: TranslateService
   ) {
     super(_injector, _changeDetectorRef);
@@ -141,6 +147,14 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public get ServiceOrderStateOption(): typeof ServiceOrderState {
     return ServiceOrderState;
+  }
+
+  public validToUpdateOs(server: McsServer): boolean {
+    let serverVcenterNoVmPatchManagementPermission = server?.platform?.type === PlatformType.VCenter &&
+      this._accessControlService.hasPermission([McsPermission.DedicatedVmPatchManagement]);
+    let serverVcloudNoCloudPatchManagementPermission = server?.platform?.type === PlatformType.VCloud &&
+      this._accessControlService.hasPermission([McsPermission.CloudVmPatchManagement]);
+    return serverVcenterNoVmPatchManagementPermission || serverVcloudNoCloudPatchManagementPermission;
   }
 
   /**

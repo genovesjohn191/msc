@@ -12,13 +12,12 @@
                 <span mcsId="status-sublabel">
                   {{ updatesStatusSubtitleLabel }}
                 </span>
-                <ng-container *ngIf="inspectButtonShown">
+                <ng-container *ngIf="inspectButtonShown && validToUpdateOs">
                   <a mcsId="inspect-server-link"
                     mcsEventTracker="os-updates-inspect-server-click"
                     mcsEventCategory="server"
                     mcsEventLabel="os-updates-inspect-server"
                     (click)="inspectForAvailableOsUpdates()"
-                    *mcsAccessControl="serverPermission?.vmPatchManagement"
                     [disabled]="inspectNowButtonDisabled()">
                     {{ 'serverServices.operatingSystemUpdates.updatesAnalysisLabel' | translate }}
                   </a>
@@ -33,14 +32,13 @@
     <mcs-grid-column mcsAlignContent="middle-right">
       <ng-container *ngIf="updateNowButtonShown">
         <button mcsButton size="xsmall"
-          *mcsAccessControl="serverPermission?.vmPatchManagement"
           mcsId="update-now-button"
           mcsEventTracker="os-updates-update-now-click"
           mcsEventCategory="server"
           mcsEventLabel="os-updates-update-now"
           (click)="changeView()"
           [disabled]="server.isProcessing">
-          {{ 'serverServices.operatingSystemUpdates.updatesNowButtonLabel' | translate }}
+          {{ updateNowButtonLabel }}
         </button>
       </ng-container>
     </mcs-grid-column>

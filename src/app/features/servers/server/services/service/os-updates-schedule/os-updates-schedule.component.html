@@ -15,10 +15,9 @@
                     mcsEventTracker="os-updates-configure-schedule-click"
                     mcsEventCategory="server"
                     mcsEventLabel="os-updates-configure-schedule"
-                    *mcsAccessControl="serverPermission.vmPatchManagement"
                     (click)="changeView()"
                     [disabled]="configureScheduleButtonDisabled(scheduleStatus)">
-                    {{ 'serverServices.operatingSystemUpdates.updatesScheduleConfigureLink' | translate }}
+                    {{ configureButtonLabel }}
                   </a>
                 </span>
               </mcs-item>

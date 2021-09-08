@@ -97,6 +97,9 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   @Input()
   public selectedServer: McsServer;
 
+  @Input()
+  public validToUpdateOs: boolean;
+
   @Output()
   public saveSchedule: EventEmitter<ServerServiceActionDetail>;
 

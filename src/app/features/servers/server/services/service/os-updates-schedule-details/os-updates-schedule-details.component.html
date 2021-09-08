@@ -6,15 +6,20 @@
     </mcs-item>
   </ng-container>
   <p>
-    <span>{{ 'serverServicesOsUpdatesSchedule.description.default' | translate }}</span>
-    <ng-container *ngIf="hasSchedule">
-      <span *ngIf="isRunOnce; else recurringDescriptionTemplate">
-        {{ 'serverServicesOsUpdatesSchedule.description.runonce' | translate }}
-      </span>
-      <ng-template #recurringDescriptionTemplate>
-        <span>{{ 'serverServicesOsUpdatesSchedule.description.recurring' | translate }}</span>
-      </ng-template>
+    <ng-container *ngIf="validToUpdateOs; else invalidToUpdateScheduleDescription">
+      <span>{{ 'serverServicesOsUpdatesSchedule.description.default' | translate }}</span>
+      <ng-container *ngIf="hasSchedule">
+        <span *ngIf="isRunOnce; else recurringDescriptionTemplate">
+          {{ 'serverServicesOsUpdatesSchedule.description.runonce' | translate }}
+        </span>
+        <ng-template #recurringDescriptionTemplate>
+          <span>{{ 'serverServicesOsUpdatesSchedule.description.recurring' | translate }}</span>
+        </ng-template>
+      </ng-container>
     </ng-container>
+    <ng-template #invalidToUpdateScheduleDescription>
+      <span>{{ 'serverServicesOsUpdatesSchedule.description.invalidToUpdateSchedule' | translate }}</span>
+    </ng-template>
   </p>
 
   <mcs-data-status [dataStatusFactory]="configurationStatusFactory">
@@ -54,6 +59,7 @@
                             [placeholder]="'serverServicesOsUpdatesSchedule.daysPlaceholder.recurring' | translate"
                             [formControl]="fcRecurringScheduleDay" multiple required>
                             <mcs-option *ngFor="let scheduleDay of (scheduleDaysChange$ | async)" [value]="scheduleDay.day"
+                              [disabled]="!validToUpdateOs"
                               [selected]="scheduleDay.checked">{{ scheduleDay.name }}</mcs-option>
                           </mcs-select>
                         </mcs-form-field>
@@ -61,14 +67,14 @@
                         <span>{{ 'serverServicesOsUpdatesSchedule.datePreposition' | translate }}</span>
 
                         <!-- Recurring Time Selection -->
-                        <mcs-form-field class="form-field-size-xsmall">
+                        <mcs-form-field class="form-field-size-xsmall" [disabled]="!validToUpdateOs">
                           <mcs-select mcsId="select-recurring-time-os-updates" [formControl]="fcRecurringScheduleTime" required>
                             <mcs-option *ngFor="let timeOption of timeOptions" [value]="timeOption">{{ timeOption }}</mcs-option>
                           </mcs-select>
                         </mcs-form-field>
 
                         <!-- Recurring Period Selection -->
-                        <mcs-form-field class="form-field-size-xsmall">
+                        <mcs-form-field class="form-field-size-xsmall" [disabled]="!validToUpdateOs">
                           <mcs-select mcsId="select-recurring-period-os-updates" [formControl]="fcRecurringScheduleTimePeriod"
                             required>
                             <mcs-option *ngFor="let dayPeriodOption of dayPeriodOptions" [value]="dayPeriodOption">
@@ -92,7 +98,7 @@
                       <mcs-section orientation="horizontal" mcsAlignContent="middle-left">
 
                         <!-- RunOnce Day Selection-->
-                        <mcs-form-field class="form-field-size-small">
+                        <mcs-form-field class="form-field-size-small" [disabled]="!validToUpdateOs">
                           <mcs-select mcsId="select-runonce-day-os-updates" [formControl]="fcRunOnceScheduleDay" required>
                             <mcs-option *ngFor="let scheduleDay of (scheduleDaysChange$ | async)" [value]="scheduleDay.day"
                               [selected]="scheduleDay.checked">{{ scheduleDay.name }}</mcs-option>
@@ -102,7 +108,7 @@
                         <span>{{ 'serverServicesOsUpdatesSchedule.datePreposition' | translate }}</span>
 
                         <!-- RunOnce Time Selection -->
-                        <mcs-form-field class="form-field-size-xsmall">
+                        <mcs-form-field class="form-field-size-xsmall" [disabled]="!validToUpdateOs">
                           <mcs-select mcsId="select-runonce-time-os-updates" [formControl]="fcRunOnceScheduleTime"
                             required>
                             <mcs-option *ngFor="let timeOption of timeOptions" [value]="timeOption">{{ timeOption }}</mcs-option>
@@ -110,7 +116,7 @@
                         </mcs-form-field>
 
                         <!-- RunOnce Period Selection -->
-                        <mcs-form-field class="form-field-size-xsmall">
+                        <mcs-form-field class="form-field-size-xsmall" [disabled]="!validToUpdateOs">
                           <mcs-select mcsId="select-runonce-period-os-updates" [formControl]="fcRunOnceScheduleTimePeriod"
                             required>
                             <mcs-option *ngFor="let dayPeriodOption of dayPeriodOptions" [value]="dayPeriodOption">{{
@@ -127,11 +133,11 @@
                 <!-- Snapshot Options -->
                 <mcs-grid-row *mcsAccessControl="[]; feature: 'EnableServerOsUpdatesSnapshot'">
                   <mcs-grid-column>
-                    <mcs-item orientation="block">
+                    <mcs-item orientation="block" [disabled]="!validToUpdateOs">
                       <strong>{{ 'serverServicesOsUpdatesSchedule.snapshotOptionsLabel' | translate }}</strong>
                       <p>{{ 'serverServicesOsUpdatesSchedule.snapshotOptionsDescription' | translate }}</p>
                       <mcs-radio-button-group [(ngModel)]="snapshot" [ngModelOptions]="{standalone: true}"
-                        mcsId="schedule-snapshot">
+                        mcsId="schedule-snapshot" >
                         <mcs-radio-button [value]="false">
                           {{ 'serverServicesOsUpdatesSchedule.snapshotOptions.updateWithoutSnapshot' | translate }}
                         </mcs-radio-button>
@@ -156,7 +162,8 @@
                     mcsEventLabel="os-updates-delete-schedule"
                     (click)="deleteExistingSchedule()"
                     [hidden]="!hasSchedule"
-                    [disabled]="!hasSchedule" color="error">
+                    color="error"
+                    [disabled]="!hasSchedule || !validToUpdateOs">
                     {{ 'serverServicesOsUpdatesSchedule.deleteScheduleButton' | translate }}
                   </button>
                   <button *ngSwitchCase="scheduleTypeOption.RunOnce" mcsButton size="medium"
@@ -165,7 +172,7 @@
                     mcsEventCategory="server"
                     mcsEventLabel="os-updates-save-runonce"
                     (click)="saveRunOnceSchedule()"
-                    [disabled]="isRunOnceSaveButtonDisabled">
+                    [disabled]="isRunOnceSaveButtonDisabled || !validToUpdateOs">
                     {{ 'serverServicesOsUpdatesSchedule.saveScheduleButton' | translate }}
                   </button>
                   <button *ngSwitchCase="scheduleTypeOption.Recurring" mcsButton size="medium"
@@ -174,7 +181,7 @@
                     mcsEventCategory="server"
                     mcsEventLabel="os-updates-save-recurring"
                     (click)="saveRecurringSchedule()"
-                    [disabled]="isRecurringSaveButtonDisabled">
+                    [disabled]="isRecurringSaveButtonDisabled || !validToUpdateOs">
                     {{ 'serverServicesOsUpdatesSchedule.saveScheduleButton' | translate }}
                   </button>
                 </mcs-item>
@@ -183,7 +190,8 @@
                   <mcs-tree *ngSwitchCase="scheduleTypeOption.RunOnce"
                     mcsId="tree-view-runonce"
                     (selectionChange)="onRunOnceTreeChange($event)">
-                    <mcs-tree-node-group [label]="'serverServicesOsUpdatesSchedule.listAllSelection' | translate" checkable>
+                    <mcs-tree-node-group [label]="'serverServicesOsUpdatesSchedule.listAllSelection' | translate"
+                      [checkable]="validToUpdateOs">
                       <mcs-tree-node
                         *ngFor="let runOnceCategory of runOnceCategories"
                         [value]="runOnceCategory"
@@ -196,8 +204,10 @@
                   <mcs-tree *ngSwitchCase="scheduleTypeOption.Recurring"
                     mcsId="tree-view-recurring"
                     (selectionChange)="onRecurringTreeChange($event)">
-                    <mcs-tree-node-group [label]="'serverServicesOsUpdatesSchedule.listAllSelection' | translate" checkable>
+                    <mcs-tree-node-group [label]="'serverServicesOsUpdatesSchedule.listAllSelection' | translate"
+                      [checkable]="validToUpdateOs">
                       <mcs-tree-node
+
                         *ngFor="let recurringCategory of recurringCategories"
                         [value]="recurringCategory"
                         [selected]="recurringCategory.isSelected">

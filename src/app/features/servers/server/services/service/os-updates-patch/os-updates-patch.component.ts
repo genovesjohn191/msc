@@ -31,6 +31,7 @@ import {
 } from '@app/core';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
+import { TranslateService } from '@ngx-translate/core';
 
 const OS_UPDATE_TIMEZONE = CommonDefinition.TIMEZONE_SYDNEY;
 const OS_UPDATE_DATEFORMAT = `dddd, D MMMM, YYYY [at] h:mm a`;
@@ -69,6 +70,9 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
     return this._job;
   }
 
+  @Input()
+  public validToUpdateOs: boolean;
+
   @Output()
   public inspectAvailableUpdates: EventEmitter<ServerServiceActionDetail>;
 
@@ -83,6 +87,7 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
   constructor(
     private _dateTimeService: McsDateTimeService,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _translate: TranslateService
   ) {
     super(ServerServicesView.OsUpdatesPatch);
     this.inspectAvailableUpdates = new EventEmitter();
@@ -209,6 +214,13 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
    */
   public get updateNowButtonShown(): boolean {
     return this._hasUpdates(this._osUpdatesDetails.updateCount) && (this.isOutDated || this.isUnAnalysed);
+  }
+
+  public get updateNowButtonLabel(): string {
+    if (this.validToUpdateOs) {
+      return this._translate.instant('serverServices.operatingSystemUpdates.validToUpdateOs.updatesNowButtonLabel');
+    }
+    return this._translate.instant('serverServices.operatingSystemUpdates.invalidToUpdateOs.updatesNowButtonLabel');
   }
 
   /**

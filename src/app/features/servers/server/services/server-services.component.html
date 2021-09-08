@@ -9,7 +9,14 @@
           <ng-container mcsPresentationPanelHeader>
             <h2>{{ 'serverServices.operatingSystemUpdates.title' | translate }}</h2>
           </ng-container>
-          <p>{{ 'serverServices.operatingSystemUpdates.description' | translate }}</p>
+          <p>
+            <ng-container *ngIf="validToUpdateOs(server); else invalidToUpdateOsDescription">
+              {{ 'serverServices.operatingSystemUpdates.validToUpdateOs.description' | translate }}
+            </ng-container>
+            <ng-template #invalidToUpdateOsDescription>
+              {{ 'serverServices.operatingSystemUpdates.invalidToUpdateOs.description' | translate }}
+            </ng-template>
+          </p>
 
           <mcs-section>
             <mcs-form-message #formMessage></mcs-form-message>
@@ -24,6 +31,7 @@
                         <mcs-service-os-updates-patch
                           [osUpdatesDetails]="updatesDetails"
                           [server]="server"
+                          [validToUpdateOs]="validToUpdateOs(server)"
                           [job]="currentJob$ | async"
                           (inspectAvailableUpdates)="executeAction($event)"
                           (viewChange)="onViewChange($event)">
@@ -37,6 +45,7 @@
                         <mcs-service-os-updates-schedule
                           [osUpdatesDetails]="updatesDetails"
                           [server]="server"
+                          [validToUpdateOs]="validToUpdateOs(server)"
                           [job]="currentJob$ | async" (viewChange)="onViewChange($event)">
                         </mcs-service-os-updates-schedule>
                       </mcs-grid-column>
@@ -170,28 +179,26 @@
 
     <!-- Details View Os Updates Patch -->
     <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.OsUpdatesPatch">
-      <ng-container *mcsAccessControl="serverPermission.vmPatchManagement;">
-        <ng-container *ngIf="updatesDetails$ | async">
-          <mcs-service-os-updates-patch-details
-            [selectedServer]="server"
-            (patchUpdates)="onPatchUpdates($event)">
-            <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
-          </mcs-service-os-updates-patch-details>
-        </ng-container>
+      <ng-container *ngIf="updatesDetails$ | async">
+        <mcs-service-os-updates-patch-details
+          [selectedServer]="server"
+          [validToUpdateOs]="validToUpdateOs(server)"
+          (patchUpdates)="onPatchUpdates($event)">
+          <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+        </mcs-service-os-updates-patch-details>
       </ng-container>
     </ng-container>
 
     <!-- Details View Os Updates Schedule -->
     <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.OsUpdatesSchedule">
-      <ng-container *mcsAccessControl="serverPermission.vmPatchManagement;">
-        <ng-container *ngIf="updatesDetails$ | async">
-          <mcs-server-os-updates-schedule-details
-            [selectedServer]="server"
-            (saveSchedule)="onSaveSchedule($event)"
-            (deleteSchedule)="onDeleteSchedule($event)">
-            <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
-          </mcs-server-os-updates-schedule-details>
-        </ng-container>
+      <ng-container *ngIf="updatesDetails$ | async">
+        <mcs-server-os-updates-schedule-details
+          [selectedServer]="server"
+          (saveSchedule)="onSaveSchedule($event)"
+          [validToUpdateOs]="validToUpdateOs(server)"
+          (deleteSchedule)="onDeleteSchedule($event)">
+          <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+        </mcs-server-os-updates-schedule-details>
       </ng-container>
     </ng-container>
 
