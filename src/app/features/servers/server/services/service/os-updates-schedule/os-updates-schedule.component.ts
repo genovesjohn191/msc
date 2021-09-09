@@ -202,6 +202,10 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
     return this._translateService.instant('serverServices.operatingSystemUpdates.updatesScheduleConfigureHoverLabel.analysing');
   }
 
+  public hideConfigureLink(): boolean {
+    return !this.validToUpdateOs && !this.hasSchedule;
+  }
+
   /**
    * Set the os updates schedule by type
    */

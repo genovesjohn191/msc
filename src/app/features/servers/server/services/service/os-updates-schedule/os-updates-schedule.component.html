@@ -10,7 +10,8 @@
             <small read-only *ngIf="!scheduleStatus.hasErrors">
               <mcs-item orientation="inline">
                 <span *ngIf="hasSchedule" mcsId="schedule-sublabel">{{ updatesScheduleSubtitleLabel }}</span>
-                <span [mcsTooltip]="updatesScheduleConfigureHoverLabel(scheduleStatus)" [mcsTooltipShow]="scheduleStatus.isUpdating || scheduleStatus.isAnalysing">
+                <span *ngIf="!hideConfigureLink()"
+                  [mcsTooltip]="updatesScheduleConfigureHoverLabel(scheduleStatus)" [mcsTooltipShow]="scheduleStatus.isUpdating || scheduleStatus.isAnalysing">
                   <a mcsId="configure-schedule-link"
                     mcsEventTracker="os-updates-configure-schedule-click"
                     mcsEventCategory="server"
