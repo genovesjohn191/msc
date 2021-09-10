@@ -1,10 +1,13 @@
 import { Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  McsAccessControlService,
   McsAuthenticationIdentity,
   McsDateTimeService
 } from '@app/core';
 import {
+  McsFeatureFlag,
+  McsReportAscAlerts,
   McsReportAuditAlerts,
   McsReportInefficientVms,
   McsReportOperationalSavings,
@@ -31,12 +34,18 @@ export class InsightsDocument implements IDashboardExportDocument {
   private _dateTimeService: McsDateTimeService;
   private _authenticationIdentity: McsAuthenticationIdentity;
   private _eventDispatcher: EventBusDispatcherService;
+  private _accessControlService: McsAccessControlService;
+
+  public get hasAccessToAscAlertsListing(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AscAlert]);
+  }
 
   public setInjector(injector: Injector): void {
     this._translateService = injector.get(TranslateService);
     this._dateTimeService = injector.get(McsDateTimeService);
     this._authenticationIdentity = injector.get(McsAuthenticationIdentity);
     this._eventDispatcher = injector.get(EventBusDispatcherService);
+    this._accessControlService = injector.get(McsAccessControlService);
   }
 
   public exportDocument(itemDetails: InsightsDocumentDetails, docType: number, injector: Injector): void {
@@ -86,6 +95,7 @@ export class InsightsDocument implements IDashboardExportDocument {
               ${this._createResourceHealthHtml(insightDetails)}
               ${this._createPerformanceScalabilityHtml(insightDetails)}
               ${this._createMonitoringAlertingHtml(insightDetails)}
+              ${this._createAscAlertsHtml(insightDetails.ascAlerts)}
               ${this._createAuditAlertsHtml(insightDetails.auditAlerts)}
               ${this._createUpdateManagementHtml(insightDetails.updateManagement)}
             </div>`;
@@ -337,6 +347,43 @@ export class InsightsDocument implements IDashboardExportDocument {
     return actualResponse;
   }
 
+  private _createAscAlertsHtml(data: McsReportAscAlerts[]):string {
+    if (!this.hasAccessToAscAlertsListing) { return ''; }
+    let title = this._translate('reports.insights.techReview.ascAlerts.title');
+    let subTitle = `
+      ${this._translate('reports.insights.techReview.ascAlerts.subTitle')}
+      <p>${this._translate('reports.insights.techReview.ascAlerts.secondSubtitle')}
+        ${this._translate('reports.insights.techReview.ascAlerts.ticketLabel')}
+        ${this._translate('reports.insights.techReview.ascAlerts.secondSubtitleContinuation')}
+      </p>`;
+    let ascAlertsTable = '';
+    ascAlertsTable += `
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
+        <tr style="background-color: #000; color: #FFF;">
+          <th style="text-align: left">Severity</th>
+          <th style="text-align: left">Description</th>
+          <th style="text-align: left">Affected Resource</th>
+          <th style="text-align: left">Start Time</th>
+        </tr>`;
+        if (data?.length > 0) {
+          data.forEach(item => {
+            ascAlertsTable += `
+              <tr style="text-align: left;">
+                <td>${item.severity ? item.severity : 'Unavailable'}</td>
+                <td>${item.description ? item.description : 'Unavailable'}</td>
+                <td>${item.affectedResource ? item.affectedResource : 'Unavailable'}</td>
+                <td>${this._formatDate(item.startTime)}</td>
+              </tr>`;
+          });
+        }
+        ascAlertsTable += `</table>`;
+        if (data?.length === 0) {
+          ascAlertsTable += `<p>${this._translate('reports.insights.techReview.ascAlerts.noDataFound')}</p>`;
+        }
+    let actualResponse = this._widgetHtml(ascAlertsTable, true, title, subTitle);
+    return actualResponse;
+  }
+
   private _createAuditAlertsHtml(data: McsReportAuditAlerts[]): string {
     let title = this._translate('reports.insights.techReview.auditAlerts.title');
     let subTitle = `
@@ -365,7 +412,8 @@ export class InsightsDocument implements IDashboardExportDocument {
         if (data?.length === 0) {
           auditAlertsTable += `<p>No data found</p>`;
         }
-    let actualResponse = this._widgetHtml(auditAlertsTable, true, title, subTitle);
+    let pageBreak = !this.hasAccessToAscAlertsListing ? true : false;
+    let actualResponse = this._widgetHtml(auditAlertsTable, pageBreak, title, subTitle);
     return actualResponse;
   }
 

@@ -13,6 +13,7 @@ export enum McsFeatureFlag {
   AzureSoftwareSubscriptions = 'EnablePublicCloudSoftwareSubscriptionListing',
 
   PublicCloudDashboard = 'EnablePublicCloudDashboard',
+  AscAlert = 'EnableAscAlertListing',
 
   PublicCloudResourceListing = 'EnablePublicCloudResourceListing',
 

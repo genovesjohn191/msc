@@ -1,0 +1,70 @@
+<div class="asc-alerts-widget reporting-table-widget">
+  <div class="listing-table-wrapper table-widget-wrapper">
+    <!-- Table -->
+    <table mat-table [dataSource]="dataSource">
+      <!-- Severity Column -->
+      <ng-container matColumnDef="severity">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.severity' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.severity || 'Unavailable'}}
+        </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.description' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.description || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Affected Resource Column -->
+      <ng-container matColumnDef="affectedResource">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.affectedResource' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.affectedResource || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Start Time Column -->
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.startTime' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ (row.startTime | mcsStdDateFormat) || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Header and Data row -->
+      <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+        [hidden]="dataSource?.isInProgress$ | async"></tr>
+    </table>
+    <!-- Table Statuses -->
+    <mcs-item orientation="block">
+      <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+        <mcs-loader size="medium"></mcs-loader>
+      </div>
+      <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+        {{ 'reports.insights.techReview.ascAlerts.noDataFound' | translate }}
+      </div>
+      <div *ngIf="dataSource?.hasError$ | async" text-center>
+        <div class="listing-status-wrapper">
+          <span>{{ 'reports.errorMessage' | translate }}</span>
+          <a (click)="retryDatasource()"
+            mcsId
+            mcsEventTracker="retry-loading-asc-alerts-list"
+            mcsEventCategory="asc-alerts"
+            mcsEventLabel="dashboard-insight-page">{{ 'reports.retryLabel' | translate }}</a>.
+        </div>
+      </div>
+    </mcs-item>
+  </div>
+</div>
