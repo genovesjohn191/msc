@@ -34,7 +34,8 @@
                   <mcs-item orientation="block">
                     <strong>{{ 'serverServicesOsUpdatesSchedule.scheduleTypeLabel' | translate }}</strong>
                     <mcs-radio-button-group [(ngModel)]="scheduleType" [ngModelOptions]="{standalone: true}"
-                      mcsId="schedule-type" (ngModelChange)="onScheduleTypeChange()">
+                      mcsId="schedule-type" (ngModelChange)="onScheduleTypeChange()"
+                      [disabled]="!validToUpdateOs">
                       <mcs-radio-button [value]="scheduleTypeOption.RunOnce">
                         {{ 'serverServicesOsUpdatesSchedule.scheduleTypeOption.runonce' | translate }}
                       </mcs-radio-button>
