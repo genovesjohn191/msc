@@ -308,6 +308,15 @@
           "subTitle": "by severity, for the specified period.",
           "totalAlerts": "Total Alerts"
         },
+        "ascAlerts": {
+          "title": "ASC Alerts",
+          "subTitle": "General Azure Security Center alerts, including intelligent threat classifications.",
+          "secondSubtitle": "High severity ASC alerts will automatically generate a ",
+          "secondSubtitleContinuation": " that our engineers will review for you.",
+          "ticketLabel": "ticket",
+          "viewInAzurePortal": "View last 3 months in Azure Portal",
+          "noDataFound": "No ASC alerts to display"
+        },
         "auditAlerts": {
           "title": "Audit Alerts",
           "subTitle": "A list of alerts which detail security events that have occurred in your environment.",
@@ -3091,6 +3100,7 @@
     "getResourceCompliance": "Something went wrong while retrieving your resource compliance information. Please try again.",
     "getMonitoringAndAlerting": "Something went wrong while retrieving your monitoring and alerting information. Please try again.",
     "getUpdateManagement": "Something went wrong while retrieving your update management information. Please try again.",
+    "getAscAlerts": "Something went wrong while retrieving your asc alerts information. Please try again.",
     "getAuditAlerts": "Something went wrong while retrieving your audit alerts information. Please try again.",
     "getInefficientVms": "Something went wrong while retrieving your inefficient VMs information. Please try again.",
     "getTopVmsByCost": "Something went wrong while retrieving your top VMs by cost information. Please try again.",
@@ -3172,6 +3182,7 @@
     "access": "Access",
     "actionTaken": "Action Taken",
     "action": "Action",
+    "affectedResource": "Affected Resource",
     "aggregationTarget": "Aggregation Target",
     "assignedTo": "Assigned To",
     "assignee": "Assignee",

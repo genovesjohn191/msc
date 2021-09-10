@@ -26,8 +26,10 @@ import { UpdateManagementWidgetComponent } from './update-management/update-mana
 import { AuditAlertsWidgetComponent } from './audit-alerts/audit-alerts-widget.component';
 import { InefficientVmsWidgetComponent } from './inefficient-vms/inefficient-vms-widget.component';
 import { TopVmsByCostWidgetComponent } from './top-vms-by-cost/top-vms-by-cost-widget.component';
+import { AscAlertsWidgetComponent } from './asc-alerts/asc-alerts-widget.component';
 
 const exports: any[] | Type<any> = [
+  AscAlertsWidgetComponent,
   AuditAlertsWidgetComponent,
   AzureResourcesWidgetComponent,
   AzureTicketsWidgetComponent,

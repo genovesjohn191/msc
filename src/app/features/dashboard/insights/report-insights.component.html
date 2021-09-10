@@ -139,7 +139,7 @@
                 mcsEventLabel="vmware-cloudhealth-link">
                 VMware CloudHealth</a>.
             </div>
-            <mcs-operational-monthly-savings-widget (dataChange)="operationalSavings($event)"></mcs-operational-monthly-savings-widget>
+            <mcs-operational-monthly-savings-widget (dataChange)="operationalSavingsDataChange($event)"></mcs-operational-monthly-savings-widget>
             <mat-divider></mat-divider>
 
             <!-- VM Rightsizing -->
@@ -155,7 +155,7 @@
                 mcsEventLabel="vmware-cloudhealth-link">
                 VMware CloudHealth</a>.
             </div>
-            <mcs-vm-rightsizing-widget (dataChange)="vmRightSizing($event)" (vmCostChange)="vmCost($event)"></mcs-vm-rightsizing-widget>
+            <mcs-vm-rightsizing-widget (dataChange)="vmRightSizingDataChange($event)" (vmCostChange)="vmCostDataChange($event)"></mcs-vm-rightsizing-widget>
             <mat-divider></mat-divider>
             
             <!-- Inefficient VMs -->
@@ -171,7 +171,7 @@
                 mcsEventLabel="vmware-cloudhealth-link">
                 VMware CloudHealth</a>.
             </div>
-            <mcs-inefficient-vms-widget [subscriptionIds]="subscriptionIdsFilter" (dataChange)="inefficientVms($event)"></mcs-inefficient-vms-widget>
+            <mcs-inefficient-vms-widget [subscriptionIds]="subscriptionIdsFilter" (dataChange)="inefficientVmsDataChange($event)"></mcs-inefficient-vms-widget>
           </div>
         </section>
         <div #techReview>
@@ -183,7 +183,7 @@
               <div class="sub-section">
                 <!-- Security -->
                 <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.security.title' | translate }}</h2>
-                <mcs-security-widget (dataChange)="securityScore($event)"></mcs-security-widget>
+                <mcs-security-widget (dataChange)="securityScoreDataChange($event)"></mcs-security-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Compliance -->
@@ -198,7 +198,7 @@
                   compliance view</a>
                     {{ 'reports.insights.techReview.compliance.subTitle' | translate }}</div>
                 <mcs-compliance-widget [subscriptionIds]="subscriptionIdsFilter"
-                  (dataChange)="compliance($event)"
+                  (dataChange)="complianceDataChange($event)"
                   (chartChange)="complianceChartUri($event)"></mcs-compliance-widget>
                 <mat-divider></mat-divider>
 
@@ -274,8 +274,52 @@
                   {{ 'reports.insights.techReview.monitoringAlerting.subTitle' | translate }}
                 </div>
                 <mcs-monitoring-and-alerting-widget [config]="monitoringAlertingConfig" [subscriptionIds]="subscriptionIdsFilter"
-                  (chartChange)="monitoringAlertingUri($event)" (alertChange)="monitoringAlertingTotalAlerts($event)"></mcs-monitoring-and-alerting-widget>
+                  (chartChange)="monitoringAlertingUri($event)" (alertChange)="monitoringAlertingTotalAlertsDataChange($event)"></mcs-monitoring-and-alerting-widget>
                 <mat-divider></mat-divider>
+
+                <!-- Asc Alerts -->
+                <ng-container *mcsAccessControl="[]; feature: ['EnableAscAlertListing']">
+                  <div class="options-container">
+                    <div>
+                      <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.ascAlerts.title' | translate }}</h2>
+                    </div>
+                    <div class="hide-on-print">
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
+                        <mat-select [(ngModel)]="selectedAscAlertsMonth">
+                          <mat-option *ngFor="let opt of monthOptions" [value]="opt">
+                            {{ opt.label }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="widget-label label-with-dropdown">
+                    {{ 'reports.insights.techReview.ascAlerts.subTitle' | translate }}
+                    <a href="{{ ascAlertsAzurePortalUrl }}"
+                      target="_blank"
+                      mcsId="azure-portal"
+                      mcsEventTracker="navigate-to-azure-portal"
+                      mcsEventCategory="dashboard-navigation"
+                      mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.ascAlerts.viewInAzurePortal' | translate }}</a>.
+                  </div>
+                  <div class="label-below-chart">
+                    {{ 'reports.insights.techReview.ascAlerts.secondSubtitle' | translate }}
+                    <ng-container *ngIf="hasTicketPermission; else noTicketTemplate">
+                      <a [mcsRouterLink]="routeKeyEnum.Tickets"
+                        mcsId="create-ticket-asc-alerts"
+                        mcsEventTracker="navigate-to-create-ticket"
+                        mcsEventCategory="dashboard-navigation"
+                        mcsEventLabel="creat-ticket-link">{{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}</a>
+                    </ng-container>
+                    <ng-template #noTicketTemplate>
+                      {{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}
+                    </ng-template>
+                    {{ 'reports.insights.techReview.ascAlerts.secondSubtitleContinuation' | translate }}
+                  </div>
+                  <mcs-asc-alerts-widget [config]="ascAlertsConfig" (dataChange)="ascAlertsDataChange($event)"></mcs-asc-alerts-widget>
+                  <mat-divider></mat-divider>
+                </ng-container>
 
                 <!-- Audit Alerts -->
                 <div class="options-container">
@@ -302,7 +346,9 @@
                     mcsEventCategory="dashboard-navigation"
                     mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.auditAlerts.viewInAzurePortal' | translate }}</a>.
                 </div>
-                <mcs-audit-alerts-widget [subscriptionIds]="subscriptionIdsFilter" [config]="auditAlertsConfig" (dataChange)="auditAlerts($event)"></mcs-audit-alerts-widget>
+                <mcs-audit-alerts-widget [subscriptionIds]="subscriptionIdsFilter"
+                  [config]="auditAlertsConfig"
+                  (dataChange)="auditAlertsDataChange($event)"></mcs-audit-alerts-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Update Management -->
@@ -310,7 +356,7 @@
                 <div class="widget-label">
                   {{ 'reports.insights.techReview.updateManagement.subTitle' | translate }}
                 </div>
-                <mcs-update-management-widget (dataChange)="updateManagement($event)"></mcs-update-management-widget>
+                <mcs-update-management-widget (dataChange)="updateManagementDataChange($event)"></mcs-update-management-widget>
               </div>
             </section>
           </ng-container>

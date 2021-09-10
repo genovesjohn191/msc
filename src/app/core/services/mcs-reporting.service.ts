@@ -21,7 +21,8 @@ import {
   McsReportUpdateManagement,
   McsReportAuditAlerts,
   McsReportInefficientVms,
-  McsReportTopVmsByCost
+  McsReportTopVmsByCost,
+  McsReportAscAlerts
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -171,6 +172,12 @@ export class McsReportingService {
         );
       })
     );
+  }
+
+  public getAscAlerts(
+    periodStart?: string,
+    periodEnd?: string): Observable<McsReportAscAlerts[]> {
+    return this._apiService.getAscAlerts(periodStart, periodEnd);
   }
 
   public getAuditAlerts(

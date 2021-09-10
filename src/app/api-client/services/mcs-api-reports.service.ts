@@ -22,7 +22,8 @@ import {
   McsReportUpdateManagement,
   McsReportAuditAlerts,
   McsReportInefficientVms,
-  McsReportTopVmsByCost
+  McsReportTopVmsByCost,
+  McsReportAscAlerts
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -348,6 +349,28 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportUpdateManagement[]>(McsReportUpdateManagement, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getAscAlerts(
+    periodStart?: string,
+    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportAscAlerts[]>> {
+    let searchParams = new Map<string, any>();
+    searchParams.set('period_start', periodStart);
+    searchParams.set('period_end', periodEnd);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/asc-alerts';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportAscAlerts[]>(McsReportAscAlerts, response);
           return apiResponse;
         })
       );

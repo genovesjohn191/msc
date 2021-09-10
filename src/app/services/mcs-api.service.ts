@@ -168,6 +168,7 @@ import {
   McsPlatform,
   McsPortal,
   McsQueryParam,
+  McsReportAscAlerts,
   McsReportAuditAlerts,
   McsReportCostRecommendations,
   McsReportGenericItem,
@@ -1982,6 +1983,17 @@ export class McsApiService {
     return this._reportsApi.getUpdateManagement(period).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getUpdateManagement'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getAscAlerts(
+    periodStart?: string,
+    periodEnd?: string): Observable<McsReportAscAlerts[]> {
+    return this._reportsApi.getAscAlerts(periodStart, periodEnd).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAscAlerts'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

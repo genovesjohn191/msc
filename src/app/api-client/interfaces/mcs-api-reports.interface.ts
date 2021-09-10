@@ -19,7 +19,8 @@ import {
   McsReportAuditAlerts,
   McsReportInefficientVms,
   McsQueryParam,
-  McsReportTopVmsByCost
+  McsReportTopVmsByCost,
+  McsReportAscAlerts
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -73,6 +74,10 @@ export interface IMcsApiReportsService {
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>>;
 
   getUpdateManagement(period?: string): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>>;
+
+  getAscAlerts(
+    periodStart?: string,
+    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportAscAlerts[]>>;
 
   getAuditAlerts(
     periodStart?: string,

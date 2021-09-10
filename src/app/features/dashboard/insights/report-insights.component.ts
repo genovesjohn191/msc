@@ -16,14 +16,20 @@ import {
   distinctUntilChanged,
   takeUntil
 } from 'rxjs/operators';
-import { McsReportingService } from '@app/core';
+import {
+  McsAccessControlService,
+  McsReportingService
+} from '@app/core';
 import {
   PerformanceAndScalabilityWidgetConfig,
+  ReportMonthConfig,
   ReportPeriod
 } from '@app/features-shared/report-widget';
 import { MonitoringAlertingWidgetConfig } from '@app/features-shared/report-widget/monitoring-and-alerting/monitoring-and-alerting-widget.component';
-import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
 import {
+  McsFeatureFlag,
+  McsPermission,
+  McsReportAscAlerts,
   McsReportAuditAlerts,
   McsReportInefficientVms,
   McsReportManagementService,
@@ -32,7 +38,8 @@ import {
   McsReportSecurityScore,
   McsReportSubscription,
   McsReportUpdateManagement,
-  McsReportVMRightsizing
+  McsReportVMRightsizing,
+  RouteKey
 } from '@app/models';
 import {
   MonitoringAlertingPeriod,
@@ -107,6 +114,10 @@ export class ReportInsightsComponent implements OnDestroy {
     return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Monitoring/AlertsManagementSummaryBlade`;
   }
 
+  public get ascAlertsAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Security/SecurityMenuBlade/7`;
+  }
+
   public get azureVmRightsizingCloudHealthUrl(): string  {
     return `${CommonDefinition.CLOUD_HEALTH_URL}/reports/metrics/azure-vm-rightsizing/current`;
   }
@@ -122,6 +133,19 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public get selectedResourceCostMonth(): PeriodOption {
     return this._selectedResourceCostMonth;
+  }
+
+  public set selectedAscAlertsMonth(value: PeriodOption) {
+    this._selectedAscAlertsMonth = value;
+    this.ascAlertsConfig = {
+      period: this._selectedAscAlertsMonth.period.from
+    };
+
+    this._changeDetector.markForCheck();
+  }
+
+  public get selectedAscAlertsMonth(): PeriodOption {
+    return this._selectedAscAlertsMonth;
   }
 
   public set selectedAuditAlertsMonth(value: PeriodOption) {
@@ -184,12 +208,25 @@ export class ReportInsightsComponent implements OnDestroy {
     return this._isPdfDownloadInProgress;
   }
 
+  public get hasTicketPermission(): boolean {
+    return this._accessControlService.hasPermission([McsPermission.TicketView]);
+  }
+
+  public get hasAccessToAscAlert(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AscAlert]);
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
+
   public _subscriptionIdsFilter: string[] = undefined;
   public _performanceSubscriptionIdsFilter: string = '';
 
   public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
-  public resourceMonthlyCostConfig: ResourceMonthlyCostWidgetConfig;
-  public auditAlertsConfig: ResourceMonthlyCostWidgetConfig;
+  public resourceMonthlyCostConfig: ReportMonthConfig;
+  public auditAlertsConfig: ReportMonthConfig;
+  public ascAlertsConfig: ReportMonthConfig;
   public monitoringAlertingConfig: MonitoringAlertingWidgetConfig
 
   public subscriptions: McsReportSubscription[];
@@ -200,6 +237,7 @@ export class ReportInsightsComponent implements OnDestroy {
   private _performanceSubscriptionFilterChange = new BehaviorSubject<string>('');
   private _selectedResourceCostMonth: PeriodOption;
   private _selectedAuditAlertsMonth: PeriodOption;
+  private _selectedAscAlertsMonth: PeriodOption;
   private _selectedMonitoringAlertingPeriod: PeriodOption;
   private _subscriptionSubject = new Subject();
   private _destroySubject = new Subject<void>();
@@ -207,6 +245,7 @@ export class ReportInsightsComponent implements OnDestroy {
   private _isPdfDownloadInProgress: boolean;
 
   public constructor(
+    private _accessControlService: McsAccessControlService,
     private reportService: McsReportingService,
     private _changeDetector: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
@@ -253,27 +292,27 @@ export class ReportInsightsComponent implements OnDestroy {
     this._exportDocumentDetails.vmBreakdown = uri;
   }
 
-  public operationalSavings(data: McsReportOperationalSavings): void {
+  public operationalSavingsDataChange(data: McsReportOperationalSavings): void {
     this._exportDocumentDetails.operationalSavings = data;
   }
 
-  public vmRightSizing(data: McsReportVMRightsizing[]): void {
+  public vmRightSizingDataChange(data: McsReportVMRightsizing[]): void {
     this._exportDocumentDetails.vmRightsizing = data;
   }
 
-  public vmCost(cost: string): void {
+  public vmCostDataChange(cost: string): void {
     this._exportDocumentDetails.vmCost = cost;
   }
 
-  public inefficientVms(data: McsReportInefficientVms[]): void {
+  public inefficientVmsDataChange(data: McsReportInefficientVms[]): void {
     this._exportDocumentDetails.inefficientVms = data;
   }
 
-  public securityScore(uri: McsReportSecurityScore): void {
+  public securityScoreDataChange(uri: McsReportSecurityScore): void {
     this._exportDocumentDetails.securityScore = uri;
   }
 
-  public compliance(data: McsReportResourceCompliance): void {
+  public complianceDataChange(data: McsReportResourceCompliance): void {
     this._exportDocumentDetails.compliance = data;
   }
 
@@ -289,7 +328,7 @@ export class ReportInsightsComponent implements OnDestroy {
     this._exportDocumentDetails.performanceScalability = uri;
   }
 
-  public monitoringAlertingTotalAlerts(totalAlerts: number): void {
+  public monitoringAlertingTotalAlertsDataChange(totalAlerts: number): void {
     this._exportDocumentDetails.totalAlerts = totalAlerts;
   }
 
@@ -297,11 +336,15 @@ export class ReportInsightsComponent implements OnDestroy {
     this._exportDocumentDetails.monitoringAlerting = uri;
   }
 
-  public auditAlerts(data: McsReportAuditAlerts[]): void {
+  public auditAlertsDataChange(data: McsReportAuditAlerts[]): void {
     this._exportDocumentDetails.auditAlerts = data;
   }
 
-  public updateManagement(data: McsReportUpdateManagement[]): void {
+  public ascAlertsDataChange(data: McsReportAscAlerts[]): void {
+    this._exportDocumentDetails.ascAlerts = data;
+  }
+
+  public updateManagementDataChange(data: McsReportUpdateManagement[]): void {
     this._exportDocumentDetails.updateManagement = data;
   }
 
@@ -321,13 +364,15 @@ export class ReportInsightsComponent implements OnDestroy {
   }
 
   private _isTechReviewWidgetsLoading(): boolean {
+    let ascAlert = this.hasAccessToAscAlert ? this._exportDocumentDetails.ascAlerts : [];
     return this._exportDocumentDetails.securityScore === undefined ||
       this._exportDocumentDetails.complianceUri === undefined ||
       this._exportDocumentDetails.resourceHealth === undefined ||
       this._exportDocumentDetails.performanceScalability === undefined ||
       this._exportDocumentDetails.monitoringAlerting === undefined ||
       this._exportDocumentDetails.auditAlerts === undefined ||
-      this._exportDocumentDetails.updateManagement  === undefined;
+      this._exportDocumentDetails.updateManagement  === undefined ||
+      ascAlert === undefined;
   }
 
   private _registerEvents(): void {
@@ -408,6 +453,7 @@ export class ReportInsightsComponent implements OnDestroy {
 
     this.selectedResourceCostMonth = this.monthOptions[0];
     this.selectedAuditAlertsMonth = this.monthOptions[0];
+    this.selectedAscAlertsMonth = this.monthOptions[0];
   }
 
   private _createMonitoringAlertingPeriodOptions(): void {

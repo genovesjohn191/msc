@@ -313,6 +313,7 @@ export * from './response/mcs-report-monitoring-and-alerting';
 export * from './response/mcs-report-severity-alerts';
 export * from './response/mcs-report-management-service';
 export * from './response/mcs-report-update-management';
+export * from './response/mcs-report-asc-alerts';
 export * from './response/mcs-report-audit-alerts';
 export * from './response/mcs-report-inefficient-vms';
 export * from './response/mcs-report-top-vms-by-cost';
