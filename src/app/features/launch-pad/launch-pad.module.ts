@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { McsStorageService } from '@app/core';
-import { DynamicFormModule, FeaturesSharedModule } from '@app/features-shared';
 import { ConfirmationDialogComponent, SharedModule } from '@app/shared';
 
 import { LaunchPadWorkflowCoreModule } from './workflows/workflow/workflow-core.module';
@@ -45,6 +44,7 @@ import { DashboardProjectDetailsComponent } from './dashboard/projects/project/d
 import { DashboardProjectTasksComponent } from './dashboard/projects/project/tasks/dashboard-project-tasks.component';
 import { DashboardProjectResolver } from './dashboard/projects/project/dashboard-project.resolver';
 import { DashboardProjectService } from './dashboard/projects/project/dashboard-project.service';
+import { FeaturesSharedModule } from '@app/features-shared';
 
 @NgModule({
   declarations: [
@@ -97,13 +97,11 @@ import { DashboardProjectService } from './dashboard/projects/project/dashboard-
     SharedModule,
     FeaturesSharedModule,
     LaunchPadWorkflowCoreModule,
-    DynamicFormModule,
     RouterModule.forChild(launchPadRoutes)
   ],
   providers: [
     McsStorageService,
     LaunchPadGuard,
-    DynamicFormModule,
     AzureDeploymentResolver,
     AzureDeploymentService,
     NetworkDbNetworkDetailsService,

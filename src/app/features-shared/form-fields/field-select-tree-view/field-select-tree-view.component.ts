@@ -52,10 +52,12 @@ interface MatTreeViewModel<TEntity> {
   expandable: boolean;
   level: number;
   selectable: boolean;
-  disabled: boolean;
+  disableWhen: (entity: TEntity) => boolean;
 
   name: string;
   tooltip: string;
+  tooltipFunc: (entity: TEntity) => string;
+
   data: TEntity;
   checkbox: FormControl
 }
@@ -89,6 +91,9 @@ export class FieldSelectTreeViewComponent<TEntity>
 
   @Input()
   public dataSource: TreeDatasource<TEntity>;
+
+  @Input()
+  public disabled: boolean = false;
 
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
@@ -159,6 +164,10 @@ export class FieldSelectTreeViewComponent<TEntity>
     this.treeSearch.stopSubscription();
   }
 
+  public trackByIndex(index: number, node: MatTreeViewModel<TEntity>): number {
+    return index;
+  }
+
   public get treeViewLabel(): string {
     let selectedItems = this.ngControl?.control?.value as Array<any>;
     if (isNullOrEmpty(selectedItems)) { return this.displayedLabel; }
@@ -213,7 +222,7 @@ export class FieldSelectTreeViewComponent<TEntity>
   public onClickItem(event: MouseEvent, node: MatTreeViewModel<TEntity>): void {
     event?.stopPropagation();
 
-    if (!node.selectable || node.disabled) { return; }
+    if (!node.selectable || node.disableWhen(node.data)) { return; }
     this._toggleItem(node);
   }
 
@@ -243,6 +252,10 @@ export class FieldSelectTreeViewComponent<TEntity>
 
   public updateValidators(): void {
     // Noop if we just need to update custom validators.
+  }
+
+  public updateView(): void {
+    this.changeDetectorRef.markForCheck();
   }
 
   public subscribeToFormValueChange(): void {
@@ -352,12 +365,12 @@ export class FieldSelectTreeViewComponent<TEntity>
     return {
       expandable: !isNullOrEmpty(treeItem.children),
       level: treeLevel,
-      selectable: treeItem.option?.selectable,
-      disabled: treeItem.option?.disableWhen(treeItem.value),
       name: treeItem.text,
-      tooltip: treeItem.option?.tooltip,
       data: treeItem.value,
-      checkbox: new FormControl(false)
+      checkbox: new FormControl(false),
+      selectable: treeItem.option?.selectable,
+      disableWhen: treeItem.option?.disableWhen,
+      tooltipFunc: treeItem.option?.tooltipFunc
     } as MatTreeViewModel<TEntity>;
   }
 
