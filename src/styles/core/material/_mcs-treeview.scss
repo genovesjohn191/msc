@@ -28,18 +28,29 @@
         .cdk-virtual-scroll-content-wrapper {
           width: 100%;
         }
+      }
 
-        .mcs-node-expand-trigger {
-          display: inline-block;
-          height: 100%;
-          width: 1.5rem;
-          text-align: center;
-        }
+      .mcs-node-expand-trigger {
+        display: inline-block;
+        height: 100%;
+        width: 1.5rem;
+        text-align: center;
       }
 
       &.mcs-tree-node-panel-always-open {
         border: 1px solid get-color($color-definitions, dark, base);
         border-top: none;
+        max-height: 20rem;
+        overflow-y: auto;
+
+        .mcs-node-expand-trigger {
+          opacity: 0;
+          width: 1rem;
+        }
+
+        .mcs-node-expandable-text {
+          color: get-color($color-definitions, dark, base);
+        }
       }
     }
   }

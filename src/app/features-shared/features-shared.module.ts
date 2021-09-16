@@ -7,6 +7,7 @@ import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
 import { ContextMenuLinkComponent } from './context-menu-link/context-menu-link.component';
 import { ContextualCatalogLinkComponent } from './contextual-catalog-link/mcs-contextual-catalog-link.component';
 import { DnsZoneManageComponent } from './dns-zone-manage/dns-zone-manage.component';
+import { DynamicFormModule } from './dynamic-form/dynamic-form.module';
 import { EnquiryFormComponent } from './enquiry-form/enquiry-form.component';
 import { FormFieldsModule } from './form-fields/form-fields.module';
 import { HelpWidgetComponent } from './help-widget/help-widget.component';
@@ -72,11 +73,13 @@ const exportedComponents = [
   declarations: exportedComponents,
   imports: [
     SharedModule,
-    FormFieldsModule
+    FormFieldsModule,
+    DynamicFormModule
   ],
   exports: [
     ...exportedComponents,
-    FormFieldsModule
+    FormFieldsModule,
+    DynamicFormModule
   ],
   entryComponents: [
     RenameServerDialogComponent,

@@ -211,7 +211,8 @@ export abstract class FormFieldBaseComponent2<TValue>
         matchCount = isNullOrEmpty(recordFound) ? matchCount : matchCount + 1;
       });
     }
-    let shouldNotifyChanges = matchCount !== nextFormValues?.length;
+    let shouldNotifyChanges = matchCount !== nextFormValues?.length ||
+      existingFormValues?.length !== nextFormValues?.length;
     if (!shouldNotifyChanges) { return; }
 
     multiple ?

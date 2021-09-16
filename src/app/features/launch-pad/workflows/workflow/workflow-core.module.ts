@@ -3,8 +3,6 @@ import { SharedModule } from '@app/shared';
 
 import { McsStorageService } from '@app/core';
 
-import { DynamicFormModule } from '@app/features-shared/dynamic-form';
-
 import { WorkflowService } from './core/workflow.service';
 import { LaunchPadWorkflowSelectorService } from './shared-layout/workflow-selector/workflow-selector.service';
 import { WorkflowGroupDirective } from './core/workflow-group.directive';
@@ -19,6 +17,7 @@ import { LaunchPadWorkflowProvisionStateComponent } from './shared-layout/workfl
 import { McsApiService } from '@app/services';
 import { LaunchPadServiceIdSwitchDialogComponent } from './shared-layout/service-id-switch-dialog/service-id-switch-dialog.component';
 import { LaunchPadObjectSelectorComponent } from './shared-layout/workflow-group/object-selector.component';
+import { FeaturesSharedModule } from '@app/features-shared';
 
 @NgModule({
   declarations: [
@@ -47,7 +46,7 @@ import { LaunchPadObjectSelectorComponent } from './shared-layout/workflow-group
   ],
   imports: [
     SharedModule,
-    DynamicFormModule
+    FeaturesSharedModule
   ],
   entryComponents: [
     LaunchPadWorkflowComponent,
@@ -57,7 +56,6 @@ import { LaunchPadObjectSelectorComponent } from './shared-layout/workflow-group
   ],
   providers: [
     McsStorageService,
-    DynamicFormModule,
     WorkflowService,
     LaunchPadWorkflowSelectorService,
     WorkflowFactory,

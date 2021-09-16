@@ -1,4 +1,4 @@
-<mcs-grid>
+<mcs-grid class="limited-view">
     <mcs-grid-row>
         <mcs-grid-column sizeMd="12" sizeLg="8">
             <div class="listing-table-wrapper">
@@ -111,7 +111,14 @@
                         </mat-slide-toggle>
                     </mcs-item>
                     <mcs-item>
-                        <mcs-dynamic-form #form [config]="formConfig" [disabled]="reservationDisabled"></mcs-dynamic-form>
+                        <mcs-field-select-tree-view #treeViewSelect size="large"
+                            [label]="getPodSelectLabel()"
+                            [formControl]="treeFormControl"
+                            [dataSource]="treeDatasource"
+                            [expandFirst]="true"
+                            [alwaysShowPanel]="true"
+                            [disabled]="reservationDisabled || reservationLoading">
+                        </mcs-field-select-tree-view>
                     </mcs-item>
                 </div>
                 
