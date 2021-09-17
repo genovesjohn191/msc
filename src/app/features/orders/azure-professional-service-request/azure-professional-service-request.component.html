@@ -1,0 +1,151 @@
+<mcs-page [header]="'orderAzureProfessionalServiceRequest.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <!-- Back to Order Dashboard -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{'shared.wizard.previous' | translate}}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Internet Details Step-->
+      <mcs-wizard-step id="azure-professional-service-request-details-step"
+        [stepTitle]="'orderAzureProfessionalServiceRequest.detailsStep.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <form [formGroup]="fgProfessionalService" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'internet-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
+
+          <mcs-item>
+            <p>{{ 'orderAzureProfessionalServiceRequest.detailsStep.description' | translate }}</p>
+          </mcs-item>
+
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
+          <!-- Management Services -->
+          <mcs-item orientation='block'>
+            <ng-container *ngIf="(managementService$ | async) | mcsIsNotNullOrEmpty">
+              <mcs-form-field>
+                <mcs-select
+                  [formControl]="fcManagementService"
+                  mcsId="select-management-service"
+                  mcsEventTracker="select-management-service"
+                  mcsEventCategory="order"
+                  mcsEventLabel="order-azure-professional-service-request"
+                  [placeholder]="'orderAzureProfessionalServiceRequest.detailsStep.managementPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderAzureProfessionalServiceRequest.detailsStep.managementHelpText' | translate">
+                  <mcs-option *ngFor="let service of managementService$ | async" [value]="service.value">
+                    {{ service.text }}
+                  </mcs-option>
+                </mcs-select>
+              </mcs-form-field>
+            </ng-container>
+            <span read-only>{{ noServicesFallbackText | translate }}</span>
+          </mcs-item>
+
+          <!-- Modules -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <mcs-select required
+                autoSelect="false"
+                [formControl]="fcAzureModule"
+                mcsId="select-azure-module"
+                mcsEventTracker="select-azure-module"
+                mcsEventCategory="order"
+                mcsEventLabel="order-azure-professional-service-request"
+                [placeholder]="'orderAzureProfessionalServiceRequest.detailsStep.modulePlaceholder' | translate"
+                [mcsContextualHelp]="'orderAzureProfessionalServiceRequest.detailsStep.moduleHelpText' | translate">
+                <mcs-option *ngFor="let module of azureModuleOptions$ | async" [value]="module.value">
+                  {{ module.text }}
+                </mcs-option>
+              </mcs-select>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderAzureProfessionalServiceRequest.errors.modules' | translate }}
+              </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- Request Details -->
+          <mcs-item orientation="block">
+            <mcs-form-field>
+              <textarea required
+                [formControl]="fcRequestDetails"
+                mcsId="input-request-details"
+                mcsEventTracker="input-request-details"
+                mcsEventCategory="order"
+                mcsEventLabel="order-azure-professional-service-request"
+                mcsInput [rows]="requestDetailsVisibleRows"
+                [maxlength]="maxRequestDetailsLength"
+                [placeholder]="'orderAzureProfessionalServiceRequest.detailsStep.requestDetailsPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAzureProfessionalServiceRequest.detailsStep.requestDetailsHelpText' | translate">
+              </textarea>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderAzureProfessionalServiceRequest.errors.requestDetails' | translate }}
+              </mcs-error>
+              <mcs-hint mcsHint align="start">
+                {{ 'shared.formField.hints.maxChar' | translate: { value: maxRequestDetailsLength } }}
+              </mcs-hint>
+              <mcs-hint mcsHint align="end">
+                {{ fcRequestDetails?.value?.length }} / {{ maxRequestDetailsLength }}
+              </mcs-hint>
+            </mcs-form-field>
+          </mcs-item>
+
+
+          <div class="action-items">
+            <!-- Next button -->
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="azure-professional-service-request">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <mcs-step-order-details [order]="order$ | async"
+          [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async"
+          [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onOrderDetailsDataChange($event)"
+          (submitOrder)="onSubmitOrder($event)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+      <mcs-step-manual-order-completed
+        [order]="order$ | async"
+        [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+      </mcs-step-manual-order-completed>
+    </mcs-wizard-step>
+    </mcs-wizard>
+  </mcs-content-panel>
+</mcs-page>

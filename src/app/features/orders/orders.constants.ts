@@ -36,6 +36,9 @@ import { ChangeInternetPortPlanComponent } from './change-internet-port-plan/cha
 import { CloudHealthServicesComponent } from './ms-request-change/cloudhealth/cloudhealth-services.component';
 import { ColocationDeviceRestartComponent } from './colocation-device-restart/colocation-device-restart.component';
 import { ProvisionComponent } from './ms-request-change/provision/provision.component';
+import {
+  AzureProfessionalServiceRequestComponent
+} from './azure-professional-service-request/azure-professional-service-request.component';
 
 /**
  * List of services for the main module
@@ -80,6 +83,7 @@ export const ordersComponents: any[] = [
   ChangeInternetPortPlanComponent,
   CloudHealthServicesComponent,
   ProvisionComponent,
+  AzureProfessionalServiceRequestComponent
 ];
 
 /**
@@ -325,6 +329,12 @@ export const ordersRoutes: Routes = [
     path: 'change/remove-simple-firewall',
     component: RemoveSimpleFirewallChangeComponent,
     data: { routeId: RouteKey.OrderRemoveSimpleFirewallChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+  {
+    path: 'change/azure-professional-service-request',
+    component: AzureProfessionalServiceRequestComponent,
+    data: { routeId: RouteKey.OrderAzureProfessionalServiceRequest },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
 

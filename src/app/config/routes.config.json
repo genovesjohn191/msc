@@ -849,6 +849,14 @@
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Remove Simple Firewall - Macquarie Cloud Services"
   },
+  "orderAzureProfessionalServiceRequest": {
+    "enumKey": "OrderAzureProfessionalServiceRequest",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/azure-professional-service-request",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableAzureProfessionalServicesRequest",
+    "documentTitle": "Request Azure Professional Services - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

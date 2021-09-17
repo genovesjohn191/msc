@@ -134,6 +134,11 @@ export class LineProperties {
           ${this._ipAddress(property.network?.ipAddress)}`;
         break;
 
+      case OrderIdType.AzureProfessionalServiceRequest:
+        lineProperty = `${this._linkedManagementService(order.parentServiceId)}
+          ${this._module(property.azureModule)}`;
+        break;
+
       default:
         lineProperty = this.translate.instant('lineProp.noDetails');
       break;
@@ -310,5 +315,15 @@ export class LineProperties {
   private _ipAddress(ipAddress: string): string {
     if (isNullOrEmpty(ipAddress)) { return ''; }
     return this.translate.instant('lineProp.ipAddress', {ip_address: ipAddress});
+  }
+
+  private _linkedManagementService(managementServiceId: string): string {
+    if (isNullOrEmpty(managementServiceId)) { return ''; }
+    return this.translate.instant('lineProp.linkedManagementService', {parent_service_id: managementServiceId});
+  }
+
+  private _module(azureModule: string): string {
+    if (isNullOrEmpty(azureModule)) { return ''; }
+    return this.translate.instant('lineProp.module', {module: azureModule});
   }
 }

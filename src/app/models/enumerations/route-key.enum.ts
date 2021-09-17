@@ -122,6 +122,7 @@ export enum RouteKey {
   OrderModifySimpleFirewallChange,
   OrderRemoveSimpleFirewallChange,
   OrderChangeInternetPortPlan,
+  OrderAzureProfessionalServiceRequest,
 
   Internet,
   InternetDetails,

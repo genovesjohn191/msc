@@ -924,7 +924,7 @@
       "servicePlaceholder": "Select a Service",
       "complexityPlaceholder": "Select Complexity",
       "azureProductPlaceHolder": "Select an Azure Product",
-      "azureResourcesPlaceHolder": "Select an Azure Resource *",
+      "azureResourcesPlaceHolder": "Select an Azure Resource",
       "requestDescriptionPlaceholder": "What change would you like applied?",
       "serviceRequestTypePlaceHolder": "Select an Azure Request Type",
       "moduleTypePlaceholder": "Select Module Type",
@@ -1016,10 +1016,10 @@
       "deviceNameLabelHelpText": "Specify your device description or label.",
       "restartInstructionHelpText": "Specify the exact instructions needed to restart your device correctly.",
       "testCasesHelpText": "List any test cases you need us to run after restarting the device, in chronological order.",
-      "colocationServicePlaceholder": "Select a service *",
+      "colocationServicePlaceholder": "Select a service",
       "floorLevelPlaceholder": "Floor Level",
       "rowNumPlaceholder": "Row number and rack",
-      "locationCabinetPlaceholder": "Device location within cabinet *",
+      "locationCabinetPlaceholder": "Device location within cabinet",
       "makeAndModelPlaceholder": "Device make and model",
       "deviceNameLabelPlaceholder": "Device name and label",
       "restartInstructionPlaceholder": "Restart instructions",
@@ -1199,6 +1199,30 @@
           "yesBtnLabel": "Yes"
         }
       }
+    }
+  },
+  "orderAzureProfessionalServiceRequest": {
+    "title": "Request Azure Professional Services",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "description": "You can use this wizard to request an Azure Professional Services package.",
+      "managementHelpText": "If this is for an existing management service, select it here.",
+      "moduleHelpText": "Select a module.",
+      "requestDetailsHelpText": "Detail your request here.",
+      "managementPlaceholder": "Select a management service",
+      "modulePlaceholder": "Select a module",
+      "requestDetailsPlaceholder": "Request details"
+    },
+    "provisioning": {
+      "description": "Your request for azure professional service is being processed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    },
+    "payload": {
+      "description": "Azure Professional Services"
+    },
+    "errors": {
+      "modules": "Module is required",
+      "requestDetails": "Request details is required"
     }
   },
   "contextMenuLink": {
@@ -3741,11 +3765,13 @@
     "diskSize": "Disk size: {{disk_size}} GB<br>",
     "inviewLevel": "Inview level: {{level}}<br>",
     "ipAddress": "IP address: {{ip_address}}<br>",
+    "linkedManagementService": "Linked management service: {{parent_service_id}}<br>",
     "linkedServer": "Linked server: {{server}}<br>",
     "linkedService": "Linked service: {{serviceId}}<br>",
     "linkedStorageProfile": "Linked storage profile: {{storage_profile}}<br>",
     "linkedVdc": "Linked VDC: {{linked_vdc}}<br>",
     "locationCabinet": "Location within cabinet: {{location}}<br>",
+    "module": "Module: {{module}}<br>",
     "network": "Network: {{network}}<br>",
     "notes": "Notes: {{note}}<br>",
     "objective": "Objective: {{change_obj}}<br>",
