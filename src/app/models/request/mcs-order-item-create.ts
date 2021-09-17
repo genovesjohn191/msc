@@ -32,4 +32,7 @@ export class McsOrderItemCreate {
 
   @JsonProperty()
   public properties?: any = undefined;
+
+  @JsonProperty()
+  public description?: string = undefined;
 }

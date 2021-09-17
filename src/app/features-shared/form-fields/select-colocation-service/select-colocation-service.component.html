@@ -6,7 +6,8 @@
   <mcs-item orientation="block">
     <ng-container *ngIf="colocationGroups | mcsIsNotNullOrEmpty">
       <mcs-form-field>
-        <mcs-select
+        <mcs-select required
+          autoSelect="false"
           mcsId="colocation-service"
           mcsEventTracker="select-rack-service"
           mcsEventCategory="order"

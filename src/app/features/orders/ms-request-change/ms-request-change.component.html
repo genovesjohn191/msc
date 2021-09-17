@@ -131,7 +131,8 @@
                   </ng-container>
                 </span>
                 <mcs-form-field *ngIf="azureResourcesOptions$ | async as azureResourcesOptions">
-                  <mcs-select [formControl]="fcAzureResource"
+                  <mcs-select required [formControl]="fcAzureResource"
+                    autoSelect="false"
                     mcsId="select-ms-service-azure-resource"
                     mcsEventTracker="select-ms-service-azure-resource"
                     mcsEventCategory="order"
