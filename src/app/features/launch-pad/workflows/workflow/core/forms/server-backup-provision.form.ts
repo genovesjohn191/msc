@@ -29,9 +29,6 @@ export const serverBackupProvisionForm: LaunchPadForm = {
     mappedProperties.push({ key: 'retentionPeriodInDays',
       value: findCrispElementAttribute(CrispAttributeNames.BaasRetentionReq, attributes)?.value } );
 
-    mappedProperties.push({ key: 'dailyQuotaInGB',
-      value: findCrispElementAttribute(CrispAttributeNames.DailyBackupQuota, attributes)?.value } );
-
     return mappedProperties;
   }
 }

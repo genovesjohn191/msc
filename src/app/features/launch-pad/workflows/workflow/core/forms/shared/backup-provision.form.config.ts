@@ -66,15 +66,7 @@ export const backupProvisionFormConfig: DynamicFormFieldConfigBase[] = [
       { key: '0 23 * * *', value: '11 PM'}
     ],
     validators: { required: true },
-  }),
-  new DynamicInputNumberField({
-    key: 'dailyQuotaInGB',
-    label: 'Daily Quota',
-    placeholder: 'Enter daily backup quota',
-    validators: { required: true, min: 1, max: 1000},
-    hint: 'Allowed value is 1 - 1000',
-    suffix: 'GB'
-  }),
+  })
 ];
 
 export const backupProvisionAddOnFormConfig: DynamicFormFieldConfigBase[] = [
