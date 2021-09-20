@@ -13,7 +13,6 @@ import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
 import { LaunchPadSearchElementsResultComponent } from './search/results-table/elements-result.component';
 import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
 import { LaunchPadWorkflowLaunchComponent } from './workflows/workflow-launch.component';
-import { LaunchPadWorkflowsComponent } from './workflows/workflows.component';
 import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/history/azure-deployment-history.component';
 import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
@@ -52,7 +51,6 @@ import { FeaturesSharedModule } from '@app/features-shared';
     LaunchPadSearchComponent,
     LaunchPadSearchElementsResultComponent,
     LaunchPadSearchServicesResultComponent,
-    LaunchPadWorkflowsComponent,
     LaunchPadWorkflowLaunchComponent,
     // Azure Deployments
     AzureDeploymentActivitiesComponent,

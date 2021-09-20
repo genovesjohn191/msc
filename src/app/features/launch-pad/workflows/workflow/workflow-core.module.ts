@@ -12,7 +12,6 @@ import { LaunchPadWorkflowComponent } from './shared-layout/workflow-group/workf
 import { LaunchPadWorkflowSelectorComponent } from './shared-layout/workflow-selector/workflow-selector.component';
 import { WorkflowSelectorLauncherComponent } from './shared-layout/workflow-selector/workflow-selector-launcher.component';
 import { LaunchPadWorkflowGroupComponent } from './shared-layout/workflow-group/workflow-group.component';
-import { LaunchPadLoadStateDialogComponent } from './shared-layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
 import { LaunchPadWorkflowProvisionStateComponent } from './shared-layout/workflow-provision-state/workflow-provision-state.component';
 import { McsApiService } from '@app/services';
 import { LaunchPadServiceIdSwitchDialogComponent } from './shared-layout/service-id-switch-dialog/service-id-switch-dialog.component';
@@ -26,7 +25,6 @@ import { FeaturesSharedModule } from '@app/features-shared';
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
     LaunchPadServiceIdSwitchDialogComponent,
-    LaunchPadLoadStateDialogComponent,
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowProvisionStateComponent,
     LaunchPadWorkflowSelectorComponent,
@@ -38,7 +36,6 @@ import { FeaturesSharedModule } from '@app/features-shared';
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
     LaunchPadServiceIdSwitchDialogComponent,
-    LaunchPadLoadStateDialogComponent,
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowProvisionStateComponent,
     LaunchPadWorkflowSelectorComponent,
@@ -51,8 +48,7 @@ import { FeaturesSharedModule } from '@app/features-shared';
   entryComponents: [
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowSelectorComponent,
-    LaunchPadServiceIdSwitchDialogComponent,
-    LaunchPadLoadStateDialogComponent
+    LaunchPadServiceIdSwitchDialogComponent
   ],
   providers: [
     McsStorageService,

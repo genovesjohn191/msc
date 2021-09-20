@@ -18,10 +18,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatVerticalStepper } from '@angular/material/stepper';
-import {
-  IMcsNavigateAwayGuard,
-  McsStorageService
-} from '@app/core';
+import { IMcsNavigateAwayGuard } from '@app/core';
 import {
   cloneDeep,
   CommonDefinition,
@@ -30,7 +27,6 @@ import {
 } from '@app/utilities';
 
 import { LaunchPadWorkflowGroupComponent } from './shared-layout/workflow-group/workflow-group.component';
-import { LaunchPadLoadStateDialogComponent } from './shared-layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
 import { WorkflowGroupSaveState } from './core/workflow-group.interface';
 import { Workflow } from './core/workflow.interface';
 import { McsApiService } from '@app/services';
@@ -67,28 +63,11 @@ export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAw
     this._context = value;
 
     this._initializeWorkflowProcess();
-    this._tryLoadSavedState();
     this._changeDetector.markForCheck();
   }
 
   public get context(): WorkflowGroupSaveState {
     return this._context;
-  }
-
-  public get saveStateKey(): string {
-    return `workflows`;
-  }
-
-  public get savedState(): WorkflowGroupSaveState[] {
-    return this._storageService.getItem(this.saveStateKey) ?? [];
-  }
-
-  public set savedState(value: WorkflowGroupSaveState[]) {
-    if (isNullOrEmpty(value)) {
-      this._storageService.removeItem(this.saveStateKey);
-    } else {
-      this._storageService.setItem(this.saveStateKey, value);
-    }
   }
 
   public get validForProvisioning(): boolean {
@@ -118,7 +97,6 @@ export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAw
 
   public constructor(
     private _dialog: MatDialog,
-    private _storageService: McsStorageService,
     private _changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar,
     private _translateService: TranslateService,
@@ -138,7 +116,6 @@ export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAw
   public addOrUpdate(): void {
     if (!this.workflowGroup.valid) { return; }
     this._saveWorkflowGroup(this.workflowGroup.payload);
-    this._saveState();
   }
 
   public addAnother(): void {
@@ -169,8 +146,6 @@ export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAw
     if (!this.validForProvisioning) {
       this._initializeWorkflowProcess();
     }
-
-    this._saveState();
 
     this._showWorkflowRemovalNotification(workflow.title);
   }
@@ -228,7 +203,6 @@ export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAw
 
     switch (state) {
       case WorkflowProvisionCompletionState.Successful: {
-        this.savedState = null;
         this.hasError = false;
         break;
       }
@@ -445,71 +419,7 @@ export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAw
       this.newlyAddedWorkflowIds.push(workflow.referenceId);
     }
 
-    this._saveState();
-
     this._changeDetector.markForCheck();
     this._markFirstStepAsComplete();
-  }
-
-  private _saveState(): void {
-    let hasChanges = !isNullOrEmpty(this.context.workflows);
-
-    if (hasChanges) {
-      this.context.workflowGroupId = this.context.workflowGroupId,
-      this.context.description = this.context.workflows[0].title;
-      this.context.config = cloneDeep(this.context.config);
-      this.context.workflows = cloneDeep(this.context.workflows);
-    }
-
-    this._tryRemoveCurrentWorkflowFromSavedState();
-    let currentState = this.savedState;
-    currentState.push(this.context);
-    this.savedState = currentState;
-  }
-
-  private _tryLoadSavedState(): void {
-    if (isNullOrEmpty(this.savedState) || this._getSavedStateIndex() < 0) {
-      return;
-    }
-
-    const loadSaveStateDialogRef = this._dialog.open(LaunchPadLoadStateDialogComponent, {
-      data: this.savedState[this._getSavedStateIndex()]
-    });
-
-    loadSaveStateDialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
-      if (result === true) {
-        this._loadSavedState();
-      } else if (result === false) {
-        this._tryRemoveCurrentWorkflowFromSavedState();
-      }
-    });
-  }
-
-  private _loadSavedState(): void {
-    let foundStateIndex = this._getSavedStateIndex();
-
-    this._initializeWorkflowProcess(cloneDeep(this.savedState[foundStateIndex].workflows));
-    this._resetForm();
-    this._markFirstStepAsComplete();
-  }
-
-  private _getSavedStateIndex(): number {
-    return this.savedState.findIndex((state) =>
-      state.companyId === this.context.companyId
-      && state.source === this.context.source
-      && state.workflowGroupId === this.context.workflowGroupId
-    );
-  }
-
-  private _tryRemoveCurrentWorkflowFromSavedState(): void {
-    let foundStateIndex = this._getSavedStateIndex();
-
-    if (foundStateIndex >= 0) {
-      let currentState = this.savedState;
-      currentState.splice(foundStateIndex, 1);
-      this.savedState = currentState;
-    }
   }
 }

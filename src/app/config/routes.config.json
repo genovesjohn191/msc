@@ -19,14 +19,6 @@
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
-  "launchPadWorkflows": {
-    "enumKey": "LaunchPadWorkflows",
-    "enumCategory": "LaunchPad",
-    "navigationPath": "launch-pad/workflows",
-    "documentTitle": "LAUNCH Pad - Workflows",
-    "requiredPermissions": ["InternalEngineerAccess"],
-    "requiredFeatureFlag": "EnableLaunchPad"
-  },
   "launchPadWorkflowLaunch": {
     "enumKey": "LaunchPadWorkflowLaunch",
     "enumCategory": "LaunchPad",
