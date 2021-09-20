@@ -18,7 +18,6 @@ import {
   worklowGroupIdParam,
   LaunchPadWorkflowLaunchComponent
 } from './workflows/workflow-launch.component';
-import { LaunchPadWorkflowsComponent } from './workflows/workflows.component';
 import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
 import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
 import { NetworkDbVlansComponent } from './network-db/vlan-db/network-db-vlans.component';
@@ -50,12 +49,6 @@ export const launchPadRoutes: Routes = [
     path: 'search/:keyword',
     component: LaunchPadSearchComponent,
     data: { routeId: RouteKey.LaunchPadSearch },
-    canActivate: [ LaunchPadGuard ]
-  },
-  {
-    path: 'workflows',
-    component: LaunchPadWorkflowsComponent,
-    data: { routeId: RouteKey.LaunchPadWorkflows },
     canActivate: [ LaunchPadGuard ]
   },
   {
