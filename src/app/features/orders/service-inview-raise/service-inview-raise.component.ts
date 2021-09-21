@@ -7,9 +7,11 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  map,
   shareReplay,
   switchMap,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -52,10 +54,16 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  convertUrlParamsKeyToLowerCase,
+  compareStrings
 } from '@app/utilities';
 
 import { ServiceInviewRaiseService } from './service-inview-raise.service';
+import {
+  ActivatedRoute,
+  Params
+} from '@angular/router';
 
 type RaiseInviewLevelProperties = {
   inviewLevel: string;
@@ -81,6 +89,8 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   public managedServers$: Observable<ServiceGroup[]>;
   public fgServiceInviewDetails: FormGroup;
   public fcService: FormControl;
+
+  public selectedServiceId$: Observable<string>;
 
   /**
    * Returns the back icon key as string
@@ -119,11 +129,13 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   private _inviewLevelLabelMap: Map<InviewLevel, string>;
   private _errorStatus: number;
   private _serverGroupCount: number;
+  private _destroyActivateRouteSubject = new Subject<void>();
 
   constructor(
     _injector: Injector,
     private _serviceInviewRaiseService: ServiceInviewRaiseService,
     private _formBuilder: FormBuilder,
+    private _activatedRoute: ActivatedRoute,
     private _apiService: McsApiService,
     private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -158,6 +170,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
 
   public ngOnInit(): void {
     this._getAllServices();
+    this._subscribesToQueryParams();
   }
 
   public ngOnDestroy(): void {
@@ -363,5 +376,25 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     if (resourceNameA < resourceNameB) { return -1; }
     if (resourceNameA > resourceNameB) { return 1; }
     return 0;
+  }
+
+  private _subscribesToQueryParams(): void {
+    this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
+      takeUntil(this._destroyActivateRouteSubject),
+      map((params) => {
+        let lowercaseUrlParams: Params = convertUrlParamsKeyToLowerCase(params);
+        return lowercaseUrlParams?.serviceid;
+      }),
+      tap((urlParamServiceId: string) => {
+        if (isNullOrEmpty(urlParamServiceId)) { return; }
+        this.managedServers$.subscribe((servers: ServiceGroup[]) => {
+          let serverList = servers[0].servers;
+          let serviceFound = serverList.find((server) =>
+            compareStrings(server?.serviceId, urlParamServiceId) === 0);
+          this.onChangeService(serviceFound);
+          this.fcService.setValue(serviceFound);
+        });
+      }),
+    );
   }
 }
