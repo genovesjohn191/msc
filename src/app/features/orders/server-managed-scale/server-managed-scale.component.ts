@@ -31,7 +31,7 @@ import {
 } from '@angular/forms';
 import {
   ActivatedRoute,
-  ParamMap
+  Params
 } from '@angular/router';
 import {
   CoreValidators,
@@ -73,7 +73,9 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  compareStrings,
+  convertUrlParamsKeyToLowerCase
 } from '@app/utilities';
 
 import { ServerManagedScaleService } from './server-managed-scale.service';
@@ -118,6 +120,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
 
   private _errorStatus: number;
   private _serverGroupCount: number;
+  private _selectedServer: string;
 
   constructor(
     _injector: Injector,
@@ -144,11 +147,11 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   }
 
   public ngOnInit() {
+    this._subscribesToQueryParams();
     this._registerFormGroups();
     this._registerEvents();
     this._registerProvisionStateMap();
     this._subscribeToManagedCloudServers();
-    this._subscribesToSelectedServerId();
   }
 
   public ngOnDestroy() {
@@ -300,7 +303,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
       map((serversCollection) => {
         let serverGroups: McsOptionGroup[] = [];
         let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
-
+        this._setManagedServerDefaultValue(servers);
         servers.forEach((server) => {
           if (!server.isManagedVCloud) { return; }
 
@@ -324,6 +327,16 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
         return throwError(error);
       })
     );
+  }
+
+  private _setManagedServerDefaultValue(servers: McsServer[]): void {
+    if (isNullOrEmpty(this._selectedServer)) { return; }
+    let selectedServer = servers.find((server) => {
+      let sameServerId = compareStrings(server.id, this._selectedServer) === 0;
+      let sameServiceId = compareStrings(server.serviceId, this._selectedServer) === 0;
+      return sameServerId || sameServiceId;
+    })
+    this.fcManageServer.setValue(selectedServer);
   }
 
   /**
@@ -357,22 +370,17 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     );
   }
 
-  private _subscribesToSelectedServerId(): void {
+  private _subscribesToQueryParams(): void {
     this._activatedRoute.queryParams.pipe(
-      switchMap((params: ParamMap) => {
-        let serverSelectedId = params['serverId'];
-        if (isNullOrEmpty(serverSelectedId)) { return; }
-        return this._apiService.getServer(serverSelectedId).pipe(
-          map((server: McsServer) => {
-            return server;
-          })
-        )
-      }),
+      takeUntil(this._destroySubject),
       catchError(() => EMPTY),
-      takeUntil(this._destroySubject))
-    .subscribe((server: McsServer) => {
-      this.fcManageServer.setValue(server);
-    });
+      map((params: Params) => {
+        let lowercaseParams: Params = convertUrlParamsKeyToLowerCase(params);
+        return lowercaseParams.serverid || lowercaseParams.serviceid;
+      }),
+      tap((id: string) => {
+        this._selectedServer = id;
+    })).subscribe();
   }
 
   /**
