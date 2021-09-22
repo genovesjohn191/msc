@@ -134,7 +134,7 @@
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
-  },  
+  },
   "launchPadNetworkDbNetworkDetails": {
     "enumKey": "LaunchPadNetworkDbNetworkDetails",
     "enumCategory": "LaunchPadVlanDb",
@@ -571,6 +571,33 @@
     "navigationPath": "licenses",
     "documentTitle": "Licenses - Macquarie Cloud Services"
   },
+  "billing": {
+    "enumPlatform": "Public",
+    "enumKey": "Billing",
+    "navigationPath": "billing",
+    "documentTitle": "Billing - Macquarie Cloud Services"
+  },
+  "billingSummary": {
+    "enumPlatform": "Public",
+    "enumCategory": "Billing",
+    "enumKey": "BillingSummary",
+    "navigationPath": "summary",
+    "documentTitle": "Billing Summary - Macquarie Cloud Services"
+  },
+  "billingService": {
+    "enumPlatform": "Public",
+    "enumCategory": "Billing",
+    "enumKey": "BillingService",
+    "navigationPath": "service",
+    "documentTitle": "Billing Service - Macquarie Cloud Services"
+  },
+  "billingTabular": {
+    "enumPlatform": "Public",
+    "enumCategory": "Billing",
+    "enumKey": "BillingTabular",
+    "navigationPath": "tabular",
+    "documentTitle": "Billing Tabular - Macquarie Cloud Services"
+  },
   "systemMessages": {
     "enumCategory": "SystemMessages",
     "enumKey": "SystemMessages",
@@ -729,7 +756,7 @@
     "requireAllFeatures": true,
     "documentTitle": "Hosted DNS Change - Macquarie Cloud Services"
   },
-"orderColocationStaffEscort": {
+  "orderColocationStaffEscort": {
     "enumKey": "OrderColocationStaffEscort",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/colocation/staff-escort",

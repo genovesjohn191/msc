@@ -1,0 +1,13 @@
+<div class="widget flat">
+  <mcs-vertical-bar-chart
+    [config]="chartConfig"
+    [data]="chartItems$ | async"
+    (chartChange)="updateChartUri($event)">
+  </mcs-vertical-bar-chart>
+
+  <mcs-report-widget-data-status type="info"
+    [processing]="processing"
+    [hasError]="hasError"
+    (retry)="getBillingSummaries()">
+  </mcs-report-widget-data-status>
+</div>

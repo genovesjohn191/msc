@@ -130,5 +130,10 @@ export enum RouteKey {
   OtherTools,
   Licenses,
 
+  Billing,
+  BillingSummary,
+  BillingService,
+  BillingTabular,
+
   HttpErrorPage
 }

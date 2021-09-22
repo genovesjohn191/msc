@@ -1,33 +1,32 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input,
-  Output,
-  EventEmitter
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {
-  coerceBoolean,
-  isNullOrEmpty
-} from '@app/utilities';
-import {
-  ChartComponent,
   ApexAxisChartSeries,
   ApexChart,
-  ApexXAxis,
-  ApexPlotOptions,
   ApexDataLabels,
-  ApexStroke,
-  ApexYAxis,
   ApexLegend,
+  ApexNonAxisChartSeries,
+  ApexPlotOptions,
+  ApexStroke,
   ApexTitleSubtitle,
   ApexTooltip,
-  ApexNonAxisChartSeries,
+  ApexXAxis,
+  ApexYAxis,
+  ChartComponent,
   ChartType
 } from 'ng-apexcharts';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { isNullOrEmpty } from '@app/utilities';
+
 import { ChartDataService } from '../chart-data.service';
 import { ChartItem } from '../chart-item.interface';
 
@@ -67,6 +66,7 @@ export type ChartTooltip = {
   yTitleFormatter?:  (seriesName: string) => string;
   yValueFormatter?: (val: number, opts?: any) => string;
   xValueFormatter?: (val: number, opts?: any) => string;
+  customFormatter?: (options: any) => string;
 }
 
 export type ChartConfig = {
@@ -191,7 +191,8 @@ export class ChartComponentBase {
           title: {
             formatter: value.tooltip.yTitleFormatter
           }
-        }
+        },
+        custom: value.tooltip.customFormatter
       }
     }
 

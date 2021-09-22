@@ -1,26 +1,29 @@
 import { Observable } from 'rxjs';
+
 import {
   McsApiSuccessResponse,
+  McsQueryParam,
+  McsReportAscAlerts,
+  McsReportAuditAlerts,
+  McsReportBillingServiceGroup,
+  McsReportBillingSummaryParams,
   McsReportCostRecommendations,
   McsReportGenericItem,
+  McsReportInefficientVms,
   McsReportIntegerData,
-  McsReportServiceChangeInfo,
-  McsReportSubscription,
-  McsReportVMRightsizing,
-  McsReportVMRightsizingSummary,
+  McsReportManagementService,
+  McsReportMonitoringAndAlerting,
   McsReportOperationalSavings,
+  McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
-  McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance,
-  McsRightSizingQueryParams,
-  McsReportManagementService,
-  McsReportUpdateManagement,
-  McsReportAuditAlerts,
-  McsReportInefficientVms,
-  McsQueryParam,
+  McsReportServiceChangeInfo,
+  McsReportSubscription,
   McsReportTopVmsByCost,
-  McsReportAscAlerts
+  McsReportUpdateManagement,
+  McsReportVMRightsizing,
+  McsReportVMRightsizingSummary,
+  McsRightSizingQueryParams
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -89,4 +92,6 @@ export interface IMcsApiReportsService {
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>>;
 
   getTopVmsByCost(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportTopVmsByCost[]>>;
+
+  getBillingSummaries(query?: McsReportBillingSummaryParams): Observable<McsApiSuccessResponse<McsReportBillingServiceGroup[]>>;
 }

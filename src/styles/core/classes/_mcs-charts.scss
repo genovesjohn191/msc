@@ -1,0 +1,18 @@
+.chart-list {
+  @include display-flex(column);
+
+  .chart-title {
+    display: block;
+    font-weight: normal;
+    padding: $space-small;
+    border-bottom: 1px solid $border-color-light;
+  }
+
+  .chart-item {
+    @include display-flex(row);
+    @include align-items(center);
+    @include set-items-interval(8px, horizontal);
+    font-weight: 200 !important;
+    $padding: $space-small !important;
+  }
+}

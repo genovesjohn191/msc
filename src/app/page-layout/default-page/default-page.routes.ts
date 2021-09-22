@@ -114,6 +114,11 @@ export const defaultPageRoutes: Routes = [
         data: { routeId: RouteKey.Licenses },
         loadChildren: () => import('../../features/licenses/licenses.module').then(m => m.LicensesModule)
       },
+      {
+        path: 'billing',
+        data: { routeId: RouteKey.Billing },
+        loadChildren: () => import('../../features/billing/billing.module').then(m => m.BillingModule)
+      },
       // New routes must be added on top of this error route page
       {
         path: '**',
