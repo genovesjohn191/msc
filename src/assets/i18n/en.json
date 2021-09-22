@@ -3364,6 +3364,15 @@
     "enabled": "Enabled"
   },
   "label": {
+    "total": "Total",
+    "minimumSpendCommitment": "Minimum Spend Commitment",
+    "managementCharges": "Our Management Charges",
+    "tenantName": "Tenant Name",
+    "initialDomain": "Initial Domain",
+    "primaryDomain": "Primary Domain",
+    "microsoftIdentifier": "Microsoft Identifier",
+    "microsoftChargeMonth": "Microsoft Charge Month",
+    "macquarieBillMonth": "Macquarie Bill Month",
     "billing": "Billing",
     "summary": "Summary",
     "byService": "By Service",
@@ -3501,6 +3510,8 @@
     "suspend": "Suspend"
   },
   "message": {
+    "minimumSpendCommitmentNotMet": "As your minimum spend commitment for this element was not met, its charge has defaulted to match the minimum spend commitment itself.",
+    "markupPercent": "{{markup}}% of consumption RRP",
     "loadingItems": "Loading items...",
     "noRecordsFound": "No records found.",
     "editToView": "Edit to view",

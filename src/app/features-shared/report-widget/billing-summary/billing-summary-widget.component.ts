@@ -16,14 +16,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import {
+  McsOption,
   McsReportBillingService,
   McsReportBillingServiceGroup,
-  McsReportBillingServiceSummary
+  McsReportBillingServiceSummary,
+  McsReportBillingSummaryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -34,6 +39,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ReportWidgetBase } from '../report-widget.base';
 import { BillingSummaryItem } from './billing-summary-item';
@@ -48,7 +54,10 @@ import { BillingSummaryItem } from './billing-summary-item';
     'class': 'widget-box'
   }
 })
-export class BillingSummaryWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
+export class BillingSummaryWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public billingAccountId: string;
+
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
   public hasError: boolean = false;
@@ -56,9 +65,12 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();
+
   private _billingSummaryItemsMap = new Map<string, BillingSummaryItem[]>();
+  private _billingSummaryTooltipMap = new Map<number, BillingSummaryItem>();
 
   public constructor(
+    private _translate: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService
   ) {
@@ -76,7 +88,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         title: 'Months'
       },
       tooltip: {
-        // customFormatter: this._tooltipCustomFormatter
+        customFormatter: this._tooltipCustomFormatter.bind(this)
       }
     };
 
@@ -86,9 +98,14 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     // 3. Ask Daniel on what are the color to be set in the graph
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this._subscribeToChartItemsChange();
     this.getBillingSummaries();
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    let billingAccountIdChange = changes['billingAccountId'];
+    if (!isNullOrEmpty(billingAccountIdChange)) { this.getBillingSummaries(); }
   }
 
   public ngOnDestroy(): void {
@@ -101,7 +118,10 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     this.updateChartUri(undefined);
     this._changeDetectorRef.markForCheck();
 
-    this._apiService.getBillingSummaries().pipe(
+    let apiQuery = new McsReportBillingSummaryParams();
+    apiQuery.billingAccountId = this.billingAccountId;
+
+    this._apiService.getBillingSummaries(apiQuery).pipe(
       map(billingSummaries => {
         if (isNullOrEmpty(billingSummaries)) { return []; }
 
@@ -110,10 +130,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         return chartItems;
       }),
       tap(chartItems => {
-        console.log(chartItems);
-        console.log(this._billingSummaryItemsMap);
         if (chartItems?.length === 0) { this.updateChartUri(''); }
-
 
         this._chartItemsChange.next(chartItems);
         this.processing = false;
@@ -136,28 +153,14 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   private _tooltipCustomFormatter(opts?: any): string {
     // TODO(apascual): check out what returns the item
     // Find the associated type and return
-    console.log(this._billingSummaryItemsMap, opts);
+    let productTypeFound = this._billingSummaryTooltipMap.get(opts.seriesIndex);
+    if (isNullOrEmpty(productTypeFound)) { return null; }
 
-    return `
-      <div class="chart-list">
-        <div class="chart-title">Azure Consumption Services</div>
-
-        <div class="chart-item">
-          <span>Total:</span>
-          <span>$87,200</span>
-        </div>
-
-        <div class="chart-item">
-          <span>Microsoft Charge Month:</span>
-          <span>Dec, 2020</span>
-        </div>
-
-        <div class"chart-item">
-          <span>Macquarie Bill Month:</span>
-          <span>Feb 2021</span>
-        </div>
-      </div>
-    `;
+    return this.generateCustomHtmlTooltip(productTypeFound?.productType, [
+      new McsOption(productTypeFound?.finalChargeDollars, this._translate.instant('label.total')),
+      new McsOption(productTypeFound?.microsoftChargeMonth, this._translate.instant('label.microsoftChargeMonth')),
+      new McsOption(productTypeFound?.macquarieBillMonth, this._translate.instant('label.macquarieBillMonth'))
+    ]);
   }
 
   private _subscribeToChartItemsChange(): void {
@@ -180,7 +183,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
       chartItems.push({
         name: productType,
-        xValue: billingItems[0].chargeMonth,
+        xValue: billingItems[0].microsoftChargeMonth,
         yValue: totalChargeDollars
       } as ChartItem);
     });
@@ -196,6 +199,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         this._appendBillingSummaryToMap(
           'parentService.productType',
           billingGroup.microsoftChargeMonth,
+          billingGroup.macquarieBillMonth,
           parentService
         );
 
@@ -204,16 +208,35 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
           this._appendBillingSummaryToMap(
             'childService.productType',
             billingGroup.microsoftChargeMonth,
+            billingGroup.macquarieBillMonth,
             childService
           );
         });
       });
+    });
+
+    // Populate the tooltip items based on summary items map
+    let seriesIndex = 0;
+    this._billingSummaryItemsMap.forEach((billingItems, productType) => {
+
+      let totalChargeDollars = billingItems
+        ?.map(item => item.finalChargeDollars)
+        .reduce((total, next) => total + next, 0);
+
+      this._billingSummaryTooltipMap.set(seriesIndex++, new BillingSummaryItem(
+        productType,
+        billingItems[0].microsoftChargeMonth,
+        billingItems[0].macquarieBillMonth,
+        totalChargeDollars,
+        billingItems[0]
+      ));
     });
   }
 
   private _appendBillingSummaryToMap(
     productType: string,
     chargeMonth: string,
+    billMonth: string,
     data: McsReportBillingService | McsReportBillingServiceSummary
   ): void {
     let serviceFound = this._billingSummaryItemsMap.get(productType);
@@ -223,12 +246,18 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       data.finalChargeDollars : data.finalChargeDollars;
 
     if (!isNullOrEmpty(serviceFound)) {
-      services.push(new BillingSummaryItem(chargeMonth, finalChargeDollars, data));
+      services.push(new BillingSummaryItem(
+        productType, chargeMonth, billMonth,
+        finalChargeDollars, data
+      ));
       return;
     }
 
     services = new Array<BillingSummaryItem>();
-    services.push(new BillingSummaryItem(chargeMonth, finalChargeDollars, data));
+    services.push(new BillingSummaryItem(
+      productType, chargeMonth, billMonth,
+      finalChargeDollars, data)
+    );
     this._billingSummaryItemsMap.set(productType, services);
   }
 }

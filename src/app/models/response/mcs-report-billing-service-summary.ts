@@ -31,9 +31,27 @@ export class McsReportBillingServiceSummary extends McsEntityBase {
   @JsonProperty()
   public discountPercent: number = undefined;
 
+  @JsonProperty({ target: McsReportBillingServiceTenant })
+  public tenant: McsReportBillingServiceTenant = undefined;
+
   @JsonProperty()
   public microsoftId: string = undefined;
 
-  @JsonProperty({ target: McsReportBillingServiceTenant })
-  public tenant: McsReportBillingServiceTenant = undefined;
+  @JsonProperty()
+  public macquarieBillMonth: string = undefined;
+
+  @JsonProperty()
+  public microsoftChargeMonth: string = undefined;
+
+  @JsonProperty()
+  public isProjection: boolean = undefined;
+
+  @JsonProperty()
+  public markupPercent: number = undefined;
+
+  @JsonProperty()
+  public hasMetMinimumCommitment: boolean = undefined;
+
+  @JsonProperty()
+  public minimumCommitmentDollars: number = undefined;
 }

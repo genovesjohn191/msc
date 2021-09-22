@@ -16,11 +16,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { McsReportBillingServiceGroup } from '@app/models';
+import {
+  McsOption,
+  McsReportBillingServiceGroup,
+  McsReportBillingSummaryParams
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   ChartConfig,
@@ -30,6 +37,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ReportWidgetBase } from '../report-widget.base';
 import { BillingServiceItem } from './billing-service-item';
@@ -44,7 +52,11 @@ import { BillingServiceItem } from './billing-service-item';
     'class': 'widget-box'
   }
 })
-export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
+export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
+
+  @Input()
+  public billingAccountId: string;
+
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
   public hasError: boolean = false;
@@ -52,10 +64,11 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();
-  private _billingServiceItemsMap = new Map<string, BillingServiceItem[]>();
+  private _billingServiceTooltipMap = new Map<number, BillingServiceItem>();
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
+    private _translate: TranslateService,
     private _apiService: McsApiService
   ) {
     super();
@@ -72,7 +85,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         title: 'Months'
       },
       tooltip: {
-        // customFormatter: this._tooltipCustomFormatter
+        customFormatter: this._tooltipCustomFormatter.bind(this)
       }
     };
 
@@ -87,6 +100,11 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     this.getBillingSummaries();
   }
 
+  public ngOnChanges(changes: SimpleChanges): void {
+    let billingAccountIdChange = changes['billingAccountId'];
+    if (!isNullOrEmpty(billingAccountIdChange)) { this.getBillingSummaries(); }
+  }
+
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
   }
@@ -97,7 +115,10 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     this.updateChartUri(undefined);
     this._changeDetectorRef.markForCheck();
 
-    this._apiService.getBillingSummaries().pipe(
+    let apiQuery = new McsReportBillingSummaryParams();
+    apiQuery.billingAccountId = this.billingAccountId;
+
+    this._apiService.getBillingSummaries(apiQuery).pipe(
       map(billingSummaries => {
         if (isNullOrEmpty(billingSummaries)) { return []; }
 
@@ -105,8 +126,6 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         return this._convertFlatRecordsToChartItems(flatRecords);
       }),
       tap(chartItems => {
-        console.log(chartItems);
-        console.log(this._billingServiceItemsMap);
         if (chartItems?.length === 0) { this.updateChartUri(''); }
 
         this._chartItemsChange.next(chartItems);
@@ -128,30 +147,52 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _tooltipCustomFormatter(opts?: any): string {
-    // TODO(apascual): check out what returns the item
-    // Find the associated type and return
-    console.log(this._billingServiceItemsMap, opts);
+    let serviceFound = this._billingServiceTooltipMap.get(opts.seriesIndex);
+    if (isNullOrEmpty(serviceFound)) { return null; }
 
-    return `
-      <div class="chart-list">
-        <div class="chart-title">Azure Consumption Services</div>
+    return this.generateCustomHtmlTooltip(serviceFound?.service, [
+      new McsOption(
+        serviceFound.finalChargeDollars,
+        this._translate.instant('label.total')
+      ),
+      new McsOption(
+        this._getMinimumCommitmentText(serviceFound),
+        this._translate.instant('label.minimumSpendCommitment')
+      ),
+      new McsOption(
+        this._translate.instant('message.markupPercent', { markup: serviceFound.managementCharges | 0 }),
+        this._translate.instant('label.managementCharges')
+      ),
+      new McsOption(
+        serviceFound.tenantName,
+        this._translate.instant('label.tenantName')
+      ),
+      new McsOption(
+        serviceFound.initialDomain,
+        this._translate.instant('label.initialDomain')
+      ),
+      new McsOption(
+        serviceFound.primaryDomain,
+        this._translate.instant('label.primaryDomain')
+      ),
+      new McsOption(
+        serviceFound.microsoftIdentifier,
+        this._translate.instant('label.microsoftIdentifier')
+      ),
+      new McsOption(
+        serviceFound.microsoftChargeMonth,
+        this._translate.instant('label.microsoftChargeMonth')
+      ),
+      new McsOption(
+        serviceFound.macquarieBillMonth,
+        this._translate.instant('label.macquarieBillMonth')
+      )
+    ]);
+  }
 
-        <div class="chart-item">
-          <span>Total:</span>
-          <span>$87,200</span>
-        </div>
-
-        <div class="chart-item">
-          <span>Microsoft Charge Month:</span>
-          <span>Dec, 2020</span>
-        </div>
-
-        <div class"chart-item">
-          <span>Macquarie Bill Month:</span>
-          <span>Feb 2021</span>
-        </div>
-      </div>
-    `;
+  private _getMinimumCommitmentText(serviceItem: BillingServiceItem): string {
+    return serviceItem.hasMetMinimumCommitment ? serviceItem.minimumSpendCommitment :
+      this._translate.instant('message.minimumSpendCommitmentNotMet');
   }
 
   private _subscribeToChartItemsChange(): void {
@@ -169,8 +210,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
       if (isNullOrEmpty(billingService)) { return; }
 
       chartItems.push({
-        name: billingService.name,
-        xValue: billingService.chargeMonth,
+        name: billingService.service,
+        xValue: billingService.microsoftChargeMonth,
         yValue: billingService.finalChargeDollars
       } as ChartItem);
     });
@@ -187,22 +228,43 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         // Append Parent Service
         billingServiceItems.push(new BillingServiceItem(
           parentService.serviceId,
-          billingGroup.microsoftChargeMonth,
           parentService.finalChargeDollars,
-          parentService
+          parentService.hasMetMinimumCommitment,
+          parentService.minimumCommitmentDollars,
+          parentService.markupPercent,
+          parentService.tenant?.name,
+          parentService.tenant?.initialDomain,
+          parentService.tenant?.primaryDomain,
+          parentService.microsoftId,
+          billingGroup.microsoftChargeMonth,
+          billingGroup.macquarieBillMonth
         ));
 
         // Append Child Services Data
         parentService.childBillingServices?.forEach(childService => {
           billingServiceItems.push(new BillingServiceItem(
             childService.serviceId,
-            billingGroup.microsoftChargeMonth,
             childService.finalChargeDollars,
-            childService
+            childService.hasMetMinimumCommitment,
+            childService.minimumCommitmentDollars,
+            childService.markupPercent,
+            childService.tenant?.name,
+            childService.tenant?.initialDomain,
+            childService.tenant?.primaryDomain,
+            childService.microsoftId,
+            billingGroup.microsoftChargeMonth,
+            billingGroup.macquarieBillMonth
           ));
         });
       });
     });
+
+    // Populate billing services series index
+    let seriesIndex = 0;
+    billingServiceItems?.forEach(billingService => {
+      this._billingServiceTooltipMap.set(seriesIndex++, billingService);
+    });
+
     return billingServiceItems;
   }
 }

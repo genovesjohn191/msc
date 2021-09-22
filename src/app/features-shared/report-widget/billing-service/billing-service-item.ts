@@ -1,9 +1,16 @@
 export class BillingServiceItem {
 
   constructor(
-    public name: string,
-    public chargeMonth: string,
+    public service: string,
     public finalChargeDollars: number,
-    public data?: any
+    public hasMetMinimumCommitment: boolean,
+    public minimumSpendCommitment: number,
+    public managementCharges: number,
+    public tenantName: string,
+    public initialDomain: string,
+    public primaryDomain: string,
+    public microsoftIdentifier: string,
+    public microsoftChargeMonth: string,
+    public macquarieBillMonth: string
   ) { }
 }
