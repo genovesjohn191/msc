@@ -61,7 +61,8 @@
                     [label]="serverGroup.resourceName"
                     *ngFor="let serverGroup of serversGroup">
 
-                    <mcs-option *ngFor="let server of serverGroup.servers" [value]="server">
+                    <mcs-option *ngFor="let server of serverGroup.servers" [value]="server"
+                      [selected]="(selectedServiceId$ | async) === server.serviceId">
                       {{ server.name }} <span read-only>- {{ server.inviewLevelLabel }}</span>
                     </mcs-option>
                   </mcs-option-group>

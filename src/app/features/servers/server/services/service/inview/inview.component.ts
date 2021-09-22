@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import {
   CoreConfig,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsNavigationService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -18,6 +19,7 @@ import {
   InviewLevel,
   McsJob,
   McsServer,
+  RouteKey,
   ServerServicesAction,
   ServerServicesView
 } from '@app/models';
@@ -51,6 +53,7 @@ export class ServiceInviewComponent extends ServerServiceDetailBase implements O
     private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authIdentity: McsAuthenticationIdentity,
+    private _navigationService: McsNavigationService,
     private _coreConfig: CoreConfig,
     private _translateService: TranslateService
   ) {
@@ -106,11 +109,10 @@ export class ServiceInviewComponent extends ServerServiceDetailBase implements O
    * @param server server reference obj
    */
   public onRaiseInviewLevel(selectedServer: McsServer): void {
-    this.raiseInviewLevel.emit(
-      {
-        action: ServerServicesAction.RaiseInviewLevel,
-        server: selectedServer
-      }
+    this._navigationService.navigateTo(RouteKey.OrderServiceInviewRaise, [],
+      { queryParams: {
+        serviceId: selectedServer.serviceId
+      }}
     );
   }
 
