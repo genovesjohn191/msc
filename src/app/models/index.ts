@@ -335,6 +335,10 @@ export * from './response/mcs-network-db-vlan';
 export * from './response/mcs-network-db-vni';
 export * from './response/mcs-network-db-site';
 export * from './response/mcs-network-db-pod-maz-aa';
+export * from './response/mcs-report-billing-service';
+export * from './response/mcs-report-billing-service-group';
+export * from './response/mcs-report-billing-service-summary';
+export * from './response/mcs-report-billing-service-tenant';
 
 /** Common */
 export * from './common/mcs-api-search-key';
@@ -382,6 +386,7 @@ export * from './common/mcs-servers-query-params';
 export * from './common/mcs-network-db-maz-aa-query-params';
 export * from './common/mcs-field-error-message';
 export * from './common/mcs-reservation-product-type-params';
+export * from './common/mcs-report-billing-summary-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

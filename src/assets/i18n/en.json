@@ -75,6 +75,7 @@
     "internet": "Internet",
     "backup": "Backup",
     "licenses": "Licenses",
+    "billing": "Billing",
     "macquarieView": "MacquarieView",
     "makeAChange": "Make a Change",
     "productCatalog": "Products",
@@ -3363,6 +3364,10 @@
     "enabled": "Enabled"
   },
   "label": {
+    "billing": "Billing",
+    "summary": "Summary",
+    "byService": "By Service",
+    "tabular": "Tabular",
     "viewInPortal": "View in Portal",
     "value": "Value",
     "data": "Data",

@@ -170,6 +170,8 @@ import {
   McsQueryParam,
   McsReportAscAlerts,
   McsReportAuditAlerts,
+  McsReportBillingServiceGroup,
+  McsReportBillingSummaryParams,
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportInefficientVms,
@@ -1792,19 +1794,30 @@ export class McsApiService {
   public getAzureReservationProductTypes(query?: McsReservationProductTypeQueryParams):
     Observable<McsApiCollection<McsReservationProductType>> {
 
-  return this._azureReservationsApi.getAzureReservationProductTypes(query).pipe(
-    catchError((error) =>
-      this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getReservationProductTypes'))
-    ),
-    map((response) => this._mapToCollection(response.content, response.totalCount))
-  );
-}
+    return this._azureReservationsApi.getAzureReservationProductTypes(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getReservationProductTypes'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
 
   public getAzureSoftwareSubscriptions(query?: McsQueryParam): Observable<McsApiCollection<McsAzureSoftwareSubscription>> {
     return this._mapToEntityRecords(this._azureSoftwareSubscriptionsRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureSoftwareSubscriptions'))
       )
+    );
+  }
+
+  public getBillingSummaries(
+    query?: McsReportBillingSummaryParams
+  ): Observable<McsApiCollection<McsReportBillingServiceGroup>> {
+    return this._reportsApi.getBillingSummaries(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBillingSummaries'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
@@ -2389,7 +2402,7 @@ export class McsApiService {
     );
   }
 
-  public reserveNetworkVlan(networkId: string, payload: McsNetworkDbNetworkReserve) : Observable<McsJob> {
+  public reserveNetworkVlan(networkId: string, payload: McsNetworkDbNetworkReserve): Observable<McsJob> {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbNetwork, networkId);
 
     return this._networkDbApi.reserveNetworkVlan(networkId, payload).pipe(
@@ -2402,7 +2415,7 @@ export class McsApiService {
     );
   }
 
-  public recycleNetworkVlan(id: string, payload: McsNetworkDbVlanAction) : Observable<McsJob> {
+  public recycleNetworkVlan(id: string, payload: McsNetworkDbVlanAction): Observable<McsJob> {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbVlan, id);
 
     return this._networkDbApi.recycleNetworkVlan(id, payload).pipe(
@@ -2415,7 +2428,7 @@ export class McsApiService {
     );
   }
 
-  public reclaimNetworkVlan(id: string, payload: McsNetworkDbVlanAction) : Observable<McsJob> {
+  public reclaimNetworkVlan(id: string, payload: McsNetworkDbVlanAction): Observable<McsJob> {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.NetworkDbVlan, id);
 
     return this._networkDbApi.reclaimNetworkVlan(id, payload).pipe(

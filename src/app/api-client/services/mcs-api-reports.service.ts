@@ -1,33 +1,37 @@
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
 import {
-  McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsReportGenericItem,
-  McsReportIntegerData,
-  McsReportSubscription,
-  McsReportCostRecommendations,
-  McsReportServiceChangeInfo,
-  McsReportVMRightsizing,
+  McsApiSuccessResponse,
   McsQueryParam,
-  McsReportVMRightsizingSummary,
+  McsReportAscAlerts,
+  McsReportAuditAlerts,
+  McsReportBillingServiceGroup,
+  McsReportBillingSummaryParams,
+  McsReportCostRecommendations,
+  McsReportGenericItem,
+  McsReportInefficientVms,
+  McsReportIntegerData,
+  McsReportManagementService,
+  McsReportMonitoringAndAlerting,
   McsReportOperationalSavings,
+  McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
-  McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance,
-  McsRightSizingQueryParams,
-  McsReportManagementService,
-  McsReportUpdateManagement,
-  McsReportAuditAlerts,
-  McsReportInefficientVms,
+  McsReportServiceChangeInfo,
+  McsReportSubscription,
   McsReportTopVmsByCost,
-  McsReportAscAlerts
+  McsReportUpdateManagement,
+  McsReportVMRightsizing,
+  McsReportVMRightsizingSummary,
+  McsRightSizingQueryParams
 } from '@app/models';
-import { McsApiClientHttpService } from '../mcs-api-client-http.service';
-import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
 import { isNullOrEmpty } from '@app/utilities';
+
+import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
+import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 
 @Injectable()
 export class McsApiReportsService implements IMcsApiReportsService {
@@ -379,7 +383,8 @@ export class McsApiReportsService implements IMcsApiReportsService {
   public getAuditAlerts(
     periodStart?: string,
     periodEnd?: string,
-    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>> {
+    subscriptionIds?: string[]
+  ): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>> {
     let searchParams = new Map<string, any>();
     searchParams.set('period_start', periodStart);
     searchParams.set('period_end', periodEnd);
@@ -404,7 +409,8 @@ export class McsApiReportsService implements IMcsApiReportsService {
 
   public getInefficientVms(
     period?: string,
-    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>> {
+    subscriptionIds?: string[]
+  ): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>> {
     let searchParams = new Map<string, any>();
     searchParams.set('period', period);
     if (!isNullOrEmpty(subscriptionIds)) {
@@ -444,5 +450,24 @@ export class McsApiReportsService implements IMcsApiReportsService {
           return apiResponse;
         })
       );
+  }
+
+  public getBillingSummaries(
+    query?: McsReportBillingSummaryParams
+  ): Observable<McsApiSuccessResponse<McsReportBillingServiceGroup[]>> {
+    if (isNullOrEmpty(query)) { query = new McsReportBillingSummaryParams(); }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/billing';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => {
+        let apiResponse = McsApiSuccessResponse.deserializeResponse<McsReportBillingServiceGroup[]>(
+          McsReportBillingServiceGroup, response
+        );
+        return apiResponse;
+      })
+    );
   }
 }
