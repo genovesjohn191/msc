@@ -1,18 +1,23 @@
 .chart-list {
   @include display-flex(column);
+  max-width: 30rem;
 
   .chart-title {
     display: block;
-    font-weight: normal;
-    padding: $space-small;
+    padding: $space-xsmall;
     border-bottom: 1px solid $border-color-light;
+    background-color: get-color($color-definitions, light, base);
+    @include font-size(12);
   }
 
   .chart-item {
+    padding: 0 $space-xsmall;
     @include display-flex(row);
-    @include align-items(center);
     @include set-items-interval(8px, horizontal);
-    font-weight: 200 !important;
-    $padding: $space-small !important;
+    @include font-size(12);
+
+    .chart-value {
+      white-space: pre-wrap;
+    }
   }
 }
