@@ -13,6 +13,7 @@ import { FieldInputNumberArrowComponent } from './field-input-number-arrow/field
 import { FieldInputTimePickerComponent } from './field-input-time-picker.component/field-input-time-picker.component';
 import { FieldInputUrlComponent } from './field-input-url/field-input-url.component';
 import { FieldInputComponent } from './field-input/field-input.component';
+import { FieldSelectBillingAccountComponent } from './field-select-billing-account/field-select-billing-account.component';
 import { FieldSelectContactComponent } from './field-select-contact/field-select-contact.component';
 import { FieldSelectDnsZoneTypeComponent } from './field-select-dns-zone-type/field-select-dns-zone-type.component';
 import { FieldSelectTreeViewComponent } from './field-select-tree-view/field-select-tree-view.component';
@@ -42,6 +43,7 @@ const exports: any[] | Type<any> = [
   FieldSelectContactComponent,
   FieldSelectDnsZoneTypeComponent,
   FieldSelectTreeViewComponent,
+  FieldSelectBillingAccountComponent,
   OrderListBoxComponent,
   SelectColocationDeviceComponent,
   SelectManagementTagComponent

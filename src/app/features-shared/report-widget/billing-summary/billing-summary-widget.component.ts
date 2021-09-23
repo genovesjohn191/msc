@@ -17,10 +17,8 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -54,9 +52,12 @@ import { BillingSummaryItem } from './billing-summary-item';
     'class': 'widget-box'
   }
 })
-export class BillingSummaryWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
+export class BillingSummaryWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   @Input()
-  public billingAccountId: string;
+  public set billingAccountId(accountId: string) {
+    this._billingAccountId = accountId;
+    this.getBillingSummaries();
+  }
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
@@ -68,6 +69,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
   private _billingSummaryItemsMap = new Map<string, BillingSummaryItem[]>();
   private _billingSummaryTooltipMap = new Map<number, BillingSummaryItem>();
+
+  private _billingAccountId: string = undefined;
 
   public constructor(
     private _translate: TranslateService,
@@ -100,12 +103,6 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
   public ngOnInit(): void {
     this._subscribeToChartItemsChange();
-    this.getBillingSummaries();
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    let billingAccountIdChange = changes['billingAccountId'];
-    if (!isNullOrEmpty(billingAccountIdChange)) { this.getBillingSummaries(); }
   }
 
   public ngOnDestroy(): void {
@@ -119,7 +116,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     this._changeDetectorRef.markForCheck();
 
     let apiQuery = new McsReportBillingSummaryParams();
-    apiQuery.billingAccountId = this.billingAccountId;
+    apiQuery.billingAccountId = this._billingAccountId;
 
     this._apiService.getBillingSummaries(apiQuery).pipe(
       map(billingSummaries => {

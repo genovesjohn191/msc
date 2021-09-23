@@ -1,6 +1,28 @@
-<mcs-page [header]="'label.billing' | translate">
+<mcs-page [header]="'label.billSummary' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div mcsAlign="end" padding-right-xlarge>
+        <mcs-field-select-billing-account [formControl]="fcBillingAccount"></mcs-field-select-billing-account>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
   <!-- Page Content -->
   <mcs-content-panel *mcsContentPanelDef>
+    <mcs-item orientation="inline" padding-bottom-xlarge>
+      <div padding-right-medium><mcs-icon [key]="statusIconKey" size="large"></mcs-icon></div>
+      <div>
+        {{ headerDescription }} <br/>{{ headerSecondDescription }}
+        <a href="{{ learnMoreLink }}"
+          target="_blank"
+          mcsId="azure-performance"
+          mcsEventTracker="navigate-to-macquarie-view"
+          mcsEventCategory="billing-sumamry-navigation"
+          mcsEventLabel="learn-more-link">Learn more</a>
+      </div>
+    </mcs-item>
+
     <div class="routing-tab-wrapper" *mcsComponentHandler>
       <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
         <!-- Summary Tab -->
