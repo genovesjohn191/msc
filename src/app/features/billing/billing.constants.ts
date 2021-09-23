@@ -3,6 +3,7 @@ import { McsPublicCloudOnlyGuard } from '@app/core/guards/mcs-public-cloud-only.
 import { RouteKey } from '@app/models';
 
 import { BillingComponent } from './billing.component';
+import { BillingSummaryService } from './billing.service';
 import { BillingServiceComponent } from './service/billing-service.component';
 import { BillingSummaryComponent } from './summary/billing-summary.component';
 import { BillingTabularComponent } from './tabular/billing-tabular.component';
@@ -11,6 +12,7 @@ import { BillingTabularComponent } from './tabular/billing-tabular.component';
  * List of services for the main module
  */
 export const billingProviders: any[] = [
+  BillingSummaryService
 ];
 
 /**

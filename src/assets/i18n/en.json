@@ -332,6 +332,15 @@
           }
         }
       }
+    },
+    "billing": {
+      "description": "View the composition of your bill - from an aggregated spend level, down to individual service charges.",
+      "secondDescription": "Please note that values shown below are not inclusive of GST and projected figures do not include CSP License or Software Subscription charges.",
+      "learnMoreLink": "http://kb.macquarieview.com/display/CKB/Customer+Guide+-+Macquarie+Managed+Azure+on+CloudHealth#CustomerGuide-MacquarieManagedAzureonCloudHealth-DiscrepanciesbetweenAzurebillsandCloudHealthreports",
+      "billingAccountDropdown": {
+        "label": "Billing Accounts",
+        "tooltip": "Billing accounts with public cloud services will be listed here."
+      }
     }
   },
   "orders": {
@@ -3373,7 +3382,7 @@
     "microsoftIdentifier": "Microsoft Identifier",
     "microsoftChargeMonth": "Microsoft Charge Month",
     "macquarieBillMonth": "Macquarie Bill Month",
-    "billing": "Billing",
+    "billSummary": "Bill Summary",
     "summary": "Summary",
     "byService": "By Service",
     "tabular": "Tabular",

@@ -17,10 +17,8 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -52,10 +50,12 @@ import { BillingServiceItem } from './billing-service-item';
     'class': 'widget-box'
   }
 })
-export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
-
+export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
   @Input()
-  public billingAccountId: string;
+  public set billingAccountId(accountId: string) {
+    this._billingAccountId = accountId;
+    this.getBillingSummaries();
+  }
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
@@ -65,6 +65,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();
   private _billingServiceTooltipMap = new Map<number, BillingServiceItem>();
+
+  private _billingAccountId: string = undefined;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -97,12 +99,6 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
   public ngOnInit() {
     this._subscribeToChartItemsChange();
-    this.getBillingSummaries();
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    let billingAccountIdChange = changes['billingAccountId'];
-    if (!isNullOrEmpty(billingAccountIdChange)) { this.getBillingSummaries(); }
   }
 
   public ngOnDestroy(): void {
@@ -116,7 +112,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     this._changeDetectorRef.markForCheck();
 
     let apiQuery = new McsReportBillingSummaryParams();
-    apiQuery.billingAccountId = this.billingAccountId;
+    apiQuery.billingAccountId = this._billingAccountId;
 
     this._apiService.getBillingSummaries(apiQuery).pipe(
       map(billingSummaries => {

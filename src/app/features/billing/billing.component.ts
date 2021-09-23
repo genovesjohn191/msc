@@ -1,7 +1,11 @@
+import { FormControl } from '@angular/forms';
+
+import { takeUntil } from 'rxjs/operators';
 import {
   of,
   Observable,
-  Subscription
+  Subscription,
+  Subject
 } from 'rxjs';
 
 import {
@@ -19,9 +23,12 @@ import {
   RouteKey
 } from '@app/models';
 import {
+  CommonDefinition,
   getSafeProperty,
   unsubscribeSafely
 } from '@app/utilities';
+import { BillingSummaryService } from './billing.service';
+import { TranslateService } from '@ngx-translate/core';
 
 type tabGroupType = 'summary' | 'service' | 'tabular';
 
@@ -33,14 +40,37 @@ type tabGroupType = 'summary' | 'service' | 'tabular';
 export class BillingComponent implements OnInit, OnDestroy {
   public selectedTabId$: Observable<string>;
 
+  public fcBillingAccount: FormControl;
+
   private _routerHandler: Subscription;
+  private _destroySubject = new Subject<void>();
 
   public constructor(
+    private _billingSummaryService: BillingSummaryService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
-    private _navigationService: McsNavigationService
+    private _navigationService: McsNavigationService,
+    private _translate: TranslateService
   ) {
     this._registerEvents();
+    this._registerFormControl();
+    this._subscribeToBillingAccountControlChanges();
+  }
+
+  public get headerDescription(): string {
+    return this._translate.instant('reports.billing.description');
+  }
+
+  public get headerSecondDescription(): string {
+    return this._translate.instant('reports.billing.secondDescription');
+  }
+
+  public get learnMoreLink(): string {
+    return this._translate.instant('reports.billing.learnMoreLink');
+  }
+
+  public get statusIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_INFO;
   }
 
   public ngOnInit(): void {
@@ -65,5 +95,21 @@ export class BillingComponent implements OnInit, OnDestroy {
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
         this.selectedTabId$ = of(tabUrl);
       });
+  }
+
+  private _registerFormControl(): void {
+    this.fcBillingAccount = new FormControl('', []);
+  }
+
+  private _subscribeToBillingAccountControlChanges(): void {
+    this.fcBillingAccount.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+    ).subscribe(change => {
+      this._onBillingAccountIdChange(change);
+    });
+  }
+
+  private _onBillingAccountIdChange(accountIds: string[]): void {
+    this._billingSummaryService.setBillingAccountId(accountIds);
   }
 }
