@@ -1,12 +1,19 @@
 import {
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  shareReplay,
+  takeUntil
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { McsNavigationService } from '@app/core';
-import { EventBusDispatcherService } from '@app/event-bus';
+
 import { BillingSummaryService } from '../billing.service';
 
 @Component({
@@ -15,16 +22,13 @@ import { BillingSummaryService } from '../billing.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BillingServiceComponent implements OnInit, OnDestroy {
+  public billingAccountId$: Observable<string>;
 
-  public billingAccountId: string;
+  private _destroySubject = new Subject<void>();
 
   public constructor(
-    private _billingSummaryService: BillingSummaryService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _navigationService: McsNavigationService
+    private _billingSummaryService: BillingSummaryService
   ) {
-    this.billingAccountId = this._billingSummaryService.getBillingAccountId();
   }
 
   public ngOnInit(): void {
@@ -35,13 +39,12 @@ export class BillingServiceComponent implements OnInit, OnDestroy {
   }
 
   public onUpdateChart(data: any): void {
-    console.log('on chart change', data);
   }
 
   private _subscribeToBillingAccountIdChange(): void {
-    this._billingSummaryService.accountIdChanged.subscribe((accountId) => {
-      this.billingAccountId = accountId;
-      this._changeDetectorRef.markForCheck();
-    })
+    this.billingAccountId$ = this._billingSummaryService.accountIdChanged.pipe(
+      takeUntil(this._destroySubject),
+      shareReplay(1)
+    );
   }
 }

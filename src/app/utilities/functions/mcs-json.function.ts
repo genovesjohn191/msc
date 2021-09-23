@@ -1,10 +1,10 @@
-import { isArray } from './mcs-array.function';
-import { isNullOrEmpty } from './mcs-object.function';
-import { serialize } from '../json-serializer/json-serializer';
 import {
   deserialize,
   IJsonObject
 } from '../json-serializer/json-deserializer';
+import { serialize } from '../json-serializer/json-serializer';
+import { isArray } from './mcs-array.function';
+import { isNullOrEmpty } from './mcs-object.function';
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
@@ -84,8 +84,12 @@ export function convertMapToJsonObject(
 /**
  * Returns the converted json into map
  * @param json Json object to be converted
+ * @param removeEmptyValues Remove values if flag was set to true
  */
-export function convertJsonToMapObject<T>(json: string): Map<string, T> {
+export function convertJsonToMapObject<T>(
+  json: string,
+  removeEmptyValues: boolean = false
+): Map<string, T> {
   let mapObject = new Map<string, T>();
   if (isNullOrEmpty(json)) { return mapObject; }
 
@@ -93,7 +97,11 @@ export function convertJsonToMapObject<T>(json: string): Map<string, T> {
   let jsonKeys = Object.keys(json);
   if (!isNullOrEmpty(jsonKeys)) {
     jsonKeys.forEach((key) => {
-      mapObject.set(key, json[key]);
+      let jsonValue = json[key];
+      let isEmpty = isNullOrEmpty(jsonValue);
+      if (removeEmptyValues && isEmpty) { return; }
+
+      mapObject.set(key, jsonValue);
     });
   }
   return mapObject;

@@ -1,23 +1,24 @@
-import { Injectable } from '@angular/core';
 import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpResponse,
-  HttpClient
-} from '@angular/common/http';
-import {
-  Observable,
-  of
+  of,
+  Observable
 } from 'rxjs';
 import {
-  mergeMap,
-  materialize,
   delay,
-  dematerialize
+  dematerialize,
+  materialize,
+  mergeMap
 } from 'rxjs/operators';
+
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { IJsonObject } from '@app/utilities';
+
 import { McsApiClientConfig } from '../mcs-api-client.config';
 
 @Injectable({ providedIn: 'root' })
@@ -42,8 +43,8 @@ export class McsApiMockInterceptor implements HttpInterceptor {
 
   public handleApiRoute(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     switch (true) {
-      case request.url.endsWith('/available-item-types') && request.method === 'GET':
-        return this._mapSuccessApi(this._jsonObject.orderAvailableItemTypes);
+      case request.url.endsWith('/billing') && request.method === 'GET':
+        return this._mapSuccessApi(this._jsonObject.apiResponse);
       default:
         return next.handle(request);
     }

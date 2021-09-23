@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
+import * as moment from 'moment-timezone';
+
 import { formatDate } from '@angular/common';
+import { Injectable } from '@angular/core';
 import {
-  isNullOrEmpty,
   convertDateTimezoneToUTC,
   isDateFormatValid,
-  CommonDefinition
+  isNullOrEmpty
 } from '@app/utilities';
-
-import * as moment from 'moment-timezone';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
   'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly' |
-  'noYearDateShortTime' | 'longDateShortTime';
+  'noYearDateShortTime' | 'longDateShortTime' | 'shortMonthYear' | 'fullMonthYear';
 
 @Injectable()
 export class McsDateTimeService {
@@ -99,5 +98,7 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('isoDate', 'YYYY-MM-DD[T]HH:mm');
     this._dateTimeMapTable.set('noYearDateShortTime', 'ddd, DD MMM, h:mm A');
     this._dateTimeMapTable.set('longDateShortTime', 'ddd, DD MMM YYYY, h:mm A');
+    this._dateTimeMapTable.set('shortMonthYear', 'MMM YYYY');
+    this._dateTimeMapTable.set('fullMonthYear', 'MMMM YYYY');
   }
 }
