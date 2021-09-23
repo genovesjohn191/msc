@@ -354,6 +354,19 @@
               </li>
             </ul>
           </li>
+
+          <!-- Billing -->
+          <li>
+            <a [mcsRouterLink]="routeKeyEnum.Billing"
+              mcsId="billing-link"
+              mcsEventTracker="navigate-to-billing"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav"
+              mcsRouterLinkActive="active">
+              {{ 'navigation.billing' | translate }}
+            </a>
+          </li>
+
           <!-- Azure -->
           <li>
             <a (click)="toggleThis('showAzureSubMenu')"

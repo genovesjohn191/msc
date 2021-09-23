@@ -1,144 +1,171 @@
 {
-  "orderAvailableItemTypes": {
+  "apiResponse": {
     "status": 200,
-    "totalCount": 1,
+    "totalCount": 2,
     "content": [
       {
-        "id": "ec15fadb-8373-4b03-9b9e-52af8611767b",
-        "name": "Product",
-        "type": "product",
-        "platforms": [
+        "macquarieBillMonth": "2021-11-01",
+        "microsoftChargeMonth": "2021-09-01",
+        "isProjection": true,
+        "parentServices": [
           {
-            "id": "79d7e398-e1f4-4346-95da-c33cacea961a",
-            "name": "Private Cloud",
-            "type": "private-cloud",
-            "families": [
+            "markupPercent": 0.45,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 3000,
+            "childBillingServices": [
               {
-                "id": "be8a3117-a42e-4a08-80bc-5006789322e7",
-                "name": "Compute",
-                "type": "compute",
-                "groups": [
-                  {
-                    "id": "0b386eda-0f56-4e04-a5dd-d5380636fadf",
-                    "name": "Servers",
-                    "type": "Servers",
-                    "availableOrderItemTypes": [
-                      {
-                        "id": "22bceced-dca3-4050-ac8f-1ce8062df5ec",
-                        "productId": "87d085b0-db97-1bc0-da04-3a9e7c961902",
-                        "orderType": "New",
-                        "productOrderType": "servers.vcloud.provision",
-                        "orderName": "Managed Server",
-                        "orderAction": "Deploy a managed server",
-                        "description": "Virtual Data Centre VM Instance",
-                        "automatedProvisioningAvailable": true,
-                        "icon": "",
-                        "displayOrder": 1
-                      },
-                      {
-                        "id": "82193c17-0a0b-46aa-98bc-9b26f9bba0ef",
-                        "productId": "87d085b0-db97-1bc0-da04-3a9e7c961902",
-                        "orderType": "Change",
-                        "productOrderType": "servers.vcloud.update",
-                        "orderName": "Managed Server",
-                        "orderAction": "Scale a managed server compute",
-                        "description": "Scale Virtual Data Centre VM Instance",
-                        "automatedProvisioningAvailable": true,
-                        "icon": "",
-                        "displayOrder": 2
-                      },
-                      {
-                        "id": "e151dc3e-30bd-494c-8a2f-26bc032a963c",
-                        "productId": "87d085b0-db97-1bc0-da04-3a9e7c961902",
-                        "orderType": "Change",
-                        "productOrderType": "servers.inview.raise",
-                        "orderName": "Managed Server",
-                        "orderAction": "Raise inview level of a managed server",
-                        "description": "Raise CVM Inview Level",
-                        "automatedProvisioningAvailable": true,
-                        "icon": "",
-                        "displayOrder": 3
-                      }
-                    ]
-                  },
-                  {
-                    "id": "0cef1495-537e-4b8b-837f-b9f8c0a57378",
-                    "name": "Backup",
-                    "type": "Backup",
-                    "availableOrderItemTypes": [
-                      {
-                        "id": "d5c1298f-534c-4356-8b3a-9db36f8fa80f",
-                        "productId": "8c56aec2-4ff4-1740-45af-cf401310c7d6",
-                        "orderType": "New",
-                        "productOrderType": "backups.server.provision",
-                        "orderName": "Server Backup",
-                        "orderAction": "Provision Server Backup",
-                        "description": "Server Backup",
-                        "automatedProvisioningAvailable": false,
-                        "icon": "",
-                        "displayOrder": 1
-                      },
-                      {
-                        "id": "6ec94ad7-0f09-4bef-97a3-0e0c22c38676",
-                        "productId": "bb094faf-4fc9-93c0-c481-a90f0310c77b",
-                        "orderType": "New",
-                        "productOrderType": "backups.vm.provision",
-                        "orderName": "VM Backup",
-                        "orderAction": "Provision VM Backup",
-                        "description": "VM Backup",
-                        "automatedProvisioningAvailable": false,
-                        "icon": "",
-                        "displayOrder": 2
-                      }
-                    ]
-                  },
-                  {
-                    "id": "6cfb6873-6307-4194-8d85-71ce91b5ec97",
-                    "name": "VDC",
-                    "type": "VDC",
-                    "availableOrderItemTypes": [
-                      {
-                        "id": "6304db7a-7aca-4bf7-aa80-991c26117c8e",
-                        "productId": "6d884cff-4fd0-9700-c61c-a8fe0310c785",
-                        "orderType": "Change",
-                        "productOrderType": "resources.vdc.compute.update",
-                        "orderName": "Scale VDC Compute",
-                        "orderAction": "Scale VDC Compute",
-                        "description": "Scale VDC Compute",
-                        "automatedProvisioningAvailable": true,
-                        "icon": "",
-                        "displayOrder": 1
-                      },
-                      {
-                        "id": "6ade4d8f-2170-411a-8b17-f9e188bb7b16",
-                        "productId": "e95cc62b-4f11-9704-c481-a90f0310c7f2",
-                        "orderType": "Change",
-                        "productOrderType": "resources.vdc.storage.update",
-                        "orderName": "Expand VDC Storage",
-                        "orderAction": "Expand VDC Storage",
-                        "description": "Expand VDC Storage",
-                        "automatedProvisioningAvailable": true,
-                        "icon": "",
-                        "displayOrder": 2
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "id": "b546d299-d8be-4f51-bf5e-36301194ec2c",
-                "name": "Security",
-                "type": "security",
-                "groups": [
-                  {
-                    "id": "1f682dc3-cfe5-45ab-9d1c-ada1482e961b",
-                    "name": "Host Security",
-                    "type": "Host Security",
-                    "availableOrderItemTypes": []
-                  }
-                ]
+                "id": "bc073aa7-2162-4e8a-87b5-d263e61dac51",
+                "active": true,
+                "billingAccountId": "28603",
+                "finalChargeDollars": 172.58,
+                "serviceId": "AZPCM28603020",
+                "billingDescription": "Azure Product Consumption",
+                "productType": "Azure Product Consumption",
+                "azureDescription": "Azure - Legacy Subscription",
+                "installedQuantity": 0,
+                "discountPercent": 0,
+                "tenant": {
+                  "id": "f5cdbbf2-f821-4d0d-9159-5925948659f1",
+                  "name": "MCS Legacy Azure",
+                  "initialDomain": "mcslegacyazure.onmicrosoft.com",
+                  "primaryDomain": "mcslegacyazure.onmicrosoft.com"
+                },
+                "microsoftId": "53D7C75D-0D3F-4C08-BB76-B52FB10349EB"
               }
-            ]
+            ],
+            "id": "0e883d53-790e-470c-a1c5-3d17f7d279f2",
+            "active": true,
+            "billingAccountId": "28603",
+            "finalChargeDollars": 172.58,
+            "serviceId": "AZMCP28603002",
+            "billingDescription": "Managed Azure CSP",
+            "productType": "Managed Azure CSP\t",
+            "azureDescription": null,
+            "installedQuantity": 0,
+            "discountPercent": null,
+            "tenant": null,
+            "microsoftId": null
+          },
+          {
+            "markupPercent": 0.45,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 3000,
+            "childBillingServices": [
+              {
+                "id": "d478bfcc-3d2d-4cca-9260-33e9a140d863",
+                "active": true,
+                "billingAccountId": "28603",
+                "finalChargeDollars": 74.76,
+                "serviceId": "AZPCM28603016",
+                "billingDescription": "Azure Product Consumption",
+                "productType": "Azure Product Consumption",
+                "azureDescription": "test",
+                "installedQuantity": 0,
+                "discountPercent": 0,
+                "tenant": {
+                  "id": "6d6e9562-7f49-43e9-985c-f2c293f04075",
+                  "name": "MCS Test",
+                  "initialDomain": "mcstest104220v7.onmicrosoft.com",
+                  "primaryDomain": "mcstest104220v7.onmicrosoft.com"
+                },
+                "microsoftId": "563BC89E-837C-4F4A-ADAB-E23D20400D01"
+              }
+            ],
+            "id": "91088a8f-c238-4d7d-bcc6-f1a28202c92c",
+            "active": true,
+            "billingAccountId": "28603",
+            "finalChargeDollars": 74.76,
+            "serviceId": "AZMCP28603001",
+            "billingDescription": "Managed Azure CSP",
+            "productType": "Managed Azure CSP\t",
+            "azureDescription": null,
+            "installedQuantity": 0,
+            "discountPercent": null,
+            "tenant": null,
+            "microsoftId": null
+          }
+        ]
+      },
+      {
+        "macquarieBillMonth": "2021-10-01",
+        "microsoftChargeMonth": "2021-08-01",
+        "isProjection": true,
+        "parentServices": [
+          {
+            "markupPercent": 0.45,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 3000,
+            "childBillingServices": [
+              {
+                "id": "9c8562b5-9732-46c4-a290-1111770d4d57",
+                "active": true,
+                "billingAccountId": "28603",
+                "finalChargeDollars": 254.3,
+                "serviceId": "AZPCM28603020",
+                "billingDescription": "Azure Product Consumption",
+                "productType": "Azure Product Consumption",
+                "azureDescription": "Azure - Legacy Subscription",
+                "installedQuantity": 0,
+                "discountPercent": 0,
+                "tenant": {
+                  "id": "f5cdbbf2-f821-4d0d-9159-5925948659f1",
+                  "name": "MCS Legacy Azure",
+                  "initialDomain": "mcslegacyazure.onmicrosoft.com",
+                  "primaryDomain": "mcslegacyazure.onmicrosoft.com"
+                },
+                "microsoftId": "53D7C75D-0D3F-4C08-BB76-B52FB10349EB"
+              }
+            ],
+            "id": "fd771951-817f-4a32-b4b9-c2b27eba1ff2",
+            "active": true,
+            "billingAccountId": "28603",
+            "finalChargeDollars": 254.3,
+            "serviceId": "AZMCP28603002",
+            "billingDescription": "Managed Azure CSP",
+            "productType": "Managed Azure CSP\t",
+            "azureDescription": null,
+            "installedQuantity": 0,
+            "discountPercent": null,
+            "tenant": null,
+            "microsoftId": null
+          },
+          {
+            "markupPercent": 0.45,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 3000,
+            "childBillingServices": [
+              {
+                "id": "8ef7df3c-6a02-4fcf-b71f-f92510c5d883",
+                "active": true,
+                "billingAccountId": "28603",
+                "finalChargeDollars": 105.7,
+                "serviceId": "AZPCM28603016",
+                "billingDescription": "Azure Product Consumption",
+                "productType": "Azure Product Consumption",
+                "azureDescription": "test",
+                "installedQuantity": 0,
+                "discountPercent": 0,
+                "tenant": {
+                  "id": "6d6e9562-7f49-43e9-985c-f2c293f04075",
+                  "name": "MCS Test",
+                  "initialDomain": "mcstest104220v7.onmicrosoft.com",
+                  "primaryDomain": "mcstest104220v7.onmicrosoft.com"
+                },
+                "microsoftId": "563BC89E-837C-4F4A-ADAB-E23D20400D01"
+              }
+            ],
+            "id": "0d8ed387-3c74-4c85-973a-edc2babc98f0",
+            "active": true,
+            "billingAccountId": "28603",
+            "finalChargeDollars": 105.69,
+            "serviceId": "AZMCP28603001",
+            "billingDescription": "Managed Azure CSP",
+            "productType": "Managed Azure CSP\t",
+            "azureDescription": null,
+            "installedQuantity": 0,
+            "discountPercent": null,
+            "tenant": null,
+            "microsoftId": null
           }
         ]
       }

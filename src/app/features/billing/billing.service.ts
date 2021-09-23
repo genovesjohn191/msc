@@ -1,23 +1,18 @@
 import {
   EventEmitter,
-  Injectable,
-  Output
+  Injectable
 } from '@angular/core';
 
 @Injectable()
 export class BillingSummaryService {
-
-  @Output()
   public accountIdChanged = new EventEmitter<string>();
 
   private _billingAccountId: string = '';
 
   public setBillingAccountId(accountId: string[]): void {
-    this._billingAccountId = accountId.join();
+    let nextBillingAccountId = accountId?.length > 0 ? accountId[0] : '';
+    if (this._billingAccountId === nextBillingAccountId) { return; }
+    this._billingAccountId = nextBillingAccountId;
     this.accountIdChanged.emit(this._billingAccountId);
-  }
-
-  public getBillingAccountId(): string {
-    return this._billingAccountId;
   }
 }

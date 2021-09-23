@@ -1,4 +1,6 @@
 <div>
-  <mcs-billing-service-widget [billingAccountId]="billingAccountId" (chartChange)="onUpdateChart($event)">
+  <mcs-billing-service-widget
+    [billingAccountId]="billingAccountId$ | async"
+    (chartChange)="onUpdateChart($event)">
   </mcs-billing-service-widget>
 </div>

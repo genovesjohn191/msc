@@ -117,10 +117,10 @@ export function getFriendlyTimespan(milleseconds: number): string {
   }
 
   let friendlyTimespan = '';
-  if (days > 0) { friendlyTimespan = `${days}d `}
-  if (hours > 0) { friendlyTimespan = `${friendlyTimespan}${hours}h `}
-  if (mins > 0 && days === 0) { friendlyTimespan = `${friendlyTimespan}${mins}m `}
-  if (secs > 0 && hours === 0) { friendlyTimespan = `${friendlyTimespan}${secs}s `}
+  if (days > 0) { friendlyTimespan = `${days}d ` }
+  if (hours > 0) { friendlyTimespan = `${friendlyTimespan}${hours}h ` }
+  if (mins > 0 && days === 0) { friendlyTimespan = `${friendlyTimespan}${mins}m ` }
+  if (secs > 0 && hours === 0) { friendlyTimespan = `${friendlyTimespan}${secs}s ` }
   return friendlyTimespan.trim();
 }
 
@@ -284,4 +284,15 @@ export function addMonthsToDate(date: Date, months: number = 1): Date {
   let resultDate = new Date(date);
   resultDate.setMonth(date.getMonth() + months);
   return resultDate;
+}
+
+/**
+ * Returns the date only from the given input excluding the time settings
+ */
+export function getDateOnly(date: Date | string): Date {
+  let actualDate =  (date instanceof Date) ? date : new Date(date);
+  actualDate.setSeconds(0);
+  actualDate.setMinutes(0);
+  actualDate.setHours(0);
+  return actualDate;
 }

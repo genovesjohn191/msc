@@ -17,8 +17,10 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -29,9 +31,12 @@ import {
 import { McsApiService } from '@app/services';
 import {
   ChartConfig,
-  ChartItem
+  ChartItem,
+  StdCurrencyFormatPipe,
+  StdDateFormatPipe
 } from '@app/shared';
 import {
+  getDateOnly,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
@@ -50,12 +55,9 @@ import { BillingServiceItem } from './billing-service-item';
     'class': 'widget-box'
   }
 })
-export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnDestroy {
+export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public set billingAccountId(accountId: string) {
-    this._billingAccountId = accountId;
-    this.getBillingSummaries();
-  }
+  public billingAccountId: string;
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
@@ -71,7 +73,9 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _datePipe: StdDateFormatPipe,
+    private _currencyPipe: StdCurrencyFormatPipe
   ) {
     super();
 
@@ -90,15 +94,16 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         customFormatter: this._tooltipCustomFormatter.bind(this)
       }
     };
-
-    // TODO(apascual): Remaining items for this
-    // 1. Add the hamburger on the widget
-    // 2. Update the tooltip settings (CspLicenses, and AzureSoftwareSubscription are not included)
-    // 3. Ask Daniel on what are the color to be set in the graph
   }
 
   public ngOnInit() {
     this._subscribeToChartItemsChange();
+    this.getBillingSummaries();
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    let billingAccountIdChange = changes['billingAccountId'];
+    if (!isNullOrEmpty(billingAccountIdChange)) { this.getBillingSummaries(); }
   }
 
   public ngOnDestroy(): void {
@@ -139,7 +144,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _valueYFormatter(val: number): string {
-    return !Number.isInteger(val) ? `${val.toFixed(2)}%` : `${val.toFixed()}%`;
+    return !Number.isInteger(val) ? `$${val.toFixed(2)}` : `$${val.toFixed()}`;
   }
 
   private _tooltipCustomFormatter(opts?: any): string {
@@ -148,7 +153,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     return this.generateCustomHtmlTooltip(serviceFound?.service, [
       new McsOption(
-        serviceFound.finalChargeDollars,
+        this._currencyPipe.transform(serviceFound.finalChargeDollars),
         this._translate.instant('label.total')
       ),
       new McsOption(
@@ -232,8 +237,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
           parentService.tenant?.initialDomain,
           parentService.tenant?.primaryDomain,
           parentService.microsoftId,
-          billingGroup.microsoftChargeMonth,
-          billingGroup.macquarieBillMonth
+          this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
+          this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear')
         ));
 
         // Append Child Services Data
@@ -248,8 +253,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
             childService.tenant?.initialDomain,
             childService.tenant?.primaryDomain,
             childService.microsoftId,
-            billingGroup.microsoftChargeMonth,
-            billingGroup.macquarieBillMonth
+            this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
+            this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear')
           ));
         });
       });
