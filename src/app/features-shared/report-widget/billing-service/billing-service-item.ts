@@ -10,6 +10,7 @@ export class BillingServiceItem {
     public initialDomain: string,
     public primaryDomain: string,
     public microsoftIdentifier: string,
+    public billingDescription: string,
     public microsoftChargeMonth: string,
     public macquarieBillMonth: string
   ) { }

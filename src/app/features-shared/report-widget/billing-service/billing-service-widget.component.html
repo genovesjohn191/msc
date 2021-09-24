@@ -1,3 +1,10 @@
+<mcs-item full-width>
+  <div mcsAlign="end">
+    <mcs-field-select-billing-service [billingServices]="billingServices" [formControl]="fcBillingService">
+    </mcs-field-select-billing-service>
+  </div>  
+</mcs-item>
+
 <div class="widget flat">
   <mcs-vertical-bar-chart
     *ngIf="!processing && !hasError"

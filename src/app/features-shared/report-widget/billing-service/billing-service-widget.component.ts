@@ -44,6 +44,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ReportWidgetBase } from '../report-widget.base';
 import { BillingServiceItem } from './billing-service-item';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'mcs-billing-service-widget',
@@ -63,6 +64,9 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   public chartItems$: Observable<ChartItem[]>;
   public hasError: boolean = false;
   public processing: boolean = true;
+  public billingServices: BillingServiceItem[] = [];
+
+  public fcBillingService: FormControl;
 
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();
@@ -78,6 +82,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     private _currencyPipe: StdCurrencyFormatPipe
   ) {
     super();
+    this._registerFormControl();
+    this._subscribeToBillingServiceControlChanges();
 
     this.chartConfig = {
       type: 'bar',
@@ -124,6 +130,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         if (isNullOrEmpty(billingSummaries)) { return []; }
 
         let flatRecords = this._getFlatBillingServices(billingSummaries?.collection);
+        this.billingServices = flatRecords;
         return this._convertFlatRecordsToChartItems(flatRecords);
       }),
       tap(chartItems => {
@@ -237,6 +244,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
           parentService.tenant?.initialDomain,
           parentService.tenant?.primaryDomain,
           parentService.microsoftId,
+          parentService.billingDescription,
           this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
           this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear')
         ));
@@ -253,6 +261,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
             childService.tenant?.initialDomain,
             childService.tenant?.primaryDomain,
             childService.microsoftId,
+            parentService.billingDescription,
             this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
             this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear')
           ));
@@ -267,5 +276,22 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     });
 
     return billingServiceItems;
+  }
+
+  private _registerFormControl(): void {
+    this.fcBillingService = new FormControl('', []);
+  }
+
+  private _subscribeToBillingServiceControlChanges(): void {
+    this.fcBillingService.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+    ).subscribe(change => {
+      this._onBillingServiceChange(change);
+    });
+  }
+
+  private _onBillingServiceChange(services: BillingServiceItem[]): void {
+    let serviceChartItems = this._convertFlatRecordsToChartItems(services);
+    this._chartItemsChange.next(serviceChartItems);
   }
 }

@@ -3,6 +3,7 @@ import {
   Type
 } from '@angular/core';
 import { SharedModule } from '@app/shared';
+import { FormFieldsModule } from '../form-fields/form-fields.module';
 
 import { AscAlertsWidgetComponent } from './asc-alerts/asc-alerts-widget.component';
 import { AuditAlertsWidgetComponent } from './audit-alerts/audit-alerts-widget.component';
@@ -61,7 +62,10 @@ const exports: any[] | Type<any> = [
 ];
 
 @NgModule({
-  imports: [ SharedModule ],
+  imports: [
+    FormFieldsModule,
+    SharedModule
+  ],
   declarations: [...exports],
   exports: [...exports]
 })
