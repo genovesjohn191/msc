@@ -1,12 +1,12 @@
 <mat-form-field
   [hidden]="!hasMultipleBillingAccount"
   appearance="outline" >
-  <mat-label>{{ 'reports.billing.billingAccountDropdown.label' | translate }}</mat-label>
+  <mat-label>{{ 'label.billingAccounts' | translate }}</mat-label>
 
   <mat-select multiple
     [formControl]="ngControl?.control"
     mcsTooltipPosition="bottom"
-    [mcsTooltip]="'reports.billing.billingAccountDropdown.tooltip' | translate"
+    [mcsTooltip]="'reports.billing.billingAccountDropdownTooltip' | translate"
     (selectionChange)="valueChange($event)">
     <mat-option *ngFor="let billingAccount of (billingAccounts$ | async)"
       [value]="billingAccount.value">

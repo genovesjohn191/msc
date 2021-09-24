@@ -337,10 +337,7 @@
       "description": "View the composition of your bill - from an aggregated spend level, down to individual service charges.",
       "secondDescription": "Please note that values shown below are not inclusive of GST and projected figures do not include CSP License or Software Subscription charges.",
       "learnMoreLink": "http://kb.macquarieview.com/display/CKB/Customer+Guide+-+Macquarie+Managed+Azure+on+CloudHealth#CustomerGuide-MacquarieManagedAzureonCloudHealth-DiscrepanciesbetweenAzurebillsandCloudHealthreports",
-      "billingAccountDropdown": {
-        "label": "Billing Accounts",
-        "tooltip": "Billing accounts with public cloud services will be listed here."
-      }
+      "billingAccountDropdownTooltip": "Billing accounts with public cloud services will be listed here."
     }
   },
   "orders": {
@@ -3183,7 +3180,8 @@
     "extendSession": "Something went wrong while extending session. Please try again.",
     "createNetworkDbNetwork": "Something went wrong while creating your network. Please try again.",
     "getAzureReservations": "Something went wrong while retrieving the list of reservations. Please try again.",
-    "getAzureSoftwareSubscriptions": "Something went wrong while retrieving the list of software subscriptions. Please try again."
+    "getAzureSoftwareSubscriptions": "Something went wrong while retrieving the list of software subscriptions. Please try again.",
+    "getBillingSummaries": "Something went wrong while retrieving billing summaries. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3426,6 +3424,7 @@
     "azureProduct": "Azure Product",
     "azureResources": "Azure Resources",
     "azureResponseSlg": "Azure Response SLG",
+    "billingAccounts": "Billing Accounts",
     "category": "Category",
     "closureDate": "Closure Date",
     "closureDetails": "Closure Details",
