@@ -355,15 +355,15 @@
             </ul>
           </li>
 
-          <!-- Billing -->
-          <li>
+          <!-- Bill Summary -->
+          <li *mcsAccessControl="['BillingView']">
             <a [mcsRouterLink]="routeKeyEnum.Billing"
-              mcsId="billing-link"
-              mcsEventTracker="navigate-to-billing"
+              mcsId="bill-summary-link"
+              mcsEventTracker="navigate-to-bill-summary"
               mcsEventCategory="navigation"
               mcsEventLabel="main-nav"
               mcsRouterLinkActive="active">
-              {{ 'navigation.billing' | translate }}
+              {{ 'navigation.billSummary' | translate }}
             </a>
           </li>
 

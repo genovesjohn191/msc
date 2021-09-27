@@ -38,6 +38,7 @@ import {
   StdDateFormatPipe
 } from '@app/shared';
 import {
+  compareDates,
   getDateOnly,
   isNullOrEmpty,
   unsubscribeSafely
@@ -46,6 +47,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ReportWidgetBase } from '../report-widget.base';
 import { BillingSummaryItem } from './billing-summary-item';
+
+const KEY_SEPARATOR = ':';
 
 @Component({
   selector: 'mcs-billing-summary-widget',
@@ -181,20 +184,40 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   private _convertBillingSummaryMapToChartItems(): ChartItem[] {
     if (isNullOrEmpty(this._billingSummaryItemsMap)) { return []; }
 
-    let chartItems = new Array<ChartItem>();
-    this._billingSummaryItemsMap.forEach((billingItems, productType) => {
+    // Convert to flat records
+    let billingSummaries = new Array<BillingSummaryItem>();
+    this._billingSummaryItemsMap.forEach((billingItems, productTypeKey) => {
       if (isNullOrEmpty(billingItems)) { return; }
 
       let totalChargeDollars = billingItems
         ?.map(item => item.finalChargeDollars)
         .reduce((total, next) => total + next, 0);
+      let productType = productTypeKey.split(KEY_SEPARATOR)[0];
 
+      billingSummaries.push(new BillingSummaryItem(
+        productType,
+        billingItems[0].microsoftChargeMonth,
+        billingItems[0].macquarieBillMonth,
+        totalChargeDollars,
+        billingItems[0].sortDate
+      ));
+    });
+
+    // Sort records
+    billingSummaries.sort((first, second) => {
+      return compareDates(first.sortDate, second.sortDate);
+    });
+
+    // Convert to chart items
+    let chartItems = new Array<ChartItem>();
+    billingSummaries?.forEach(billingSummary => {
       chartItems.push({
-        name: productType,
-        xValue: billingItems[0].microsoftChargeMonth,
-        yValue: totalChargeDollars
+        name: billingSummary.productType,
+        xValue: billingSummary.microsoftChargeMonth,
+        yValue: billingSummary.finalChargeDollars
       } as ChartItem);
     });
+
     return chartItems;
   }
 
@@ -205,18 +228,18 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       billingGroup.parentServices?.forEach(parentService => {
         // Append Parent Service
         this._appendBillingSummaryToMap(
-          parentService.productType,
-          this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
-          this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
+          this._generateItemKey(parentService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
+          billingGroup.microsoftChargeMonth,
+          billingGroup.macquarieBillMonth,
           parentService
         );
 
         // Append Child Services Data
         parentService?.childBillingServices?.forEach(childService => {
           this._appendBillingSummaryToMap(
-            childService.productType,
-            this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
-            this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
+            this._generateItemKey(childService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
+            billingGroup.microsoftChargeMonth,
+            billingGroup.macquarieBillMonth,
             childService
           );
         });
@@ -225,29 +248,31 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
     // Populate the tooltip items based on summary items map
     let seriesIndex = 0;
-    this._billingSummaryItemsMap.forEach((billingItems, productType) => {
+    this._billingSummaryItemsMap.forEach((billingItems, key) => {
 
       let totalChargeDollars = billingItems
         ?.map(item => item.finalChargeDollars)
         .reduce((total, next) => total + next, 0);
+      let productType = key.split(KEY_SEPARATOR)[0];
 
       this._billingSummaryTooltipMap.set(seriesIndex++, new BillingSummaryItem(
         productType,
         billingItems[0].microsoftChargeMonth,
         billingItems[0].macquarieBillMonth,
         totalChargeDollars,
+        getDateOnly(billingItems[0].microsoftChargeMonth),
         billingItems[0]
       ));
     });
   }
 
   private _appendBillingSummaryToMap(
-    productType: string,
+    productTypeKey: string,
     chargeMonth: string,
     billMonth: string,
     data: McsReportBillingService | McsReportBillingServiceSummary
   ): void {
-    let serviceFound = this._billingSummaryItemsMap.get(productType);
+    let serviceFound = this._billingSummaryItemsMap.get(productTypeKey);
     let services = serviceFound;
 
     let finalChargeDollars = data instanceof McsReportBillingService ?
@@ -255,17 +280,29 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
     if (!isNullOrEmpty(serviceFound)) {
       services.push(new BillingSummaryItem(
-        productType, chargeMonth, billMonth,
-        finalChargeDollars, data
+        productTypeKey,
+        this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),
+        this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
+        finalChargeDollars,
+        getDateOnly(chargeMonth),
+        data
       ));
       return;
     }
 
     services = new Array<BillingSummaryItem>();
     services.push(new BillingSummaryItem(
-      productType, chargeMonth, billMonth,
-      finalChargeDollars, data)
-    );
-    this._billingSummaryItemsMap.set(productType, services);
+      productTypeKey,
+      this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),
+      this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
+      finalChargeDollars,
+      getDateOnly(chargeMonth),
+      data
+    ));
+    this._billingSummaryItemsMap.set(productTypeKey, services);
+  }
+
+  private _generateItemKey(type: string, date: Date): string {
+    return `${type}${KEY_SEPARATOR}${date}`;
   }
 }
