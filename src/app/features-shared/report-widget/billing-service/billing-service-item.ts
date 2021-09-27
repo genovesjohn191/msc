@@ -12,6 +12,7 @@ export class BillingServiceItem {
     public microsoftIdentifier: string,
     public billingDescription: string,
     public microsoftChargeMonth: string,
-    public macquarieBillMonth: string
+    public macquarieBillMonth: string,
+    public sortDate: Date
   ) { }
 }

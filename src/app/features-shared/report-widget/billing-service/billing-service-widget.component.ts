@@ -23,6 +23,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import {
   McsOption,
   McsReportBillingServiceGroup,
@@ -36,6 +37,7 @@ import {
   StdDateFormatPipe
 } from '@app/shared';
 import {
+  compareDates,
   getDateOnly,
   isNullOrEmpty,
   unsubscribeSafely
@@ -44,7 +46,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ReportWidgetBase } from '../report-widget.base';
 import { BillingServiceItem } from './billing-service-item';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'mcs-billing-service-widget',
@@ -246,7 +247,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
           parentService.microsoftId,
           parentService.billingDescription,
           this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
-          this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear')
+          this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
+          getDateOnly(billingGroup.microsoftChargeMonth)
         ));
 
         // Append Child Services Data
@@ -263,10 +265,16 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
             childService.microsoftId,
             parentService.billingDescription,
             this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
-            this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear')
+            this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
+            getDateOnly(billingGroup.microsoftChargeMonth)
           ));
         });
       });
+    });
+
+    // Sort all billing services by month
+    billingServiceItems?.sort((first, second) => {
+      return compareDates(first.sortDate, second.sortDate);
     });
 
     // Populate billing services series index
