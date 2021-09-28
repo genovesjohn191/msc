@@ -47,6 +47,12 @@ export class McsOrderItemType extends McsEntityBase {
   @JsonProperty()
   public isSchedulable: boolean = undefined;
 
+  @JsonProperty()
+  public contractTermApplicable: boolean = undefined;
+
+  @JsonProperty()
+  public itemChangeType: string = undefined;
+
   /**
    * Returns whether the order item has lead time options
    */

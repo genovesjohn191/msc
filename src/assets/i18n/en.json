@@ -1827,7 +1827,8 @@
     "acceleratedLeadTimeNote": "For expedited delivery, our accelerated lead time is {{ acceleratedLeadTimeHours }}.",
     "billingDetails": {
       "header": "Billing Details",
-      "changeOrderNote": "The contract term and billing details for this service will remain as-is.",
+      "orderNoteWithoutContractTerm": "No contract term applies for this product.",
+      "orderNoteWithContractTerm": "The contract term and billing details for this service will remain as-is.",
       "contractTermPlaceholder": "Contract Term",
       "contractTermHelp": "Select a contract term for all items in this order.",
       "contractTermRequired": "You must select a contract term.",
