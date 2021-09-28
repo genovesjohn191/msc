@@ -97,7 +97,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   // Order items table
   public order$: Observable<McsOrder>;
-  public isOrderTypeChange$: Observable<boolean>;
+  public isOrderContractTermApplicable$: Observable<boolean>;
   public orderItemsColumns: string[];
   public orderDetailsView: OrderDetailsView;
   public dialogRef: DialogRef<TemplateRef<any>>;
@@ -448,7 +448,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       shareReplay(1)
     );
 
-    this.isOrderTypeChange$ = this.order$.pipe(
+    this.isOrderContractTermApplicable$ = this.order$.pipe(
       switchMap((order) => {
         let mainOrderItem = getSafeProperty(order, (obj) => obj.items[0]);
         if (isNullOrEmpty(mainOrderItem)) {
@@ -457,7 +457,7 @@ export class OrderComponent implements OnInit, OnDestroy {
         return this._apiService.getOrderItemTypes({ keyword: mainOrderItem.itemOrderType }).pipe(
           map((orderTypeDetails) => {
             let orderDetail = getSafeProperty(orderTypeDetails, (obj) => obj.collection[0]);
-            return !isNullOrEmpty(orderDetail) && orderDetail.itemType === ItemType.Change;
+            return !isNullOrEmpty(orderDetail) && !orderDetail.contractTermApplicable;
           }),
           shareReplay(1)
         );

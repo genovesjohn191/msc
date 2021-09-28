@@ -68,7 +68,8 @@ import {
   WorkflowStatus,
   McsPermission,
   McsFilterInfo,
-  Day
+  Day,
+  ItemChangeType
 } from '@app/models';
 import {
   WizardStepComponent,
@@ -184,7 +185,7 @@ export class StepOrderDetailsComponent
   public ngOnChanges(changes: SimpleChanges): void {
     let orderItemTypeChange = changes['orderItemType'];
     if (!isNullOrEmpty(orderItemTypeChange)) {
-      this._updateFormGroupByType();
+      this._updateFormGroupByContractTermApplicable();
       this._setOrderDescription();
       this._updateMinimumScheduleDate();
     }
@@ -221,6 +222,14 @@ export class StepOrderDetailsComponent
 
   public get orderTypeEnum(): any {
     return ItemType;
+  }
+
+  public get billingDetailsFallbackText(): string {
+    let orderHasContractTerm = this.orderItemType?.itemChangeType === ItemChangeType.Change;
+    if (orderHasContractTerm) {
+      return this._translate.instant('orderDetailsStep.billingDetails.orderNoteWithContractTerm');
+    }
+    return this._translate.instant('orderDetailsStep.billingDetails.orderNoteWithoutContractTerm');
   }
 
   public get hasLeadTimeOptions(): boolean {
@@ -453,11 +462,11 @@ export class StepOrderDetailsComponent
   }
 
   /**
-   * Updates the form group by order type
+   * Updates the form group by contract term applicable
    */
-  private _updateFormGroupByType(): void {
-    let itemType = getSafeProperty(this.orderItemType, (obj) => obj.itemType, ItemType.Change);
-    itemType === ItemType.Change ? this._setOrderChangeFormControls() : this._setOrderNewFormControls();
+  private _updateFormGroupByContractTermApplicable(): void {
+    let contractTermApplicable = getSafeProperty(this.orderItemType, (obj) => obj.contractTermApplicable);
+    !contractTermApplicable ? this._setOrderChangeFormControls() : this._setOrderNewFormControls();
   }
 
   /**
