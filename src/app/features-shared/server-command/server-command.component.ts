@@ -340,9 +340,9 @@ export class ServerCommandComponent {
       }
     });
 
-    let messageContentByState = this.server.isPoweredOff ?
-      this._translateService.instant('dialog.serverResetPassword.poweredOffMessage', { server_name: this.server.name }) :
-      this._translateService.instant('dialog.serverResetPassword.poweredOnMessage', { server_name: this.server.name });
+    let messageContentByState = this.server.isSelfManaged ?
+      this._translateService.instant('dialog.serverResetPassword.serviceTypeSelfManagedMessage', { server_name: this.server.name }) :
+      this._translateService.instant('dialog.serverResetPassword.serviceTypeManagedMessage', { server_name: this.server.name });
 
     let dialogData = {
       data: resetDetails,
