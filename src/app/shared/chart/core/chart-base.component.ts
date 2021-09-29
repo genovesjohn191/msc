@@ -41,6 +41,8 @@ export type ChartDataLabels = {
   enabled?: boolean;
   style?: ChartDataLabelsStyle,
   formatter?: (val: number, opts?: any) => string | number;
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export type ChartXAxis = {
@@ -56,17 +58,23 @@ export type ChartYAxis = {
 }
 
 export type ChartLegend = {
-  position?: string,
-  horizontalAlign?: string,
+  position?: 'top' | 'right' | 'bottom' | 'left',
+  horizontalAlign?: 'left' | 'center' | 'right',
   offsetX?: number,
   formatter?: (val: string, opts?: any) => string;
 }
 
 export type ChartTooltip = {
-  yTitleFormatter?:  (seriesName: string) => string;
+  yTitleFormatter?: (seriesName: string) => string;
   yValueFormatter?: (val: number, opts?: any) => string;
   xValueFormatter?: (val: number, opts?: any) => string;
   customFormatter?: (options: any) => string;
+}
+
+export type ChartPlotOptions = {
+  bar: {
+    columnWidth?: string;
+  }
 }
 
 export type ChartConfig = {
@@ -81,6 +89,7 @@ export type ChartConfig = {
   tooltip?: ChartTooltip;
   labels?: any[];
   colors?: string[];
+  plotOptions?: ChartPlotOptions;
 }
 
 type ChartOptions = {
@@ -126,7 +135,7 @@ export class ChartComponentBase {
       type: value.type,
       stacked: value.stacked,
       events: {
-        mounted: () =>  {
+        mounted: () => {
           this.getChartUri();
         }
       },
@@ -171,13 +180,26 @@ export class ChartComponentBase {
         style: {
           colors: [(opts) => { return '#000' }]
         },
-        formatter: value.dataLabels.formatter
+        formatter: value.dataLabels.formatter,
+        offsetX: value.dataLabels.offsetX,
+        offsetY: value.dataLabels.offsetY
       };
     }
 
     if (!isNullOrEmpty(value.legend)) {
       this.legend = {
-        formatter: value.legend.formatter
+        formatter: value.legend.formatter,
+        position: value.legend.position,
+        offsetX: value.legend.offsetX,
+        horizontalAlign: value.legend.horizontalAlign
+      };
+    }
+
+    if (!isNullOrEmpty(value.plotOptions)) {
+      this.plotOptions = {
+        bar: {
+          columnWidth: value.plotOptions?.bar?.columnWidth
+        }
       };
     }
 
@@ -212,9 +234,9 @@ export class ChartComponentBase {
       xaxis: this._xaxis,
       yaxis: this._yaxis,
       dataLabels: this._dataLabels,
-      plotOptions: this._plotOptions,
+      plotOptions: this.plotOptions,
       stroke: this._stroke,
-      legend: this._legend,
+      legend: this.legend,
       title: this._title,
       tooltip: this._tooltip,
       labels: this._labels,
@@ -229,19 +251,11 @@ export class ChartComponentBase {
   }
 
   public set chart(value: ApexChart) {
-    this._chart = {...this._chart, ...value};
+    this._chart = { ...this._chart, ...value };
   }
 
   public set dataLabels(value: ApexDataLabels) {
-    this._dataLabels = {...this._dataLabels, ...value};
-  }
-
-  public set legend(value: ApexLegend) {
-    this._legend = {...this._legend, ...value};
-  }
-
-  public set plotOptions(value: ApexPlotOptions) {
-    this._plotOptions = {...this._plotOptions, ...value};
+    this._dataLabels = { ...this._dataLabels, ...value };
   }
 
   public set series(value: ApexAxisChartSeries | ApexNonAxisChartSeries) {
@@ -249,23 +263,23 @@ export class ChartComponentBase {
   }
 
   public set stroke(value: ApexStroke) {
-    this._stroke = {...this._stroke, ...value};
+    this._stroke = { ...this._stroke, ...value };
   }
 
   public set title(value: ApexTitleSubtitle) {
-    this._title = {...this._title, ...value};
+    this._title = { ...this._title, ...value };
   }
 
   public set tooltip(value: ApexTooltip) {
-    this._tooltip = {...this._tooltip, ...value};
+    this._tooltip = { ...this._tooltip, ...value };
   }
 
   public set xaxis(value: ApexXAxis) {
-    this._xaxis = {...this._xaxis, ...value};
+    this._xaxis = { ...this._xaxis, ...value };
   }
 
   public set yaxis(value: ApexYAxis) {
-    this._yaxis = {...this._yaxis, ...value};
+    this._yaxis = { ...this._yaxis, ...value };
   }
 
   public set labels(value: any[]) {
@@ -296,9 +310,10 @@ export class ChartComponentBase {
     }
   };
 
-  private _legend: ApexLegend;
-  private _plotOptions: ApexPlotOptions;
+  protected legend: ApexLegend;
+  protected plotOptions: ApexPlotOptions;
   protected _series: ApexAxisChartSeries | ApexNonAxisChartSeries = [];
+
   private _stroke: ApexStroke;
   private _title: ApexTitleSubtitle;
   private _labels: any[];
@@ -322,5 +337,5 @@ export class ChartComponentBase {
   public constructor(
     protected chartDataService: ChartDataService,
     protected changeDetectorRef: ChangeDetectorRef,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute) { }
 }

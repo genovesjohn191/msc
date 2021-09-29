@@ -90,13 +90,19 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       yaxis: {
         title: 'Your Bill',
         showLabel: true,
-        valueFormatter: this._valueYFormatter
-      },
-      xaxis: {
-        title: 'Months'
+        valueFormatter: this._valueYFormatter.bind(this)
       },
       tooltip: {
         customFormatter: this._tooltipCustomFormatter.bind(this)
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: this._dataLabelFormatter.bind(this),
+        offsetX: -25
+      },
+      legend: {
+        position: 'bottom',
+        horizontalAlign: 'center'
       }
     };
   }
@@ -150,15 +156,28 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     ).subscribe();
   }
 
-  private _valueYFormatter(val: number): string {
-    return !Number.isInteger(val) ? `$${val.toFixed(2)}` : `$${val.toFixed()}`;
+  private _dataLabelFormatter(value: number, opts?: any): string {
+    return  this._currencyPipe.transform(value);
+  }
+
+  private _valueYFormatter(value: number): string {
+    return  this._currencyPipe.transform(value);
+  }
+
+  private _generateServiceTitle(summaryItem: BillingSummaryItem): string {
+    if (isNullOrEmpty(summaryItem)) { return; }
+
+    let summaryItemTitle = summaryItem.isProjection ?
+      `${summaryItem.productType} (projected)` : summaryItem.productType;
+    return summaryItemTitle;
   }
 
   private _tooltipCustomFormatter(opts?: any): string {
     let productTypeFound = this._billingSummaryTooltipMap.get(opts.seriesIndex);
     if (isNullOrEmpty(productTypeFound)) { return null; }
 
-    return this.generateCustomHtmlTooltip(productTypeFound?.productType, [
+    let summaryTitle = this._generateServiceTitle(productTypeFound);
+    return this.generateCustomHtmlTooltip(summaryTitle, [
       new McsOption(
         this._currencyPipe.transform(productTypeFound?.finalChargeDollars),
         this._translate.instant('label.total')
@@ -196,6 +215,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
       billingSummaries.push(new BillingSummaryItem(
         productType,
+        billingItems[0].isProjection,
         billingItems[0].microsoftChargeMonth,
         billingItems[0].macquarieBillMonth,
         totalChargeDollars,
@@ -229,6 +249,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         // Append Parent Service
         this._appendBillingSummaryToMap(
           this._generateItemKey(parentService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
+          parentService.isProjection,
           billingGroup.microsoftChargeMonth,
           billingGroup.macquarieBillMonth,
           parentService
@@ -238,6 +259,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         parentService?.childBillingServices?.forEach(childService => {
           this._appendBillingSummaryToMap(
             this._generateItemKey(childService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
+            childService.isProjection,
             billingGroup.microsoftChargeMonth,
             billingGroup.macquarieBillMonth,
             childService
@@ -257,6 +279,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
       this._billingSummaryTooltipMap.set(seriesIndex++, new BillingSummaryItem(
         productType,
+        billingItems[0].isProjection,
         billingItems[0].microsoftChargeMonth,
         billingItems[0].macquarieBillMonth,
         totalChargeDollars,
@@ -268,6 +291,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
   private _appendBillingSummaryToMap(
     productTypeKey: string,
+    isProjection: boolean,
     chargeMonth: string,
     billMonth: string,
     data: McsReportBillingService | McsReportBillingServiceSummary
@@ -281,6 +305,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     if (!isNullOrEmpty(serviceFound)) {
       services.push(new BillingSummaryItem(
         productTypeKey,
+        isProjection,
         this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),
         this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
         finalChargeDollars,
@@ -293,6 +318,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     services = new Array<BillingSummaryItem>();
     services.push(new BillingSummaryItem(
       productTypeKey,
+      isProjection,
       this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),
       this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
       finalChargeDollars,

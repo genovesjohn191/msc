@@ -21,3 +21,14 @@
     }
   }
 }
+
+.chart-note {
+  @include display-flex(row);
+  max-width: 30rem;
+  margin-top: $space-small;
+  padding: $space-xsmall;
+
+  white-space: pre-wrap;
+  @include font-size(12);
+  color: $readonly-color;
+}
