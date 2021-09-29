@@ -2330,7 +2330,7 @@
   },
   "ticketCreate": {
     "header": "Create New Ticket",
-    "description": "<h2>We all need help from time to time.</h2>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue. Provide us with as much information as you can and we'll take a look.",
+    "description": "<h2>We all need help from time to time.</h2>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.\r\n Provide us with as much information as you can and we'll take a look.",
     "type": "Ticket Type",
     "typeHeader": "Ticket Type",
     "services": "Services",
