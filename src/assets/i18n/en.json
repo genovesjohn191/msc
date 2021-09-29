@@ -3574,7 +3574,8 @@
     "unknown": "Unknown",
     "noAzureReservations": "There are no reservations to display.",
     "noAzureSoftwareSubscriptions": "There are no software subscriptions to display.",
-    "billingDetailsWithoutContractTerm": "No contract term applies for this product.",
+    "billingDetailsNew": "No contract term applies for this product.",
+    "billingDetailsWithoutContractTerm": "No contract term applies for this request.",
     "billingDetailsWithContractTerm": "The contract term and billing details for this service will remain as-is."
   },
   "tooltip": {
