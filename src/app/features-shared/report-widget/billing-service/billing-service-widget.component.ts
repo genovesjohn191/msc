@@ -92,13 +92,19 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
       yaxis: {
         title: 'Your Bill',
         showLabel: true,
-        valueFormatter: this._valueYFormatter
-      },
-      xaxis: {
-        title: 'Months'
+        valueFormatter: this._valueYFormatter.bind(this)
       },
       tooltip: {
         customFormatter: this._tooltipCustomFormatter.bind(this)
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: this._dataLabelFormatter.bind(this),
+        offsetX: -25
+      },
+      legend: {
+        position: 'bottom',
+        horizontalAlign: 'center'
       }
     };
   }
@@ -151,25 +157,49 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     ).subscribe();
   }
 
-  private _valueYFormatter(val: number): string {
-    return !Number.isInteger(val) ? `$${val.toFixed(2)}` : `$${val.toFixed()}`;
+  private _dataLabelFormatter(value: number, opts?: any): string {
+    return this._currencyPipe.transform(value);
+  }
+
+  private _valueYFormatter(value: number): string {
+    return  this._currencyPipe.transform(value);
+  }
+
+  private _generateServiceTitle(serviceItem: BillingServiceItem): string {
+    if (isNullOrEmpty(serviceItem)) { return; }
+
+    let serviceTitle = isNullOrEmpty(serviceItem.productType) ?
+      serviceItem.service : `${serviceItem.productType} - ${serviceItem.service}`;
+
+    let serviceTitleWithSuffix = serviceItem.isProjection ?
+      `${serviceTitle} (projected)` : serviceTitle;
+    return serviceTitleWithSuffix;
   }
 
   private _tooltipCustomFormatter(opts?: any): string {
     let serviceFound = this._billingServiceTooltipMap.get(opts.seriesIndex);
     if (isNullOrEmpty(serviceFound)) { return null; }
 
-    return this.generateCustomHtmlTooltip(serviceFound?.service, [
+    let serviceTitle = this._generateServiceTitle(serviceFound);
+    return this.generateCustomHtmlTooltip(serviceTitle, [
       new McsOption(
         this._currencyPipe.transform(serviceFound.finalChargeDollars),
         this._translate.instant('label.total')
       ),
       new McsOption(
-        this._getMinimumCommitmentText(serviceFound),
+        this._translate.instant('label.percentage', { value: serviceFound.discountPercent | 0 }),
+        this._translate.instant('label.discountOfRrp')
+      ),
+      new McsOption(
+        serviceFound.linkManagementService,
+        this._translate.instant('label.linkManagementService')
+      ),
+      new McsOption(
+        this._currencyPipe.transform(serviceFound.minimumCommitmentDollars),
         this._translate.instant('label.minimumSpendCommitment')
       ),
       new McsOption(
-        this._translate.instant('message.markupPercent', { markup: serviceFound.managementCharges | 0 }),
+        this._translate.instant('message.markupPercent', { markup: serviceFound.markupPercent | 0 }),
         this._translate.instant('label.managementCharges')
       ),
       new McsOption(
@@ -196,12 +226,10 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         serviceFound.macquarieBillMonth,
         this._translate.instant('label.macquarieBillMonth')
       )
-    ]);
-  }
-
-  private _getMinimumCommitmentText(serviceItem: BillingServiceItem): string {
-    return serviceItem.hasMetMinimumCommitment ? serviceItem.minimumSpendCommitment :
-      this._translate.instant('message.minimumSpendCommitmentNotMet');
+    ],
+      !serviceFound.hasMetMinimumCommitment &&
+      this._translate.instant('message.minimumSpendCommitmentNotMet')
+    );
   }
 
   private _subscribeToChartItemsChange(): void {
@@ -221,7 +249,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
       chartItems.push({
         name: billingService.service,
         xValue: billingService.microsoftChargeMonth,
-        yValue: billingService.finalChargeDollars
+        yValue: billingService.childService?.finalChargeDollars ||
+          billingService.parentService?.finalChargeDollars
       } as ChartItem);
     });
     return chartItems;
@@ -237,36 +266,21 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         // Append Parent Service
         billingServiceItems.push(new BillingServiceItem(
           parentService.serviceId,
-          parentService.finalChargeDollars,
-          parentService.hasMetMinimumCommitment,
-          parentService.minimumCommitmentDollars,
-          parentService.markupPercent,
-          parentService.tenant?.name,
-          parentService.tenant?.initialDomain,
-          parentService.tenant?.primaryDomain,
-          parentService.microsoftId,
-          parentService.billingDescription,
           this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
           this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
-          getDateOnly(billingGroup.microsoftChargeMonth)
+          getDateOnly(billingGroup.microsoftChargeMonth),
+          parentService
         ));
 
         // Append Child Services Data
         parentService.childBillingServices?.forEach(childService => {
           billingServiceItems.push(new BillingServiceItem(
             childService.serviceId,
-            childService.finalChargeDollars,
-            childService.hasMetMinimumCommitment,
-            childService.minimumCommitmentDollars,
-            childService.markupPercent,
-            childService.tenant?.name,
-            childService.tenant?.initialDomain,
-            childService.tenant?.primaryDomain,
-            childService.microsoftId,
-            parentService.billingDescription,
             this._datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
             this._datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
-            getDateOnly(billingGroup.microsoftChargeMonth)
+            getDateOnly(billingGroup.microsoftChargeMonth),
+            parentService,
+            childService
           ));
         });
       });

@@ -1,15 +1,19 @@
 import {
-  Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
   ChangeDetectorRef,
+  Component,
+  Input,
   OnInit,
-  Input
+  ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartItem } from '@app/shared';
 import { isNullOrEmpty } from '@app/utilities';
-import { ChartData, ChartDataService } from '../chart-data.service';
+
+import {
+  ChartData,
+  ChartDataService
+} from '../chart-data.service';
 import { ChartComponentBase } from '../core/chart-base.component';
 
 @Component({
@@ -54,8 +58,8 @@ export class VerticalBarChartComponent extends ChartComponentBase implements OnI
 
   private _setDefaultOptions(): void {
     this.legend = {
-      position: 'top',
-      horizontalAlign: 'left',
+      position: this.legend?.position || 'top',
+      horizontalAlign: this.legend?.horizontalAlign || 'left',
       offsetX: 0,
     }
 
