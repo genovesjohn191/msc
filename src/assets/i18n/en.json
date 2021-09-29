@@ -1827,8 +1827,6 @@
     "acceleratedLeadTimeNote": "For expedited delivery, our accelerated lead time is {{ acceleratedLeadTimeHours }}.",
     "billingDetails": {
       "header": "Billing Details",
-      "orderNoteWithoutContractTerm": "No contract term applies for this product.",
-      "orderNoteWithContractTerm": "The contract term and billing details for this service will remain as-is.",
       "contractTermPlaceholder": "Contract Term",
       "contractTermHelp": "Select a contract term for all items in this order.",
       "contractTermRequired": "You must select a contract term.",
@@ -2332,7 +2330,7 @@
   },
   "ticketCreate": {
     "header": "Create New Ticket",
-    "description": "<h2>We all need help from time to time.</h2>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.\r\n\n Provide us with as much information as you can and we'll take a look.\r\n\n Existing tickets can be viewed and managed in MacquarieView.",
+    "description": "<h2>We all need help from time to time.</h2>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue. Provide us with as much information as you can and we'll take a look.",
     "type": "Ticket Type",
     "typeHeader": "Ticket Type",
     "services": "Services",
@@ -3575,7 +3573,9 @@
     "noPermissionFallbackText": "Unable to load this item as you do not have the relevant permissions. Please ensure you have the necessary permissions in MacquarieView.",
     "unknown": "Unknown",
     "noAzureReservations": "There are no reservations to display.",
-    "noAzureSoftwareSubscriptions": "There are no software subscriptions to display."
+    "noAzureSoftwareSubscriptions": "There are no software subscriptions to display.",
+    "billingDetailsWithoutContractTerm": "No contract term applies for this product.",
+    "billingDetailsWithContractTerm": "The contract term and billing details for this service will remain as-is."
   },
   "tooltip": {
     "exportWord": "Export Word Document",
@@ -3623,6 +3623,8 @@
     },
     "serverResetPassword": {
       "title": "Reset Server Password",
+      "serviceTypeManagedMessage": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?",
+      "serviceTypeSelfManagedMessage": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?<br><br>Please note that this will cause VMware guest customization to run on this server, which may reset network settings and restart it.",
       "poweredOnMessage": "Resetting the server password requires a restart of your server.<br><br>Are you sure you want to reset the password and restart server <strong>{{server_name}}</strong> now?<br><br>Please note that this will cause VMware guest customization to run, which may reset network settings and restart the VM.",
       "poweredOffMessage": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?<br><br>Please note that this will cause VMware guest customization to run, which may reset network settings and restart the VM."
     },

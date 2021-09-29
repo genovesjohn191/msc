@@ -227,9 +227,9 @@ export class StepOrderDetailsComponent
   public get billingDetailsFallbackText(): string {
     let orderHasContractTerm = this.orderItemType?.itemChangeType === ItemChangeType.Change;
     if (orderHasContractTerm) {
-      return this._translate.instant('orderDetailsStep.billingDetails.orderNoteWithContractTerm');
+      return this._translate.instant('message.billingDetailsWithContractTerm');
     }
-    return this._translate.instant('orderDetailsStep.billingDetails.orderNoteWithoutContractTerm');
+    return this._translate.instant('message.billingDetailsWithoutContractTerm');
   }
 
   public get hasLeadTimeOptions(): boolean {
