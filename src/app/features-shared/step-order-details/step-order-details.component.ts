@@ -185,6 +185,7 @@ export class StepOrderDetailsComponent
   public ngOnChanges(changes: SimpleChanges): void {
     let orderItemTypeChange = changes['orderItemType'];
     if (!isNullOrEmpty(orderItemTypeChange)) {
+      this._updateFormGroupByType();
       this._updateFormGroupByContractTermApplicable();
       this._setOrderDescription();
       this._updateMinimumScheduleDate();
@@ -466,11 +467,28 @@ export class StepOrderDetailsComponent
   }
 
   /**
+   * Updates the form group by order type
+   *
+   */
+  private _updateFormGroupByType(): void {
+    let itemType = getSafeProperty(this.orderItemType, (obj) => obj.itemType, ItemType.Change);
+    itemType === ItemType.Change ? this._setOrderChangeFormControls() : this._setOrderNewFormControls();
+  }
+
+  /**
    * Updates the form group by contract term applicable
    */
   private _updateFormGroupByContractTermApplicable(): void {
     let contractTermApplicable = getSafeProperty(this.orderItemType, (obj) => obj.contractTermApplicable);
-    !contractTermApplicable ? this._setOrderChangeFormControls() : this._setOrderNewFormControls();
+    !contractTermApplicable ? this._setWithoutContractTermFormControls() : this._setWithContractTermFormControls();
+  }
+
+  private _setWithoutContractTermFormControls(): void {
+    this.fgOrderBilling.removeControl('fcContractTerm');
+  }
+
+  private _setWithContractTermFormControls(): void {
+    this.fgOrderBilling.setControl('fcContractTerm', this.fcContractTerm);
   }
 
   /**
@@ -494,7 +512,6 @@ export class StepOrderDetailsComponent
     this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
     this.fgOrderBilling.setControl('fcDateSchedule', this.fcDateSchedule);
     this.fgOrderBilling.setControl('fcTimeSchedule', this.fcTimeSchedule);
-    this.fgOrderBilling.removeControl('fcContractTerm');
     this.fgOrderBilling.removeControl('fcBillingEntity');
     this.fgOrderBilling.removeControl('fcBillingSite');
     this.fgOrderBilling.removeControl('fcBillingCostCenter');
@@ -508,7 +525,6 @@ export class StepOrderDetailsComponent
     this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
     this.fgOrderBilling.setControl('fcDateSchedule', this.fcDateSchedule);
     this.fgOrderBilling.setControl('fcTimeSchedule', this.fcTimeSchedule);
-    this.fgOrderBilling.setControl('fcContractTerm', this.fcContractTerm);
     this.fgOrderBilling.setControl('fcBillingEntity', this.fcBillingEntity);
     this.fgOrderBilling.setControl('fcBillingSite', this.fcBillingSite);
     this.fgOrderBilling.setControl('fcBillingCostCenter', this.fcBillingCostCenter);

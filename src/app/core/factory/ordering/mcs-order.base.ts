@@ -170,7 +170,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     let orderItemType = this._orderItemTypeChange.getValue() || {} as any;
 
     let orderDescription = orderDetails.description || this._getOrderDescriptionByType(orderItemType);
-    let orderContract = orderItemType.contractTermApplicable ? orderDetails.contractDurationMonths : null;
+    let orderContract = orderItemType.itemType !== ItemType.Change ? orderDetails.contractDurationMonths : null;
 
     this._orderBuilder
       .setDescription(orderDescription)
