@@ -296,3 +296,11 @@ export function getDateOnly(date: Date | string): Date {
   actualDate.setHours(0);
   return actualDate;
 }
+
+/**
+ * Gets timestamp in seconds
+ */
+export function getTimestamp(date: Date | string): number {
+  let actualDate =  (date instanceof Date) ? date : new Date(date);
+  return actualDate?.getTime();
+}

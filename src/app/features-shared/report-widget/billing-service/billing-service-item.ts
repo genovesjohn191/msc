@@ -1,81 +1,94 @@
-import {
-  McsReportBillingService,
-  McsReportBillingServiceSummary
-} from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
-
 export class BillingServiceItem {
+  public productType: string;
+  public service: string;
+  public microsoftChargeMonth: string;
+  public macquarieBillMonth: string;
+  public azureDescription: string;
+  public isProjection: boolean;
+  public finalChargeDollars: number;
+  public installedQuantity: number;
+  public discountPercent: number;
+  public hasMetMinimumCommitment: boolean;
+  public minimumCommitmentDollars: number;
+  public markupPercent: number;
+  public microsoftIdentifier: string;
+  public billingDescription: string;
+  public tenantName: string;
+  public initialDomain: string;
+  public primaryDomain: string;
 
-  constructor(
-    public service: string,
-    public microsoftChargeMonth: string,
-    public macquarieBillMonth: string,
-    public sortDate: Date,
-    public parentService: McsReportBillingService,
-    public childService?: McsReportBillingServiceSummary
-  ) { }
+  public sortDate?: Date;
+  public timestamp?: number;
 
-  public get productType(): string {
-    return this._getFieldValue('productType');
-  }
+  public parentServiceId?: string;
+  public markupPercentParent?: number;
 
-  public get isProjection(): boolean {
-    return this._getFieldValue('isProjection');
-  }
 
-  public get finalChargeDollars(): number {
-    return this._getFieldValue('finalChargeDollars');
-  }
+  // public get azureDescription(): string {
+  //   return this._getFieldValue('azureDescription') ||
+  //     this._getFieldValue('billingDescription');
+  // }
 
-  public get discountPercent(): number {
-    return this._getFieldValue('discountPercent');
-  }
+  // public get productType(): string {
+  //   return this._getFieldValue('productType');
+  // }
 
-  public get hasMetMinimumCommitment(): boolean {
-    return this._getFieldValue('hasMetMinimumCommitment');
-  }
+  // public get isProjection(): boolean {
+  //   return this._getFieldValue('isProjection');
+  // }
 
-  public get minimumCommitmentDollars(): number {
-    return this._getFieldValue('minimumCommitmentDollars');
-  }
+  // public get finalChargeDollars(): number {
+  //   return this._getFieldValue('finalChargeDollars');
+  // }
 
-  public get markupPercent(): number {
-    return this._getFieldValue('markupPercent');
-  }
+  // public get installedQuantity(): number {
+  //   return this._getFieldValue('installedQuantity');
+  // }
 
-  public get tenantName(): string {
-    return this.childService?.tenant?.name ||
-      this.parentService?.tenant?.name;
-  }
+  // public get discountPercent(): number {
+  //   return this._getFieldValue('discountPercent');
+  // }
 
-  public get initialDomain(): string {
-    return this.childService?.tenant?.initialDomain ||
-      this.parentService?.tenant?.initialDomain;
-  }
+  // public get hasMetMinimumCommitment(): boolean {
+  //   return this._getFieldValue('hasMetMinimumCommitment');
+  // }
 
-  public get primaryDomain(): string {
-    return this.childService?.tenant?.primaryDomain ||
-      this.parentService?.tenant?.primaryDomain;
-  }
+  // public get minimumCommitmentDollars(): number {
+  //   return this._getFieldValue('minimumCommitmentDollars');
+  // }
 
-  public get microsoftIdentifier(): string {
-    return this._getFieldValue('microsoftId');
-  }
+  // public get markupPercent(): number {
+  //   return this._getFieldValue('markupPercent');
+  // }
 
-  public get billingDescription(): string {
-    return this._getFieldValue('billingDescription');
-  }
+  // public get markupPercentParent(): number {
+  //   return this.parentService?.markupPercent;
+  // }
 
-  public get linkManagementService(): string {
-    return this.parentService?.serviceId;
-  }
+  // public get microsoftIdentifier(): string {
+  //   return this._getFieldValue('microsoftId');
+  // }
 
-  private _getFieldValue<TValue, TProperty extends keyof (McsReportBillingService | McsReportBillingServiceSummary)>(
-    property: TProperty
-  ): TValue {
-    if (!isNullOrEmpty(this.childService)) {
-      return this.childService[property] as any;
-    }
-    return this.parentService[property] as any;
-  }
+  // public get billingDescription(): string {
+  //   return this._getFieldValue('billingDescription');
+  // }
+
+  // public get linkManagementService(): string {
+  //   return this.parentService?.serviceId;
+  // }
+
+  // public get tenantName(): string {
+  //   return this.childService?.tenant?.name ||
+  //     this.parentService?.tenant?.name;
+  // }
+
+  // public get initialDomain(): string {
+  //   return this.childService?.tenant?.initialDomain ||
+  //     this.parentService?.tenant?.initialDomain;
+  // }
+
+  // public get primaryDomain(): string {
+  //   return this.childService?.tenant?.primaryDomain ||
+  //     this.parentService?.tenant?.primaryDomain;
+  // }
 }
