@@ -1,6 +1,6 @@
 .chart-list {
   @include display-flex(column);
-  max-width: 30rem;
+  max-width: 20rem;
 
   .chart-title {
     display: block;
@@ -24,7 +24,7 @@
 
 .chart-note {
   @include display-flex(row);
-  max-width: 30rem;
+  max-width: 20rem;
   margin-top: $space-small;
   padding: $space-xsmall;
 

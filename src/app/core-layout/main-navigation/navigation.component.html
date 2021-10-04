@@ -356,7 +356,7 @@
           </li>
 
           <!-- Bill Summary -->
-          <li *mcsAccessControl="['BillingView']">
+          <li *mcsAccessControl="['BillingView']; feature: 'EnableAzureConsolidatedBilling'">
             <a [mcsRouterLink]="routeKeyEnum.Billing"
               mcsId="bill-summary-link"
               mcsEventTracker="navigate-to-bill-summary"

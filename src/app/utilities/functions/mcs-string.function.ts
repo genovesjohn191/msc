@@ -138,34 +138,43 @@ export function convertSpacesToDash(source: string): string {
   return source.replace(/\s+/g, '-').toLowerCase();
 }
 
+/**
+ * Returns the string without spaces
+ */
+export function removeSpaces(source: string): string {
+  return source.replace(/\s+/g, '');
+}
+
 // TO DO: create a pipe to convert all string format to text
 export function formatStringToText(source: string): string {
-  return source.replace(/(\t)/g,' ');
+  return source.replace(/(\t)/g, ' ');
 }
 
 /**
  * Returns the converted string numbers to phone number
  */
-export function formatStringToPhoneNumber(source: string,
-                                          customFormatRegex: RegExp = null,
-                                          removeCountryCodes: boolean = false): string {
-    let result: string = null;
-    if(!source) {return result;}
-    let trimmedNumberString = source.replace(/\D/g, '');
+export function formatStringToPhoneNumber(
+  source: string,
+  customFormatRegex: RegExp = null,
+  removeCountryCodes: boolean = false
+): string {
+  let result: string = null;
+  if (!source) { return result; }
+  let trimmedNumberString = source.replace(/\D/g, '');
 
-    if(trimmedNumberString) {
-      let [first, ...rest] = (customFormatRegex) ? trimmedNumberString.match(customFormatRegex)
-                                                : trimmedNumberString.match(DEFAULT_PHONENUMBER_FORMAT_REGEX);
-      if (customFormatRegex) {
-        result = first;
-      } else {
-        result = rest.join(' ');
-      }
-
-      if (removeCountryCodes) {
-          let removedCountryCode = result.slice(-10);
-          result = removedCountryCode;
-      }
+  if (trimmedNumberString) {
+    let [first, ...rest] = (customFormatRegex) ? trimmedNumberString.match(customFormatRegex)
+      : trimmedNumberString.match(DEFAULT_PHONENUMBER_FORMAT_REGEX);
+    if (customFormatRegex) {
+      result = first;
+    } else {
+      result = rest.join(' ');
     }
-    return result;
+
+    if (removeCountryCodes) {
+      let removedCountryCode = result.slice(-10);
+      result = removedCountryCode;
+    }
+  }
+  return result;
 }

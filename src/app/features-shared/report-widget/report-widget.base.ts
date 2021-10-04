@@ -18,7 +18,7 @@ export abstract class ReportWidgetBase {
   protected generateCustomHtmlTooltip(
     title: string,
     options: McsOption[],
-    suffix?: string
+    note?: string
   ): string {
 
     // This would automatically ignore those empty or null items
@@ -42,10 +42,10 @@ export abstract class ReportWidgetBase {
 
     let htmlChartSuffix = `
       <div class="chart-note">
-        <p>${suffix}</p>
+        <p>${note}</p>
       </div>`;
 
-    return isNullOrEmpty(suffix) ? htmlChartList :
+    return isNullOrEmpty(note) ? htmlChartList :
       `${htmlChartList} ${htmlChartSuffix}`;
   }
 }

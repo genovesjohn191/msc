@@ -48,6 +48,8 @@ export type ChartDataLabels = {
 export type ChartXAxis = {
   showLabel?: boolean;
   title?: string;
+  format?: string;
+  type?: 'category' | 'numeric' | 'datetime';
   valueFormatter?: (val: string, timestamp?: number) => string | string[];
 }
 
@@ -157,8 +159,10 @@ export class ChartComponentBase {
         },
         labels: {
           show: value.xaxis.showLabel ?? true,
-          formatter: value.xaxis.valueFormatter
-        }
+          formatter: value.xaxis.valueFormatter,
+          format: value.xaxis.format
+        },
+        type: value.xaxis.type
       };
     }
 
