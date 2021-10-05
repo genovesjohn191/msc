@@ -1,15 +1,12 @@
 import {
-  throwError,
   BehaviorSubject,
   Observable,
   Subject
 } from 'rxjs';
 import {
-  catchError,
   map,
   shareReplay,
-  takeUntil,
-  tap
+  takeUntil
 } from 'rxjs/operators';
 
 import {
@@ -27,10 +24,8 @@ import {
   McsOption,
   McsReportBillingService,
   McsReportBillingServiceGroup,
-  McsReportBillingServiceSummary,
-  McsReportBillingSummaryParams
+  McsReportBillingServiceSummary
 } from '@app/models';
-import { McsApiService } from '@app/services';
 import {
   ChartConfig,
   ChartItem,
@@ -38,9 +33,11 @@ import {
   StdDateFormatPipe
 } from '@app/shared';
 import {
+  compareDates,
   getDateOnly,
   getTimestamp,
   isNullOrEmpty,
+  isNullOrUndefined,
   removeSpaces,
   unsubscribeSafely
 } from '@app/utilities';
@@ -51,10 +48,11 @@ import { BillingSummaryItem } from './billing-summary-item';
 
 const KEY_SEPARATOR = ':';
 
-class BillingSummaryStruct {
+class BillingSummaryViewModel {
   constructor(
     public title: string,
-    public items: McsOption[]
+    public items: McsOption[],
+    public includeProjectionSuffix?: boolean
   ) { }
 }
 
@@ -70,7 +68,7 @@ class BillingSummaryStruct {
 })
 export class BillingSummaryWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public billingAccountId: string;
+  public billingSummaries: McsReportBillingServiceGroup[];
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
@@ -83,12 +81,11 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   private _billingSummaryItemsMap = new Map<string, BillingSummaryItem[]>();
   private _billingSeriesItems: BillingSummaryItem[][] = [];
   private _billingSettingsMap = new Map<string, (item: BillingSummaryItem) => McsOption>();
-  private _billingStructMap = new Map<string, (item: BillingSummaryItem) => BillingSummaryStruct>();
+  private _billingStructMap = new Map<string, (item: BillingSummaryItem) => BillingSummaryViewModel>();
 
   public constructor(
     private _translate: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _apiService: McsApiService,
     private _datePipe: StdDateFormatPipe,
     private _currencyPipe: StdCurrencyFormatPipe
   ) {
@@ -118,20 +115,19 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         horizontalAlign: 'center'
       }
     };
+
+    this._registerSettingsMap();
+    this._registerBillingStructMap();
   }
 
   public ngOnInit(): void {
-    this._registerSettingsMap();
-    this._registerBillingStructMap();
-
     this._subscribeToChartItemsChange();
+    this.getBillingSummaries();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    let billingAccountIdChange = changes['billingAccountId'];
-    if (!isNullOrEmpty(billingAccountIdChange)) {
-      this.getBillingSummaries();
-    }
+    let billingSummariesChange = changes['billingSummaries'];
+    if (!isNullOrEmpty(billingSummariesChange)) { this.getBillingSummaries(); }
   }
 
   public ngOnDestroy(): void {
@@ -142,34 +138,18 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     this.hasError = false;
     this.processing = true;
     this.updateChartUri(undefined);
+
+    if (!isNullOrEmpty(this.billingSummaries)) {
+      this._billingSummaryItemsMap.clear();
+      this._updateBillingSummaryMap(this.billingSummaries);
+
+      let chartItems = this._convertBillingSummaryMapToChartItems();
+      this._chartItemsChange.next(chartItems);
+
+      this.processing = isNullOrUndefined(this.billingSummaries);
+      if (chartItems?.length === 0) { this.updateChartUri(''); }
+    }
     this._changeDetectorRef.markForCheck();
-
-    let apiQuery = new McsReportBillingSummaryParams();
-    apiQuery.billingAccountId = this.billingAccountId;
-
-    this._apiService.getBillingSummaries(apiQuery).pipe(
-      map(billingSummaries => {
-        if (isNullOrEmpty(billingSummaries)) { return []; }
-
-        this._updateBillingSummaryMap(billingSummaries?.collection);
-        let chartItems = this._convertBillingSummaryMapToChartItems();
-        return chartItems;
-      }),
-      tap(chartItems => {
-        if (chartItems?.length === 0) { this.updateChartUri(''); }
-
-        this._chartItemsChange.next(chartItems);
-        this.processing = false;
-        this._changeDetectorRef.markForCheck();
-      }),
-      catchError((error) => {
-        this.hasError = true;
-        this.processing = false;
-        this.updateChartUri('');
-        this._changeDetectorRef.markForCheck();
-        return throwError(error);
-      })
-    ).subscribe();
   }
 
   private _dataLabelFormatter(value: number, opts?: any): string {
@@ -184,15 +164,18 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     let billingFound = this._billingSeriesItems[opts.seriesIndex][opts.dataPointIndex];
     if (isNullOrEmpty(billingFound)) { return null; }
 
-    let billingKey = removeSpaces(billingFound.productType)?.toUpperCase();
-    let billingFuncFound = this._billingStructMap?.get(billingKey);
-    if (isNullOrEmpty(billingFuncFound)) { return `Nothing to display`; }
+    let billingViewModel = this._getBillingViewModelByItem(billingFound);
+    let billingTitle = this._generateBillingTitle(billingViewModel);
 
-    let billingItemInfo = billingFuncFound(billingFound);
     return this.generateCustomHtmlTooltip(
-      billingItemInfo.title,
-      billingItemInfo.items
+      billingTitle,
+      billingViewModel.items
     );
+  }
+
+  private _generateBillingTitle(billingViewModel: BillingSummaryViewModel): string {
+    return billingViewModel?.includeProjectionSuffix ?
+      `${billingViewModel.title} (Projected)` : billingViewModel?.title;
   }
 
   private _subscribeToChartItemsChange(): void {
@@ -223,21 +206,20 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         billingItems[0].microsoftChargeMonth,
         billingItems[0].macquarieBillMonth,
         totalChargeDollars,
+        billingItems[0].usdPerUnit,
         getDateOnly(new Date(+actualDate)),
         +actualDate
       ));
     });
 
-    // Sort records
-    // billingSummaries.sort((first, second) => {
-    //   return compareDates(second.sortDate, first.sortDate);
-    // });
-
     // Convert to chart items
     let chartItems = new Array<ChartItem>();
     billingSummaries?.forEach(billingSummary => {
+      let billingViewModel = this._getBillingViewModelByItem(billingSummary);
+      let billingTitle = this._generateBillingTitle(billingViewModel);
+
       chartItems.push({
-        name: billingSummary.productType,
+        name: billingTitle,
         xValue: billingSummary.timestamp,
         yValue: billingSummary.finalChargeDollars
       } as ChartItem);
@@ -246,6 +228,14 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     // Populate billing services series index
     this._updateBillingSeriesItems(billingSummaries);
     return chartItems;
+  }
+
+  private _getBillingViewModelByItem(summary: BillingSummaryItem): BillingSummaryViewModel {
+    let billingKey = removeSpaces(summary.productType)?.toUpperCase();
+    let billingFuncFound = this._billingStructMap?.get(billingKey);
+    if (isNullOrEmpty(billingFuncFound)) { return null; }
+
+    return billingFuncFound(summary);
   }
 
   private _updateBillingSeriesItems(summaries: BillingSummaryItem[]): void {
@@ -318,6 +308,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
     let finalChargeDollars = data instanceof McsReportBillingService ?
       data.finalChargeDollars : data.finalChargeDollars;
+    let usdPerUnit = data instanceof McsReportBillingService ?
+      data.finalChargeDollars : data.finalChargeDollars;
 
     if (!isNullOrEmpty(serviceFound)) {
       services.push(new BillingSummaryItem(
@@ -326,6 +318,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),
         this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
         finalChargeDollars,
+        usdPerUnit,
         getDateOnly(chargeMonth)
       ));
       return;
@@ -338,6 +331,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),
       this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
       finalChargeDollars,
+      usdPerUnit,
       getDateOnly(chargeMonth)
     ));
     this._billingSummaryItemsMap.set(productTypeKey, services);
@@ -347,11 +341,24 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     return `${type}${KEY_SEPARATOR}${getTimestamp(date)}`;
   }
 
+  private _isDateGreaterThanExpiry(timestamp: number): boolean {
+    let novemberDate = new Date();
+    novemberDate.setFullYear(2021, 10, 1);
+    return compareDates(new Date(timestamp), novemberDate) === 1;
+  }
+
   private _registerSettingsMap(): void {
     this._billingSettingsMap.set('total', item =>
       new McsOption(
         this._currencyPipe.transform(item.finalChargeDollars),
         this._translate.instant('label.total')
+      )
+    );
+
+    this._billingSettingsMap.set('usdPerUnit', item =>
+      new McsOption(
+        this._isDateGreaterThanExpiry(item.timestamp) && item.usdPerUnit,
+        this._translate.instant('label.audUsdExchangeRate')
       )
     );
 
@@ -385,100 +392,106 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     let defaultStructProps = ['total', 'microsoftChargeMonth', 'macquarieBillMonth'];
 
     this._billingStructMap.set('AZUREESSENTIALSCSP',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `Azure Essentials CSP`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps)
       )
     );
 
     this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `Azure Essentials Enterprise Agreement`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps)
       )
     );
 
     this._billingStructMap.set('MANAGEDAZURECSP',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `Managed Azure CSP`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps)
       )
     );
 
     this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `Managed Azure Enterprise Agreement`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps)
       )
     );
 
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `Azure Product Consumption`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
+        this._getTooltipOptionsInfo(item, 'total', 'usdPerUnit', 'microsoftChargeMonth', 'macquarieBillMonth')
       )
     );
 
     this._billingStructMap.set('AZURERESERVATION',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `Azure Reservation`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps)
       )
     );
 
     this._billingStructMap.set('CSPLICENSES',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `CSP Licenses`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps)
       )
     );
 
     this._billingStructMap.set('AZURESOFTWARESUBSCRIPTION',
-      item => new BillingSummaryStruct(
+      item => new BillingSummaryViewModel(
         `Software Subscriptions`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps)
       )
     );
 
     this._billingStructMap.set('AZUREESSENTIALSCSP',
-      item => new BillingSummaryStruct(
-        `Azure Essentials CSP (Projected)`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
+      item => new BillingSummaryViewModel(
+        `Azure Essentials CSP`,
+        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        item.isProjection
       )
     );
 
     this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
-      item => new BillingSummaryStruct(
-        `Azure Essentials Enterprise Agreement (Projected)`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
+      item => new BillingSummaryViewModel(
+        `Azure Essentials Enterprise Agreement`,
+        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        item.isProjection
       )
     );
 
     this._billingStructMap.set('MANAGEDAZURECSP',
-      item => new BillingSummaryStruct(
-        `Managed Azure CSP (Projected)`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
+      item => new BillingSummaryViewModel(
+        `Managed Azure CSP`,
+        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        item.isProjection
       )
     );
 
     this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
-      item => new BillingSummaryStruct(
-        `Managed Azure Enterprise Agreement (Projected)`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
+      item => new BillingSummaryViewModel(
+        `Managed Azure Enterprise Agreement`,
+        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        item.isProjection
       )
     );
 
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
-      item => new BillingSummaryStruct(
-        `Azure Product Consumption (Projected)`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
+      item => new BillingSummaryViewModel(
+        `Azure Product Consumption`,
+        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        item.isProjection
       )
     );
 
     this._billingStructMap.set('AZURERESERVATION',
-      item => new BillingSummaryStruct(
-        `Azure Reservation (Projected)`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
+      item => new BillingSummaryViewModel(
+        `Azure Reservation`,
+        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        item.isProjection
       )
     );
   }

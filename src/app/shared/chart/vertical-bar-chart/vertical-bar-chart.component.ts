@@ -68,7 +68,7 @@ export class VerticalBarChartComponent extends ChartComponentBase implements OnI
         barHeight: '100%',
         horizontal: false,
         dataLabels: {
-          position: 'top'
+          position: 'center'
         },
         distributed: this.distributed
       }

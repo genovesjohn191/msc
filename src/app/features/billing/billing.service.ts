@@ -1,10 +1,14 @@
+import { BehaviorSubject } from 'rxjs';
+
 import {
   EventEmitter,
   Injectable
 } from '@angular/core';
+import { McsReportBillingServiceGroup } from '@app/models';
 
 @Injectable()
 export class BillingSummaryService {
+  public billingSummariesChange = new BehaviorSubject<McsReportBillingServiceGroup[]>(null);
   public accountIdChanged = new EventEmitter<string>();
 
   private _billingAccountId: string = '';
@@ -14,5 +18,9 @@ export class BillingSummaryService {
     if (this._billingAccountId === nextBillingAccountId) { return; }
     this._billingAccountId = nextBillingAccountId;
     this.accountIdChanged.emit(this._billingAccountId);
+  }
+
+  public setBillingSummaries(billingSummaries: McsReportBillingServiceGroup[]): void {
+    this.billingSummariesChange.next(billingSummaries);
   }
 }
