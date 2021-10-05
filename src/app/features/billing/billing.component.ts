@@ -1,12 +1,14 @@
-import { FormControl } from '@angular/forms';
-
-import { takeUntil } from 'rxjs/operators';
 import {
   of,
   Observable,
-  Subscription,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
+import {
+  startWith,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -15,20 +17,25 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { McsNavigationService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  McsReportBillingSummaryParams,
   McsRouteInfo,
   RouteKey
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import {
-  CommonDefinition,
   getSafeProperty,
-  unsubscribeSafely
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
-import { BillingSummaryService } from './billing.service';
 import { TranslateService } from '@ngx-translate/core';
+
+import { BillingSummaryService } from './billing.service';
 
 type tabGroupType = 'summary' | 'service' | 'tabular';
 
@@ -50,7 +57,8 @@ export class BillingComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _navigationService: McsNavigationService,
-    private _translate: TranslateService
+    private _translate: TranslateService,
+    private _apiService: McsApiService
   ) {
     this._registerEvents();
     this._registerFormControl();
@@ -104,12 +112,20 @@ export class BillingComponent implements OnInit, OnDestroy {
   private _subscribeToBillingAccountControlChanges(): void {
     this.fcBillingAccount.valueChanges.pipe(
       takeUntil(this._destroySubject),
-    ).subscribe(change => {
-      this._onBillingAccountIdChange(change);
-    });
+      startWith([null]),
+      tap(accountIds => {
+        let query = new McsReportBillingSummaryParams();
+        query.billingAccountId = isNullOrEmpty(accountIds) ? null : accountIds[0];
+        this._subscribeToBillingSummaries(query);
+      })
+    ).subscribe();
   }
 
-  private _onBillingAccountIdChange(accountIds: string[]): void {
-    this._billingSummaryService.setBillingAccountId(accountIds);
+  private _subscribeToBillingSummaries(query?: McsReportBillingSummaryParams): void {
+    this._apiService.getBillingSummaries(query).pipe(
+      tap(response => {
+        this._billingSummaryService.setBillingSummaries(response?.collection || []);
+      })
+    ).subscribe();
   }
 }

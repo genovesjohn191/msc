@@ -13,6 +13,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { McsReportBillingServiceGroup } from '@app/models';
 import { unsubscribeSafely } from '@app/utilities';
 
 import { BillingSummaryService } from '../billing.service';
@@ -24,6 +25,7 @@ import { BillingSummaryService } from '../billing.service';
 })
 export class BillingSummaryComponent implements OnInit, OnDestroy {
   public billingAccountId$: Observable<string>;
+  public billingSummaries$: Observable<McsReportBillingServiceGroup[]>;
 
   private _destroySubject = new Subject<void>();
 
@@ -33,6 +35,7 @@ export class BillingSummaryComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this._subscribeToBillingSummaries();
     this._subscribeToBillingAccountIdChange();
   }
 
@@ -45,6 +48,13 @@ export class BillingSummaryComponent implements OnInit, OnDestroy {
 
   private _subscribeToBillingAccountIdChange(): void {
     this.billingAccountId$ = this._billingSummaryService.accountIdChanged.pipe(
+      takeUntil(this._destroySubject),
+      shareReplay(1)
+    );
+  }
+
+  private _subscribeToBillingSummaries(): void {
+    this.billingSummaries$ = this._billingSummaryService.billingSummariesChange.pipe(
       takeUntil(this._destroySubject),
       shareReplay(1)
     );

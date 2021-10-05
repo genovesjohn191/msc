@@ -1,6 +1,6 @@
 <div>
   <mcs-billing-summary-widget
-    [billingAccountId]="billingAccountId$ | async"
+    [billingSummaries]="billingSummaries$ | async"
     (chartChange)="onUpdateChart($event)">
   </mcs-billing-summary-widget>
 </div>

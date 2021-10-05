@@ -1,8 +1,9 @@
 import { JsonProperty } from '@app/utilities';
 
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsReportBillingService } from './mcs-report-billing-service';
 
-export class McsReportBillingServiceGroup {
+export class McsReportBillingServiceGroup extends McsEntityBase {
   @JsonProperty()
   public macquarieBillMonth: string = undefined;
 

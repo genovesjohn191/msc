@@ -3371,6 +3371,7 @@
     "enabled": "Enabled"
   },
   "label": {
+    "audUsdExchangeRate": "AUD-USD Exchange Rate",
     "total": "Total",
     "installedQuantity": "Installed Quantity",
     "linkManagementService": "Linked Management Service",
@@ -3522,7 +3523,7 @@
     "suspend": "Suspend"
   },
   "message": {
-    "minimumSpendCommitmentNotMet": "As your minimum spend commitment for this element was not met, its charge has defaulted to match the minimum spend commitment itself.",
+    "minimumSpendCommitmentNotMet": "The minimum Azure spend for this element was not met, so the charge defaulted to the Minimum Spend Commitment.",
     "markupPercent": "{{markup}}% of consumption RRP",
     "loadingItems": "Loading items...",
     "noRecordsFound": "No records found.",

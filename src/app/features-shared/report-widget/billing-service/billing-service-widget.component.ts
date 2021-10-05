@@ -1,15 +1,11 @@
 import {
-  throwError,
   BehaviorSubject,
   Observable,
   Subject
 } from 'rxjs';
 import {
-  catchError,
-  map,
   shareReplay,
-  takeUntil,
-  tap
+  takeUntil
 } from 'rxjs/operators';
 
 import {
@@ -26,10 +22,8 @@ import {
 import { FormControl } from '@angular/forms';
 import {
   McsOption,
-  McsReportBillingServiceGroup,
-  McsReportBillingSummaryParams
+  McsReportBillingServiceGroup
 } from '@app/models';
-import { McsApiService } from '@app/services';
 import {
   ChartConfig,
   ChartItem,
@@ -37,10 +31,12 @@ import {
   StdDateFormatPipe
 } from '@app/shared';
 import {
+  compareDates,
   createObject,
   getDateOnly,
   getTimestamp,
   isNullOrEmpty,
+  isNullOrUndefined,
   removeSpaces,
   unsubscribeSafely
 } from '@app/utilities';
@@ -49,11 +45,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportWidgetBase } from '../report-widget.base';
 import { BillingServiceItem } from './billing-service-item';
 
-class BillingServiceStruct {
+class BillingServiceViewModel {
   constructor(
     public title: string,
+    public items: McsOption[],
     public includeMininumCommentNote: boolean,
-    public items: McsOption[]
+    public includeProjectionSuffix: boolean
   ) { }
 }
 
@@ -69,7 +66,7 @@ class BillingServiceStruct {
 })
 export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public billingAccountId: string;
+  public billingSummaries: McsReportBillingServiceGroup[];
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
@@ -82,15 +79,13 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();
 
-  private _billingAccountId: string = undefined;
   private _billingSeriesItems: BillingServiceItem[][] = [];
   private _billingSettingsMap = new Map<string, (item: BillingServiceItem) => McsOption>();
-  private _billingStructMap = new Map<string, (item: BillingServiceItem) => BillingServiceStruct>();
+  private _billingStructMap = new Map<string, (item: BillingServiceItem) => BillingServiceViewModel>();
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _apiService: McsApiService,
     private _datePipe: StdDateFormatPipe,
     private _currencyPipe: StdCurrencyFormatPipe
   ) {
@@ -122,19 +117,19 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         horizontalAlign: 'center'
       }
     };
+
+    this._registerSettingsMap();
+    this._registerBillingStructMap();
   }
 
   public ngOnInit() {
-    this._registerSettingsMap();
-    this._registerBillingStructMap();
-
     this._subscribeToChartItemsChange();
     this.getBillingSummaries();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    let billingAccountIdChange = changes['billingAccountId'];
-    if (!isNullOrEmpty(billingAccountIdChange)) { this.getBillingSummaries(); }
+    let billingSummariesChange = changes['billingSummaries'];
+    if (!isNullOrEmpty(billingSummariesChange)) { this.getBillingSummaries(); }
   }
 
   public ngOnDestroy(): void {
@@ -145,34 +140,18 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     this.hasError = false;
     this.processing = true;
     this.updateChartUri(undefined);
+
+    if (!isNullOrEmpty(this.billingSummaries)) {
+      let flatRecords = this._getFlatBillingServices(this.billingSummaries);
+      this.billingServices = flatRecords;
+
+      let chartItems = this._convertFlatRecordsToChartItems(flatRecords);
+      this._chartItemsChange.next(chartItems);
+
+      this.processing = isNullOrUndefined(this.billingSummaries);
+      if (chartItems?.length === 0) { this.updateChartUri(''); }
+    }
     this._changeDetectorRef.markForCheck();
-
-    let apiQuery = new McsReportBillingSummaryParams();
-    apiQuery.billingAccountId = this._billingAccountId;
-
-    this._apiService.getBillingSummaries(apiQuery).pipe(
-      map(billingSummaries => {
-        if (isNullOrEmpty(billingSummaries)) { return []; }
-
-        let flatRecords = this._getFlatBillingServices(billingSummaries?.collection);
-        this.billingServices = flatRecords;
-        return this._convertFlatRecordsToChartItems(flatRecords);
-      }),
-      tap(chartItems => {
-        if (chartItems?.length === 0) { this.updateChartUri(''); }
-
-        this._chartItemsChange.next(chartItems);
-        this.processing = false;
-        this._changeDetectorRef.markForCheck();
-      }),
-      catchError((error) => {
-        this.hasError = true;
-        this.processing = false;
-        this.updateChartUri('');
-        this._changeDetectorRef.markForCheck();
-        return throwError(error);
-      })
-    ).subscribe();
   }
 
   private _dataLabelFormatter(value: number, opts?: any): string {
@@ -187,18 +166,22 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     let serviceFound = this._billingSeriesItems[opts.seriesIndex][opts.dataPointIndex];
     if (isNullOrEmpty(serviceFound)) { return null; }
 
-    let billingKey = removeSpaces(serviceFound.productType)?.toUpperCase();
-    let billingFuncFound = this._billingStructMap?.get(billingKey);
-    if (isNullOrEmpty(billingFuncFound)) { return `Nothing to display`; }
+    let billingStruct = this._getBillingViewModelByItem(serviceFound);
+    let billingTitle = this._generateBillingTitle(billingStruct);
 
-    let billingItemInfo = billingFuncFound(serviceFound);
     return this.generateCustomHtmlTooltip(
-      billingItemInfo.title,
-      billingItemInfo.items,
-      billingItemInfo.includeMininumCommentNote &&
+      billingTitle,
+      billingStruct.items,
+      billingStruct.includeMininumCommentNote &&
       !serviceFound.hasMetMinimumCommitment &&
+      serviceFound.minimumCommitmentDollars &&
       this._translate.instant('message.minimumSpendCommitmentNotMet')
     );
+  }
+
+  private _generateBillingTitle(billingStruct: BillingServiceViewModel): string {
+    return billingStruct?.includeProjectionSuffix ?
+      `${billingStruct.title} (Projected)` : billingStruct?.title;
   }
 
   private _subscribeToChartItemsChange(): void {
@@ -215,8 +198,11 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     services.forEach(billingService => {
       if (isNullOrEmpty(billingService)) { return; }
 
+      let billingViewModel = this._getBillingViewModelByItem(billingService);
+      let billingTitle = this._generateBillingTitle(billingViewModel);
+
       chartItems.push({
-        name: billingService.service,
+        name: billingTitle,
         xValue: billingService.timestamp,
         yValue: billingService.finalChargeDollars
       } as ChartItem);
@@ -225,6 +211,14 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     // Populate billing services series index
     this._updateBillingSeriesItems(services);
     return chartItems;
+  }
+
+  private _getBillingViewModelByItem(service: BillingServiceItem): BillingServiceViewModel {
+    let billingKey = removeSpaces(service.productType)?.toUpperCase();
+    let billingFuncFound = this._billingStructMap?.get(billingKey);
+    if (isNullOrEmpty(billingFuncFound)) { return null; }
+
+    return billingFuncFound(service);
   }
 
   private _updateBillingSeriesItems(services: BillingServiceItem[]): void {
@@ -270,6 +264,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
           billingDescription: parentService.billingDescription,
           discountPercent: parentService.discountPercent,
           finalChargeDollars: parentService.finalChargeDollars,
+          usdPerUnit: parentService.usdPerUnit,
           hasMetMinimumCommitment: parentService.hasMetMinimumCommitment,
           initialDomain: parentService.tenant?.initialDomain,
           installedQuantity: parentService.installedQuantity,
@@ -295,6 +290,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
             billingDescription: childService.billingDescription,
             discountPercent: childService.discountPercent,
             finalChargeDollars: childService.finalChargeDollars,
+            usdPerUnit: childService.usdPerUnit,
             hasMetMinimumCommitment: childService.hasMetMinimumCommitment,
             initialDomain: childService.tenant?.initialDomain,
             installedQuantity: childService.installedQuantity,
@@ -317,11 +313,6 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         });
       });
     });
-
-    // Sort all billing services by month
-    // billingServiceItems?.sort((first, second) => {
-    //   return compareDates(first.sortDate, second.sortDate);
-    // });
     return billingServiceItems;
   }
 
@@ -342,11 +333,24 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     this._chartItemsChange.next(serviceChartItems);
   }
 
+  private _isDateGreaterThanExpiry(timestamp: number): boolean {
+    let novemberDate = new Date();
+    novemberDate.setFullYear(2021, 10, 1);
+    return compareDates(new Date(timestamp), novemberDate) === 1;
+  }
+
   private _registerSettingsMap(): void {
     this._billingSettingsMap.set('total', item =>
       new McsOption(
         this._currencyPipe.transform(item.finalChargeDollars),
         this._translate.instant('label.total')
+      )
+    );
+
+    this._billingSettingsMap.set('usdPerUnit', item =>
+      new McsOption(
+        this._isDateGreaterThanExpiry(item.timestamp) && item.usdPerUnit,
+        this._translate.instant('label.audUsdExchangeRate')
       )
     );
 
@@ -415,7 +419,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingSettingsMap.set('microsoftIdentifier', item =>
       new McsOption(
-        item.microsoftIdentifier,
+        item.microsoftIdentifier || 'Unknown',
         this._translate.instant('label.microsoftIdentifier')
       )
     );
@@ -448,147 +452,179 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
   private _registerBillingStructMap(): void {
     this._billingStructMap.set('AZUREESSENTIALSCSP',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, false
       )
     );
 
     this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, false
       )
     );
 
     this._billingStructMap.set('MANAGEDAZURECSP',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, false
       )
     );
 
     this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, false
       )
     );
 
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
-      item => new BillingServiceStruct(`${item.azureDescription}`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
-          'total', 'discountOffRrp', 'linkManagementService', 'managementChargesParent',
+          'total', 'usdPerUnit', 'discountOffRrp', 'linkManagementService', 'managementChargesParent',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, false
       )
     );
 
     // TODO(apascual): This item still under confirmation on jira FUSION-6581
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTIONENTERPRISEAGREEMENT',
-      item => new BillingServiceStruct(`${item.azureDescription}`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, false
       )
     );
 
     this._billingStructMap.set('AZURERESERVATION',
-      item => new BillingServiceStruct(`${item.azureDescription}`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
           'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, false
       )
     );
 
     this._billingStructMap.set('CSPLICENSES',
-      item => new BillingServiceStruct(`${item.azureDescription}`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
           'total', 'installedQuantity', 'discountOffRrp',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, false
       )
     );
 
     this._billingStructMap.set('AZURESOFTWARESUBSCRIPTION',
-      item => new BillingServiceStruct(`${item.azureDescription}`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
           'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, false
       )
     );
 
     this._billingStructMap.set('AZUREESSENTIALSCSP',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}(Projected)`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, item.isProjection
       )
     );
 
     this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}(Projected)`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, item.isProjection
       )
     );
 
     this._billingStructMap.set('MANAGEDAZURECSP',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}(Projected)`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, item.isProjection
       )
     );
 
     this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
-      item => new BillingServiceStruct(`${item.billingDescription} - ${item.service}(Projected)`, true,
+      item => new BillingServiceViewModel(
+        `${item.billingDescription} - ${item.service}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        true, item.isProjection
       )
     );
 
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
-      item => new BillingServiceStruct(`${item.azureDescription}(Projected)`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
           'total', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, item.isProjection
       )
     );
 
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTIONENTERPRISEAGREEMENT',
-      item => new BillingServiceStruct(`${item.azureDescription}(Projected)`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
           'total', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, item.isProjection
       )
     );
 
     this._billingStructMap.set('AZURERESERVATION',
-      item => new BillingServiceStruct(`${item.azureDescription}(Projected)`, false,
+      item => new BillingServiceViewModel(
+        `${item.azureDescription}`,
         this._getTooltipOptionsInfo(item,
           'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth')
+          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth'),
+        false, item.isProjection
       )
     );
   }

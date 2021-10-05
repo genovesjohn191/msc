@@ -6,6 +6,7 @@ export class BillingSummaryItem {
     public microsoftChargeMonth: string,
     public macquarieBillMonth: string,
     public finalChargeDollars: number,
+    public usdPerUnit: number,
     public sortDate: Date,
     public timestamp?: number
   ) { }
