@@ -1,34 +1,42 @@
+$chart-font-size: 12;
+$chart-max-width: 20rem;
+
 .chart-list {
   @include display-flex(column);
-  max-width: 20rem;
+  max-width: $chart-max-width;
+  background-color: rgba(0, 0, 0, 0.4);
 
   .chart-title {
     display: block;
-    padding: $space-xsmall;
-    border-bottom: 1px solid $border-color-light;
-    background-color: get-color($color-definitions, light, base);
-    @include font-size(12);
+    margin-bottom: $space-small;
+    padding: $space-xsmall $space-medium;
+    @include font-size($chart-font-size);
+    background-color: rgba(0, 0, 0, 0.75);
   }
 
   .chart-item {
-    padding: 0 $space-xsmall;
+    padding: 0 $space-medium;
     @include display-flex(row);
     @include set-items-interval(8px, horizontal);
-    @include font-size(12);
+    @include font-size($chart-font-size);
 
     .chart-value {
       white-space: pre-wrap;
+    }
+
+    &:last-child() {
+      margin-bottom: $space-small;
     }
   }
 }
 
 .chart-note {
   @include display-flex(row);
-  max-width: 20rem;
+  @include font-size($chart-font-size);
+  max-width: $chart-max-width;
   margin-top: $space-small;
-  padding: $space-xsmall;
+  padding: $space-xsmall $space-medium;
 
   white-space: pre-wrap;
-  @include font-size(12);
-  color: $readonly-color;
+  color: $readonly-color-on-dark;
 }

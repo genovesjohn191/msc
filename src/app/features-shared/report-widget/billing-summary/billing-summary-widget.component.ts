@@ -103,12 +103,13 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         valueFormatter: this._valueYFormatter.bind(this)
       },
       tooltip: {
-        customFormatter: this._tooltipCustomFormatter.bind(this)
+        customFormatter: this._tooltipCustomFormatter.bind(this),
+        theme: 'dark'
       },
       dataLabels: {
         enabled: true,
         formatter: this._dataLabelFormatter.bind(this),
-        offsetX: -25
+        offsetX: -20
       },
       legend: {
         position: 'bottom',
@@ -279,6 +280,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
           parentService.isProjection,
           billingGroup.microsoftChargeMonth,
           billingGroup.macquarieBillMonth,
+          billingGroup.usdPerUnit,
           parentService
         );
 
@@ -289,6 +291,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
             childService.isProjection,
             billingGroup.microsoftChargeMonth,
             billingGroup.macquarieBillMonth,
+            billingGroup.usdPerUnit,
             childService
           );
         });
@@ -301,14 +304,13 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     isProjection: boolean,
     chargeMonth: string,
     billMonth: string,
+    usdPerUnit: number,
     data: McsReportBillingService | McsReportBillingServiceSummary
   ): void {
     let serviceFound = this._billingSummaryItemsMap.get(productTypeKey);
     let services = serviceFound;
 
     let finalChargeDollars = data instanceof McsReportBillingService ?
-      data.finalChargeDollars : data.finalChargeDollars;
-    let usdPerUnit = data instanceof McsReportBillingService ?
       data.finalChargeDollars : data.finalChargeDollars;
 
     if (!isNullOrEmpty(serviceFound)) {

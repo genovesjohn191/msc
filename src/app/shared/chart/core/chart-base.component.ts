@@ -67,6 +67,7 @@ export type ChartLegend = {
 }
 
 export type ChartTooltip = {
+  theme?: 'light' | 'dark';
   yTitleFormatter?: (seriesName: string) => string;
   yValueFormatter?: (val: number, opts?: any) => string;
   xValueFormatter?: (val: number, opts?: any) => string;
@@ -218,7 +219,8 @@ export class ChartComponentBase {
             formatter: value.tooltip.yTitleFormatter
           }
         },
-        custom: value.tooltip.customFormatter
+        custom: value.tooltip.customFormatter,
+        theme: value.tooltip.theme
       }
     }
 

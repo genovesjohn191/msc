@@ -13,6 +13,9 @@ export class McsReportBillingServiceGroup extends McsEntityBase {
   @JsonProperty()
   public isProjection: boolean = undefined;
 
+  @JsonProperty()
+  public usdPerUnit: number = undefined
+
   @JsonProperty({ target: McsReportBillingService })
   public parentServices: McsReportBillingService[] = undefined;
 }
