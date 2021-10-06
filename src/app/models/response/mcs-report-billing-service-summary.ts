@@ -14,9 +14,6 @@ export class McsReportBillingServiceSummary extends McsEntityBase {
   public finalChargeDollars: number = undefined;
 
   @JsonProperty()
-  public usdPerUnit: number = undefined
-
-  @JsonProperty()
   public serviceId: string = undefined;
 
   @JsonProperty()

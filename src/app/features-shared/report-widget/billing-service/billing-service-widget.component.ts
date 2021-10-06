@@ -105,12 +105,13 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         valueFormatter: this._valueYFormatter.bind(this)
       },
       tooltip: {
-        customFormatter: this._tooltipCustomFormatter.bind(this)
+        customFormatter: this._tooltipCustomFormatter.bind(this),
+        theme: 'dark'
       },
       dataLabels: {
         enabled: true,
         formatter: this._dataLabelFormatter.bind(this),
-        offsetX: -25
+        offsetX: -20
       },
       legend: {
         position: 'bottom',
@@ -264,7 +265,6 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
           billingDescription: parentService.billingDescription,
           discountPercent: parentService.discountPercent,
           finalChargeDollars: parentService.finalChargeDollars,
-          usdPerUnit: parentService.usdPerUnit,
           hasMetMinimumCommitment: parentService.hasMetMinimumCommitment,
           initialDomain: parentService.tenant?.initialDomain,
           installedQuantity: parentService.installedQuantity,
@@ -279,7 +279,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
           service: parentService.serviceId,
           tenantName: parentService.tenant?.name,
           sortDate: getDateOnly(billingGroup.microsoftChargeMonth),
-          timestamp: getTimestamp(billingGroup.microsoftChargeMonth)
+          timestamp: getTimestamp(billingGroup.microsoftChargeMonth),
+          usdPerUnit: billingGroup.usdPerUnit
         });
         billingServiceItems.push(parentBillingServiceItem);
 
@@ -290,7 +291,6 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
             billingDescription: childService.billingDescription,
             discountPercent: childService.discountPercent,
             finalChargeDollars: childService.finalChargeDollars,
-            usdPerUnit: childService.usdPerUnit,
             hasMetMinimumCommitment: childService.hasMetMinimumCommitment,
             initialDomain: childService.tenant?.initialDomain,
             installedQuantity: childService.installedQuantity,
@@ -307,7 +307,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
             markupPercentParent: parentService.markupPercent,
             parentServiceId: parentService.serviceId,
             sortDate: getDateOnly(billingGroup.microsoftChargeMonth),
-            timestamp: getTimestamp(billingGroup.microsoftChargeMonth)
+            timestamp: getTimestamp(billingGroup.microsoftChargeMonth),
+            usdPerUnit: billingGroup.usdPerUnit
           });
           billingServiceItems.push(childBillingServiceItem);
         });
