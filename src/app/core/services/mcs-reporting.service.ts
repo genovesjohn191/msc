@@ -22,7 +22,9 @@ import {
   McsReportAuditAlerts,
   McsReportInefficientVms,
   McsReportTopVmsByCost,
-  McsReportAscAlerts
+  McsReportAscAlerts,
+  McsReportPlatformSecurityAdvisories,
+  McsReportParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -195,6 +197,10 @@ export class McsReportingService {
 
   public getTopVmsByCost(query?: McsQueryParam): Observable<McsReportTopVmsByCost[]> {
     return this._apiService.getTopVmsByCost(query);
+  }
+
+  public getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsReportPlatformSecurityAdvisories[]> {
+    return this._apiService.getPlatformSecurityAdvisories(query);
   }
 
   public _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {

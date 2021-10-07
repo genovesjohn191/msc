@@ -21,7 +21,9 @@
           <span>{{ 'serversVdcOverview.shared.properties.configuration' | translate }}:</span>
           <span [innerHTML]="resource?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
           <span>/</span>
-          <span [innerHTML]="resource?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
+          <span [innerHTML]="resource?.compute?.cpuLimitMBLabel | mcsDataLabel"
+            mcsCursor="default"
+            [matTooltip]="ghzTooltip(resource?.compute?.cpuLimitGhz)"></span>
           <ng-container *ngIf="resource?.scaleable">
             <ng-container *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingVdcComputeScale'];">
               <a (click)="scaleVdc(resource)"

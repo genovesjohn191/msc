@@ -319,6 +319,7 @@ export * from './response/mcs-report-asc-alerts';
 export * from './response/mcs-report-audit-alerts';
 export * from './response/mcs-report-inefficient-vms';
 export * from './response/mcs-report-top-vms-by-cost';
+export * from './response/mcs-report-platform-security-advisories';
 export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
@@ -388,6 +389,7 @@ export * from './common/mcs-network-db-maz-aa-query-params';
 export * from './common/mcs-field-error-message';
 export * from './common/mcs-reservation-product-type-params';
 export * from './common/mcs-report-billing-summary-params';
+export * from './common/mcs-report-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

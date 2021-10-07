@@ -17,6 +17,7 @@ import { FieldSelectBillingAccountComponent } from './field-select-billing-accou
 import { FieldSelectBillingServiceComponent } from './field-select-billing-service/field-select-billing-service.component';
 import { FieldSelectContactComponent } from './field-select-contact/field-select-contact.component';
 import { FieldSelectDnsZoneTypeComponent } from './field-select-dns-zone-type/field-select-dns-zone-type.component';
+import { FieldSelectMonthPeriodComponent } from './field-select-month-period/field-select-month-period.component';
 import { FieldSelectTreeViewComponent } from './field-select-tree-view/field-select-tree-view.component';
 import { InputInlineEditComponent } from './input-inline-edit/input-inline-edit.component';
 import { OrderListBoxComponent } from './order-listbox/order-listbox.component';
@@ -46,6 +47,7 @@ const exports: any[] | Type<any> = [
   FieldSelectTreeViewComponent,
   FieldSelectBillingAccountComponent,
   FieldSelectBillingServiceComponent,
+  FieldSelectMonthPeriodComponent,
   OrderListBoxComponent,
   SelectColocationDeviceComponent,
   SelectManagementTagComponent

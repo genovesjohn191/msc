@@ -7,8 +7,10 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsContactUs,
+  McsFeatureFlag,
   McsPermission,
   McsReportCostRecommendations,
+  McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
   McsTicket
 } from '@app/models';
@@ -32,6 +34,10 @@ export class OverviewDocument implements IDashboardExportDocument {
 
   public hasTicketViewPermission(): boolean {
     return this._accessControlService.hasPermission([McsPermission.TicketView]);
+  }
+
+  public get hasAccessToPlatformSecurityListing(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlatformSecurityAdvisory]);
   }
 
   public setInjector(injector: Injector): void {
@@ -76,6 +82,7 @@ export class OverviewDocument implements IDashboardExportDocument {
           ${this._createResourceChangesHtml(overviewDetails)}
           ${this._createAzureTicketsHtml(overviewDetails.azureTickets)}
           ${this._createTopVmsByCostHtml(overviewDetails.topVms)}
+          ${this._createPlatformSecurityHtml(overviewDetails.platformSecurity)}
         </div>
       </div>`;
 
@@ -222,6 +229,41 @@ export class OverviewDocument implements IDashboardExportDocument {
           topVmsByCostTable += `<p>No VMs or no cost data to display.</p>`;
         }
     let actualResponse = this._widgetHtml(topVmsByCostTable, false, title, subTitle);
+    return actualResponse;
+  }
+
+  private _createPlatformSecurityHtml(data: McsReportPlatformSecurityAdvisories[]): string {
+    if (!this.hasAccessToPlatformSecurityListing) { return ''; }
+
+    let title = this._translate('reports.overview.platformSecurityAdvisoriesWidget.title');
+    let subTitle = `${this._translate('reports.overview.platformSecurityAdvisoriesWidget.subTitle')}`
+    let platformSecurityTable = '';
+    platformSecurityTable += `
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
+        <tr style="background-color: #000; color: #FFF;">
+          <th style="text-align: left">Description</th>
+          <th style="text-align: left">Impacted Services</th>
+          <th style="text-align: left">Impacted Regions</th>
+          <th style="text-align: left">Start Time</th>
+        </tr>`;
+        if (data?.length > 0) {
+          data.forEach(item => {
+            platformSecurityTable += `
+              <tr style="text-align: left;">
+                <td>${item.description}</td>
+                <td>${item.impactedServices.join(', ')}</td>
+                <td>${item.impactedRegions.join(', ')}</td>
+                <td>${item.startTime}</td>
+              </tr>
+            `;
+          });
+        }
+        platformSecurityTable += `</table>`;
+        if (data?.length === 0) {
+          platformSecurityTable += `<p>
+            ${this._translate('reports.overview.platformSecurityAdvisoriesWidget.noDataFound')}`;
+        }
+    let actualResponse = this._widgetHtml(platformSecurityTable, false, title, subTitle);
     return actualResponse;
   }
 
