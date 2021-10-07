@@ -98,7 +98,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         type: 'datetime'
       },
       yaxis: {
-        title: 'Your Bill',
+        title: 'Charge',
         showLabel: true,
         valueFormatter: this._valueYFormatter.bind(this)
       },

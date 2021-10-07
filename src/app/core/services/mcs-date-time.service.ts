@@ -11,7 +11,8 @@ import {
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
   'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly' |
-  'noYearDateShortTime' | 'longDateShortTime' | 'shortMonthYear' | 'fullMonthYear';
+  'noYearDateShortTime' | 'longDateShortTime' | 'shortMonthYear' | 'fullMonthYear' |
+  'shortDateTime';
 
 @Injectable()
 export class McsDateTimeService {
@@ -100,5 +101,6 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('longDateShortTime', 'ddd, DD MMM YYYY, h:mm A');
     this._dateTimeMapTable.set('shortMonthYear', 'MMM YYYY');
     this._dateTimeMapTable.set('fullMonthYear', 'MMMM YYYY');
+    this._dateTimeMapTable.set('shortDateTime', 'YYYY-MM-DD');
   }
 }
