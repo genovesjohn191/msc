@@ -91,13 +91,13 @@ export type ChartConfig = {
   legend?: ChartLegend;
   tooltip?: ChartTooltip;
   labels?: any[];
-  colors?: string[];
+  colors?: any[];
   plotOptions?: ChartPlotOptions;
 }
 
 type ChartOptions = {
   chart: ApexChart;
-  colors?: string[];
+  colors?: any[];
   dataLabels: ApexDataLabels;
   legend: ApexLegend;
   plotOptions: ApexPlotOptions;
@@ -292,7 +292,7 @@ export class ChartComponentBase {
     this._labels = value;
   }
 
-  public set colors(value: string[]) {
+  public set colors(value: any[]) {
     this._colors = value;
   }
 
@@ -323,7 +323,7 @@ export class ChartComponentBase {
   private _stroke: ApexStroke;
   private _title: ApexTitleSubtitle;
   private _labels: any[];
-  private _colors: string[];
+  private _colors: any[];
   private _tooltip: ApexTooltip = {
 
   };

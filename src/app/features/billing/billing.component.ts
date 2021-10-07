@@ -27,6 +27,7 @@ import {
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import { StdDateFormatPipe } from '@app/shared';
 import {
   getSafeProperty,
   isNullOrEmpty,
@@ -58,7 +59,8 @@ export class BillingComponent implements OnInit, OnDestroy {
     private _eventDispatcher: EventBusDispatcherService,
     private _navigationService: McsNavigationService,
     private _translate: TranslateService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _datePipe: StdDateFormatPipe
   ) {
     this._registerEvents();
     this._registerFormControl();
@@ -114,8 +116,12 @@ export class BillingComponent implements OnInit, OnDestroy {
       takeUntil(this._destroySubject),
       startWith([null]),
       tap(accountIds => {
+        let dateParams = this._getAssociatedDates();
+
         let query = new McsReportBillingSummaryParams();
         query.billingAccountId = isNullOrEmpty(accountIds) ? null : accountIds[0];
+        query.microsoftChargeMonthRangeBefore = dateParams.before;
+        query.microsoftChargeMonthRangeAfter = dateParams.after;
         this._subscribeToBillingSummaries(query);
       })
     ).subscribe();
@@ -127,5 +133,18 @@ export class BillingComponent implements OnInit, OnDestroy {
         this._billingSummaryService.setBillingSummaries(response?.collection || []);
       })
     ).subscribe();
+  }
+
+  private _getAssociatedDates(): { before: string, after: string } {
+    let beforeDate = new Date();
+    beforeDate.setMonth(0, 1);
+
+    let afterDate = new Date();
+    afterDate.setMonth(11, 1);
+
+    return {
+      before: this._datePipe.transform(beforeDate, 'shortDateTime'),
+      after: this._datePipe.transform(afterDate, 'shortDateTime')
+    };
   }
 }
