@@ -178,6 +178,8 @@ import {
   McsReportIntegerData,
   McsReportManagementService,
   McsReportMonitoringAndAlerting,
+  McsReportParams,
+  McsReportPlatformSecurityAdvisories,
   McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
@@ -2040,6 +2042,15 @@ export class McsApiService {
     return this._reportsApi.getTopVmsByCost(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTopVmsByCost'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsReportPlatformSecurityAdvisories[]> {
+    return this._reportsApi.getPlatformSecurityAdvisories(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPlatformSecurityAdvisories'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

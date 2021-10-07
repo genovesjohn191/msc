@@ -14,6 +14,8 @@ import {
   McsReportManagementService,
   McsReportMonitoringAndAlerting,
   McsReportOperationalSavings,
+  McsReportParams,
+  McsReportPlatformSecurityAdvisories,
   McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
@@ -94,4 +96,6 @@ export interface IMcsApiReportsService {
   getTopVmsByCost(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportTopVmsByCost[]>>;
 
   getBillingSummaries(query?: McsReportBillingSummaryParams): Observable<McsApiSuccessResponse<McsReportBillingServiceGroup[]>>;
+
+  getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>>;
 }

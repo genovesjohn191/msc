@@ -20,6 +20,7 @@ import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/
 import { OperationalMonthlySavingsWidgetComponent } from './operational-monthly-savings/operational-monthly-savings-widget.component';
 import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly-savings/subitems/operational-savings-subitems-viewer.component';
 import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
+import { PlatformSecurityAdvisoriesWidgetComponent } from './platform-security-advisories/platform-security-advisories-widget.component';
 import { ReportWidgetDataStatusComponent } from './report-widget-data-status.component';
 import { ResourceChangesWidgetComponent } from './resource-changes/resource-changes-widget.component';
 import { ResourceHealthWidgetComponent } from './resource-health/resource-health-widget.component';
@@ -58,7 +59,8 @@ const exports: any[] | Type<any> = [
   VirtualMachineUsageBreakdownWidgetComponent,
   VmRightsizingWidgetComponent,
   BillingSummaryWidgetComponent,
-  BillingServiceWidgetComponent
+  BillingServiceWidgetComponent,
+  PlatformSecurityAdvisoriesWidgetComponent
 ];
 
 @NgModule({

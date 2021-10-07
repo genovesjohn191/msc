@@ -1,6 +1,7 @@
 import {
   McsContactUs,
   McsReportCostRecommendations,
+  McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
   McsTicket
 } from '@app/models';
@@ -14,4 +15,5 @@ export class OverviewDocumentDetails {
   public contactUs: McsContactUs[];
   public azureTickets: McsTicket[];
   public topVms: McsReportTopVmsByCost[];
+  public platformSecurity: McsReportPlatformSecurityAdvisories[];
 }

@@ -17,6 +17,8 @@ import {
   McsReportManagementService,
   McsReportMonitoringAndAlerting,
   McsReportOperationalSavings,
+  McsReportParams,
+  McsReportPlatformSecurityAdvisories,
   McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
@@ -465,6 +467,25 @@ export class McsApiReportsService implements IMcsApiReportsService {
       map((response) => {
         let apiResponse = McsApiSuccessResponse.deserializeResponse<McsReportBillingServiceGroup[]>(
           McsReportBillingServiceGroup, response
+        );
+        return apiResponse;
+      })
+    );
+  }
+
+  public getPlatformSecurityAdvisories(
+    query?: McsReportParams
+  ): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>> {
+    if (isNullOrEmpty(query)) { query = new McsReportParams(); }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/platform-security-advisories';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => {
+        let apiResponse = McsApiSuccessResponse.deserializeResponse<McsReportPlatformSecurityAdvisories[]>(
+          McsReportPlatformSecurityAdvisories, response
         );
         return apiResponse;
       })

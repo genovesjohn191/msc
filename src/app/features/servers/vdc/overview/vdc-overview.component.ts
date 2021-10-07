@@ -110,6 +110,10 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
     return result.join(`\r\n`);
   }
 
+  public ghzTooltip(ghzValue: number): string {
+    return `${ghzValue} GHz`;
+  }
+
   /**
    * Returns true when vdc can create new server
    * @param resource Resource to be checked

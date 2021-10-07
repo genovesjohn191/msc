@@ -4,11 +4,14 @@ import {
   Injector,
   ChangeDetectorRef,
 } from '@angular/core';
+import { McsAccessControlService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsContactUs,
+  McsFeatureFlag,
   McsReportCostRecommendations,
+  McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
   McsTicket
 } from '@app/models';
@@ -32,6 +35,7 @@ export class ReportOverviewComponent {
 
   public constructor(
     private _injector: Injector,
+    private _accessControlService: McsAccessControlService,
     private _changeDetector: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService)
   {
@@ -40,6 +44,10 @@ export class ReportOverviewComponent {
 
   public get pdfDownloadInProgress(): boolean {
     return this._isPdfDownloadInProgress;
+  }
+
+  public get hasAccessToPlatformSecurity(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlatformSecurityAdvisory]);
   }
 
   public onClickExportWord(): void {
@@ -90,7 +98,12 @@ export class ReportOverviewComponent {
     this._exportDocumentDetails.topVms = data;
   }
 
+  public platformSecurityDataChange(data: McsReportPlatformSecurityAdvisories[]): void {
+    this._exportDocumentDetails.platformSecurity = data;
+  }
+
   public widgetsLoading(): boolean {
+    let platformSecurity = this.hasAccessToPlatformSecurity ? this._exportDocumentDetails.platformSecurity : [];
     return this._exportDocumentDetails.azureSubscription === undefined ||
       this._exportDocumentDetails.licenseSubscription === undefined ||
       this._exportDocumentDetails.azureResources === undefined ||
@@ -98,7 +111,8 @@ export class ReportOverviewComponent {
       this._exportDocumentDetails.costRecommendation === undefined ||
       this._exportDocumentDetails.resourceCount === undefined ||
       this._exportDocumentDetails.azureTickets === undefined ||
-      this._exportDocumentDetails.topVms === undefined;
+      this._exportDocumentDetails.topVms === undefined ||
+      platformSecurity === undefined;
   }
 
   private _registerEvents(): void {

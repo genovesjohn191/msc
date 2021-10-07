@@ -30,6 +30,21 @@ export class McsResourceCompute {
   @JsonProperty()
   public memoryAvailableMB: number = undefined;
 
+  @JsonProperty()
+  public cpuAllocationGhz: number = undefined;
+
+  @JsonProperty()
+  public cpuAvailableGhz: number = undefined;
+
+  @JsonProperty()
+  public cpuLimitGhz: number = undefined;
+
+  @JsonProperty()
+  public cpuReservationGhz: number = undefined;
+
+  @JsonProperty()
+  public cpuUsedGhz: number = undefined;
+
   /**
    * Returns the memoryLimitMB with its unit
    */

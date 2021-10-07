@@ -233,6 +233,11 @@
         "subTitle": "A list of your 5 most expensive VMs, along with their uptime and any reserved hours that have been applied to them (month to date). This data is refreshed on the first week of each month.",
         "cloudHealthLinkLabel": "View in CloudHealth",
         "noDataFound": "No VMs or no cost data to display."
+      },
+      "platformSecurityAdvisoriesWidget": {
+        "title": "Platform Security Advisories",
+        "subTitle": "A list of alerts which detail security events that have occurred in your Azure tenancy.",
+        "noDataFound": "No platform security advisories to display."
       }
     },
     "insights": {
@@ -3135,6 +3140,7 @@
     "getAuditAlerts": "Something went wrong while retrieving your audit alerts information. Please try again.",
     "getInefficientVms": "Something went wrong while retrieving your inefficient VMs information. Please try again.",
     "getTopVmsByCost": "Something went wrong while retrieving your top VMs by cost information. Please try again.",
+    "getPlatformSecurityAdvisories": "Something went wrong while retrieving your platform security advisories information. Please try again.",
     "getTerraformDeployments": "Something went wrong while retrieving your Azure deployments. Please try again.",
     "getTerraformDeployment": "Something went wrong while retrieving your Azure deployment details. Please try again.",
     "getTerraformDeploymentActivities": "Something went wrong while retrieving your Azure deployment activities. Please try again.",
@@ -3252,6 +3258,8 @@
     "hourlyCharge": "Hourly Charge",
     "id": "ID",
     "isInfrastructure": "Is Infrastructure",
+    "impactedRegions": "Impacted Regions",
+    "impactedServices": "Impacted Services",
     "installedBaseState": "Installed Base State",
     "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
@@ -3263,6 +3271,7 @@
     "lastUpdated": "Last Updated",
     "lastUpdatedBy": "Last Updated By",
     "lastUpdatedDate": "Last Updated Date",
+    "link": "Link",
     "loggedBy": "Logged By",
     "loggedOn": "Logged On",
     "managementIp": "Management IP",
@@ -3450,6 +3459,7 @@
     "lastUpdated": "Last Updated",
     "learnMore": "Learn More",
     "moduleType": "Module Type",
+    "month": "Month",
     "multicastIpAddress":"Multicast IP Address",
     "name": "Name",
     "newActivity": "New Comment/Attachment",
@@ -3479,6 +3489,7 @@
     "type": "Type",
     "useCase": "Use Case",
     "updatedBy":"Updated By",
+    "viewInAzurePortal": "View in Azure Portal",
     "vni": "VNI",
     "vlans": "VLANs",
     "deleteZoneRecord": "Delete Zone Record",
@@ -3579,7 +3590,8 @@
     "billingDetailsNew": "No contract term applies for this product.",
     "billingDetailsWithoutContractTerm": "No contract term applies for this request.",
     "billingDetailsWithContractTerm": "The contract term for this service will remain as-is.",
-    "changeOrderNote": "The billing details for this service will remain as-is."
+    "changeOrderNote": "The billing details for this service will remain as-is.",
+    "unavailable": "Unavailable"
   },
   "tooltip": {
     "exportWord": "Export Word Document",
