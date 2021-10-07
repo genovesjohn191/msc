@@ -13,7 +13,8 @@
           {{ 'serverCreate.vdcDropdownList.header' | translate }}
         </ng-container>
 
-        <mcs-option [value]="item" *ngFor="let item of resources$ | async">
+        <mcs-option [value]="item" *ngFor="let item of resources$ | async"
+          [selected]="(selectedServiceId$ | async) === item.serviceId">
           {{ getResourceDisplayedText(item) }}
         </mcs-option>
       </mcs-option-group>

@@ -16,6 +16,19 @@ import {
   FormGroup
 } from '@angular/forms';
 import {
+  ActivatedRoute,
+  Params
+} from '@angular/router';
+
+import { Observable, Subject } from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   IMcsDataChange,
   IMcsFormGroup,
   McsAccessControlService
@@ -28,14 +41,13 @@ import {
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import {
+  compareStrings,
+  convertUrlParamsKeyToLowerCase,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-
-import { Observable, Subject } from 'rxjs';
-import { map, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'mcs-select-resource-dropdown',
@@ -71,13 +83,16 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
 
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
+  public selectedServiceId$: Observable<string>;
 
   public get resources(): McsResource[] { return this._resources; }
   private _resources: McsResource[];
   private _selectedResource: McsResource;
   private _destroySubject = new Subject<void>();
+  private _destroyActivateRouteSubject = new Subject<void>();
 
   constructor(
+    private _activatedRoute: ActivatedRoute,
     private _accessControlService: McsAccessControlService,
     private _apiService: McsApiService,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -88,6 +103,7 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
   public ngOnInit(): void {
     this._intializeFormGroup();
     this._subscribeToAllResources();
+    this._subscribesToQueryParams();
   }
 
   public ngOnDestroy() {
@@ -169,5 +185,24 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
     this._formGroup.touchedStateChanges().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  private _subscribesToQueryParams(): void {
+    this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
+      takeUntil(this._destroyActivateRouteSubject),
+      map((params) => {
+        let lowercaseUrlParams: Params = convertUrlParamsKeyToLowerCase(params);
+        return lowercaseUrlParams?.serviceid;
+      }),
+      tap((urlParamServiceId: string) => {
+        if (isNullOrEmpty(urlParamServiceId)) { return; }
+        this.resources$.subscribe((resources: McsResource[]) => {
+          let resourceList = resources;
+          let serviceFound = resourceList.find((server) =>
+            compareStrings(server?.serviceId, urlParamServiceId) === 0);
+          this.fcResource.setValue(serviceFound);
+        });
+      }),
+    );
   }
 }
