@@ -136,11 +136,13 @@ export class BillingComponent implements OnInit, OnDestroy {
   }
 
   private _getAssociatedDates(): { before: string, after: string } {
+    // Need to cover the settings in which the date after should be greater than and before
+    // should be less than equal to.
     let beforeDate = new Date();
-    beforeDate.setMonth(0, 1);
+    beforeDate.setMonth(11, 1);
 
     let afterDate = new Date();
-    afterDate.setMonth(11, 1);
+    afterDate.setMonth(0, 1);
 
     return {
       before: this._datePipe.transform(beforeDate, 'shortDateTime'),
