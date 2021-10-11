@@ -193,7 +193,9 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   }
 
   public isValidField(key: string) {
-    if ((!this.form.controls[key].dirty && !this.form.controls[key].touched)) {
+    let isFieldEmptyOnInitialLoad = isNullOrEmpty(this.form.controls[key].value)
+      || this.form.controls[key].value?.length === 0;
+    if ((!this.form.controls[key].dirty && !this.form.controls[key].touched && isFieldEmptyOnInitialLoad)) {
       return true;
     }
 
