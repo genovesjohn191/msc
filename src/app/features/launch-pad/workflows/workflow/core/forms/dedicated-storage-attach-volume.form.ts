@@ -28,7 +28,7 @@ export const dedicatedStorageAttachVolumeForm: LaunchPadForm = {
       validators: { required: true },
       allowCustomInput: true,
       allowDuplicates: true,
-      maxItems: 2,
+      maxItems: 1,
       useServiceIdAsKey: true
     })
   ],

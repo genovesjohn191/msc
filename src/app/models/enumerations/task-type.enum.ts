@@ -49,8 +49,8 @@ export enum TaskType {
 
   // Launchpad 7000-8999
   LaunchpadManagedServerCreate = 7000,
-  LaunchpadManagementToolsAddCvm = 7001,
-  LaunchpadManagementToolsDeleteCvm = 7002,
+  LaunchpadManagementToolsAdd = 7001,
+  LaunchpadManagementToolsDelete = 7002,
   LaunchpadBackupProvisionServerBackup = 7003,
   LaunchpadBackupProvisionVmBackup = 7004,
   LaunchpadDedicatedStorageUnmaskVolume = 7005,

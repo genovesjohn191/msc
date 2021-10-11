@@ -64,8 +64,8 @@ export enum JobType {
 
   // Launchpad
   LaunchpadManagedServerCreate = 102001,
-  LaunchpadManagementToolsAddCvm = 102002,
-  LaunchpadManagementToolsDeleteCvm = 102003,
+  LaunchpadManagementToolsAdd = 102002,
+  LaunchpadManagementToolsDelete = 102003,
   LaunchpadBackupProvisionServerBackup = 102004,
   LaunchpadBackupProvisionVmBackup = 102005,
   LaunchpadDedicatedStorageUnmaskVolume = 102006,
@@ -137,8 +137,8 @@ export const jobTypeText = {
   [JobType.ManagedServerProvisionBat]: 'New Backup Aggregation Target',
 
   [JobType.LaunchpadManagedServerCreate]: 'New Managed Server',
-  [JobType.LaunchpadManagementToolsAddCvm]: 'Add to Management Tools',
-  [JobType.LaunchpadManagementToolsDeleteCvm]: 'Remove from Management Tools',
+  [JobType.LaunchpadManagementToolsAdd]: 'Add to Management Tools',
+  [JobType.LaunchpadManagementToolsDelete]: 'Remove from Management Tools',
   [JobType.LaunchpadBackupProvisionServerBackup]: 'Backup Server',
   [JobType.LaunchpadBackupProvisionVmBackup]: 'Backup VM',
   [JobType.LaunchpadDedicatedStorageUnmaskVolume]: 'Unmask Dedicated Storage Volume',
