@@ -49,7 +49,8 @@
                 (selectionChange)="onChangeVdc($event)"
                 [mcsContextualHelp]="'orderVdcScale.vdc.contextualHelp' | translate">
 
-                <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
+                <mcs-option *ngFor="let resource of resources$ | async" [value]="resource"
+                  [selected]="(selectedServiceId$ | async) === resource.serviceId">
                   {{ resource.name }}
                 </mcs-option>
               </mcs-select>
