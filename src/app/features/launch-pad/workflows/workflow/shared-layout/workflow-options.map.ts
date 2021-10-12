@@ -5,6 +5,7 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
 
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvision, 'Create a new virtual data centre VM instance.'],
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex, 'Create a new virtual data centre VM instance w/ Add Ons.'],
+  [WorkflowGroupId.VirtualDataCentreNetworkCreate, 'Create a new virtual data centre network.'],
 
   [WorkflowGroupId.DedicatedStorageUnmaskVolume, 'Unmask dedicated storage volume.'],
   [WorkflowGroupId.DedicatedStorageIncreaseVolumeSize, 'Increase dedicated storage volume.'],

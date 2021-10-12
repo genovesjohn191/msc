@@ -1,0 +1,50 @@
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [matBadge]="hasError ? '!' : ''"
+  matBadgePosition="before"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  [matTooltip]="hasError ? 'Failed to load options' : ''"
+  matTooltipPosition="above"
+  (focusout)="updateValue(valueInput)"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : label }}</mat-label>
+
+  <input
+    #valueInput
+    [mcsId]="id"
+    [required]="required"
+    [hidden]="disabled"
+    [placeholder]="config.placeholder"
+    [formControl]="inputCtrl"
+    [maxlength]="255"
+    matInput
+    [matAutocomplete]="auto">
+
+    <mat-autocomplete #auto="matAutocomplete"
+      [displayWith]="getOptionValue.bind(this)"
+      (optionSelected)="selected($event)">
+      <mat-option *ngIf="!required && !hasError"
+      style="font-size: 14px !important;">-- None --</mat-option>
+      <mat-option *ngFor="let opt of config.options" [value]="opt" 
+        [matTooltip]="opt.hint" matTooltipPosition="right"
+        style="font-size: 14px !important;">
+        {{ opt.value }}
+      </mat-option>
+    </mat-autocomplete>
+
+  <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+
+
+  <button mat-icon-button matSuffix
+    (click)="retrieveOptions()"
+    *ngIf="hasError"
+    matTooltip="Retry"
+    matTooltipPosition="above">
+    <mat-icon color="primary">refresh</mat-icon>
+  </button>
+
+</mat-form-field>
+
+<span *ngIf="config.vlanVisibility && showVlanText && !isLoading" class="vlan-text"> {{ vlanText }}</span>

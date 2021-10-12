@@ -16,6 +16,7 @@ import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zo
 import { DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent } from './select-chips-azure-software-subscription-product-type/select-chips-azure-software-subscription-product-type.component';
 import { DynamicSelectAzureSubscriptionComponent } from './select-azure-subscription/select-azure-subscription.component';
 import { DynamicSelectBatComponent } from './select-bat/select-bat.component';
+import { DynamicSelectChipSingleCompanyComponent } from './select-chip-single-company/select-chip-single-company.component';
 import { DynamicSelectChipsCompanyComponent } from './select-chips-company/select-chips-company.component';
 import { DynamicSelectChipsManagementDomainComponent } from './select-chips-management-domain/select-chips-management-domain.component';
 import { DynamicSelectChipsTerraformModuleComponent } from './select-chips-terraform-module/select-chips-terraform-module.component';
@@ -27,6 +28,8 @@ import { DynamicSelectMultipleComponent } from './select-multiple/select-multipl
 import { DynamicSelectMultipleNetworkDbPodsComponent } from './select-multiple-network-db-pods/select-multiple-network-db-pods.component';
 import { DynamicSelectNetworkDbUseCaseComponent } from './select-network-db-usecase/select-network-db-use-case.component';
 import { DynamicSelectNetworkComponent } from './select-network/select-network.component';
+import { DynamicSelectGatewayIpComponent } from './select-gateway-ip/select-gateway-ip.component';
+import { DynamicSelectNetworkVlanComponent } from './select-network-vlan/select-network-vlan.component';
 import { DynamicSelectOsComponent } from './select-os/select-os.component';
 import { DynamicSelectRetentionPeriodComponent } from './select-retention-period/select-retention-period.component';
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
@@ -53,6 +56,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
+  DynamicSelectChipSingleCompanyComponent,
   DynamicSelectChipsComponent,
   DynamicSelectChipsManagementDomainComponent,
   DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent,
@@ -65,6 +69,8 @@ const exports: any[] | Type<any> = [
   DynamicSelectMultipleComponent,
   DynamicSelectMultipleNetworkDbPodsComponent,
   DynamicSelectNetworkComponent,
+  DynamicSelectGatewayIpComponent,
+  DynamicSelectNetworkVlanComponent,
   DynamicSelectNetworkDbUseCaseComponent,
   DynamicSelectOsComponent,
   DynamicSelectRetentionPeriodComponent,

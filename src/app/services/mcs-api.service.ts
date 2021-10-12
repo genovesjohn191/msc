@@ -154,10 +154,12 @@ import {
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
   McsObjectInstalledService,
+  McsNetworkVdcPrecheckVlan,
   McsObjectProject,
   McsObjectProjectsQueryParams,
   McsObjectProjectTasks,
   McsObjectQueryParams,
+  McsObjectVdcQueryParams,
   McsOrder,
   McsOrderApprover,
   McsOrderAvailable,
@@ -2147,6 +2149,15 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProjectTasks'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getVdcNetworkPrecheck(query?: McsObjectVdcQueryParams): Observable<McsNetworkVdcPrecheckVlan> {
+    return this._objectsApi.getVdcNetworkPrecheck(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkVlan'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

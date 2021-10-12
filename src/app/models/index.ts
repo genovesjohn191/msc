@@ -323,6 +323,8 @@ export * from './response/mcs-report-platform-security-advisories';
 export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
+export * from './response/mcs-network-vdc-precheck-vlan'
+export * from './response/mcs-network-vdc-subnet'
 export * from './response/mcs-object-crisp-order';
 export * from './response/mcs-object-project';
 export * from './response/mcs-object-project-task';

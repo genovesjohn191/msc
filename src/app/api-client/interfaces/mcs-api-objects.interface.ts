@@ -3,10 +3,12 @@ import {
   McsApiSuccessResponse,
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
+  McsNetworkVdcPrecheckVlan,
   McsObjectProject,
   McsObjectProjectsQueryParams,
   McsObjectProjectTasks,
-  McsObjectQueryParams
+  McsObjectQueryParams,
+  McsObjectVdcQueryParams
 } from '@app/models';
 import {
   McsObjectCrispElement,
@@ -69,4 +71,10 @@ export interface IMcsApiObjectsService {
    * @param projectId unique identifier of the element
    */
    getProjectTasks(projectId: string, query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProjectTasks[]>>;
+
+  /**
+   * Get network vlan details from the API
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+   getVdcNetworkPrecheck(query?: McsObjectVdcQueryParams): Observable<McsApiSuccessResponse<McsNetworkVdcPrecheckVlan>>;
 }

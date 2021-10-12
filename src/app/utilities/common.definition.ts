@@ -203,6 +203,7 @@ export class CommonDefinition {
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;
+  public static REGEX_PRIVATE_IP_PATTERN = /(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
   public static REGEX_IP_PATTERN_SHORTHAND_MASK
     = /^([1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3}(\/(3[0-2]|[1-2]\d|\d))?$/;
   public static REGEX_URL_PATTERN
@@ -244,6 +245,8 @@ export class CommonDefinition {
   public static REGEX_DNS_TYPE_NS = /^((?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?))$/;
   public static REGEX_DNS_TYPE_NAPTR = /^(.{1,128})$/;
   public static REGEX_DNS_TYPE_PTR = /^(?:(?:\d+\.)*\d+(?:-in\.addr\.arpa\.)?)$/;
+
+  public static REGEX_DUMMY_SERVICE_ID_PATTERN = /^([mM][xX|0-9]?[mM][gG][mM][tT])[0-9]{7,10}$/;
 
   /** Session count */
   public static SESSION_IDLE_TIME_IN_SECONDS = 900;

@@ -25,7 +25,8 @@
     <input matInput type="text"
       placeholder="Select object"
       [matAutocomplete]="auto"
-      [formControl]="serviceFilterControl"/>
+      [formControl]="serviceFilterControl"
+      (focusout)="focusOut()"/>
 
     <button mat-icon-button matPrefix
       type="button"
