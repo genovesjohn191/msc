@@ -1,0 +1,10 @@
+@import "../../../../../styles/shared/base";
+
+.more {
+  opacity: 0.75;
+  @include font-size($font-size-default);
+}
+
+.vlan-text {
+  font-weight: 600;
+}

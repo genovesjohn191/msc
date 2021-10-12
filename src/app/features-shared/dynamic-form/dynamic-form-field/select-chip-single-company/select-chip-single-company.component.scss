@@ -1,0 +1,9 @@
+@import "../../../../../styles/shared/base";
+
+.chip-icon-remove {
+  display: none;
+}
+
+.chip:hover .chip-icon-remove {
+  display: inline-block;
+}

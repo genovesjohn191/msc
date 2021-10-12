@@ -32,6 +32,7 @@ import {
 import { productWorkflowGroupMap } from '../../core/product-workflow-group.map';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
+import { WorkflowGroupId } from '../../core/workflow-groups/workflow-group-type.enum';
 
 
 @Component({
@@ -98,6 +99,35 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
         this._validProductTypes.push(ProductType[key]);
       }
     });
+  }
+
+  public focusOut(): void {
+    switch(this._context.workflowGroupId){
+      case WorkflowGroupId.VirtualDataCentreNetworkCreate:
+      case WorkflowGroupId.VirtualDataCentreNetworkCreateCustom:
+        const newSvcId = this.serviceFilterControl.value;
+        if (CommonDefinition.REGEX_DUMMY_SERVICE_ID_PATTERN.test(newSvcId)) {
+          this.selectedObject = {
+            serviceId: newSvcId,
+            companyId: null,
+            companyName: '',
+            orderId: '',
+            assignedTo: '',
+            hostingEngineer: '',
+            status: '',
+            createdOn: '',
+            serviceAttributes: [],
+            associatedServices: [],
+            productId: '',
+            description: '',
+            productType: ProductType.Unknown
+          };
+        }
+        else {
+          this.selectedObject = null;
+        }
+        break;
+    }
   }
 
   private _initializeFiltering(): void {

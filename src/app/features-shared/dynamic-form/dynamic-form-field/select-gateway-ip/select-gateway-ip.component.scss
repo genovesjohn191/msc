@@ -1,0 +1,25 @@
+@import "../../../../../styles/shared/base";
+
+.more {
+  opacity: 0.75;
+  @include font-size(0.75em);
+}
+
+.divider {
+  font-size: $font-size-xxlarge;
+  margin: $space-medium;
+}
+
+.span-text {
+  font-weight: 600;
+  max-width: 250px;
+  display: inline-block;
+}
+
+.gateway-ip-field {
+  max-width: 250px;
+}
+
+.div-container {
+  display: inline-block;
+}

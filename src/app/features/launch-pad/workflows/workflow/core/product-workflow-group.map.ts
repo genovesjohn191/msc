@@ -189,7 +189,8 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsAdd,
         WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        WorkflowGroupId.ManagementToolsUpdate,
+        WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
 
@@ -243,7 +244,8 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsAdd,
         WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        WorkflowGroupId.ManagementToolsUpdate,
+        WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
 
@@ -306,7 +308,8 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsAdd,
         WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        WorkflowGroupId.ManagementToolsUpdate,
+        WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
 
@@ -403,7 +406,8 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsAdd,
         WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        WorkflowGroupId.ManagementToolsUpdate,
+        WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
 
@@ -624,6 +628,18 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.VmBackup,
       [
         WorkflowGroupId.VmBackupProvision
+      ]
+    ],
+
+    [ ProductType.VirtualCrossConnect,
+      [
+        WorkflowGroupId.VirtualDataCentreNetworkCreate
+      ]
+    ],
+
+    [ ProductType.DataCentresCrossConnect,
+      [
+        WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
   ]

@@ -58,6 +58,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-bat-field>
 
+        <mcs-dff-select-chip-single-company-field *ngSwitchCase="'select-chip-single-company'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-chip-single-company-field>
+
         <mcs-dff-select-chips-field *ngSwitchCase="'select-chips'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-chips-field>
@@ -106,6 +110,14 @@
         <mcs-dff-select-network-field *ngSwitchCase="'select-network'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-network-field>
+
+        <mcs-dff-select-gateway-ip-field *ngSwitchCase="'select-gateway-ip'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-gateway-ip-field>
+
+        <mcs-dff-select-network-vlan-field *ngSwitchCase="'select-network-vlan'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-network-vlan-field>
 
         <mcs-dff-select-network-db-use-case-field *ngSwitchCase="'select-network-db-use-case'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">

@@ -21,7 +21,9 @@ import {
   MicrosoftReservationProvisionWorkflowGroup,
   MicrosoftSoftwareSubscriptionProvisionWorkflowGroup,
   ServerBackupProvisionWorkflowGroup,
-  VmBackupProvisionWorkflowGroup
+  VmBackupProvisionWorkflowGroup,
+  VdcNetworkCreateWorkflowGroup,
+  VdcNetworkCreateCustomWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 
@@ -51,6 +53,8 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
 
   [ WorkflowGroupId.VirtualDataCentreVmInstanceProvision,  VdcVmInstanceProvisionWorkflowGroup ],
   [ WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex, VdcVmInstanceProvisionComplexWorkflowGroup ],
+  [ WorkflowGroupId.VirtualDataCentreNetworkCreate, VdcNetworkCreateWorkflowGroup ],
+  [ WorkflowGroupId.VirtualDataCentreNetworkCreateCustom, VdcNetworkCreateCustomWorkflowGroup ],
 
   [ WorkflowGroupId.VmBackupProvision,  VmBackupProvisionWorkflowGroup ],
 ]);

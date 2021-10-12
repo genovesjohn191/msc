@@ -13,7 +13,9 @@ import {
   McsObjectCrispOrderQueryParams,
   McsObjectProjectsQueryParams,
   McsObjectProject,
-  McsObjectProjectTasks
+  McsObjectProjectTasks,
+  McsObjectVdcQueryParams,
+  McsNetworkVdcPrecheckVlan
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { IMcsApiObjectsService } from '../interfaces/mcs-api-objects.interface';
@@ -196,6 +198,32 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsObjectProjectTasks[]>(McsObjectProjectTasks, response);
+        })
+      );
+  }
+
+  public getVdcNetworkPrecheck(query?: McsObjectVdcQueryParams): Observable<McsApiSuccessResponse<McsNetworkVdcPrecheckVlan>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('vdc_id', query.vdcId);
+    searchParams.set('network_service_id', query.networkServiceId);
+    searchParams.set('network_id', query.networkId);
+
+    let requestHeaders = new Map<string, any>();
+    requestHeaders.set('company-id', query.companyId);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/objects/provision-vdc-network-precheck';
+    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.optionalHeaders = requestHeaders;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsNetworkVdcPrecheckVlan>(McsNetworkVdcPrecheckVlan, response);
+          return apiResponse;
         })
       );
   }

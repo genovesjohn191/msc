@@ -26,3 +26,14 @@ export class McsObjectProjectsQueryParams extends McsQueryParam {
     super();
   }
 }
+
+export class McsObjectVdcQueryParams extends McsQueryParam {
+  public vdcId?: string;
+  public networkServiceId?: string;
+  public companyId?: string;
+  public networkId?: string;
+
+  constructor() {
+    super();
+  }
+}

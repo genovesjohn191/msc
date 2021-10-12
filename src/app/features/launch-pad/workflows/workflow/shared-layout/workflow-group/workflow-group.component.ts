@@ -29,6 +29,7 @@ import {
   McsObjectCrispElementService,
   McsObjectCrispElementServiceAttribute,
   ProductType,
+  RouteKey,
   WorkflowType
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -56,6 +57,7 @@ import { WorkflowService } from '../../core/workflow.service';
 import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
 import { LaunchPadWorkflowComponent } from './workflow.component';
 import { LaunchPadForm } from '../../core/forms/form.interface';
+import { McsNavigationService } from '@app/core';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -146,7 +148,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     private _apiService: McsApiService,
     private _dialog: MatDialog,
     private _translateService: TranslateService,
-    private _snackBar: MatSnackBar) {
+    private _snackBar: MatSnackBar,
+    private _navigationService: McsNavigationService) {
 
       this._parentServiceRetrieved = new EventEmitter<McsObjectCrispElementService[]>();
       this._listenToParentServiceRetrieval();
@@ -179,37 +182,51 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   }
 
   public switchObject(event: McsObjectCrispElement): void {
-    let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
-    let requiresCrispData = !isNullOrEmpty(workflowGroup.parent.form?.mapCrispElementAttributes);
-
-    if (!requiresCrispData) {
+    if(CommonDefinition.REGEX_DUMMY_SERVICE_ID_PATTERN.test(event.serviceId)) {
       this.context.serviceId = event.serviceId;
       this.context.productId = event.productId.toString();
+      this.context.companyId = event.companyId;
+      this.context.workflowGroupId = WorkflowGroupId.VirtualDataCentreNetworkCreateCustom;
+
+      this._initWorkflowGroup();
       this._updateWorkflowInstances(this.context);
       this._changeDetector.markForCheck();
       return;
     }
 
-    const loadSaveStateDialogRef =
-      this._dialog.open(LaunchPadServiceIdSwitchDialogComponent, { data: event.serviceId + ' [' + event.productId + ']' });
+    else {
+      let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
+      let requiresCrispData = !isNullOrEmpty(workflowGroup.parent.form?.mapCrispElementAttributes);
 
-    loadSaveStateDialogRef.afterClosed()
-    .pipe(takeUntil(this._dialogSubject))
-    .subscribe(result => {
-      if (result) {
-        this.context.serviceId = event.serviceId;
-        this.context.productId = event.productId.toString();
-
-        this._initWorkflowGroup();
-        this._updateWorkflowInstances(this.context);
-        this._changeDetector.markForCheck();
-      } else {
+      if (!requiresCrispData) {
         this.context.serviceId = event.serviceId;
         this.context.productId = event.productId.toString();
         this._updateWorkflowInstances(this.context);
         this._changeDetector.markForCheck();
+        return;
       }
-    });
+
+      const loadSaveStateDialogRef =
+        this._dialog.open(LaunchPadServiceIdSwitchDialogComponent, { data: event.serviceId + ' [' + event.productId + ']' });
+
+      loadSaveStateDialogRef.afterClosed()
+      .pipe(takeUntil(this._dialogSubject))
+      .subscribe(result => {
+        if (result) {
+          this.context.serviceId = event.serviceId;
+          this.context.productId = event.productId.toString();
+
+          this._initWorkflowGroup();
+          this._updateWorkflowInstances(this.context);
+          this._changeDetector.markForCheck();
+        } else {
+          this.context.serviceId = event.serviceId;
+          this.context.productId = event.productId.toString();
+          this._updateWorkflowInstances(this.context);
+          this._changeDetector.markForCheck();
+        }
+      });
+    }
   }
 
   private _loadWorkflowGroup(workflows: Workflow[]): void {
@@ -245,6 +262,11 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   }
 
   private _initWorkflowGroup(): void {
+    if(!this._workflowService.hasAccessToFeature(this.context.workflowGroupId)){
+      this._navigationService.navigateTo(RouteKey.HttpErrorPage);
+      return;
+    }
+
     let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
 
     let requiresCrispData = !isNullOrEmpty(workflowGroup.parent.form?.mapCrispElementAttributes);
@@ -528,7 +550,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   }
 
   private _getWorkflowGroupById(id: WorkflowGroupId): WorkflowGroup {
-    let workflowGroupType = workflowGroupMap.get(this.context.workflowGroupId);
+    let workflowGroupType = workflowGroupMap.get(id);
     return new workflowGroupType();
   }
 }

@@ -1,0 +1,51 @@
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [matBadge]="hasError ? '!' : ''"
+  matBadgePosition="before"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  [matTooltip]="hasError ? 'Failed to load options' : ''"
+  matTooltipPosition="above"
+  
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ isLoading ? 'Loading...' : label }} {{ required ? ' *' : ''}}</mat-label>
+
+  <mat-chip-list class="chip" #chipList cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="drop($event)">
+
+    <mat-chip
+      class="box"
+      [class.single]="true"
+      *ngFor="let item of companyList"
+      [selectable]="selectable"
+      [removable]="removable"
+      (removed)="remove(item)"
+      cdkDrag>
+      {{ isString(item) ? item : item.label }}
+      <mat-icon class="chip-icon-remove" matChipRemove *ngIf="removable">cancel</mat-icon>
+    </mat-chip>
+
+    <input *ngIf="companyList.length === 0"
+      #valueInput type="text"
+      [mcsId]="id"
+      [required]="required"
+      [hidden]="disabled"
+      [placeholder]="config.placeholder"
+      [formControl]="inputCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)">
+
+      <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+  </mat-chip-list>
+
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      <small>{{ option.value }}</small>
+    </mat-option>
+  </mat-autocomplete>
+
+</mat-form-field>

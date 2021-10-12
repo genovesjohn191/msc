@@ -1,6 +1,8 @@
 export * from './form.interface';
 
 export * from './vdc-vm-instance-provision.form';
+export * from './vdc-network-create.form';
+export * from './vdc-network-create-custom.form';
 export * from './management-tools-add.form';
 export * from './management-tools-update.form';
 

@@ -3162,6 +3162,7 @@
     "getProjects": "Something went wrong while retrieving projects. Please try again.",
     "getProject": "Something went wrong while retrieving project details. Please try again.",
     "getProjectTasks": "Something went wrong while retrieving project tasks. Please try again.",
+    "getNetworkVlan": "Something went wrong while retrieving network vlan details. Please try again.",
     "getCrispOrders": "Something went wrong while retrieving CRISP orders. Please try again.",
     "getCrispOrder": "Something went wrong while retrieving CRISP order details. Please try again.",
     "getCrispOrderElements": "Something went wrong while retrieving CRISP order elements. Please try again.",
@@ -3591,7 +3592,10 @@
     "billingDetailsWithoutContractTerm": "No contract term applies for this request.",
     "billingDetailsWithContractTerm": "The contract term for this service will remain as-is.",
     "changeOrderNote": "The billing details for this service will remain as-is.",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "invalidIpAddress": "Please enter a valid private IP address.",
+    "validationMin": "Must not be less than ", 
+    "validationMax": "Must not exceed "
   },
   "tooltip": {
     "exportWord": "Export Word Document",

@@ -26,6 +26,8 @@ export enum WorkflowType {
   ServerBackupProvision = 'launchpad.serverbackup.provision',
 
   VmBackupProvision = 'launchpad.vmbackup.provision',
+
+  VdcNetworkCreate = 'launchpad.vdcnetwork.create'
 }
 
 /**

@@ -10,6 +10,7 @@ export interface WorkflowConfig {
   title: string;
   form: LaunchPadForm;
   required?: boolean;
+  featureFlag?: string;
 }
 
 export interface WorkflowData {
