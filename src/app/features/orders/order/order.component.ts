@@ -52,7 +52,8 @@ import {
   OrderWorkflowAction,
   RouteKey,
   WorkflowStatus,
-  OrderIdType
+  OrderIdType,
+  McsOrderItemType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -97,13 +98,14 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   // Order items table
   public order$: Observable<McsOrder>;
+  public orderItemType$: Observable<any>;
   public isOrderTypeChange$: Observable<boolean>;
+  public isContractTermApplicable$: Observable<boolean>;
   public orderItemsColumns: string[];
   public orderDetailsView: OrderDetailsView;
   public dialogRef: DialogRef<TemplateRef<any>>;
   public chargesState$: Observable<ChargesState>;
   public isInAwaitingApprovalState: boolean;
-  public isContractTermApplicable$: Observable<boolean>;
   private _lineOrderProperties: string;
   public orderProperties = new LineProperties(this._translate);
 
@@ -154,6 +156,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this._subscribeToOrderResolver();
     this._subscribeToParamChange();
     this._subscribeToChargesStateChange();
+    this._subscribeToOrderItemType();
     this._subscribeToContractTermApplicableStatus();
     this._registerOrderDataChangeEvent();
     this._registerOrderItemsColumnMap();
@@ -449,17 +452,14 @@ export class OrderComponent implements OnInit, OnDestroy {
       shareReplay(1)
     );
 
-    this.isOrderTypeChange$ = this.order$.pipe(
+    this.orderItemType$ = this.order$.pipe(
       switchMap((order) => {
         let mainOrderItem = getSafeProperty(order, (obj) => obj.items[0]);
         if (isNullOrEmpty(mainOrderItem)) {
           throw new Error(this._translate.instant('order.errorOrderTypeNoOrderItems'));
         }
         return this._apiService.getOrderItemTypes({ keyword: mainOrderItem.itemOrderType }).pipe(
-          map((orderTypeDetails) => {
-            let orderDetail = getSafeProperty(orderTypeDetails, (obj) => obj.collection[0]);
-            return !isNullOrEmpty(orderDetail) && orderDetail.itemType === ItemType.Change;
-          }),
+          map((orderTypeDetails) => getSafeProperty(orderTypeDetails, (obj) => obj.collection)),
           shareReplay(1)
         );
       }),
@@ -467,23 +467,21 @@ export class OrderComponent implements OnInit, OnDestroy {
     );
   }
 
+  private _subscribeToOrderItemType(): void {
+    this.isOrderTypeChange$ = this.orderItemType$.pipe(
+      map((orderTypeDetails: McsOrderItemType[]) => {
+        let orderDetail = orderTypeDetails[0];
+        return !isNullOrEmpty(orderDetail) && orderDetail.itemType === ItemType.Change;
+      })
+    );
+  }
+
   private _subscribeToContractTermApplicableStatus(): void {
-    this.isContractTermApplicable$ = this.order$.pipe(
-      switchMap((order) => {
-        let mainOrderItem = getSafeProperty(order, (obj) => obj.items[0]);
-        if (isNullOrEmpty(mainOrderItem)) {
-          throw new Error(this._translate.instant('order.errorOrderTypeNoOrderItems'));
-        }
-        return this._apiService.getOrderItemTypes({ keyword: mainOrderItem.itemOrderType }).pipe(
-          map((orderTypeDetails) => {
-            let orderCollection = getSafeProperty(orderTypeDetails, (obj) => obj.collection);
-            let orderHasContractTermApplicable = orderCollection.find((detail) => detail.contractTermApplicable);
-            return !isNullOrEmpty(orderCollection) && !isNullOrEmpty(orderHasContractTermApplicable);
-          }),
-          shareReplay(1)
-        );
+    this.isContractTermApplicable$ = this.orderItemType$.pipe(
+      map((orderTypeDetails: McsOrderItemType[]) => {
+        let orderHasContractTermApplicable = orderTypeDetails.find((detail) => detail.contractTermApplicable);
+        return !isNullOrEmpty(orderTypeDetails) && !isNullOrEmpty(orderHasContractTermApplicable);
       }),
-      shareReplay(1)
     );
   }
 
