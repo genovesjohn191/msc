@@ -154,7 +154,10 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
    */
   public scaleVdc(selectedResource: McsResource): void {
     this.eventDispatcher.dispatch(McsEvent.vdcScaleSelectedEvent, selectedResource);
-    this._navigationService.navigateTo(RouteKey.OrderVdcScale);
+    this._navigationService.navigateTo(RouteKey.OrderVdcScale, [],
+      { queryParams: {
+        serviceId: selectedResource.serviceId
+      }});
   }
 
   /**
