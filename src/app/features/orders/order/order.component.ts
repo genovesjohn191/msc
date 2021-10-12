@@ -103,6 +103,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   public dialogRef: DialogRef<TemplateRef<any>>;
   public chargesState$: Observable<ChargesState>;
   public isInAwaitingApprovalState: boolean;
+  public isContractTermApplicable$: Observable<boolean>;
   private _lineOrderProperties: string;
   public orderProperties = new LineProperties(this._translate);
 
@@ -153,7 +154,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this._subscribeToOrderResolver();
     this._subscribeToParamChange();
     this._subscribeToChargesStateChange();
-
+    this._subscribeToContractTermApplicableStatus();
     this._registerOrderDataChangeEvent();
     this._registerOrderItemsColumnMap();
   }
@@ -458,6 +459,26 @@ export class OrderComponent implements OnInit, OnDestroy {
           map((orderTypeDetails) => {
             let orderDetail = getSafeProperty(orderTypeDetails, (obj) => obj.collection[0]);
             return !isNullOrEmpty(orderDetail) && orderDetail.itemType === ItemType.Change;
+          }),
+          shareReplay(1)
+        );
+      }),
+      shareReplay(1)
+    );
+  }
+
+  private _subscribeToContractTermApplicableStatus(): void {
+    this.isContractTermApplicable$ = this.order$.pipe(
+      switchMap((order) => {
+        let mainOrderItem = getSafeProperty(order, (obj) => obj.items[0]);
+        if (isNullOrEmpty(mainOrderItem)) {
+          throw new Error(this._translate.instant('order.errorOrderTypeNoOrderItems'));
+        }
+        return this._apiService.getOrderItemTypes({ keyword: mainOrderItem.itemOrderType }).pipe(
+          map((orderTypeDetails) => {
+            let orderCollection = getSafeProperty(orderTypeDetails, (obj) => obj.collection);
+            let orderHasContractTermApplicable = orderCollection.find((detail) => detail.contractTermApplicable);
+            return !isNullOrEmpty(orderCollection) && !isNullOrEmpty(orderHasContractTermApplicable);
           }),
           shareReplay(1)
         );
