@@ -141,19 +141,15 @@
                 <ng-container mcsPresentationPanelHeader>
                   <h2>{{ 'order.billingDetails' | translate }}</h2>
                 </ng-container>
-                <mcs-item>
+
+                <mcs-item *ngIf="isContractTermApplicable$ | async">
                   <span>{{ 'order.contractTerm' | translate }}:</span>
-                  <ng-container *ngIf="(isOrderTypeChange$ | async); else contractDurationTemplate">
-                    <ng-container *ngTemplateOutlet="changeOrderTemplate"></ng-container>
-                  </ng-container>
-                  <ng-template #contractDurationTemplate>
-                    <span *ngIf="!isContractDurationZero(selectedOrder.contractDurationMonths); else contractTermCancellationTemplate">
-                      {{ selectedOrder.contractDurationMonths }}
-                      {{ 'order.contractTermSuffix' | translate }}
-                    </span>
-                    <ng-template #contractTermCancellationTemplate>
-                      <span>{{ 'order.contractTermCancellation' | translate }} </span>
-                    </ng-template>
+                  <span *ngIf="!isContractDurationZero(selectedOrder.contractDurationMonths); else contractTermCancellationTemplate">
+                    {{ selectedOrder.contractDurationMonths }}
+                    {{ 'order.contractTermSuffix' | translate }}
+                  </span>
+                  <ng-template #contractTermCancellationTemplate>
+                    <span>{{ 'order.contractTermCancellation' | translate }} </span>
                   </ng-template>
                 </mcs-item>
 
