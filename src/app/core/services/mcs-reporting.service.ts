@@ -1,30 +1,31 @@
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
 import {
   McsQueryParam,
+  McsReportAscAlerts,
+  McsReportAuditAlerts,
   McsReportCostRecommendations,
   McsReportGenericItem,
+  McsReportInefficientVms,
   McsReportIntegerData,
-  McsReportServiceChangeInfo,
-  McsReportSubscription,
-  McsReportVMRightsizing,
-  McsReportVMRightsizingSummary,
+  McsReportManagementService,
+  McsReportMonitoringAndAlerting,
   McsReportOperationalSavings,
+  McsReportParams,
+  McsReportPlatformSecurityAdvisories,
+  McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
+  McsReportServiceChangeInfo,
   McsReportSeverityAlerts,
-  McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance,
-  McsRightSizingQueryParams,
-  McsReportManagementService,
-  McsReportUpdateManagement,
-  McsReportAuditAlerts,
-  McsReportInefficientVms,
+  McsReportSubscription,
   McsReportTopVmsByCost,
-  McsReportAscAlerts,
-  McsReportPlatformSecurityAdvisories,
-  McsReportParams
+  McsReportUpdateManagement,
+  McsReportVMRightsizing,
+  McsReportVMRightsizingSummary,
+  McsRightSizingQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -150,20 +151,20 @@ export class McsReportingService {
     subscriptionIds?: string[]
   ): Observable<McsReportMonitoringAndAlerting> {
     return this._apiService.getMonitoringAndAlerting(periodStart, periodEnd, subscriptionIds)
-    .pipe(map((resources) => {
-      let items: ChartItem[] = [];
-      let alerts: McsReportSeverityAlerts[] = [];
-      if (!isNullOrEmpty(resources.alerts)) {
-        alerts = resources.alerts.sort((a, b) => a.severity - b.severity);
-      }
-      items = this._convertMonitoringAndAlertingToChartItem(alerts);
-      return {
-        startedOn: resources.startedOn,
-        totalAlerts: resources.totalAlerts,
-        alerts: resources.alerts,
-        alertsChartItem: items
-      };
-    }));
+      .pipe(map((resources) => {
+        let items: ChartItem[] = [];
+        let alerts: McsReportSeverityAlerts[] = [];
+        if (!isNullOrEmpty(resources.alerts)) {
+          alerts = resources.alerts.sort((a, b) => a.severity - b.severity);
+        }
+        items = this._convertMonitoringAndAlertingToChartItem(alerts);
+        return {
+          startedOn: resources.startedOn,
+          totalAlerts: resources.totalAlerts,
+          alerts: resources.alerts,
+          alertsChartItem: items
+        };
+      }));
   }
 
   public getUpdateManagement(period?: string): Observable<McsReportUpdateManagement[]> {
@@ -275,6 +276,46 @@ export class McsReportingService {
     });
 
     return data;
+  }
+
+  public fillMissingChartItems(chartItems: ChartItem[], defaultValue: number = 0): ChartItem[] {
+    if (isNullOrEmpty(chartItems)) { return; }
+
+    // Get all periods
+    let uniquePeriods = [...new Set(chartItems?.map(item => item.xValue))];
+    let uniqueNames = [...new Set(chartItems?.map(item => item.name))];
+    let chartItemMap = new Map<string, ChartItem[]>();
+
+    // Group records
+    uniquePeriods?.forEach(period => {
+      let periodItems: ChartItem[];
+      let periodFound = chartItemMap.get(period);
+      if (isNullOrEmpty(periodFound)) { periodItems = []; }
+
+      uniqueNames.forEach(uniqueName => {
+        let itemFound = periodItems.find(item => item.name === uniqueName);
+        if (!isNullOrEmpty(itemFound)) { return; }
+
+        let normalizedValue = chartItems.find(chartItem =>
+          chartItem.name === uniqueName &&
+          chartItem.xValue === period
+        )?.yValue || defaultValue;
+
+        periodItems.push({
+          name: uniqueName,
+          xValue: period,
+          yValue: normalizedValue
+        });
+      });
+      chartItemMap.set(period, periodItems);
+    });
+
+    // Create flat records
+    let updatedChartItems = new Array<ChartItem>();
+    chartItemMap.forEach(mapRecords => {
+      updatedChartItems.push(...mapRecords);
+    });
+    return updatedChartItems;
   }
 
   public fillMissingRecordsWithDefault(items: McsReportGenericItem[], defaultValue: number = 0): McsReportGenericItem[] {

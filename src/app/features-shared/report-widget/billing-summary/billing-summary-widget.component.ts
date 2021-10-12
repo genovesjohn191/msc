@@ -20,6 +20,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
+import { McsReportingService } from '@app/core';
 import {
   McsOption,
   McsReportBillingService,
@@ -87,7 +88,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     private _translate: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _datePipe: StdDateFormatPipe,
-    private _currencyPipe: StdCurrencyFormatPipe
+    private _currencyPipe: StdCurrencyFormatPipe,
+    private _reportingService: McsReportingService
   ) {
     super();
 
@@ -95,7 +97,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       type: 'bar',
       stacked: true,
       xaxis: {
-        type: 'datetime'
+        type: 'category'
       },
       yaxis: {
         title: 'Charge',
@@ -212,6 +214,9 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         +actualDate
       ));
     });
+    billingSummaries?.sort((first, second) =>
+      compareDates(first.sortDate, second.sortDate)
+    );
 
     // Convert to chart items
     let chartItems = new Array<ChartItem>();
@@ -221,14 +226,15 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
       chartItems.push({
         name: billingTitle,
-        xValue: billingSummary.timestamp,
+        xValue: billingSummary.microsoftChargeMonth,
         yValue: billingSummary.finalChargeDollars
       } as ChartItem);
     });
+    let newChartItems = this._reportingService.fillMissingChartItems(chartItems);
 
     // Populate billing services series index
-    this._updateBillingSeriesItems(billingSummaries);
-    return chartItems;
+    this._updateBillingSeriesItems(newChartItems, billingSummaries);
+    return newChartItems;
   }
 
   private _getBillingViewModelByItem(summary: BillingSummaryItem): BillingSummaryViewModel {
@@ -239,19 +245,19 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     return billingFuncFound(summary);
   }
 
-  private _updateBillingSeriesItems(summaries: BillingSummaryItem[]): void {
+  private _updateBillingSeriesItems(chartItems: ChartItem[], summaries: BillingSummaryItem[]): void {
     // Group them first by their service names
-    let billingSeriesMap = new Map<string, BillingSummaryItem[]>();
-    summaries?.forEach(summaryItem => {
-      let servicesFound = billingSeriesMap.get(summaryItem.productType);
-      if (!isNullOrEmpty(servicesFound)) {
-        servicesFound.push(summaryItem);
+    let billingSeriesMap = new Map<string, ChartItem[]>();
+    chartItems?.forEach(chartItem => {
+      let chartItemsFound = billingSeriesMap.get(chartItem.name);
+      if (!isNullOrEmpty(chartItemsFound)) {
+        chartItemsFound.push(chartItem);
         return;
       }
 
-      let seriesItems = new Array<BillingSummaryItem>();
-      seriesItems.push(summaryItem);
-      billingSeriesMap.set(summaryItem.productType, seriesItems);
+      let chartItemsMap = new Array<ChartItem>();
+      chartItemsMap.push(chartItem);
+      billingSeriesMap.set(chartItem.name, chartItemsMap);
     });
 
     // Update the indexing on the tooltip
@@ -260,10 +266,14 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     billingSeriesMap.forEach((items, key) => {
       this._billingSeriesItems[seriesIndex] = [];
 
-      let dataPointIndex = 0;
-      items.forEach(item => {
-        this._billingSeriesItems[seriesIndex][dataPointIndex] = item;
-        dataPointIndex++;
+      items.forEach((item, pointIndex) => {
+        let serviceFound = summaries.find(summary => {
+          let billingViewModel = this._getBillingViewModelByItem(summary);
+          let billingTitle = this._generateBillingTitle(billingViewModel);
+          return billingTitle === item.name &&
+            summary.microsoftChargeMonth === item.xValue;
+        });
+        this._billingSeriesItems[seriesIndex][pointIndex] = serviceFound;
       });
       seriesIndex++;
     });
@@ -321,7 +331,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
         finalChargeDollars,
         usdPerUnit,
-        getDateOnly(chargeMonth)
+        getDateOnly(chargeMonth),
+        getTimestamp(chargeMonth)
       ));
       return;
     }
@@ -334,7 +345,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       this._datePipe.transform(getDateOnly(billMonth), 'shortMonthYear'),
       finalChargeDollars,
       usdPerUnit,
-      getDateOnly(chargeMonth)
+      getDateOnly(chargeMonth),
+      getTimestamp(chargeMonth)
     ));
     this._billingSummaryItemsMap.set(productTypeKey, services);
   }
@@ -346,7 +358,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   private _isDateGreaterThanExpiry(timestamp: number): boolean {
     let novemberDate = new Date();
     novemberDate.setFullYear(2021, 10, 1);
-    return compareDates(new Date(timestamp), novemberDate) === 1;
+    return compareDates(new Date(timestamp), novemberDate) !== -1;
   }
 
   private _registerSettingsMap(): void {
@@ -357,12 +369,21 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       )
     );
 
-    this._billingSettingsMap.set('usdPerUnit', item =>
-      new McsOption(
-        this._isDateGreaterThanExpiry(item.timestamp) && item.usdPerUnit,
+    this._billingSettingsMap.set('usdPerUnit', item => {
+      let usdPerUnitValue = null;
+      if (this._isDateGreaterThanExpiry(item.timestamp)) {
+        if (isNullOrUndefined(item.usdPerUnit)) {
+          usdPerUnitValue = this._translate.instant('message.notYetAvailable');
+        } else {
+          usdPerUnitValue = item.usdPerUnit;
+        }
+      }
+
+      return new McsOption(
+        usdPerUnitValue,
         this._translate.instant('label.audUsdExchangeRate')
       )
-    );
+    });
 
     this._billingSettingsMap.set('microsoftChargeMonth', item =>
       new McsOption(
@@ -421,20 +442,6 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       )
     );
 
-    this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
-      item => new BillingSummaryViewModel(
-        `Azure Product Consumption`,
-        this._getTooltipOptionsInfo(item, 'total', 'usdPerUnit', 'microsoftChargeMonth', 'macquarieBillMonth')
-      )
-    );
-
-    this._billingStructMap.set('AZURERESERVATION',
-      item => new BillingSummaryViewModel(
-        `Azure Reservation`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps)
-      )
-    );
-
     this._billingStructMap.set('CSPLICENSES',
       item => new BillingSummaryViewModel(
         `CSP Licenses`,
@@ -484,7 +491,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
       item => new BillingSummaryViewModel(
         `Azure Product Consumption`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        this._getTooltipOptionsInfo(item, 'total', 'usdPerUnit', 'microsoftChargeMonth', 'macquarieBillMonth'),
         item.isProjection
       )
     );

@@ -8,7 +8,8 @@ import {
   catchError,
   map,
   shareReplay,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -61,10 +62,13 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  convertUrlParamsKeyToLowerCase,
+  compareStrings
 } from '@app/utilities';
 
 import { VdcScaleService } from './vdc-scale.service';
+import { ActivatedRoute, Params } from '@angular/router';
 
 type VdcScaleProperties = {
   cpuCount: number;
@@ -97,14 +101,17 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
   @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
+  public selectedServiceId$: Observable<string>;
   private _vdcScale: VdcManageScale;
   private _destroySubject = new Subject<void>();
+  private _destroyActivateRouteSubject = new Subject<void>();
   private _selectedResourceHandler: Subscription;
   private _errorStatus: number;
   private _resourcesCount: number;
 
   constructor(
     _injector: Injector,
+    private _activatedRoute: ActivatedRoute,
     private _elementRef: ElementRef,
     private _vdcScaleService: VdcScaleService,
     private _formGroupService: McsFormGroupService,
@@ -130,11 +137,32 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
 
   public ngOnInit() {
     this._getAllResources();
+    this._subscribeToQueryParams();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._selectedResourceHandler);
+  }
+
+  private _subscribeToQueryParams(): void {
+    this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
+      takeUntil(this._destroyActivateRouteSubject),
+      map((params) => {
+        let lowercaseUrlParams: Params = convertUrlParamsKeyToLowerCase(params);
+        return lowercaseUrlParams?.serviceid;
+      }),
+      tap((urlParamServiceId: string) => {
+        if (isNullOrEmpty(urlParamServiceId)) { return; }
+        this.resources$.subscribe((resources: McsResource[]) => {
+          let resourceList = resources;
+          let resourceFound = resourceList.find((resource) =>
+            compareStrings(resource?.serviceId, urlParamServiceId) === 0);
+          this.fcVdc.setValue(resourceFound);
+          this.onChangeVdc(resourceFound);
+        });
+      }),
+    );
   }
 
   /**
@@ -278,7 +306,7 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
     this.resources$ = this._apiService.getResources().pipe(
       map((response) => {
         let resources = getSafeProperty(response, (obj) => obj.collection)
-        .filter((resource) => !resource.isDedicated);
+          .filter((resource) => !resource.isDedicated);
         this._resourcesCount = resources?.length;
         return resources;
       }),
