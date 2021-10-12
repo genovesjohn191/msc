@@ -3535,6 +3535,7 @@
     "suspend": "Suspend"
   },
   "message": {
+    "notYetAvailable": "Not yet available",
     "minimumSpendCommitmentNotMet": "The minimum Azure spend for this element was not met, so the charge defaulted to the Minimum Spend Commitment.",
     "markupPercent": "{{markup}}% of consumption RRP",
     "loadingItems": "Loading items...",

@@ -29,6 +29,8 @@ import {
 import { McsApiService } from '@app/services';
 import { StdDateFormatPipe } from '@app/shared';
 import {
+  addMonthsToDate,
+  addYearsToDate,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
@@ -138,15 +140,15 @@ export class BillingComponent implements OnInit, OnDestroy {
   private _getAssociatedDates(): { before: string, after: string } {
     // Need to cover the settings in which the date after should be greater than and before
     // should be less than equal to.
-    let beforeDate = new Date();
-    beforeDate.setMonth(11, 1);
+    let targetMonth = addMonthsToDate(new Date(), 1);
+    targetMonth.setDate(1);
 
-    let afterDate = new Date();
-    afterDate.setMonth(0, 1);
+    let startDate = addYearsToDate(targetMonth, -1);
+    let endDate = targetMonth;
 
     return {
-      before: this._datePipe.transform(beforeDate, 'shortDateTime'),
-      after: this._datePipe.transform(afterDate, 'shortDateTime')
+      after: this._datePipe.transform(startDate, 'shortDateTime'),
+      before: this._datePipe.transform(endDate, 'shortDateTime')
     };
   }
 }

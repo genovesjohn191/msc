@@ -1,83 +1,46 @@
 {
   "apiResponse": {
     "status": 200,
-    "totalCount": 2,
+    "totalCount": 5,
     "content": [
       {
         "macquarieBillMonth": "2021-11-01",
         "microsoftChargeMonth": "2021-09-01",
         "isProjection": true,
+      "usdPerUnit": 5.8,
         "parentServices": [
           {
-            "markupPercent": 0.45,
+            "markupPercent": 45,
             "hasMetMinimumCommitment": false,
             "minimumCommitmentDollars": 3000,
             "childBillingServices": [
               {
-                "id": "bc073aa7-2162-4e8a-87b5-d263e61dac51",
+                "id": "ba7dec58-20ee-47a5-9d0c-a8f137e6ba9b",
                 "active": true,
-                "billingAccountId": "28603",
-                "finalChargeDollars": 172.58,
-                "serviceId": "AZPCM28603020",
+                "billingAccountId": "27117",
+                "finalChargeDollars": 5.9,
+                "serviceId": "AZPCM27117008",
                 "billingDescription": "Azure Product Consumption",
-                "productType": "Azure Product Consumption",
-                "azureDescription": "Azure - Legacy Subscription",
+                "productType": "AzureProductConsumption",
+                "azureDescription": "AZPCM27117008-M-Macquarie_Telecom_Contoso",
                 "installedQuantity": 0,
                 "discountPercent": 0,
                 "tenant": {
-                  "id": "f5cdbbf2-f821-4d0d-9159-5925948659f1",
-                  "name": "MCS Legacy Azure",
-                  "initialDomain": "mcslegacyazure.onmicrosoft.com",
-                  "primaryDomain": "mcslegacyazure.onmicrosoft.com"
+                  "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+                  "name": "contosoltd",
+                  "initialDomain": "contosoltd100321.onmicrosoft.com",
+                  "primaryDomain": "contosoltd100321.onmicrosoft.com"
                 },
-                "microsoftId": "53D7C75D-0D3F-4C08-BB76-B52FB10349EB"
+                "microsoftId": "596f6831-761a-4eac-a3cf-87302cede83d"
               }
             ],
-            "id": "0e883d53-790e-470c-a1c5-3d17f7d279f2",
+            "id": "090b0729-06af-4259-8d27-a8deff86b843",
             "active": true,
-            "billingAccountId": "28603",
-            "finalChargeDollars": 172.58,
-            "serviceId": "AZMCP28603002",
+            "billingAccountId": "27117",
+            "finalChargeDollars": 1.83,
+            "serviceId": "AZMCP27117001",
             "billingDescription": "Managed Azure CSP",
-            "productType": "Managed Azure CSP\t",
-            "azureDescription": null,
-            "installedQuantity": 0,
-            "discountPercent": null,
-            "tenant": null,
-            "microsoftId": null
-          },
-          {
-            "markupPercent": 0.45,
-            "hasMetMinimumCommitment": false,
-            "minimumCommitmentDollars": 3000,
-            "childBillingServices": [
-              {
-                "id": "d478bfcc-3d2d-4cca-9260-33e9a140d863",
-                "active": true,
-                "billingAccountId": "28603",
-                "finalChargeDollars": 74.76,
-                "serviceId": "AZPCM28603016",
-                "billingDescription": "Azure Product Consumption",
-                "productType": "Azure Product Consumption",
-                "azureDescription": "test",
-                "installedQuantity": 0,
-                "discountPercent": 0,
-                "tenant": {
-                  "id": "6d6e9562-7f49-43e9-985c-f2c293f04075",
-                  "name": "MCS Test",
-                  "initialDomain": "mcstest104220v7.onmicrosoft.com",
-                  "primaryDomain": "mcstest104220v7.onmicrosoft.com"
-                },
-                "microsoftId": "563BC89E-837C-4F4A-ADAB-E23D20400D01"
-              }
-            ],
-            "id": "91088a8f-c238-4d7d-bcc6-f1a28202c92c",
-            "active": true,
-            "billingAccountId": "28603",
-            "finalChargeDollars": 74.76,
-            "serviceId": "AZMCP28603001",
-            "billingDescription": "Managed Azure CSP",
-            "productType": "Managed Azure CSP\t",
+            "productType": "ManagedAzureCsp",
             "azureDescription": null,
             "installedQuantity": 0,
             "discountPercent": null,
@@ -87,42 +50,112 @@
         ]
       },
       {
-        "macquarieBillMonth": "2021-10-01",
-        "microsoftChargeMonth": "2021-08-01",
-        "isProjection": true,
+        "macquarieBillMonth": "2021-07-01",
+        "microsoftChargeMonth": "2021-05-01",
+        "isProjection": false,
+      "usdPerUnit": 5.8,
         "parentServices": [
           {
-            "markupPercent": 0.45,
+            "markupPercent": 0,
             "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "db493576-ab07-478d-a8f3-6d424aec08f4",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 110,
+            "serviceId": "AZRCP27117004",
+            "billingDescription": "Azure Reservation",
+            "productType": "AzureReservation",
+            "azureDescription": "Reserved_VM_Instance_Standard_B1ls_AU_Southeast_1_Year",
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "903fdbbb-4137-4448-9735-a18c073f1e38"
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "56952407-39dc-4b45-b131-da9d661630af",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 0,
+            "serviceId": "AZSCP27117001",
+            "billingDescription": "Software Subscriptions",
+            "productType": "AzureSoftwareSubscription",
+            "azureDescription": "Windows Server CAL - 1 Device CAL - 3 year",
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "2b2c18e37948"
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "52948229-7218-4f9d-b807-cd484af055a7",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 10.29,
+            "serviceId": "AZRCP27117003",
+            "billingDescription": "Azure Reservation",
+            "productType": "AzureReservation",
+            "azureDescription": "Reserved_VM_Instance_Standard_B1ms_AU_East_3_Years",
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "819cf1a4-0fe2-4d26-9cb7-66031f8a5811"
+          },
+          {
+            "markupPercent": 45,
+            "hasMetMinimumCommitment": true,
             "minimumCommitmentDollars": 3000,
             "childBillingServices": [
               {
-                "id": "9c8562b5-9732-46c4-a290-1111770d4d57",
+                "id": "31dee58f-42e5-4df7-b808-4d004fdf3336",
                 "active": true,
-                "billingAccountId": "28603",
-                "finalChargeDollars": 254.3,
-                "serviceId": "AZPCM28603020",
+                "billingAccountId": "27117",
+                "finalChargeDollars": 8.87,
+                "serviceId": "AZPCM27117008",
                 "billingDescription": "Azure Product Consumption",
-                "productType": "Azure Product Consumption",
-                "azureDescription": "Azure - Legacy Subscription",
+                "productType": "AzureProductConsumption",
+                "azureDescription": "AZPCM27117008-M-Macquarie_Telecom_Contoso",
                 "installedQuantity": 0,
                 "discountPercent": 0,
                 "tenant": {
-                  "id": "f5cdbbf2-f821-4d0d-9159-5925948659f1",
-                  "name": "MCS Legacy Azure",
-                  "initialDomain": "mcslegacyazure.onmicrosoft.com",
-                  "primaryDomain": "mcslegacyazure.onmicrosoft.com"
+                  "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+                  "name": "contosoltd",
+                  "initialDomain": "contosoltd100321.onmicrosoft.com",
+                  "primaryDomain": "contosoltd100321.onmicrosoft.com"
                 },
-                "microsoftId": "53D7C75D-0D3F-4C08-BB76-B52FB10349EB"
+                "microsoftId": "596f6831-761a-4eac-a3cf-87302cede83d"
               }
             ],
-            "id": "fd771951-817f-4a32-b4b9-c2b27eba1ff2",
+            "id": "89fa5aa0-b4c8-4d73-8308-c92db4cb4b0b",
             "active": true,
-            "billingAccountId": "28603",
-            "finalChargeDollars": 254.3,
-            "serviceId": "AZMCP28603002",
+            "billingAccountId": "27117",
+            "finalChargeDollars": 3300,
+            "serviceId": "AZMCP27117001",
             "billingDescription": "Managed Azure CSP",
-            "productType": "Managed Azure CSP\t",
+            "productType": "ManagedAzureCsp",
             "azureDescription": null,
             "installedQuantity": 0,
             "discountPercent": null,
@@ -130,42 +163,380 @@
             "microsoftId": null
           },
           {
-            "markupPercent": 0.45,
+            "markupPercent": 0,
             "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "e31bf77e-4a6a-4f8f-bea6-07d2d7cd0284",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 6.97,
+            "serviceId": "AZLCP27117004",
+            "billingDescription": "Azure Information Protection Premium P1 - 2 Licenses",
+            "productType": "CspLicenses",
+            "azureDescription": "Azure Information Protection Premium P1",
+            "installedQuantity": 1,
+            "discountPercent": 2,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "681E84BF-DABE-4C06-B541-E734266B47E8"
+          }
+        ]
+      },
+      {
+        "macquarieBillMonth": "2021-09-01",
+        "microsoftChargeMonth": "2021-07-01",
+        "isProjection": false,
+        "parentServices": [
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "f4a9fff3-69a3-4c3f-be7a-356a08742182",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 10.85,
+            "serviceId": "AZRCP27117003",
+            "billingDescription": "Azure Reservation",
+            "productType": "AzureReservation",
+            "azureDescription": null,
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": null,
+            "microsoftId": null
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "4cadc562-185b-4366-a093-61dfa287b699",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 4.24,
+            "serviceId": "AZRCP27117004",
+            "billingDescription": "Azure Reservation",
+            "productType": "AzureReservation",
+            "azureDescription": null,
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": null,
+            "microsoftId": null
+          },
+          {
+            "markupPercent": 45,
+            "hasMetMinimumCommitment": true,
             "minimumCommitmentDollars": 3000,
             "childBillingServices": [
               {
-                "id": "8ef7df3c-6a02-4fcf-b71f-f92510c5d883",
+                "id": "315b6481-c7dd-4474-9e41-6383d47b4dd9",
                 "active": true,
-                "billingAccountId": "28603",
-                "finalChargeDollars": 105.7,
-                "serviceId": "AZPCM28603016",
+                "billingAccountId": "27117",
+                "finalChargeDollars": 9.98,
+                "serviceId": "AZPCM27117008",
                 "billingDescription": "Azure Product Consumption",
-                "productType": "Azure Product Consumption",
-                "azureDescription": "test",
+                "productType": "AzureProductConsumption",
+                "azureDescription": "AZPCM27117008-M-Macquarie_Telecom_Contoso",
                 "installedQuantity": 0,
                 "discountPercent": 0,
                 "tenant": {
-                  "id": "6d6e9562-7f49-43e9-985c-f2c293f04075",
-                  "name": "MCS Test",
-                  "initialDomain": "mcstest104220v7.onmicrosoft.com",
-                  "primaryDomain": "mcstest104220v7.onmicrosoft.com"
+                  "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+                  "name": "contosoltd",
+                  "initialDomain": "contosoltd100321.onmicrosoft.com",
+                  "primaryDomain": "contosoltd100321.onmicrosoft.com"
                 },
-                "microsoftId": "563BC89E-837C-4F4A-ADAB-E23D20400D01"
+                "microsoftId": "596f6831-761a-4eac-a3cf-87302cede83d"
               }
             ],
-            "id": "0d8ed387-3c74-4c85-973a-edc2babc98f0",
+            "id": "f5aa0641-77f6-4f0f-ac82-24bdd9fb905d",
             "active": true,
-            "billingAccountId": "28603",
-            "finalChargeDollars": 105.69,
-            "serviceId": "AZMCP28603001",
+            "billingAccountId": "27117",
+            "finalChargeDollars": 3300,
+            "serviceId": "AZMCP27117001",
             "billingDescription": "Managed Azure CSP",
-            "productType": "Managed Azure CSP\t",
+            "productType": "ManagedAzureCsp",
             "azureDescription": null,
             "installedQuantity": 0,
             "discountPercent": null,
             "tenant": null,
             "microsoftId": null
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "fb4be4fc-2809-471a-b082-ee053da87115",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 1.44,
+            "serviceId": "AZLCP27117004",
+            "billingDescription": "Azure Information Protection Premium P1 - 2 Licenses",
+            "productType": "CspLicenses",
+            "azureDescription": "Azure Information Protection Premium P1",
+            "installedQuantity": 1,
+            "discountPercent": 2,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "681E84BF-DABE-4C06-B541-E734266B47E8"
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "b802c604-e9d1-4dfd-80ea-e100f76966b0",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 1.51,
+            "serviceId": "AZLCP27117003",
+            "billingDescription": "Exchange Online Protection - 1 Licenses",
+            "productType": "CspLicenses",
+            "azureDescription": null,
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": null,
+            "microsoftId": null
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "54d72b4f-554a-4886-b125-720e9a0154ff",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 13.37,
+            "serviceId": "AZLCP27117001",
+            "billingDescription": "E-Azure Active Directory Premium P2 Mx - 2 Licenses",
+            "productType": "CspLicenses",
+            "azureDescription": "E-Azure Active Directory Premium P2 Mx",
+            "installedQuantity": 1,
+            "discountPercent": 2.02,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "5521E961-21E4-4865-911B-8022D73291C2"
+          }
+        ]
+      },
+      {
+        "macquarieBillMonth": "2021-08-01",
+        "microsoftChargeMonth": "2021-06-01",
+        "isProjection": false,
+        "parentServices": [
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "3da7fbd4-9091-4a2b-b05a-604536abd071",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 10.52,
+            "serviceId": "AZRCP27117003",
+            "billingDescription": "Azure Reservation",
+            "productType": "AzureReservation",
+            "azureDescription": "Reserved_VM_Instance_Standard_B1ms_AU_East_3_Years",
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "819cf1a4-0fe2-4d26-9cb7-66031f8a5811"
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "474202cf-83f0-4cc3-bbe0-0de114ed7c71",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 4.11,
+            "serviceId": "AZRCP27117004",
+            "billingDescription": "Azure Reservation",
+            "productType": "AzureReservation",
+            "azureDescription": "Reserved_VM_Instance_Standard_B1ls_AU_Southeast_1_Year",
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "903fdbbb-4137-4448-9735-a18c073f1e38"
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "c4638be9-c3b6-4da2-8478-135bf18570ba",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 0,
+            "serviceId": "AZSCP27117001",
+            "billingDescription": "Software Subscriptions",
+            "productType": "AzureSoftwareSubscription",
+            "azureDescription": "Windows Server CAL - 1 Device CAL - 3 year",
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "2b2c18e37948"
+          },
+          {
+            "markupPercent": 45,
+            "hasMetMinimumCommitment": true,
+            "minimumCommitmentDollars": 3000,
+            "childBillingServices": [
+              {
+                "id": "5fa244f4-26b6-4ec6-841a-c451c2b2421f",
+                "active": true,
+                "billingAccountId": "27117",
+                "finalChargeDollars": 9.64,
+                "serviceId": "AZPCM27117008",
+                "billingDescription": "Azure Product Consumption",
+                "productType": "AzureProductConsumption",
+                "azureDescription": "AZPCM27117008-M-Macquarie_Telecom_Contoso",
+                "installedQuantity": 0,
+                "discountPercent": 0,
+                "tenant": {
+                  "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+                  "name": "contosoltd",
+                  "initialDomain": "contosoltd100321.onmicrosoft.com",
+                  "primaryDomain": "contosoltd100321.onmicrosoft.com"
+                },
+                "microsoftId": "596f6831-761a-4eac-a3cf-87302cede83d"
+              }
+            ],
+            "id": "5a34b9af-e835-4b14-b03a-2975aad96170",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 3300,
+            "serviceId": "AZMCP27117001",
+            "billingDescription": "Managed Azure CSP",
+            "productType": "ManagedAzureCsp",
+            "azureDescription": null,
+            "installedQuantity": 0,
+            "discountPercent": null,
+            "tenant": null,
+            "microsoftId": null
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "041afd08-9e8c-4317-b133-e83c46420f0e",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 5.72,
+            "serviceId": "AZLCP27117004",
+            "billingDescription": "Azure Information Protection Premium P1 - 2 Licenses",
+            "productType": "CspLicenses",
+            "azureDescription": "Azure Information Protection Premium P1",
+            "installedQuantity": 1,
+            "discountPercent": 2,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "681E84BF-DABE-4C06-B541-E734266B47E8"
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "f4ab9d2a-c0a8-4e15-bd9e-9b3465537c74",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 1.51,
+            "serviceId": "AZLCP27117003",
+            "billingDescription": "Exchange Online Protection - 1 Licenses",
+            "productType": "CspLicenses",
+            "azureDescription": null,
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": null,
+            "microsoftId": null
+          },
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "ededc9e9-a0a4-4a35-8f57-740f2709eaef",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 21.83,
+            "serviceId": "AZLCP27117001",
+            "billingDescription": "E-Azure Active Directory Premium P2 Mx - 2 Licenses",
+            "productType": "CspLicenses",
+            "azureDescription": "E-Azure Active Directory Premium P2 Mx",
+            "installedQuantity": 1,
+            "discountPercent": 2.02,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "5521E961-21E4-4865-911B-8022D73291C2"
+          }
+        ]
+      },
+      {
+        "macquarieBillMonth": "2021-06-01",
+        "microsoftChargeMonth": "2021-04-01",
+        "isProjection": false,
+        "parentServices": [
+          {
+            "markupPercent": 0,
+            "hasMetMinimumCommitment": false,
+            "minimumCommitmentDollars": 0,
+            "childBillingServices": [],
+            "id": "a4d03765-68a4-40ce-afa4-36976d03b9d5",
+            "active": true,
+            "billingAccountId": "27117",
+            "finalChargeDollars": 110,
+            "serviceId": "AZRCP27117003",
+            "billingDescription": "Azure Reservation",
+            "productType": "AzureReservation",
+            "azureDescription": "Reserved_VM_Instance_Standard_B1ms_AU_East_3_Years",
+            "installedQuantity": 1,
+            "discountPercent": 0,
+            "tenant": {
+              "id": "64f5627a-cfc1-4a0c-a58c-9f5256e58b16",
+              "name": "contosoltd",
+              "initialDomain": "contosoltd100321.onmicrosoft.com",
+              "primaryDomain": "contosoltd100321.onmicrosoft.com"
+            },
+            "microsoftId": "819cf1a4-0fe2-4d26-9cb7-66031f8a5811"
           }
         ]
       }

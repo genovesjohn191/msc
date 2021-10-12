@@ -287,6 +287,17 @@ export function addMonthsToDate(date: Date, months: number = 1): Date {
 }
 
 /**
+ * Adds years to a specific date
+ * @param date date to increment
+ * @param years number of years to add, default to 1
+ */
+ export function addYearsToDate(date: Date, years: number = 1): Date {
+  let resultDate = new Date(date);
+  resultDate.setFullYear(date.getFullYear() + years);
+  return resultDate;
+}
+
+/**
  * Returns the date only from the given input excluding the time settings
  */
 export function getDateOnly(date: Date | string): Date {
