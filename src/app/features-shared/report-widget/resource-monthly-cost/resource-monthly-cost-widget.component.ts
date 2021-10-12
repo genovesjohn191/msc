@@ -1,4 +1,11 @@
 import {
+  throwError,
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -8,22 +15,17 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {
-  BehaviorSubject,
-  Observable,
-  throwError
-} from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { McsReportingService } from '@app/core';
+import {
+  ChartConfig,
+  ChartItem
+} from '@app/shared';
 import {
   compareArrays,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import {
-  ChartConfig,
-  ChartItem
-} from '@app/shared';
+
 import { ReportWidgetBase } from '../report-widget.base';
 
 export interface ResourceMonthlyCostWidgetConfig {
@@ -116,25 +118,25 @@ export class ResourceMonthlyCostWidgetComponent extends ReportWidgetBase impleme
     this.processing = true;
     this.updateChartUri(undefined);
     this.reportingService.getResourceMonthlyCostReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
-    .pipe(catchError((error) => {
-      this.hasError = true;
-      this.processing = false;
-      this.updateChartUri('');
-      this._changeDetector.markForCheck();
-      return throwError(error);
-    }))
-    .subscribe((result) => {
-      this.chartData = result;
-      if (result.length === 0) {
-        this.updateChartUri ('');
-      };
-      if (!isNullOrEmpty(result) || this.noDataForOneYear) {
-        this.dataReceived.complete();
-      }
-      this.dataReceived.emit(result);
-      this.processing = false;
-      this._changeDetector.markForCheck();
-    });
+      .pipe(catchError((error) => {
+        this.hasError = true;
+        this.processing = false;
+        this.updateChartUri('');
+        this._changeDetector.markForCheck();
+        return throwError(error);
+      }))
+      .subscribe((result) => {
+        this.chartData = result;
+        if (result.length === 0) {
+          this.updateChartUri('');
+        };
+        if (!isNullOrEmpty(result) || this.noDataForOneYear) {
+          this.dataReceived.complete();
+        }
+        this.dataReceived.emit(result);
+        this.processing = false;
+        this._changeDetector.markForCheck();
+      });
   }
 
   public tooltipYValueFormatter(val: number): string {
