@@ -1,6 +1,6 @@
 export class BillingServiceItem {
   public productType: string;
-  public service: string;
+  public serviceId: string;
   public microsoftChargeMonth: string;
   public macquarieBillMonth: string;
   public azureDescription: string;

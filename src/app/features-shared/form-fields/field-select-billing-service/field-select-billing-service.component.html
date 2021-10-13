@@ -3,12 +3,10 @@
   appearance="outline" >
   <mat-label>{{ 'label.services' | translate }}</mat-label>
 
-  <mat-select multiple
-    [formControl]="ngControl?.control"
-    (selectionChange)="valueChange($event)">
+  <mat-select multiple [formControl]="ngControl?.control">
     <mat-option *ngFor="let billingService of billingServices"
       [value]="billingService">
-      {{ billingService?.billingDescription }} - {{ billingService?.service }}
+      {{ billingService?.billingDescription }} - {{ billingService?.serviceId }}
     </mat-option>
   </mat-select>
 </mat-form-field>

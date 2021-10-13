@@ -49,8 +49,7 @@ type tabGroupType = 'summary' | 'service' | 'tabular';
 })
 export class BillingComponent implements OnInit, OnDestroy {
   public selectedTabId$: Observable<string>;
-
-  public fcBillingAccount: FormControl;
+  public fcBillingAccount = new FormControl('');;
 
   private _routerHandler: Subscription;
   private _destroySubject = new Subject<void>();
@@ -65,7 +64,6 @@ export class BillingComponent implements OnInit, OnDestroy {
     private _datePipe: StdDateFormatPipe
   ) {
     this._registerEvents();
-    this._registerFormControl();
     this._subscribeToBillingAccountControlChanges();
   }
 
@@ -107,10 +105,6 @@ export class BillingComponent implements OnInit, OnDestroy {
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
         this.selectedTabId$ = of(tabUrl);
       });
-  }
-
-  private _registerFormControl(): void {
-    this.fcBillingAccount = new FormControl('', []);
   }
 
   private _subscribeToBillingAccountControlChanges(): void {
