@@ -6,8 +6,8 @@
   <mat-select multiple
     [formControl]="ngControl?.control"
     mcsTooltipPosition="bottom"
-    [mcsTooltip]="'reports.billing.billingAccountDropdownTooltip' | translate"
-    (selectionChange)="valueChange($event)">
+    [mcsTooltip]="'reports.billing.billingAccountDropdownTooltip' | translate">
+
     <mat-option *ngFor="let billingAccount of (billingAccounts$ | async)"
       [value]="billingAccount.value">
       {{ billingAccount.text }}

@@ -1,4 +1,8 @@
 import { Observable } from 'rxjs';
+import {
+  map,
+  switchMap
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -10,23 +14,18 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {
-  map,
-  switchMap
-} from 'rxjs/operators';
-import {
   McsBilling,
   McsOption
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import {
   createObject,
   getSafeProperty,
   unsubscribeSafely
 } from '@app/utilities';
-import { McsApiService } from '@app/services';
 
 import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
 import { IFieldSelectBillingAccount } from './field-select-billing-account';
-
 
 @Component({
   selector: 'mcs-field-select-billing-account',
@@ -63,10 +62,6 @@ export class FieldSelectBillingAccountComponent
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this.destroySubject);
-  }
-
-  public valueChange(billingAccountId): void {
-    this.writeValue(billingAccountId.value);
   }
 
   private _getBillingAccounts(): void {

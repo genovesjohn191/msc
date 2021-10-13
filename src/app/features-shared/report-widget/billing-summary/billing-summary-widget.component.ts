@@ -9,6 +9,7 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
+import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -87,6 +88,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   public constructor(
     private _translate: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _decimalPipe: DecimalPipe,
     private _datePipe: StdDateFormatPipe,
     private _currencyPipe: StdCurrencyFormatPipe,
     private _reportingService: McsReportingService
@@ -111,7 +113,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       dataLabels: {
         enabled: true,
         formatter: this._dataLabelFormatter.bind(this),
-        offsetX: -20
+        offsetX: -10
       },
       legend: {
         position: 'bottom',
@@ -156,7 +158,12 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _dataLabelFormatter(value: number, opts?: any): string {
-    return this._currencyPipe.transform(value);
+    let thousandValue = value / 1000;
+    let actualValue = thousandValue > 1 ? thousandValue : value;
+    let roundedValue = +this._decimalPipe.transform(actualValue, '1.0-0');
+
+    let displayedValue = thousandValue > 1 ? `$${roundedValue}K` : `$${roundedValue}`;
+    return displayedValue;
   }
 
   private _valueYFormatter(value: number): string {
@@ -287,7 +294,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         // Append Parent Service
         this._appendBillingSummaryToMap(
           this._generateItemKey(parentService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
-          parentService.isProjection,
+          billingGroup.isProjection,
           billingGroup.microsoftChargeMonth,
           billingGroup.macquarieBillMonth,
           billingGroup.usdPerUnit,
@@ -298,7 +305,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         parentService?.childBillingServices?.forEach(childService => {
           this._appendBillingSummaryToMap(
             this._generateItemKey(childService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
-            childService.isProjection,
+            billingGroup.isProjection,
             billingGroup.microsoftChargeMonth,
             billingGroup.macquarieBillMonth,
             billingGroup.usdPerUnit,

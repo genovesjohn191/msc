@@ -6,14 +6,11 @@ import {
   OnDestroy,
   ViewEncapsulation
 } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
-
-import { unsubscribeSafely } from '@app/utilities';
 import { BillingServiceItem } from '@app/features-shared/report-widget/billing-service/billing-service-item';
+import { unsubscribeSafely } from '@app/utilities';
 
 import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
 import { IFieldSelectBillingService } from './field-select-billing-service';
-
 
 @Component({
   selector: 'mcs-field-select-billing-service',
@@ -50,27 +47,11 @@ export class FieldSelectBillingServiceComponent
     unsubscribeSafely(this.destroySubject);
   }
 
-  public valueChange(services: MatSelectChange): void {
-    let selectedServices: BillingServiceItem[] = [];
-    if (services.value.length === 0) {
-      selectedServices = this._initialBillingServices;
-    } else {
-      services.value.forEach((service) => {
-        this._initialBillingServices.forEach((initialService) => {
-          let isSameService  = initialService.service === service.service;
-          if (!isSameService) { return; }
-          selectedServices.push(initialService);
-        })
-      })
-    }
-    this.writeValue(selectedServices);
-  }
-
   private _setBillingServiceOptions(services: BillingServiceItem[]): BillingServiceItem[] {
     let billingServices: BillingServiceItem[] = [];
     if (services?.length > 1) {
       services.forEach((service) => {
-        let isServiceUnique = this._checkDuplicate(billingServices, service.service);
+        let isServiceUnique = this._checkDuplicate(billingServices, service.serviceId);
         if (!isServiceUnique) { return; }
         billingServices.push(service);
       })
@@ -79,6 +60,6 @@ export class FieldSelectBillingServiceComponent
   }
 
   private _checkDuplicate(services: BillingServiceItem[], serviceId: string): boolean {
-    return services.findIndex(service => service.service === serviceId) < 0;
+    return services.findIndex(service => service.serviceId === serviceId) < 0;
   }
 }
