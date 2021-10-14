@@ -21,6 +21,7 @@ import { McsApiService } from '@app/services';
 import {
   createObject,
   getSafeProperty,
+  isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
 
@@ -74,28 +75,27 @@ export class FieldSelectBillingAccountComponent
 
             let billingAccounts: McsOption[] = [];
 
-            orderBilling.forEach((order) => {
-              reportBilling.forEach((report) => {
-                report.parentServices.forEach((parentService) => {
-                  let isParentUnique = this._checkDuplicate(billingAccounts, parentService.billingAccountId);
-                  if (!isParentUnique) { return; }
-                  let parentOptionText = this.setOptionText(order, parentService.billingAccountId);
+            reportBilling.forEach((report) => {
+              report.parentServices.forEach((parentService) => {
+                let isParentUnique = this._checkDuplicate(billingAccounts, parentService.billingAccountId);
+                if (!isParentUnique) { return; }
+                let parentOptionName = this.setOptionName(orderBilling, parentService.billingAccountId);
+                billingAccounts.push(createObject(McsOption, {
+                  text: `${parentOptionName} (${parentService.billingAccountId})`,
+                  value: parentService.billingAccountId
+                }))
+                parentService.childBillingServices.forEach((childService) => {
+                  let isChildUnique = this._checkDuplicate(billingAccounts, childService.billingAccountId);
+                  if (!isChildUnique) { return; }
+                  let childOptionName = this.setOptionName(orderBilling, childService.billingAccountId);
                   billingAccounts.push(createObject(McsOption, {
-                    text: `${parentOptionText} (${parentService.billingAccountId})`,
-                    value: parentService.billingAccountId
+                    text: `${childOptionName} (${childService.billingAccountId})`,
+                    value: childService.billingAccountId
                   }))
-                  parentService.childBillingServices.forEach((childService) => {
-                    let isChildUnique = this._checkDuplicate(billingAccounts, childService.billingAccountId);
-                    if (!isChildUnique) { return; }
-                    let childOptionText = this.setOptionText(order, childService.billingAccountId);
-                    billingAccounts.push(createObject(McsOption, {
-                      text: `${childOptionText} (${childService.billingAccountId})`,
-                      value: childService.billingAccountId
-                    }))
-                  });
-                })
+                });
               })
             })
+
             this._billingAccountCount = billingAccounts?.length;
             this._changeDetectorRef.markForCheck();
             return billingAccounts
@@ -105,11 +105,14 @@ export class FieldSelectBillingAccountComponent
     )
   }
 
-  private setOptionText(order: McsBilling, accountId: string): string {
-    if (order.id === accountId) {
-      return order.name;
+  private setOptionName(orderBilling: McsBilling[], accountId: string): string {
+    if (orderBilling?.length === 0) { return 'Unknown'; }
+
+    let associatedOrderBilling = orderBilling.find((order) => order.id === accountId);
+    if (isNullOrEmpty(associatedOrderBilling)) {
+      return 'Unknown';
     }
-    return 'Unknown';
+    return associatedOrderBilling.name;
   }
 
   private _checkDuplicate(billingAccounts: McsOption[], accountBillingId: string): boolean {
