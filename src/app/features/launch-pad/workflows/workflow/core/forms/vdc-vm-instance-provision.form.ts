@@ -36,7 +36,8 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
       dependents: ['os', 'storage', 'network', 'ipAddress'],
       validators: { required: true },
       settings: { preserve: true },
-      hideSelfManaged: true
+      hideSelfManaged: true,
+      useServiceIdAsKey: true
     }),
     new DynamicInputHostNameField({
       key: 'name',

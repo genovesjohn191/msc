@@ -10,11 +10,15 @@ import {
   map
 } from 'rxjs/operators';
 
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 import {
   McsResource,
   ServiceType,
-  serviceTypeText } from '@app/models';
+  serviceTypeText
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   DynamicFormFieldDataChangeEventParam,
@@ -28,7 +32,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
 @Component({
   selector: 'mcs-dff-select-vdc-field',
   templateUrl: '../shared-template/select-group.component.html',
-  styleUrls: [ '../dynamic-form-field.scss' ],
+  styleUrls: ['../dynamic-form-field.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -70,8 +74,11 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    let dataValue = this.config.useServiceIdAsKey ? this.collection.find((item) => item.serviceId === value)
+      : this.collection.find((item) => item.id === value);
+
     this.dataChange.emit({
-      value: this.collection.find((item) => item.name === value),
+      value: dataValue,
       eventName,
       dependents
     });
@@ -113,7 +120,8 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
       let groupName = serviceTypeText[item.serviceType];
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
       let name = `${item.availabilityZone} (${item.name})`;
-      let option = {key: item.serviceId, value: name} as FlatOption;
+      let id = this.config.useServiceIdAsKey ? item.serviceId : item.id;
+      let option = { key: id, value: name } as FlatOption;
 
       if (existingGroup) {
         // Add option to existing group

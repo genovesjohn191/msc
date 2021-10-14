@@ -1,4 +1,4 @@
-<div *ngIf="isInputVisible" class="div-container">
+<div *ngIf="isInputVisible || isLoading" class="div-container">
   <mat-form-field
     *ngIf="visible && !isResourceSelfManaged"
     appearance="outline"
@@ -18,7 +18,7 @@
       [disabled]="disabled"
       [(value)]="config.value"
       (selectionChange)="valueChange($event); onSelectionChange($event);">
-      <mat-option [value]="-1">-- New Gateway IP --</mat-option>
+      <mat-option [value]="''">-- New Gateway IP --</mat-option>
       <mat-option *ngFor="let opt of config.options" [value]="opt.key">
         {{ opt.value }}
       </mat-option>
@@ -55,7 +55,7 @@
   </mat-form-field>
 </div>
 
-<span *ngIf="!isInputVisible" class="span-text">
+<span *ngIf="!(isInputVisible || isLoading)" class="span-text">
   A new subnet will be created for this network. 
 </span>
 
