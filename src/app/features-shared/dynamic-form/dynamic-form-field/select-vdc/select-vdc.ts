@@ -13,6 +13,7 @@ export class DynamicSelectVdcField extends DynamicFormFieldConfigBase {
 
   public hideSelfManaged?: boolean = false;
   public hideManaged?: boolean = false;
+  public useServiceIdAsKey: boolean = false;
 
   public constructor(options: {
     key: string;
@@ -27,10 +28,12 @@ export class DynamicSelectVdcField extends DynamicFormFieldConfigBase {
     settings?: DynamicFormControlSettings;
     hideSelfManaged?: boolean;
     hideManaged?: boolean;
+    useServiceIdAsKey?: boolean;
   }) {
     super(options);
 
     this.hideSelfManaged = options.hideSelfManaged || false;
     this.hideManaged = options.hideManaged || false;
+    this.useServiceIdAsKey = options.useServiceIdAsKey || false;
   }
 }

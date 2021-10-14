@@ -124,10 +124,8 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
   }
 
   public get isInputVisible(): boolean {
-    if (isNullOrUndefined(this._resource) || (isNullOrUndefined(this._network)
-        || this._resource.isSelfManaged) || this.isLoading ) { return true }
-
-    return (!this._resource.isSelfManaged && this.isNetworkExisting && this.collection.length > 0);
+    if (isNullOrUndefined(this._resource) || this._resource.isSelfManaged) { return true }
+    return this.isNetworkExisting && this.collection.length > 0;
   }
 
   public get isResourceSelfManaged(): boolean {
@@ -144,13 +142,12 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
   }
 
   protected callService(): Observable<McsNetworkVdcSubnet[]> {
-    if (isNullOrEmpty(this._resource) || isNullOrEmpty(this._companyId) || isNullOrEmpty(this._network)) { return of([]); }
+    if (isNullOrEmpty(this._resource) || isNullOrEmpty(this._companyId)) { return of([]); }
 
     let queryParam = new McsObjectVdcQueryParams();
     queryParam.vdcId = this._resource.id;
     queryParam.networkServiceId = this._serviceId;
     queryParam.companyId = this._companyId;
-    queryParam.networkId = this._network.id;
 
     return this._apiService.getVdcNetworkPrecheck(queryParam).pipe(
       takeUntil(this.destroySubject),
