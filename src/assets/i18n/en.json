@@ -3532,7 +3532,8 @@
     "restart": "Restart",
     "resume": "Resume",
     "stop": "Stop",
-    "suspend": "Suspend"
+    "suspend": "Suspend",
+    "reserveNewSubnet": "Reserve a new subnet"
   },
   "message": {
     "notYetAvailable": "Not yet available",
@@ -3596,7 +3597,8 @@
     "unavailable": "Unavailable",
     "invalidIpAddress": "Please enter a valid private IP address.",
     "validationMin": "Must not be less than ",
-    "validationMax": "Must not exceed "
+    "validationMax": "Must not exceed ",
+    "vdcNewSubnet": "A new subnet will be created for this network."
   },
   "tooltip": {
     "exportWord": "Export Word Document",
