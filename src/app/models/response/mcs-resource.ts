@@ -51,6 +51,9 @@ export class McsResource extends McsEntityBase {
   @JsonProperty({ target: McsResourceVApp })
   public vApps: McsResourceVApp[] = undefined;
 
+  @JsonProperty()
+  public billingDescription: string = undefined;
+
   @JsonProperty({
     serializer: ServiceTypeSerialization,
     deserializer: ServiceTypeSerialization

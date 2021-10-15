@@ -234,7 +234,7 @@
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-small>
+          <td mat-cell *matCellDef="let row" hidden-small  matTooltip="{{ row.billingDescription }}">
             {{ row.serviceId }}
           </td>
         </ng-container>
@@ -244,7 +244,7 @@
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.resource' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-small>
+          <td mat-cell *matCellDef="let row" hidden-small  matTooltip="{{ getResourceBillingDescription(row.platform?.resourceId) }}">
             <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, row?.platform?.resourceId]"
               mcsId mcsStopPropagation
               mcsEventTracker="navigate-to-resource"

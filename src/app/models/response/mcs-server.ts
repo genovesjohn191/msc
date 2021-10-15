@@ -79,6 +79,9 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   @JsonProperty()
   public serviceChangeAvailable: boolean = undefined;
 
+  @JsonProperty()
+  public billingDescription: string = undefined;
+
   @JsonProperty({ target: McsServerVmwareTools })
   public vmwareTools: McsServerVmwareTools = undefined;
 
