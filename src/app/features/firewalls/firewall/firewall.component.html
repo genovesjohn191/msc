@@ -42,7 +42,8 @@
               mcsId="select-firewall"
               mcsEventTracker="select-firewall-without-ha"
               mcsEventCategory="firewall"
-              mcsEventLabel="firewall-list-panel">
+              mcsEventLabel="firewall-list-panel"
+              matTooltip="{{ firewall.billingDescription }}">
 
               <mcs-option [value]="firewall"
                 [selected]="(selectedFirewall$ | async)?.id === firewall.id">
