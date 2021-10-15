@@ -1,6 +1,4 @@
-@import "../../../styles/shared/base";
-
-mcs-content-panel {
+.dashboard-content {
   background-color: rgb(235, 235, 235);
   @include print() {
     background-color: transparent;

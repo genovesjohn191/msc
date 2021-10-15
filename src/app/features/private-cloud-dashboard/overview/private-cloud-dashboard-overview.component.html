@@ -1,0 +1,45 @@
+<mcs-page header="Private Cloud Overview">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef class="hide-on-print">
+      <!-- Nav Menu -->
+      <mcs-action-item *ngIf="hasPrivateAndPublicCloudAccess"
+        mcsResponsivePanelItem hidden-small [matMenuTriggerFor]="menu">
+        <mcs-icon size="xlarge" [key]="arrowDropDownBlackIconKey" ></mcs-icon>
+      </mcs-action-item>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item class="active" (click)="onClickPrivateCloud()">Private Cloud</button>
+        <button mat-menu-item (click)="onClickPublicCloud()">Public Cloud</button>
+      </mat-menu>
+
+      <!-- PDF Icon -->
+      <mcs-action-item mcsResponsivePanelItem hidden-small
+        [mcsTooltip]="'tooltip.exportPdf' | translate">
+        <mcs-icon key="pdf-black" size="large" mcsCursor="pointer"></mcs-icon>
+      </mcs-action-item>
+
+      <!-- Word Icon -->
+      <mcs-action-item mcsResponsivePanelItem hidden-small
+        [mcsTooltip]="'tooltip.exportWord' | translate">
+        <mcs-icon key="word-black" size="large" mcsCursor="pointer"></mcs-icon>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef class="full-width dashboard-content">
+    <div class="report-wrapper">
+      <div class="widget-box" *ngIf="!hasCloudVmAccess">
+        <div class="widget">{{ 'privateCloud.overview.description' | translate }}</div>
+      </div>
+      <div class="widget-wrapper">
+        <ul>
+          <li>
+          </li>
+          <li>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

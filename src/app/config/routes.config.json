@@ -243,6 +243,14 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
   },
+  "privateCloudDashboardOverview": {
+    "enumKey": "PrivateCloudDashboardOverview",
+    "enumCategory": "PrivateCloudDashboard",
+    "navigationPath": "private-cloud/dashboard/overview",
+    "enumPlatform": "Private",
+    "requiredFeatureFlag": ["EnablePrivateCloudDashboard"],
+    "documentTitle": "Private Cloud Dashboard Overview - Macquarie Cloud Services"
+  },
   "reportOverview": {
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",

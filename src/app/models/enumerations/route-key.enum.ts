@@ -135,5 +135,8 @@ export enum RouteKey {
   BillingService,
   BillingTabular,
 
+  PrivateCloudDashboard,
+  PrivateCloudDashboardOverview,
+
   HttpErrorPage
 }
