@@ -43,6 +43,8 @@
 @import "classes/mcs-image";
 @import "classes/mcs-cog-action";
 @import "classes/mcs-charts";
+@import "classes/mcs-dashboard";
+@import "classes/mcs-overview-widgets";
 
 @import "material/mcs-chiplist";
 @import "material/mcs-snackbar";
@@ -54,6 +56,7 @@
 @import "material/mcs-treeview";
 @import "material/mcs-date-picker";
 @import "material/mcs-time-picker";
+@import "material/mcs-menu";
 
 *,
 *:after,

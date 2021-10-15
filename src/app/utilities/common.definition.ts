@@ -108,6 +108,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_PERSON_GREEN = 'person-green';
   public static ASSETS_SVG_PERSON_RED = 'person-red';
   public static ASSETS_SVG_PERSON_YELLOW = 'person-yellow';
+  public static ASSETS_SVG_ARROW_DROP_DOWN_BLACK = 'arrow-drop-down-black';
   public static ASSETS_SVG_ARROW_RIGHT_WHITE = 'arrow-right-white';
   public static ASSETS_SVG_ARROW_RIGHT_BLUE = 'arrow-right-blue';
   public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';

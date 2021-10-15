@@ -1,0 +1,6 @@
+.mat-menu-item {
+  &.active {
+    color: $color-primary-01;
+    font-weight: bold;
+  }
+}

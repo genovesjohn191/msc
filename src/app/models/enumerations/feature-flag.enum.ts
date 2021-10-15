@@ -18,6 +18,8 @@ export enum McsFeatureFlag {
   AscAlert = 'EnableAscAlertListing',
   PlatformSecurityAdvisory = 'EnablePlatformSecurityAdvisoryListing',
 
+  PrivateCloudDashboard = 'EnablePrivateCloudDashboard',
+
   PublicCloudResourceListing = 'EnablePublicCloudResourceListing',
 
   CatalogSolutionListing = 'EnableCatalogSolutionListing',

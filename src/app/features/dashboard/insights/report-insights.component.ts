@@ -80,7 +80,7 @@ const months = [
 @Component({
   selector: 'mcs-report-insights',
   templateUrl: './report-insights.component.html',
-  styleUrls: ['../report-pages.scss', './report-insights.component.scss'],
+  styleUrls: ['./report-insights.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'report-insights-component'

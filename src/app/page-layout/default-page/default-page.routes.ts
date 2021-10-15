@@ -119,6 +119,12 @@ export const defaultPageRoutes: Routes = [
         data: { routeId: RouteKey.Billing },
         loadChildren: () => import('../../features/billing/billing.module').then(m => m.BillingModule)
       },
+      {
+        path: 'private-cloud/dashboard',
+        data: { routeId: RouteKey.PrivateCloudDashboard },
+        loadChildren: () => import('../../features/private-cloud-dashboard/private-cloud-dashboard.module')
+          .then(m => m.PrivateCloudDashboardModule)
+      },
       // New routes must be added on top of this error route page
       {
         path: '**',
