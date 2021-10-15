@@ -38,7 +38,8 @@ import {
   RouteKey,
   ServerCommand,
   ServiceType,
-  VmPowerstateCommand
+  VmPowerstateCommand,
+  McsResource
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -76,6 +77,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsServer>;
   public readonly dataSelection: McsTableSelection2<McsServer>;
   public readonly dataEvents: McsTableEvents<McsServer>;
+  private resources: McsResource[] = [];
 
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
@@ -365,9 +367,14 @@ export class ServersComponent implements OnInit, OnDestroy {
     );
   }
 
+  public getResourceBillingDescription(resourceId): string {
+    return this.resources.find(resource => resource.id === resourceId)?.billingDescription;
+  }
+
   private _setResourcesFlag(): void {
     let managedResources = this._apiService.getResources().pipe(
       map((resources) => {
+        this.resources = resources.collection;
         this.hasManagedResource = resources && !!resources.collection.find((_resource) =>
           _resource.serviceType === ServiceType.Managed);
         this._changeDetectorRef.markForCheck();
