@@ -34,6 +34,7 @@ import { TranslateService } from '@ngx-translate/core';
 const defaultPrefixLength = 27;
 const prefixMinSelfManaged = 16;
 const prefixMinManaged = 26;
+const reserveNewSubnetValue = 'Reserve a new subnet';
 
 @Component({
   selector: 'mcs-dff-select-gateway-ip-field',
@@ -65,6 +66,7 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
 
   public networkName: string = '';
   public isNetworkExisting: boolean = true;
+  public reserveNewSubnetValue = reserveNewSubnetValue;
 
   // Filter variables
   private _resource: McsResource;
@@ -97,7 +99,6 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
         this._reset();
         this._resource = params.value as McsResource;
         this.retrieveOptions();
-        this._updatePrefixValidators();
         this._updateValidators();
         break;
 
@@ -134,6 +135,11 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
   }
 
   public onSelectionChange(event: any) {
+    if (event.value === this.reserveNewSubnetValue){
+      this.prefixDisabled = false;
+      return;
+    }
+
     let selectedSubnet = this.collection.find(item => item.gatewayIp === event.value);
     if (!isNullOrUndefined(selectedSubnet)) {
       this.prefixLength = selectedSubnet.prefixLength;
@@ -152,7 +158,6 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
     return this._apiService.getVdcNetworkPrecheck(queryParam).pipe(
       takeUntil(this.destroySubject),
       map((response) => {
-        if (isNullOrEmpty(response.subnets)) { this._updateValidators(); }
         return response && response.subnets;
       }));
   }
@@ -194,6 +199,7 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
       this.config.value = null;
       this.valueChange(this.config.value);
     }
+    this._updatePrefixValidators();
   }
 
   private _reset(): void {

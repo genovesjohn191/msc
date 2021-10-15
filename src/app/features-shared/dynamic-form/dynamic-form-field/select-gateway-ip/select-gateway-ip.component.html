@@ -18,7 +18,7 @@
       [disabled]="disabled"
       [(value)]="config.value"
       (selectionChange)="valueChange($event); onSelectionChange($event);">
-      <mat-option value="Reserve a new subnet" class="mat-option-reserve-new">{{ 'action.reserveNewSubnet' | translate }}</mat-option>
+      <mat-option [value]="reserveNewSubnetValue" class="mat-option-reserve-new">{{ 'action.reserveNewSubnet' | translate }}</mat-option>
       <mat-option *ngFor="let opt of config.options" [value]="opt.key">
         {{ opt.value }}
       </mat-option>
