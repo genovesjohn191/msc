@@ -42,6 +42,7 @@ import {
   JobStatus,
   McsJob,
   McsQueryParam,
+  McsResource,
   McsRouteInfo,
   McsServer,
   McsServerPlatform,
@@ -86,6 +87,7 @@ export class ServerComponent implements OnInit, OnDestroy {
   public server$: Observable<McsServer>;
   public selectedTabId$: Observable<string>;
   public serverPermission: McsServerPermission;
+  private resources: McsResource[] = [];
 
   private _destroySubject = new Subject<void>();
   private _routerHandler: Subscription;
@@ -119,6 +121,7 @@ export class ServerComponent implements OnInit, OnDestroy {
     this.dataEvents = new McsTableEvents(_injector, this.listviewDatasource, {
       dataChangeEvent: McsEvent.dataChangeServers as any
     });
+    this._getResources();
     this._registerEvents();
   }
 
@@ -222,6 +225,17 @@ export class ServerComponent implements OnInit, OnDestroy {
     );
   }
 
+  private _getResources() {
+    this._apiService.getResources().pipe(
+      tap((resources) => {
+        this.resources = resources.collection;
+      })
+    ).subscribe();
+  }
+
+  public getResourceBillingDescription(resourceId): string {
+    return this.resources.find(resource => resource.id === resourceId)?.billingDescription;
+  }
 
   /**
    * Resets the management state
