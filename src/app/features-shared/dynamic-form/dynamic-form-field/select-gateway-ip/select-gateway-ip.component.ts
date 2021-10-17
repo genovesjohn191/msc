@@ -119,7 +119,7 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
   }
 
   private _updatePrefixValidators() {
-    this.prefixDisabled = !this._resource.isSelfManaged;
+    this.prefixDisabled = !this._resource.isSelfManaged && this.isInputVisible;
     this.config.prefixValidators.min = this._resource.isSelfManaged ? prefixMinSelfManaged : prefixMinManaged;
     this.prefixLength = defaultPrefixLength;
   }
