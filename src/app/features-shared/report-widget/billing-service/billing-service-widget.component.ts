@@ -35,6 +35,7 @@ import {
 import {
   compareDates,
   createObject,
+  formatStringToColor,
   getDateOnly,
   getTimestamp,
   isNullOrEmpty,
@@ -46,6 +47,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ReportWidgetBase } from '../report-widget.base';
 import { BillingServiceItem } from './billing-service-item';
+
+const PROJECT_TEXT = '(Projected)';
+const PROJECTED_COLOR_HASH = '#a5a6aa';
 
 class BillingServiceViewModel {
   constructor(
@@ -72,6 +76,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
+
   public hasError: boolean = false;
   public processing: boolean = true;
   public billingServices: BillingServiceItem[] = [];
@@ -153,10 +158,33 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
       let chartItems = this._convertFlatRecordsToChartItems(flatRecords);
       this._chartItemsChange.next(chartItems);
 
+      this._updateChartColors(chartItems);
       this.processing = isNullOrUndefined(this.billingSummaries);
       if (chartItems?.length === 0) { this.updateChartUri(''); }
     }
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _updateChartColors(chartItems: ChartItem[]): void {
+    if (isNullOrEmpty(chartItems)) { return; }
+
+    let chartNames = chartItems?.map(item => item.name) || [];
+
+    let uniqueNames = [...new Set(chartNames)];
+    let createdColors = uniqueNames.map(name => formatStringToColor(name));
+    let colorsFunc = createdColors.map(color =>
+      itemFunc => this._colorFunc(itemFunc, color));
+
+    this.chartConfig.colors = colorsFunc;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _colorFunc(opts: any, definedColor: string): string {
+    let serviceFound = this._billingSeriesItems[opts.seriesIndex][opts.dataPointIndex];
+    let billingStruct = this._getBillingViewModelByItem(serviceFound);
+    let billingTitle = this._generateBillingTitle(billingStruct);
+
+    return billingTitle?.includes(PROJECT_TEXT) ? PROJECTED_COLOR_HASH : definedColor;
   }
 
   private _dataLabelFormatter(value: number, opts?: any): string {
@@ -191,7 +219,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
   private _generateBillingTitle(billingStruct: BillingServiceViewModel): string {
     return billingStruct?.includeProjectionSuffix ?
-      `${billingStruct.title} (Projected)` : billingStruct?.title;
+      `${billingStruct.title} ${PROJECT_TEXT}` : billingStruct?.title;
   }
 
   private _subscribeToChartItemsChange(): void {
@@ -230,7 +258,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _getBillingViewModelByItem(service: BillingServiceItem): BillingServiceViewModel {
-    let billingKey = removeSpaces(service.productType)?.toUpperCase();
+    let billingKey = removeSpaces(service?.productType)?.toUpperCase();
     let billingFuncFound = this._billingStructMap?.get(billingKey);
     if (isNullOrEmpty(billingFuncFound)) { return null; }
 
@@ -358,6 +386,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         distinctService.serviceId === billingService.serviceId);
     });
     let serviceChartItems = this._convertFlatRecordsToChartItems(filteredServices);
+    this._updateChartColors(serviceChartItems);
     this._chartItemsChange.next(serviceChartItems);
   }
 
