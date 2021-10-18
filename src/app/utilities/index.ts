@@ -42,3 +42,4 @@ export * from './enumerations/keyboard-key';
 
 // Import all the extensions here so they're declared globally
 import './extensions/keyboard-event.extension';
+import './extensions/string.extensions';

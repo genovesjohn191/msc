@@ -151,25 +151,6 @@ export function formatStringToText(source: string): string {
 }
 
 /**
- * Formats the string to its equivalent color
- * @param source Source string to be converted
- */
-export function formatStringToColor(source: string): string {
-  if (!source) { return ''; }
-
-  let hash = 0;
-  for (let i = 0; i < source.length; i++) {
-    hash = source.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  let colour = '#';
-  for (let i = 0; i < 3; i++) {
-    let value = (hash >> (i * 8)) & 0xFF;
-    colour += ('00' + value.toString(16)).substr(-2);
-  }
-  return colour;
-}
-
-/**
  * Returns the converted string numbers to phone number
  */
 export function formatStringToPhoneNumber(

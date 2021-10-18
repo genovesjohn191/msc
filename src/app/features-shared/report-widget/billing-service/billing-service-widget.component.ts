@@ -35,7 +35,6 @@ import {
 import {
   compareDates,
   createObject,
-  formatStringToColor,
   getDateOnly,
   getTimestamp,
   isNullOrEmpty,
@@ -171,20 +170,20 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     let chartNames = chartItems?.map(item => item.name) || [];
 
     let uniqueNames = [...new Set(chartNames)];
-    let createdColors = uniqueNames.map(name => formatStringToColor(name));
-    let colorsFunc = createdColors.map(color =>
-      itemFunc => this._colorFunc(itemFunc, color));
+    let createdColors = uniqueNames.map(name => name.toHex());
+    let colorsFunc = createdColors.map((color, index) =>
+      itemFunc => this._colorFunc(itemFunc, color, index));
 
     this.chartConfig.colors = colorsFunc;
     this._changeDetectorRef.markForCheck();
   }
 
-  private _colorFunc(opts: any, definedColor: string): string {
+  private _colorFunc(opts: any, definedColor: string, index: number): string {
     let serviceFound = this._billingSeriesItems[opts.seriesIndex][opts.dataPointIndex];
     let billingStruct = this._getBillingViewModelByItem(serviceFound);
     let billingTitle = this._generateBillingTitle(billingStruct);
 
-    return billingTitle?.includes(PROJECT_TEXT) ? PROJECTED_COLOR_HASH : definedColor;
+    return billingTitle?.includes(PROJECT_TEXT) ? definedColor.toDefinedGreyHex(index) : definedColor;
   }
 
   private _dataLabelFormatter(value: number, opts?: any): string {
