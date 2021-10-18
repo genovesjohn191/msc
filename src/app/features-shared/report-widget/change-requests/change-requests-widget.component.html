@@ -2,37 +2,114 @@
   <h3>{{ 'reports.overview.changeRequestsWidget.title' | translate }}</h3>
   <div class="data-wrapper">
     <mcs-cta-list>
-      <mcs-cta-list-panel [icon]="azureServiceRequestIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingMicrosoftRequestChange']">
-        <mcs-cta-list-header link="servers">
-          <a href="{{ azureServiceRequestLink }}">
-            {{ 'reports.overview.changeRequestsWidget.changeServiceRequest.link' | translate }}
-          </a>
-        </mcs-cta-list-header>
-        <mcs-cta-list-body>
-          {{ 'reports.overview.changeRequestsWidget.changeServiceRequest.description' | translate }}
-        </mcs-cta-list-body>
-      </mcs-cta-list-panel>
-      <mcs-cta-list-panel [icon]="changeLicenseCountIcon" *mcsAccessControl="['OrderEdit'];">
-        <mcs-cta-list-header link="servers">
-          <a href="{{ changeLicenseCountLink }}">
-            {{ 'reports.overview.changeRequestsWidget.changeLicenseCount.link' | translate }}
-          </a>
-        </mcs-cta-list-header>
-        <mcs-cta-list-body>
-          {{ 'reports.overview.changeRequestsWidget.changeLicenseCount.description' | translate }}
-        </mcs-cta-list-body>
-      </mcs-cta-list-panel>
+      <!-- Microsoft Request Change -->
+      <ng-container *ngIf="!isPrivateCloud">
+        <mcs-cta-list-panel
+          [icon]="azureServiceRequestIcon" *mcsAccessControl="[]; feature: ['EnableOrderingMicrosoftRequestChange']">
+          <mcs-cta-list-header>
+            <a [mcsRouterLink]="routeKeyEnum.OrderMsRequestChange">
+              {{ 'reports.overview.changeRequestsWidget.changeServiceRequest.link' | translate }}
+            </a>
+          </mcs-cta-list-header>
+          <mcs-cta-list-body>
+            {{ 'reports.overview.changeRequestsWidget.changeServiceRequest.description' | translate }}
+            <mcs-contextual-catalog-link *ngIf="orderItemTypes"
+              [isIcon]="true"
+              [eventLabel]="'ms-request-change-catalog-link'"
+              [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.MsRequestChange)">
+            </mcs-contextual-catalog-link>
+          </mcs-cta-list-body>
+        </mcs-cta-list-panel>
+      </ng-container>
+
+      <!-- Change License Count -->
+      <ng-container *ngIf="!isPrivateCloud">
+        <mcs-cta-list-panel [icon]="changeLicenseCountIcon">
+          <mcs-cta-list-header>
+            <a [mcsRouterLink]="routeKeyEnum.OrderMsLicenseCountChange">
+              {{ 'reports.overview.changeRequestsWidget.changeLicenseCount.link' | translate }}
+            </a>
+          </mcs-cta-list-header>
+          <mcs-cta-list-body>
+            {{ 'reports.overview.changeRequestsWidget.changeLicenseCount.description' | translate }}
+            <mcs-contextual-catalog-link *ngIf="orderItemTypes"
+              [isIcon]="true"
+              [eventLabel]="'change-license-count-product-catalog-link'"
+              [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.MsLicenseCountChange)">
+            </mcs-contextual-catalog-link>
+          </mcs-cta-list-body>
+        </mcs-cta-list-panel>
+      </ng-container>
+      
+      <!-- Create Server -->
+      <ng-container *mcsAccessControl="['CloudVmEdit', 'DedicatedVmEdit'];">
+        <mcs-cta-list-panel [icon]="createNewServerIcon" *ngIf="isPrivateCloud && hasManagedVdc">
+          <mcs-cta-list-header>
+            <a [mcsRouterLink]="routeKeyEnum.ServerCreate">
+              {{ 'reports.overview.changeRequestsWidget.createServer.link' | translate }}
+            </a>
+          </mcs-cta-list-header>
+          <mcs-cta-list-body>
+            {{ 'reports.overview.changeRequestsWidget.createServer.description' | translate }}
+            <mcs-contextual-catalog-link *ngIf="orderItemTypes"
+              [isIcon]="true"
+              [eventLabel]="'server-create-product-catalog-link'"
+              [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.CreateManagedServer)">
+            </mcs-contextual-catalog-link>
+          </mcs-cta-list-body>
+        </mcs-cta-list-panel>
+      </ng-container>
+
+      <!-- Expand VDC Storage -->
+      <ng-container *mcsAccessControl="['CloudVmEdit', 'DedicatedVmEdit'];">
+        <mcs-cta-list-panel [icon]="expandStorageIcon" *ngIf="isPrivateCloud && hasVdc">
+          <mcs-cta-list-header>
+            <a [mcsRouterLink]="routeKeyEnum.OrderVdcStorageExpand">
+              {{ 'reports.overview.changeRequestsWidget.expandVdc.link' | translate }}
+            </a>
+          </mcs-cta-list-header>
+          <mcs-cta-list-body>
+            {{ 'reports.overview.changeRequestsWidget.expandVdc.description' | translate }}
+            <mcs-contextual-catalog-link *ngIf="orderItemTypes"
+              [isIcon]="true"
+              [eventLabel]="'expand-vdc-storage-product-catalog-link'"
+              [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.VdcStorageExpand)">
+            </mcs-contextual-catalog-link>
+          </mcs-cta-list-body>
+        </mcs-cta-list-panel>
+      </ng-container>
+
+      <!-- Request Custom Change -->
+      <ng-container *ngIf="isPrivateCloud">
+        <mcs-cta-list-panel [icon]="customChangeIcon">
+          <mcs-cta-list-header>
+            <a [mcsRouterLink]="routeKeyEnum.OrderServiceCustomChange">
+              {{ 'reports.overview.changeRequestsWidget.customChange.link' | translate }}
+            </a>
+          </mcs-cta-list-header>
+          <mcs-cta-list-body>
+            {{ 'reports.overview.changeRequestsWidget.customChange.description' | translate }}
+            <mcs-contextual-catalog-link *ngIf="orderItemTypes"
+              [isIcon]="true"
+              [eventLabel]="'custom-change-product-catalog-link'"
+              [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.ServiceCustomChange)">
+            </mcs-contextual-catalog-link>
+          </mcs-cta-list-body>
+        </mcs-cta-list-panel>
+      </ng-container>
       <!-- temporarily hidden until Change DNS page is available -->
-      <!-- <mcs-cta-list-panel [icon]="changeDnsZoneIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingDnsCustomRequest']">
-        <mcs-cta-list-header link="servers">
-          <a href="{{ changeManagedDnsLink }}">
-            {{ 'reports.overview.changeRequestsWidget.changeDNSZone.link' | translate }}
-          </a>
-        </mcs-cta-list-header>
-        <mcs-cta-list-body>
-          {{ 'reports.overview.changeRequestsWidget.changeDNSZone.description' | translate }}
-        </mcs-cta-list-body>
-      </mcs-cta-list-panel> -->
+      <!-- <ng-container *ngIf="!isPrivateCloud">
+        <mcs-cta-list-panel [icon]="changeDnsZoneIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingDnsCustomRequest']">
+          <mcs-cta-list-header link="servers">
+            <a [mcsRouterLink]="routeKeyEnum.OrderHostedDnsChange">
+              {{ 'reports.overview.changeRequestsWidget.changeDNSZone.link' | translate }}
+            </a>
+          </mcs-cta-list-header>
+          <mcs-cta-list-body>
+            {{ 'reports.overview.changeRequestsWidget.changeDNSZone.description' | translate }}
+          </mcs-cta-list-body>
+        </mcs-cta-list-panel>
+      </ng-container> -->
     </mcs-cta-list>
   </div>
 </div>

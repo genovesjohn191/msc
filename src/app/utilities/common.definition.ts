@@ -191,6 +191,15 @@ export class CommonDefinition {
   public static ASSETS_SVG_SMALL_MARKETING_BLUE = 'small-marketing-blue';
   public static ASSETS_SVG_SMALL_CALCULATOR_CHECK_BLACK = 'small-calculator-check-black';
   public static ASSETS_SVG_SMALL_LOCK_BLACK = 'small-lock-black';
+  public static ASSETS_SVG_SMALL_LIST_ALT_BLACK = 'small-list-alt-black';
+  public static ASSETS_SVG_SMALL_PHOTO_LIBRARY_BLACK = 'small-photo-library-black';
+  public static ASSETS_SVG_SMALL_STORAGE_BLACK = 'small-storage-black';
+  public static ASSETS_SVG_SMALL_GPP_MAYBE_BLACK = 'small-gpp-maybe-black';
+  public static ASSETS_SVG_SMALL_CORONAVIRUS_BLACK = 'small-coronavirus-black';
+  public static ASSETS_SVG_SMALL_SECURITY_BLACK = 'small-security-black';
+  public static ASSETS_SVG_SMALL_ADD_BOX_BLACK = 'small-add-box-black';
+  public static ASSETS_SVG_SMALL_CLOUD_UPLOAD_BLACK = 'small-cloud-upload-black';
+  public static ASSETS_SVG_SMALL_EXPAND_BLACK = 'small-expand-black';
 
   /** Filter Selector */
   public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';

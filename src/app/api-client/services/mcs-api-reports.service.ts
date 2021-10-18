@@ -10,6 +10,7 @@ import {
   McsReportAuditAlerts,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
+  McsReportComputeResourceTotals,
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportInefficientVms,
@@ -490,5 +491,20 @@ export class McsApiReportsService implements IMcsApiReportsService {
         return apiResponse;
       })
     );
+  }
+
+  public getComputeResourceTotals(): Observable<McsApiSuccessResponse<McsReportComputeResourceTotals>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/private-cloud/reports/compute-resource-totals';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportComputeResourceTotals>(McsReportComputeResourceTotals, response);
+          return apiResponse;
+        })
+      );
   }
 }

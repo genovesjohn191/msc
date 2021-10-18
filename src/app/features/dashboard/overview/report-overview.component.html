@@ -42,7 +42,9 @@
             <mcs-cost-recommendations-widget (dataChange)="costRecommendations($event)"></mcs-cost-recommendations-widget>
           </li>
           <li>
-            <mcs-change-requests-widget class="hide-on-print" *mcsAccessControl="['OrderEdit'];"></mcs-change-requests-widget>
+            <mcs-change-requests-widget class="hide-on-print"
+              [isPrivateCloud]="false"
+              *mcsAccessControl="['OrderEdit'];"></mcs-change-requests-widget>
           </li>
           <li>
             <mcs-contact-us-widget (dataChange)="contactUs($event)"></mcs-contact-us-widget>

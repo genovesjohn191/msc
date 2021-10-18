@@ -48,6 +48,12 @@ $shadow-effect: 1px solid #e3e3e3;
     .title {
       align-items: flex-start;
     }
+
+    .icon-container {
+      svg {
+        fill: $color-black !important;
+      }
+    }
   }
 
   .reporting-table-widget {
