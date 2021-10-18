@@ -1,15 +1,19 @@
 import {
-  Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
   ChangeDetectorRef,
+  Component,
+  Input,
   OnInit,
-  Input
+  ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartItem } from '@app/shared';
 import { isNullOrEmpty } from '@app/utilities';
-import { ChartData, ChartDataService } from '../chart-data.service';
+
+import {
+  ChartData,
+  ChartDataService
+} from '../chart-data.service';
 import { ChartComponentBase } from '../core/chart-base.component';
 
 @Component({
@@ -75,6 +79,13 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
       style: {
         fontSize: '10px',
         colors: ['#333']
+      },
+      dropShadow: {
+        top: 1,
+        left: 1,
+        blur: 0,
+        color: '#000',
+        opacity: 0.45
       }
     };
   }

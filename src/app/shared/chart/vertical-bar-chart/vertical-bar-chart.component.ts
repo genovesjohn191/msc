@@ -79,6 +79,13 @@ export class VerticalBarChartComponent extends ChartComponentBase implements OnI
       style: {
         fontSize: '10px',
         colors: ['#fff']
+      },
+      dropShadow: {
+        top: 1,
+        left: 1,
+        blur: 0,
+        color: '#000',
+        opacity: 0.45
       }
     };
   }
