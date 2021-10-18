@@ -7,6 +7,7 @@ import {
   McsReportAuditAlerts,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
+  McsReportComputeResourceTotals,
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportInefficientVms,
@@ -98,4 +99,6 @@ export interface IMcsApiReportsService {
   getBillingSummaries(query?: McsReportBillingSummaryParams): Observable<McsApiSuccessResponse<McsReportBillingServiceGroup[]>>;
 
   getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>>;
+
+  getComputeResourceTotals(): Observable<McsApiSuccessResponse<McsReportComputeResourceTotals>>;
 }

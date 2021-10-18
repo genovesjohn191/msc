@@ -3,6 +3,7 @@ import {
   Type
 } from '@angular/core';
 import { SharedModule } from '@app/shared';
+import { FeaturesSharedModule } from '../features-shared.module';
 import { FormFieldsModule } from '../form-fields/form-fields.module';
 
 import { AscAlertsWidgetComponent } from './asc-alerts/asc-alerts-widget.component';
@@ -21,6 +22,7 @@ import { OperationalMonthlySavingsWidgetComponent } from './operational-monthly-
 import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly-savings/subitems/operational-savings-subitems-viewer.component';
 import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
 import { PlatformSecurityAdvisoriesWidgetComponent } from './platform-security-advisories/platform-security-advisories-widget.component';
+import { PrivateCloudServicesOverviewWidgetComponent } from './private-cloud-services-overview/private-cloud-services-overview-widget.component';
 import { ReportWidgetDataStatusComponent } from './report-widget-data-status.component';
 import { ResourceChangesWidgetComponent } from './resource-changes/resource-changes-widget.component';
 import { ResourceHealthWidgetComponent } from './resource-health/resource-health-widget.component';
@@ -60,12 +62,14 @@ const exports: any[] | Type<any> = [
   VmRightsizingWidgetComponent,
   BillingSummaryWidgetComponent,
   BillingServiceWidgetComponent,
-  PlatformSecurityAdvisoriesWidgetComponent
+  PlatformSecurityAdvisoriesWidgetComponent,
+  PrivateCloudServicesOverviewWidgetComponent
 ];
 
 @NgModule({
   imports: [
     FormFieldsModule,
+    FeaturesSharedModule,
     SharedModule
   ],
   declarations: [...exports],

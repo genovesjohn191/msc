@@ -1,0 +1,48 @@
+<div class="widget">
+  <h3>{{ 'label.servicesOverview' | translate }}</h3>
+  <div class="data-wrapper">
+    <mcs-cta-list *ngIf="!hasError; else errorTemplate">
+      <!-- Servers -->
+      <mcs-cta-list-panel *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']"
+        [icon]="notvisibleCopyBlackIcon" compact="true">
+        <mcs-cta-list-action>
+          <a [mcsRouterLink]="routeKeyEnum.Servers"
+            mcsId="private-cloud-services-overview-servers"
+            mcsEventTracker="navigate-to-servers-listing"
+            mcsEventCategory="private-cloud-dashboard-overview-navigation"
+            mcsEventLabel="servers-listing-link">
+            {{ resourceDescription('Server', computeResourceTotals?.serverCount || 0) }}
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+
+      <!-- VDC -->
+      <mcs-cta-list-panel  *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']"
+        [icon]="cloudBlackIcon" compact="true">
+        <mcs-cta-list-action>
+          {{ resourceDescription('VDC', computeResourceTotals?.vdcCount || 0) }}
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+
+       <!-- Firewall -->
+       <mcs-cta-list-panel *mcsAccessControl="['FirewallConfigurationView']"
+        [icon]="cloudBlackIcon" compact="true">
+        <mcs-cta-list-action>
+          <a [mcsRouterLink]="routeKeyEnum.Firewalls"
+            mcsId="private-cloud-services-overview-firewalls"
+            mcsEventTracker="navigate-to-firewalls-listing"
+            mcsEventCategory="private-cloud-dashboard-overview-navigation"
+            mcsEventLabel="firewalls-listing-link">
+            {{ resourceDescription('Firewall', computeResourceTotals?.firewallCount || 0) }}
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+    </mcs-cta-list>
+    <ng-template #errorTemplate>
+      <small read-only>
+        {{ 'reports.errorMessage' | translate }}
+        <a (click)="retry()">{{ 'reports.retryLabel' | translate }}</a>
+      </small>
+    </ng-template>
+  </div>
+</div>

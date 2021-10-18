@@ -214,6 +214,18 @@
         "changeDNSZone": {
           "link": "Change Macquarie-Managed DNS Zone",
           "description": "Manage DNS zones in MacquarieView."
+        },
+        "createServer": {
+          "link": "Order a New Server",
+          "description": "Create a Virtual Data Centre VM instance."
+        },
+        "expandVdc": {
+          "link": "Expand VDC Storage",
+          "description": "Increase the size of your VDC storage profile."
+        },
+        "customChange": {
+          "link": "Request a Custom Change",
+          "description": "Request a non-standard change for your service."
         }
       },
       "costAndRecommendationsWidget": {
@@ -225,9 +237,6 @@
       "resourceChangesWidget": {
         "title": "Resource Count Since Last Month",
         "noData": "No resource count changes since last month"
-      },
-      "servicesOverviewWidget": {
-        "title": "Services Overview"
       },
       "topVmsByCostWidget": {
         "title": "Top VMs by Cost",
@@ -3147,6 +3156,7 @@
     "getInefficientVms": "Something went wrong while retrieving your inefficient VMs information. Please try again.",
     "getTopVmsByCost": "Something went wrong while retrieving your top VMs by cost information. Please try again.",
     "getPlatformSecurityAdvisories": "Something went wrong while retrieving your platform security advisories information. Please try again.",
+    "getComputeResourceTotals": "Something went wrong while retrieving your compute resource total information. Please try again.",
     "getTerraformDeployments": "Something went wrong while retrieving your Azure deployments. Please try again.",
     "getTerraformDeployment": "Something went wrong while retrieving your Azure deployment details. Please try again.",
     "getTerraformDeploymentActivities": "Something went wrong while retrieving your Azure deployment activities. Please try again.",
@@ -3484,6 +3494,7 @@
     "selectContact": "Select Contact",
     "selectStorage": "Select Storage",
     "services": "Services",
+    "servicesOverview": "Services Overview",
     "serviceId": "Service ID",
     "softwareSubscriptions": "Software Subscriptions",
     "status": "Status",

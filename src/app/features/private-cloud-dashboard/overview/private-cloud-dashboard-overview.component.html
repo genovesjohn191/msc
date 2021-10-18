@@ -34,9 +34,17 @@
       </div>
       <div class="widget-wrapper">
         <ul>
-          <li>
+          <li *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess', 'FirewallConfigurationView']">
+            <mcs-private-cloud-services-overview-widget (serviceOverviewDataChange)="serviceOverviewData($event)"></mcs-private-cloud-services-overview-widget>
+          </li>
+          <li *mcsAccessControl="['OrderEdit']">
+            <mcs-change-requests-widget class="hide-on-print"
+              [isPrivateCloud]="true"
+              [vdcList]="vdcList$ | async"
+              [orderItemTypes]="orderItemTypes$ | async"></mcs-change-requests-widget>
           </li>
           <li>
+            <mcs-contact-us-widget (dataChange)="contactUs($event)"></mcs-contact-us-widget>
           </li>
         </ul>
       </div>
