@@ -265,7 +265,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
               label: id
             }],
             placeholder: 'Search for company name or ID...',
-            allowCustomInput: true,
+            allowCustomInput: false,
             maxItems: 1,
             eventName: 'company-change',
           })
