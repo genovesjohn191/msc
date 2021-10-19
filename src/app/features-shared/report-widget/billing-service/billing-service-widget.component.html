@@ -10,6 +10,7 @@
 <div class="widget flat">
   <mcs-vertical-bar-chart
     *ngIf="!processing && !hasError"
+    class="custom-chart"
     [config]="chartConfig"
     [data]="chartItems$ | async"
     (chartChange)="updateChartUri($event)">

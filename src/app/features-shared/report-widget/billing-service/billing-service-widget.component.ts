@@ -13,10 +13,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Renderer2,
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
@@ -48,7 +50,6 @@ import { ReportWidgetBase } from '../report-widget.base';
 import { BillingServiceItem } from './billing-service-item';
 
 const PROJECT_TEXT = '(Projected)';
-const PROJECTED_COLOR_HASH = '#a5a6aa';
 
 class BillingServiceViewModel {
   constructor(
@@ -90,7 +91,9 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   private _billingStructMap = new Map<string, (item: BillingServiceItem) => BillingServiceViewModel>();
 
   public constructor(
+    private _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _renderer: Renderer2,
     private _translate: TranslateService,
     private _decimalPipe: DecimalPipe,
     private _datePipe: StdDateFormatPipe,
@@ -122,8 +125,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
         offsetX: -10
       },
       legend: {
-        position: 'bottom',
-        horizontalAlign: 'center'
+        position: 'right',
+        horizontalAlign: 'left'
       }
     };
 
@@ -547,7 +550,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('AZUREESSENTIALSCSP',
       item => new BillingServiceViewModel(
-        `${item.billingDescription}`,
+        `${item.billingDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
@@ -558,7 +561,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
       item => new BillingServiceViewModel(
-        `${item.billingDescription}`,
+        `${item.billingDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
@@ -569,7 +572,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('MANAGEDAZURECSP',
       item => new BillingServiceViewModel(
-        `${item.billingDescription}`,
+        `${item.billingDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',
@@ -580,7 +583,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
       item => new BillingServiceViewModel(
-        `${item.billingDescription}`,
+        `${item.billingDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'minimumSpendCommitment', 'managementCharges',
           'tenantName', 'initialDomain', 'primaryDomain',

@@ -15,16 +15,16 @@
       <div padding-right-medium><mcs-icon [key]="statusIconKey" size="large"></mcs-icon></div>
       <div>
         {{ headerDescription }} <br/>{{ headerSecondDescription }}
-        <a href="{{ learnMoreLink }}"
+        <!-- <a href="{{ learnMoreLink }}"
           target="_blank"
           mcsId="azure-performance"
           mcsEventTracker="navigate-to-macquarie-view"
           mcsEventCategory="billing-sumamry-navigation"
-          mcsEventLabel="learn-more-link">Learn more</a>
+          mcsEventLabel="learn-more-link">Learn more</a> -->
       </div>
     </mcs-item>
 
-    <div class="routing-tab-wrapper" *mcsComponentHandler>
+    <div full-width class="routing-tab-wrapper" *mcsComponentHandler>
       <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
         <!-- Summary Tab -->
         <mcs-tab [label]="'label.summary' | translate" id="summary"></mcs-tab>
@@ -37,7 +37,7 @@
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
-      <div class="routing-tab-content-wrapper limited-view">
+      <div class="routing-tab-content-wrapper">
         <router-outlet></router-outlet>
       </div>
     </div>
