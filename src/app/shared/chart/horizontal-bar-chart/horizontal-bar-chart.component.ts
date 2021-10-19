@@ -58,9 +58,12 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
 
   private _setDefaultOptions(): void {
     this.legend = {
-      position: 'top',
-      horizontalAlign: 'left',
+      formatter: this.legend?.formatter,
+      position: this.legend?.position || 'top',
+      horizontalAlign: this.legend?.horizontalAlign || 'left',
       offsetX: 0,
+      width: this.legend?.width,
+      height: this.legend?.height
     }
 
     this.plotOptions = {

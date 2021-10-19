@@ -58,9 +58,12 @@ export class VerticalBarChartComponent extends ChartComponentBase implements OnI
 
   private _setDefaultOptions(): void {
     this.legend = {
+      formatter: this.legend?.formatter,
       position: this.legend?.position || 'top',
       horizontalAlign: this.legend?.horizontalAlign || 'left',
       offsetX: 0,
+      width: this.legend?.width,
+      height: this.legend?.height
     }
 
     this.plotOptions = {

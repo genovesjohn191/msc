@@ -118,8 +118,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
         offsetX: -10
       },
       legend: {
-        position: 'bottom',
-        horizontalAlign: 'center'
+        position: 'right',
+        horizontalAlign: 'left'
       }
     };
 

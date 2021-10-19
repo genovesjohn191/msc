@@ -1,8 +1,9 @@
 $chart-font-size: 12;
-$chart-max-width: 20rem;
+$chart-max-width: 25rem;
 
 .chart-list {
   @include display-flex(column);
+  width: $chart-max-width;
   max-width: $chart-max-width;
   background-color: rgba(0, 0, 0, 0.4);
 
@@ -12,16 +13,26 @@ $chart-max-width: 20rem;
     padding: $space-xsmall $space-medium;
     @include font-size($chart-font-size);
     background-color: rgba(0, 0, 0, 0.75);
+    white-space: pre-wrap;
+    word-break: break-all;
   }
 
   .chart-item {
     padding: 0 $space-medium;
-    @include display-flex(row);
-    @include set-items-interval(8px, horizontal);
     @include font-size($chart-font-size);
+
+    display: grid;
+    grid-gap: 0.5rem 0.7rem;
+    grid-template-columns: repeat(2, 50%);
+
+    .chart-label {
+      text-align: right;
+      white-space: nowrap;
+    }
 
     .chart-value {
       white-space: pre-wrap;
+      word-break: break-all;
     }
 
     &:last-child() {
@@ -39,4 +50,13 @@ $chart-max-width: 20rem;
 
   white-space: pre-wrap;
   color: $readonly-color-on-dark;
+}
+
+.custom-chart {
+  .apexcharts-legend-series {
+    max-width: 250px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }

@@ -5,7 +5,17 @@ declare global {
     toRGB(): string;
     toRandomGreyHex(): string;
     toDefinedGreyHex(index: number): string;
+    truncate(truncateLength: number): string;
   }
+}
+
+String.prototype.truncate = function (truncateLength: number) {
+  if (this.length === 0) return this;
+  let exceeded = this.length > truncateLength;
+
+  return exceeded ?
+    `${this.substring(0, truncateLength)}...` :
+    this;
 }
 
 String.prototype.toDefinedGreyHex = function (index: number) {

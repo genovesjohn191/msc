@@ -63,6 +63,8 @@ export type ChartLegend = {
   position?: 'top' | 'right' | 'bottom' | 'left',
   horizontalAlign?: 'left' | 'center' | 'right',
   offsetX?: number,
+  width?: number,
+  height?: number,
   formatter?: (val: string, opts?: any) => string;
 }
 
@@ -196,7 +198,9 @@ export class ChartComponentBase {
         formatter: value.legend.formatter,
         position: value.legend.position,
         offsetX: value.legend.offsetX,
-        horizontalAlign: value.legend.horizontalAlign
+        horizontalAlign: value.legend.horizontalAlign,
+        width: value.legend.width,
+        height: value.legend.height
       };
     }
 
@@ -220,7 +224,7 @@ export class ChartComponentBase {
           }
         },
         custom: value.tooltip.customFormatter,
-        theme: value.tooltip.theme
+        theme: value.tooltip.theme || 'light'
       }
     }
 
