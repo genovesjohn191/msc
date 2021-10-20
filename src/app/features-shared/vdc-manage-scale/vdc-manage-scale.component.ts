@@ -346,7 +346,12 @@ export class VdcManageScaleComponent
     // Create table definitions
     let tableSize = MAX_CPU;
     let vdcScaleTable = new Array<VdcManageScale>();
-    for (let cpu = this.initialCpu; cpu <= tableSize; cpu++) {
+    let cpuValue = this.initialCpu;
+
+    // Handle odd numbered initial CPU values
+    if (cpuValue % 2 !== 0) { cpuValue++; }
+
+    for (let cpu = cpuValue; cpu <= tableSize; cpu++) {
       let vdcManageScaleItem = {
         cpuCount: cpu,
         memoryGB: cpu * this.ramRatio
