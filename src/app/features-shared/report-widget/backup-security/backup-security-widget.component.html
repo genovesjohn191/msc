@@ -1,0 +1,73 @@
+<div *ngIf="hasManagedServers" class="widget">
+  <h3>{{ 'label.backupAndSecurity' | translate }}</h3>
+  <div class="data-wrapper">
+    <mcs-item padding-bottom-medium>
+      <mcs-icon [key]="hostSecurityIcon" padding-right-xsmall></mcs-icon>
+      <h4>{{ 'label.hostSecurity' | translate }}</h4>
+    </mcs-item>
+    <mcs-cta-list>
+      <!-- Add Anti-Virus -->
+      <mcs-cta-list-panel [icon]="addAvIcon">
+        <mcs-cta-list-header>
+          <a [mcsRouterLink]="routeKeyEnum.OrderAddAntiVirus">{{ 'label.addAntiVirus' | translate }}</a>
+        </mcs-cta-list-header>
+        <mcs-cta-list-body>
+          {{ 'privateCloudDashboard.backupSecurityWidget.addAvDescription' | translate }}
+          <mcs-contextual-catalog-link *ngIf="orderItemTypes" [isIcon]="true"
+            [eventLabel]="'add-anti-virus-product-catalog-link'"
+            [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.AddAntiVirus)">
+          </mcs-contextual-catalog-link>
+        </mcs-cta-list-body>
+      </mcs-cta-list-panel>
+
+      <!-- Add HIDS -->
+      <mcs-cta-list-panel [icon]="addHidsIcon">
+        <mcs-cta-list-header>
+          <a [mcsRouterLink]="routeKeyEnum.OrderAddHids">{{ 'label.addHids' | translate }}</a>
+        </mcs-cta-list-header>
+        <mcs-cta-list-body>
+          {{ 'privateCloudDashboard.backupSecurityWidget.addHidsDescription' | translate }}
+          <mcs-contextual-catalog-link *ngIf="orderItemTypes" [isIcon]="true"
+            [eventLabel]="'add-hids-product-catalog-link'"
+            [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.AddHids)">
+          </mcs-contextual-catalog-link>
+        </mcs-cta-list-body>
+      </mcs-cta-list-panel>
+    </mcs-cta-list>
+
+    <mcs-item padding-bottom-medium padding-top-medium>
+      <mcs-icon [key]="backupIcon" padding-right-xsmall></mcs-icon>
+      <h4>{{ 'label.backup' | translate }}</h4>
+    </mcs-item>
+
+    <mcs-cta-list>
+      <!-- Add Server Backup -->
+      <mcs-cta-list-panel [icon]="serverBackupIcon">
+        <mcs-cta-list-header>
+          <a [mcsRouterLink]="routeKeyEnum.OrderAddServerBackup">{{ 'label.addServerBackup' | translate }}</a>
+        </mcs-cta-list-header>
+        <mcs-cta-list-body>
+          {{ 'privateCloudDashboard.backupSecurityWidget.addServerBackupDescription' | translate }}
+          <mcs-contextual-catalog-link *ngIf="orderItemTypes" [isIcon]="true"
+            [eventLabel]="'add-server-backup-product-catalog-link'"
+            [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.AddServerBackup)">
+          </mcs-contextual-catalog-link>
+        </mcs-cta-list-body>
+      </mcs-cta-list-panel>
+
+      <!-- Add VM Backup -->
+      <mcs-cta-list-panel [icon]="vmBackupIcon">
+        <mcs-cta-list-header>
+          <a [mcsRouterLink]="routeKeyEnum.OrderAddVmBackup">{{ 'label.addVmBackup' | translate }}</a>
+        </mcs-cta-list-header>
+        <mcs-cta-list-body>
+          {{ 'privateCloudDashboard.backupSecurityWidget.addVmBackupDescription' | translate }}
+          <mcs-contextual-catalog-link *ngIf="orderItemTypes" [isIcon]="true"
+            [eventLabel]="'add-vm-backup-product-catalog-link'"
+            [orderProductId]="getOrderTypeProductId(orderIdTypeEnum.AddVmBackup)">
+          </mcs-contextual-catalog-link>
+        </mcs-cta-list-body>
+      </mcs-cta-list-panel>
+    </mcs-cta-list>
+  </div>
+</div>
