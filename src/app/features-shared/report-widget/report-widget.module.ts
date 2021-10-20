@@ -10,6 +10,7 @@ import { AscAlertsWidgetComponent } from './asc-alerts/asc-alerts-widget.compone
 import { AuditAlertsWidgetComponent } from './audit-alerts/audit-alerts-widget.component';
 import { AzureResourcesWidgetComponent } from './azure-resources/azure-resources-widget.component';
 import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widget.component';
+import { BackupSecurityWidgetComponent } from './backup-security/backup-security-widget.component';
 import { BillingServiceWidgetComponent } from './billing-service/billing-service-widget.component';
 import { BillingSummaryWidgetComponent } from './billing-summary/billing-summary-widget.component';
 import { ChangeRequestWidgetComponent } from './change-requests/change-requests-widget.component';
@@ -63,7 +64,8 @@ const exports: any[] | Type<any> = [
   BillingSummaryWidgetComponent,
   BillingServiceWidgetComponent,
   PlatformSecurityAdvisoriesWidgetComponent,
-  PrivateCloudServicesOverviewWidgetComponent
+  PrivateCloudServicesOverviewWidgetComponent,
+  BackupSecurityWidgetComponent
 ];
 
 @NgModule({

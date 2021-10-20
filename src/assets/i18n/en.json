@@ -356,9 +356,15 @@
       "billingAccountDropdownTooltip": "Billing accounts with public cloud services will be listed here."
     }
   },
-  "privateCloud": {
+  "privateCloudDashboard": {
     "overview": {
       "description": "There's more to see here! We'd like to show you some metrics and recommendations for your LAUNCH environment however it seems your account does not have permission to view virtual servers and/or VDCs. This can be updated by your organisation's administrator within MacquarieView."
+    },
+    "backupSecurityWidget": {
+      "addAvDescription": "Keep your server safe from malware.",
+      "addHidsDescription": "Host Intrusion Detection System logs or blocks attempted unauthorised access to your server.",
+      "addServerBackupDescription": "A reliable file-level backup solution for your server.",
+      "addVmBackupDescription": "VM Backup is a powerful image-level backup service."
     }
   },
   "orders": {
@@ -3450,11 +3456,17 @@
     "primary": "Primary",
     "secondary": "Secondary",
     "activity": "Activity",
+    "addAntiVirus": "Add Anti-Virus",
+    "addHids": "Add HIDS",
+    "addServerBackup": "Add Server Backup",
+    "addVmBackup": "Add VM Backup",
     "additionalNotesOptional": "Additional Notes (optional)",
     "attachments": "Attachments",
     "azureProduct": "Azure Product",
     "azureResources": "Azure Resources",
     "azureResponseSlg": "Azure Response SLG",
+    "backup": "Backup",
+    "backupAndSecurity": "Backup and Security",
     "billingAccounts": "Billing Accounts",
     "category": "Category",
     "closureDate": "Closure Date",
@@ -3470,6 +3482,7 @@
     "deviceDetails": "Device Details",
     "email": "Email",
     "history": "History",
+    "hostSecurity": "Host Security",
     "information": "Information",
     "id": "ID",
     "lastDeployment": "Last Deployment",
