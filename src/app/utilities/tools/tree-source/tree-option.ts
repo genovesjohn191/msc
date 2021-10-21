@@ -1,8 +1,6 @@
 export class TreeOption<TValue> {
-
-  constructor(
-    public selectable: boolean = true,
-    public disableWhen?: (node: TValue) => boolean,
-    public tooltipFunc?: (node: TValue) => string
-  ) { }
+  public selectable: boolean = true;
+  public excludeFromSelection?: boolean;  // This will only included once selectable is true
+  public disableWhen?: (node: TValue) => boolean;
+  public tooltipFunc?: (node: TValue) => string;
 }

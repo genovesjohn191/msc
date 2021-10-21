@@ -1,9 +1,13 @@
 <mcs-item full-width>
-  <div mcsAlign="end">
-    <mcs-field-select-billing-service
-      [billingServices]="billingServices"
-      [formControl]="fcBillingService">
-    </mcs-field-select-billing-service>
+  <div mcsAlign="end" [ngStyle]="{'width': '20rem'}">
+    <mcs-field-select-tree-view #treeViewSelect size="large"
+      [label]="'label.services' | translate"
+      [hideChips]="true"
+      [multiple]="true"
+      [formControl]="fcBillingService"
+      [dataSource]="servicesDatasource"
+      [expandFirst]="true">
+    </mcs-field-select-tree-view>
   </div>
 </mcs-item>
 
