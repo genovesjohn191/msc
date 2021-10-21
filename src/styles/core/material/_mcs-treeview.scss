@@ -23,11 +23,16 @@
 
       cdk-virtual-scroll-viewport.mcs-tree-scroll-container {
         height: 100%;
-        background-color: get-color($color-definitions, light, base);
+        background-color: get-color($color-definitions, light, tint);
 
         .cdk-virtual-scroll-content-wrapper {
           width: 100%;
         }
+      }
+
+      .mcs-tree-node-option {
+        overflow: hidden;
+        white-space: nowrap;
       }
 
       .mcs-node-expand-trigger {

@@ -4,6 +4,7 @@ import {
   Subject
 } from 'rxjs';
 import {
+  map,
   shareReplay,
   takeUntil
 } from 'rxjs/operators';
@@ -26,6 +27,7 @@ import { FormControl } from '@angular/forms';
 import { McsReportingService } from '@app/core';
 import {
   McsOption,
+  McsOptionGroup,
   McsReportBillingServiceGroup
 } from '@app/models';
 import {
@@ -42,7 +44,11 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   removeSpaces,
-  unsubscribeSafely
+  unsubscribeSafely,
+  TreeDatasource,
+  TreeGroup,
+  TreeItem,
+  TreeUtility
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -74,14 +80,14 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   @Input()
   public billingSummaries: McsReportBillingServiceGroup[];
 
+  public servicesDatasource: TreeDatasource<McsReportBillingServiceGroup>;
+
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
 
   public hasError: boolean = false;
   public processing: boolean = true;
-  public billingServices: BillingServiceItem[] = [];
-
-  public fcBillingService: FormControl;
+  public fcBillingService = new FormControl('', []);
 
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();
@@ -89,6 +95,9 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   private _billingSeriesItems: BillingServiceItem[][] = [];
   private _billingSettingsMap = new Map<string, (item: BillingServiceItem) => McsOption>();
   private _billingStructMap = new Map<string, (item: BillingServiceItem) => BillingServiceViewModel>();
+
+  private _billingServicesChange = new BehaviorSubject<BillingServiceItem[]>(null);
+  private _billingServiceGroupsChange = new BehaviorSubject<McsOptionGroup[]>(null);
 
   public constructor(
     private _elementRef: ElementRef<HTMLElement>,
@@ -101,8 +110,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     private _reportingService: McsReportingService
   ) {
     super();
-    this._registerFormControl();
     this._subscribeToBillingServiceControlChanges();
+    this.servicesDatasource = new TreeDatasource(this._convertGroupServicesToTreeItems.bind(this));
 
     this.chartConfig = {
       type: 'bar',
@@ -136,26 +145,33 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
   public ngOnInit() {
     this._subscribeToChartItemsChange();
-    this.displayAllBillingServices();
+    this.displayAllBillingServices(true);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     let billingSummariesChange = changes['billingSummaries'];
-    if (!isNullOrEmpty(billingSummariesChange)) { this.displayAllBillingServices(); }
+    if (!isNullOrEmpty(billingSummariesChange)) {
+      this.displayAllBillingServices(true);
+    }
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
   }
 
-  public displayAllBillingServices(): void {
+  public displayAllBillingServices(updateGroup?: boolean): void {
     this.hasError = false;
     this.processing = true;
     this.updateChartUri(undefined);
 
     if (!isNullOrEmpty(this.billingSummaries)) {
       let flatRecords = this._getFlatBillingServices(this.billingSummaries);
-      this.billingServices = flatRecords;
+      this._billingServicesChange.next(flatRecords);
+
+      if (updateGroup) {
+        let groupRecords = this._getGroupBillingServices(flatRecords);
+        this._billingServiceGroupsChange.next(groupRecords);
+      };
 
       let chartItems = this._convertFlatRecordsToChartItems(flatRecords);
       this._chartItemsChange.next(chartItems);
@@ -182,6 +198,8 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _colorFunc(opts: any, definedColor: string, index: number): string {
+    if (isNullOrEmpty(this._billingSeriesItems)) { return definedColor; }
+
     let serviceFound = this._billingSeriesItems[opts.seriesIndex][opts.dataPointIndex];
     let billingStruct = this._getBillingViewModelByItem(serviceFound);
     let billingTitle = this._generateBillingTitle(billingStruct);
@@ -228,6 +246,22 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     this.chartItems$ = this._chartItemsChange.pipe(
       takeUntil(this._destroySubject),
       shareReplay(1)
+    );
+  }
+
+  private _convertGroupServicesToTreeItems(): Observable<TreeItem<string>[]> {
+    return this._billingServiceGroupsChange.pipe(
+      map(groups =>
+        TreeUtility.convertEntityToTreemItems(groups,
+          group => new TreeGroup(group.groupName, group.groupName, group.options, {
+            selectable: true,
+            excludeFromSelection: true
+          }),
+          option => new TreeGroup(option.text, option.value, null, {
+            selectable: true
+          })
+        )
+      )
     );
   }
 
@@ -367,8 +401,32 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     return billingServiceItems;
   }
 
-  private _registerFormControl(): void {
-    this.fcBillingService = new FormControl('', []);
+  private _getGroupBillingServices(flatRecords: BillingServiceItem[]): McsOptionGroup[] {
+    if (isNullOrEmpty(flatRecords)) { return null; }
+    let groupRecords = new Array<McsOptionGroup>();
+    let groupRecordsMap = new Map<string, McsOption[]>();
+    let groupRecordProductsMap = new Map<string, BillingServiceItem>();
+
+    // Group records by product type
+    flatRecords?.forEach(flatRecord => {
+      let options = new Array<McsOption>();
+      let groupFound = groupRecordsMap.get(flatRecord.productType);
+
+      !isNullOrEmpty(groupFound) ?
+        options = groupFound :
+        groupRecordProductsMap.set(flatRecord.productType, flatRecord);
+
+      options.push(new McsOption(flatRecord, flatRecord.serviceId));
+      groupRecordsMap.set(flatRecord.productType, options);
+    });
+
+    // Update mapping
+    groupRecordsMap.forEach((options, productType) => {
+      let groupRecord = groupRecordProductsMap.get(productType);
+      let uniqueRecords = options.distinct(item => item.text);
+      groupRecords.push(new McsOptionGroup(groupRecord?.billingDescription, ...uniqueRecords));
+    });
+    return groupRecords;
   }
 
   private _subscribeToBillingServiceControlChanges(): void {
@@ -383,10 +441,11 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _filterBillingServices(distinctServices: BillingServiceItem[]): void {
-    let filteredServices = this.billingServices?.filter(billingService => {
-      return !!distinctServices.find(distinctService =>
-        distinctService.serviceId === billingService.serviceId);
-    });
+    let filteredServices = this._billingServicesChange.getValue()
+      ?.filter(billingService => {
+        return !!distinctServices.find(distinctService =>
+          distinctService.serviceId === billingService.serviceId);
+      });
     let serviceChartItems = this._convertFlatRecordsToChartItems(filteredServices);
     this._updateChartColors(serviceChartItems);
     this._chartItemsChange.next(serviceChartItems);

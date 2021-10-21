@@ -4,22 +4,33 @@
   [class.mcs-tree-dropdown-trigger-fullwidth]="alwaysShowPanel">
   <mat-label>{{ treeViewLabel }}</mat-label>
 
-  <mat-chip-list #chipList *ngIf="selectedNodes$ | async as selectedNodes">
-    <mat-chip *ngFor="let node of selectedNodes"
-      [selectable]="false"
-      [removable]="false">
-      {{ node.name }}
-    </mat-chip>
-
-    <input matInput
+  <ng-container *ngIf="hideChips; else chipsView">
+    <input matInput *ngIf="selectedNodes$ | async"
       [disabled]="disabled"
-      [placeholder]="displayedLabel"
       (click)="onTogglePanel()"
       (blur)="onBlurInput()"
       (keydown)="onKeyDown($event)"
-      [formControl]="fcTreeSearch"
-      [matChipInputFor]="chipList">
-  </mat-chip-list>
+      [formControl]="fcTreeSearch">
+  </ng-container>
+
+  <ng-template #chipsView>
+    <mat-chip-list #chipList *ngIf="selectedNodes$ | async as selectedNodes">
+      <mat-chip *ngFor="let node of selectedNodes"
+        [selectable]="false"
+        [removable]="false">
+        {{ node.name }}
+      </mat-chip>
+
+      <input matInput
+        [disabled]="disabled"
+        [placeholder]="displayedLabel"
+        (click)="onTogglePanel()"
+        (blur)="onBlurInput()"
+        (keydown)="onKeyDown($event)"
+        [formControl]="fcTreeSearch"
+        [matChipInputFor]="chipList">
+    </mat-chip-list>
+  </ng-template>
 
   <mcs-loader margin-bottom-small *ngIf="processOnGoing$ | async" size="small" matSuffix></mcs-loader>
   <mat-error mcsFieldErrorMessage="selectTreeView">{{ displayedErrorMessage }}</mat-error>
@@ -84,7 +95,7 @@
 
 <!-- Option View Template for common rendering -->
 <ng-template #optionViewTemplate let-node>
-  <mcs-option role="treeitem"
+  <mcs-option role="treeitem" class="mcs-tree-node-option"
     (click)="onClickItem($event, node)"
     [ngStyle]="{'pointer-events': 'auto'}"
     [disabled]="node.disableWhen && node.disableWhen(node.data)"
@@ -100,12 +111,16 @@
         <mcs-checkbox
           [disabled]="node.disableWhen && node.disableWhen(node.data)"
           [checked]="itemIsChecked(node)">
-          <span [innerHTML]="node.name"></span>
+          <div [mcsTextTruncate]="node.name">
+            <span [innerHTML]="node.name"></span>
+          </div>
         </mcs-checkbox>
       </ng-container>
 
       <ng-template #nonSelectableView>
-        <span [innerHTML]="node.name"></span>
+        <div [mcsTextTruncate]="node.name">
+          <span [innerHTML]="node.name"></span>
+        </div>
       </ng-template>
     </ng-container>
 
@@ -122,13 +137,18 @@
           [disabled]="node.disableWhen && node.disableWhen(node.data)"
           [indeterminate]="itemIsInDeterminate(node)"
           [checked]="itemIsChecked(node)">
-          <span [innerHTML]="node.name"></span>
+
+          <div [mcsTextTruncate]="node.name">
+            <span [innerHTML]="node.name"></span>
+          </div>
         </mcs-checkbox>
       </ng-container>
 
       <ng-template #nonSelectableView>
-        <span [innerHTML]="node.name"
-          class="mcs-node-expandable-text"></span>
+        <div [mcsTextTruncate]="node.name">
+          <span [innerHTML]="node.name"
+            class="mcs-node-expandable-text"></span>
+        </div>
       </ng-template>
     </ng-template>
   </mcs-option>

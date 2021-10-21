@@ -52,6 +52,7 @@ interface MatTreeViewModel<TEntity> {
   expandable: boolean;
   level: number;
   selectable: boolean;
+  excludeFromSelection: boolean;
   disableWhen: (entity: TEntity) => boolean;
 
   name: string;
@@ -94,6 +95,9 @@ export class FieldSelectTreeViewComponent<TEntity>
 
   @Input()
   public disabled: boolean = false;
+
+  @Input()
+  public hideChips: boolean = false;
 
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
@@ -169,15 +173,12 @@ export class FieldSelectTreeViewComponent<TEntity>
   }
 
   public get treeViewLabel(): string {
-    let selectedItems = this.ngControl?.control?.value as Array<any>;
-    if (isNullOrEmpty(selectedItems)) { return this.displayedLabel; }
+    let selectedNodes = this._selectedNodesChange.getValue();
+    if (isNullOrEmpty(selectedNodes)) { return this.displayedLabel; }
 
-    let firstTreeFound = this.treeControl.dataNodes
-      .find(dataNode => dataNode.data === this.ngControl?.control?.value[0]);
-
-    return selectedItems.length > 1 ?
-      `${firstTreeFound?.name} (+${selectedItems.length - 1} selected)` :
-      firstTreeFound?.name;
+    return selectedNodes?.length > 1 ?
+      `${selectedNodes[0]?.name} (+${selectedNodes.length - 1} selected)` :
+      selectedNodes[0].name;
   }
 
   public get itemHeightInPx(): number {
@@ -222,7 +223,7 @@ export class FieldSelectTreeViewComponent<TEntity>
   public onClickItem(event: MouseEvent, node: MatTreeViewModel<TEntity>): void {
     event?.stopPropagation();
 
-    if (!node.selectable || node.disableWhen(node.data)) { return; }
+    if (!node.selectable || (node.disableWhen && node.disableWhen(node.data))) { return; }
     this._toggleItem(node);
   }
 
@@ -234,9 +235,9 @@ export class FieldSelectTreeViewComponent<TEntity>
     if (!node.expandable || !this.multiple) { return false; }
 
     const descendants = this.treeControl.getDescendants(node) || [];
-    const uncheckedItemFound = descendants.find(descendant => !descendant.checkbox?.value);
+    const uncheckedItemFound = descendants?.find(descendant => !descendant.checkbox?.value);
     if (uncheckedItemFound) {
-      return descendants.some(descendant => descendant.checkbox?.value);
+      return descendants?.some(descendant => descendant.checkbox?.value);
     }
     return false;
   }
@@ -290,7 +291,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       tap(selectedNodes => {
         // Notify changes to form control
         let dataRecords = selectedNodes?.map(selectedNode => selectedNode.data as any);
-        this.propagateFormControlChanges(dataRecords, true);
+        this.propagateFormControlChanges(dataRecords, this.multiple);
       })
     );
   }
@@ -312,8 +313,10 @@ export class FieldSelectTreeViewComponent<TEntity>
 
       // Update associated form control
       const selectedNodes = this.treeControl.dataNodes
-        ?.filter(dataNode => dataNode.checkbox?.value);
+        ?.filter(dataNode => dataNode.checkbox?.value &&
+          !dataNode.excludeFromSelection);
       this._selectedNodesChange.next(selectedNodes);
+      this.changeDetectorRef.markForCheck();
     });
   }
 
@@ -369,6 +372,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       data: treeItem.value,
       checkbox: new FormControl(false),
       selectable: treeItem.option?.selectable,
+      excludeFromSelection: treeItem.option?.excludeFromSelection,
       disableWhen: treeItem.option?.disableWhen,
       tooltipFunc: treeItem.option?.tooltipFunc
     } as MatTreeViewModel<TEntity>;
