@@ -21,6 +21,7 @@ import {
   McsReportResourceHealth,
   McsReportSecurityScore,
   McsReportServiceChangeInfo,
+  McsReportStorageResourceUtilisation,
   McsReportSubscription,
   McsReportTopVmsByCost,
   McsReportUpdateManagement,
@@ -101,4 +102,6 @@ export interface IMcsApiReportsService {
   getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>>;
 
   getComputeResourceTotals(): Observable<McsApiSuccessResponse<McsReportComputeResourceTotals>>;
+
+  getResourcesStorages(): Observable<McsApiSuccessResponse<McsReportStorageResourceUtilisation[]>>;
 }

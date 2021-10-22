@@ -21,6 +21,7 @@ import {
   McsReportSecurityScore,
   McsReportServiceChangeInfo,
   McsReportSeverityAlerts,
+  McsReportStorageResourceUtilisation,
   McsReportSubscription,
   McsReportTopVmsByCost,
   McsReportUpdateManagement,
@@ -207,6 +208,10 @@ export class McsReportingService {
 
   public getComputeResourceTotals(): Observable<McsReportComputeResourceTotals> {
     return this._apiService.getComputeResourceTotals();
+  }
+
+  public getResourcesStorages(): Observable<McsReportStorageResourceUtilisation[]> {
+    return this._apiService.getResourcesStorages();
   }
 
   public _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {

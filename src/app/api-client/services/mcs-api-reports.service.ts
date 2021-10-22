@@ -24,6 +24,7 @@ import {
   McsReportResourceHealth,
   McsReportSecurityScore,
   McsReportServiceChangeInfo,
+  McsReportStorageResourceUtilisation,
   McsReportSubscription,
   McsReportTopVmsByCost,
   McsReportUpdateManagement,
@@ -503,6 +504,21 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportComputeResourceTotals>(McsReportComputeResourceTotals, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getResourcesStorages(): Observable<McsApiSuccessResponse<McsReportStorageResourceUtilisation[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/private-cloud/reports/resource-storage';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportStorageResourceUtilisation[]>(McsReportStorageResourceUtilisation, response);
           return apiResponse;
         })
       );
