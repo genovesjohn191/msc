@@ -27,6 +27,7 @@ import {
   McsOrderItemType,
   McsPermission,
   McsReportComputeResourceTotals,
+  McsReportStorageResourceUtilisation,
   McsResource,
   RouteKey
 } from '@app/models';
@@ -85,12 +86,16 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
     this._navigationService.navigateTo(RouteKey.PrivateCloudDashboardOverview);
   }
 
-  public serviceOverviewData(data: McsReportComputeResourceTotals): void {
+  public serviceOverviewDataChange(data: McsReportComputeResourceTotals): void {
     this._exportDocumentDetails.servicesOverview = data;
   }
 
-  public contactUs(contactUs: McsContactUs[]): void {
+  public contactUsDataChange(contactUs: McsContactUs[]): void {
     this._exportDocumentDetails.contactUs = contactUs;
+  }
+
+  public resourceStorageUtilisationDataChange(storage: McsReportStorageResourceUtilisation[]): void {
+    this._exportDocumentDetails.resourceStorageUtilisation = storage;
   }
 
   private getOrderItemTypes(): void {

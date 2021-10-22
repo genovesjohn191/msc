@@ -7,8 +7,15 @@ import {
   OnInit
 } from '@angular/core';
 
-import { Subject, throwError } from 'rxjs';
-import { catchError, map, takeUntil } from 'rxjs/operators';
+import {
+  Subject,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map,
+  takeUntil
+} from 'rxjs/operators';
 
 import {
   McsApiCollection,

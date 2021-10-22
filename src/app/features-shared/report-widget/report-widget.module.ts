@@ -31,6 +31,7 @@ import { ResourceMonthlyCostWidgetComponent } from './resource-monthly-cost/reso
 import { SecurityWidgetComponent } from './security/security-widget.component';
 import { ServicesCostOverviewWidgetComponent } from './services-cost-overview/services-cost-overview-widget.component';
 import { ServicesOverviewWidgetComponent } from './services-overview/services-overview-widget.component';
+import { StorageProfileUtilisationWidgetComponent } from './storage-profile-utilisation/storage-profile-utilisation-widget.component';
 import { TopVmsByCostWidgetComponent } from './top-vms-by-cost/top-vms-by-cost-widget.component';
 import { UpdateManagementWidgetComponent } from './update-management/update-management-widget.component';
 import { VirtualMachineUsageBreakdownWidgetComponent } from './virtual-machine-usage-breakdown/virtual-machine-usage-breakdown-widget.component';
@@ -65,7 +66,8 @@ const exports: any[] | Type<any> = [
   BillingServiceWidgetComponent,
   PlatformSecurityAdvisoriesWidgetComponent,
   PrivateCloudServicesOverviewWidgetComponent,
-  BackupSecurityWidgetComponent
+  BackupSecurityWidgetComponent,
+  StorageProfileUtilisationWidgetComponent
 ];
 
 @NgModule({

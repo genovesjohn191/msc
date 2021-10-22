@@ -266,7 +266,8 @@ import {
   McsTicketQueryParams,
   McsValidation,
   McsWorkflowCreate,
-  McsReportComputeResourceTotals
+  McsReportComputeResourceTotals,
+  McsReportStorageResourceUtilisation
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2063,6 +2064,15 @@ export class McsApiService {
     return this._reportsApi.getComputeResourceTotals().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getComputeResourceTotals'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getResourcesStorages(): Observable<McsReportStorageResourceUtilisation[]> {
+    return this._reportsApi.getResourcesStorages().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcesStorages'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

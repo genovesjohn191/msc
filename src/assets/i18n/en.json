@@ -3031,6 +3031,7 @@
     "getResource": "Something went wrong while retrieving your service information.",
     "getResourceCompute": "Something went wrong while retrieving your service information.",
     "getResourceStorages": "Something went wrong while retrieving your storage information.",
+    "getResourcesStorages": "Something went wrong while retrieving your resource storages information.",
     "getResourceNetworks": "Something went wrong while retrieving your network information.",
     "getResourceNetwork": "Something went wrong while retrieving your network information.",
     "getResourceCatalogs": "Something went wrong while retrieving your catalogs.",
@@ -3383,6 +3384,7 @@
     "useCase": "Use Case",
     "useCaseName": "Use Case Name",
     "user": "User",
+    "utilisation": "Utilisation",
     "utilizationThisMonth": "Utilization this Month (Hours)",
     "vApp": "vApp",
     "vdc": "VDC",
@@ -3511,6 +3513,7 @@
     "serviceId": "Service ID",
     "softwareSubscriptions": "Software Subscriptions",
     "status": "Status",
+    "storageProfileUtilisation": "Storage Profile Utilisation",
     "subscription": "Subscription",
     "tag": "Tag",
     "tasks": "Tasks",
@@ -3628,7 +3631,8 @@
     "invalidIpAddress": "Please enter a valid private IP address.",
     "validationMin": "Must not be less than ",
     "validationMax": "Must not exceed ",
-    "vdcNewSubnet": "A new subnet will be created for this network."
+    "vdcNewSubnet": "A new subnet will be created for this network.",
+    "noStorageProfileUtilisation": "No storage profiles to display."
   },
   "tooltip": {
     "exportWord": "Export Word Document",

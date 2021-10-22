@@ -344,6 +344,7 @@ export * from './response/mcs-report-billing-service';
 export * from './response/mcs-report-billing-service-group';
 export * from './response/mcs-report-billing-service-summary';
 export * from './response/mcs-report-billing-service-tenant';
+export * from './response/mcs-report-storage-profile-utilisation';
 
 /** Common */
 export * from './common/mcs-api-search-key';
