@@ -1,6 +1,7 @@
 export class BillingSummaryItem {
 
   constructor(
+    public id: string,
     public productType: string,
     public isProjection: boolean,
     public microsoftChargeMonth: string,

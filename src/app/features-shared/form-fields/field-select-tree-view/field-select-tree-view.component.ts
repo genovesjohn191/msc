@@ -335,9 +335,15 @@ export class FieldSelectTreeViewComponent<TEntity>
 
     // We need to update the viewportsize dynamically based
     // on the records expanded
+    let maxItemsRendered = 0;
+    dataRecords.forEach(dataRecord => {
+      ++maxItemsRendered;
+      maxItemsRendered += dataRecord.children?.length;
+    });
+
     refreshView(() => {
       let maxDisplayNodes = Math.min(
-        this._viewPortScroll?.getRenderedRange()?.end || this.treeControl?.dataNodes?.length,
+        maxItemsRendered || this._viewPortScroll?.getRenderedRange()?.end || this.treeControl?.dataNodes?.length,
         maxItemsDisplay
       );
 
@@ -385,10 +391,11 @@ export class FieldSelectTreeViewComponent<TEntity>
       takeUntil(this.destroySubject),
       tap(dataRecords => {
         this.treeDatasource.data = dataRecords;
-        this._updateViewPortHeight(dataRecords);
         this._expandFirstRecord(dataRecords);
+
         this.processOnGoing$.next(false);
         this.changeDetectorRef.markForCheck();
+        this._updateViewPortHeight(dataRecords);
       }),
       catchError(error => {
         this.processOnGoing$.next(false);

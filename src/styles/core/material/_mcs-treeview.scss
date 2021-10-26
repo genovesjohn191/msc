@@ -20,6 +20,7 @@
       overflow: hidden;
       margin-top: -1.3rem;
       border: 1px solid $border-color-light;
+      background-color: get-color($color-definitions, light, tint);
 
       cdk-virtual-scroll-viewport.mcs-tree-scroll-container {
         height: 100%;

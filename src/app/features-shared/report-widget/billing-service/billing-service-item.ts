@@ -1,4 +1,5 @@
 export class BillingServiceItem {
+  public id: string;
   public productType: string;
   public serviceId: string;
   public microsoftChargeMonth: string;
