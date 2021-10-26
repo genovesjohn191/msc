@@ -28,7 +28,8 @@ String.prototype.toDefinedGreyHex = function (index: number) {
     '#777777', '#797979', '#767676',
     '#8B8B8B', '#C0C0C0'
   ];
-  return definedColors[index];
+  let actualIndex = Math.min(index, definedColors.length - 1);
+  return definedColors[actualIndex];
 }
 
 String.prototype.toRandomGreyHex = function () {

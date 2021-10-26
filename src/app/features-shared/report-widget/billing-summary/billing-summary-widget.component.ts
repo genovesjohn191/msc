@@ -41,7 +41,8 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   removeSpaces,
-  unsubscribeSafely
+  unsubscribeSafely,
+  Guid
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -175,10 +176,13 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _colorFunc(opts: any, definedColor: string, index: number): string {
+    if (isNullOrEmpty(this._billingSeriesItems)) { return definedColor; }
+
     let serviceFound = this._billingSeriesItems[opts.seriesIndex][opts.dataPointIndex];
+    if (isNullOrEmpty(serviceFound)) { return definedColor; }
+
     let billingStruct = this._getBillingViewModelByItem(serviceFound);
     let billingTitle = this._generateBillingTitle(billingStruct);
-
     return billingTitle?.includes(PROJECT_TEXT) ? definedColor.toDefinedGreyHex(index) : definedColor;
   }
 
@@ -209,6 +213,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _generateBillingTitle(billingViewModel: BillingSummaryViewModel): string {
+    if (isNullOrEmpty(billingViewModel)) { return null; }
+
     return billingViewModel?.includeProjectionSuffix ?
       `${billingViewModel.title} ${PROJECT_TEXT}` : billingViewModel?.title;
   }
@@ -236,6 +242,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       let actualDate = productTypeKey.split(KEY_SEPARATOR)[1];
 
       billingSummaries.push(new BillingSummaryItem(
+        Guid.newGuid().toString(),
         productType,
         billingItems[0].isProjection,
         billingItems[0].microsoftChargeMonth,
@@ -257,6 +264,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
       let billingTitle = this._generateBillingTitle(billingViewModel);
 
       chartItems.push({
+        id: billingSummary.id,
         name: billingTitle,
         xValue: billingSummary.microsoftChargeMonth,
         yValue: billingSummary.finalChargeDollars
@@ -270,6 +278,8 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
   }
 
   private _getBillingViewModelByItem(summary: BillingSummaryItem): BillingSummaryViewModel {
+    if (isNullOrEmpty(summary)) { return null; }
+
     let billingKey = removeSpaces(summary?.productType)?.toUpperCase();
     let billingFuncFound = this._billingStructMap?.get(billingKey);
     if (isNullOrEmpty(billingFuncFound)) { return null; }
@@ -279,34 +289,35 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
   private _updateBillingSeriesItems(chartItems: ChartItem[], summaries: BillingSummaryItem[]): void {
     // Group them first by their service names
+    this._billingSeriesItems = [];
+
+    let seriesIndex = 0;
     let billingSeriesMap = new Map<string, ChartItem[]>();
     chartItems?.forEach(chartItem => {
+      let summaryFound = summaries.find(service => service.id === chartItem.id);
+
       let chartItemsFound = billingSeriesMap.get(chartItem.name);
       if (!isNullOrEmpty(chartItemsFound)) {
+        let arrayKeys = [...billingSeriesMap.keys()];
+        let mapIndex = 0;
+
+        for (const key of arrayKeys) {
+          if (key === chartItem.name) { break; }
+          ++mapIndex;
+        }
+
+        this._billingSeriesItems[mapIndex][chartItemsFound.length] = summaryFound;
         chartItemsFound.push(chartItem);
         return;
       }
 
-      let chartItemsMap = new Array<ChartItem>();
-      chartItemsMap.push(chartItem);
-      billingSeriesMap.set(chartItem.name, chartItemsMap);
-    });
+      let chartItemList = new Array<ChartItem>();
+      chartItemList.push(chartItem);
+      billingSeriesMap.set(chartItem.name, chartItemList);
 
-    // Update the indexing on the tooltip
-    this._billingSeriesItems = [];
-    let seriesIndex = 0;
-    billingSeriesMap.forEach((items, key) => {
+      // Initialize billing series multi array, we always set the pointindex 0 here
       this._billingSeriesItems[seriesIndex] = [];
-
-      items.forEach((item, pointIndex) => {
-        let serviceFound = summaries.find(summary => {
-          let billingViewModel = this._getBillingViewModelByItem(summary);
-          let billingTitle = this._generateBillingTitle(billingViewModel);
-          return billingTitle === item.name &&
-            summary.microsoftChargeMonth === item.xValue;
-        });
-        this._billingSeriesItems[seriesIndex][pointIndex] = serviceFound;
-      });
+      this._billingSeriesItems[seriesIndex][0] = summaryFound;
       seriesIndex++;
     });
   }
@@ -357,6 +368,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
     if (!isNullOrEmpty(serviceFound)) {
       services.push(new BillingSummaryItem(
+        Guid.newGuid().toString(),
         productTypeKey,
         isProjection,
         this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),
@@ -371,6 +383,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
     services = new Array<BillingSummaryItem>();
     services.push(new BillingSummaryItem(
+      Guid.newGuid().toString(),
       productTypeKey,
       isProjection,
       this._datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear'),

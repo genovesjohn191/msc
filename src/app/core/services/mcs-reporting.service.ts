@@ -296,7 +296,7 @@ export class McsReportingService {
     let uniqueNames = [...new Set(chartItems?.map(item => item.name))];
     let chartItemMap = new Map<string, ChartItem[]>();
 
-    // Group records
+    // Group records by x-axis
     uniquePeriods?.forEach(period => {
       let periodItems: ChartItem[];
       let periodFound = chartItemMap.get(period);
@@ -306,12 +306,14 @@ export class McsReportingService {
         let itemFound = periodItems.find(item => item.name === uniqueName);
         if (!isNullOrEmpty(itemFound)) { return; }
 
-        let normalizedValue = chartItems.find(chartItem =>
+        let chartItemFound = chartItems.find(chartItem =>
           chartItem.name === uniqueName &&
           chartItem.xValue === period
-        )?.yValue || defaultValue;
+        );
+        let normalizedValue = chartItemFound?.yValue || defaultValue;
 
         periodItems.push({
+          id: chartItemFound?.id,
           name: uniqueName,
           xValue: period,
           yValue: normalizedValue
