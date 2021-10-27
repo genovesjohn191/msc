@@ -3,8 +3,12 @@ import {
   Component,
   EventEmitter,
   Injector,
+  Input,
+  OnChanges,
   OnDestroy,
   Output,
+  SimpleChange,
+  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 
@@ -54,12 +58,18 @@ const maxTicketsToDisplay: number = 5;
   }
 })
 
-export class AzureTicketsWidgetComponent implements OnDestroy {
+export class AzureTicketsWidgetComponent implements OnDestroy, OnChanges {
+  @Input()
+  public serviceId: string;
+
+  @Input()
+  public title: string;
 
   public readonly dataSource: McsTableDataSource2<McsTicket>;
   public readonly defaultColumnFilters: McsFilterInfo[];
 
   public hasMore: boolean = false;
+  private _serviceId: string;
 
   private _ticketStatusIconMap = new Map<string, string>();
   private _destroySubject = new Subject<void>();
@@ -84,7 +94,7 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
     private _ticketService: McsApiTicketsService,
     private _navigationService: McsNavigationService
   ) {
-    this.dataSource = new McsTableDataSource2(this._getAzureTickets.bind(this));
+    this.dataSource = new McsTableDataSource2();
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'summary' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'lastUpdatedDate' }),
@@ -97,6 +107,14 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
     unsubscribeSafely(this._destroySubject);
   }
 
+  public ngOnChanges(changes: SimpleChanges): void {
+    let serviceIdChange = changes['serviceId'];
+    if (!isNullOrEmpty(serviceIdChange.currentValue)) {
+      this._serviceId = serviceIdChange.currentValue;
+    }
+    this.dataSource.updateDatasource(this._getAzureTickets.bind(this));
+  }
+
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
   }
@@ -104,7 +122,7 @@ export class AzureTicketsWidgetComponent implements OnDestroy {
   private _getAzureTickets(): Observable<McsMatTableContext<McsTicket>> {
     let queryParam = new McsTicketQueryParams();
     queryParam.pageSize = maxTicketsToDisplay;
-    queryParam.serviceId = 'AZ';
+    queryParam.serviceId = this._serviceId;
     queryParam.state = 'open';
     this.dataChange.emit(undefined);
     return this._ticketService.getTickets(queryParam).pipe(

@@ -46,8 +46,19 @@ export class DashboardGuard implements CanActivate {
       return false;
     }
 
-    // Try Navigate to Private Cloud Default Page
     let hasPrivateCloudAccess = this._authenticationIdentity.platformSettings.hasPrivateCloud;
+    let hasPublicCloudAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
+
+    // Try Navigate to Private Cloud Dashboard Default Page
+    let hasPrivateCloudDashboardAccess = hasPrivateCloudAccess && !hasPublicCloudAccess &&
+      this._accessControlService.hasAccessToFeature([McsFeatureFlag.PrivateCloudDashboard]);
+
+    if (hasPrivateCloudDashboardAccess) {
+      this._navigationService.navigateTo(RouteKey.PrivateCloudDashboardOverview);
+      return false;
+    }
+
+    // Try Navigate to Private Cloud Default Page
     if (hasPrivateCloudAccess) {
       // Try Navigate to Compute
       let hasVmAccess = this._accessControlService.hasPermission([
@@ -70,7 +81,6 @@ export class DashboardGuard implements CanActivate {
     }
 
     // Try Navigate to Public Cloud Default Page
-    let hasPublicCloudAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
     if (hasPublicCloudAccess) {
       this._navigationService.navigateTo(RouteKey.Licenses);
       return false;

@@ -56,5 +56,8 @@ export enum McsPermission {
   SystemMessageEdit = 'SystemMessageEdit',
 
   // Azure Resources
-  AzureView = 'AzureView'
+  AzureView = 'AzureView',
+
+  // Storage Profile Utilisation
+  OrganizationVdcView = 'OrganizationVdcView'
 }

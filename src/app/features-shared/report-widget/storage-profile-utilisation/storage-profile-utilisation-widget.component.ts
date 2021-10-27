@@ -13,6 +13,7 @@ import {
 } from 'rxjs/operators';
 
 import {
+  McsAccessControlService,
   McsMatTableContext,
   McsNavigationService,
   McsReportingService,
@@ -20,6 +21,7 @@ import {
 } from '@app/core';
 import {
   McsFilterInfo,
+  McsPermission,
   McsReportStorageResourceUtilisation,
   PlatformType,
   RouteKey
@@ -28,6 +30,7 @@ import {
   createObject,
   isNullOrEmpty
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-storage-profile-utilisation-widget',
@@ -48,20 +51,34 @@ export class StorageProfileUtilisationWidgetComponent {
 
   constructor(
     private _reportingService: McsReportingService,
-    private _navigationService: McsNavigationService
+    private _navigationService: McsNavigationService,
+    private _translate: TranslateService,
+    private _accessControlService: McsAccessControlService
   ) {
     this.dataSource = new McsTableDataSource2(this._getStorageProfiles.bind(this));
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'storageProfile' }),
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'resource' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'utilisation' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' }),
     ];
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
+  public get hasOrderEditAccess(): boolean {
+    return this._accessControlService.hasPermission([McsPermission.OrderEdit]);
+  }
+
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
+  }
+
+  public expandLinkFallBackText(storage: McsReportStorageResourceUtilisation): string {
+    if (!this.disableExpandVdcStorage(storage) || !this.showExpandLink(storage.resourcePlatform)) { return; }
+    if (isNullOrEmpty(storage.serviceId) || !storage.serviceChangeAvailable) {
+      return this._translate.instant('privateCloudDashboard.storageUtilisationWidget.expandLinkProvision');
+    } else if (storage.isStretched) {
+      return this._translate.instant('privateCloudDashboard.storageUtilisationWidget.expandLinkStretched');
+    }
   }
 
   public disableExpandVdcStorage(resourceStorage: McsReportStorageResourceUtilisation): boolean {
@@ -71,7 +88,7 @@ export class StorageProfileUtilisationWidgetComponent {
   }
 
   public showExpandLink(resourcePlatform: any): boolean {
-    return resourcePlatform === PlatformType.VCloud;
+    return resourcePlatform === PlatformType.VCloud && this.hasOrderEditAccess;
   }
 
   public navigateToExpandVdcStorage(resourceStorage: McsReportStorageResourceUtilisation): void {
@@ -88,7 +105,7 @@ export class StorageProfileUtilisationWidgetComponent {
     if (usage > 85) {
       return 'red';
     } else if(usage > 75 && usage <= 85) {
-      return 'yellow';
+      return 'darkorange';
     }
     return 'green';
   }
