@@ -58,5 +58,6 @@ $chart-max-width: 25rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    min-height: 1rem;
   }
 }

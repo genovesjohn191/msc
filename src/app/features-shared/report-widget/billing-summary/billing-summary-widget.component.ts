@@ -100,6 +100,7 @@ export class BillingSummaryWidgetComponent extends ReportWidgetBase implements O
 
     this.chartConfig = {
       type: 'bar',
+      height: '420px',
       stacked: true,
       xaxis: {
         type: 'category'
