@@ -76,14 +76,6 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.CloudServicesGateway,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.CustomerDedicatedFirewall,
       [
@@ -121,14 +113,6 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.DedicatedNetworkUtm,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.DedicatedServer,
       [
@@ -148,14 +132,6 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.DedicatedSras,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.DedicatedVcenterServer,
       [
@@ -186,22 +162,10 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
 
     [ ProductType.FirewallVlan,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate,
         WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
 
-    [ ProductType.FirewallVxlan,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.FourtyEightPortSwitch,
       [
@@ -221,40 +185,9 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.GlobalServerLoadBalancing,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
-
-    [ ProductType.HostingClientToSiteVpn,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
-
     [ ProductType.HostingInternetPort,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate,
         WorkflowGroupId.VirtualDataCentreNetworkCreate
-      ]
-    ],
-
-    [ ProductType.HostingSiteToSiteVpn,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
       ]
     ],
 
@@ -294,21 +227,9 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.InfrastructureProxy,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.Internet,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate,
         WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
@@ -322,23 +243,6 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.LoadBalancingChange,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
-
-    [ ProductType.LoadBalancingGeneral,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.ManagedRouter,
       [
@@ -379,34 +283,14 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       [ ]
     ],
 
-    [ ProductType.NasRaidOneServer,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.NasRaidSDisk,
       [ ]
     ],
 
-    [ ProductType.NasRaidSServer,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.NetworkAttachedStorage,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate,
         WorkflowGroupId.VirtualDataCentreNetworkCreate
       ]
     ],
@@ -456,14 +340,6 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.PerformanceInternet,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.PortSwitch,
       [
@@ -484,32 +360,6 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
-    [ ProductType.SanRaidOneServer,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
-
-    [ ProductType.SanRaidSServer,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
-
-    [ ProductType.SecureWebGateway,
-      [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
-      ]
-    ],
 
     [ ProductType.ServerBackup,
       [
