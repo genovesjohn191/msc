@@ -2792,12 +2792,12 @@
     "table": {
       "descriptions": {
         "macquarieView": {
-          "name": "Macquarie View",
-          "description": "Manage company contacts, users, invoices and monitor your infrastructure."
+          "name": "MacquarieView",
+          "description": "Manage your company's contacts, users, billing information and access InView reports."
         },
         "vCloud": {
           "name": "vCloud Director",
-          "description": "Manage your Virtual Machines and Virtual Data Centers."
+          "description": "Manage your LAUNCH VDCs."
         },
         "vSphere": {
           "name": "vSphere",
@@ -2805,11 +2805,11 @@
         },
         "firewall": {
           "name": "FortiManager",
-          "description": "Manage your network firewall."
+          "description": "Manage your virtual and dedicated firewalls."
         },
         "zerto": {
           "name": "Zerto",
-          "description": "True High Availability, at the click of a button."
+          "description": "View and manage disaster recovery configuration and replication groups."
         },
         "ciscoUcs": {
           "name": "Cisco UCS",
@@ -2818,6 +2818,30 @@
         "f5": {
           "name": "F5",
           "description": "Manage load balancing and SSL offload."
+        },
+        "azurePortal": {
+          "name": "Azure Portal",
+          "description": "Access your Azure environment and manage your resources in depth."
+        },
+        "cloudHealth": {
+          "name": "CloudHealth",
+          "description": "View budget and performance reporting for your Azure environment, and configure smart alerts."
+        },
+        "trendMicroDSM": {
+          "name": "Trend Micro DSM",
+          "description": "Manage your Anti-Virus and HIDS services."
+        },
+        "fortiAnalyzer": {
+          "name": "FortiAnalyzer",
+          "description": "Access centralized security logging and reporting features for your virtual and dedicated firewalls."
+        },
+        "vMWarevRealizeOC": {
+          "name": "VMware vRealize Operations Console",
+          "description": "Access centralized security logging and reporting features for your virtual and dedicated firewalls."
+        },
+        "f5EnterpriseManager": {
+          "name": "F5 Enterprise Manager",
+          "description": "A single pane for managing multiple F5 devices at once."
         }
       },
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tools.",

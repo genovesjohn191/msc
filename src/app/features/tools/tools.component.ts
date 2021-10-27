@@ -72,6 +72,13 @@ export class ToolsComponent implements OnDestroy {
     this.toolDescriptionMap.set(descriptions.vCloud.name, descriptions.vCloud.description);
     this.toolDescriptionMap.set(descriptions.vSphere.name, descriptions.vSphere.description);
     this.toolDescriptionMap.set(descriptions.firewall.name, descriptions.firewall.description);
+    this.toolDescriptionMap.set(descriptions.azurePortal.name, descriptions.azurePortal.description);
+    this.toolDescriptionMap.set(descriptions.cloudHealth.name, descriptions.cloudHealth.description);
+    this.toolDescriptionMap.set(descriptions.trendMicroDSM.name, descriptions.trendMicroDSM.description);
+    this.toolDescriptionMap.set(descriptions.fortiAnalyzer.name, descriptions.fortiAnalyzer.description);
+    this.toolDescriptionMap.set(descriptions.zerto.name, descriptions.zerto.description);
+    this.toolDescriptionMap.set(descriptions.vMWarevRealizeOC.name, descriptions.vMWarevRealizeOC.description);
+    this.toolDescriptionMap.set(descriptions.f5EnterpriseManager.name, descriptions.f5EnterpriseManager.description);
   }
 
   private _getPortals(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsPortal>> {
@@ -86,7 +93,7 @@ export class ToolsComponent implements OnDestroy {
 
         // Add Macquarie View
         let macquarieView = new McsPortal();
-        macquarieView.name = 'Macquarie View';
+        macquarieView.name = 'MacquarieView';
         macquarieView.resourceSpecific = true;
 
         let macquarieViewPortalAccess = new McsPortalAccess();
