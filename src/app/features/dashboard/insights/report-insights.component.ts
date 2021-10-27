@@ -52,10 +52,10 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import { InsightsDocumentDetails } from './report-insights-document';
-import { DashboardExportDocumentManager } from '../export-document-factory/dashboard-export-document-manager';
-import { DashboardExportDocumentType } from '../export-document-factory/dashboard-export-document-type';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import { DashboardExportDocumentManager } from '@app/features-shared/export-document-factory/dashboard-export-document-manager';
+import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
 
 interface PeriodOption {
   label: string;

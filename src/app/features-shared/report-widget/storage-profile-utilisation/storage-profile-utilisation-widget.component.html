@@ -11,17 +11,8 @@
           {{ 'columnHeader.storageProfile' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.name || 'Unavailable'}}
-        </td>
-      </ng-container>
-
-      <!-- Resource Name Column -->
-      <ng-container matColumnDef="resource">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'columnHeader.resource' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.resourceName || 'Unavailable' }}
+          {{ row.name || 'Unavailable'}} 
+          <div><small read-only>{{ row.resourceName || 'Unavailable' }}</small></div>
         </td>
       </ng-container>
 
@@ -34,20 +25,23 @@
           <div text-center [ngStyle]="{'color': getColor(row.usedMB, row.limitMB)}">
             {{ getUtilisationPercentage(row.usedMB, row.limitMB) }}%
           </div>
-          <span *ngIf="(row.usedMB | mcsIsNotNullOrEmpty); else emptyLabel">
-            ({{ row.usedMB | mcsDataSize: 'MB' }}</span>
-          <ng-template #emptyLabel>
-            (<span [innerHTML]="row.usedMB | mcsDataLabel"></span>
-          </ng-template>
-          <span> / </span>
-          <span>{{ row.limitMB | mcsDataSize: 'MB' }}</span>)
+          <div text-center>
+            <span *ngIf="(row.usedMB | mcsIsNotNullOrEmpty); else emptyLabel">
+              ({{ row.usedMB | mcsDataSize: 'MB' }}</span>
+            <ng-template #emptyLabel>
+              (<span [innerHTML]="row.usedMB | mcsDataLabel"></span>
+            </ng-template>
+            <span> / </span>
+            <span>{{ row.limitMB | mcsDataSize: 'MB' }}</span>)
+          </div>
         </td>
       </ng-container>
 
       <!-- Action Column -->
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row"
+          [matTooltip]="expandLinkFallBackText(row)">
           <a *ngIf="showExpandLink(row.resourcePlatform)"
             [disabled]="disableExpandVdcStorage(row)"
             (click)="navigateToExpandVdcStorage(row)"

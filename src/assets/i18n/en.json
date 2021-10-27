@@ -195,7 +195,6 @@
         "cloudHealthLinkLabel": "View in CloudHealth"
       },
       "azureTicketsWidget": {
-        "title": "Open Azure Tickets",
         "newTicketLinkLabel": "New",
         "moreTicketsLinkLabel": "View All",
         "empty": "No open tickets.",
@@ -365,6 +364,10 @@
       "addHidsDescription": "Host Intrusion Detection System logs or blocks attempted unauthorised access to your server.",
       "addServerBackupDescription": "A reliable file-level backup solution for your server.",
       "addVmBackupDescription": "VM Backup is a powerful image-level backup service."
+    },
+    "storageUtilisationWidget": {
+      "expandLinkProvision": "This storage profile cannot be expanded as it is still being provisioned. Please contact your account team for assistance.",
+      "expandLinkStretched": "Stretched VDC Storage cannot currently be expanded. Please contact your account team for assistance."
     }
   },
   "orders": {
@@ -3522,6 +3525,8 @@
     "none": "None",
     "notes": "Notes",
     "overview": "Overview",
+    "openAzureTickets": "Open Azure Tickets",
+    "openPrivateCloudTickets": "Open Private Cloud Tickets",
     "ownership": "Ownership",
     "phone": "Phone",
     "requestType": "Request Type",

@@ -3,7 +3,7 @@
   <div class="data-wrapper">
     <mcs-cta-list *ngIf="!hasError; else errorTemplate">
       <!-- Servers -->
-      <mcs-cta-list-panel *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']"
+      <mcs-cta-list-panel *mcsAccessControl="['CloudVmAccess']"
         [icon]="notvisibleCopyBlackIcon" compact="true">
         <mcs-cta-list-action>
           <a [mcsRouterLink]="routeKeyEnum.Servers"
@@ -17,7 +17,7 @@
       </mcs-cta-list-panel>
 
       <!-- VDC -->
-      <mcs-cta-list-panel  *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']"
+      <mcs-cta-list-panel  *mcsAccessControl="['OrganizationVdcView']"
         [icon]="cloudBlackIcon" compact="true">
         <mcs-cta-list-action>
           {{ resourceDescription('VDC', computeResourceTotals?.vdcCount || 0) }}

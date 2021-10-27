@@ -1,8 +1,9 @@
+import { InsightsDocument } from '@app/features/dashboard/export-document/insights-document';
+import { OverviewDocument } from '@app/features/dashboard/export-document/overview-document';
+import { PrivateCloudDashboardOverviewDocument } from '@app/features/private-cloud-dashboard/overview/private-cloud-dashboard-overview-document';
 import { isNullOrUndefined } from '@app/utilities';
 import { IDashboardExportDocument } from './dashboard-export-document-interface';
 import { DashboardExportDocumentType } from './dashboard-export-document-type';
-import { InsightsDocument } from './document/insights-document';
-import { OverviewDocument } from './document/overview-document';
 
 export class DashboardExportDocumentManager {
   private _documentFactoriesMap: Map<DashboardExportDocumentType, IDashboardExportDocument>;
@@ -28,5 +29,7 @@ export class DashboardExportDocumentManager {
     this._documentFactoriesMap.set(DashboardExportDocumentType.MsWordInsights, new InsightsDocument());
     this._documentFactoriesMap.set(DashboardExportDocumentType.PdfOverview, new OverviewDocument());
     this._documentFactoriesMap.set(DashboardExportDocumentType.PdfInsights, new InsightsDocument());
+    this._documentFactoriesMap.set(DashboardExportDocumentType.MsWordPrivateCloudDashboard, new PrivateCloudDashboardOverviewDocument());
+    this._documentFactoriesMap.set(DashboardExportDocumentType.PdfPrivateCloudDashboard, new PrivateCloudDashboardOverviewDocument());
   }
 }

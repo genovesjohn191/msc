@@ -14,15 +14,25 @@
 
       <!-- PDF Icon -->
       <mcs-action-item mcsResponsivePanelItem hidden-small
-        [mcsTooltip]="'tooltip.exportPdf' | translate">
+        [disabled]="pdfDownloadInProgress || widgetsLoading()"
+        [mcsTooltip]="'tooltip.exportPdf' | translate"
+        (click)="onClickExportPdf($event)">
         <mcs-icon key="pdf-black" size="large" mcsCursor="pointer"></mcs-icon>
-      </mcs-action-item>
+     </mcs-action-item>
 
       <!-- Word Icon -->
       <mcs-action-item mcsResponsivePanelItem hidden-small
-        [mcsTooltip]="'tooltip.exportWord' | translate">
+        [disabled]="widgetsLoading() || pdfDownloadInProgress"
+        [mcsTooltip]="'tooltip.exportWord' | translate"
+        (click)="onClickExportWord()">
         <mcs-icon key="word-black" size="large" mcsCursor="pointer"></mcs-icon>
       </mcs-action-item>
+
+      <ng-container *ngIf="pdfDownloadInProgress">
+        <mcs-loader size="small"
+          [mcsTooltip]="'tooltip.tooltipText' | translate"
+          mcsTooltipPosition="right"></mcs-loader>
+      </ng-container>
     </mcs-top-panel-item>
   </mcs-top-panel>
 
@@ -34,7 +44,7 @@
       </div>
       <div class="widget-wrapper">
         <ul>
-          <li *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess', 'FirewallConfigurationView']">
+          <li *mcsAccessControl="['CloudVmAccess', 'FirewallConfigurationView']">
             <mcs-private-cloud-services-overview-widget (serviceOverviewDataChange)="serviceOverviewDataChange($event)">
             </mcs-private-cloud-services-overview-widget>
           </li>
@@ -44,13 +54,18 @@
               [vdcList]="vdcList$ | async"
               [orderItemTypes]="orderItemTypes$ | async"></mcs-change-requests-widget>
           </li>
-          <li *mcsAccessControl="['OrderEdit', 'CloudVmAccess', 'DedicatedVmAccess']">
+          <li *mcsAccessControl="['OrderEdit', 'CloudVmAccess']">
             <mcs-backup-security-widget class="hide-on-print"
               [orderItemTypes]="orderItemTypes$ | async"></mcs-backup-security-widget>
           </li>
-          <li>
+          <li *mcsAccessControl="['OrganizationVdcView']">
             <mcs-storage-profile-utilisation-widget (dataChange)="resourceStorageUtilisationDataChange($event)">
             </mcs-storage-profile-utilisation-widget>
+          </li>
+          <li>
+            <mcs-azure-tickets-widget (dataChange)="azureTicketsDataChange($event)"
+              [title]="'label.openPrivateCloudTickets' | translate"
+              [serviceId]="'!AZ'"></mcs-azure-tickets-widget>
           </li>
           <li>
             <mcs-contact-us-widget (dataChange)="contactUsDataChange($event)"></mcs-contact-us-widget>

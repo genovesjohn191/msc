@@ -5,6 +5,8 @@ import {
  McsDateTimeService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { IDashboardExportDocument } from '@app/features-shared/export-document-factory/dashboard-export-document-interface';
+import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
 import {
   McsContactUs,
   McsFeatureFlag,
@@ -21,9 +23,7 @@ import {
   HtmlToPdfUtility
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import { OverviewDocumentDetails } from '../../overview/report-overview.document';
-import { IDashboardExportDocument } from '../dashboard-export-document-interface';
-import { DashboardExportDocumentType } from '../dashboard-export-document-type';
+import { OverviewDocumentDetails } from '../overview/report-overview.document';
 
 export class OverviewDocument implements IDashboardExportDocument {
   private _translateService: TranslateService;
@@ -90,7 +90,7 @@ export class OverviewDocument implements IDashboardExportDocument {
   }
 
   private _createServiceCostOverviewHtml(overviewDetails: OverviewDocumentDetails): string {
-    let title = this._translate('reports.overview.servicesOverviewWidget.title');
+    let title = this._translate('label.servicesOverview');
     let azureSubscriptionLabel = overviewDetails.azureSubscription === 1 ? 'subscription' : 'subscriptions';
     let widgetHtml = `<div>${overviewDetails.azureSubscription} Azure ${azureSubscriptionLabel}</div>`;
     let licenseSubscriptionLabel = overviewDetails.licenseSubscription === 1 ? 'subscription' : 'subscriptions';
@@ -170,7 +170,7 @@ export class OverviewDocument implements IDashboardExportDocument {
   }
 
   private _createAzureTicketsHtml(data: McsTicket[]): string {
-    let title = `${this._translate('reports.overview.azureTicketsWidget.title')}`;
+    let title = `${this._translate('label.openAzureTickets')}`;
     let ticketsTable = '';
     if (this.hasTicketViewPermission) {
       ticketsTable += `

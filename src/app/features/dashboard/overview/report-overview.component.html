@@ -2,6 +2,16 @@
    <!-- Top Panel -->
    <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef padding-left-medium class="hide-on-print">
+       <!-- Nav Menu -->
+      <mcs-action-item *ngIf="hasPrivateAndPublicCloudAccess && hasAccessToPrivateCloudDashboard"
+        mcsResponsivePanelItem hidden-small [matMenuTriggerFor]="menu">
+        <mcs-icon size="xlarge" [key]="arrowDropDownBlackIconKey" ></mcs-icon>
+      </mcs-action-item>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onClickPrivateCloud()">Private Cloud</button>
+        <button mat-menu-item class="active" (click)="onClickPublicCloud()">Public Cloud</button>
+      </mat-menu>
+
       <!-- PDF Icon -->
       <mcs-action-item mcsResponsivePanelItem hidden-small
         [disabled]="pdfDownloadInProgress || widgetsLoading()"
@@ -53,7 +63,9 @@
             <mcs-resource-changes-widget (chartChange)="resourceCountUri($event)"></mcs-resource-changes-widget>
           </li>
           <li>
-            <mcs-azure-tickets-widget (dataChange)="azureTickets($event)"></mcs-azure-tickets-widget>
+            <mcs-azure-tickets-widget (dataChange)="azureTickets($event)"
+            [title]="'label.openAzureTickets' | translate"
+              [serviceId]="'AZ'"></mcs-azure-tickets-widget>
           </li>
           <li>
             <mcs-top-vms-by-cost-widget (dataChange)="topVmsByCost($event)"></mcs-top-vms-by-cost-widget>

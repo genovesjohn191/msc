@@ -321,6 +321,7 @@ export * from './response/mcs-report-inefficient-vms';
 export * from './response/mcs-report-top-vms-by-cost';
 export * from './response/mcs-report-platform-security-advisories';
 export * from './response/mcs-report-compute-resource-totals';
+export * from './response/mcs-report-storage-profile-utilisation';
 export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
@@ -344,7 +345,6 @@ export * from './response/mcs-report-billing-service';
 export * from './response/mcs-report-billing-service-group';
 export * from './response/mcs-report-billing-service-summary';
 export * from './response/mcs-report-billing-service-tenant';
-export * from './response/mcs-report-storage-profile-utilisation';
 
 /** Common */
 export * from './common/mcs-api-search-key';

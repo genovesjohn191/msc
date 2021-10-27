@@ -4,19 +4,25 @@ import {
   Injector,
   ChangeDetectorRef,
 } from '@angular/core';
-import { McsAccessControlService } from '@app/core';
+import {
+  McsAccessControlService,
+  McsAuthenticationIdentity,
+  McsNavigationService
+} from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import { DashboardExportDocumentManager } from '@app/features-shared/export-document-factory/dashboard-export-document-manager';
+import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
 import {
   McsContactUs,
   McsFeatureFlag,
   McsReportCostRecommendations,
   McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
-  McsTicket
+  McsTicket,
+  RouteKey
 } from '@app/models';
-import { DashboardExportDocumentManager } from '../export-document-factory/dashboard-export-document-manager';
-import { DashboardExportDocumentType } from '../export-document-factory/dashboard-export-document-type';
+import { CommonDefinition } from '@app/utilities';
 import { OverviewDocumentDetails } from './report-overview.document';
 
 @Component({
@@ -34,11 +40,27 @@ export class ReportOverviewComponent {
 
   public constructor(
     private _injector: Injector,
+    private _authenticationIdentity: McsAuthenticationIdentity,
     private _accessControlService: McsAccessControlService,
     private _changeDetector: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService)
+    private _eventDispatcher: EventBusDispatcherService,
+    private _navigationService: McsNavigationService
+  )
   {
     this._registerEvents();
+  }
+
+  public get arrowDropDownBlackIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_ARROW_DROP_DOWN_BLACK;
+  }
+
+  public get hasPrivateAndPublicCloudAccess(): boolean {
+    return this._authenticationIdentity.platformSettings.hasPublicCloud &&
+      this._authenticationIdentity.platformSettings.hasPrivateCloud;
+  }
+
+  public get hasAccessToPrivateCloudDashboard(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PrivateCloudDashboard]);
   }
 
   public get pdfDownloadInProgress(): boolean {
@@ -47,6 +69,14 @@ export class ReportOverviewComponent {
 
   public get hasAccessToPlatformSecurity(): boolean {
     return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlatformSecurityAdvisory]);
+  }
+
+  public onClickPublicCloud(): void {
+    this._navigationService.navigateTo(RouteKey.ReportOverview);
+  }
+
+  public onClickPrivateCloud(): void {
+    this._navigationService.navigateTo(RouteKey.PrivateCloudDashboardOverview);
   }
 
   public onClickExportWord(): void {

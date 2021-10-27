@@ -42,7 +42,7 @@
       </ng-container>
       
       <!-- Create Server -->
-      <ng-container *mcsAccessControl="['CloudVmEdit', 'DedicatedVmEdit'];">
+      <ng-container *mcsAccessControl="['CloudVmAccess', 'OrganizationVdcView'];">
         <mcs-cta-list-panel [icon]="createNewServerIcon" *ngIf="isPrivateCloud && hasManagedVdc">
           <mcs-cta-list-header>
             <a [mcsRouterLink]="routeKeyEnum.ServerCreate">
@@ -61,7 +61,7 @@
       </ng-container>
 
       <!-- Expand VDC Storage -->
-      <ng-container *mcsAccessControl="['CloudVmEdit', 'DedicatedVmEdit'];">
+      <ng-container *mcsAccessControl="['CloudVmAccess'];">
         <mcs-cta-list-panel [icon]="expandStorageIcon" *ngIf="isPrivateCloud && hasVdc">
           <mcs-cta-list-header>
             <a [mcsRouterLink]="routeKeyEnum.OrderVdcStorageExpand">

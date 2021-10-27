@@ -22,10 +22,10 @@ import {
   coerceNumber,
   HtmlToPdfUtility
 } from '@app/utilities';
-import { InsightsDocumentDetails } from '../../insights/report-insights-document';
-import { IDashboardExportDocument } from '../dashboard-export-document-interface';
-import { DashboardExportDocumentType } from '../dashboard-export-document-type';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { IDashboardExportDocument } from '@app/features-shared/export-document-factory/dashboard-export-document-interface';
+import { InsightsDocumentDetails } from '../insights/report-insights-document';
+import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
 
 const cloudhealthText = 'reports.insights.vmCloudHealthLink';
 
