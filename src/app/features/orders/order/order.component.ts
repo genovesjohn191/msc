@@ -197,6 +197,11 @@ export class OrderComponent implements OnInit, OnDestroy {
       orderItem => !isNullOrEmpty(orderItem.deliveryType));
   }
 
+  public get hasMonthlyFees(): boolean {
+    return !!this.dataSource?.findRecord(
+      orderItem => !isNullOrUndefined(orderItem.charges.monthly));
+  }
+
   public get isImpersonating(): boolean {
     return this._authenticationIdentity.isImpersonating;
   }
@@ -540,6 +545,10 @@ export class OrderComponent implements OnInit, OnDestroy {
 
     this._orderItemsColumnPredicateMap.set('deliveryType',
       () => this.hasDeliveryTypeOptions
+    );
+
+    this._orderItemsColumnPredicateMap.set('monthlyCharge',
+      () => this.hasMonthlyFees
     );
   }
 }

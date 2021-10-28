@@ -153,7 +153,7 @@
                   </ng-template>
                 </mcs-item>
 
-                <mcs-item>
+                <mcs-item *ngIf="hasMonthlyFees">
                   <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
                   <span>
                     {{ selectedOrder.charges?.currencySymbol }}{{ ((selectedOrder.charges?.monthly || 0) | number: '1.2')}}
