@@ -20,7 +20,7 @@
       <mcs-cta-list-panel  *mcsAccessControl="['OrganizationVdcView']"
         [icon]="cloudBlackIcon" compact="true">
         <mcs-cta-list-action>
-          {{ resourceDescription('VDC', computeResourceTotals?.vdcCount || 0) }}
+          {{ resourceDescription('VDC', computeResourceTotals?.resourceCount || 0) }}
         </mcs-cta-list-action>
       </mcs-cta-list-panel>
 
@@ -39,10 +39,10 @@
       </mcs-cta-list-panel>
     </mcs-cta-list>
     <ng-template #errorTemplate>
-      <small read-only>
+      <mcs-data-status-error mcsDataError>
         {{ 'reports.errorMessage' | translate }}
         <a (click)="retry()">{{ 'reports.retryLabel' | translate }}</a>
-      </small>
+      </mcs-data-status-error>
     </ng-template>
   </div>
 </div>
