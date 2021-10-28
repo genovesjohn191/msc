@@ -31,18 +31,20 @@ import {
   McsReportStorageResourceUtilisation,
   McsResource,
   McsTicket,
-  RouteKey
+  PlatformType,
+  RouteKey,
+  ServiceType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   CommonDefinition,
   getSafeProperty
 } from '@app/utilities';
-import { PrivateCloudDashboardOverviewDocumentDetails } from './private-cloud-dashboard-overview';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { DashboardExportDocumentManager } from '@app/features-shared/export-document-factory/dashboard-export-document-manager';
 import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
+import { PrivateCloudDashboardOverviewDocumentDetails } from '@app/features-shared/export-document-factory/models/private-cloud-dashboard-overview';
 
 @Component({
   selector: 'mcs-private-cloud-dashboard-overview',
@@ -96,6 +98,11 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
 
   public get hasOrganizationVdcViewAccess(): boolean {
     return this._accessControlService.hasPermission([McsPermission.OrganizationVdcView]);
+  }
+
+  public showBackupSecurity(): boolean {
+    return this.hasCloudVmAccess &&
+      this._accessControlService.hasPermission([McsPermission.OrderEdit]);
   }
 
   public get showServiceOverview(): boolean {
@@ -169,7 +176,14 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
       catchError((error) => {
         return throwError(error);
       }),
-      map((response) => getSafeProperty(response, (obj) => obj.collection)),
+      map((response) => {
+        let resources = getSafeProperty(response, (obj) => obj.collection);
+        if (resources?.length === 0) { return; }
+        let managedVdcs = resources.filter((resource) => {
+          return resource.serviceType === ServiceType.Managed && resource.platform === PlatformType.VCloud;
+        })
+        return managedVdcs;
+      }),
       shareReplay(1));
   }
 

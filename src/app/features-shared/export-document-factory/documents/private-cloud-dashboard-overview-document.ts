@@ -5,8 +5,6 @@ import {
  McsDateTimeService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { IDashboardExportDocument } from '@app/features-shared/export-document-factory/dashboard-export-document-interface';
-import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
 import {
   McsContactUs,
   McsPermission,
@@ -21,7 +19,9 @@ import {
   HtmlToPdfUtility
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import { PrivateCloudDashboardOverviewDocumentDetails } from './private-cloud-dashboard-overview';
+import { IDashboardExportDocument } from '../dashboard-export-document-interface';
+import { DashboardExportDocumentType } from '../dashboard-export-document-type';
+import { PrivateCloudDashboardOverviewDocumentDetails } from '../models/private-cloud-dashboard-overview';
 
 export class PrivateCloudDashboardOverviewDocument implements IDashboardExportDocument {
   private _translateService: TranslateService;
@@ -106,7 +106,7 @@ export class PrivateCloudDashboardOverviewDocument implements IDashboardExportDo
       }
       if (this.hasAccessToOrganizationView) {
         widgetHtml += `
-          <div>${this._resourceDescription('VDC', resource.vdcCount)}</div><br/>`;
+          <div>${this._resourceDescription('VDC', resource.resourceCount)}</div><br/>`;
       }
       if (this.hasAccessToFirewall) {
         widgetHtml += `

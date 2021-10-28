@@ -1,9 +1,9 @@
-import { InsightsDocument } from '@app/features/dashboard/export-document/insights-document';
-import { OverviewDocument } from '@app/features/dashboard/export-document/overview-document';
-import { PrivateCloudDashboardOverviewDocument } from '@app/features/private-cloud-dashboard/overview/private-cloud-dashboard-overview-document';
 import { isNullOrUndefined } from '@app/utilities';
 import { IDashboardExportDocument } from './dashboard-export-document-interface';
 import { DashboardExportDocumentType } from './dashboard-export-document-type';
+import { InsightsDocument } from './documents/insights-document';
+import { OverviewDocument } from './documents/overview-document';
+import { PrivateCloudDashboardOverviewDocument } from './documents/private-cloud-dashboard-overview-document';
 
 export class DashboardExportDocumentManager {
   private _documentFactoriesMap: Map<DashboardExportDocumentType, IDashboardExportDocument>;

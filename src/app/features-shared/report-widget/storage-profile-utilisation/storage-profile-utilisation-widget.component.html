@@ -70,14 +70,14 @@
         {{ 'message.noStorageProfileUtilisation' | translate }}
       </div>
       <div *ngIf="dataSource?.hasError$ | async" text-center>
-        <div class="listing-status-wrapper">
-          <span>{{ 'reports.errorMessage' | translate }}</span>
+        <mcs-data-status-error mcsDataError>
+          <span>{{ 'reports.errorMessage' | translate }} </span>
           <a (click)="retryDatasource()"
             mcsId
             mcsEventTracker="retry-loading-storage-profile-utilisation-list"
             mcsEventCategory="storage-profile-utilisation"
             mcsEventLabel="private-cloud-dashboard-overview-page">{{ 'reports.retryLabel' | translate }}</a>
-        </div>
+        </mcs-data-status-error>
       </div>
     </mcs-item>
   </div>
