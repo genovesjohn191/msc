@@ -394,6 +394,7 @@ export * from './common/mcs-field-error-message';
 export * from './common/mcs-reservation-product-type-params';
 export * from './common/mcs-report-billing-summary-params';
 export * from './common/mcs-report-params';
+export * from './common/mcs-object-project-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

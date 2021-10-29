@@ -19,14 +19,6 @@ export class McsObjectCrispOrderQueryParams extends McsQueryParam {
   }
 }
 
-export class McsObjectProjectsQueryParams extends McsQueryParam {
-  public state?: CrispOrderState;
-
-  constructor() {
-    super();
-  }
-}
-
 export class McsObjectVdcQueryParams extends McsQueryParam {
   public vdcId?: string;
   public networkServiceId?: string;

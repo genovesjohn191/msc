@@ -956,7 +956,9 @@
     "title": "Place a Service Request",
     "detailsStep": {
       "title": "Details",
-      "description": "You can use this wizard to request a custom change to your Azure services. Please provide the details of your request below.",
+      "description": "You can use this wizard to request a change to your Azure services. Please provide the details of your request below.",
+      "secondDescription": "Our lead time of 24 hours for fully supported services in Essentials subscriptions under the Enhanced Service Level ensures we have time to get the right engineer for the task.<br>For fully supported services in Managed subscriptions under the Comprehensive Service Level, our accelerated lead time is 4 hours.",
+      "thirdDescription": "This request's charges are waived for Azure Managed customers.",
       "serviceSubscriptionId": "Subscription ID: {{subscriptionId}}",
       "servicePlaceholder": "Select a Service",
       "complexityPlaceholder": "Select Complexity",

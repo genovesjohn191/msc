@@ -54,8 +54,8 @@
               [vdcList]="vdcList$ | async"
               [orderItemTypes]="orderItemTypes$ | async"></mcs-change-requests-widget>
           </li>
-          <li *ngIf="showBackupSecurity">
-            <mcs-backup-security-widget *ngIf="(vdcList$ | async) | mcsIsNotNullOrEmpty"
+          <li *ngIf="showBackupSecurity() && (vdcList$ | async) | mcsIsNotNullOrEmpty">
+            <mcs-backup-security-widget
               class="hide-on-print"
               [orderItemTypes]="orderItemTypes$ | async"></mcs-backup-security-widget>
           </li>
