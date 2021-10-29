@@ -20,4 +20,7 @@ export class McsAzureService extends McsEntityBase {
 
   @JsonProperty()
   public parentSubscriptionServiceId: string = undefined;
+
+  @JsonProperty()
+  public serviceLevel: string = undefined;
 }

@@ -156,7 +156,6 @@ import {
   McsObjectInstalledService,
   McsNetworkVdcPrecheckVlan,
   McsObjectProject,
-  McsObjectProjectsQueryParams,
   McsObjectProjectTasks,
   McsObjectQueryParams,
   McsObjectVdcQueryParams,
@@ -267,7 +266,8 @@ import {
   McsValidation,
   McsWorkflowCreate,
   McsReportComputeResourceTotals,
-  McsReportStorageResourceUtilisation
+  McsReportStorageResourceUtilisation,
+  McsObjectProjectParams
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2144,7 +2144,7 @@ export class McsApiService {
     );
   }
 
-  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiCollection<McsObjectProject>> {
+  public getProjects(query?: McsObjectProjectParams): Observable<McsApiCollection<McsObjectProject>> {
     return this._objectsApi.getProjects(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProjects'))
@@ -2162,7 +2162,7 @@ export class McsApiService {
     );
   }
 
-  public getProjectTasks(projectId: string, query?: McsObjectProjectsQueryParams):
+  public getProjectTasks(projectId: string, query?: McsObjectProjectParams):
     Observable<McsApiCollection<McsObjectProjectTasks>> {
     return this._objectsApi.getProjectTasks(projectId, query).pipe(
       catchError((error) =>

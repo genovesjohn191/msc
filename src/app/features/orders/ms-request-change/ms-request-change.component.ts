@@ -169,6 +169,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return this._translateService.instant('orderMsRequestChange.detailsStep.managementTags.actionLabel');
   }
 
+  public get unknownFallbackText(): string {
+    return this._translateService.instant('message.unknown');
+  }
+
   public get formResponseEnum(): any {
     return FormResponse;
   }
@@ -591,8 +595,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
         subscriptions.forEach((subscription) => {
           let textValue = (!isNullOrEmpty(subscription.serviceId)) ? `${subscription.friendlyName} - ${subscription.serviceId}`
             : `${subscription.friendlyName}`;
-          subscriptionOptions.push(createObject(McsOption,
-            { text: textValue, value: subscription }));
+          let serviceLevelText = subscription.serviceLevel || this.unknownFallbackText;
+          subscriptionOptions.push(createObject(McsOption, {
+            text: `${textValue} (${serviceLevelText})`,
+            value: subscription
+          }));
         });
         this._serviceCount = subscriptionOptions?.length;
         return subscriptionOptions;
