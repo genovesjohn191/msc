@@ -7,7 +7,7 @@ declare global {
 Array.prototype.distinct = function (selector?: (item: any) => string | number) {
   if (this.length === 0) return this;
   let uniqueKeys = [...new Set(this.map(selector))];
-  return uniqueKeys.map((_uniqueKey, index) => this[index]);
+  return uniqueKeys.map(uniqueKey => this.find(item => selector(item) === uniqueKey));
 }
 
 export { };
