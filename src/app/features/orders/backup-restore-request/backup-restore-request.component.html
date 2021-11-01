@@ -66,7 +66,7 @@
                   <span *ngIf="showPermissionErrorFallbackText" read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
                   <span *ngIf="!showPermissionErrorFallbackText" read-only>
                     <span> {{ 'orderBackupRestoreRequest.errors.serviceFallbackLabel' | translate }}</span>
-                    <span *mcsAccessControl="['TicketCreateaaa']">
+                    <span *mcsAccessControl="['TicketCreate']">
                       <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>
                       <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
                         mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
@@ -84,8 +84,12 @@
                 <mcs-field-input-date-picker class="form-field-size-small"
                   [formControl]="fcRestoreFromDate"
                   [minDate]="minDate"
-                  [maxDate]="maxDate" [defaultDate]="null"
-                  mcsId="mcs-datepicker">
+                  [maxDate]="maxDate"
+                  [defaultDate]="null"
+                  mcsId="mcs-datepicker"
+                  mcsEventTracker="input-restore-date"
+                  mcsEventCategory="order-restore-backup-request"
+                  mcsEventLabel="order-restore-backup-request-page">
                   <mcs-error mcsError errorState="required">
                     {{ 'orderBackupRestoreRequest.errors.restoreDateRequired' | translate }}
                   </mcs-error>
@@ -95,7 +99,7 @@
             <!-- What to restore -->
             <mcs-item orientation="block">
               <mcs-form-field>
-                <textarea mcsId="input-what-to-restore" mcsEventTracker="input-what-to-restore"
+                <textarea required mcsId="input-what-to-restore" mcsEventTracker="input-what-to-restore"
                   mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page"
                   mcsInput [rows]="instructionVisibleRows" [formControl]="fcDataRequired"
                   [maxlength]="maxInstructionsLength"
@@ -117,7 +121,7 @@
             <!-- Restore Destination -->
             <mcs-item orientation="block">
               <mcs-form-field>
-                <textarea mcsId="input-restore-destination" mcsEventTracker="input-restore-destination"
+                <textarea required mcsId="input-restore-destination" mcsEventTracker="input-restore-destination"
                   mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page"
                   mcsInput [rows]="instructionVisibleRows" [formControl]="fcRestoreDestination"
                   [maxlength]="maxInstructionsLength"
