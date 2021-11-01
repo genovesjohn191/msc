@@ -16,6 +16,7 @@ export enum OrderIdType {
   AddVmBackup = 'backups.vm.provision',
   AddServerBackup = 'backups.server.provision',
   AddBat = 'backups.bat.provision',
+  RestoreBackupRequest = 'backup.requestRestore',
   MsLicenseCountChange = 'microsoft.licenseCount.change',
   MsRequestChange = 'microsoft.subscription.requestChange',
   HostedDnsChange = 'dns.customRequest',

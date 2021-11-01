@@ -1264,6 +1264,40 @@
       "requestDetails": "Request details is required"
     }
   },
+  "orderBackupRestoreRequest": {
+    "title": "Request a Backup Restore",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "previous": "Back",
+      "description": "You can use this wizard to request a custom restore from a backup service you have provisioned. Please provide the details of your request below.",
+      "serviceHelpText": "Select a backup service to restore from.",
+      "dataRequiredHelpText": "Enter the name of the VMs, drives or files you would like restored.",
+      "restoreDestinationHelpText": "Enter the name of the VMs, drives or directories you would like your data restored to.",
+      "servicePlaceholder": "Select a Backup service",
+      "restoreDatePlaceholder": "What date would you like to restore from?",
+      "dataRequiredPlaceholder": "What would you like restored?",
+      "restoreDestinationPlaceholder": "Where would you like this data restored to?",
+      "customerReferenceNumberPlaceholder": "Customer reference number",
+      "customerReferenceNumberHelpText": "Enter an optional reference number. This is useful if you need to reference an internal change record or ticket ID."
+    },
+    "provisioning": {
+      "description": "Your request for azure professional service is being processed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    },
+    "payload": {
+      "description": "Azure Professional Services"
+    },
+    "errors": {
+      "serviceFallbackLabel": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+      "raiseTicketPrefix": " or ",
+      "raiseTicketLink": "raise a ticket",
+      "raiseTicketSuffix": " if this is unexpected",
+      "serviceRequired": "Service is required.",
+      "restoreDateRequired": "Restore date is required.",
+      "dataRequiredRequired": "Please specify what to restore.",
+      "restoreDestinationRequired": "Please specify restore destination."
+    }
+  },
   "contextMenuLink": {
     "requestCustomChange": "Request a Custom Change",
     "raiseTicket": "Raise a Ticket"

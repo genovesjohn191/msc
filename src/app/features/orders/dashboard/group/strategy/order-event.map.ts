@@ -22,6 +22,7 @@ import { SimpleFirewallChangeRemoveEvent } from './events/simple-firewall-change
 import { SimpleFirewallChangeModifyEvent } from './events/simple-firewall-change-modify.event';
 import { ChangeInternetPortPlanEvent } from './events/change-internet-port-plan.event';
 import { AzureProfessionalServiceRequestEvent } from './events/azure-professional-service-request.event';
+import { BackupRestoreRequestEvent } from './events/backup-restore-request.event';
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
 export const orderEventMap: OrderEventRecord = {
@@ -47,5 +48,6 @@ export const orderEventMap: OrderEventRecord = {
   'firewall.simpleChange.remove': new SimpleFirewallChangeRemoveEvent(),
   'firewall.simpleChange.modify': new SimpleFirewallChangeModifyEvent(),
   'internetPort.change': new ChangeInternetPortPlanEvent(),
-  'publicCloud.professionalServices': new AzureProfessionalServiceRequestEvent()
+  'publicCloud.professionalServices': new AzureProfessionalServiceRequestEvent(),
+  'backup.requestRestore': new BackupRestoreRequestEvent()
 };

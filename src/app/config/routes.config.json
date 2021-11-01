@@ -884,6 +884,14 @@
     "requiredFeatureFlag": "EnableAzureProfessionalServicesRequest",
     "documentTitle": "Request Azure Professional Services - Macquarie Cloud Services"
   },
+  "OrderRestoreBackupRequest": {
+    "enumKey": "OrderRestoreBackupRequest",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/restore-backup-request",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingBackupRestore",
+    "documentTitle": "Request a Backup Restore - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

@@ -36,6 +36,7 @@ import { ChangeInternetPortPlanComponent } from './change-internet-port-plan/cha
 import { CloudHealthServicesComponent } from './ms-request-change/cloudhealth/cloudhealth-services.component';
 import { ColocationDeviceRestartComponent } from './colocation-device-restart/colocation-device-restart.component';
 import { ProvisionComponent } from './ms-request-change/provision/provision.component';
+import { BackupRestoreRequestComponent } from './backup-restore-request/backup-restore-request.component';
 import {
   AzureProfessionalServiceRequestComponent
 } from './azure-professional-service-request/azure-professional-service-request.component';
@@ -83,7 +84,8 @@ export const ordersComponents: any[] = [
   ChangeInternetPortPlanComponent,
   CloudHealthServicesComponent,
   ProvisionComponent,
-  AzureProfessionalServiceRequestComponent
+  AzureProfessionalServiceRequestComponent,
+  BackupRestoreRequestComponent
 ];
 
 /**
@@ -335,6 +337,12 @@ export const ordersRoutes: Routes = [
     path: 'change/azure-professional-service-request',
     component: AzureProfessionalServiceRequestComponent,
     data: { routeId: RouteKey.OrderAzureProfessionalServiceRequest },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+  {
+    path: 'change/restore-backup-request',
+    component: BackupRestoreRequestComponent,
+    data: { routeId: RouteKey.OrderRestoreBackupRequest },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
 
