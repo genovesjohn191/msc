@@ -422,14 +422,22 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     // Group records by product type
     flatRecords?.forEach(flatRecord => {
       let options = new Array<McsOption>();
-      let groupFound = groupRecordsMap.get(flatRecord.productType);
+      let billingKey = removeSpaces(flatRecord?.productType)?.toUpperCase();
+      let billingFuncFound = this._billingStructMap?.get(billingKey);
+      if (isNullOrEmpty(billingFuncFound)) { return null; }
+
+      let groupName = billingFuncFound(flatRecord).title;
+      let groupFound = groupRecordsMap.get(groupName);
 
       !isNullOrEmpty(groupFound) ?
         options = groupFound :
-        groupRecordProductsMap.set(flatRecord.productType, flatRecord);
+        groupRecordProductsMap.set(groupName, flatRecord);
 
-      options.push(new McsOption(flatRecord, flatRecord.serviceId));
-      groupRecordsMap.set(flatRecord.productType, options);
+      let billingViewModel = this._getBillingViewModelByItem(flatRecord);
+      let billingTitle = this._generateBillingTitle(billingViewModel);
+
+      options.push(new McsOption(flatRecord, billingTitle));
+      groupRecordsMap.set(groupName, options);
     });
 
     // Update mapping
