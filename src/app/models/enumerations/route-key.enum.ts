@@ -113,6 +113,7 @@ export enum RouteKey {
   OrderAddServerBackup,
   OrderAddVmBackup,
   OrderAddBat,
+  OrderRestoreBackupRequest,
   OrderMsLicenseCountChange,
   OrderMsRequestChange,
   OrderRemoteHands,

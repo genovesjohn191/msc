@@ -1,0 +1,179 @@
+<mcs-page [header]="'orderBackupRestoreRequest.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to previous URL -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end" mcsNavigateBackward mcsId="navigate-back" mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders" mcsEventLabel="backup-restore-request">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'orderBackupRestoreRequest.detailsStep.previous' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-wizard>
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Details Step-->
+      <mcs-wizard-step id="backup-restore-request-details-step"
+        [stepTitle]="'orderBackupRestoreRequest.detailsStep.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="fgBackupRestoreRequest" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link [eventLabel]="'backup-restore-request-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
+          <mcs-item>
+            <p [innerHTML]="'orderBackupRestoreRequest.detailsStep.description' | translate"></p>
+          </mcs-item>
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
+          <!-- Backup Services -->
+          <ng-container *ngIf="loadingInProgress; else serviceTemplate">
+            <mcs-loader size="small" [mcsTooltip]="loadingText" mcsTooltipPosition="right"></mcs-loader>
+          </ng-container>
+
+          <ng-template #serviceTemplate>
+            <mcs-item orientation="block">
+              <mcs-form-field *ngIf="groupedBackupServices">
+                <mcs-select mcsId="select-box-location" mcsEventTracker="select-box-location" mcsEventCategory="order"
+                  mcsEventLabel="server-request-patch" [formControl]="fcService"
+                  [disabled]="!(groupedBackupServices.length > 0)"
+                  [placeholder]="'orderBackupRestoreRequest.detailsStep.servicePlaceholder' | translate"
+                  [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.serviceHelpText' | translate" required
+                  [autoSelect]="false">
+                  <mcs-option-group *ngFor="let group of groupedBackupServices" [label]="group.groupName">
+                    <mcs-option *ngFor="let backup of group.options" [value]="backup.value">
+                      {{ backup.text }}
+                    </mcs-option>
+                  </mcs-option-group>
+                </mcs-select>
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderBackupRestoreRequest.errors.serviceRequired' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+
+              <container *ngIf="this.noServicesToDisplay">
+                <span *ngIf="showPermissionErrorFallbackText" read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
+                <span *ngIf="!showPermissionErrorFallbackText" read-only>
+                  <span> {{ 'orderBackupRestoreRequest.errors.serviceFallbackLabel' | translate }}</span>
+                  <span *mcsAccessControl="['TicketCreateaaa']">
+                    <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>
+                    <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
+                      mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
+                      mcsEventLabel="order-backup-restore-change-page">{{ 'orderHostedDnsChange.requestDetails.zones.raiseTicketLink' | translate }}</a>
+                    <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketSuffix' | translate }}</span>
+                  </span>.
+                </span>
+              </container>
+            </mcs-item>
+          </ng-template>
+
+          <ng-container *ngIf="fcService?.value">
+            <!-- Restore Date -->
+            <mcs-item orientation="separated">
+              <span align-self-start>{{ 'orderBackupRestoreRequest.detailsStep.restoreDatePlaceholder' | translate }}</span>
+                <mcs-field-input-date-picker class="form-field-size-small"
+                  [formControl]="fcRestoreFromDate"
+                  [minDate]="minDate"
+                  [maxDate]="maxDate" [defaultDate]="null"
+                  mcsId="mcs-datepicker">
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderBackupRestoreRequest.errors.restoreDateRequired' | translate }}
+                  </mcs-error>
+                </mcs-field-input-date-picker>
+            </mcs-item>
+
+            <!-- What to restore -->
+            <mcs-item orientation="block">
+              <mcs-form-field>
+                <textarea mcsId="input-what-to-restore" mcsEventTracker="input-what-to-restore"
+                  mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page"
+                  mcsInput [rows]="instructionVisibleRows" [formControl]="fcDataRequired"
+                  [maxlength]="maxInstructionsLength"
+                  [placeholder]="'orderBackupRestoreRequest.detailsStep.dataRequiredPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.dataRequiredHelpText' | translate">
+                </textarea>
+                <mcs-hint mcsHint align="start">
+                  {{ 'shared.formField.hints.maxChar' | translate: { value: maxInstructionsLength } }}
+                </mcs-hint>
+                <mcs-hint mcsHint align="end">
+                  {{ fcDataRequired?.value?.length }} / {{ maxInstructionsLength }}
+                </mcs-hint>
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderBackupRestoreRequest.errors.dataRequiredRequired' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+            </mcs-item>
+
+            <!-- Restore Destination -->
+            <mcs-item orientation="block">
+              <mcs-form-field>
+                <textarea mcsId="input-restore-destination" mcsEventTracker="input-restore-destination"
+                  mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page"
+                  mcsInput [rows]="instructionVisibleRows" [formControl]="fcRestoreDestination"
+                  [maxlength]="maxInstructionsLength"
+                  [placeholder]="'orderBackupRestoreRequest.detailsStep.restoreDestinationPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.restoreDestinationHelpText' | translate">
+                </textarea>
+                <mcs-hint mcsHint align="start">
+                  {{ 'shared.formField.hints.maxChar' | translate: { value: maxInstructionsLength } }}
+                </mcs-hint>
+                <mcs-hint mcsHint align="end">
+                  {{ fcRestoreDestination?.value?.length }} / {{ maxInstructionsLength }}
+                </mcs-hint>
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderBackupRestoreRequest.errors.restoreDestinationRequired' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+            </mcs-item>
+
+            <!-- Customer Reference Number -->
+            <mcs-item orientation="block">
+              <mcs-form-field>
+                <input mcsInput [formControl]="fcReferenceNumber"
+                  [placeholder]="'orderBackupRestoreRequest.detailsStep.customerReferenceNumberPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.customerReferenceNumberHelpText' | translate"
+                  mcsId="input-reference-number" mcsEventTracker="input-reference-number"
+                  mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page">
+              </mcs-form-field>
+            </mcs-item>
+          </ng-container>
+
+          <div class="action-items">
+            <button mcsButton arrow="right" mcsWizardStepNext [disabled]="!(formIsValid)" mcsId="step-1-next"
+              mcsEventTracker="step-1-next" mcsEventCategory="orders" mcsEventLabel="backup-restore-request">{{
+              'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step" [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <mcs-step-order-details [order]="order$ | async" [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async" [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onOrderDetailsDataChange($event)" (submitOrder)="onSubmitOrder($event, fcService?.value)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step" [stepTitle]="'shared.wizard.completed' | translate" customClass="limited-view">
+        <mcs-step-manual-order-completed [order]="order$ | async"
+          [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+        </mcs-step-manual-order-completed>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>
