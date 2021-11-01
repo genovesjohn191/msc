@@ -38,46 +38,45 @@
           <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
 
           <!-- Backup Services -->
-          <ng-container *ngIf="loadingInProgress; else serviceTemplate">
-            <mcs-loader size="small" [mcsTooltip]="loadingText" mcsTooltipPosition="right"></mcs-loader>
-          </ng-container>
+          <mcs-item orientation="block">
+            <ng-container *ngIf="loadingInProgress; else serviceTemplate">
+              <mcs-loader size="small" [mcsTooltip]="loadingText" mcsTooltipPosition="right"></mcs-loader>
+            </ng-container>
 
-          <ng-template #serviceTemplate>
-            <mcs-item orientation="block">
-              <mcs-form-field *ngIf="groupedBackupServices">
-                <mcs-select mcsId="select-box-location" mcsEventTracker="select-box-location" mcsEventCategory="order"
-                  mcsEventLabel="server-request-patch" [formControl]="fcService"
-                  [disabled]="!(groupedBackupServices.length > 0)"
-                  [placeholder]="'orderBackupRestoreRequest.detailsStep.servicePlaceholder' | translate"
-                  [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.serviceHelpText' | translate" required
-                  [autoSelect]="false">
-                  <mcs-option-group *ngFor="let group of groupedBackupServices" [label]="group.groupName">
-                    <mcs-option *ngFor="let backup of group.options" [value]="backup.value">
-                      {{ backup.text }}
-                    </mcs-option>
-                  </mcs-option-group>
-                </mcs-select>
-                <mcs-error mcsError errorState="required">
-                  {{ 'orderBackupRestoreRequest.errors.serviceRequired' | translate }}
-                </mcs-error>
-              </mcs-form-field>
+            <ng-template #serviceTemplate>
+                <mcs-form-field *ngIf="groupedBackupServices && !noServicesToDisplay">
+                  <mcs-select mcsId="select-box-location" mcsEventTracker="select-box-location" mcsEventCategory="order"
+                    mcsEventLabel="server-request-patch" [formControl]="fcService"
+                    [disabled]="noServicesToDisplay"
+                    [placeholder]="'orderBackupRestoreRequest.detailsStep.servicePlaceholder' | translate"
+                    [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.serviceHelpText' | translate" required
+                    [autoSelect]="false">
+                    <mcs-option-group *ngFor="let group of groupedBackupServices" [label]="group.groupName">
+                      <mcs-option *ngFor="let backup of group.options" [value]="backup.value">
+                        {{ backup.text }}
+                      </mcs-option>
+                    </mcs-option-group>
+                  </mcs-select>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderBackupRestoreRequest.errors.serviceRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
 
-              <container *ngIf="this.noServicesToDisplay">
-                <span *ngIf="showPermissionErrorFallbackText" read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
-                <span *ngIf="!showPermissionErrorFallbackText" read-only>
-                  <span> {{ 'orderBackupRestoreRequest.errors.serviceFallbackLabel' | translate }}</span>
-                  <span *mcsAccessControl="['TicketCreateaaa']">
-                    <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>
-                    <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
-                      mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                      mcsEventLabel="order-backup-restore-change-page">{{ 'orderHostedDnsChange.requestDetails.zones.raiseTicketLink' | translate }}</a>
-                    <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketSuffix' | translate }}</span>
-                  </span>.
-                </span>
-              </container>
-            </mcs-item>
-          </ng-template>
-
+                <container *ngIf="noServicesToDisplay">
+                  <span *ngIf="showPermissionErrorFallbackText" read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
+                  <span *ngIf="!showPermissionErrorFallbackText" read-only>
+                    <span> {{ 'orderBackupRestoreRequest.errors.serviceFallbackLabel' | translate }}</span>
+                    <span *mcsAccessControl="['TicketCreateaaa']">
+                      <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>
+                      <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
+                        mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
+                        mcsEventLabel="order-backup-restore-change-page">{{ 'orderHostedDnsChange.requestDetails.zones.raiseTicketLink' | translate }}</a>
+                      <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketSuffix' | translate }}</span>
+                    </span>.
+                  </span>
+                </container>
+            </ng-template>
+          </mcs-item>
           <ng-container *ngIf="fcService?.value">
             <!-- Restore Date -->
             <mcs-item orientation="separated">

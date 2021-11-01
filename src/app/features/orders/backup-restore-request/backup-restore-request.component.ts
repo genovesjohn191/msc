@@ -103,7 +103,7 @@ export class BackupRestoreRequestComponent extends McsOrderWizardBase implements
   }
 
   public get noServicesToDisplay(): boolean {
-    return !isNullOrEmpty(this._errorStatus) || this.groupedBackupServices.length === 0;
+    return !isNullOrEmpty(this._errorStatus) || this._backupServicesCount === 0;
   }
 
   public get formIsValid(): boolean {
@@ -279,7 +279,7 @@ export class BackupRestoreRequestComponent extends McsOrderWizardBase implements
           });
           this.groupedBackupServices.push(createObject(McsOptionGroup, { groupName: 'Server Backup', options: serverBackups }));
           this.loadingInProgress = false;
-          this._backupServicesCount += this.groupedBackupServices?.length;
+          this._backupServicesCount += serverBackups?.length;
         })
       )
       .subscribe();
@@ -300,7 +300,7 @@ export class BackupRestoreRequestComponent extends McsOrderWizardBase implements
           });
           this.groupedBackupServices.push(createObject(McsOptionGroup, { groupName: 'VM Backup', options: vmBackups }));
           this.loadingInProgress = false;
-          this._backupServicesCount += this.groupedBackupServices?.length;
+          this._backupServicesCount += vmBackups?.length;
         })
       )
       .subscribe();
