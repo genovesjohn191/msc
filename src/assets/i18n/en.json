@@ -1274,7 +1274,7 @@
       "dataRequiredHelpText": "Enter the name of the VMs, drives or files you would like restored.",
       "restoreDestinationHelpText": "Enter the name of the VMs, drives or directories you would like your data restored to.",
       "servicePlaceholder": "Select a Backup service",
-      "restoreDatePlaceholder": "What date would you like to restore from?",
+      "restoreDatePlaceholder": "What date would you like to restore from? *",
       "dataRequiredPlaceholder": "What would you like restored?",
       "restoreDestinationPlaceholder": "Where would you like this data restored to?",
       "customerReferenceNumberPlaceholder": "Customer reference number",
