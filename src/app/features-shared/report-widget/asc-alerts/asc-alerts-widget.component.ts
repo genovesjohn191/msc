@@ -26,8 +26,12 @@ import {
 } from '@app/models';
 import {
   createObject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  setDateToFirstDayOftheMonth,
+  setDateToLastDayOftheMonth
 } from '@app/utilities';
+import { StdDateFormatPipe } from '@app/shared';
+import { ReportPeriod } from '../report-period.interface';
 
 export interface AscAlertsWidgetConfig {
   period: Date
@@ -50,8 +54,9 @@ export class AscAlertsWidgetComponent implements OnInit {
     if (!validValue) { return; }
 
     this._config = value;
-    this._startPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
-    this._endPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
+    let selectedPeriod = this._setStartEndDate(value.period);
+    this._startPeriod = selectedPeriod.from.toString();
+    this._endPeriod = selectedPeriod.until.toString();
     this.retryDatasource();
   }
 
@@ -71,7 +76,10 @@ export class AscAlertsWidgetComponent implements OnInit {
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
-  constructor(private _reportingService: McsReportingService) {
+  constructor(
+    private _reportingService: McsReportingService,
+    private _datePipe: StdDateFormatPipe
+  ) {
     this.dataSource = new McsTableDataSource2(this._getAscAlerts.bind(this));
   }
 
@@ -100,5 +108,14 @@ export class AscAlertsWidgetComponent implements OnInit {
         return throwError(error);
       })
     );
+  }
+
+  private _setStartEndDate(selectedPeriod: Date): ReportPeriod {
+    let firstDateOfTheMonth =  new Date(setDateToFirstDayOftheMonth(selectedPeriod));
+    let lastDateOfTheMonth = new Date(setDateToLastDayOftheMonth(selectedPeriod).setHours(23, 59, 59));
+    return {
+      from: this._datePipe.transform(new Date(`${firstDateOfTheMonth} UTC`), 'tracksDateTime'),
+      until: this._datePipe.transform(new Date(`${lastDateOfTheMonth} UTC`), 'tracksDateTime')
+    }
   }
 }
