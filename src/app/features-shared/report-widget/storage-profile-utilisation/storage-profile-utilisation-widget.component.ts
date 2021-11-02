@@ -6,7 +6,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import {  throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import {
   catchError,
   map
@@ -59,7 +59,11 @@ export class StorageProfileUtilisationWidgetComponent {
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'storageProfile' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'utilisation' }),
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' }),
+      createObject(McsFilterInfo, {
+        value: this.hasOrderEditAccess ? true : false,
+        exclude: true,
+        id: 'action'
+      }),
     ];
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
