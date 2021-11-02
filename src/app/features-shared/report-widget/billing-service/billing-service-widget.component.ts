@@ -417,7 +417,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     if (isNullOrEmpty(flatRecords)) { return null; }
     let groupRecords = new Array<McsOptionGroup>();
     let groupRecordsMap = new Map<string, McsOption[]>();
-    let groupRecordProductsMap = new Map<string, BillingServiceItem>();
+    let groupRecordsNameMap = new Map<string, string>();
 
     // Group records by product type
     flatRecords?.forEach(flatRecord => {
@@ -427,24 +427,25 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
       if (isNullOrEmpty(billingFuncFound)) { return null; }
 
       let groupName = billingFuncFound(flatRecord).title;
-      let groupFound = groupRecordsMap.get(groupName);
+      let groupRawName = flatRecord?.productType;
+      let groupFound = groupRecordsMap.get(groupRawName);
 
       !isNullOrEmpty(groupFound) ?
         options = groupFound :
-        groupRecordProductsMap.set(groupName, flatRecord);
+        groupRecordsNameMap.set(groupRawName, groupName);
 
       let billingViewModel = this._getBillingViewModelByItem(flatRecord);
       let billingTitle = this._generateBillingTitle(billingViewModel);
 
       options.push(new McsOption(flatRecord, billingTitle));
-      groupRecordsMap.set(groupName, options);
+      groupRecordsMap.set(groupRawName, options);
     });
 
     // Update mapping
     groupRecordsMap.forEach((options, productType) => {
-      let groupRecord = groupRecordProductsMap.get(productType);
+      let groupRecordName = groupRecordsNameMap.get(productType);
       let uniqueRecords = options.distinct(item => item.text);
-      groupRecords.push(new McsOptionGroup(groupRecord?.billingDescription, ...uniqueRecords));
+      groupRecords.push(new McsOptionGroup(groupRecordName, ...uniqueRecords));
     });
     return groupRecords;
   }
