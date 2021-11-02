@@ -19,6 +19,7 @@ import {
 
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
+import { McsAutomationInterceptor } from './interceptors/mcs-correlation-id.interceptor';
 import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.interceptor';
 import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interceptor';
 import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
@@ -42,6 +43,11 @@ import { McsSystemMessageService } from './services/mcs-system-message.service';
     {
       provide: ErrorHandler,
       useClass: McsErrorHandlerInterceptor
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: McsAutomationInterceptor,
+      multi: true
     }
   ],
   imports: [
