@@ -102,6 +102,6 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('shortMonthYear', 'MMM YYYY');
     this._dateTimeMapTable.set('fullMonthYear', 'MMMM YYYY');
     this._dateTimeMapTable.set('shortDateTime', 'YYYY-MM-DD');
-    this._dateTimeMapTable.set('tracksDateTime', 'YYYY-MM-DD h:mm:ss');
+    this._dateTimeMapTable.set('tracksDateTime', 'YYYY-MM-DD HH:mm:ss');
   }
 }

@@ -55,8 +55,8 @@ export class AscAlertsWidgetComponent implements OnInit {
 
     this._config = value;
     let selectedPeriod = this._setStartEndDate(value.period);
-    this._startPeriod = selectedPeriod.from.toString();
-    this._endPeriod = selectedPeriod.until.toString();
+    this._startPeriod = this._datePipe.transform(selectedPeriod.from, 'tracksDateTime');
+    this._endPeriod = this._datePipe.transform(new Date(selectedPeriod.until), 'tracksDateTime');
     this.retryDatasource();
   }
 
@@ -114,8 +114,8 @@ export class AscAlertsWidgetComponent implements OnInit {
     let firstDateOfTheMonth =  new Date(setDateToFirstDayOftheMonth(selectedPeriod));
     let lastDateOfTheMonth = new Date(setDateToLastDayOftheMonth(selectedPeriod).setHours(23, 59, 59));
     return {
-      from: this._datePipe.transform(new Date(`${firstDateOfTheMonth} UTC`), 'tracksDateTime'),
-      until: this._datePipe.transform(new Date(`${lastDateOfTheMonth} UTC`), 'tracksDateTime')
+      from: new Date(new Date(firstDateOfTheMonth).toUTCString().substr(0, 25)),
+      until: new Date(new Date(lastDateOfTheMonth).toUTCString().substr(0, 25))
     }
   }
 }
