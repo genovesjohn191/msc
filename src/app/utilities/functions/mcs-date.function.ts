@@ -315,3 +315,11 @@ export function getTimestamp(date: Date | string): number {
   let actualDate =  (date instanceof Date) ? date : new Date(date);
   return actualDate?.getTime();
 }
+
+export function setDateToFirstDayOftheMonth(date: Date): Date {
+ return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+export function setDateToLastDayOftheMonth(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+}

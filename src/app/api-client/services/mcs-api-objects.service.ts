@@ -11,11 +11,11 @@ import {
   McsObjectQueryParams,
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
-  McsObjectProjectsQueryParams,
   McsObjectProject,
   McsObjectProjectTasks,
   McsObjectVdcQueryParams,
-  McsNetworkVdcPrecheckVlan
+  McsNetworkVdcPrecheckVlan,
+  McsObjectProjectParams
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { IMcsApiObjectsService } from '../interfaces/mcs-api-objects.interface';
@@ -144,18 +144,12 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
       );
   }
 
-  public getProjects(query?: McsObjectProjectsQueryParams): Observable<McsApiSuccessResponse<McsObjectProject[]>> {
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('state', query.state);
+  public getProjects(query?: McsObjectProjectParams): Observable<McsApiSuccessResponse<McsObjectProject[]>> {
+    if (isNullOrEmpty(query)) { query = new McsObjectProjectParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/objects/projects';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -179,20 +173,13 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
       );
   }
 
-  public getProjectTasks(projectId: string, query?: McsObjectProjectsQueryParams):
+  public getProjectTasks(projectId: string, query?: McsObjectProjectParams):
     Observable<McsApiSuccessResponse<McsObjectProjectTasks[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('state', query.state);
+    if (isNullOrEmpty(query)) { query = new McsObjectProjectParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/objects/projects/${projectId}/tasks`;
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

@@ -99,6 +99,9 @@ export class FieldSelectTreeViewComponent<TEntity>
   @Input()
   public hideChips: boolean = false;
 
+  @Input()
+  public selectAllByDefault: boolean = false;
+
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
   public viewportHeight: string;
@@ -302,12 +305,14 @@ export class FieldSelectTreeViewComponent<TEntity>
       const currentValue = node.checkbox?.value;
       const nextValue = !currentValue;
       node.checkbox?.setValue(nextValue);
+      node.checkbox.markAsTouched();
 
       // Select children elements of the tree
       const descendants = this.treeControl.getDescendants(node) || [];
       if (!isNullOrEmpty(descendants) && node.expandable) {
         descendants?.forEach(descendant => {
           descendant.checkbox.setValue(nextValue);
+          descendant.checkbox.markAsTouched();
         });
       }
 
@@ -353,16 +358,25 @@ export class FieldSelectTreeViewComponent<TEntity>
     });
   }
 
-  private _expandFirstRecord(dataRecords: TreeItem<TEntity>[]): void {
-    if (isNullOrEmpty(dataRecords) || !this.expandFirst) { return; }
+  private _initializeRecordsDisplay(dataRecords: TreeItem<TEntity>[]): void {
+    let needsToUpdateDisplay = this.expandFirst || this.selectAllByDefault;
+    if (isNullOrEmpty(dataRecords) || !needsToUpdateDisplay) { return; }
 
     refreshView(() => {
       dataRecords.forEach(dataRecord => {
         let dataFound = this.treeControl.dataNodes
           ?.find(dataNode => dataNode.data === dataRecord.value);
+        if (isNullOrEmpty(dataFound)) { return; }
 
-        if (!dataFound?.expandable) { return; }
-        this.treeControl.expand(dataFound);
+        // Expand the expandable items initially
+        if (this.expandFirst && dataFound?.expandable) {
+          this.treeControl.expand(dataFound);
+        }
+
+        // Toggle the items
+        if (this.selectAllByDefault) {
+          this._toggleItem(dataFound);
+        }
       });
     });
   }
@@ -391,7 +405,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       takeUntil(this.destroySubject),
       tap(dataRecords => {
         this.treeDatasource.data = dataRecords;
-        this._expandFirstRecord(dataRecords);
+        this._initializeRecordsDisplay(dataRecords);
 
         this.processOnGoing$.next(false);
         this.changeDetectorRef.markForCheck();

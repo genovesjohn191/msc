@@ -17,7 +17,7 @@ import { WorkflowSelectorConfig } from '@app/features/launch-pad/workflows/workf
 import {
   CrispOrderState,
   McsFilterInfo,
-  McsObjectProjectsQueryParams,
+  McsObjectProjectParams,
   McsObjectProjectTasks,
   ProductType,
   RouteKey
@@ -93,7 +93,7 @@ export class DashboardProjectTasksComponent implements OnDestroy {
   }
 
   private _getTableData(): Observable<McsMatTableContext<McsObjectProjectTasks>> {
-    let queryParam = new McsObjectProjectsQueryParams();
+    let queryParam = new McsObjectProjectParams();
     queryParam.pageIndex = 1;
     queryParam.pageSize = 100;
     queryParam.state = this.state;

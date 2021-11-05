@@ -1,7 +1,7 @@
 import { Injector } from '@angular/core';
-import { InsightsDocumentDetails } from '@app/features/dashboard/insights/report-insights-document';
-import { OverviewDocumentDetails } from '@app/features/dashboard/overview/report-overview.document';
-import { PrivateCloudDashboardOverviewDocumentDetails } from '@app/features/private-cloud-dashboard/overview/private-cloud-dashboard-overview';
+import { PrivateCloudDashboardOverviewDocumentDetails } from './models/private-cloud-dashboard-overview';
+import { InsightsDocumentDetails } from './models/report-insights';
+import { OverviewDocumentDetails } from './models/report-overview';
 
 type ReportingDetails = OverviewDocumentDetails |
   InsightsDocumentDetails |

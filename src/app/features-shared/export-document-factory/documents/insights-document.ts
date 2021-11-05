@@ -23,9 +23,9 @@ import {
   HtmlToPdfUtility
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { IDashboardExportDocument } from '@app/features-shared/export-document-factory/dashboard-export-document-interface';
-import { InsightsDocumentDetails } from '../insights/report-insights-document';
-import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
+import { InsightsDocumentDetails } from '../models/report-insights';
+import { DashboardExportDocumentType } from '../dashboard-export-document-type';
+import { IDashboardExportDocument } from '../dashboard-export-document-interface';
 
 const cloudhealthText = 'reports.insights.vmCloudHealthLink';
 

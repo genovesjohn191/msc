@@ -1,10 +1,12 @@
 import {
   of,
+  BehaviorSubject,
   Observable,
   Subject,
   Subscription
 } from 'rxjs';
 import {
+  map,
   startWith,
   takeUntil,
   tap
@@ -22,6 +24,9 @@ import { McsNavigationService } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  McsReportBillingService,
+  McsReportBillingServiceGroup,
+  McsReportBillingServiceSummary,
   McsReportBillingSummaryParams,
   McsRouteInfo,
   RouteKey
@@ -53,6 +58,7 @@ export class BillingComponent implements OnInit, OnDestroy {
 
   private _routerHandler: Subscription;
   private _destroySubject = new Subject<void>();
+  private _billingSummariesCache = new BehaviorSubject<Array<McsReportBillingServiceGroup>>(null);
 
   public constructor(
     private _billingSummaryService: BillingSummaryService,
@@ -89,6 +95,7 @@ export class BillingComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._routerHandler);
+    this._billingSummariesCache.next(null);
   }
 
   public onTabChanged(tab: any) {
@@ -115,20 +122,79 @@ export class BillingComponent implements OnInit, OnDestroy {
         let dateParams = this._getAssociatedDates();
 
         let query = new McsReportBillingSummaryParams();
-        query.billingAccountId = isNullOrEmpty(accountIds) ? null : accountIds[0];
+        // query.billingAccountId = isNullOrEmpty(accountIds) ? null : accountIds[0];
         query.microsoftChargeMonthRangeBefore = dateParams.before;
         query.microsoftChargeMonthRangeAfter = dateParams.after;
-        this._subscribeToBillingSummaries(query);
+
+        // Retrieve the cache records and filter it by account id
+        let billingSummaryGroups = this._billingSummariesCache.getValue();
+        if (!isNullOrEmpty(billingSummaryGroups)) {
+          let updatedGroups = this._filterServicesRecords(billingSummaryGroups, accountIds);
+          this._billingSummaryService.setBillingSummaries(updatedGroups || []);
+        } else {
+          this._subscribeToBillingSummaries(query, accountIds);
+        }
       })
     ).subscribe();
   }
 
-  private _subscribeToBillingSummaries(query?: McsReportBillingSummaryParams): void {
+  private _subscribeToBillingSummaries(
+    query?: McsReportBillingSummaryParams,
+    billingAccountIds?: string[]
+  ): void {
     this._apiService.getBillingSummaries(query).pipe(
-      tap(response => {
-        this._billingSummaryService.setBillingSummaries(response?.collection || []);
+      map(response => {
+        if (isNullOrEmpty(response?.collection)) { return []; }
+        this._billingSummariesCache.next(response?.collection.slice());
+        return this._filterServicesRecords(response?.collection, billingAccountIds);
+      }),
+      tap(filteredRecords => {
+        this._billingSummaryService.setBillingSummaries(filteredRecords || []);
       })
     ).subscribe();
+  }
+
+  private _filterServicesRecords(
+    groupRecords: McsReportBillingServiceGroup[],
+    billingAccountIds: string[]
+  ): McsReportBillingServiceGroup[] {
+    if (isNullOrEmpty(billingAccountIds)) { return groupRecords; }
+
+    let recordGroups = new Array<McsReportBillingServiceGroup>();
+    groupRecords?.forEach(groupRecord => {
+      let tempRecordGroup = Object.assign(new McsReportBillingServiceGroup(), groupRecord);
+      tempRecordGroup.parentServices = [];
+
+      groupRecord.parentServices?.forEach(parentService => {
+        let tempChildServices = new Array<McsReportBillingServiceSummary>();
+
+        // Add child item
+        parentService.childBillingServices.forEach(childService => {
+          let childFound = billingAccountIds.find(accountId => accountId === childService.billingAccountId);
+          if (isNullOrEmpty(childFound)) { return; }
+          tempChildServices.push(childService);
+        });
+
+        let tempParentService = Object.assign(new McsReportBillingService(), parentService);
+        tempParentService.childBillingServices = [];
+        if (!isNullOrEmpty(tempChildServices)) {
+          tempParentService.childBillingServices = tempChildServices;
+        }
+        let parentServiceFound = !!billingAccountIds.find(
+          accountId => parentService.billingAccountId === accountId
+        );
+
+        let parentServiceIncluded = !isNullOrEmpty(tempChildServices) || !isNullOrEmpty(parentServiceFound);
+        if (parentServiceIncluded) {
+          tempRecordGroup.parentServices.push(tempParentService);
+        }
+      });
+
+      if (!isNullOrEmpty(tempRecordGroup.parentServices)) {
+        recordGroups.push(tempRecordGroup);
+      }
+    });
+    return recordGroups;
   }
 
   private _getAssociatedDates(): { before: string, after: string } {

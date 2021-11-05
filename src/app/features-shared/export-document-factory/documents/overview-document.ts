@@ -5,8 +5,6 @@ import {
  McsDateTimeService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { IDashboardExportDocument } from '@app/features-shared/export-document-factory/dashboard-export-document-interface';
-import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
 import {
   McsContactUs,
   McsFeatureFlag,
@@ -23,7 +21,9 @@ import {
   HtmlToPdfUtility
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import { OverviewDocumentDetails } from '../overview/report-overview.document';
+import { IDashboardExportDocument } from '../dashboard-export-document-interface';
+import { DashboardExportDocumentType } from '../dashboard-export-document-type';
+import { OverviewDocumentDetails } from '../models/report-overview';
 
 export class OverviewDocument implements IDashboardExportDocument {
   private _translateService: TranslateService;

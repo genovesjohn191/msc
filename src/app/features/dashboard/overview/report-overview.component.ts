@@ -13,6 +13,7 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { DashboardExportDocumentManager } from '@app/features-shared/export-document-factory/dashboard-export-document-manager';
 import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
+import { OverviewDocumentDetails } from '@app/features-shared/export-document-factory/models/report-overview';
 import {
   McsContactUs,
   McsFeatureFlag,
@@ -23,7 +24,6 @@ import {
   RouteKey
 } from '@app/models';
 import { CommonDefinition } from '@app/utilities';
-import { OverviewDocumentDetails } from './report-overview.document';
 
 @Component({
   selector: 'mcs-report-overview',

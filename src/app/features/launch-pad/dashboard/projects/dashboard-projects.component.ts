@@ -22,7 +22,7 @@ import {
   CrispOrderState,
   McsFilterInfo,
   McsObjectProject,
-  McsObjectProjectsQueryParams,
+  McsObjectProjectParams,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -119,11 +119,12 @@ export class DashboardProjectsComponent implements OnDestroy {
   }
 
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectProject>> {
-    let queryParam = new McsObjectProjectsQueryParams();
+    let queryParam = new McsObjectProjectParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.state = this._state;
+    queryParam.assignee = this._identity.user.userId;
 
     return this._apiService.getProjects(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));

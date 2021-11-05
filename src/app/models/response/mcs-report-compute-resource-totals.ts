@@ -5,7 +5,7 @@ export class McsReportComputeResourceTotals {
   public serverCount: number = undefined;
 
   @JsonProperty()
-  public vdcCount: number = undefined;
+  public resourceCount: number = undefined;
 
   @JsonProperty()
   public firewallCount: number = undefined;
