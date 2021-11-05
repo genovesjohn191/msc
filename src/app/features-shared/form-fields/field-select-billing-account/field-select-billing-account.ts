@@ -1,3 +1,5 @@
 import { IFormField } from '../abstraction/form-field.interface';
 
-export interface IFieldSelectBillingAccount extends IFormField { }
+export interface IFieldSelectBillingAccount extends IFormField {
+  selectedAllByDefault: boolean;
+}
