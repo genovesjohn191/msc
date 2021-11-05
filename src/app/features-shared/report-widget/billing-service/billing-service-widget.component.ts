@@ -602,7 +602,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   private _registerBillingStructMap(): void {
     this._billingStructMap.set('CSPLICENSES',
       item => new BillingServiceViewModel(
-        `${item.azureDescription}`,
+        `${item.azureDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'installedQuantity', 'discountOffRrp',
           'tenantName', 'initialDomain', 'primaryDomain',
@@ -613,7 +613,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('AZURESOFTWARESUBSCRIPTION',
       item => new BillingServiceViewModel(
-        `${item.azureDescription}`,
+        `${item.azureDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
@@ -668,7 +668,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
       item => new BillingServiceViewModel(
-        `${item.azureDescription}`,
+        `${item.azureDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'usdPerUnit', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
@@ -679,7 +679,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('AZUREPRODUCTCONSUMPTIONENTERPRISEAGREEMENT',
       item => new BillingServiceViewModel(
-        `${item.azureDescription}`,
+        `${item.azureDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
@@ -690,7 +690,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
     this._billingStructMap.set('AZURERESERVATION',
       item => new BillingServiceViewModel(
-        `${item.azureDescription}`,
+        `${item.azureDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
           'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
