@@ -2398,7 +2398,7 @@
   },
   "ticketShared": {
     "activity": {
-      "worknotes": "The comment is not visible to users"
+      "worknotes": "This comment is visible to internal Macquarie users only."
     }
   },
   "firewalls": {
