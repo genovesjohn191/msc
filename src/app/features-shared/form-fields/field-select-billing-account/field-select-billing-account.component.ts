@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import {
   map,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -9,6 +10,7 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
+  Input,
   OnDestroy,
   OnInit,
   ViewEncapsulation
@@ -40,6 +42,9 @@ import { IFieldSelectBillingAccount } from './field-select-billing-account';
 export class FieldSelectBillingAccountComponent
   extends FormFieldBaseComponent2<string[]>
   implements IFieldSelectBillingAccount, OnInit, OnDestroy {
+
+  @Input()
+  public selectedAllByDefault: boolean;
 
   public billingAccounts$: Observable<McsOption[]>;
 
@@ -99,6 +104,10 @@ export class FieldSelectBillingAccountComponent
             this._billingAccountCount = billingAccounts?.length;
             this._changeDetectorRef.markForCheck();
             return billingAccounts
+          }),
+          tap(billingAccounts => {
+            if (isNullOrEmpty(billingAccounts)) { return; }
+            this.selectedAllByDefault && this._selectRecords(...billingAccounts);
           })
         )
       })
@@ -117,5 +126,11 @@ export class FieldSelectBillingAccountComponent
 
   private _checkDuplicate(billingAccounts: McsOption[], accountBillingId: string): boolean {
     return billingAccounts.findIndex(billAccount => billAccount.value === accountBillingId) < 0;
+  }
+
+  private _selectRecords(...billingAccountIds: McsOption[]): void {
+    if (isNullOrEmpty(billingAccountIds)) { return; }
+    let accountIds = billingAccountIds.map(account => account.value);
+    this.ngControl.control.setValue(accountIds);
   }
 }
