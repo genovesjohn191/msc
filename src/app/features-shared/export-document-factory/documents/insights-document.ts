@@ -353,26 +353,29 @@ export class InsightsDocument implements IDashboardExportDocument {
     let subTitle = `
       ${this._translate('reports.insights.techReview.ascAlerts.subTitle')}
       <p>${this._translate('reports.insights.techReview.ascAlerts.secondSubtitle')}
-        ${this._translate('reports.insights.techReview.ascAlerts.ticketLabel')}
-        ${this._translate('reports.insights.techReview.ascAlerts.secondSubtitleContinuation')}
+        ${this._translate('reports.insights.techReview.ascAlerts.ticketLabel')} ${this._translate('reports.insights.techReview.ascAlerts.secondSubtitleContinuation')}
       </p>`;
     let ascAlertsTable = '';
     ascAlertsTable += `
       <table style="width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">
           <th style="text-align: left">Severity</th>
-          <th style="text-align: left">Description</th>
+          <th style="text-align: left">Title</th>
           <th style="text-align: left">Affected Resource</th>
           <th style="text-align: left">Start Time</th>
         </tr>`;
         if (data?.length > 0) {
           data.forEach(item => {
+            let description = item.description ? item.description : this._translate('message.noAlertDescriptionDialog');
             ascAlertsTable += `
               <tr style="text-align: left;">
                 <td>${item.severity ? item.severity : 'Unavailable'}</td>
-                <td>${item.description ? item.description : 'Unavailable'}</td>
+                <td>${item.title ? item.title : 'Unavailable'}</td>
                 <td>${item.affectedResource ? item.affectedResource : 'Unavailable'}</td>
                 <td>${this._formatDate(item.startTime)}</td>
+              </tr>
+              <tr>
+                <td colspan="4">${description}</td>
               </tr>`;
           });
         }

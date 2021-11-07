@@ -294,29 +294,6 @@
                       </mat-form-field>
                     </div>
                   </div>
-                  <div class="widget-label label-with-dropdown">
-                    {{ 'reports.insights.techReview.ascAlerts.subTitle' | translate }}
-                    <a href="{{ ascAlertsAzurePortalUrl }}"
-                      target="_blank"
-                      mcsId="azure-portal"
-                      mcsEventTracker="navigate-to-azure-portal"
-                      mcsEventCategory="dashboard-navigation"
-                      mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.ascAlerts.viewInAzurePortal' | translate }}</a>.
-                  </div>
-                  <div class="label-below-chart">
-                    {{ 'reports.insights.techReview.ascAlerts.secondSubtitle' | translate }}
-                    <ng-container *ngIf="hasTicketPermission; else noTicketTemplate">
-                      <a [mcsRouterLink]="routeKeyEnum.Tickets"
-                        mcsId="create-ticket-asc-alerts"
-                        mcsEventTracker="navigate-to-create-ticket"
-                        mcsEventCategory="dashboard-navigation"
-                        mcsEventLabel="creat-ticket-link">{{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}</a>
-                    </ng-container>
-                    <ng-template #noTicketTemplate>
-                      {{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}
-                    </ng-template>
-                    {{ 'reports.insights.techReview.ascAlerts.secondSubtitleContinuation' | translate }}
-                  </div>
                   <mcs-asc-alerts-widget [config]="ascAlertsConfig" (dataChange)="ascAlertsDataChange($event)"></mcs-asc-alerts-widget>
                   <mat-divider></mat-divider>
                 </ng-container>

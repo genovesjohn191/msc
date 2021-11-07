@@ -62,5 +62,17 @@ $shadow-effect: 1px solid #e3e3e3;
     @include print() {
       width: 850px;
     }
+
+    .label-with-dropdown {
+      margin-top: -15px;
+  
+      @include breakpoint(small) {
+        margin-top: 0;
+      }
+  
+      @include print() {
+        margin-top: 0;
+      }
+    }
   }
 }

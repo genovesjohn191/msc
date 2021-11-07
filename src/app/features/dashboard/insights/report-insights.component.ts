@@ -114,10 +114,6 @@ export class ReportInsightsComponent implements OnDestroy {
     return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Monitoring/AlertsManagementSummaryBlade`;
   }
 
-  public get ascAlertsAzurePortalUrl(): string  {
-    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Security/SecurityMenuBlade/7`;
-  }
-
   public get azureVmRightsizingCloudHealthUrl(): string  {
     return `${CommonDefinition.CLOUD_HEALTH_URL}/reports/metrics/azure-vm-rightsizing/current`;
   }
@@ -206,10 +202,6 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public get pdfDownloadInProgress(): boolean {
     return this._isPdfDownloadInProgress;
-  }
-
-  public get hasTicketPermission(): boolean {
-    return this._accessControlService.hasPermission([McsPermission.TicketView]);
   }
 
   public get hasAccessToAscAlert(): boolean {

@@ -1,4 +1,29 @@
 <div class="asc-alerts-widget reporting-table-widget">
+  <div class="widget-label label-with-dropdown" margin-bottom-medium>
+    {{ 'reports.insights.techReview.ascAlerts.subTitle' | translate }}
+    <a href="{{ ascAlertsAzurePortalUrl }}"
+      target="_blank"
+      mcsId="azure-portal"
+      mcsEventTracker="navigate-to-azure-portal"
+      mcsEventCategory="dashboard-navigation"
+      mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.ascAlerts.viewInAzurePortal' | translate }}</a>.
+  </div>
+  <div class="label-below-chart" margin-bottom-medium>
+    {{ 'reports.insights.techReview.ascAlerts.secondSubtitle' | translate }}
+    <ng-container *ngIf="hasTicketPermission; else noTicketTemplate">
+      <a 
+        (click)="onClickTicketLink()"
+        mcsId="create-ticket-asc-alerts"
+        mcsEventTracker="navigate-to-create-ticket"
+        mcsEventCategory="dashboard-navigation"
+        mcsEventLabel="creat-ticket-link">{{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}</a>
+    </ng-container>
+    <ng-template #noTicketTemplate>
+      {{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}
+    </ng-template>
+    {{ 'reports.insights.techReview.ascAlerts.secondSubtitleContinuation' | translate }}
+  </div>
+
   <div class="listing-table-wrapper table-widget-wrapper">
     <!-- Table -->
     <table mat-table [dataSource]="dataSource">
@@ -8,17 +33,21 @@
           {{ 'columnHeader.severity' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.severity || 'Unavailable'}}
+          <ng-container *ngIf="row.severity; else emptyValueTemplate">
+            {{ row.severity }}
+          </ng-container>
         </td>
       </ng-container>
 
-      <!-- Description Column -->
+      <!-- Title Column -->
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'columnHeader.description' | translate }}
+          {{ 'columnHeader.title' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.description || 'Unavailable' }}
+          <ng-container *ngIf="row.title; else emptyValueTemplate">
+            {{ row.title }}
+          </ng-container>
         </td>
       </ng-container>
 
@@ -28,7 +57,9 @@
           {{ 'columnHeader.affectedResource' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.affectedResource || 'Unavailable' }}
+          <ng-container *ngIf="row.affectedResource; else emptyValueTemplate">
+            {{ row.affectedResource }}
+          </ng-container>
         </td>
       </ng-container>
 
@@ -38,13 +69,17 @@
           {{ 'columnHeader.startTime' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ (row.startTime | mcsStdDateFormat) || 'Unavailable' }}
+          <ng-container *ngIf="row.startTime; else emptyValueTemplate">
+            {{ row.startTime | mcsStdDateFormat }}
+          </ng-container>
         </td>
       </ng-container>
 
       <!-- Header and Data row -->
       <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
       <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+        mcsCursor="pointer"
+        (click)="onRowClick(row)"
         [hidden]="dataSource?.isInProgress$ | async"></tr>
     </table>
     <!-- Table Statuses -->
@@ -66,5 +101,8 @@
         </div>
       </div>
     </mcs-item>
+    <ng-template #emptyValueTemplate>
+      <span read-only>{{ 'message.unavailable' | translate }}</span>
+    </ng-template>
   </div>
 </div>

@@ -3,11 +3,12 @@ import { map } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Injector,
   ViewChild
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 import {
   McsAuthenticationIdentity,
   McsCookieService,
@@ -19,9 +20,7 @@ import {
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
-  McsCompany,
   McsFilterInfo,
-  McsIdentity,
   McsQueryParam,
   McsTicket,
   RouteKey
@@ -53,11 +52,13 @@ export class TicketsComponent {
   public readonly dataEvents: McsTableEvents<McsTicket>;
   public readonly defaultColumnFilters: McsFilterInfo[];
 
+  public urlParamSearchKeyword: string;
+
   constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
+    private _activatedRoute: ActivatedRoute,
     private _cookieService: McsCookieService,
     private _navigationService: McsNavigationService
   ) {
@@ -96,6 +97,10 @@ export class TicketsComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
     }
+  }
+
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
   public get addIconKey(): string {
@@ -144,7 +149,10 @@ export class TicketsComponent {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
-    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    let queryParamSearch = getSafeProperty(param, obj => obj.search.keyword);
+    this.urlParamSearchKeyword = this._activatedRoute.snapshot.queryParams.filter || undefined;
+    let searchKeyword = isNullOrEmpty(param.search) ? this.urlParamSearchKeyword : queryParamSearch;
+    queryParam.keyword = searchKeyword;
 
     let ticketSortPredicate = (firstRecord: McsTicket, secondRecord: McsTicket) =>
       compareDates(secondRecord.updatedOn, firstRecord.updatedOn);

@@ -6,6 +6,9 @@ export class McsReportAscAlerts extends McsEntityBase {
   public severity: string = undefined;
 
   @JsonProperty()
+  public title: string = undefined;
+
+  @JsonProperty()
   public description: string = undefined;
 
   @JsonProperty()
