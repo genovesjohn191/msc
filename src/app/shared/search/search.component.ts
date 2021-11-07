@@ -42,9 +42,23 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   @Input()
   public delayInSeconds: number | 'none' = 'none';
 
+  @Input()
+  public set defaultValue(value: string) {
+    if (!isNullOrEmpty(value)) {
+      this._defaultValue = value;
+      this.keyword = this._defaultValue;
+      this._notifySearchKeywordChange();
+    }
+  }
+
+  public get defaultValue(): string {
+    return this._defaultValue;
+  }
+
   public generatedId: string;
   public keyword: string;
   public searching: boolean;
+  private _defaultValue: string = '';
   public searchChangedStream: EventEmitter<any>;
 
   private _searchSubject: Subject<string>;

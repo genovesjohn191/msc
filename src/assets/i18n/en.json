@@ -331,7 +331,8 @@
           "secondSubtitleContinuation": " that our engineers will review for you.",
           "ticketLabel": "ticket",
           "viewInAzurePortal": "View last 3 months in Azure Portal",
-          "noDataFound": "No ASC alerts to display"
+          "noDataFound": "No ASC alerts to display",
+          "ticketSearchKeyword": "Security Center Alert:"
         },
         "auditAlerts": {
           "title": "Audit Alerts",
@@ -3433,6 +3434,7 @@
     "ticketNumber": "Ticket Number",
     "tier": "Tier",
     "time": "Time",
+    "title": "Title",
     "toolsVersion": "Tools Version",
     "totalScore": "Total Score",
     "totalCost": "Total Cost",
@@ -3697,7 +3699,10 @@
     "validationMin": "Must not be less than ",
     "validationMax": "Must not exceed ",
     "vdcNewSubnet": "A new subnet will be created for this network.",
-    "noStorageProfileUtilisation": "No storage profiles to display."
+    "noStorageProfileUtilisation": "No storage profiles to display.",
+    "noAlertTitleDialog": "Unknown Alert",
+    "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>"
+
   },
   "tooltip": {
     "exportWord": "Export Word Document",

@@ -32,7 +32,7 @@
   <mcs-left-panel *mcsLeftPanelDef="'tickets.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
-      <mcs-search *ngIf="!isMobile" #search mcsId="tickets-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="tickets-desktop-search" [defaultValue]="urlParamSearchKeyword"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->

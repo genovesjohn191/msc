@@ -1,5 +1,6 @@
 <mcs-form-field>
   <input mcsInput type="text" (keydown.space)="$event.stopPropagation()" #search placeholder="Type to search..."
+    [value]="defaultValue"
     (keyup)="onChangeKeyEvent(search.value)"
     (keyup.enter)="onEnterKeyUpEvent(search.value)"
     [attr.id]="generatedId">

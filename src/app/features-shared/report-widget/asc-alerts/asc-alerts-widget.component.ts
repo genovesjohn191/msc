@@ -18,20 +18,30 @@ import {
 import {
   McsMatTableContext,
   McsTableDataSource2,
-  McsReportingService
+  McsReportingService,
+  McsNavigationService,
+  McsAccessControlService
 } from '@app/core';
 import {
   McsFilterInfo,
-  McsReportAscAlerts
+  McsPermission,
+  McsReportAscAlerts,
+  RouteKey
 } from '@app/models';
 import {
+  CommonDefinition,
   createObject,
   isNullOrEmpty,
   setDateToFirstDayOftheMonth,
   setDateToLastDayOftheMonth
 } from '@app/utilities';
-import { StdDateFormatPipe } from '@app/shared';
+import {
+  DialogActionType,
+  DialogService2,
+  StdDateFormatPipe
+} from '@app/shared';
 import { ReportPeriod } from '../report-period.interface';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface AscAlertsWidgetConfig {
   period: Date
@@ -77,10 +87,22 @@ export class AscAlertsWidgetComponent implements OnInit {
   private _endPeriod: string = '';
 
   constructor(
+    private _accessControlService: McsAccessControlService,
+    private _dialogService: DialogService2,
+    private _datePipe: StdDateFormatPipe,
     private _reportingService: McsReportingService,
-    private _datePipe: StdDateFormatPipe
+    private _navigationService: McsNavigationService,
+    private _translateService: TranslateService
   ) {
     this.dataSource = new McsTableDataSource2(this._getAscAlerts.bind(this));
+  }
+
+  public get ascAlertsAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Security/SecurityMenuBlade/7`;
+  }
+
+  public get hasTicketPermission(): boolean {
+    return this._accessControlService.hasPermission([McsPermission.TicketView]);
   }
 
   ngOnInit(): void {
@@ -89,6 +111,23 @@ export class AscAlertsWidgetComponent implements OnInit {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
+  }
+
+  public onClickTicketLink(): void {
+    this._navigationService.navigateTo(RouteKey.Tickets, [], {
+      queryParams: {
+        filter: this._translateService.instant('reports.insights.techReview.ascAlerts.ticketSearchKeyword')
+      }
+    });
+  }
+
+  public onRowClick(alert: McsReportAscAlerts): void {
+    this._dialogService.openMessage({
+      type: DialogActionType.Info,
+      title: alert.title || this._translateService.instant('message.noAlertTitleDialog'),
+      message: alert.description || this._translateService.instant('message.noAlertDescriptionDialog'),
+      okText: this._translateService.instant('action.dismiss')
+    });
   }
 
   private _initializeDataColumns(): void {
