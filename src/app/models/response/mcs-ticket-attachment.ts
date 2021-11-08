@@ -17,4 +17,7 @@ export class McsTicketAttachment extends McsEntityBase {
     deserializer: McsDateSerialization
   })
   public createdOn: Date = undefined;
+
+  @JsonProperty()
+  public isQuarantined: boolean = undefined;
 }

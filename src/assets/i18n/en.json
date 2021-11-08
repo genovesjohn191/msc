@@ -2392,7 +2392,8 @@
     "creatingComment": "Adding comment...",
     "backToTickets": "Back To Tickets",
     "addActivity": "Add",
-    "resourceNotFound": "Resource not found"
+    "resourceNotFound": "Resource not found",
+    "attachmentIsQuarantinedToolTip": "This file may contain malicious content and cannot be downloaded."
   },
   "ticketCreate": {
     "header": "Create New Ticket",
