@@ -15,11 +15,15 @@
   <!-- Comment message -->
   <div>
     <p *ngIf="!isAttachment" text-pre-wrap>{{ ticketActivity.content }}</p>
-    <p *ngIf="isAttachment">
-      <mcs-file-download [downloading]="downloading"
-        (download)="downloadAttachment()">
-        {{ ticketActivity.content }}
-      </mcs-file-download>
+    <p *ngIf="isAttachment"
+      [matTooltip]="'ticket.attachmentIsQuarantinedToolTip' | translate"
+      [matTooltipDisabled]="!ticketActivity.isAttachmentQuarantined">
+        <mcs-file-download
+          [downloading]="downloading"
+          (download)="downloadAttachment()"
+          [disabled]="ticketActivity.isAttachmentQuarantined">
+          {{ ticketActivity.content }}
+        </mcs-file-download>
     </p>
   </div>
 

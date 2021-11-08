@@ -13,6 +13,7 @@ export class TicketActivity {
   public date: Date;
   public type: TicketActivityType;
   public commentType: CommentType;
+  public isAttachmentQuarantined: boolean;
 
   /**
    * Creates a ticket activity by comment
@@ -41,6 +42,7 @@ export class TicketActivity {
     activity.content = attachment.fileName;
     activity.date = attachment.createdOn;
     activity.type = TicketActivityType.Attachment;
+    activity.isAttachmentQuarantined = attachment.isQuarantined;
 
     return activity;
   }
