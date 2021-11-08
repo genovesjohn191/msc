@@ -173,15 +173,19 @@
               <ng-container *ngIf="selectedTicket.attachments | mcsIsNotNullOrEmpty; else noAttachments">
                 <mcs-list spacing="small">
                   <mcs-list-item *ngFor="let attachment of selectedTicket.attachments">
-                    <mcs-file-download [fileType]="attachment.contentType"
-                      [downloading]="isDownloading(attachment?.id)"
-                      (download)="downloadAttachment(selectedTicket, attachment)"
-                      mcsId="download-attachment"
-                      mcsEventTracker="download-attachment"
-                      mcsEventCategory="ticket"
-                      mcsEventLabel="ticket-details-page">
-                      {{ attachment.fileName }}
-                    </mcs-file-download>
+                    <div [matTooltip]="'ticket.attachmentIsQuarantinedToolTip' | translate"
+                      [matTooltipDisabled]="!attachment.isQuarantined">
+                        <mcs-file-download [fileType]="attachment.contentType"
+                          [downloading]="isDownloading(attachment?.id)"
+                          (download)="downloadAttachment(selectedTicket, attachment)"
+                          mcsId="download-attachment"
+                          mcsEventTracker="download-attachment"
+                          mcsEventCategory="ticket"
+                          mcsEventLabel="ticket-details-page"
+                          [disabled]="attachment.isQuarantined">
+                        {{ attachment.fileName }}
+                      </mcs-file-download>
+                    </div>
                   </mcs-list-item>
                 </mcs-list>
               </ng-container>
