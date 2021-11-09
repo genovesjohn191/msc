@@ -18,20 +18,14 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
 
   public getAzureServices(query?: McsAzureServicesRequestParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsAzureService[]>> {
-     // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsAzureServicesRequestParams(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('tenant_id', query.tenantId);
 
-    let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    requestParameter.endPoint = `/public-cloud/services`;
-    requestParameter.searchParameters = searchParams;
-    requestParameter.optionalHeaders = optionalHeaders;
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/services';
+    mcsApiRequestParameter.searchParameters = McsAzureServicesRequestParams.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
-    return this._mcsApiHttpService.get(requestParameter)
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsAzureService[]>(

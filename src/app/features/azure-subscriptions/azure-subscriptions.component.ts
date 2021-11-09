@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   McsAzureService,
+  McsAzureServicesRequestParams,
   McsFilterInfo,
-  McsQueryParam,
   RouteKey
 } from '@app/models';
 import {
@@ -33,6 +33,7 @@ import {
   Paginator,
   Search
 } from '@app/shared';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-azure-subscriptions',
@@ -53,6 +54,9 @@ export class AzureSubscriptionsComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'parent' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -87,11 +91,19 @@ export class AzureSubscriptionsComponent {
     }
   }
 
+  public onSortChange(sortState: Sort) {
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getAzureServices(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureService>> {
-    let queryParam = new McsQueryParam();
+    let queryParam = new McsAzureServicesRequestParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getAzureServices(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection,
