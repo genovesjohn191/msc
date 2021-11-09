@@ -27,7 +27,6 @@ import {
   McsAzureResourceQueryParams,
   McsAzureResourceTag,
   McsFilterInfo,
-  McsQueryParam,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -42,6 +41,7 @@ import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-azure-resources',
@@ -65,6 +65,8 @@ export class AzureResourcesComponent {
 
   public tagName: string;
   public tagValue: string;
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -97,6 +99,12 @@ export class AzureResourcesComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
     }
+  }
+
+  public onSortChange(sortState: Sort) {
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
   }
 
   public get cogIconKey(): string {
@@ -188,6 +196,8 @@ export class AzureResourcesComponent {
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.tagName = this.tagName;
     queryParam.tagValue = this.tagValue;
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getAzureResources(queryParam).pipe(
       map(response => new McsMatTableContext(response?.collection,

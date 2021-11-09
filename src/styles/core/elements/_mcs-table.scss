@@ -46,6 +46,12 @@ table {
   width: 100%;
 
   thead {
+    &:hover {
+      .mat-sort-header-arrow {
+        color: $color-white;
+      }
+    }
+
     tr,
     tr.mat-header-row {
       text-align: left;

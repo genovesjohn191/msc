@@ -31,6 +31,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatSortModule } from '@angular/material/sort';
 
 const exportedModules = [
   ClipboardModule,
@@ -58,6 +59,7 @@ const exportedModules = [
   MatProgressSpinnerModule,
   MatStepperModule,
   MatSlideToggleModule,
+  MatSortModule,
   MatTooltipModule,
   MatTreeModule,
   MatMenuModule,

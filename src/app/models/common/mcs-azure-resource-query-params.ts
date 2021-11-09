@@ -1,14 +1,13 @@
+import { JsonProperty } from '@app/utilities';
 import { McsQueryParam } from './mcs-query-param';
 
 export class McsAzureResourceQueryParams extends McsQueryParam {
-  public tagName?: string;
-  public tagValue?: string;
-  public subscriptionId?: string;
+  @JsonProperty({ name: 'tag_name' })
+  public tagName?: string = undefined;
 
-  constructor() {
-    super();
-    this.tagName = '';
-    this.tagValue = '';
-    this.subscriptionId = '';
-  }
+  @JsonProperty({ name: 'tag_value' })
+  public tagValue?: string = undefined;
+
+  @JsonProperty({ name: 'subscription_id' })
+  public subscriptionId?: string = undefined;
 }

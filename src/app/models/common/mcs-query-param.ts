@@ -8,14 +8,14 @@ import {
 
 export class McsQueryParam {
   public set keyword(value: string) {
-    this._keyword = value;
+    this.search_keyword = value;
   }
 
   // TO DO: fix issue on order list not showing when returning back to /orders/dashboard page
   public get keyword(): string {
-    return isNullOrEmpty(this._keyword) ? '' : this._keyword;
+    return isNullOrEmpty(this.search_keyword) ? '' : this.search_keyword;
   }
-  private _keyword?: string;
+  private search_keyword?: string;
 
   @JsonProperty({ name: 'page' })
   public pageIndex?: number;
@@ -23,10 +23,18 @@ export class McsQueryParam {
   @JsonProperty({ name: 'per_page' })
   public pageSize?: number;
 
+  @JsonProperty({ name: 'sort_direction' })
+  public sortDirection?: string;
+
+  @JsonProperty({ name: 'sort_field' })
+  public sortField?: string;
+
   constructor() {
     this.keyword = '';
     this.pageIndex = CommonDefinition.PAGE_INDEX_DEFAULT;
     this.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+    this.sortDirection = '';
+    this.sortField = '';
   }
 
   public static convertCustomQueryToParamMap<TQuery>(query: TQuery): Map<string, string> {

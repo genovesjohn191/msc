@@ -18,21 +18,13 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
   public getAzureResources(query?: McsAzureResourceQueryParams): Observable<McsApiSuccessResponse<McsAzureResource[]>> {
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsAzureResourceQueryParams(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('tag_name', query.tagName);
-    searchParams.set('tag_value', query.tagValue);
-    searchParams.set('subscription_id', query.subscriptionId);
 
-    let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    requestParameter.endPoint = `/public-cloud/resources`;
-    requestParameter.searchParameters = searchParams;
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/resources';
+    mcsApiRequestParameter.searchParameters = McsAzureResourceQueryParams.convertCustomQueryToParamMap(query);
 
-    return this._mcsApiHttpService.get(requestParameter)
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsAzureResource[]>(
