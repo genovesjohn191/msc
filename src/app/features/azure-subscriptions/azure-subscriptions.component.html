@@ -3,11 +3,18 @@
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count"  *ngIf="dataSource?.totalCount$ | async as totalCount">
-          <span>{{ totalCount | mcsPlural:
-                ('azureSubscriptions.dataSingular' | translate) : ('azureSubscriptions.dataPlural' | translate) }}
-          </span>
-        </div>
+        <ng-container *ngIf="isSorting; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count"  *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalCount | mcsPlural:
+                  ('azureSubscriptions.dataSingular' | translate) : ('azureSubscriptions.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
       </div>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -120,7 +127,8 @@
         </ng-container>
 
         <!-- Header and Data row -->
-        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
         <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
       </table>
 

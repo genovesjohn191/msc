@@ -7,15 +7,8 @@ import {
 } from '@app/utilities';
 
 export class McsQueryParam {
-  public set keyword(value: string) {
-    this.search_keyword = value;
-  }
-
-  // TO DO: fix issue on order list not showing when returning back to /orders/dashboard page
-  public get keyword(): string {
-    return isNullOrEmpty(this.search_keyword) ? '' : this.search_keyword;
-  }
-  private search_keyword?: string;
+  @JsonProperty({ name: 'search_keyword' })
+  public keyword?: string;
 
   @JsonProperty({ name: 'page' })
   public pageIndex?: number;

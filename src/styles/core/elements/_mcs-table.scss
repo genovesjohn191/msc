@@ -59,6 +59,10 @@ table {
       background-color: $table-header-background-color;
       height: $table-row-size;
 
+      &.disabled-element {
+        opacity: 0.7 !important;
+      }
+
       th,
       td,
       th.mat-header-cell {

@@ -98,7 +98,7 @@ export class OrdersDashboardComponent implements OnInit, OnDestroy {
 
   private _getOrderFamilies(param: McsListviewQueryParam): Observable<McsListviewContext<McsOrderAvailableFamily>> {
     let queryParam = new McsQueryParam();
-    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search?.keyword || '');
 
     return this._ordersDashboardService.getOrderAvailableFamilies(queryParam).pipe(
       tap((familyCollection) => {

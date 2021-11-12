@@ -1,8 +1,10 @@
 import {
   Observable,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   map,
   shareReplay,
   takeUntil
@@ -52,6 +54,7 @@ import {
 } from '@app/utilities';
 
 import { LicenseService } from './licenses.service';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-licenses',
@@ -78,6 +81,10 @@ export class LicensesComponent implements OnInit, OnDestroy {
   public activeJobs$: Observable<McsJob[]>;
   public licenses$: Observable<McsLicense[]>;
   private _destroySubject = new Subject<void>();
+
+  public isSorting: boolean;
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -139,6 +146,13 @@ export class LicensesComponent implements OnInit, OnDestroy {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
+  }
+
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
   }
 
   /**
@@ -244,10 +258,19 @@ export class LicensesComponent implements OnInit, OnDestroy {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getLicenses(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount))
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount)
+      })
     );
   }
 
