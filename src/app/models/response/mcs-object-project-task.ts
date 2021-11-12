@@ -28,4 +28,7 @@ export class McsObjectProjectTasks extends McsEntityBase {
 
   @JsonProperty()
   public productType: string = undefined;
+
+  @JsonProperty()
+  public companyId: number = undefined;
 }
