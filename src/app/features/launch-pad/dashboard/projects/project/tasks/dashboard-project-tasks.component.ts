@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   CoreRoutes,
-  McsAuthenticationIdentity,
   McsMatTableConfig,
   McsMatTableContext,
   McsNavigationService,
@@ -48,7 +47,6 @@ export class DashboardProjectTasksComponent implements OnDestroy {
   public constructor(
     private _apiService: McsApiService,
     private _dashboardProjectService: DashboardProjectService,
-    private _identity: McsAuthenticationIdentity,
     private _navigationService: McsNavigationService
   ) {
     this.dataSource = new McsTableDataSource2<McsObjectProjectTasks>(this._getTableData.bind(this))
@@ -81,10 +79,11 @@ export class DashboardProjectTasksComponent implements OnDestroy {
 
   public getLauncherConfig(record: McsObjectProjectTasks):  WorkflowSelectorConfig {
     let productType: any = ProductType[record.productType];
+    let companyId = record.companyId || 0;
 
     return {
       label: record.serviceId,
-      companyId: this._identity.user.companyId,
+      companyId: companyId.toString(),
       source: 'crisp-elements',
       serviceId: record.serviceId,
       productId: record.productId.toString(),
