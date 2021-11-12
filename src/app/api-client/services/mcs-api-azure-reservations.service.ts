@@ -20,18 +20,13 @@ export class McsApiAzureReservationsService implements IMcsApiAzureReservationsS
 
   public getAzureReservations(query?: McsQueryParam):
     Observable<McsApiSuccessResponse<McsAzureReservation[]>> {
-     // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
-    let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    requestParameter.endPoint = `/public-cloud/reservations`;
-    requestParameter.searchParameters = searchParams;
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reservations';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
-    return this._mcsApiHttpService.get(requestParameter)
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsAzureReservation[]>(

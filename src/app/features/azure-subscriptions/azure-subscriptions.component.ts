@@ -5,8 +5,14 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 import {
   McsAzureService,
   McsAzureServicesRequestParams,
@@ -57,6 +63,7 @@ export class AzureSubscriptionsComponent {
 
   private _sortDirection: string;
   private _sortField: string;
+  public isSorting: boolean;
 
   constructor(
     _injector: Injector,
@@ -92,6 +99,7 @@ export class AzureSubscriptionsComponent {
   }
 
   public onSortChange(sortState: Sort) {
+    this.isSorting = true;
     this._sortDirection = sortState.direction;
     this._sortField = sortState.active;
     this.retryDatasource();
@@ -106,8 +114,15 @@ export class AzureSubscriptionsComponent {
     queryParam.sortField = this._sortField;
 
     return this._apiService.getAzureServices(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount))
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount)
+      })
     );
   }
 

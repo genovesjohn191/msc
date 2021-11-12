@@ -65,6 +65,8 @@ export class AzureResourcesComponent {
 
   public tagName: string;
   public tagValue: string;
+  public isSorting: boolean;
+
   private _sortDirection: string;
   private _sortField: string;
 
@@ -102,6 +104,7 @@ export class AzureResourcesComponent {
   }
 
   public onSortChange(sortState: Sort) {
+    this.isSorting = true;
     this._sortDirection = sortState.direction;
     this._sortField = sortState.active;
     this.retryDatasource();
@@ -200,8 +203,15 @@ export class AzureResourcesComponent {
     queryParam.sortField = this._sortField;
 
     return this._apiService.getAzureResources(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount))
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount)
+      })
     );
   }
 }

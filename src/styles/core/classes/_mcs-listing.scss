@@ -91,7 +91,8 @@ $listing-table-widget-max-height: 350px;
   @include display-flex(row);
   overflow: auto;
 
-  .total-record-count {
+  .total-record-count,
+  .sorting-label {
     @include display-flex(row);
     @include align-items(center);
     margin-left: auto;
