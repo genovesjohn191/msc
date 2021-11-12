@@ -288,13 +288,6 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       [ ]
     ],
 
-
-    [ ProductType.NetworkAttachedStorage,
-      [
-        WorkflowGroupId.VirtualDataCentreNetworkCreate
-      ]
-    ],
-
     [ ProductType.NonStandardDedicatedLoadBalancing,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,
