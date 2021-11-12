@@ -45,57 +45,54 @@
 
         <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
 
-          <mcs-item orientation="block">
-              <!-- Colocation Service -->
-              <ng-container *ngIf="loadingInProgress; else serviceTemplate">
-                <mcs-loader size="small"
-                  [mcsTooltip]="loadingText"
-                  mcsTooltipPosition="right"></mcs-loader>
-              </ng-container>
-              <ng-template #serviceTemplate>
-                <mcs-form-field *ngIf="hasServiceToDisplay">
-                  <mcs-select [formControl]="fcColocationService"
-                  [placeholder]="'orderColocationStaffEscort.requestDetails.colocationService.placeholder' | translate"
-                  [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.colocationService.helptext' | translate"
-                  mcsId="select-colocation-service"
-                  mcsEventTracker="select-colocation-service"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page"
-                  required autoSelect="false">
-                    <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
-                      <ng-container *mcsOptionGroupLabel>
-                        <span>{{ colocationGroup?.groupName }}</span>
-                      </ng-container>
-                      <mcs-option *ngFor="let service of colocationGroup.options"  [value]="service.value">
-                        {{ service.text }}
-                      </mcs-option>
-                    </mcs-option-group>
-                  </mcs-select>
-                </mcs-form-field>
-                <span read-only>{{ noServicesFallbackText | translate }}</span>
-              </ng-template>
-          </mcs-item>
-          <br><hr><br>
+        <mcs-item orientation="block">
+            <!-- Colocation Service -->
+            <ng-container *ngIf="loadingInProgress; else serviceTemplate">
+              <mcs-loader size="small"
+                [mcsTooltip]="loadingText"
+                mcsTooltipPosition="right"></mcs-loader>
+            </ng-container>
+            <ng-template #serviceTemplate>
+              <mcs-form-field *ngIf="hasServiceToDisplay">
+                <mcs-select [formControl]="fcColocationService"
+                [placeholder]="'orderColocationStaffEscort.requestDetails.colocationService.placeholder' | translate"
+                [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.colocationService.helptext' | translate"
+                mcsId="select-colocation-service"
+                mcsEventTracker="select-colocation-service"
+                mcsEventCategory="order-collocation-staff-escort"
+                mcsEventLabel="order-collocation-staff-escort-page"
+                required autoSelect="false">
+                  <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
+                    <ng-container *mcsOptionGroupLabel>
+                      <span>{{ colocationGroup?.groupName }}</span>
+                    </ng-container>
+                    <mcs-option *ngFor="let service of colocationGroup.options"  [value]="service.value">
+                      {{ service.text }}
+                    </mcs-option>
+                  </mcs-option-group>
+                </mcs-select>
+              </mcs-form-field>
+              <span read-only>{{ noServicesFallbackText | translate }}</span>
+            </ng-template>
+        </mcs-item>
 
+        <div *ngIf="fcColocationService.value">
+          <br><hr><br>
           <!-- Attendance Details -->
-          <mcs-item>
+          <mcs-item orientation="block">
             <p><strong>{{ 'orderColocationStaffEscort.requestDetails.attendanceLabel' | translate }}</strong></p>
           </mcs-item>
-          <mcs-item [hidden]="!isImpersonating">
+          <mcs-item [hidden]="!isImpersonating" orientation="block">
             <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.escortee.placeholder' | translate }}</span>
           </mcs-item>
-
           <!-- Escortee -->
-          <mcs-item orientation="separated" [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.escortee.helptext' | translate" [hidden]="isImpersonating">
+          <mcs-item orientation="separated" [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.escortee.helptext' | translate" [hidden]="isImpersonating" style="margin-bottom: 15px;">
             <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.escortee.placeholder' | translate }}</span>
             <mcs-form-field class="form-field-size-small">
               <mcs-select required
                 [formControl]="fcEscortee"
                 (selectionChange)="onEscorteeChange($event)"
-                mcsId="select-escortee"
-                mcsEventTracker="select-escortee"
-                mcsEventCategory="order-collocation-staff-escort"
-                mcsEventLabel="order-collocation-staff-escort-page">
+                mcsId="select-escortee">
 
                 <mcs-option *ngFor="let escortee of escorteeOptions$ | async" [value]="escortee.value">
                   {{ escortee.text }}
@@ -105,16 +102,12 @@
           </mcs-item>
 
           <ng-container *ngIf="isEscorteeSomeoneElse(fcEscortee?.value) || isImpersonating">
-            <mcs-item orientation="block">
+            <mcs-item orientation="block" class="basic-form" style="margin-bottom: 15px;">
               <!-- Name -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.name.label' | translate }}</span>
                 <mcs-form-field>
                   <input mcsInput [formControl]="fcName"
                     mcsId="input-name"
-                    mcsEventTracker="input-name"
-                    mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page"
                     [placeholder]="'orderColocationStaffEscort.requestDetails.name.placeHolder' | translate"
                     required>
                   <mcs-error mcsError errorState="required">
@@ -125,13 +118,9 @@
 
               <!-- Organization -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.organization.label' | translate }}</span>
                 <mcs-form-field>
                   <input mcsInput [formControl]="fcOrganization"
                     mcsId="input-organization"
-                    mcsEventTracker="input-organization"
-                    mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page"
                     [placeholder]="'orderColocationStaffEscort.requestDetails.organization.placeHolder' | translate"
                     required>
                   <mcs-error mcsError errorState="required">
@@ -142,13 +131,9 @@
 
               <!-- Job Title -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.jobTitle.label' | translate }}</span>
                 <mcs-form-field >
                   <input mcsInput [formControl]="fcJobTitle"
                     mcsId="input-job-title"
-                    mcsEventTracker="input-job-title"
-                    mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page"
                     [placeholder]="'orderColocationStaffEscort.requestDetails.jobTitle.placeHolder' | translate"
                     required>
                   <mcs-error mcsError errorState="required">
@@ -159,13 +144,9 @@
 
               <!-- Mobile Number -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.mobile.label' | translate }}</span>
                 <mcs-form-field>
                   <input mcsInput [formControl]="fcMobile"
                     mcsId="input-mobile"
-                    mcsEventTracker="input-mobile"
-                    mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page"
                     [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.mobile.helpText' | translate"
                     [placeholder]="'orderColocationStaffEscort.requestDetails.mobile.placeHolder' | translate"
                     required>
@@ -180,13 +161,9 @@
 
               <!-- Email Address -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.email.label' | translate }}</span>
                 <mcs-form-field >
                   <input mcsInput [formControl]="fcEmail"
                     mcsId="input-email"
-                    mcsEventTracker="input-email"
-                    mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page"
                     [placeholder]="'orderColocationStaffEscort.requestDetails.email.placeHolder' | translate"
                     required>
                   <mcs-error mcsError errorState="required">
@@ -200,95 +177,81 @@
             </mcs-item>
           </ng-container>
 
-          <!-- Date of Attendance -->
-          <mcs-item orientation="separated">
-            <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.attendanceDate.label' | translate }}</span>
-            <mcs-form-field class="form-field-size-small">
-              <mcs-datetimepicker
-                [hideTime]="true"
-                [required]="true"
-                [minDate]="minDate"
-                [maxDate]="maxDate"
-                [label]="'shared.datetimepicker.datepickerLabel' | translate"
-                [formControl]="fcAttendanceDate"
-                [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.attendanceDate.helptext' | translate"
-                mcsId="input-attendance-date"
-                mcsEventTracker="input-attendance-date"
-                mcsEventCategory="order-collocation-staff-escort"
-                mcsEventLabel="order-collocation-staff-escort-page">
-              </mcs-datetimepicker>
-              <mcs-error mcsError errorState="required">
-                {{ 'orderColocationStaffEscort.requestDetails.attendanceDate.errorRequired' | translate }}
-              </mcs-error>
-            </mcs-form-field>
-          </mcs-item>
+          <div class="basic-form">
+            <!-- Date of Attendance -->
+            <mcs-item orientation="separated">
+              <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.attendanceDate.label' | translate }}</span>
+                <mcs-field-input-date-picker class="form-field-size-small"
+                  [required]="true"
+                  [formControl]="fcAttendanceDate"
+                  [minDate]="minDate"
+                  [maxDate]="maxDate"
+                  [defaultDate]="minDate"
+                  [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.attendanceDate.helptext' | translate"
+                  (onDateChange)="onDateChanged($event)"
+                  mcsId="input-attendance-date">
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderBackupRestoreRequest.errors.restoreDateRequired' | translate }}
+                  </mcs-error>
+                </mcs-field-input-date-picker>
+            </mcs-item>
 
-          <!-- Arrival Time -->
-          <mcs-item orientation="separated">
-            <span align-self-start>{{'orderColocationStaffEscort.requestDetails.arrivalTime.label' | translate}}</span>
-            <mcs-form-field class="form-field-size-small"
-              [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.arrivalTime.helptext' | translate" >
-              <mcs-timepicker
-                [formControl]="fcArrivalTime"
-                [stepHour]="stepHour"
-                [stepMinute]="stepMinute"
-                [maximumTime]="maxArrivalTime"
-                [minimumTime]="defaultArrivalTime"
-                (timeChange)="onArrivalTimeChange($event)"
-                mcsId="input-arrival-time"
-                mcsEventTracker="input-arrival-time"
-                mcsEventCategory="order-collocation-staff-escort"
-                mcsEventLabel="order-collocation-staff-escort-page">
-              </mcs-timepicker>
-              <mcs-error mcsError errorState="minimumTime" text-wrap>
-                {{ 'orderColocationStaffEscort.requestDetails.arrivalTime.errorMinimumTime' | translate: { standardLeadTimeHours: staffEscortStandardLeadTimeHours }  }}
-              </mcs-error>
-              <mcs-error mcsError errorState="maximumTime" text-wrap>
-                {{ 'orderColocationStaffEscort.requestDetails.arrivalTime.errorMaximumTime' | translate }}
-              </mcs-error>
-            </mcs-form-field>
-          </mcs-item>
+            <!-- Arrival Time -->
+            <mcs-item orientation="separated">
+              <span align-self-start>{{'orderColocationStaffEscort.requestDetails.arrivalTime.label' | translate}}</span>
+              <div>
+                <mcs-field-input-time-picker
+                  [formControl]="fcArrivalTime"
+                  [stepMinute]="stepMinute"
+                  [timeFormat]="24"
+                  [maxTime]="maxArrivalTime"
+                  [minTime]="defaultArrivalTime"
+                  mcsId="input-arrival-time">
+                </mcs-field-input-time-picker>
+              </div>
+            </mcs-item>
 
-          <!-- Exit Time -->
-          <mcs-item orientation="separated">
-            <span align-self-start>{{'orderColocationStaffEscort.requestDetails.exitTime.label' | translate}}</span>
-            <mcs-form-field class="form-field-size-small"
-              [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.exitTime.helptext' | translate">
-              <mcs-timepicker
-                [formControl]="fcExitTime"
-                [stepHour]="stepHour"
-                [stepMinute]="stepMinute"
-                [minimumTime]="minExitTime"
-                [maximumTime]="maxExitTime"
-                (timeChange)="onExitTimeChange($event)"
-                mcsId="input-exit-time"
-                mcsEventTracker="input-exit-time"
-                mcsEventCategory="order-collocation-staff-escort"
-                mcsEventLabel="order-collocation-staff-escort-page">
-              </mcs-timepicker>
-              <mcs-error mcsError errorState="minimumTime" text-wrap>
-                {{ 'orderColocationStaffEscort.requestDetails.exitTime.errorMinimumTime' | translate }}
-              </mcs-error>
-              <mcs-error mcsError errorState="maximumTime" text-wrap>
-                {{ 'orderColocationStaffEscort.requestDetails.exitTime.errorMaximumTime' | translate }}
-              </mcs-error>
-            </mcs-form-field>
-          </mcs-item><br><hr><br>
+            <!-- Exit Time -->
+            <mcs-item orientation="separated">
+              <span align-self-start>{{'orderColocationStaffEscort.requestDetails.exitTime.label' | translate}}</span>
+              <div>
+                <mcs-field-input-time-picker
+                  [formControl]="fcExitTime"
+                  [stepMinute]="stepMinute"
+                  [timeFormat]="24"
+                  [minTime]="defaultExitTime"
+                  mcsId="input-exit-time">
+                </mcs-field-input-time-picker>
+              </div>
+            </mcs-item>
+            <br><hr><br>
+          </div>
+          
 
           <!-- Activities -->
-          <mcs-item orientation="block">
+          <mcs-item orientation="block" class="basic-form">
             <p><strong>{{ 'orderColocationStaffEscort.requestDetails.activitiesLabel' | translate}}</strong></p>
+
+            <!-- Row number and Rack -->
+            <mcs-item orientation="block">
+              <mcs-form-field>
+                <input mcsInput [formControl]="fcRackIdentifier" required
+                  [placeholder]="'orderColocationStaffEscort.requestDetails.rowNumberAndRack.placeholder' | translate"
+                  [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.rowNumberAndRack.helptext' | translate"
+                  mcsId="input-tools-required">
+
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderColocationStaffEscort.requestDetails.rowNumberAndRack.errorRequired' | translate }}
+                  </mcs-error>
+              </mcs-form-field>
+            </mcs-item>
 
             <!-- Work to Perform -->
             <mcs-item orientation="block">
-              <span align-self-start>{{'orderColocationStaffEscort.requestDetails.workToPerform.label' | translate}}</span>
               <mcs-form-field>
                 <textarea mcsInput rows="3" #workToPerformControl required
                   [formControl]="fcWorkToPerform"
                   mcsId="input-work-to-perform"
-                  mcsEventTracker="input-work-to-perform"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page"
                   [maxlength]="defaultMaxlength"
                   [placeholder]="'orderColocationStaffEscort.requestDetails.workToPerform.placeholder' | translate"
                   [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.workToPerform.helptext' | translate"></textarea>
@@ -307,28 +270,20 @@
 
             <!-- Tools Required -->
             <mcs-item orientation="block">
-              <span align-self-start>{{'orderColocationStaffEscort.requestDetails.toolsRequired.label' | translate}}</span>
               <mcs-form-field>
                 <input mcsInput [formControl]="fcToolsRequired"
                   [placeholder]="'orderColocationStaffEscort.requestDetails.toolsRequired.placeholder' | translate"
                   [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.toolsRequired.helptext' | translate"
-                  mcsId="input-tools-required"
-                  mcsEventTracker="input-tools-required"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page">
+                  mcsId="input-tools-required">
               </mcs-form-field>
             </mcs-item>
 
             <!-- Reason -->
             <mcs-item orientation="block">
-              <span align-self-start>{{'orderColocationStaffEscort.requestDetails.reason.label' | translate}}</span>
               <mcs-form-field>
                 <textarea mcsInput rows="3" #reasonControl required
                   [formControl]="fcReason"
                   mcsId="input-reason"
-                  mcsEventTracker="input-reason"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page"
                   [maxlength]="defaultMaxlength"
                   [placeholder]="'orderColocationStaffEscort.requestDetails.reason.placeholder' | translate"
                   [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.reason.helptext' | translate"></textarea>
@@ -352,13 +307,11 @@
                 <input mcsInput [formControl]="fcReferenceNumber"
                   [placeholder]="'orderColocationStaffEscort.requestDetails.referenceNumber.placeholder' | translate"
                   [mcsContextualHelp]="'smacShared.form.customerReference.helpText' | translate"
-                  mcsId="input-reference-number"
-                  mcsEventTracker="input-reference-number"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page">
+                  mcsId="input-reference-number">
               </mcs-form-field>
             </mcs-item>
           </mcs-item>
+        </div>
 
           <div class="action-items">
             <button mcsButton arrow="right"

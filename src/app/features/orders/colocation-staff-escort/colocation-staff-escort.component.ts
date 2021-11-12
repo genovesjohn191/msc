@@ -31,6 +31,7 @@ import {
 import {
   CoreValidators,
   McsAuthenticationIdentity,
+  McsDateTimeService,
   McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
@@ -68,20 +69,20 @@ import {
   pluck,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  addHoursToDate,
+  compareDates
 } from '@app/utilities';
 
 import { ColocationStaffEscortService } from './colocation-staff-escort.service';
 
 const COLOCATION_STAFF_ESCORT = Guid.newGuid().toString();
 const TEXTAREA_MAXLENGTH_DEFAULT = 850;
-const MAX_HOUR = 23;
 const MAX_DATE = addMonthsToDate(getCurrentDate(), 12);
 const STEP_HOUR: number = 1;
 const STEP_MINUTE: number = 30;
-const DEFAULT_ARRIVAL_EXIT_TIME_RANGE = 4;
-const ARRIVAL_TIME_MAX: [number, number] = [23, 0];
-const EXIT_TIME_MAX: [number, number] = [23, STEP_MINUTE];
+const ARRIVAL_TIME_MAX = '23:30';
+const ARRIVAL_TIME_MIN_DEFAULT = '00:00';
 const LOADING_TEXT = 'loading';
 interface IRackService {
   serviceId: string
@@ -110,6 +111,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   public fcAttendanceDate: FormControl;
   public fcArrivalTime: FormControl;
   public fcExitTime: FormControl;
+  public fcRackIdentifier: FormControl;
   public fcWorkToPerform: FormControl;
   public fcToolsRequired: FormControl;
   public fcReason: FormControl;
@@ -123,6 +125,9 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   public colocationGroups: McsOptionGroup[] = [];
   public hasServiceToDisplay: boolean;
   public loadingInProgress: boolean;
+  public minAttendanceDateTime: Date;
+  public minArrivalTime: string;
+  public minExitTime: string;
 
   @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
@@ -133,6 +138,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   }
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
+  private _destroySubject = new Subject<void>();
   private _selectedRackServiceHandler: Subscription;
   private _userAccount: McsAccount = new McsAccount();
   private _company: McsCompany = new McsCompany();
@@ -146,6 +152,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     private _switchAccountService: SwitchAccountService,
     private _changeDetector: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
+    private _dateTimeService: McsDateTimeService,
     private _eventDispatcher: EventBusDispatcherService
   ) {
     super(
@@ -166,11 +173,13 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     this._getUserIdentityAndAccountDetails();
     this._getEscorteeOptions();
     this._getRackServices();
+    this._setEarliestAttendanceDateTime();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._formGroupSubject);
     unsubscribeSafely(this._selectedRackServiceHandler);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get backIconKey(): string {
@@ -203,7 +212,8 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   }
 
   public get minDate(): Date {
-    return getCurrentDate();
+    if(isNullOrUndefined(this.minAttendanceDateTime)) { return }
+    return this.minAttendanceDateTime;
   }
 
   public get maxDate(): Date {
@@ -221,44 +231,55 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     return LOADING_TEXT;
   }
 
-  // TO DO: for unit test
-  public get defaultArrivalTime(): [number, number] {
-    let arrivalHour =  this.minDate.getHours() + DEFAULT_ARRIVAL_EXIT_TIME_RANGE ;
-    let arrivalMinutes = this.minDate.getMinutes();
-    if (arrivalMinutes >= STEP_MINUTE) {
-      arrivalHour = arrivalHour+1;
-      arrivalMinutes = 0;
-    }
-    else{
-      arrivalMinutes = STEP_MINUTE;
-    }
-    return  (arrivalHour > MAX_HOUR) ? [23, 0] :  [arrivalHour, arrivalMinutes];
+  public get maxArrivalTime(): string {
+    return ARRIVAL_TIME_MAX;
+  }
+
+  public get defaultArrivalTime(): string {
+    if(isNullOrUndefined(this.minArrivalTime)) { return }
+    return this.minArrivalTime;
+  }
+
+  public get defaultExitTime(): string {
+    if(isNullOrUndefined(this.minExitTime)) { return }
+    return this.minExitTime;
+  }
+
+  private _setEarliestAttendanceDateTime(){
+    this.orderItemType$.subscribe(orderItemType => {
+      if(!isNullOrUndefined(orderItemType.standardLeadTimeHours)) {
+        this._setDefaultAttendanceDetails(orderItemType.standardLeadTimeHours);
+      }
+    });
+  }
+
+  private _setDefaultAttendanceDetails(standardLeadTimeHours: number) : void {
+    // Compute and assign minimum arrival date and time
+    let currentRoundedDateTime = this._roundTime(getCurrentDate());
+    this.minAttendanceDateTime = addHoursToDate(currentRoundedDateTime, standardLeadTimeHours);
+    this.minArrivalTime = this._dateTimeService.formatDate(this.minAttendanceDateTime, '24hourTime');
+
+    // Compute and assign minimum exit time
+    let minExitTime = this._dateTimeService.addMinutesToDate(this.minAttendanceDateTime, STEP_MINUTE);
+    this.minExitTime = this._dateTimeService.formatDate(minExitTime, '24hourTime');
+
+    // Set Attendance Detail Values
+    this.fcAttendanceDate.setValue(this.minAttendanceDateTime);
+    this.fcArrivalTime.setValue(this.minArrivalTime);
+    this.fcExitTime.setValue(this.minExitTime);
+  }
+
+  private _roundTime(time: Date): Date {
+    time.setMilliseconds(Math.ceil(time.getMilliseconds() / 1000) * 1000);
+    time.setSeconds(Math.ceil(time.getSeconds() / 60) * 60);
+    time.setMinutes(Math.ceil(time.getMinutes() / STEP_MINUTE) * STEP_MINUTE);
+    return time;
   }
 
   public get isImpersonating(): boolean {
     return this._authenticationIdentity.isImpersonating;
   }
 
-  // TO DO: for unit test
-  public get defaultExitTime(): [number, number] {
-    let exitHours = this.defaultArrivalTime[0] + DEFAULT_ARRIVAL_EXIT_TIME_RANGE;
-    let exitMinutes = this.defaultArrivalTime[1];
-    return exitHours > MAX_HOUR ? [23, 30] : [exitHours, exitMinutes];
-  }
-
-  public get maxArrivalTime(): [number, number] {
-    return ARRIVAL_TIME_MAX;
-  }
-
-  public get maxExitTime(): [number, number] {
-    return EXIT_TIME_MAX;
-  }
-  // TO DO: for unit Tests
-  public get minExitTime(): [number, number] {
-    let minTime =  this.fcArrivalTime.value;
-    if(isNullOrEmpty(minTime)){ return; }
-    return [minTime[0], minTime[1] + STEP_MINUTE];
-  }
   public isEscorteeSomeoneElse(escortee: ColocationEscortee): boolean {
     return escortee === ColocationEscortee.SomeoneElse;
   }
@@ -292,15 +313,41 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     }
   }
 
-  public onArrivalTimeChange(_value: [number, number]): void {
-    this.fcArrivalTime.setValue(_value);
-    this.fcArrivalTime.updateValueAndValidity();
-    this.fcExitTime.updateValueAndValidity();
+  private _subscribeAttendanceDetailsChanges(){
+    this.fcArrivalTime.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => {
+        if(isNullOrEmpty(this.fcExitTime.value)){ return; }
+
+        let exitTime = this._dateTimeService.formatTimeStringToDate(this.fcExitTime.value);
+        let arrivalTime = this._dateTimeService.formatTimeStringToDate(this.fcArrivalTime.value);
+
+        // Set new minimum exit time
+        let minExitTime = this._dateTimeService.addMinutesToDate(arrivalTime, STEP_MINUTE);
+        this.minExitTime = this._dateTimeService.formatDate(minExitTime, '24hourTime');
+
+        if(compareDates(exitTime, arrivalTime) < 0){
+          // Set new min exit time as fcExitTime value
+          this.fcExitTime.setValue(this.minExitTime);
+        }
+      })
+    ).subscribe();
   }
-  public onExitTimeChange(_value: [number, number]): void {
-    this.fcExitTime.setValue(_value);
-    this.fcExitTime.updateValueAndValidity();
-    this.fcArrivalTime.updateValueAndValidity();
+
+  public onDateChanged(selectedDate: string): void {
+    if(compareDates(this.minAttendanceDateTime, new Date(selectedDate)) > 0) {
+      // Set new minimum arrival time
+      this.minArrivalTime = this._dateTimeService.formatDate(this.minAttendanceDateTime, '24hourTime');
+      let currentArrivalTime = this._dateTimeService.formatTimeStringToDate(this.fcArrivalTime.value);
+
+      if(compareDates(this.minAttendanceDateTime, currentArrivalTime) > 0) {
+        // Set new min arrival time as fcArrivalTime value
+        this.fcArrivalTime.setValue(this.minArrivalTime);
+      }
+    }
+    else {
+      this.minArrivalTime = ARRIVAL_TIME_MIN_DEFAULT;
+    }
   }
 
   /**
@@ -319,7 +366,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
       }),
       OrderRequester.Billing,
       orderDetails.deliveryType,
-      this._formatSchedule(this.fcAttendanceDate.value, this.fcArrivalTime.value)
+      this._getScheduleDateTime()
     );
     this._colocationStaffEscortService.submitOrderRequest();
   }
@@ -352,9 +399,10 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     this.fcMobile = new FormControl('', [CoreValidators.required,
                                         CoreValidators.pattern(CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN)]);
     this.fcEmail = new FormControl('', [CoreValidators.required, CoreValidators.pattern(CommonDefinition.REGEX_EMAIL_PATTERN)]);
-    this.fcAttendanceDate = new FormControl(this.minDate, []);
-    this.fcArrivalTime = new FormControl(this.defaultArrivalTime,[CoreValidators.required]);
-    this.fcExitTime = new FormControl(this.defaultExitTime, [CoreValidators.required]);
+    this.fcAttendanceDate = new FormControl('', [CoreValidators.required]);
+    this.fcArrivalTime = new FormControl('', [CoreValidators.required]);
+    this.fcExitTime = new FormControl('', [CoreValidators.required]);
+    this.fcRackIdentifier = new FormControl('', [CoreValidators.required]);
     this.fcWorkToPerform = new FormControl('', [CoreValidators.required]);
     this.fcToolsRequired = new FormControl('', []);
     this.fcReason = new FormControl('', [CoreValidators.required]);
@@ -371,6 +419,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
       fcAttendanceDate: this.fcAttendanceDate,
       fcArrivalTime: this.fcArrivalTime,
       fcExitTime: this.fcExitTime,
+      fcRackIdentifier: this.fcRackIdentifier,
       fcWorkToPerform: this.fcWorkToPerform,
       fcToolsRequired: this.fcToolsRequired,
       fcReason: this.fcReason,
@@ -380,25 +429,29 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     this.fgColocationStaffEscortDetails.valueChanges.pipe(
       takeUntil(this._formGroupSubject)
     ).subscribe();
+
+    this._subscribeAttendanceDetailsChanges();
   }
 
   /**
    * Format the schedule based on the attendance date and arrival time
    */
-  private _formatSchedule(attendanceDate: Date, arrivalTime: [number, number]): string {
-    if (isNullOrEmpty(attendanceDate) || isNullOrEmpty(arrivalTime)) { return; }
-    attendanceDate.setHours(arrivalTime[0]);
-    attendanceDate.setMinutes(arrivalTime[1]);
+  private _getScheduleDateTime(): string {
+    if (isNullOrEmpty(this.fcAttendanceDate.value) || isNullOrEmpty(this.fcArrivalTime.value)) { return; }
+    let attendanceDate = new Date(this.fcAttendanceDate.value);
+    let convertedTime = this._dateTimeService.formatTimeStringToDate(this.fcArrivalTime.value);
+    attendanceDate.setHours(convertedTime.getHours());
+    attendanceDate.setMinutes(convertedTime.getMinutes());
     return attendanceDate.toISOString();
   }
 
   /**
    * Format the time similar to '00:00'
    */
-  private _formatTime(time: [number, number]): string {
+  private _formatTime(time: string): string {
     if (isNullOrEmpty(time)) { return; }
-    let formatTwoDigit = (_time) => ('0' + _time).slice(-2);
-    return `${formatTwoDigit(time[0])}:${formatTwoDigit(time[1])}`;
+    let dateTimeValue = this._dateTimeService.formatTimeStringToDate(time);
+    return this._dateTimeService.formatDate(dateTimeValue, 'HH:mm');
   }
 
   /**
@@ -437,9 +490,10 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
               attendeeJobTitle: (isEscorteeSomeoneElse) ? this.fcJobTitle.value : this._userAccount.jobTitle,
               attendeeMobileNumber: this._formatMobileNumber(),
               attendeeEmailAddress: (isEscorteeSomeoneElse) ? this.fcEmail.value : this._userAccount.emailAddress,
-              arrivalDate: this.fcAttendanceDate.value,
+              arrivalDate: new Date(this.fcAttendanceDate.value),
               arrivalTime: this._formatTime(this.fcArrivalTime.value),
               exitTime: this._formatTime(this.fcExitTime.value),
+              rackIdentifier: this.fcRackIdentifier.value,
               workRequired: this.fcWorkToPerform.value,
               toolsRequired: this.fcToolsRequired.value,
               remoteHandsExceptionReason: this.fcReason.value,
