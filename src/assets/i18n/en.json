@@ -710,7 +710,7 @@
       },
       "attendanceLabel": "Attendance Details",
       "escortee": {
-        "placeholder": "Who requires the escort?",
+        "placeholder": "Who requires the escort? *",
         "helptext": "If this escort is for yourself, we'll contact you using the information on your user account. Otherwise, please provide the contact information of the third-party that requires the escort."
       },
       "name": {
@@ -733,27 +733,27 @@
         "errorRequired": "Mobile number is required",
         "errorFormat": "Invalid mobile number format",
         "helpText": "Please input your mobile number using either one of the following formats: +61400000000, 61400000000 or just your 10 digit mobile number",
-        "placeHolder": "e.g. +61400000000 or your 10 digit mobile number"
+        "placeHolder": "Mobile number (e.g. +61 400 000 000)"
       },
       "email": {
-        "label": "E-mail address is reqruired",
+        "label": "E-mail address is required",
         "errorRequired": "Enter Email Address",
         "errorEmailFormat": "Invalid e-mail address format",
         "placeHolder": "Attendee's email address"
       },
       "attendanceDate": {
-        "label": "Date of attendance",
+        "label": "Date of attendance *",
         "helptext": "Specify the date you wish to book this staff escort for",
         "errorRequired": "Date of attendance must be entered."
       },
       "arrivalTime": {
-        "label": "Arrival time",
+        "label": "Arrival time *",
         "helptext": "Specify the time you or the third party will be arriving for the staff escort. Please note, if the person to be escorted arrives on site later than the booked time, attendance may not be granted",
         "errorMinimumTime": "Arrival time should be greater than {{standardLeadTimeHours}} hours",
         "errorMaximumTime": "Arrival time should not be later than 23:00"
       },
       "exitTime": {
-        "label": "Exit time",
+        "label": "Exit time *",
         "helptext": "If known, specify the time you or the third-party will be leaving.",
         "errorMinimumTime": "Exit time should be 30 minutes later than arrival time",
         "errorMaximumTime": "Exit time should not be later than 23:30"
@@ -766,10 +766,16 @@
         "errorRequired": "Work to be performed must be entered.",
         "placeholder": "Work to be performed"
       },
+      "rowNumberAndRack": {
+        "label": "Row number and rack",
+        "helptext": "Specify one or more row numbers and rack identifiers relating to your request (e.g. 1D, 3F, etc.)",
+        "errorRequired": "Row number and rack must be entered.",
+        "placeholder": "Row number and rack"
+      },
       "toolsRequired": {
         "label": "Tools required to be provided by us",
         "helptext": "Specify any tools you need us to provide in order to complete this work. For example, a trolley.",
-        "placeholder": ""
+        "placeholder": "Tools required to be provided by us"
       },
       "reason": {
         "label": "Reason this work cannot be performed by Remote Hands",
@@ -780,7 +786,7 @@
       },
       "referenceNumber": {
         "label": "Customer reference number",
-        "placeholder": ""
+        "placeholder": "Customer reference number"
       }
     },
     "provisioning": {

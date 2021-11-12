@@ -47,9 +47,6 @@ export class FieldInputDatePickerComponent
   @Input()
   public get minDate(): Date { return this._minDate; }
   public set minDate(min: Date) {
-    if (min.getDay < new Date().getDay) {
-      throw new Error('Declared minimum date count should not be later than or equal to current date');
-    }
     if (compareDates(min, this._maxDate) === 1) {
       throw new Error('Declared minimum date should not be later than maximum date');
     }

@@ -34,6 +34,9 @@ export class McsOrderColocationStaffEscort {
   public workRequired: string = undefined;
 
   @JsonProperty()
+  public rackIdentifier: string = undefined;
+
+  @JsonProperty()
   public toolsRequired: string = undefined;
 
   @JsonProperty()

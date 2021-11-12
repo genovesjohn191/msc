@@ -3,6 +3,7 @@ import * as moment from 'moment-timezone';
 import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
 import {
+  containsString,
   convertDateTimezoneToUTC,
   isDateFormatValid,
   isNullOrEmpty
@@ -12,7 +13,7 @@ export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full'
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
   'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly' |
   'noYearDateShortTime' | 'longDateShortTime' | 'shortMonthYear' | 'fullMonthYear' |
-  'shortDateTime' | 'tracksDateTime';
+  'shortDateTime' | 'tracksDateTime' | '24hourTime';
 
 @Injectable()
 export class McsDateTimeService {
@@ -80,6 +81,39 @@ export class McsDateTimeService {
   }
 
   /**
+   * Converts string time to date
+   * @param time string to convert
+   */
+  public formatTimeStringToDate(time: string): Date {
+    let timeArray = time.split(' ')[0].split(':');
+    let date = new Date();
+    let hours = Number(timeArray[0]);
+    let minutes = Number(timeArray[1]);
+
+    if(containsString(time.toUpperCase(), 'PM')){
+      hours += 12;
+    }
+    else if(hours === 12){
+      hours = 0;
+    }
+
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    return date;
+  }
+
+  /**
+   * Adds time to a specific date
+   * @param date date to increment
+   * @param minutes number of hours to add, default to 1
+   */
+  public addMinutesToDate(date: Date, minutes: number = 1): Date {
+    let resultDate = new Date(date);
+    resultDate.setMinutes(date.getMinutes() + minutes);
+    return resultDate;
+  }
+
+  /**
    * Creates the date time map table associated with the formatting
    */
   private _createDateTimeTable(): void {
@@ -96,6 +130,7 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('mediumTime', 'h:mm:ss A');
     this._dateTimeMapTable.set('longTime', 'h:mm:ss A Z');
     this._dateTimeMapTable.set('fullTime', 'h:mm:ss A ZZ');
+    this._dateTimeMapTable.set('24hourTime', 'HH:mm');
     this._dateTimeMapTable.set('isoDate', 'YYYY-MM-DD[T]HH:mm');
     this._dateTimeMapTable.set('noYearDateShortTime', 'ddd, DD MMM, h:mm A');
     this._dateTimeMapTable.set('longDateShortTime', 'ddd, DD MMM YYYY, h:mm A');
