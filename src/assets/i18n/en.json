@@ -748,7 +748,7 @@
       },
       "arrivalTime": {
         "label": "Arrival time *",
-        "helptext": "Specify the time you or the third party will be arriving for the staff escort. Please note, if the person to be escorted arrives on site later than the booked time, attendance may not be granted",
+        "helptext": "Specify the time you or the third party will be arriving for the staff escort. Please note, if the person to be escorted arrives on site later than the booked time, attendance may not be granted.",
         "errorMinimumTime": "Arrival time should be greater than {{standardLeadTimeHours}} hours",
         "errorMaximumTime": "Arrival time should not be later than 23:00"
       },
