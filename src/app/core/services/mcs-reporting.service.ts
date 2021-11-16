@@ -6,6 +6,7 @@ import {
   McsQueryParam,
   McsReportAscAlerts,
   McsReportAuditAlerts,
+  McsReportRecentServiceRequestSlt,
   McsReportComputeResourceTotals,
   McsReportCostRecommendations,
   McsReportGenericItem,
@@ -204,6 +205,10 @@ export class McsReportingService {
 
   public getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsReportPlatformSecurityAdvisories[]> {
     return this._apiService.getPlatformSecurityAdvisories(query);
+  }
+
+  public getRecentServiceRequestSlt(): Observable<McsReportRecentServiceRequestSlt[]> {
+    return this._apiService.getRecentServiceRequestSlt();
   }
 
   public getComputeResourceTotals(): Observable<McsReportComputeResourceTotals> {

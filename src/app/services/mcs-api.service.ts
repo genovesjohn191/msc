@@ -267,7 +267,8 @@ import {
   McsWorkflowCreate,
   McsReportComputeResourceTotals,
   McsReportStorageResourceUtilisation,
-  McsObjectProjectParams
+  McsObjectProjectParams,
+  McsReportRecentServiceRequestSlt
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2055,6 +2056,15 @@ export class McsApiService {
     return this._reportsApi.getPlatformSecurityAdvisories(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPlatformSecurityAdvisories'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getRecentServiceRequestSlt(): Observable<McsReportRecentServiceRequestSlt[]> {
+    return this._reportsApi.getRecentServiceRequestSlt().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getRecentServiceRequestSlt'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

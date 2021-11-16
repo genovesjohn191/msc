@@ -8,6 +8,7 @@ import {
   McsQueryParam,
   McsReportAscAlerts,
   McsReportAuditAlerts,
+  McsReportRecentServiceRequestSlt,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
   McsReportComputeResourceTotals,
@@ -488,6 +489,20 @@ export class McsApiReportsService implements IMcsApiReportsService {
       map((response) => {
         let apiResponse = McsApiSuccessResponse.deserializeResponse<McsReportPlatformSecurityAdvisories[]>(
           McsReportPlatformSecurityAdvisories, response
+        );
+        return apiResponse;
+      })
+    );
+  }
+
+  public getRecentServiceRequestSlt(): Observable<McsApiSuccessResponse<McsReportRecentServiceRequestSlt[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/azure-service-request-slt';
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => {
+        let apiResponse = McsApiSuccessResponse.deserializeResponse<McsReportRecentServiceRequestSlt[]>(
+          McsReportRecentServiceRequestSlt, response
         );
         return apiResponse;
       })

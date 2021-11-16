@@ -17,6 +17,7 @@ import { OverviewDocumentDetails } from '@app/features-shared/export-document-fa
 import {
   McsContactUs,
   McsFeatureFlag,
+  McsReportRecentServiceRequestSlt,
   McsReportCostRecommendations,
   McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
@@ -69,6 +70,12 @@ export class ReportOverviewComponent {
 
   public get hasAccessToPlatformSecurity(): boolean {
     return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlatformSecurityAdvisory]);
+  }
+
+  public get hasAccessToRecentServiceRequestSlt(): boolean {
+    let hasOrderAccess = this._accessControlService.hasPermission(['OrderEdit', 'OrderView']);
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AzureServiceRequestSltReport]) &&
+      hasOrderAccess;
   }
 
   public onClickPublicCloud(): void {
@@ -131,8 +138,15 @@ export class ReportOverviewComponent {
     this._exportDocumentDetails.platformSecurity = data;
   }
 
+  public recentServiceRequestSltDataChange(data: McsReportRecentServiceRequestSlt[]): void {
+    this._exportDocumentDetails.recentServiceRequestSlt = data;
+  }
+
   public widgetsLoading(): boolean {
     let platformSecurity = this.hasAccessToPlatformSecurity ? this._exportDocumentDetails.platformSecurity : [];
+    let recentServiceRequest = this.hasAccessToRecentServiceRequestSlt ?
+      this._exportDocumentDetails.recentServiceRequestSlt : [];
+
     return this._exportDocumentDetails.azureSubscription === undefined ||
       this._exportDocumentDetails.licenseSubscription === undefined ||
       this._exportDocumentDetails.azureResources === undefined ||
@@ -141,7 +155,8 @@ export class ReportOverviewComponent {
       this._exportDocumentDetails.resourceCount === undefined ||
       this._exportDocumentDetails.azureTickets === undefined ||
       this._exportDocumentDetails.topVms === undefined ||
-      platformSecurity === undefined;
+      platformSecurity === undefined ||
+      recentServiceRequest === undefined;
   }
 
   private _registerEvents(): void {

@@ -247,6 +247,11 @@
         "title": "Platform Security Advisories",
         "subTitle": "A list of alerts which detail security events that have occurred in your Azure tenancy.",
         "noDataFound": "No platform security advisories to display."
+      },
+      "recentServiceWidget": {
+        "title": "Recent Service Requests",
+        "description": "For Custom and CloudHealth service requests on subscriptions that have a Comprehensive service level, we offer a best-efforts target of &#60;4 business hours - from the time of submission, to engineer assignment (fully supported services only). Newly submitted requests may take a few minutes to display here.",
+        "noDataFound": "No azure service request slt to display."
       }
     },
     "insights": {
@@ -3234,6 +3239,7 @@
     "getInefficientVms": "Something went wrong while retrieving your inefficient VMs information. Please try again.",
     "getTopVmsByCost": "Something went wrong while retrieving your top VMs by cost information. Please try again.",
     "getPlatformSecurityAdvisories": "Something went wrong while retrieving your platform security advisories information. Please try again.",
+    "getRecentServiceRequestSlt": "Something went wrong while retrieving your azure service request slt information. Please try again.",
     "getComputeResourceTotals": "Something went wrong while retrieving your compute resource total information. Please try again.",
     "getTerraformDeployments": "Something went wrong while retrieving your Azure deployments. Please try again.",
     "getTerraformDeployment": "Something went wrong while retrieving your Azure deployment details. Please try again.",
@@ -3319,6 +3325,7 @@
     "aggregationTarget": "Aggregation Target",
     "assignedTo": "Assigned To",
     "assignee": "Assignee",
+    "assignmentTarget": "Assignment Target",
     "attachedTo": "Attached To",
     "billingDescription": "Description",
     "billingFrequency": "Billing Frequency",
@@ -3426,6 +3433,7 @@
     "sourceInterfaces": "Source Interfaces",
     "speed": "Speed",
     "started": "Started",
+    "submitted": "Submitted",
     "subscription": "Subscription",
     "subscriptionId": "Subscription ID",
     "summary": "Summary",
@@ -3566,6 +3574,7 @@
     "month": "Month",
     "multicastIpAddress":"Multicast IP Address",
     "name": "Name",
+    "new": "New",
     "newActivity": "New Comment/Attachment",
     "none": "None",
     "notes": "Notes",
