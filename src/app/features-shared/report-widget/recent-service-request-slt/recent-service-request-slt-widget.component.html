@@ -1,0 +1,97 @@
+<div class="widget">
+  <mcs-item orientation="separated" class="title">
+    <h3>
+      {{ 'reports.overview.recentServiceWidget.title' | translate }}
+    </h3>
+    <div mcsAlign="end">
+      <a class="hide-on-print"
+        (click)="navigateToAzureServiceRequest()"
+        target="_blank"
+        mcsId="azure-service-request-slt-widget-ms-request-change-link"
+        mcsEventTracker="navigate-to-ms-request-change"
+        mcsEventCategory="order"
+        mcsEventLabel="azure-service-request-slt-widget">
+          <span>{{ 'label.new' | translate }}</span>
+      </a>
+    </div>
+  </mcs-item>
+  <div padding-top-medium [innerHtml]="'reports.overview.recentServiceWidget.description' | translate"></div>
+
+  <div class="listing-table-wrapper table-widget-wrapper">
+    <!-- Table -->
+    <table mat-table [dataSource]="dataSource">
+      <!-- Order ID Column -->
+      <ng-container matColumnDef="orderId">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.orderId' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.orderId || 'Unavailable'}}
+        </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.description' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row"
+          [mcsTextTruncate]="row.description"
+          mcsTextTruncateSize="100px"
+          [matTooltip]="row.description"
+          [matTooltipDisabled]="isTextFitToColumn(row.description)">
+          {{ row.description || 'Unavailable'}}
+        </td>
+      </ng-container>
+
+       <!-- Assignment Target Column -->
+       <ng-container matColumnDef="assignmentTarget">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.assignmentTarget' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" text-center>
+          {{ row.assignmentTarget || 'N/A'}}
+        </td>
+      </ng-container>
+
+       <!-- Submitted Column -->
+       <ng-container matColumnDef="submitted">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.submitted' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" text-center>
+          <ng-container *ngIf="row.submittedOn; else noDateTemplate">
+            {{ row.submittedOn | mcsStdDateFormat: 'shortDate' }} <br/>
+            {{ row.submittedOn | mcsStdDateFormat: 'mediumTime' }}
+          </ng-container>
+          <ng-template #noDateTemplate>
+            {{ 'message.unavailable' | translate }}
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Header and Data row -->
+      <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+    </table>
+    <!-- Table Statuses -->
+    <mcs-item orientation="block">
+      <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+        <mcs-loader size="medium"></mcs-loader>
+      </div>
+      <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+        {{ 'reports.overview.recentServiceWidget.noDataFound' | translate }}
+      </div>
+      <div *ngIf="dataSource?.hasError$ | async" text-center>
+        <div class="listing-status-wrapper">
+          <span>{{ 'reports.errorMessage' | translate }}</span>
+          <a (click)="retryDatasource()"
+            mcsId
+            mcsEventTracker="retry-loading-azure-service-request-slt-list"
+            mcsEventCategory="azure-service-request-slt"
+            mcsEventLabel="dashboard-overview-page">{{ 'reports.retryLabel' | translate }}</a>.
+        </div>
+      </div>
+    </mcs-item>
+  </div>
+</div>

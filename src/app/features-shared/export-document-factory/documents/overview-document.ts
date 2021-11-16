@@ -9,6 +9,7 @@ import {
   McsContactUs,
   McsFeatureFlag,
   McsPermission,
+  McsReportRecentServiceRequestSlt,
   McsReportCostRecommendations,
   McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
@@ -38,6 +39,11 @@ export class OverviewDocument implements IDashboardExportDocument {
 
   public get hasAccessToPlatformSecurityListing(): boolean {
     return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlatformSecurityAdvisory]);
+  }
+
+  public get hasAccessToRecentServiceRequest(): boolean {
+    return this._accessControlService.hasAccessToFeature(McsFeatureFlag.AzureServiceRequestSltReport) &&
+      this._accessControlService.hasPermission(['OrderEdit', 'OrderApprove']);
   }
 
   public setInjector(injector: Injector): void {
@@ -81,6 +87,7 @@ export class OverviewDocument implements IDashboardExportDocument {
           ${this._createContactUsHtml(overviewDetails.contactUs)}
           ${this._createResourceChangesHtml(overviewDetails)}
           ${this._createAzureTicketsHtml(overviewDetails.azureTickets)}
+          ${this._createRecentServiceRequestSltHtml(overviewDetails.recentServiceRequestSlt)}
           ${this._createTopVmsByCostHtml(overviewDetails.topVms)}
           ${this._createPlatformSecurityHtml(overviewDetails.platformSecurity)}
         </div>
@@ -200,6 +207,46 @@ export class OverviewDocument implements IDashboardExportDocument {
     return actualResponse;
   }
 
+  private _createRecentServiceRequestSltHtml(data: McsReportRecentServiceRequestSlt[]): string {
+    if (!this.hasAccessToRecentServiceRequest) { return ''; }
+
+    let title = this._translate('reports.overview.recentServiceWidget.title');
+    let subTitle = `${this._translate('reports.overview.recentServiceWidget.description')}`
+    let recentServiceRequestSltTable = '';
+    recentServiceRequestSltTable += `
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
+        <tr style="background-color: #000; color: #FFF;">
+          <th style="text-align: left">Order ID</th>
+          <th style="text-align: left">Description</th>
+          <th style="text-align: left">Assignment Target</th>
+          <th style="text-align: left">Submitted</th>
+        </tr>`;
+        if (data?.length > 0) {
+          data.forEach(item => {
+            let submittedOn = 'Unavailable';
+            if (item.submittedOn) {
+              submittedOn = `${this._formatDate(item.submittedOn, 'shortDate')} <br/>
+              ${this._formatDate(item.submittedOn, 'mediumTime')}`
+            }
+            recentServiceRequestSltTable += `
+              <tr style="text-align: left;">
+                <td>${item.orderId ? item.orderId : 'Unavailable'}</td>
+                <td>${item.description ? item.description : 'Unavailable'}</td>
+                <td style="text-align: center">${item.assignmentTarget ? item.assignmentTarget : 'N/A'}</td>
+                <td style="text-align: center">${submittedOn}</td>
+              </tr>
+            `;
+          });
+        }
+        recentServiceRequestSltTable += `</table>`;
+        if (data?.length === 0) {
+          recentServiceRequestSltTable += `<p>
+            ${this._translate('reports.overview.recentServiceWidget.noDataFound')}`;
+        }
+    let actualResponse = this._widgetHtml(recentServiceRequestSltTable, false, title, subTitle);
+    return actualResponse;
+  }
+
   private _createTopVmsByCostHtml(data: McsReportTopVmsByCost[]): string {
     let title = this._translate('reports.overview.topVmsByCostWidget.title');
     let subTitle = `${this._translate('reports.overview.topVmsByCostWidget.subTitle')}`
@@ -253,7 +300,7 @@ export class OverviewDocument implements IDashboardExportDocument {
                 <td>${item.description}</td>
                 <td>${item.impactedServices.join(', ')}</td>
                 <td>${item.impactedRegions.join(', ')}</td>
-                <td>${item.startTime}</td>
+                <td>${this._formatDate(item.startTime, 'default')}</td>
               </tr>
             `;
           });

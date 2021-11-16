@@ -320,6 +320,7 @@ export * from './response/mcs-report-audit-alerts';
 export * from './response/mcs-report-inefficient-vms';
 export * from './response/mcs-report-top-vms-by-cost';
 export * from './response/mcs-report-platform-security-advisories';
+export * from './response/mcs-report-recent-service-request-slt';
 export * from './response/mcs-report-compute-resource-totals';
 export * from './response/mcs-report-storage-profile-utilisation';
 export * from './response/mcs-tenant';

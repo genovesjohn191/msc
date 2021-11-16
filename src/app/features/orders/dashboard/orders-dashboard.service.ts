@@ -98,6 +98,15 @@ export class OrdersDashboardService {
           let familyIsExisting = familyMap.has(family.name);
           if (familyIsExisting) {
             let currentFamilyFromMap = familyMap.get(family.name);
+            currentFamilyFromMap.groups.forEach((currentFamilyGroup) => {
+              family.groups.forEach((familyGroup) => {
+                let isGroupExisting = familyGroup.name === currentFamilyGroup.name;
+                if (isGroupExisting) {
+                  familyGroup.orderAvailableItemTypes.push(...currentFamilyGroup.orderAvailableItemTypes);
+                  currentFamilyGroup.orderAvailableItemTypes = [];
+                }
+              })
+            })
             currentFamilyFromMap.groups = [...currentFamilyFromMap.groups, ...family.groups];
             return;
           }

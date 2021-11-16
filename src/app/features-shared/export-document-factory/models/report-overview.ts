@@ -1,5 +1,6 @@
 import {
   McsContactUs,
+  McsReportRecentServiceRequestSlt,
   McsReportCostRecommendations,
   McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
@@ -16,4 +17,5 @@ export class OverviewDocumentDetails {
   public azureTickets: McsTicket[];
   public topVms: McsReportTopVmsByCost[];
   public platformSecurity: McsReportPlatformSecurityAdvisories[];
+  public recentServiceRequestSlt: McsReportRecentServiceRequestSlt[];
 }

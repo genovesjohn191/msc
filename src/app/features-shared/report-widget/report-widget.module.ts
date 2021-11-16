@@ -36,12 +36,16 @@ import { TopVmsByCostWidgetComponent } from './top-vms-by-cost/top-vms-by-cost-w
 import { UpdateManagementWidgetComponent } from './update-management/update-management-widget.component';
 import { VirtualMachineUsageBreakdownWidgetComponent } from './virtual-machine-usage-breakdown/virtual-machine-usage-breakdown-widget.component';
 import { VmRightsizingWidgetComponent } from './vm-rightsizing/vm-rightsizing-widget.component';
+import { RecentServiceRequestSltWidgetComponent } from './recent-service-request-slt/recent-service-request-slt-widget.component';
 
 const exports: any[] | Type<any> = [
   AscAlertsWidgetComponent,
   AuditAlertsWidgetComponent,
   AzureResourcesWidgetComponent,
   AzureTicketsWidgetComponent,
+  BackupSecurityWidgetComponent,
+  BillingServiceWidgetComponent,
+  BillingSummaryWidgetComponent,
   ChangeRequestWidgetComponent,
   ComplianceWidgetComponent,
   ContactUsWidgetComponent,
@@ -51,6 +55,9 @@ const exports: any[] | Type<any> = [
   OperationalMonthlySavingsWidgetComponent,
   OperationalSavingsSubitemsViewerComponent,
   PerformanceAndScalabilityWidgetComponent,
+  PlatformSecurityAdvisoriesWidgetComponent,
+  PrivateCloudServicesOverviewWidgetComponent,
+  RecentServiceRequestSltWidgetComponent,
   ReportWidgetDataStatusComponent,
   ResourceChangesWidgetComponent,
   ResourceHealthWidgetComponent,
@@ -58,16 +65,11 @@ const exports: any[] | Type<any> = [
   SecurityWidgetComponent,
   ServicesCostOverviewWidgetComponent,
   ServicesOverviewWidgetComponent,
+  StorageProfileUtilisationWidgetComponent,
   TopVmsByCostWidgetComponent,
   UpdateManagementWidgetComponent,
   VirtualMachineUsageBreakdownWidgetComponent,
-  VmRightsizingWidgetComponent,
-  BillingSummaryWidgetComponent,
-  BillingServiceWidgetComponent,
-  PlatformSecurityAdvisoriesWidgetComponent,
-  PrivateCloudServicesOverviewWidgetComponent,
-  BackupSecurityWidgetComponent,
-  StorageProfileUtilisationWidgetComponent
+  VmRightsizingWidgetComponent
 ];
 
 @NgModule({
