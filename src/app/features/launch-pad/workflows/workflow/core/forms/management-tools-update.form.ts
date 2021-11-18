@@ -1,8 +1,17 @@
-import { DynamicInputIpField, DynamicInputTextField, DynamicSelectField, DynamicSlideToggleField } from '@app/features-shared/dynamic-form';
+import {
+  DynamicInputHostNameField,
+  DynamicInputIpField,
+  DynamicInputTextField,
+  DynamicSelectChipsManagementDomainField,
+  DynamicSelectField
+} from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { LaunchPadForm } from './form.interface';
-import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
+import {
+  CrispAttributeNames,
+  findCrispElementAttribute
+} from './mapping-helper';
 import { standardContextMapper } from './shared/standard-context-mapper';
 
 export const updateInManagementToolsForm: LaunchPadForm = {
@@ -11,15 +20,22 @@ export const updateInManagementToolsForm: LaunchPadForm = {
       key: 'ipAddress',
       label: 'IP Address',
       placeholder: 'Enter an IP address',
-      hint: 'IP address is required if no management name is provided'
+      hint: 'IP address is required if no management domain is provided'
     }),
-    new DynamicInputTextField({
-      key: 'managementName',
-      label: 'Management Name',
-      placeholder: 'Enter management name',
-      validators: { maxlength: 200 },
-      eventName: 'management-name-change',
-      dependents: [ 'ipAddress' ]
+    new DynamicInputHostNameField({
+      key: 'hostName',
+      label: 'Hostname',
+      placeholder: 'Enter a hostname',
+      validators: { required: true }
+    }),
+    new DynamicSelectChipsManagementDomainField({
+      key: 'managementDomain',
+      label: 'Management Domain',
+      placeholder: 'Select or enter a management domain...',
+      allowCustomInput: true,
+      maxItems: 1,
+      dependents: [ 'ipAddress' ],
+      eventName: 'management-name-change'
     }),
     new DynamicInputTextField({
       key: 'communityString',
