@@ -7,6 +7,17 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
+
 import {
   McsTableDataSource2,
   McsMatTableQueryParam,
@@ -28,8 +39,6 @@ import {
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { WorkflowSelectorConfig } from '../../workflows/workflow';
 
 @Component({
@@ -68,6 +77,10 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
   }
 
   public searching: boolean;
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   public searchChangedStream: EventEmitter<any> =  new EventEmitter<any>();
 
@@ -83,6 +96,13 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
 
   public showLoading(showLoading: boolean): void { }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   public ngOnDestroy(): void {
     unsubscribeSafely(this.searchChangedStream);
     this.dataSource.disconnect(null);
@@ -93,9 +113,18 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getCrispElements(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
+      }));
   }
 
   public retryDatasource(): void {
