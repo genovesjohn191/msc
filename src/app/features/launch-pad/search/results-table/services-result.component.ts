@@ -7,8 +7,16 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Sort } from '@angular/material/sort';
+
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   McsMatTableConfig,
@@ -33,7 +41,6 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { WorkflowSelectorConfig } from '../../workflows/workflow';
-
 @Component({
   selector: 'mcs-launch-pad-search-services-result',
   templateUrl: './services-result.component.html',
@@ -76,6 +83,10 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
   public readonly dataSource: McsTableDataSource2<McsObjectInstalledService>;
 
   public _keyword: string = '';
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   public constructor(private _changeDetector: ChangeDetectorRef, private _apiService: McsApiService) {
     this.dataSource = new McsTableDataSource2<McsObjectInstalledService>(this._getData.bind(this))
@@ -90,14 +101,11 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
     this.dataSource.disconnect(null);
   }
 
-  private _getData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectInstalledService>> {
-    let queryParam = new McsQueryParam();
-    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
-    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
-    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-
-    return this._apiService.getInstalledServices(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
   }
 
   public retryDatasource(): void {
@@ -115,5 +123,24 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
       productId: record.productId,
       type: productType
     };
+  }
+
+  private _getData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectInstalledService>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
+    return this._apiService.getInstalledServices(queryParam).pipe(
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
+      }));
   }
 }

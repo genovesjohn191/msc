@@ -4,11 +4,15 @@ import {
   Injector,
   OnDestroy
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+
 import {
   Observable,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   map,
   shareReplay,
   takeUntil,
@@ -44,8 +48,12 @@ export class CrispOrderElementsComponent implements OnDestroy {
   public crispOrder$:  Observable<McsObjectCrispOrder>;;
   public readonly dataSource: McsTableDataSource2<McsObjectCrispElement>;
 
+  public isSorting: boolean;
+
   public state: CrispOrderState = 'OPEN';
   private _orderId: string;
+  private _sortDirection: string;
+  private _sortField: string;
   private _destroySubject = new Subject<void>();
 
   public readonly defaultColumnFilters = [
@@ -75,6 +83,13 @@ export class CrispOrderElementsComponent implements OnDestroy {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
+  }
+
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
   }
 
   public selectedTabChange(tab: MatTabChangeEvent): void {
@@ -118,8 +133,17 @@ export class CrispOrderElementsComponent implements OnDestroy {
     queryParam.pageIndex = 1;
     queryParam.pageSize = 100;
     queryParam.state = this.state;
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getCrispOrderElements(this._crispOrderService.getCrispOrderId().toString(), queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection, response?.totalCollectionCount)
+      }));
   }
 }

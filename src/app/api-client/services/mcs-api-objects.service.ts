@@ -27,18 +27,11 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
   public getCrispElements(query?: McsObjectQueryParams): Observable<McsApiSuccessResponse<McsObjectCrispElement[]>> {
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('company_id', query.companyId);
-    searchParams.set('product_type', query.productType);
+    if (isNullOrEmpty(query)) { query = new McsObjectQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/objects/crisp-elements';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsObjectQueryParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -63,18 +56,11 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
   }
 
   public getInstalledServices(query?: McsObjectQueryParams): Observable<McsApiSuccessResponse<McsObjectInstalledService[]>> {
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('company_id', query.companyId);
-    searchParams.set('product_type', query.productType);
+    if (isNullOrEmpty(query)) { query = new McsObjectQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/objects/crisp-installed-services';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsObjectQueryParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -85,18 +71,11 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
   }
 
   public getCrispOrders(query?: McsObjectCrispOrderQueryParams): Observable<McsApiSuccessResponse<McsObjectCrispOrder[]>> {
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('assignee', query.assignee);
-    searchParams.set('state', query.state);
+    if (isNullOrEmpty(query)) { query = new McsObjectCrispOrderQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/objects/crisp-orders';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsObjectCrispOrderQueryParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -122,19 +101,11 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
 
   public getCrispOrderElements(orderId: string, query?: McsObjectCrispOrderQueryParams):
   Observable<McsApiSuccessResponse<McsObjectCrispElement[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('assignee', query.assignee);
-    searchParams.set('state', query.state);
+    if (isNullOrEmpty(query)) { query = new McsObjectCrispOrderQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/objects/crisp-orders/${orderId}/elements`;
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsObjectCrispOrderQueryParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

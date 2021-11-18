@@ -1,22 +1,21 @@
+import { JsonProperty } from '@app/utilities';
 import { McsQueryParam } from './mcs-query-param';
 
 export class McsObjectQueryParams extends McsQueryParam {
-  public companyId?: string;
-  public productType?: string;
+  @JsonProperty({ name: 'company_id' })
+  public companyId?: string = undefined;
 
-  constructor() {
-    super();
-  }
+  @JsonProperty({ name: 'product_type' })
+  public productType?: string = undefined;
 }
 
 export type CrispOrderState = '' | 'OPEN' | 'CLOSED';
 export class McsObjectCrispOrderQueryParams extends McsQueryParam {
-  public state?: CrispOrderState;
-  public assignee?: string;
+  @JsonProperty({ name: 'state' })
+  public state?: CrispOrderState = undefined;
 
-  constructor() {
-    super();
-  }
+  @JsonProperty({ name: 'assignee' })
+  public assignee?: string = undefined;
 }
 
 export class McsObjectVdcQueryParams extends McsQueryParam {
