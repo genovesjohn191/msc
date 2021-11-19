@@ -47,7 +47,7 @@ export enum TaskType {
 
   PublicCloudLicenseChangeCount = 6000,
 
-  // Launchpad 7000-8999
+  // LaunchPad 7000-8999
   LaunchpadManagedServerCreate = 7000,
   LaunchpadManagementToolsAdd = 7001,
   LaunchpadManagementToolsDelete = 7002,

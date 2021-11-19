@@ -76,7 +76,7 @@ export class LaunchPadWorkflowLaunchComponent implements OnInit {
         let workflowGroupIdParam = params.get(worklowGroupIdParam);
         let id: any = WorkflowGroupId[WorkflowGroupId[workflowGroupIdParam]];
 
-        // Set LAUNCH pad context
+        // Set LaunchPad context
         this.context = {
           source: params.get(sourceParam) as LaunchPadContextSource,
           workflowGroupId: id,
@@ -96,7 +96,7 @@ export class LaunchPadWorkflowLaunchComponent implements OnInit {
           return;
         }
 
-        // Set LAUNCH pad config
+        // Set LaunchPad config
         this._loadWorkflow(this.context);
       })
     ).subscribe();

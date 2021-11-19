@@ -62,7 +62,7 @@ export enum JobType {
   ManagedServerProvisionVmBackup = 100607,
   ManagedServerProvisionBat = 1000608,
 
-  // Launchpad
+  // LaunchPad
   LaunchpadManagedServerCreate = 102001,
   LaunchpadManagementToolsAdd = 102002,
   LaunchpadManagementToolsDelete = 102003,

@@ -13,7 +13,7 @@
         </a>
       </li>
 
-      <!-- LAUNCH Pad -->
+      <!-- LaunchPad -->
       <ng-container *ngIf="!isImpersonating">
         <li *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableLaunchPad']" hidden-small>
           <a (click)="toggleThis('showLaunchPadMenu')"

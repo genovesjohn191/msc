@@ -7,7 +7,7 @@
   "launchPad": {
     "enumKey": "LaunchPad",
     "navigationPath": "launch-pad",
-    "documentTitle": "LAUNCH Pad",
+    "documentTitle": "LaunchPad",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
@@ -15,7 +15,7 @@
     "enumKey": "LaunchPadSearch",
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/search",
-    "documentTitle": "LAUNCH Pad - Search",
+    "documentTitle": "LaunchPad - Search",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
@@ -23,7 +23,7 @@
     "enumKey": "LaunchPadWorkflowLaunch",
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/workflows/launch",
-    "documentTitle": "LAUNCH Pad - Launch",
+    "documentTitle": "LaunchPad - Launch",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
@@ -31,7 +31,7 @@
     "enumKey": "LaunchPadAzureDeployments",
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments",
-    "documentTitle": "LAUNCH Pad - Azure Deployments",
+    "documentTitle": "LaunchPad - Azure Deployments",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
@@ -40,7 +40,7 @@
     "enumKey": "LaunchPadAzureDeploymentCreate",
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments/create",
-    "documentTitle": "LAUNCH Pad - Create Azure Deployment",
+    "documentTitle": "LaunchPad - Create Azure Deployment",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
@@ -49,7 +49,7 @@
     "enumKey": "LaunchPadAzureDeploymentDetails",
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments",
-    "documentTitle": "LAUNCH Pad - Azure Deployment Details",
+    "documentTitle": "LaunchPad - Azure Deployment Details",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
@@ -58,7 +58,7 @@
     "enumKey": "LaunchPadAzureDeploymentDetailsOverview",
     "enumCategory": "LaunchPad",
     "navigationPath": "overview",
-    "documentTitle": "LAUNCH Pad - Azure Deployment Overview",
+    "documentTitle": "LaunchPad - Azure Deployment Overview",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
@@ -67,7 +67,7 @@
     "enumKey": "LaunchPadAzureDeploymentDetailsHistory",
     "enumCategory": "LaunchPad",
     "navigationPath": "history",
-    "documentTitle": "LAUNCH Pad - Azure Deployment History",
+    "documentTitle": "LaunchPad - Azure Deployment History",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
@@ -76,7 +76,7 @@
     "enumKey": "LaunchPadNetworkDbSites",
     "enumCategory": "LaunchPadNetworkDb",
     "navigationPath": "launch-pad/network-db/sites",
-    "documentTitle": "LAUNCH Pad - Network DB Sites",
+    "documentTitle": "LaunchPad - Network DB Sites",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -85,7 +85,7 @@
     "enumKey": "LaunchPadNetworkDbPods",
     "enumCategory": "LaunchPadNetworkDb",
     "navigationPath": "launch-pad/network-db/pods",
-    "documentTitle": "LAUNCH Pad - Network DB PODs",
+    "documentTitle": "LaunchPad - Network DB PODs",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -94,7 +94,7 @@
     "enumKey": "LaunchPadNetworkDbVlans",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/vlans",
-    "documentTitle": "LAUNCH Pad - VLAN DB VLANs",
+    "documentTitle": "LaunchPad - VLAN DB VLANs",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -103,7 +103,7 @@
     "enumKey": "LaunchPadNetworkDbVnis",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/vnis",
-    "documentTitle": "LAUNCH Pad - VLAN DB VNIs",
+    "documentTitle": "LaunchPad - VLAN DB VNIs",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -112,7 +112,7 @@
     "enumKey": "LaunchPadNetworkDbUseCases",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/use-cases",
-    "documentTitle": "LAUNCH Pad - VLAN DB Use Cases",
+    "documentTitle": "LaunchPad - VLAN DB Use Cases",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -121,7 +121,7 @@
     "enumKey": "LaunchPadNetworkDbMulticastIps",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/multicast-ips",
-    "documentTitle": "LAUNCH Pad - VLAN DB Multicast IPs",
+    "documentTitle": "LaunchPad - VLAN DB Multicast IPs",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -130,7 +130,7 @@
     "enumKey": "LaunchPadNetworkDbNetworks",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/networks",
-    "documentTitle": "LAUNCH Pad - VLAN DB Networks",
+    "documentTitle": "LaunchPad - VLAN DB Networks",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -139,7 +139,7 @@
     "enumKey": "LaunchPadNetworkDbNetworkDetails",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/networks",
-    "documentTitle": "LAUNCH Pad - Network Details",
+    "documentTitle": "LaunchPad - Network Details",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -148,7 +148,7 @@
     "enumKey": "LaunchPadNetworkDbNetworkDetailsOverview",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "overview",
-    "documentTitle": "LAUNCH Pad - Network Overview",
+    "documentTitle": "LaunchPad - Network Overview",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -157,7 +157,7 @@
     "enumKey": "LaunchPadNetworkDbNetworkDetailsEvents",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "events",
-    "documentTitle": "LAUNCH Pad - Network Events",
+    "documentTitle": "LaunchPad - Network Events",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -166,7 +166,7 @@
     "enumKey": "LaunchPadNetworkDbNetworkDetailsVlans",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "vlans",
-    "documentTitle": "LAUNCH Pad - Network Vlans",
+    "documentTitle": "LaunchPad - Network VLANs",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -175,7 +175,7 @@
     "enumKey": "LaunchPadNetworkDbNetworkDetailsEdit",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "edit",
-    "documentTitle": "LAUNCH Pad - Network Edit",
+    "documentTitle": "LaunchPad - Edit Network",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -184,7 +184,7 @@
     "enumKey": "LaunchPadNetworkDbNetworkCreate",
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/networks/create",
-    "documentTitle": "LAUNCH Pad - Create a Network",
+    "documentTitle": "LaunchPad - Create a Network",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
@@ -220,7 +220,7 @@
     "enumKey": "LaunchPadCrispOrders",
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "launch-pad/dashboard/orders",
-    "documentTitle": "CRISP - Orders",
+    "documentTitle": "Dashboard - My Orders",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
@@ -229,7 +229,7 @@
     "enumKey": "LaunchPadCrispOrderDetails",
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "launch-pad/dashboard/orders",
-    "documentTitle": "CRISP - Order Details",
+    "documentTitle": "Order Details",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
@@ -238,7 +238,7 @@
     "enumKey": "LaunchPadCrispOrderDetailsElements",
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "elements",
-    "documentTitle": "CRISP - Order Elements",
+    "documentTitle": "Order Elements",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
@@ -249,14 +249,14 @@
     "navigationPath": "private-cloud/dashboard/overview",
     "enumPlatform": "Private",
     "requiredFeatureFlag": ["EnablePrivateCloudDashboard"],
-    "documentTitle": "Private Cloud Dashboard Overview - Macquarie Cloud Services"
+    "documentTitle": "Private Cloud Overview - Macquarie Cloud Services"
   },
   "reportOverview": {
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",
     "navigationPath": "dashboard/overview",
     "enumPlatform": "Public",
-    "documentTitle": "Overview - Macquarie Cloud Services",
+    "documentTitle": "Public Cloud Overview - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnablePublicCloudDashboard"
   },
   "reportInsights": {
@@ -264,7 +264,7 @@
     "enumCategory": "Dashboard",
     "navigationPath": "dashboard/insights",
     "enumPlatform": "Public",
-    "documentTitle": "Insights - Macquarie Cloud Services",
+    "documentTitle": "Public Cloud Insights - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnablePublicCloudDashboard"
   },
   "azure": {
@@ -507,7 +507,7 @@
     "enumKey": "InternetDetailsManagement",
     "navigationPath": "management",
     "requiredPermissions": ["InternetView"],
-    "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
+    "documentTitle": "Internet Port Management - Macquarie Cloud Services"
   },
   "dnsListing": {
     "enumKey": "DnsListing",
@@ -516,7 +516,7 @@
     "navigationPath": "network/dns",
     "requireAllFeatures": true,
     "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
-    "documentTitle": "DNS Listing - Macquarie Cloud Services"
+    "documentTitle": "DNS Services - Macquarie Cloud Services"
   },
   "dnsDetails": {
     "enumKey": "DnsDetails",
@@ -550,7 +550,7 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargets",
     "navigationPath": "storage/aggregation-targets",
-    "documentTitle": "Storage - Macquarie Cloud Services"
+    "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetails": {
     "enumPlatform": "Private",
@@ -564,14 +564,14 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetailsManagement",
     "navigationPath": "management",
-    "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
+    "documentTitle": "BAT Management - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetailsLinkedServices": {
     "enumPlatform": "Private",
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetailsLinkedServices",
     "navigationPath": "linked-services",
-    "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
+    "documentTitle": "Linked Services - Macquarie Cloud Services"
   },
   "licenses": {
     "enumPlatform": "Public",
@@ -590,14 +590,14 @@
     "enumCategory": "Billing",
     "enumKey": "BillingSummary",
     "navigationPath": "summary",
-    "documentTitle": "Billing Summary - Macquarie Cloud Services"
+    "documentTitle": "Bill Summary - Macquarie Cloud Services"
   },
   "billingService": {
     "enumPlatform": "Public",
     "enumCategory": "Billing",
     "enumKey": "BillingService",
     "navigationPath": "service",
-    "documentTitle": "Billing Service - Macquarie Cloud Services"
+    "documentTitle": "Bill Services - Macquarie Cloud Services"
   },
   "billingTabular": {
     "enumPlatform": "Public",
@@ -666,26 +666,26 @@
   "catalogProductsPlatform": {
     "enumKey": "CatalogProductsPlatform",
     "navigationPath": "catalog/products/platform",
-    "documentTitle": "Catalog Product Platform - Macquarie Cloud Services"
+    "documentTitle": "Product Catalog - Macquarie Cloud Services"
   },
   "catalogProduct": {
     "enumKey": "CatalogProduct",
     "navigationPath": "catalog/products",
-    "documentTitle": "Catalog Product - Macquarie Cloud Services"
+    "documentTitle": "Product Catalog - Macquarie Cloud Services"
   },
   "catalogSolution": {
     "enumKey": "CatalogSolution",
     "navigationPath": "catalog/solutions",
     "requiredFeatureFlag": ["EnableCatalogSolutionListing"],
     "requireAllFeatures": true,
-    "documentTitle": "Catalog Solution - Macquarie Cloud Services"
+    "documentTitle": "Solution Catalog - Macquarie Cloud Services"
   },
   "catalogSolutions": {
     "enumKey": "CatalogSolutions",
     "navigationPath": "catalog/solutions",
     "requiredFeatureFlag": ["EnableCatalogSolutionListing"],
     "requireAllFeatures": true,
-    "documentTitle": "Catalog Solutions - Macquarie Cloud Services"
+    "documentTitle": "Solution Catalog - Macquarie Cloud Services"
   },
   "orders": {
     "enumKey": "OrdersHistory",
@@ -706,14 +706,14 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/dashboard",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Orders Dashboard - Macquarie Cloud Services"
+    "documentTitle": "Make a Change - Macquarie Cloud Services"
   },
   "orderServerManagedScale": {
     "enumKey": "OrderServerManagedScale",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/server-managed-scale",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
+    "documentTitle": "Scale Managed Server - Macquarie Cloud Services"
   },
   "orderVdcScale": {
     "enumKey": "OrderVdcScale",
@@ -728,7 +728,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/vdc-storage",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Expand Vdc Storage - Macquarie Cloud Services"
+    "documentTitle": "Expand VDC Storage - Macquarie Cloud Services"
   },
   "orderVdcStorageCreate": {
     "enumKey": "OrderVdcStorageCreate",
@@ -737,14 +737,14 @@
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": ["EnableOrderingVdcStorageProvision"],
     "requireAllFeatures": true,
-    "documentTitle": "Create Vdc Storage - Macquarie Cloud Services"
+    "documentTitle": "Create VDC Storage - Macquarie Cloud Services"
   },
   "orderServiceInviewRaise": {
     "enumKey": "OrderServiceInviewRaise",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/services/inview",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Service Raise Inview Level - Macquarie Cloud Services"
+    "documentTitle": "Raise InView Level - Macquarie Cloud Services"
   },
   "orderServiceCustomChange": {
     "enumKey": "OrderServiceCustomChange",
@@ -753,7 +753,7 @@
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": ["EnableOrderingServiceCustomRequest"],
     "requireAllFeatures": true,
-    "documentTitle": "Custom Change Service - Macquarie Cloud Services"
+    "documentTitle": "Custom Change - Macquarie Cloud Services"
   },
   "orderHostedDnsChange": {
     "enumKey": "OrderHostedDnsChange",
@@ -770,7 +770,7 @@
     "navigationPath": "orders/change/colocation/staff-escort",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingColocationStaffEscort",
-    "documentTitle": "Colocation Staff Escort - Macquarie Cloud Services"
+    "documentTitle": "Intellicentre Staff Escort - Macquarie Cloud Services"
   },
   "orderColocationDeviceRestart": {
     "enumKey": "OrderColocationDeviceRestart",
@@ -799,21 +799,21 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/server-backup",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Add Server Backup Provision - Macquarie Cloud Services"
+    "documentTitle": "Add Server Backup - Macquarie Cloud Services"
   },
   "orderAddVmBackup": {
     "enumKey": "OrderAddVmBackup",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/vm-backup",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Add VM Backup Provision - Macquarie Cloud Services"
+    "documentTitle": "Add VM Backup - Macquarie Cloud Services"
   },
   "orderAddBat": {
     "enumKey": "OrderAddBat",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/backup-aggregation-target",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Add Backup Aggregation Target Provision - Macquarie Cloud Services"
+    "documentTitle": "New BAT - Macquarie Cloud Services"
   },
   "orderMsLicenseCountChange": {
     "enumKey": "OrderMsLicenseCountChange",
@@ -829,7 +829,7 @@
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": ["EnableOrderingMicrosoftRequestChange"],
     "requireAllFeatures": true,
-    "documentTitle": "Microsoft Place Service Request - Macquarie Cloud Services"
+    "documentTitle": "Place a Service Request - Macquarie Cloud Services"
   },
   "orderRemoteHands": {
     "enumKey": "OrderRemoteHands",
@@ -858,7 +858,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/add-simple-firewall",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Add Simple Firewall - Macquarie Cloud Services"
+    "documentTitle": "Simple Firewall Change - Add - Macquarie Cloud Services"
   },
   "orderModifySimpleFirewallChange": {
     "enumPlatform": "Private",
@@ -866,7 +866,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/modify-simple-firewall",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Modify Simple Firewall - Macquarie Cloud Services"
+    "documentTitle": "Simple Firewall Change - Modify - Macquarie Cloud Services"
   },
   "orderRemoveSimpleFirewallChange": {
     "enumPlatform": "Private",
@@ -874,7 +874,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/remove-simple-firewall",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Remove Simple Firewall - Macquarie Cloud Services"
+    "documentTitle": "Simple Firewall Change - Remove - Macquarie Cloud Services"
   },
   "orderAzureProfessionalServiceRequest": {
     "enumKey": "OrderAzureProfessionalServiceRequest",

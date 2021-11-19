@@ -34,7 +34,7 @@ export class DashboardGuard implements CanActivate {
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
 
-    // Try Navigate to Launchpad Projects - Default Page for Engineers
+    // Try Navigate to LaunchPad Projects - Default Page for Engineers
     let activeCompanyId = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT) ||
       this._authenticationIdentity.user?.companyId;
     let hasLaunchpadProjectsAccess =

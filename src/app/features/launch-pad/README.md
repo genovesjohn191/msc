@@ -1,16 +1,16 @@
-# LAUNCH PAD Workflow Builder Guide
+# LaunchPad Workflow Builder Guide
 
 ### 1. Create Workflow Group
 Create new workflow group under `/core/workflows/workflow-group`
 - `id` --- create and specify a `workflowType`
-- `productType` --- this should match the productType of the target CRISP object, the productType of child workflows should match the associated CRISP object. This will allow the LAUNCH Pad to match and populate CRISP object data with the form.
+- `productType` --- this should match the productType of the target CRISP object, the productType of child workflows should match the associated CRISP object. This will allow the LaunchPad to match and populate CRISP object data with the form.
 - `title` --- title of the workflow
 - `form` --- create and specify a `LaunchPadForm`
 
 ### 2. Create Workflow Form
 Create new `LaunchPadForm` under `/core/workflows/forms`
 - `config` --- array of `DynamicFormFieldConfigBase`. list of fields that will be in the form
-- `mapContext` --- (optional) callback function for mapping LAUNCH Pad context to a form. This is necessary if the form requires access to `WorkflowGroupSaveState`
+- `mapContext` --- (optional) callback function for mapping LaunchPad context to a form. This is necessary if the form requires access to `WorkflowGroupSaveState`
 - `mapCrispElementAttributes` --- (optional) callback function for mapping CRISP object payload to the form. This is necessary if the form is expecting to receive CRISP elements payload info.
 
 ### 3. Build Workflow Relationships
