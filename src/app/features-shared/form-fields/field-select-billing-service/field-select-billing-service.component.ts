@@ -6,7 +6,7 @@ import {
   OnDestroy,
   ViewEncapsulation
 } from '@angular/core';
-import { BillingServiceItem } from '@app/features-shared/report-widget/billing-service/billing-service-item';
+import { BillingServiceItem } from '@app/features-shared/report-widget/billing';
 import { unsubscribeSafely } from '@app/utilities';
 
 import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';

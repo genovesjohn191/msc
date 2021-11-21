@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ChartItem } from './chart-item.interface';
 import { isNullOrEmpty } from '@app/utilities';
+
+import { ChartItem } from './chart-item.interface';
 
 interface Series {
   name: string;
