@@ -51,8 +51,7 @@
                       <mcs-select [formControl]="fcDnsService" required autoSelect="false"
                         [placeholder]="'orderHostedDnsChange.requestDetails.dnsService.placeholder' | translate"
                         [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.dnsService.helptext' | translate"
-                        mcsId="select-dns-service" mcsEventTracker="select-dns-service" mcsEventCategory="order"
-                        mcsEventLabel="order-hosted-dns-change-page"
+                        mcsId="select-dns-service"
                         (selectionChange)="onDnsServiceChange($event)">
                         <mcs-option *ngFor="let networkDnsOption of networkDnsOptions" [value]="networkDnsOption.value"
                         [selected]="(selectedDnsNetwork$ | async)?.serviceId === networkDnsOption.value.serviceId">
@@ -80,8 +79,7 @@
                       <mcs-select [formControl]="fcZone" required autoSelect="false"
                         [placeholder]="'orderHostedDnsChange.requestDetails.zones.placeholder' | translate"
                         [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.zones.helptext' | translate"
-                        mcsId="select-dns-zones" mcsEventTracker="select-dns-zones" mcsEventCategory="order"
-                        mcsEventLabel="order-hosted-dns-change-page">
+                        mcsId="select-dns-zones">
                         <mcs-option *ngFor="let zone of networkDnsZoneOptions" [value]="zone.value.name">
                             {{ zone.value.name }}
                         </mcs-option>

@@ -36,10 +36,7 @@
               [placeholder]="'orderVdcStorageCreate.vdc.placeholder' | translate"
               (selectionChange)="onChangeResource($event)"
               [mcsContextualHelp]="'orderVdcStorageCreate.vdc.contextualHelp' | translate"
-              mcsId="select-resource"
-              mcsEventTracker="select-resource-click"
-              mcsEventCategory="orders"
-              mcsEventLabel="select-resource">
+              mcsId="select-resource">
 
               <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
                 {{ resource.name }}
@@ -52,10 +49,7 @@
                 <mcs-select [formControl]="fcPerfomanceTier" required
                   (selectionChange)="onChangePerfomanceTier($event)"
                   [placeholder]="'orderVdcStorageCreate.vdc.placeholder' | translate"
-                  mcsId="select-storage"
-                  mcsEventTracker="select-storage-click"
-                  mcsEventCategory="orders"
-                  mcsEventLabel="select-storage">
+                  mcsId="select-storage">
                   <mcs-option *ngFor="let storage of resourceStorages" [value]="storage">
                     {{ storage.name }}
                   </mcs-option>

@@ -54,9 +54,6 @@
                 <mcs-item orientation="block">
                   <mcs-form-field *ngIf="hasServiceToDisplay">
                     <mcs-select mcsId="rack-service"
-                      mcsEventTracker="select-rack-service"
-                      mcsEventCategory="order"
-                      mcsEventLabel="colocation-remote-hands"
                       [formControl]="fcRackService"
                       [disabled]="!hasServiceToDisplay"
                       [placeholder]="'orderRemoteHands.detailsStep.rackServicePlaceholder' | translate"
@@ -87,9 +84,6 @@
                 <input mcsInput
                   [formControl]="fcFloorLevel"
                   mcsId="input-floor-level"
-                  mcsEventTracker="nput-floor-level"
-                  mcsEventCategory="order"
-                  mcsEventLabel="order-remote-hands"
                   [placeholder]="'orderRemoteHands.detailsStep.floorLevelPlaceholder' | translate"
                   [mcsContextualHelp]="'orderRemoteHands.detailsStep.floorLevelHelpText' | translate"
                   required>
@@ -105,9 +99,6 @@
                 <input mcsInput
                   [formControl]="fcRackNumber"
                   mcsId="input-rack-number"
-                  mcsEventTracker="input-rack-number"
-                  mcsEventCategory="order"
-                  mcsEventLabel="order-remote-hands"
                   [placeholder]="'orderRemoteHands.detailsStep.rackNumberPlaceholder' | translate"
                   [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackNumberHelpText' | translate"
                   required>
@@ -121,9 +112,6 @@
               <mcs-item orientation="block">
                 <mcs-form-field>
                   <mcs-select mcsId="selec-box-location"
-                    mcsEventTracker="select-box-location"
-                    mcsEventCategory="order"
-                    mcsEventLabel="colocation-remote-hands"
                     [formControl]="fcCabinetLocation"
                     [placeholder]="'orderRemoteHands.detailsStep.locationPlaceholder' | translate"
                     [mcsContextualHelp]="'orderRemoteHands.detailsStep.locationDetailsHelpText' | translate">
@@ -142,9 +130,6 @@
               <mcs-form-field>
                 <textarea
                   mcsId="input-remote-hands-instructions"
-                  mcsEventTracker="input-remote-hands-instructions"
-                  mcsEventCategory="order"
-                  mcsEventLabel="colocation-remote-hands"
                   mcsInput [rows]="instructionVisibleRows"
                   [formControl]="fcInstruction"
                   [maxlength]="maxInstructionsLength"

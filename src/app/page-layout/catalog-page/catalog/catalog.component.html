@@ -13,6 +13,9 @@
                 size="medium"
                 mcsCursor="pointer"
                 [mcsTooltip]="'tooltip.exportWord' | translate"
+                mcsEventTracker="export-word-document"
+                mcsEventCategory="catalog"
+                mcsEventLabel="catalog-page"
                 (click)="onClickExportWord(activeCatalogItem)">
               </mcs-icon>
             </ng-container>

@@ -9,10 +9,7 @@
           <mcs-select [formControl]="fcAggregation"
             [placeholder]="'serverShared.addOnBackup.serverAggregation.placeholder' | translate"
             [mcsContextualHelp]="'serverShared.addOnBackup.serverAggregation.contextualHelp' | translate"
-            mcsId="manage-backup-server-aggregation-target"
-            mcsEventTracker="backup-server-aggregation-target"
-            mcsEventCategory="order"
-            mcsEventLabel="server-backup-server">
+            mcsId="manage-backup-server-aggregation-target">
 
             <mcs-option *ngFor="let aggregationTarget of aggregationTargets" [value]="aggregationTarget.value">
               {{ aggregationTarget.text }}
@@ -39,10 +36,7 @@
           [formControl]="fcRetention"
           [placeholder]="'serverShared.addOnBackup.retention.placeholder' | translate"
           [mcsContextualHelp]="'serverShared.addOnBackup.retention.contextualHelp' | translate"
-          mcsId="manage-backup-server-retention"
-          mcsEventTracker="backup-server-retention"
-          mcsEventCategory="order"
-          mcsEventLabel="server-backup-server">
+          mcsId="manage-backup-server-retention">
 
           <mcs-option *ngFor="let retention of retentionOptions$ | async" [value]="retention.value">
             {{ retention.text }}
@@ -67,10 +61,7 @@
         <mcs-select [formControl]="fcInview" required
           [placeholder]="'serverShared.addOnBackup.inviewLevel.placeholder' | translate"
           [mcsContextualHelp]="'serverShared.addOnBackup.inviewLevel.contextualHelp' | translate"
-          mcsId="manage-backup-server-inview"
-          mcsEventTracker="backup-server-inview"
-          mcsEventCategory="order"
-          mcsEventLabel="server-backup-server">
+          mcsId="manage-backup-server-inview">
 
           <mcs-option *ngFor="let inviewLevel of inviewLevelOptions$ | async" [value]="inviewLevel.value">
             {{ inviewLevel.text }}
@@ -87,10 +78,7 @@
     <mcs-form-field class="form-field-size-small">
       <mcs-select [formControl]="fcBackupSchedule" required
         [placeholder]="'serverShared.addOnBackup.backupSchedule.placeholder' | translate"
-        mcsId="manage-backup-server-schedule"
-        mcsEventTracker="backup-server-schedule"
-        mcsEventCategory="order"
-        mcsEventLabel="server-backup-server">
+        mcsId="manage-backup-server-schedule">
 
         <mcs-option *ngFor="let backup of scheduleBackupOptions$ | async" [value]="backup.value">
           {{ backup.text }}
@@ -106,10 +94,7 @@
       [mcsContextualHelp]="'serverShared.addOnBackup.dailyQuota.contextualHelp' | translate">
       <input mcsInput [formControl]="fcDailyQuota"
         [placeholder]="'serverShared.addOnBackup.dailyQuota.placeholder' | translate"
-        mcsId="manage-backup-server-daily-quota"
-        mcsEventTracker="backup-server-daily-quota"
-        mcsEventCategory="order"
-        mcsEventLabel="server-backup-server">
+        mcsId="manage-backup-server-daily-quota">
 
       <mcs-suffix mcsSuffix>{{ 'serverShared.addOnBackup.dailyQuota.suffix' | translate }}</mcs-suffix>
       <mcs-error mcsError errorState="required">

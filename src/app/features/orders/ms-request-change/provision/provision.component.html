@@ -6,9 +6,6 @@
       <mcs-select required
         [formControl]="fcModuleType"
         mcsId="select-module-type"
-        mcsEventTracker="module-type"
-        mcsEventCategory="order"
-        mcsEventLabel="order-service-request"
         [placeholder]="'orderMsRequestChange.detailsStep.moduleTypePlaceholder' | translate"
         [mcsContextualHelp]="'orderMsRequestChange.detailsStep.moduleTypeContextualHelp' | translate"
         (selectionChange)="onChangeModuleType($event)">
@@ -56,9 +53,6 @@
         autoSelect="false"
         [formControl]="fcResourceGroup"
         mcsId="select-azure-resource-group"
-        mcsEventTracker="azure-resource-group"
-        mcsEventCategory="order"
-        mcsEventLabel="order-service-request"
         [mcsContextualHelp]="'orderMsRequestChange.detailsStep.resourceGroupContextualHelp' | translate"
         [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
         (selectionChange)="onChangeResourceGroup($event)">
@@ -79,9 +73,6 @@
       <input mcsInput required
         [formControl]="fcNewResourceGroupName"
         mcsId="input-new-resource-group-name"
-        mcsEventTracker="new-resource-group-name"
-        mcsEventCategory="order"
-        mcsEventLabel="order-service-request"
         [placeholder]="'orderMsRequestChange.detailsStep.newResourceGroupPlaceholder' | translate">
         <mcs-error mcsError errorState="required">
           {{ 'orderMsRequestChange.errors.newResourceGroup' | translate }}

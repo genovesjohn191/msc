@@ -59,9 +59,6 @@
               <input mcsInput required
                 [formControl]="fcFloorLevel"
                 mcsId="input-floor-level"
-                mcsEventTracker="input-floor-level"
-                mcsEventCategory="order"
-                mcsEventLabel="order-colocation-device-restart"
                 [placeholder]="'orderColocationDeviceRestart.detailsStep.floorLevelPlaceholder' | translate"
                 [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.floorLevelHelpText' | translate">
                 <mcs-error mcsError errorState="required">
@@ -76,9 +73,6 @@
               <input mcsInput required
                 [formControl]="fcRackNumber"
                 mcsId="input-rack-number"
-                mcsEventTracker="input-rack-number"
-                mcsEventCategory="order"
-                mcsEventLabel="order-colocation-device-restart"
                 [placeholder]="'orderColocationDeviceRestart.detailsStep.rowNumPlaceholder' | translate"
                 [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.rowNumberHelpText' | translate">
                 <mcs-error mcsError errorState="required">
@@ -93,9 +87,6 @@
               <mcs-select required
                 autoSelect="false"
                 mcsId="select-cabinet-location"
-                mcsEventTracker="select-cabinet-location"
-                mcsEventCategory="order"
-                mcsEventLabel="order-colocation-device-restart"
                 [formControl]="fcLocationCabinet"
                 [placeholder]="'orderColocationDeviceRestart.detailsStep.locationCabinetPlaceholder' | translate"
                 [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.locationCabinetHelpText' | translate">
@@ -115,9 +106,6 @@
               <input mcsInput required
                 [formControl]="fcDeviceMakeModel"
                 mcsId="input-device-make-and-model"
-                mcsEventTracker="input-device-make-and-model"
-                mcsEventCategory="order"
-                mcsEventLabel="order-colocation-device-restart"
                 [placeholder]="'orderColocationDeviceRestart.detailsStep.makeAndModelPlaceholder' | translate"
                 [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.makeAndModelHelpText' | translate">
                 <mcs-error mcsError errorState="required">
@@ -132,9 +120,6 @@
               <input mcsInput required
                 [formControl]="fcDeviceNameLabel"
                 mcsId="input-device-name-and-model"
-                mcsEventTracker="input-device-name-and-model"
-                mcsEventCategory="order"
-                mcsEventLabel="order-colocation-device-restart"
                 [placeholder]="'orderColocationDeviceRestart.detailsStep.deviceNameLabelPlaceholder' | translate"
                 [mcsContextualHelp]="'orderColocationDeviceRestart.detailsStep.deviceNameLabelHelpText' | translate">
                 <mcs-error mcsError errorState="required">
@@ -148,9 +133,6 @@
             <mcs-form-field>
               <textarea required
                 mcsId="input-restart-instructions"
-                mcsEventTracker="input-restart-instructions"
-                mcsEventCategory="order"
-                mcsEventLabel="order-colocation-device-restart"
                 mcsInput [rows]="maxRestartInstructionsRows"
                 [formControl]="fcRestartInstruction"
                 [maxlength]="maxRestartInstructionsLength"

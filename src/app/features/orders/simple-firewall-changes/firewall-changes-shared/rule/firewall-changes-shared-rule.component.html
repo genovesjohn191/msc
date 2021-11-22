@@ -8,10 +8,7 @@
                   <mcs-form-field>
                     <mcs-select [formControl]="formGroup?.controls['fcActionType']" required
                       (selectionChange)="onActionTypeSelectionChange($event)"
-                      mcsId="add-simple-firewall-change-action-type"
-                      mcsEventTracker="select-order-simple-firewall-change-action-type"
-                      mcsEventCategory="order"
-                      mcsEventLabel="simple-firewall-change-page">
+                      mcsId="add-simple-firewall-change-action-type">
 
                       <mcs-option *ngFor="let actionType of actionTypeOptions$ | async" [value]="actionType.value">
                         {{ actionType.text }}
@@ -99,10 +96,7 @@
                 <mcs-grid-column sizeLg="6">
                   <mcs-form-field>
                     <mcs-select [formControl]="formGroup?.controls['fcProtocol']" required
-                      mcsId="add-simple-firewall-change-protocol"
-                      mcsEventTracker="select-order-simple-firewall-change-protocol"
-                      mcsEventCategory="order"
-                      mcsEventLabel="simple-firewall-change-page">
+                      mcsId="add-simple-firewall-change-protocol">
                       <mcs-option *ngFor="let protocolType of protocolTypeOptions$ | async" [value]="protocolType.value">
                         {{ protocolType.text }}
                       </mcs-option>
@@ -121,9 +115,6 @@
                     mcsInput rows="3"
                     [formControl]="formGroup?.controls['fcRulesToDelete']"
                     [placeholder]="'orderSimpleFirewallChanges.detailsStep.remove.rulesToRemove.placeHolder' | translate"
-                    mcsEventTracker="textarea-remove-simple-firewall-change-rule"
-                    mcsEventCategory="order"
-                    mcsEventLabel="order-remove-simple-firewall-change"
                     mcsId="remove-simple-firewall-change-rule"></textarea>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.remove.rulesToRemove.errorRequired' | translate }}

@@ -63,7 +63,7 @@
             <mcs-item>
               <a [mcsRouterLink]="getRouteUrl(row?.id)"
                 mcsId
-                mcsEventTracker="navigate-to-network-db"
+                mcsEventTracker="navigate-to-network-db-details"
                 mcsEventCategory="launchpad-network-db"
                 mcsEventLabel="network-db-listing-page">
                 {{ row.name }}</a>
@@ -179,7 +179,7 @@
             <span>{{ 'networkDb.networks.errorMessage' | translate }}</span>
             <a (click)="retryDatasource()"
               mcsId
-              mcsEventTracker="retry-loading-network-db-site-list"
+              mcsEventTracker="retry-loading-network-db-list"
               mcsEventCategory="launchpad-network-db"
               mcsEventLabel="pod-listing-page">{{ 'networkDb.networks.retry' | translate }}</a>.
           </div>

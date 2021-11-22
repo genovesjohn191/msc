@@ -53,10 +53,7 @@
                 [formControl]="fcRetention"
                 [placeholder]="'orderAddBat.detailsStep.retentionPlaceholder' | translate"
                 [mcsContextualHelp]="'orderAddBat.detailsStep.retentionHelp' | translate"
-                mcsId="select-order-bat-retention"
-                mcsEventTracker="select-retention"
-                mcsEventCategory="order-bat"
-                mcsEventLabel="order-bat-page">
+                mcsId="select-order-bat-retention">
 
                 <mcs-option *ngFor="let retention of retentionOptions$ | async" [value]="retention.value">
                   {{ retention.text }}
@@ -72,10 +69,7 @@
               <mcs-select [formControl]="fcInview" required
                 [placeholder]="'orderAddBat.detailsStep.inviewLevelPlaceholder' | translate"
                 [mcsContextualHelp]="'orderAddBat.detailsStep.inviewLevelHelp' | translate"
-                mcsId="select-order-bat-inview"
-                mcsEventTracker="select-inview-level"
-                mcsEventCategory="order-bat"
-                mcsEventLabel="order-bat-page">
+                mcsId="select-order-bat-inview">
 
                 <mcs-option *ngFor="let inviewLevel of inviewLevelOptions$ | async" [value]="inviewLevel.value">
                   {{ inviewLevel.text }}
@@ -91,10 +85,7 @@
               [mcsContextualHelp]="'orderAddBat.detailsStep.dailyQuotaHelp' | translate">
               <input mcsInput [formControl]="fcDailyQuota"
                 [placeholder]="'orderAddBat.detailsStep.dailyQuotaPlaceholder' | translate"
-                mcsId="input-daily-quota"
-                mcsEventTracker="input-daily-quota"
-                mcsEventCategory="order-bat"
-                mcsEventLabel="order-bat-page">
+                mcsId="input-daily-quota">
 
               <mcs-suffix mcsSuffix>{{ 'orderAddBat.detailsStep.dailyQuotaSuffix' | translate }}</mcs-suffix>
               <mcs-error mcsError errorState="required">

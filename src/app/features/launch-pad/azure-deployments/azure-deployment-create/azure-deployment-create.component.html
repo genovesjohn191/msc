@@ -10,11 +10,13 @@
         <mcs-dynamic-form #form [config]="formConfig" (afterDataChange)="formAfterDataChanged()" (beforeDataChange)="formBeforeDataChanged($event)"></mcs-dynamic-form>
 
         <br />
-        <button
-        mat-raised-button
-        color="primary"
-        [disabled]="!validDeploymentDetails"
-        (click)="gotoVariables()">
+        <button mat-raised-button
+          color="primary"
+          [disabled]="!validDeploymentDetails"
+          (click)="gotoVariables()"
+          mcsEventTracker="step-1-next"
+          mcsEventCategory="launchpad-deployment"
+          mcsEventLabel="launchpad-deployment-creation-next">
           <mat-icon>chevron_right</mat-icon>
           Next
         </button>
@@ -57,7 +59,10 @@
           <form [formGroup]="tfvarsEditorForm">
             <div style="max-width: 700px;">
               <div style="margin-bottom: 15px; text-align: right;">
-                <a href="https://www.terraform.io/docs/language/syntax/configuration.html" target="_blank">
+                <a href="https://www.terraform.io/docs/language/syntax/configuration.html" target="_blank"
+                  mcsEventTracker="navigate-to-terraform-io"
+                  mcsEventCategory="launchpad-deployment"
+                  mcsEventLabel="hcl-syntax-reference-link">
                   HCL Syntax Reference
                 </a>
               </div>
@@ -74,10 +79,13 @@
 
           <br />
           <button
-          mat-raised-button
-          color="primary"
-          [disabled]="!validVariables"
-          (click)="createDeployment()">
+            mat-raised-button
+            color="primary"
+            [disabled]="!validVariables"
+            (click)="createDeployment()"
+            mcsEventTracker="create-deployment"
+            mcsEventCategory="launchpad-deployment"
+            mcsEventLabel="launchpad-deployment-create-deployment">
             <mat-icon>chevron_right</mat-icon>
             Create
           </button>
@@ -122,7 +130,7 @@
                 [mcsRouterLink]="[routeKeyEnum.LaunchPadAzureDeploymentDetails, id]"
                 mcsId="go-to-deployment-link"
                 mcsEventTracker="navigate-to-deployment-details"
-                mcsEventCategory="deployment"
+                mcsEventCategory="launchpad-deployment"
                 mcsEventLabel="deployment-creation">
                 Go to your Deployment
               </a>

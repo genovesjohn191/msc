@@ -5,9 +5,6 @@
   <!-- VM Backup -->
   <mcs-collapsible-panel
     mcsId="addon-vm-backup-toggle"
-    mcsEventTracker="server-create-addon-vm-backup-toggle"
-    mcsEventCategory="server-create"
-    mcsEventLabel="server-create-addon-vm-backup-toggle"
     [mcsContextualHelp]="'serverCreateAddOnsStep.backupVm.contextualHelp' | translate"
     [header]="'serverCreateAddOnsStep.backupVm.label' | translate"
     (collapseChange)="onToggleVmBackUp($event)">
@@ -22,9 +19,6 @@
   <!-- Server Backup -->
   <mcs-collapsible-panel
     mcsId="addon-server-backup-toggle"
-    mcsEventTracker="server-create-addon-server-backup-toggle"
-    mcsEventCategory="server-create"
-    mcsEventLabel="server-create-addon-server-backup-toggle"
     [mcsContextualHelp]="'serverCreateAddOnsStep.backupServer.contextualHelp' | translate"
     [header]="'serverCreateAddOnsStep.backupServer.label' | translate"
     (collapseChange)="onToggleServerBackUp($event)">
@@ -42,9 +36,6 @@
 
       <mcs-checkbox
         mcsId="addon-anti-virus-toggle"
-        mcsEventTracker="server-create-addon-anti-virus-toggle"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-addon-anti-virus-toggle"
         (statusChange)="onToggleAntiVirus($event)">
         {{ 'serverCreateAddOnsStep.antivirus.label' | translate }}
       </mcs-checkbox>
@@ -55,9 +46,6 @@
   <ng-container>
     <mcs-collapsible-panel
       mcsId="addon-hids-toggle"
-      mcsEventTracker="server-create-addon-hids-toggle"
-      mcsEventCategory="server-create"
-      mcsEventLabel="server-create-addon-hids-toggle"
       [mcsContextualHelp]="'serverCreateAddOnsStep.hids.contextualHelp' | translate"
       [header]="'serverCreateAddOnsStep.hids.label' | translate"
       (collapseChange)="onToggleHids($event)">
@@ -73,9 +61,6 @@
 
     <mcs-addon-inview
       mcsId="addon-inview-select"
-      mcsEventTracker="server-create-addon-inview-select"
-      mcsEventCategory="server-create"
-      mcsEventLabel="server-create-addon-inview-select"
       (dataChange)="onChangeInviewDetails($event)">
     </mcs-addon-inview>
   </div>
@@ -83,9 +68,6 @@
   <!-- SQL Server -->
   <mcs-collapsible-panel *ngIf="isWindows"
     mcsId="addon-sql-toggle"
-    mcsEventTracker="server-create-addon-sql-toggle"
-    mcsEventCategory="server-create"
-    mcsEventLabel="server-create-addon-sql-toggle"
     [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServer.contextualHelp' | translate"
     [header]="'serverCreateAddOnsStep.sqlServer.label' | translate"
     (collapseChange)="onToggleSqlServer($event)">

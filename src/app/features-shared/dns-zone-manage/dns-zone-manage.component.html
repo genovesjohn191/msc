@@ -236,14 +236,14 @@
             <a (click)="onClickCancelEdit(row)"
                mcsId
                mcsEventTracker="cancel-dns-zone-record"
-               mcsEventCategory="dns-zone"
+               mcsEventCategory="dns"
                mcsEventLabel="dns-zone-page">
               {{ 'action.cancel' | translate }}
             </a>
             <a (click)="onClickSaveDnsZoneRecord(row)"
               mcsId
               mcsEventTracker="save-dns-zone-record"
-              mcsEventCategory="dns-zone"
+              mcsEventCategory="dns"
               mcsEventLabel="dns-zone-page">
               {{ 'action.save' | translate }}
             </a>
@@ -254,7 +254,7 @@
                [disabled]="row.inProgress$ | async"
                mcsId
                mcsEventTracker="edit-dns-zone-record"
-               mcsEventCategory="dns-zone"
+               mcsEventCategory="dns"
                mcsEventLabel="dns-zone-page">
               {{ 'action.edit' | translate }}
             </a>
@@ -262,7 +262,7 @@
               [disabled]="row.inProgress$ | async"
               mcsId
               mcsEventTracker="delete-dns-zone-record"
-              mcsEventCategory="dns-zone"
+              mcsEventCategory="dns"
               mcsEventLabel="dns-zone-page">
               {{ 'action.delete' | translate }}
             </a>

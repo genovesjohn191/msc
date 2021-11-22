@@ -86,10 +86,7 @@
                   [minDate]="minDate"
                   [maxDate]="maxDate"
                   [defaultDate]="null"
-                  mcsId="mcs-datepicker"
-                  mcsEventTracker="input-restore-date"
-                  mcsEventCategory="order-restore-backup-request"
-                  mcsEventLabel="order-restore-backup-request-page">
+                  mcsId="mcs-datepicker">
                   <mcs-error mcsError errorState="required">
                     {{ 'orderBackupRestoreRequest.errors.restoreDateRequired' | translate }}
                   </mcs-error>
@@ -99,9 +96,10 @@
             <!-- What to restore -->
             <mcs-item orientation="block">
               <mcs-form-field>
-                <textarea required mcsId="input-what-to-restore" mcsEventTracker="input-what-to-restore"
-                  mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page"
-                  mcsInput [rows]="instructionVisibleRows" [formControl]="fcDataRequired"
+                <textarea required 
+                  mcsId="input-what-to-restore"
+                  mcsInput [rows]="instructionVisibleRows"
+                  [formControl]="fcDataRequired"
                   [maxlength]="maxInstructionsLength"
                   [placeholder]="'orderBackupRestoreRequest.detailsStep.dataRequiredPlaceholder' | translate"
                   [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.dataRequiredHelpText' | translate">
@@ -121,9 +119,10 @@
             <!-- Restore Destination -->
             <mcs-item orientation="block">
               <mcs-form-field>
-                <textarea required mcsId="input-restore-destination" mcsEventTracker="input-restore-destination"
-                  mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page"
-                  mcsInput [rows]="instructionVisibleRows" [formControl]="fcRestoreDestination"
+                <textarea required
+                  mcsId="input-restore-destination"
+                  mcsInput [rows]="instructionVisibleRows"
+                  [formControl]="fcRestoreDestination"
                   [maxlength]="maxInstructionsLength"
                   [placeholder]="'orderBackupRestoreRequest.detailsStep.restoreDestinationPlaceholder' | translate"
                   [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.restoreDestinationHelpText' | translate">
@@ -143,11 +142,11 @@
             <!-- Customer Reference Number -->
             <mcs-item orientation="block">
               <mcs-form-field>
-                <input mcsInput [formControl]="fcReferenceNumber"
+                <input mcsInput
+                  mcsId="input-reference-number"
+                  [formControl]="fcReferenceNumber"
                   [placeholder]="'orderBackupRestoreRequest.detailsStep.customerReferenceNumberPlaceholder' | translate"
-                  [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.customerReferenceNumberHelpText' | translate"
-                  mcsId="input-reference-number" mcsEventTracker="input-reference-number"
-                  mcsEventCategory="order-restore-backup-request" mcsEventLabel="order-restore-backup-request-page">
+                  [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.customerReferenceNumberHelpText' | translate">
               </mcs-form-field>
             </mcs-item>
           </ng-container>

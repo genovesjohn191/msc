@@ -46,10 +46,7 @@
               [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
               (selectionChange)="onChangeResource($event)"
               [mcsContextualHelp]="'orderVdcStorageExpand.vdc.contextualHelp' | translate"
-              mcsId="select-resource"
-              mcsEventTracker="select-resource-click"
-              mcsEventCategory="orders"
-              mcsEventLabel="select-resource">
+              mcsId="select-resource">
               <mcs-option *ngFor="let resource of resources$ | async" [value]="resource"
                 [selected]="(selectedServiceId$ | async)?.resourceId === resource.id">
                 {{ resource.name }}
@@ -65,10 +62,7 @@
                   (selectionChange)="onChangeStorage($event)"
                   [placeholder]="'orderVdcStorageExpand.vdcStorage.placeholder' | translate"
                   [mcsContextualHelp]="'orderVdcStorageExpand.vdcStorage.contextualHelp' | translate"
-                  mcsId="select-storage"
-                  mcsEventTracker="select-resource-click"
-                  mcsEventCategory="orders"
-                  mcsEventLabel="select-resource">
+                  mcsId="select-storage">
                   <mcs-option *ngFor="let storage of selectedResource.storage" [value]="storage"
                     [selected]="(selectedStorage$ | async)?.id === storage.id">
                     {{ storage.name }}
