@@ -94,9 +94,9 @@
                   <a mcsButton="basic" color="white" labelPlacement="left"
                     [href]="onRequestChange(row)"
                     mcsId="dns-listing-request-change"
-                    mcsEventTracker="dns-listing-request-change"
-                    mcsEventCategory="dnsListing"
-                    mcsEventLabel="dns-listing--page">
+                    mcsEventTracker="dns-request-change"
+                    mcsEventCategory="dns"
+                    mcsEventLabel="dns-listing-page">
                     {{ 'dnsListing.requestChange' | translate }}
                   </a>
               </div>
@@ -105,9 +105,9 @@
               class="cog-actions-wrapper">
               <a mcsButton="basic" color="white" labelPlacement="left"
                 [href]="onRaiseTicket(row)"
-                mcsId="dns-listing-raise-ticket"
-                mcsEventTracker="dns-listing-raise-ticket"
-                mcsEventCategory="dnsListing"
+                mcsId="dns-raise-ticket"
+                mcsEventTracker="navigate-to-raise-ticket"
+                mcsEventCategory="dns"
                 mcsEventLabel="dns-listing-page">
                 {{ 'dnsListing.raiseTicket' | translate }}
               </a>
@@ -123,7 +123,7 @@
          mcsId="dns-listing-row"
          (click)="navigateToDNSDetails(row)"
          mcsEventTracker="navigate-to-hosted-dns-change"
-         mcsEventCategory="dns listing"
+         mcsEventCategory="dns"
          mcsEventLabel="dns-listing-page"></tr>
      </table>
 
@@ -141,7 +141,7 @@
            <a (click)="retryDatasource()"
              mcsId
              mcsEventTracker="retry-loading-dns-listing"
-             mcsEventCategory="dns-listing-resource"
+             mcsEventCategory="dns"
              mcsEventLabel="dns-listing-page">{{ 'dnsListing.retry' | translate }}</a>.
          </div>
        </div>

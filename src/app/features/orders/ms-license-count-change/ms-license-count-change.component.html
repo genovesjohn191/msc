@@ -52,10 +52,7 @@
                   [placeholder]="'orderMsLicenseCountChange.detailsStep.baseLicense.placeholder' | translate"
                   [mcsContextualHelp]="'orderMsLicenseCountChange.detailsStep.baseLicense.helpText' | translate"
                   (selectionChange)="onChangeLicense($event, childLicensesFcConfig)"
-                  mcsId="select-ms-license"
-                  mcsEventTracker="select-ms-license"
-                  mcsEventCategory="order"
-                  mcsEventLabel="ms-license-count-change">
+                  mcsId="select-ms-license">
                   <mcs-option *ngFor="let license of licenses$ | async"
                     [value]="license.value"
                     [disabled]="isCurrentLicenseHasActiveJob(license?.value?.serviceId, activeJob$ | async)">

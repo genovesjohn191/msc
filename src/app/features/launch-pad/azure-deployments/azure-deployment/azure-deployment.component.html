@@ -53,9 +53,6 @@
 
           <button mat-menu-item (click)="renameClicked(deployment)"
             mcsId="rename-deployment"
-            mcsEventTracker="rename-deployment"
-            mcsEventCategory="launchpad-deployment"
-            mcsEventLabel="azure-deployment-details-page"
             [disabled]="deployment.isProcessing">
             {{ 'action.rename' | translate }}
           </button>

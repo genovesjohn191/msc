@@ -46,10 +46,7 @@
               (selectionChange)="onChangeService($event)"
               [placeholder]="'orderServiceRaiseInview.serviceDetails.service.placeholder' | translate"
               [mcsContextualHelp]="'orderServiceRaiseInview.serviceDetails.service.contextualHelp' | translate"
-              mcsId="select-service"
-              mcsEventTracker="select-service-click"
-              mcsEventCategory="orders"
-              mcsEventLabel="select-service">
+              mcsId="select-service">
 
               <ng-template #serversTemplate let-serversGroup let-title="serverTitle">
                 <mcs-option-group>

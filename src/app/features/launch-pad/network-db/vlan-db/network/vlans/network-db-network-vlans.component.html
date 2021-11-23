@@ -50,15 +50,15 @@
                             class="action-data-cell">
 
                             <mat-menu #actionMenu="matMenu">
-                                <button *ngIf="row.status===1" mat-menu-item mcsId="delete-deployment"
-                                    mcsEventTracker="delete-deployment" mcsEventCategory="launchpad-deployment"
-                                    mcsEventLabel="deployment-listing-page" (click)="recycleClicked(row.id)" [disabled]="processing">
+                                <button *ngIf="row.status===1" mat-menu-item mcsId="recycle-db-network"
+                                    mcsEventTracker="recycle-db-network" mcsEventCategory="launchpad-db-network"
+                                    mcsEventLabel="network-db-vlan-listing-page" (click)="recycleClicked(row.id)" [disabled]="processing">
                                     {{ 'networkDb.vlans.actions.recycle' | translate }}
                                 </button>
 
-                                <button *ngIf="row.status===2" mat-menu-item mcsId="delete-deployment"
-                                    mcsEventTracker="delete-deployment" mcsEventCategory="launchpad-deployment"
-                                    mcsEventLabel="deployment-listing-page" (click)="reclaimClicked(row.id)" [disabled]="processing">
+                                <button *ngIf="row.status===2" mat-menu-item mcsId="reclaim-db-network"
+                                    mcsEventTracker="reclaim-db-network" mcsEventCategory="launchpad-db-network"
+                                    mcsEventLabel="network-db-vlan-listing-page" (click)="reclaimClicked(row.id)" [disabled]="processing">
                                     {{ 'networkDb.vlans.actions.reclaim' | translate }}
                                 </button>
                             </mat-menu>
@@ -86,7 +86,7 @@
                         <div class="listing-status-wrapper">
                             <span>{{ 'networkDb.vlans.errorMessage' | translate }}</span>
                             <a (click)="retryDatasource()" mcsId mcsEventTracker="retry-loading-network-db-site-list"
-                                mcsEventCategory="launchpad-network-db" mcsEventLabel="pod-listing-page">{{
+                                mcsEventCategory="launchpad-network-db" mcsEventLabel="network-db-vlan-listing-page">{{
                                 'networkDb.vlans.retry' | translate }}</a>.
                         </div>
                     </div>
@@ -123,7 +123,12 @@
                 </div>
                 
                 <div *ngIf="!processingReservation && !hasReservationError" style="margin-top: 15px; width: 100%;" mcsAlign="end">
-                    <button mat-raised-button color="primary" [disabled]="!isValidPayload" (click)="reserveVlanClicked()">
+                    <button mat-raised-button color="primary"
+                        [disabled]="!isValidPayload"
+                        (click)="reserveVlanClicked()"
+                        mcsEventTracker="reserve-db-network-vlan"
+                        mcsEventCategory="launchpad-db-network"
+                        mcsEventLabel="network-db-vlan-reserve">
                         <mat-icon>chevron_right</mat-icon>
                         {{ 'networkDb.vlans.actions.reserve' | translate }}
                     </button>
@@ -140,8 +145,19 @@
                   <div *ngIf="hasReservationError">
                     <mcs-status-message type="error">
                       {{ watchedReservationJob?.errorMessage || 'networkDb.vlans.reserveErrorMessage' | translate }}
-                      <a *ngIf="watchedReservationJob" style="margin-left: 5px; margin-right: 5px;" mcsId [mcsRouterLink]="getNotificationRoute()" target="_blank">View Logs</a>
-                      <a style="margin-left: 5px;" mcsId (click)="retry()">Go back</a>
+                      <a *ngIf="watchedReservationJob" style="margin-left: 5px; margin-right: 5px;"
+                        mcsId [mcsRouterLink]="getNotificationRoute()" target="_blank"
+                        mcsEventTracker="navigate-to-watched-reservation-job"
+                        mcsEventCategory="navigate"
+                        mcsEventLabel="network-db-vlan-listing-page">
+                        View Logs
+                      </a>
+                      <a style="margin-left: 5px;" mcsId (click)="retry()"
+                        mcsEventTracker="navigate-back-to-reserve-form"
+                        mcsEventCategory="launchpad-network-db"
+                        mcsEventLabel="network-db-vlan-reserve-retry">
+                        Go back
+                      </a>
                     </mcs-status-message>
                   </div>
             </mcs-presentation-panel>

@@ -48,9 +48,6 @@
                 <mcs-select
                   [formControl]="fcManagementService"
                   mcsId="select-management-service"
-                  mcsEventTracker="select-management-service"
-                  mcsEventCategory="order"
-                  mcsEventLabel="order-azure-professional-service-request"
                   [placeholder]="'orderAzureProfessionalServiceRequest.detailsStep.managementPlaceholder' | translate"
                   [mcsContextualHelp]="'orderAzureProfessionalServiceRequest.detailsStep.managementHelpText' | translate">
                   <mcs-option *ngFor="let service of managementService$ | async" [value]="service.value">
@@ -69,9 +66,6 @@
                 autoSelect="false"
                 [formControl]="fcAzureModule"
                 mcsId="select-azure-module"
-                mcsEventTracker="select-azure-module"
-                mcsEventCategory="order"
-                mcsEventLabel="order-azure-professional-service-request"
                 [placeholder]="'orderAzureProfessionalServiceRequest.detailsStep.modulePlaceholder' | translate"
                 [mcsContextualHelp]="'orderAzureProfessionalServiceRequest.detailsStep.moduleHelpText' | translate">
                 <mcs-option *ngFor="let module of azureModuleOptions$ | async" [value]="module.value">
@@ -90,9 +84,6 @@
               <textarea required
                 [formControl]="fcRequestDetails"
                 mcsId="input-request-details"
-                mcsEventTracker="input-request-details"
-                mcsEventCategory="order"
-                mcsEventLabel="order-azure-professional-service-request"
                 mcsInput [rows]="requestDetailsVisibleRows"
                 [maxlength]="maxRequestDetailsLength"
                 [placeholder]="'orderAzureProfessionalServiceRequest.detailsStep.requestDetailsPlaceholder' | translate"

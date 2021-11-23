@@ -51,8 +51,7 @@
                       <mcs-select [formControl]="fcFirewallServices" required autoSelect="false"
                         [placeholder]="'orderSimpleFirewallChanges.detailsStep.firewallService.placeholder' | translate"
                         [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.firewallService.helptext' | translate"
-                        mcsId="add-firewall-services" mcsEventTracker="select-firewall-service" mcsEventCategory="order"
-                        mcsEventLabel="add-simple-firewall-change-page">
+                        mcsId="add-firewall-services">
                         <mcs-option *ngFor="let firewallOption of firewallOptions " [value]="firewallOption.value">
                           {{ firewallOption.text }}
                         </mcs-option>

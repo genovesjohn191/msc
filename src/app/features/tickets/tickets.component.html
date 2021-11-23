@@ -61,7 +61,7 @@
           <td mat-cell *matCellDef="let row">
             <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
               mcsId="select-ticket"
-              mcsEventTracker="navigate-to-ticke"
+              mcsEventTracker="navigate-to-ticket"
               mcsEventCategory="ticket"
               mcsEventLabel="ticket-listing-page">{{ row.ticketNumber }}</a>
           </td>

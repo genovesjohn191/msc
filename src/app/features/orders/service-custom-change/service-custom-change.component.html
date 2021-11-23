@@ -60,10 +60,7 @@
             <mcs-form-field>
               <mcs-select [formControl]="fcService"
                 [placeholder]="'orderServiceCustomChange.requestDetails.service.placeholder' | translate"
-                mcsId="select-service"
-                mcsEventTracker="select-service"
-                mcsEventCategory="order"
-                mcsEventLabel="order-custom-change-page">
+                mcsId="select-service">
 
                 <ng-template #servicesTemplate let-customChangeServices let-title="serviceTitle">
                   <mcs-option-group>
@@ -130,9 +127,6 @@
             <mcs-form-field>
               <textarea mcsInput rows="3" #changeDescriptionInput required
                 mcsId="input-change-description"
-                mcsEventTracker="input-change-description"
-                mcsEventCategory="order"
-                mcsEventLabel="order-custom-change-page"
                 [maxlength]="defaultMaxlength"
                 [mcsContextualHelp]="'orderServiceCustomChange.requestDetails.changeDescription.helpText' | translate"
                 [placeholder]="'orderServiceCustomChange.requestDetails.changeDescription.placeholder' | translate"
@@ -155,9 +149,6 @@
             <mcs-form-field>
               <textarea mcsInput rows="3" #changeObjectiveInput required
                 mcsId="input-change-objective"
-                mcsEventTracker="input-change-objective"
-                mcsEventCategory="order"
-                mcsEventLabel="order-custom-change-page"
                 [maxlength]="defaultMaxlength"
                 [mcsContextualHelp]="'orderServiceCustomChange.requestDetails.changeObjective.helpText' | translate"
                 [placeholder]="'orderServiceCustomChange.requestDetails.changeObjective.placeholder' | translate"
