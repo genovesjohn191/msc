@@ -24,15 +24,14 @@ export class BillingOperationService {
     billingServiceGroups: McsReportBillingServiceGroup[]
   ): void {
     if (!isNullOrEmpty(this._billingServiceGroupsCache)) { return; }
-
     this._billingServiceGroupsCache = billingServiceGroups;
 
     this.summaryOperation = BillingOperationFactory
       .getInstance(this._injector)
-      .getServiceGroupFactory(BillingOperationType.Summary, this._billingServiceGroupsCache);
+      .createServiceGroupFactory(BillingOperationType.Summary, this._billingServiceGroupsCache);
 
     this.serviceOperation = BillingOperationFactory
       .getInstance(this._injector)
-      .getServiceGroupFactory(BillingOperationType.Service, this._billingServiceGroupsCache);
+      .createServiceGroupFactory(BillingOperationType.Service, this._billingServiceGroupsCache);
   }
 }

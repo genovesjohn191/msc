@@ -3485,6 +3485,10 @@
     "enabled": "Enabled"
   },
   "label": {
+    "users": "Users",
+    "chargePerUser": "Charge Per User",
+    "plan": "Plan",
+    "linkedConsumptionService": "Linked Consumption Service",
     "audUsdExchangeRate": "AUD-USD Exchange Rate",
     "total": "Total",
     "installedQuantity": "Installed Quantity",

@@ -96,6 +96,8 @@ export class BillingSummaryOperation
 
     billingGroups.forEach(billingGroup => {
       billingGroup.parentServices?.forEach(parentService => {
+        if (isNullOrUndefined(parentService.productType)) { return; }
+
         // Append Parent Service
         this._appendBillingSummaryToMap(
           this._generateItemKey(parentService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
@@ -108,6 +110,8 @@ export class BillingSummaryOperation
 
         // Append Child Services Data
         parentService?.childBillingServices?.forEach(childService => {
+          if (isNullOrUndefined(childService.productType)) { return; }
+
           this._appendBillingSummaryToMap(
             this._generateItemKey(childService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
             billingGroup.isProjection,
@@ -221,7 +225,10 @@ export class BillingSummaryOperation
 
     let chartNames = chartItems?.map(item => item.name) || [];
 
-    let uniqueNames = [...new Set(chartNames)];
+    let uniqueNames = [...new Set(chartNames)]
+      .filter(name => !isNullOrUndefined(name));
+    if (isNullOrEmpty(uniqueNames)) { return; }
+
     let createdColors = uniqueNames.map(name => name?.toHex());
     let colorsFunc = createdColors.map((color, index) =>
       itemFunc => this._colorFunc(itemFunc, color, index, seriesItems));
@@ -402,6 +409,15 @@ export class BillingSummaryOperation
     this._billingStructMap.set('AZURESOFTWARESUBSCRIPTION',
       item => new BillingOperationViewModel(
         `Software Subscriptions`,
+        this._getTooltipOptionsInfo(item, ...defaultStructProps),
+        false,
+        false
+      )
+    );
+
+    this._billingStructMap.set('AZUREVIRTUALDESKTOP',
+      item => new BillingOperationViewModel(
+        `Azure Virtual Desktop`,
         this._getTooltipOptionsInfo(item, ...defaultStructProps),
         false,
         false
