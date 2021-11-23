@@ -97,6 +97,8 @@ export class BillingServiceOperation
 
     billingGroups.forEach(billingGroup => {
       billingGroup.parentServices?.forEach(parentService => {
+        if (isNullOrUndefined(parentService.productType)) { return; }
+
         // Append Parent Service
         let parentBillingServiceItem = createObject(BillingServiceItem, {
           id: Guid.newGuid().toString(),
@@ -119,7 +121,11 @@ export class BillingServiceOperation
           tenantName: parentService.tenant?.name,
           sortDate: getDateOnly(billingGroup.microsoftChargeMonth),
           timestamp: getTimestamp(billingGroup.microsoftChargeMonth),
-          usdPerUnit: billingGroup.usdPerUnit
+          usdPerUnit: billingGroup.usdPerUnit,
+          userQuantity: parentService.userQuantity,
+          chargePerUserDollars: parentService.chargePerUserDollars,
+          plan: parentService.plan,
+          linkedConsumptionService: parentService.linkedConsumptionService
         });
         if (!filterPred || filterPred(parentBillingServiceItem)) {
           billingServiceItems.push(parentBillingServiceItem);
@@ -127,6 +133,8 @@ export class BillingServiceOperation
 
         // Append Child Services Data
         parentService.childBillingServices?.forEach(childService => {
+          if (isNullOrUndefined(childService.productType)) { return; }
+
           let childBillingServiceItem = createObject(BillingServiceItem, {
             id: Guid.newGuid().toString(),
             azureDescription: childService.azureDescription || childService.billingDescription,
@@ -150,7 +158,11 @@ export class BillingServiceOperation
             parentServiceId: parentService.serviceId,
             sortDate: getDateOnly(billingGroup.microsoftChargeMonth),
             timestamp: getTimestamp(billingGroup.microsoftChargeMonth),
-            usdPerUnit: billingGroup.usdPerUnit
+            usdPerUnit: billingGroup.usdPerUnit,
+            userQuantity: childService.userQuantity,
+            chargePerUserDollars: childService.chargePerUserDollars,
+            plan: childService.plan,
+            linkedConsumptionService: childService.linkedConsumptionService
           });
           if (!filterPred || filterPred(childBillingServiceItem)) {
             billingServiceItems.push(childBillingServiceItem);
@@ -233,8 +245,11 @@ export class BillingServiceOperation
 
     let chartNames = chartItems?.map(item => item.name) || [];
 
-    let uniqueNames = [...new Set(chartNames)];
-    let createdColors = uniqueNames.map(name => name.toHex());
+    let uniqueNames = [...new Set(chartNames)]
+      .filter(name => !isNullOrUndefined(name));
+    if (isNullOrEmpty(uniqueNames)) { return; }
+
+    let createdColors = uniqueNames?.map(name => name.toHex());
     let colorsFunc = createdColors.map((color, index) =>
       itemFunc => this._colorFunc(itemFunc, color, index, seriesItems));
 
@@ -392,6 +407,34 @@ export class BillingServiceOperation
         this.translate.instant('label.serviceId')
       )
     );
+
+    this._billingSettingsMap.set('userQuantity', item =>
+      new McsOption(
+        item.userQuantity,
+        this.translate.instant('label.users')
+      )
+    );
+
+    this._billingSettingsMap.set('chargePerUserDollars', item =>
+      new McsOption(
+        this.currencyPipe.transform(item.chargePerUserDollars),
+        this.translate.instant('label.chargePerUser')
+      )
+    );
+
+    this._billingSettingsMap.set('plan', item =>
+      new McsOption(
+        item.plan,
+        this.translate.instant('label.plan')
+      )
+    );
+
+    this._billingSettingsMap.set('linkedConsumptionService', item =>
+      new McsOption(
+        item.linkedConsumptionService,
+        this.translate.instant('label.linkedConsumptionService')
+      )
+    );
   }
 
   private _registerBillingStructMap(): void {
@@ -413,6 +456,16 @@ export class BillingServiceOperation
           'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
           'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
           'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
+        false, false
+      )
+    );
+
+    this._billingStructMap.set('AZUREVIRTUALDESKTOP',
+      item => new BillingOperationViewModel(
+        `${item.azureDescription} - ${item.serviceId}`,
+        this._getTooltipOptionsInfo(item,
+          'total', 'minimumSpendCommitment', 'userQuantity',
+          'chargePerUserDollars', 'plan', 'linkConsumptionService'),
         false, false
       )
     );
