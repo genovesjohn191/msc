@@ -111,14 +111,17 @@
                         </mat-slide-toggle>
                     </mcs-item>
                     <mcs-item>
-                        <mcs-field-select-tree-view #treeViewSelect size="large"
-                            [label]="getPodSelectLabel()"
+                        <mcs-field-select-tree-view
                             [formControl]="treeFormControl"
+                            #treeViewSelect size="large"
+                            [label]="getPodSelectLabel()"
+                            [hideChips]="false"
+                            [multiple]="true"
                             [dataSource]="treeDatasource"
                             [expandFirst]="true"
-                            [alwaysShowPanel]="true"
-                            [disabled]="reservationDisabled || reservationLoading">
-                        </mcs-field-select-tree-view>
+                            [selectAllByDefault]="false"
+                            [alwaysShowPanel]="true">
+                            </mcs-field-select-tree-view>
                     </mcs-item>
                 </div>
                 
