@@ -356,7 +356,7 @@
     },
     "billing": {
       "description": "View the composition of your bill - from an aggregated spend level, down to individual service charges.",
-      "secondDescription": "Please note that values shown below are GST-exclusive and projected figures do not include CSP License or Software Subscription charges.",
+      "secondDescription": "Please note: Values shown below are GST-exclusive and projected figures do not include CSP License or Software Subscription charges. Projected figures are derived from data available in VMware CloudHealth. If an Azure Subscription or Reservation Order has not been configured in CloudHealth, it will not appear in projected figures.",
       "learnMoreLink": "http://kb.macquarieview.com/display/CKB/Customer+Guide+-+Macquarie+Managed+Azure+on+CloudHealth#CustomerGuide-MacquarieManagedAzureonCloudHealth-DiscrepanciesbetweenAzurebillsandCloudHealthreports",
       "billingAccountDropdownTooltip": "Billing accounts with public cloud services will be listed here."
     }
