@@ -10,10 +10,6 @@
     [class.dynamic-form]="hasContextualHelp">
     <div *ngFor="let input of config" class="form-row" [mcsContextualHelp]="input.contextualHelp">
       <div  [ngSwitch]="input.template">
-        <mat-error *ngIf="!isValidField(input.key)">
-          {{ getErrorMessage(input.key) }}
-        </mat-error>
-
         <mcs-dff-input-text-field *ngSwitchCase="'input-text'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-text-field>
@@ -162,6 +158,9 @@
         <mcs-dff-slide-toggle-field *ngSwitchCase="'slide-toggle'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-slide-toggle-field>
+        <mat-error *ngIf="!isValidField(input.key)">
+          {{ getErrorMessage(input.key) }}
+        </mat-error>
       </div>
     </div>
   </div>
