@@ -77,10 +77,6 @@ export class BillingComponent implements OnInit, OnDestroy {
     return this._translate.instant('reports.billing.description');
   }
 
-  public get headerSecondDescription(): string {
-    return this._translate.instant('reports.billing.secondDescription');
-  }
-
   public get learnMoreLink(): string {
     return this._translate.instant('reports.billing.learnMoreLink');
   }

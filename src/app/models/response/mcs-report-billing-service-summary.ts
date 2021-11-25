@@ -56,6 +56,9 @@ export class McsReportBillingServiceSummary extends McsEntityBase {
   public minimumCommitmentDollars: number = undefined;
 
   @JsonProperty()
+  public minimumCommitmentUsers: number = undefined;
+
+  @JsonProperty()
   public userQuantity: number = undefined;
 
   @JsonProperty()

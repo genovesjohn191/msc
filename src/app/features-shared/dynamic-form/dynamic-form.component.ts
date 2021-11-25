@@ -4,7 +4,11 @@ import {
   QueryList,
   OnInit,
   Component,
-  ChangeDetectorRef, AfterViewInit, EventEmitter, Output
+  ChangeDetectorRef,
+  AfterViewInit,
+  EventEmitter,
+  Output,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   FormGroup,
@@ -25,7 +29,8 @@ import { DynamicFormValidationService } from './dynamic-form-validation.service'
 @Component({
   selector: 'mcs-dynamic-form',
   templateUrl: './dynamic-form.component.html',
-  styleUrls: ['./dynamic-form.scss']
+  styleUrls: ['./dynamic-form.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DynamicFormComponent implements OnInit, AfterViewInit {
   @Input()
@@ -199,6 +204,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
       return true;
     }
 
+    this.form.controls[key].markAsTouched();
     return this.form.controls[key].valid;
   }
 

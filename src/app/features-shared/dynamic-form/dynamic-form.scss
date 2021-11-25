@@ -1,9 +1,25 @@
 @import "../../../styles/shared/base";
 
+.form-row {
+  .ng-invalid.ng-touched {
+    .mat-form-field-appearance-outline .mat-form-field-outline {
+      color: $color-red-00 !important;
+    }
+
+    .mat-form-field-label {
+      color: $color-red-00;
+    }
+  }
+}
+
 .cta-wrapper {
   margin-top: $space-large;
 
   button:not(:first-child) {
     margin-left: $space-small;
   }
+}
+
+mat-error {
+  @include font-size($font-size-small);
 }
