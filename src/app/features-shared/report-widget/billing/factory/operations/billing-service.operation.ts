@@ -122,6 +122,7 @@ export class BillingServiceOperation
           sortDate: getDateOnly(billingGroup.microsoftChargeMonth),
           timestamp: getTimestamp(billingGroup.microsoftChargeMonth),
           usdPerUnit: billingGroup.usdPerUnit,
+          minimumCommitmentUsers: parentService.minimumCommitmentUsers,
           userQuantity: parentService.userQuantity,
           chargePerUserDollars: parentService.chargePerUserDollars,
           plan: parentService.plan,
@@ -159,6 +160,7 @@ export class BillingServiceOperation
             sortDate: getDateOnly(billingGroup.microsoftChargeMonth),
             timestamp: getTimestamp(billingGroup.microsoftChargeMonth),
             usdPerUnit: billingGroup.usdPerUnit,
+            minimumCommitmentUsers: childService.minimumCommitmentUsers,
             userQuantity: childService.userQuantity,
             chargePerUserDollars: childService.chargePerUserDollars,
             plan: childService.plan,
@@ -408,6 +410,13 @@ export class BillingServiceOperation
       )
     );
 
+    this._billingSettingsMap.set('minimumUserCommitment', item => 
+      new McsOption(
+        item.minimumCommitmentUsers,
+        this.translate.instant('label.minimumUserCommitment')
+      )
+    );
+
     this._billingSettingsMap.set('userQuantity', item =>
       new McsOption(
         item.userQuantity,
@@ -464,8 +473,8 @@ export class BillingServiceOperation
       item => new BillingOperationViewModel(
         `${item.azureDescription} - ${item.serviceId}`,
         this._getTooltipOptionsInfo(item,
-          'total', 'minimumSpendCommitment', 'userQuantity',
-          'chargePerUserDollars', 'plan', 'linkConsumptionService'),
+          'total', 'minimumUserCommitment', 'userQuantity',
+          'chargePerUserDollars', 'plan', 'linkedConsumptionService'),
         false, false
       )
     );
