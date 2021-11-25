@@ -25,6 +25,7 @@ export class BillingServiceItem {
   public parentServiceId?: string;
   public markupPercentParent?: number;
 
+  public minimumCommitmentUsers: number;
   public userQuantity: number;
   public chargePerUserDollars: number;
   public plan: string;

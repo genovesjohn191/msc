@@ -16,7 +16,7 @@
     <mcs-item orientation="inline" padding-bottom-xlarge>
       <div padding-right-medium><mcs-icon [key]="statusIconKey" size="large"></mcs-icon></div>
       <div>
-        {{ headerDescription }} <br/>{{ headerSecondDescription }}
+        <span [innerHTML]="headerDescription"></span>
         <!-- <a href="{{ learnMoreLink }}"
           target="_blank"
           mcsId="azure-performance"
