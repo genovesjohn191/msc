@@ -107,7 +107,7 @@ export class NetworkDbNetworkVlansComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
   ];
 
-  public treeFormControl = new FormControl();
+  public treeFormControl = new FormControl('', []);
   public treeDatasource: TreeDatasource<GroupedOption>;
   private podList = new Array<McsNetworkDbPod>();
   private vxlanGroup: number = null;
