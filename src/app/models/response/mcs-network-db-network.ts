@@ -20,7 +20,7 @@ export class McsNetworkDbNetwork extends McsEntityBase {
   public serviceId: string = undefined;
 
   @JsonProperty()
-  public vniId: number = undefined;
+  public vni: number = undefined;
 
   @JsonProperty()
   public useCaseId: number = undefined;

@@ -117,7 +117,7 @@ export class NetworkDbNetworkEditComponent extends BasicJobEditComponentBase<Mcs
 
   public getUneditableFields(): UneditableField[] {
     return [
-      { type: 'text', label: 'VNI', value: this.network.vniId, fallbackText: 'None' },
+      { type: 'text', label: 'VNI', value: this.network.vni, fallbackText: 'None' },
       { type: 'text', label: 'Multicast IP Address', value: this.network.multicastIpAddress, fallbackText: 'None' },
       { type: 'text', label: 'Created By', value: this.network.createdBy },
       { type: 'date', label: 'Created Date', value: this.network.createdOn },
