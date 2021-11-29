@@ -2888,7 +2888,7 @@
         },
         "vMWarevRealizeOC": {
           "name": "VMware vRealize Operations Console",
-          "description": "Access centralized security logging and reporting features for your virtual and dedicated firewalls."
+          "description": "A self-driving IT Operations Management platform for LAUNCH DSR / NSR that incorporates AI and predictive analytics."
         },
         "f5EnterpriseManager": {
           "name": "F5 Enterprise Manager",
