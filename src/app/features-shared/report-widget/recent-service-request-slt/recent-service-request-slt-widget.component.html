@@ -36,10 +36,8 @@
           {{ 'columnHeader.description' | translate }}
         </th>
         <td mat-cell *matCellDef="let row"
-          [mcsTextTruncate]="row.description"
-          mcsTextTruncateSize="100px"
-          [matTooltip]="row.description"
-          [matTooltipDisabled]="isTextFitToColumn(row.description)">
+          [mcsTextTruncate]="descriptionTooltip(row.description)"
+          mcsTextTruncateSize="100px">
           {{ row.description || 'Unavailable'}}
         </td>
       </ng-container>
