@@ -61,8 +61,8 @@ export class RecentServiceRequestSltWidgetComponent {
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
-  public isTextFitToColumn(text: string): boolean {
-    return text.length < maxTextLength;
+  public descriptionTooltip(text: string): string {
+    return text.length < maxTextLength ? '' : text;
   }
 
   public hasAccessToAzureServiceRequest(): boolean {
