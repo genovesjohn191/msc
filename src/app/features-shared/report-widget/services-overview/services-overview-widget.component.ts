@@ -57,7 +57,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
       count: 0,
       processing: true,
       hasError: true,
-      link: CoreRoutes.getNavigationPath(RouteKey.AzureSoftwareSubscriptions),
+      link: CoreRoutes.getNavigationPath(RouteKey.AzureSubscriptions),
       getData: this.getAzureSubscriptionInfo.bind(this),
       eventId: 'services-overview-azure-sub',
       eventTracker: 'navigate-to-azure-subscription',
