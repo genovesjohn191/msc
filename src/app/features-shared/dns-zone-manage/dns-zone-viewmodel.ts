@@ -316,6 +316,9 @@ export class DnsZoneViewModel {
 
   private _onValidateHostName(inputValue: string): boolean {
     if (isNullOrEmpty(inputValue)) { return false; }
+    if (this.fcZoneType.value === DnsRecordType.CNAME) {
+      return CommonDefinition.REGEX_DNS_HOSTNAME_CNAME_TYPE.test(inputValue);
+    }
     return CommonDefinition.REGEX_DNS_HOSTNAME.test(inputValue);
   }
 
