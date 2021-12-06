@@ -8,6 +8,7 @@ export * from './input-network-db-network-name/input-network-db-network-name';
 export * from './input-number/input-number';
 export * from './input-terraform-deployment-name/input-terraform-deployment-name';
 export * from './input-random/input-random';
+export * from './input-short-customer-name/input-short-customer-name';
 export * from './input-text/input-text';
 export * from './select/select';
 export * from './select-availability-zone/select-availability-zone';

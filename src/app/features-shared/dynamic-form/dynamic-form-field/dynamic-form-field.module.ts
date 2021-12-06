@@ -10,6 +10,7 @@ import { DynamicInputNetworkDbNetworkNameComponent } from './input-network-db-ne
 import { DynamicInputNumberComponent } from './input-number/input-number.component';
 import { DynamicInputPasswordComponent } from './input-password/input-password.component';
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
+import { DynamicInputShortCustomerNameComponent } from './input-short-customer-name/input-short-customer-name.component';
 import { DynamicInputTerraformDeploymentNameComponent } from './input-terraform-deployment-name/input-terraform-deployment-name.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
 import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zone/select-availability-zone.component';
@@ -53,6 +54,7 @@ const exports: any[] | Type<any> = [
   DynamicInputPasswordComponent,
   DynamicInputTerraformDeploymentNameComponent,
   DynamicInputRandomComponent,
+  DynamicInputShortCustomerNameComponent,
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
