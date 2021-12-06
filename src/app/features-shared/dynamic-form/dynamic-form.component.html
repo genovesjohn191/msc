@@ -42,6 +42,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-random-field>
 
+        <mcs-dff-input-short-customer-name-field *ngSwitchCase="'input-short-customer-name'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-short-customer-name-field>
+
         <mcs-dff-select-azure-subscription-field *ngSwitchCase="'select-azure-subscription'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-azure-subscription-field>

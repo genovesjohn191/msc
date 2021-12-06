@@ -222,6 +222,7 @@ export class CommonDefinition {
     = /^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$/;
   public static REGEX_FQDN_DOMAIN_PATTERN
     = /^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/;
+  public static REGEX_SHORT_CUSTOMER_NAME_PATTERN = /^[a-zA-Z0-9]{1,16}$/;
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
   public static REGEX_NUMERIC_PATTERN = /^-?\d*?$/;
   public static REGEX_DECIMAL_PATTERN = /^-?\d*(\.\d+)?$/;

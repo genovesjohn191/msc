@@ -127,6 +127,10 @@ export class CoreValidators {
     return CommonDefinition.REGEX_FQDN_DOMAIN_PATTERN.test(control.value) ? null : { fqdnDomain: true };
   }
 
+  public static shortCustomerName(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_SHORT_CUSTOMER_NAME_PATTERN.test(control.value) ? null : { shortCustomerName: true };
+  }
+
   /**
    * Validator that performs email validation
    *

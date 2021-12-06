@@ -1,5 +1,6 @@
 import {
   DynamicInputHiddenField,
+  DynamicInputShortCustomerNameField,
   DynamicSelectAvailabilityZoneField,
   DynamicSelectTenantField
 } from '@app/features-shared/dynamic-form';
@@ -23,9 +24,18 @@ export const microsoftCreateSubscriptionForm: LaunchPadForm = {
     new DynamicSelectTenantField({
       key: 'tenant',
       label: 'Tenant',
+      eventName: 'tenant-change',
       contextualHelp: 'Select an Azure tenant to create this subscription for.',
       validators: { required: true },
+      dependents: ['customerShortName'],
       useTenantIdAsKey: true
+    }),
+    new DynamicInputShortCustomerNameField({
+      key: 'customerShortName',
+      label: 'Short Customer Name',
+      placeholder: 'Enter a short customer name',
+      contextualHelp: 'Specify a short customer name (alphanumeric, 16 characters max). This will be used to name any resources that are created during provisioning.',
+      validators: { required: true, maxlength: 16 }
     }),
     new DynamicSelectAvailabilityZoneField({
       key: 'location',

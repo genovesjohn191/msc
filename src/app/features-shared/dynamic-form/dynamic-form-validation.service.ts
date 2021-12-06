@@ -44,6 +44,9 @@ export class DynamicFormValidationService {
     if (control.hasError('hostName')) {
       return 'Incorrect host name format';
     }
+    if (control.hasError('shortCustomerName')) {
+      return 'Incorrect short customer name format';
+    }
   }
 
   public getValidators(controlData: DynamicFormFieldConfig): ValidatorFn[] {
