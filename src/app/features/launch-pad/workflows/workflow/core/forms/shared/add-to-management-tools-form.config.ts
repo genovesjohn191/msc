@@ -40,6 +40,7 @@ export const addToManagementToolsFormConfig: DynamicFormFieldConfigBase[] = [
       { key: 'IC4', value: 'IC 4'},
       { key: 'IC5', value: 'IC 5'},
       { key: 'PH1', value: 'PH 1'},
+      { key: 'ICX', value: 'ICX'},
       { key: 'LB1', value: 'IC 1 (LAB)'}
     ],
   }),
