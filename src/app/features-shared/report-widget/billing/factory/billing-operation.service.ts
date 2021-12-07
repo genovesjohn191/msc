@@ -3,7 +3,7 @@ import {
   Injector
 } from '@angular/core';
 import { McsReportBillingServiceGroup } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
+import { compareArrays } from '@app/utilities';
 
 import { IBillingOperation } from './abstractions/billing-operation.interface';
 import { BillingOperationFactory } from './billing-operation.factory';
@@ -23,7 +23,9 @@ export class BillingOperationService {
   public initializeBillingServiceGroups(
     billingServiceGroups: McsReportBillingServiceGroup[]
   ): void {
-    if (!isNullOrEmpty(this._billingServiceGroupsCache)) { return; }
+    let comparisonResult = compareArrays(this._billingServiceGroupsCache, billingServiceGroups);
+    if (comparisonResult === 0) { return; }
+
     this._billingServiceGroupsCache = billingServiceGroups;
 
     this.summaryOperation = BillingOperationFactory
