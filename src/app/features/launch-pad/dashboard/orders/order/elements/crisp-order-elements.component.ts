@@ -55,6 +55,7 @@ export class CrispOrderElementsComponent implements OnDestroy {
   private _sortDirection: string;
   private _sortField: string;
   private _destroySubject = new Subject<void>();
+  private _crispOrderDetails : McsObjectCrispOrder;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
@@ -105,7 +106,7 @@ export class CrispOrderElementsComponent implements OnDestroy {
 
     return {
       label: record.serviceId,
-      companyId: record.companyId,
+      companyId: record.companyId ? record.companyId : this._crispOrderDetails.companyId,
       source: 'crisp-elements',
       serviceId: record.serviceId,
       productId: record.productId,
@@ -122,6 +123,7 @@ export class CrispOrderElementsComponent implements OnDestroy {
     this.crispOrder$ = this._crispOrderService.getCrispOrderDetails().pipe(
       takeUntil(this._destroySubject),
       tap((crispOrder: McsObjectCrispOrder) => {
+        this._crispOrderDetails = crispOrder;
         this.retryDatasource();
       }),
       shareReplay(1)
