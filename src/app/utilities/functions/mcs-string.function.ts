@@ -145,6 +145,13 @@ export function removeSpaces(source: string): string {
   return source?.replace(/\s+/g, '');
 }
 
+/**
+ * Returns the string without spaces and non-alphanumeric characters
+ */
+ export function removeNonAlphaNumericChars(source: string): string {
+  return source?.replace(/[^0-9a-z]/gi, '');
+}
+
 // TO DO: create a pipe to convert all string format to text
 export function formatStringToText(source: string): string {
   return source?.replace(/(\t)/g, ' ');
