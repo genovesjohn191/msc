@@ -32,7 +32,7 @@
       [mcsId]="id"
       [required]="required"
       [hidden]="disabled"
-      [placeholder]="config.placeholder"
+      [placeholder]="config.value.length === 1 && this.config.maxItems === 1 ? '' : config.placeholder"
       [formControl]="inputCtrl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"

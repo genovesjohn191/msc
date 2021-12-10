@@ -268,7 +268,8 @@ import {
   McsReportComputeResourceTotals,
   McsReportStorageResourceUtilisation,
   McsObjectProjectParams,
-  McsReportRecentServiceRequestSlt
+  McsReportRecentServiceRequestSlt,
+  McsObjectCrispObject
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2106,6 +2107,14 @@ export class McsApiService {
     );
   }
 
+  public getCrispObjects(query?: McsObjectQueryParams): Observable<McsApiCollection<McsObjectCrispObject>> {
+    return this._objectsApi.getCrispObjects(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispElements'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
 
   public getCrispElement(productId: string): Observable<McsObjectCrispElement> {
     return this._objectsApi.getCrispElement(productId).pipe(

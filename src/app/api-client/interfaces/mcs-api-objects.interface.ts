@@ -8,7 +8,8 @@ import {
   McsObjectProjectTasks,
   McsObjectQueryParams,
   McsObjectVdcQueryParams,
-  McsObjectProjectParams
+  McsObjectProjectParams,
+  McsObjectCrispObject
 } from '@app/models';
 import {
   McsObjectCrispElement,
@@ -53,6 +54,12 @@ export interface IMcsApiObjectsService {
    */
   getCrispOrderElements(orderId: string, query?: McsObjectCrispOrderQueryParams):
   Observable<McsApiSuccessResponse<McsObjectCrispElement[]>>;
+
+  /**
+   * Get combined list of the CRISP elements and CRISP installed services from the API
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+   getCrispObjects(query?: McsObjectQueryParams): Observable<McsApiSuccessResponse<McsObjectCrispObject[]>>
 
   /**
    * Get all the object projects from the API

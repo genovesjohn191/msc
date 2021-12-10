@@ -33,6 +33,7 @@ import { DynamicSelectGatewayIpComponent } from './select-gateway-ip/select-gate
 import { DynamicSelectNetworkVlanComponent } from './select-network-vlan/select-network-vlan.component';
 import { DynamicSelectOsComponent } from './select-os/select-os.component';
 import { DynamicSelectRetentionPeriodComponent } from './select-retention-period/select-retention-period.component';
+import { DynamicSelectChipsServiceComponent } from './select-chips-service/select-chips-service.component';
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 import { DynamicSelectTenantComponent } from './select-tenant/select-tenant.component';
 import { DynamicSelectTerraformModuleTypeComponent } from './select-terraform-module-type/select-terraform-module-type.component';
@@ -76,6 +77,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectNetworkDbUseCaseComponent,
   DynamicSelectOsComponent,
   DynamicSelectRetentionPeriodComponent,
+  DynamicSelectChipsServiceComponent,
   DynamicSelectSoftwareSubscriptionProductTypeComponent,
   DynamicSelectReservationProductTypeComponent,
   DynamicSelectStorageProfileComponent,

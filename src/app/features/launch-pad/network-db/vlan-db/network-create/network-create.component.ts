@@ -11,11 +11,11 @@ import {
   DynamicInputNetworkDbNetworkNameField,
   DynamicInputTextField,
   DynamicSelectChipsCompanyField,
-  DynamicSelectNetworkDbUseCaseField
+  DynamicSelectNetworkDbUseCaseField,
+  DynamicSelectChipsServiceField
 } from '@app/features-shared/dynamic-form';
 import {
   McsJob,
-  McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
   RouteKey
 } from '@app/models';
@@ -62,19 +62,20 @@ export class NetworkDbNetworkCreateComponent extends BasicJobFormComponentBase<M
       allowCustomInput: true,
       maxItems: 1,
       eventName: 'company-change',
-      dependents: ['name']
+      dependents: ['name','serviceId']
+    }),
+    new DynamicSelectChipsServiceField({
+      key: 'serviceId',
+      label: 'Service ID',
+      placeholder: 'Search for a Service ID...',
+      allowCustomInput: true,
+      maxItems: 1
     }),
     new DynamicInputNetworkDbNetworkNameField({
       key: 'name',
       label: 'Network Name',
       placeholder: 'Enter a network name',
       validators: { required: true, maxlength: 255 }
-    }),
-    new DynamicInputTextField({
-      key: 'serviceId',
-      label: 'Service ID',
-      placeholder: 'Enter a service ID',
-      validators: { maxlength: 30 }
     }),
     new DynamicSelectNetworkDbUseCaseField({
       key: 'useCaseId',
@@ -98,7 +99,7 @@ export class NetworkDbNetworkCreateComponent extends BasicJobFormComponentBase<M
       companyId: isNullOrEmpty(properties.company) ? null :  properties.company[0].value,
       name: properties.name,
       description: properties.description,
-      serviceId: properties.serviceId,
+      serviceId: !isNullOrEmpty(properties.serviceId) ? properties.serviceId[0].label.toString() : null,
       useCaseId: Number(properties.useCaseId)
     }
   }
