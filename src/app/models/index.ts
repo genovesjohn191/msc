@@ -326,6 +326,7 @@ export * from './response/mcs-report-storage-profile-utilisation';
 export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
+export * from './response/mcs-object-crisp-object';
 export * from './response/mcs-network-vdc-precheck-vlan'
 export * from './response/mcs-network-vdc-subnet'
 export * from './response/mcs-object-crisp-order';

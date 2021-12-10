@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  forkJoin,
+  Observable
+} from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
@@ -15,11 +18,13 @@ import {
   McsObjectProjectTasks,
   McsObjectVdcQueryParams,
   McsNetworkVdcPrecheckVlan,
-  McsObjectProjectParams
+  McsObjectProjectParams,
+  McsObjectCrispObject
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { IMcsApiObjectsService } from '../interfaces/mcs-api-objects.interface';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
+import { CrispObjectType } from '@app/models/enumerations/crisp-object-type.enum';
 
 @Injectable()
 export class McsApiObjectsService implements IMcsApiObjectsService {
@@ -39,6 +44,39 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
           return McsApiSuccessResponse.deserializeResponse<McsObjectCrispElement[]>(McsObjectCrispElement, response);
         })
       );
+  }
+
+  public getCrispObjects(query?: McsObjectQueryParams): Observable<McsApiSuccessResponse<McsObjectCrispObject[]>> {
+    if (isNullOrEmpty(query)) { query = new McsObjectQueryParams(); }
+
+    let crispElementsObservable = this.getCrispElements(query);
+    let installedServicesObservable = this.getInstalledServices(query);
+
+    return forkJoin([crispElementsObservable, installedServicesObservable]).pipe(
+      map(results => {
+        let crispObjects = new Array<McsObjectCrispObject>();
+        let crispElementsResult = results[0];
+        let installedServicesResult = results[1];
+
+        crispElementsResult.content.forEach(element => {
+          let crispObject = this._mcsObjectCrispObjectMapper(element, CrispObjectType.Element);
+          crispObjects.push(crispObject);
+        });
+
+        installedServicesResult.content.forEach(installedService => {
+          let crispObject = this._mcsObjectCrispObjectMapper(installedService, CrispObjectType.InstalledService);
+          crispObjects.push(crispObject);
+        });
+
+        let response: McsApiSuccessResponse<McsObjectCrispObject[]> = {
+          status: crispElementsResult.status,
+          totalCount: crispObjects.length,
+          content: crispObjects
+        }
+
+        return response;
+      })
+    );
   }
 
   public getCrispElement(productId: string): Observable<McsApiSuccessResponse<McsObjectCrispElement>> {
@@ -184,5 +222,18 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
           return apiResponse;
         })
       );
+  }
+
+  private _mcsObjectCrispObjectMapper(item: McsObjectCrispElement | McsObjectInstalledService, type: string): McsObjectCrispObject {
+    return {
+      companyId: item.companyId,
+      companyName: item.companyName,
+      createdOn: item.createdOn,
+      description: item.description,
+      productId: item.productId,
+      productType: item.productType,
+      serviceId: item.serviceId,
+      objectType: type
+    };
   }
 }
