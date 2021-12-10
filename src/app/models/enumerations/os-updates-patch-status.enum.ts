@@ -13,16 +13,16 @@ export const osUpdatesStatusLabel = {
   [OsUpdatesPatchStatus.Analysing]: 'We are inspecting your operating system.',
   [OsUpdatesPatchStatus.Updating]: 'We are updating your operating system.',
   [OsUpdatesPatchStatus.Unanalysed]: 'Your operating system may not be up to date.',
-  [OsUpdatesPatchStatus.Error]: 'Unable to retrieve updates information.',
+  [OsUpdatesPatchStatus.Error]: 'Unable to retrieve OS update information.',
 };
 
 export const osUpdatesStatusSubtitleLabel = {
-  [OsUpdatesPatchStatus.Updated]: 'Last inspected {{formattedDate}}, Sydney Time.',
-  [OsUpdatesPatchStatus.Outdated]: 'Last inspected {{formattedDate}}, Sydney Time.',
-  [OsUpdatesPatchStatus.Analysing]: 'Operating system updates details will be available after the inspection.',
-  [OsUpdatesPatchStatus.Updating]: 'Started on {{formattedDate}}, Sydney Time.',
+  [OsUpdatesPatchStatus.Updated]: 'Last inspected {{formattedDate}}, Sydney time.',
+  [OsUpdatesPatchStatus.Outdated]: 'Last inspected {{formattedDate}}, Sydney time.',
+  [OsUpdatesPatchStatus.Analysing]: 'OS update information will be available shortly.',
+  [OsUpdatesPatchStatus.Updating]: 'Started on {{formattedDate}}, Sydney time.',
   [OsUpdatesPatchStatus.Unanalysed]: 'Your operating system has never been inspected.',
-  [OsUpdatesPatchStatus.Error]: 'Last inspected {{formattedDate}}, Sydney Time.',
+  [OsUpdatesPatchStatus.Error]: 'Last inspected {{formattedDate}}, Sydney time.',
 };
 
 export const osUpdatesScheduleConfigureHoverLabel = {
