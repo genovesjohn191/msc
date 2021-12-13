@@ -27,7 +27,7 @@
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureSubscriptions.filterColumn' | translate" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureSubscriptions.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="azureSubscriptions"
         [defaultFilters]="defaultColumnFilters">

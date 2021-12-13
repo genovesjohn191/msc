@@ -22,7 +22,7 @@
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'networkDb.vlans.filterColumn' | translate" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'networkDb.vlans.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="network-db-vlans"
         [defaultFilters]="defaultColumnFilters">

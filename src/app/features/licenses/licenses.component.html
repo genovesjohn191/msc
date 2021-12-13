@@ -55,7 +55,7 @@
   <!-- Side Menu -->
   <mcs-left-panel *mcsLeftPanelDef="'licenses.leftPanelHeader' | translate">
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'licenses.filterColumn' | translate" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'licenses.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="licenses"
         [defaultFilters]="defaultColumnFilters"

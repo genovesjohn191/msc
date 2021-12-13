@@ -37,7 +37,7 @@
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'launchPadAzureDeployments.filterColumn' | translate" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'launchPadAzureDeployments.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="azure-deployments"
         [defaultFilters]="defaultColumnFilters">
