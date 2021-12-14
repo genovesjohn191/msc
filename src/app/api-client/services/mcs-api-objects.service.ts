@@ -59,12 +59,12 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
         let installedServicesResult = results[1];
 
         crispElementsResult.content.forEach(element => {
-          let crispObject = this._mcsObjectCrispObjectMapper(element, CrispObjectType.Element);
+          let crispObject = this._mcsObjectCrispObjectMapper(element, CrispObjectType.Elements);
           crispObjects.push(crispObject);
         });
 
         installedServicesResult.content.forEach(installedService => {
-          let crispObject = this._mcsObjectCrispObjectMapper(installedService, CrispObjectType.InstalledService);
+          let crispObject = this._mcsObjectCrispObjectMapper(installedService, CrispObjectType.InstalledServices);
           crispObjects.push(crispObject);
         });
 

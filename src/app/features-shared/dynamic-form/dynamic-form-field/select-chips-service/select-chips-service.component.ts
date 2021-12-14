@@ -126,7 +126,8 @@ export class DynamicSelectChipsServiceComponent extends DynamicSelectChipsFieldC
     switch (params.eventName) {
 
       case 'company-change':
-        this._companyId = params.value;
+        let convertibleToIntId = !isNaN(+params.value);
+        this._companyId = convertibleToIntId ? params.value : null;
         this.retrieveOptions();
         break;
     }

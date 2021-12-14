@@ -1,4 +1,4 @@
 export enum CrispObjectType {
-  Element = 'Element',
-  InstalledService = 'Installed Service'
+  Elements = 'Elements',
+  InstalledServices = 'Installed Services'
 }
