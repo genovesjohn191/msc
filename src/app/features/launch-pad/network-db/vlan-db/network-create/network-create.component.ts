@@ -62,31 +62,36 @@ export class NetworkDbNetworkCreateComponent extends BasicJobFormComponentBase<M
       allowCustomInput: true,
       maxItems: 1,
       eventName: 'company-change',
-      dependents: ['name','serviceId']
+      dependents: ['name','serviceId'],
+      contextualHelp: 'Select a company to create this network for, or manually enter a custom company name.'
     }),
     new DynamicSelectChipsServiceField({
       key: 'serviceId',
       label: 'Service ID',
       placeholder: 'Search for a Service ID...',
       allowCustomInput: true,
-      maxItems: 1
+      maxItems: 1,
+      contextualHelp: 'Select a service ID, or manually enter a dummy service ID (e.g. MXMGMT).'
     }),
     new DynamicInputNetworkDbNetworkNameField({
       key: 'name',
       label: 'Network Name',
       placeholder: 'Enter a network name',
-      validators: { required: true, maxlength: 255 }
+      validators: { required: true, maxlength: 255 },
+      contextualHelp: 'Enter a name for this network.'
     }),
     new DynamicSelectNetworkDbUseCaseField({
       key: 'useCaseId',
       label: 'Use Case',
-      validators: { required: true }
+      validators: { required: true },
+      contextualHelp: 'Select a use case for this network.'
     }),
     new DynamicInputTextField({
       key: 'description',
       label: 'Description',
       placeholder: 'Enter a description',
-      validators: { maxlength: 1024 }
+      validators: { maxlength: 1024 },
+      contextualHelp: 'Optionally, enter a description for this network.'
     })
   ];
 

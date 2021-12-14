@@ -5,7 +5,7 @@
       <!-- Form Details -->
       <mat-step [editable]="!creationSuccessful && (!processing && !hasError)" [completed]="false">
         <ng-template matStepLabel>{{ settings.title }}</ng-template>
-        <div *ngIf="!processing && !hasError">
+        <div *ngIf="!processing && !hasError" style="max-width: 700px;min-width: 650px;">
           <mcs-dynamic-form #form [config]="formConfig"></mcs-dynamic-form>
           <br />
           <button
