@@ -38,15 +38,11 @@ export class McsResourceMedia extends McsEntityBase {
   })
   public createdOn: Date = undefined;
 
-  /**
-   * Returns the enumeration equivalent of the status
-   */
   public get statusLabel(): string {
     return this.status;
   }
 
   public get isReady(): boolean {
-    // TODO(apascual): FUSION-5546: The status should be implemented first in resource media and this should be enum type not string
     return this.status === 'Ready';
   }
 }
