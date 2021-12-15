@@ -11,6 +11,22 @@ export enum McsPermission {
   CloudVmPatchManagement = 'CloudVmPatchManagement',
   CloudVmManagementIpView = 'CloudVmManagementIpView',
 
+  // Self-Managed VM
+  SelfManagedCloudVmAccess = 'SelfManagedCloudVmAccess',
+  SelfManagedCloudVmEdit = 'SelfManagedCloudVmEdit',
+  SelfManagedCloudVmNicEdit = 'SelfManagedCloudVmNicEdit',
+  SelfManagedCloudVmPowerStateEdit = 'SelfManagedCloudVmPowerStateEdit',
+  SelfManagedCloudVmSnapshotAccess = 'SelfManagedCloudVmSnapshotAccess',
+
+  // Managed VM
+  ManagedCloudVmAccess = 'ManagedCloudVmAccess',
+  ManagedCloudVmEdit = 'ManagedCloudVmEdit',
+  ManagedCloudVmNicEdit = 'ManagedCloudVmNicEdit',
+  ManagedCloudVmPowerStateEdit = 'ManagedCloudVmPowerStateEdit',
+  ManagedCloudVmSnapshotAccess = 'ManagedCloudVmSnapshotAccess',
+  ManagedCloudVmPatchManagement = 'ManagedCloudVmPatchManagement',
+  ManagedCloudVmManagementIpView = 'ManagedCloudVmManagementIpView',
+
   // Dedicated VM
   DedicatedVmAccess = 'DedicatedVmAccess',
   DedicatedVmEdit = 'DedicatedVmEdit',

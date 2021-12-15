@@ -45,7 +45,7 @@
           <h2>{{ resourceDetailLabels.platformTitle }}</h2>
         </ng-container>
 
-        <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
+        <ng-container *mcsAccessControl="['DedicatedVmEdit', 'ManagedCloudVmEdit', 'SelfManagedCloudVmEdit']">
           <ng-container *ngIf="resourceDetailLabels.newServerButtonShown">
             <mcs-item *ngIf="canCreateNewServer(resource)">
               <button mcsButton size="small" mcsId

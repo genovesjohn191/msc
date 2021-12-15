@@ -29,6 +29,7 @@ import {
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsServerPermission,
   McsTableDataSource2
 } from '@app/core';
 import { McsEvent } from '@app/events';
@@ -165,7 +166,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     super(_injector, _changeDetectorRef);
     this.manageNetwork = new ServerManageNetwork();
     this.nicMethodType = ServerNicMethodType.AddNic;
-
     this.nicsDataSource = new McsTableDataSource2(this._getServerNics.bind(this));
     this.nicsColumns = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'nic' }),
@@ -326,6 +326,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public isEditNicEnabled(server: McsServer, nic: McsServerNic): boolean {
     if (isNullOrEmpty(nic)) { return false; }
     return server.isSelfManaged || !nic.isPrimary;
+  }
+
+  public getPowerStatePermission(server: McsServer): McsServerPermission {
+    return new McsServerPermission(server);
   }
 
   /**

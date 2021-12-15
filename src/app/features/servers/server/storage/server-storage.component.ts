@@ -28,6 +28,7 @@ import {
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsServerPermission,
   McsTableDataSource2
 } from '@app/core';
 import { McsEvent } from '@app/events';
@@ -144,7 +145,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     super(_injector, _changeDetectorRef);
     this.manageStorage = new ServerManageStorage();
     this.diskMethodType = ServerDiskMethodType.AddDisk;
-
     this.disksDataSource = new McsTableDataSource2(this._getServerDisks.bind(this));
     this.disksColumns = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'storageDevice' }),
@@ -164,6 +164,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     unsubscribeSafely(this._createDiskHandler);
     unsubscribeSafely(this._updateDiskHandler);
     unsubscribeSafely(this._deleteDiskHandler);
+  }
+
+  public getPowerStatePermission(server: McsServer): McsServerPermission {
+    return new McsServerPermission(server);
   }
 
   /**

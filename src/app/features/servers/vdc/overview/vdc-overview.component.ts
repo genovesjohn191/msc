@@ -121,7 +121,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
   public canCreateNewServer(resource: McsResource): boolean {
     let isSelfManaged = getSafeProperty(resource, (obj) => obj.isSelfManaged);
     let requiredPermissions = isSelfManaged ?
-      [McsPermission.CloudVmEdit] :
+      [McsPermission.SelfManagedCloudVmEdit] :
       [McsPermission.OrderEdit, McsPermission.OrderApprove];
     return this._accessControlService.hasPermission(requiredPermissions);
   }
