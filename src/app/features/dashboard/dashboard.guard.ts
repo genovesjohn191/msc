@@ -62,7 +62,8 @@ export class DashboardGuard implements CanActivate {
     if (hasPrivateCloudAccess) {
       // Try Navigate to Compute
       let hasVmAccess = this._accessControlService.hasPermission([
-        McsPermission.CloudVmAccess,
+        McsPermission.ManagedCloudVmAccess,
+        McsPermission.SelfManagedCloudVmAccess,
         McsPermission.DedicatedVmAccess
       ]);
       if (hasVmAccess) {

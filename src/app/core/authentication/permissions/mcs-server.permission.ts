@@ -1,7 +1,9 @@
 import {
   McsServer,
   McsPermission,
-  McsFeatureFlag
+  McsFeatureFlag,
+  ServiceType,
+  PlatformType
 } from '@app/models';
 
 export class McsServerPermission {
@@ -12,48 +14,76 @@ export class McsServerPermission {
    * Returns the permission for Vm Access based on Server Type
    */
   public get vmAccess(): string[] {
-    return this._server.isDedicated ?
-      [McsPermission.DedicatedVmAccess] : [McsPermission.CloudVmAccess];
+    if (this._server.platform.type === PlatformType.VCenter) {
+      return [McsPermission.DedicatedVmAccess];
+    } else if (this._server.serviceType === ServiceType.Managed) {
+      return [McsPermission.ManagedCloudVmAccess];
+    } else {
+      return [McsPermission.SelfManagedCloudVmAccess];
+    }
   }
 
   /**
    * Returns the permission for Vm Edit based on Server Type
    */
   public get vmEdit(): string[] {
-    return this._server.isDedicated ?
-      [McsPermission.DedicatedVmEdit] : [McsPermission.CloudVmEdit];
+    if (this._server.platform.type === PlatformType.VCenter) {
+      return [McsPermission.DedicatedVmEdit];
+    } else if (this._server.serviceType === ServiceType.Managed) {
+      return [McsPermission.ManagedCloudVmEdit];
+    } else {
+      return [McsPermission.SelfManagedCloudVmEdit];
+    }
   }
 
   /**
    * Returns the permission for Vm Nic Edit based on Server Type
    */
   public get vmNicEdit(): string[] {
-    return this._server.isDedicated ?
-      [McsPermission.DedicatedVmNicEdit] : [McsPermission.CloudVmNicEdit];
+    if (this._server.platform.type === PlatformType.VCenter) {
+      return [McsPermission.DedicatedVmNicEdit];
+    } else if (this._server.serviceType === ServiceType.Managed) {
+      return [McsPermission.ManagedCloudVmNicEdit];
+    } else {
+      return [McsPermission.SelfManagedCloudVmNicEdit];
+    }
   }
 
   /**
    * Returns the permission for Vm Snapshot Access based on Server Type
    */
   public get vmSnapshotAccess(): string[] {
-    return this._server.isDedicated ?
-      [McsPermission.DedicatedVmSnapshotAccess] : [McsPermission.CloudVmSnapshotAccess];
+    if (this._server.platform.type === PlatformType.VCenter) {
+      return [McsPermission.DedicatedVmSnapshotAccess];
+    } else if (this._server.serviceType === ServiceType.Managed) {
+      return [McsPermission.ManagedCloudVmSnapshotAccess];
+    } else {
+      return [McsPermission.SelfManagedCloudVmSnapshotAccess];
+    }
   }
 
   /**
    * Returns the permission for Vm Power State Edit based on Server Type
    */
   public get vmPowerStateEdit(): string[] {
-    return this._server.isDedicated ?
-      [McsPermission.DedicatedVmPowerStateEdit] : [McsPermission.CloudVmPowerStateEdit];
+    if (this._server.platform.type === PlatformType.VCenter) {
+      return [McsPermission.DedicatedVmPowerStateEdit];
+    } else if (this._server.serviceType === ServiceType.Managed) {
+      return [McsPermission.ManagedCloudVmPowerStateEdit];
+    } else {
+      return [McsPermission.SelfManagedCloudVmPowerStateEdit];
+    }
   }
 
   /**
    * Returns the permission for Vm Patch Management
    */
   public get vmPatchManagement(): string[] {
-    return this._server.isDedicated ?
-      [McsPermission.DedicatedVmPatchManagement] : [McsPermission.CloudVmPatchManagement];
+    if (this._server.platform.type === PlatformType.VCenter) {
+      return [McsPermission.DedicatedVmPatchManagement];
+    } else if (this._server.serviceType === ServiceType.Managed) {
+      return [McsPermission.ManagedCloudVmPatchManagement];
+    }
   }
 
   /**

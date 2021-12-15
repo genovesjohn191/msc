@@ -23,6 +23,7 @@ import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsServerPermission,
   McsTableDataSource2,
   McsTableEvents,
   McsTableSelection2
@@ -39,7 +40,8 @@ import {
   ServerCommand,
   ServiceType,
   VmPowerstateCommand,
-  McsResource
+  McsResource,
+  McsPermission
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -203,6 +205,10 @@ export class ServersComponent implements OnInit, OnDestroy {
     let someServersCannotExecute = this.dataSelection.getSelectedItems()
       .find((selectedServer) => !selectedServer[propName]);
     return !someServersCannotExecute;
+  }
+
+  public getPowerStatePermission(server: McsServer): McsServerPermission {
+    return new McsServerPermission(server);
   }
 
   public retryDatasource(): void {
@@ -393,7 +399,17 @@ export class ServersComponent implements OnInit, OnDestroy {
     if (filter.id === 'select') {
       return this._accessControlService.hasPermission([
         'DedicatedVmPowerStateEdit',
+        'ManagedCloudVmPowerStateEdit',
+        'SelfManagedCloudVmPowerStateEdit',
         'CloudVmManagementIpView'
+      ]);
+    }
+
+    if (filter.id === 'action') {
+      return this._accessControlService.hasPermission([
+        'DedicatedVmPowerStateEdit',
+        'ManagedCloudVmPowerStateEdit',
+        'SelfManagedCloudVmPowerStateEdit'
       ]);
     }
 

@@ -215,7 +215,7 @@
           </li>
 
           <!-- Compute -->
-          <li *mcsAccessControl="['DedicatedVmAccess','CloudVmAccess']">
+          <li *mcsAccessControl="['DedicatedVmAccess','SelfManagedCloudVmAccess', 'ManagedCloudVmAccess']">
             <a (click)="toggleThis('showComputeSubmenu')"
               [class.active]="selectedCategory === routerCategoryEnum.Compute"
               mcsId="compute-link">

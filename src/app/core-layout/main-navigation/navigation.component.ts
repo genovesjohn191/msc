@@ -169,7 +169,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
    */
   public get hasDefaultPageAccess(): boolean {
     let hasPrivateAccess = this._accessControlService.hasPermission([
-      McsPermission.CloudVmAccess,
+      McsPermission.SelfManagedCloudVmAccess,
+      McsPermission.ManagedCloudVmAccess,
       McsPermission.DedicatedVmAccess,
       McsPermission.FirewallConfigurationView
     ]);

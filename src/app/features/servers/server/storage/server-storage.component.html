@@ -60,29 +60,31 @@
         </ng-container>
 
         <!-- Action Column -->
-        <ng-container matColumnDef="action" *mcsAccessControl="serverPermission.vmEdit">
+        <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef class="action-header-cell">
           </th>
           <td mat-cell *matCellDef="let row">
-            <mcs-item *ngIf="(resource$ | async)?.hasStorage">
-              <a [disabled]="!server.executable || hasServerSnapshot"
-                  (click)="openExpandDiskWindow(row)"
+            <ng-container *mcsAccessControl="getPowerStatePermission(server).vmEdit">
+              <mcs-item *ngIf="(resource$ | async)?.hasStorage">
+                <a [disabled]="!server.executable || hasServerSnapshot"
+                    (click)="openExpandDiskWindow(row)"
+                    mcsId
+                    mcsEventTracker="show-expand-disk"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                  {{ 'serverStorage.expandStorageLink' | translate }}
+                </a>
+                <a *ngIf="!row.isPrimary"
+                  [disabled]="!server.executable || hasServerSnapshot"
+                  (click)="deleteDisk(server, row)"
                   mcsId
-                  mcsEventTracker="show-expand-disk"
+                  mcsEventTracker="delete-disk"
                   mcsEventCategory="server"
                   mcsEventLabel="server-details-page">
-                {{ 'serverStorage.expandStorageLink' | translate }}
-              </a>
-              <a *ngIf="!row.isPrimary"
-                [disabled]="!server.executable || hasServerSnapshot"
-                (click)="deleteDisk(server, row)"
-                mcsId
-                mcsEventTracker="delete-disk"
-                mcsEventCategory="server"
-                mcsEventLabel="server-details-page">
-                {{ 'serverStorage.deleteStorageLink' | translate }}
-              </a>
-            </mcs-item>
+                  {{ 'serverStorage.deleteStorageLink' | translate }}
+                </a>
+              </mcs-item>
+            </ng-container>
           </td>
         </ng-container>
 

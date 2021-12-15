@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
     <!-- Server Creation -->
-    <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
+    <ng-container *mcsAccessControl="['DedicatedVmEdit', 'ManagedCloudVmEdit', 'SelfManagedCloudVmEdit']">
       <ng-container *ngIf="hasCreateResources">
         <mcs-top-panel-item *mcsTopPanelItemDef>
           <mcs-action-item
@@ -22,7 +22,7 @@
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <mcs-responsive-panel *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
+        <mcs-responsive-panel *mcsAccessControl="['DedicatedVmPowerStateEdit','ManagedCloudVmPowerStateEdit', 'SelfManagedCloudVmPowerStateEdit']">
           <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!canExecuteAction('startable')"
             (click)="startMultipleServers()"
@@ -140,7 +140,7 @@
             [disabled]="row.isProcessing"
             mcsCursor="default"
             mcsStopPropagation>
-            <mcs-checkbox color="dark"
+            <mcs-checkbox color="dark" *mcsAccessControl="getPowerStatePermission(row).vmPowerStateEdit;"
               [checked]="dataSelection?.isItemSelected(row)"
               (statusChange)="dataSelection?.toggleItemSelection(row)">
             </mcs-checkbox>
@@ -274,7 +274,7 @@
             text-center
             class="action-data-cell">
             <mcs-server-command mcsId="server-command"
-              *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']"
+              *mcsAccessControl="getPowerStatePermission(row).vmPowerStateEdit;"
               [server]="row"
               [excluded]="excludedCommands"></mcs-server-command>
           </td>
