@@ -13,6 +13,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { McsDataStatusFactory } from '@app/core';
 import { McsReportBillingServiceGroup } from '@app/models';
 import { unsubscribeSafely } from '@app/utilities';
 
@@ -41,6 +42,10 @@ export class BillingSummaryComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  public get billingSummaryStatus(): McsDataStatusFactory<any> {
+    return this._billingSummaryService.billingSummaryProcessingStatus;
   }
 
   public onUpdateChart(data: any): void {

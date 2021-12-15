@@ -17,6 +17,7 @@ import {
   DataStatus,
   JobStatus,
   JobType,
+  McsIdentity,
   McsJob
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -30,7 +31,6 @@ import {
 } from '@app/utilities';
 import { LogClass } from '@peerlancers/ngx-logger';
 
-import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 
 /**
@@ -54,7 +54,7 @@ export class McsNotificationContextService implements McsDisposable {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsJob[]>(null);
-    this.subscribeToActiveJobs();
+
     this._registerEvents();
   }
 
@@ -108,11 +108,21 @@ export class McsNotificationContextService implements McsDisposable {
       McsEvent.dataAllRecordsUpdated,
       this._resendActiveJobs.bind(this)
     );
+
+    this._eventDispatcher.addEventListener(
+      McsEvent.userChange,
+      this._onUserChanged.bind(this)
+    );
   }
 
   private _resendActiveJobs(): void {
     if (isNullOrEmpty(this._notifications)) { return; }
     this._notificationsStream.next(this._notifications);
+  }
+
+  private _onUserChanged(user: McsIdentity): void {
+    if (isNullOrEmpty(user)) { return; }
+    this.subscribeToActiveJobs();
   }
 
   /**

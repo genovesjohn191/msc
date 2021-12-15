@@ -4,10 +4,12 @@ import {
   EventEmitter,
   Injectable
 } from '@angular/core';
+import { McsDataStatusFactory } from '@app/core';
 import { McsReportBillingServiceGroup } from '@app/models';
 
 @Injectable()
 export class BillingSummaryService {
+  public billingSummaryProcessingStatus = new McsDataStatusFactory<any>();
   public billingSummariesChange = new BehaviorSubject<McsReportBillingServiceGroup[]>(null);
   public accountIdChanged = new EventEmitter<string>();
 

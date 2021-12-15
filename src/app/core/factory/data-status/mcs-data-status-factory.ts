@@ -1,18 +1,19 @@
-import { ChangeDetectorRef } from '@angular/core';
 import {
   BehaviorSubject,
+  Observable,
   Subscription
 } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { ChangeDetectorRef } from '@angular/core';
+import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { DataStatus } from '@app/models';
 
 export class McsDataStatusFactory<T> {
-  /**
-   * Get the data status of the model
-   */
+
   private _dataStatus: DataStatus;
   public get dataStatus(): DataStatus { return this._dataStatus; }
   public set dataStatus(value: DataStatus) {
@@ -24,6 +25,9 @@ export class McsDataStatusFactory<T> {
       }
     }
   }
+
+  public inProgress$: Observable<boolean>;
+  public completed$: Observable<boolean>;
 
   /**
    * Event that emits when status has changed
@@ -37,8 +41,11 @@ export class McsDataStatusFactory<T> {
   private _statusSubscription: Subscription;
   public get statusSubscription(): Subscription { return this._statusSubscription; }
 
-  constructor(private _changeDetectorRef?: ChangeDetectorRef) {
+  constructor(
+    private _changeDetectorRef?: ChangeDetectorRef
+  ) {
     this._dataStatus = DataStatus.Success;
+    this._subscribeToStatusChange();
   }
 
   /**
@@ -71,5 +78,17 @@ export class McsDataStatusFactory<T> {
    */
   private _notifyStatusChanged(): void {
     this._statusChanged.next(this.dataStatus);
+  }
+
+  private _subscribeToStatusChange(): void {
+    this.inProgress$ = this._statusChanged.pipe(
+      map(status => status === DataStatus.PreActive ||
+        status === DataStatus.Active)
+    );
+
+    this.completed$ = this.statusChanged.pipe(
+      map(status => status === DataStatus.Empty ||
+        status === DataStatus.Success)
+    );
   }
 }

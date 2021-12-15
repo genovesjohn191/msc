@@ -13,17 +13,17 @@
 </mcs-item>
 
 <div class="widget flat">
-  <mcs-vertical-bar-chart
-    *ngIf="!processing && !hasError"
-    class="custom-chart"
-    [config]="chartConfig"
-    [data]="chartItems$ | async"
-    (chartChange)="updateChartUri($event)">
-  </mcs-vertical-bar-chart>
+  <ng-container *ngIf="processingStatus.completed$ | async">
+    <mcs-vertical-bar-chart
+      class="custom-chart"
+      [config]="chartConfig"
+      [data]="chartItems$ | async"
+      (chartChange)="updateChartUri($event)">
+    </mcs-vertical-bar-chart>
+  </ng-container>
 
   <mcs-report-widget-data-status type="info"
-    [processing]="processing"
-    [hasError]="hasError"
+    [dataStatus]="processingStatus"
     (retry)="displayAllBillingServices()">
   </mcs-report-widget-data-status>
 </div>
