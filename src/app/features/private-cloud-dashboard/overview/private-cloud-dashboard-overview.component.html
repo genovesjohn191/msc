@@ -44,7 +44,7 @@
       </div>
       <div class="widget-wrapper">
         <ul>
-          <li *mcsAccessControl="['CloudVmAccess', 'FirewallConfigurationView']">
+          <li *mcsAccessControl="['ManagedCloudVmAccess', 'SelfManagedCloudVmAccess', 'FirewallConfigurationView']">
             <mcs-private-cloud-services-overview-widget (serviceOverviewDataChange)="serviceOverviewDataChange($event)">
             </mcs-private-cloud-services-overview-widget>
           </li>

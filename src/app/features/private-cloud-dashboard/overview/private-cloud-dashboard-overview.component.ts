@@ -89,7 +89,8 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
   }
 
   public get hasCloudVmAccess(): boolean {
-    return this._accessControlService.hasPermission([McsPermission.CloudVmAccess]);
+    return this._accessControlService.hasPermission([
+      McsPermission.ManagedCloudVmAccess, McsPermission.SelfManagedCloudVmAccess]);
   }
 
   public get hasAccessToFirewall(): boolean {

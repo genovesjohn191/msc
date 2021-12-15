@@ -3,7 +3,7 @@
   <div class="data-wrapper">
     <mcs-cta-list *ngIf="!hasError; else errorTemplate">
       <!-- Servers -->
-      <mcs-cta-list-panel *mcsAccessControl="['CloudVmAccess']"
+      <mcs-cta-list-panel *mcsAccessControl="['ManagedCloudVmAccess', 'SelfManagedCloudVmAccess']"
         [icon]="notvisibleCopyBlackIcon" compact="true">
         <mcs-cta-list-action>
           <a [mcsRouterLink]="routeKeyEnum.Servers"

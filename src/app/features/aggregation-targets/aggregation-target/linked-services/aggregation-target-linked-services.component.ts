@@ -112,7 +112,10 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
    * Return true if the user has access to the selected linked service
    */
   public hasAccessToService(linkedService: McsBatLinkedService): boolean {
-    return this._accessControlService.hasPermission([McsPermission.CloudVmAccess, McsPermission.DedicatedVmAccess]);
+    return this._accessControlService.hasPermission([
+      McsPermission.ManagedCloudVmAccess,
+      McsPermission.SelfManagedCloudVmAccess,
+      McsPermission.DedicatedVmAccess]);
   }
 
   /**
