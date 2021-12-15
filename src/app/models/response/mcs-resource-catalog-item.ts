@@ -26,9 +26,16 @@ export class McsResourceCatalogItem extends McsEntityBase {
   })
   public serviceType: ServiceType = undefined;
 
-  public get isReady(): boolean  {
-    // return this.catalogItem?.status === 'Ready';
-    // TODO(apascual): FUSION-5546: The status should be implemented first in catalogItem
-    return true;
+  @JsonProperty()
+  public virtualMachineCount: number = undefined;
+
+  @JsonProperty()
+  public supportsGuestCustomization: boolean = undefined;
+
+  @JsonProperty()
+  public status: string = undefined;
+
+  public get isReady(): boolean {
+    return this.status === 'Ready';
   }
 }
