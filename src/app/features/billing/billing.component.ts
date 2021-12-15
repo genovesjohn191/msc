@@ -1,11 +1,13 @@
 import {
   of,
+  throwError,
   BehaviorSubject,
   Observable,
   Subject,
   Subscription
 } from 'rxjs';
 import {
+  catchError,
   map,
   startWith,
   takeUntil,
@@ -123,10 +125,12 @@ export class BillingComponent implements OnInit, OnDestroy {
         query.microsoftChargeMonthRangeAfter = dateParams.after;
 
         // Retrieve the cache records and filter it by account id
+        this._billingSummaryService.billingSummaryProcessingStatus.setInProgress();
         let billingSummaryGroups = this._billingSummariesCache.getValue();
         if (!isNullOrEmpty(billingSummaryGroups)) {
           let updatedGroups = this._filterServicesRecords(billingSummaryGroups, accountIds);
           this._billingSummaryService.setBillingSummaries(updatedGroups || []);
+          this._billingSummaryService.billingSummaryProcessingStatus.setSuccessful(updatedGroups);
         } else {
           this._subscribeToBillingSummaries(query, accountIds);
         }
@@ -146,6 +150,11 @@ export class BillingComponent implements OnInit, OnDestroy {
       }),
       tap(filteredRecords => {
         this._billingSummaryService.setBillingSummaries(filteredRecords || []);
+        this._billingSummaryService.billingSummaryProcessingStatus.setSuccessful(filteredRecords);
+      }),
+      catchError(error => {
+        this._billingSummaryService.billingSummaryProcessingStatus.setError();
+        return throwError(() => error);
       })
     ).subscribe();
   }

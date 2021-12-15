@@ -24,6 +24,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { McsDataStatusFactory } from '@app/core';
 import {
   McsOption,
   McsOptionGroup,
@@ -36,7 +37,6 @@ import {
 } from '@app/shared';
 import {
   isNullOrEmpty,
-  isNullOrUndefined,
   removeSpaces,
   unsubscribeSafely,
   TreeDatasource,
@@ -63,15 +63,15 @@ import { BillingServiceItem } from '../factory/models/billing-service-item';
 })
 export class BillingServiceWidgetComponent extends ReportWidgetBase implements OnInit, OnChanges, OnDestroy {
   @Input()
+  public processingStatus: McsDataStatusFactory<any>;
+
+  @Input()
   public billingSummaries: McsReportBillingServiceGroup[];
 
   public servicesDatasource: TreeDatasource<McsReportBillingServiceGroup>;
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
-
-  public hasError: boolean = false;
-  public processing: boolean = true;
   public fcBillingService = new FormControl('', []);
 
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
@@ -147,8 +147,6 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
   }
 
   public displayAllBillingServices(): void {
-    this.hasError = false;
-    this.processing = true;
     this.updateChartUri(undefined);
     this._billingSummariesChange.next();
 
@@ -171,8 +169,6 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
           this._changeDetectorRef.markForCheck();
         })
       ).subscribe();
-
-      this.processing = isNullOrUndefined(this.billingSummaries);
     }
     this._changeDetectorRef.markForCheck();
   }
