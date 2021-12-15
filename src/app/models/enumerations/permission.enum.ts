@@ -2,15 +2,6 @@ export enum McsPermission {
   // Engineer
   InternalEngineerAccess = 'InternalEngineerAccess',
 
-  // Cloud VM
-  CloudVmAccess = 'CloudVmAccess',
-  CloudVmEdit = 'CloudVmEdit',
-  CloudVmNicEdit = 'CloudVmNicEdit',
-  CloudVmPowerStateEdit = 'CloudVmPowerStateEdit',
-  CloudVmSnapshotAccess = 'CloudVmSnapshotAccess',
-  CloudVmPatchManagement = 'CloudVmPatchManagement',
-  CloudVmManagementIpView = 'CloudVmManagementIpView',
-
   // Self-Managed VM
   SelfManagedCloudVmAccess = 'SelfManagedCloudVmAccess',
   SelfManagedCloudVmEdit = 'SelfManagedCloudVmEdit',

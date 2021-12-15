@@ -153,7 +153,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     let serverVcenterNoVmPatchManagementPermission = server?.platform?.type === PlatformType.VCenter &&
       this._accessControlService.hasPermission([McsPermission.DedicatedVmPatchManagement]);
     let serverVcloudNoCloudPatchManagementPermission = server?.platform?.type === PlatformType.VCloud &&
-      this._accessControlService.hasPermission([McsPermission.CloudVmPatchManagement]);
+      this._accessControlService.hasPermission([McsPermission.ManagedCloudVmPatchManagement]);
     return serverVcenterNoVmPatchManagementPermission || serverVcloudNoCloudPatchManagementPermission;
   }
 

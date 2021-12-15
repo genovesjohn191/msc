@@ -401,7 +401,7 @@ export class ServersComponent implements OnInit, OnDestroy {
         'DedicatedVmPowerStateEdit',
         'ManagedCloudVmPowerStateEdit',
         'SelfManagedCloudVmPowerStateEdit',
-        'CloudVmManagementIpView'
+        'ManagedCloudVmManagementIpView'
       ]);
     }
 
@@ -416,7 +416,7 @@ export class ServersComponent implements OnInit, OnDestroy {
     if (filter.id === 'managementIp') {
       return this._accessControlService.hasPermission([
         'DedicatedVmManagementIpView',
-        'CloudVmManagementIpView'
+        'ManagedCloudVmManagementIpView'
       ]);
     }
     return true;

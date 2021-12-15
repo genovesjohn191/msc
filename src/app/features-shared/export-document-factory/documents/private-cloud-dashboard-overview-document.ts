@@ -36,7 +36,8 @@ export class PrivateCloudDashboardOverviewDocument implements IDashboardExportDo
   }
 
   public get hasAccessToCloudVm(): boolean {
-    return this._accessControlService.hasPermission([McsPermission.CloudVmAccess]);
+    return this._accessControlService.hasPermission([
+      McsPermission.ManagedCloudVmAccess, McsPermission.SelfManagedCloudVmAccess]);
   }
 
   public get hasAccessToOrganizationView(): boolean {

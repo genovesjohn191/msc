@@ -54,7 +54,7 @@ describe('AccessControlDirective', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <div *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']">Hello World</div>
+        <div *mcsAccessControl="['ManagedCloudVmAccess', 'SelfManagedCloudVmAccess', 'DedicatedVmAccess']">Hello World</div>
         `
       }
     });
@@ -72,16 +72,18 @@ describe('AccessControlDirective', () => {
     it(`should render the element when any permission required is present`, fakeAsync(() => {
       let userIdentity = new McsIdentity();
       userIdentity.permissions = [
-        'CloudVmAccess',
+        'ManagedCloudVmAccess',
+        'SelfManagedCloudVmAccess',
         'DedicatedVmAccess',
         'DedicatedVmEdit',
-        'CloudVmEdit'
+        'ManagedCloudVmEdit',
+        'SelfManagedCloudVmEdit'
       ];
       userIdentity.features = [];
       mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'createEmbeddedView');
-      component.accessControl.permission = ['DedicatedVmEdit', 'CloudVmEdit'];
+      component.accessControl.permission = ['DedicatedVmEdit', 'ManagedCloudVmEdit', 'SelfManagedCloudVmEdit'];
       component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
@@ -91,16 +93,18 @@ describe('AccessControlDirective', () => {
     it(`should render the element when all permission required is present`, fakeAsync(() => {
       let userIdentity = new McsIdentity();
       userIdentity.permissions = [
-        'CloudVmAccess',
+        'ManagedCloudVmAccess',
+        'SelfManagedCloudVmAccess',
         'DedicatedVmAccess',
         'DedicatedVmEdit',
-        'CloudVmEdit'
+        'ManagedCloudVmEdit',
+        'SelfManagedCloudVmEdit'
       ];
       userIdentity.features = [];
       mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'createEmbeddedView');
-      component.accessControl.permission = ['DedicatedVmEdit', 'CloudVmEdit'];
+      component.accessControl.permission = ['DedicatedVmEdit', 'ManagedCloudVmEdit', 'SelfManagedCloudVmEdit'];
       component.accessControl.requireAllPermissions = true;
       component.accessControl.ngOnChanges();
       tick();
@@ -110,7 +114,7 @@ describe('AccessControlDirective', () => {
 
     it(`should render the element when any feature required is enabled`, fakeAsync(() => {
       let userIdentity = new McsIdentity();
-      userIdentity.permissions = ['CloudVmAccess', 'DedicatedVmAccess'];
+      userIdentity.permissions = ['ManagedCloudVmAccess', 'SelfManagedCloudVmAccess', 'DedicatedVmAccess'];
       let feature = new McsKeyValuePair();
       feature.key = 'enablePublicCloud';
       feature.value = true;
@@ -131,7 +135,7 @@ describe('AccessControlDirective', () => {
 
     it(`should render the element when all feature required is enabled`, fakeAsync(() => {
       let userIdentity = new McsIdentity();
-      userIdentity.permissions = ['CloudVmAccess', 'DedicatedVmAccess'];
+      userIdentity.permissions = ['ManagedCloudVmAccess', 'SelfManagedCloudVmAccess', 'DedicatedVmAccess'];
       let feature = new McsKeyValuePair();
       feature.key = 'enablePublicCloud';
       feature.value = true;
@@ -153,12 +157,12 @@ describe('AccessControlDirective', () => {
 
     it(`should not render the element if any permission is required and all are missing`, fakeAsync(() => {
       let userIdentity = new McsIdentity();
-      userIdentity.permissions = ['CloudVmAccess', 'DedicatedVmAccess'];
+      userIdentity.permissions = ['ManagedCloudVmAccess', 'SelfManagedCloudVmAccess', 'DedicatedVmAccess'];
       userIdentity.features = [];
       mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'clear');
-      component.accessControl.permission = ['DedicatedVmEdit', 'CloudVmEdit'];
+      component.accessControl.permission = ['DedicatedVmEdit', 'ManagedCloudVmEdit', 'SelfManagedCloudVmEdit'];
       component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.clear).toHaveBeenCalledTimes(1);
@@ -167,12 +171,12 @@ describe('AccessControlDirective', () => {
 
     it(`should not render the element if all permissions are required and any is missing`, fakeAsync(() => {
       let userIdentity = new McsIdentity();
-      userIdentity.permissions = ['CloudVmAccess', 'DedicatedVmAccess'];
+      userIdentity.permissions = ['ManagedCloudVmAccess', 'SelfManagedCloudVmAccess', 'DedicatedVmAccess'];
       userIdentity.features = [];
       mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'clear');
-      component.accessControl.permission = ['DedicatedVmEdit', 'CloudVmAccess'];
+      component.accessControl.permission = ['DedicatedVmEdit', 'ManagedCloudVmAccess', 'SelfManagedCloudVmAccess'];
       component.accessControl.requireAllPermissions = true;
       component.accessControl.ngOnChanges();
       tick();
