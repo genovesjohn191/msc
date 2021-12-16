@@ -69,4 +69,10 @@ export class McsLicense extends McsEntityBase {
   public get isChangeable(): boolean {
     return !this.isSuspended && !this.isPending && !this.isTrial;
   }
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public commitmentEndDate: Date = undefined;
 }
