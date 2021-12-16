@@ -43,6 +43,7 @@ export class NetworkDbVnisComponent implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsNetworkDbVni>;
 
   public readonly defaultColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'status' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'network' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
