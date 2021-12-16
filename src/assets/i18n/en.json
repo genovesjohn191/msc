@@ -2709,6 +2709,7 @@
     "columnFilter": "Column Filter",
     "dataSingular": "License",
     "dataPlural": "Licenses",
+    "noCommitmentEndDateLabel": "Unknown",
     "noParentIdLabel": "None",
     "changeLicenseCount": "Change license count",
     "retry": "Try again shortly"
@@ -3331,6 +3332,7 @@
     "billingTerm": "Billing Term",
     "catalog": "OS Edition",
     "code": "Code",
+    "commitmentEndDate": "Commitment End Date",
     "companyId": "Company ID",
     "companyName": "Company Name",
     "completed": "Completed",

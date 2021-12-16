@@ -74,6 +74,7 @@ export class LicensesComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscriptionId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentEndDate' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'parent' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
