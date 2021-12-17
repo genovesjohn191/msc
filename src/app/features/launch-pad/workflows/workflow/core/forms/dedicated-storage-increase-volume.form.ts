@@ -1,4 +1,4 @@
-import { DynamicInputNumberField } from '@app/features-shared/dynamic-form';
+import { DynamicInputSizeField } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { LaunchPadForm } from './form.interface';
@@ -6,12 +6,12 @@ import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper
 
 export const dedicatedStorageIncreaseVolumeForm: LaunchPadForm = {
   config: [
-    new DynamicInputNumberField({
+    new DynamicInputSizeField({
       key: 'diskSizeInGB',
       label: 'New Size',
       placeholder: 'Enter new size',
-      validators: { required: true, min: 1, max: 16384 },
-      hint: 'Allowed value is 1 - 16384',
+      validators: { required: true, minSize: 1, maxSize: 17592 },
+      hint: 'Allowed value is 1 - 17592',
       suffix: 'GB'
     }),
   ],

@@ -1,0 +1,19 @@
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  style="max-width: 200px;"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
+
+  <input #control matInput type="number" class="number"
+    [mcsId]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [placeholder]="config.placeholder"
+    [min]="config.validators?.minSize"
+    [max]="config.validators?.maxSize"
+    [(ngModel)]="config.value"
+    (input)="valueChange($event)"/>
+  <span matPrefix class="prefix" *ngIf="config.prefix">{{config.prefix}}</span>
+  <span matSuffix class="suffix" *ngIf="config.suffix">{{config.suffix}}</span>
+</mat-form-field>

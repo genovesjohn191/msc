@@ -10,6 +10,7 @@ export * from './input-terraform-deployment-name/input-terraform-deployment-name
 export * from './input-random/input-random';
 export * from './input-short-customer-name/input-short-customer-name';
 export * from './input-text/input-text';
+export * from './input-size/input-size';
 export * from './select/select';
 export * from './select-availability-zone/select-availability-zone';
 export * from './select-azure-subscription/select-azure-subscription';

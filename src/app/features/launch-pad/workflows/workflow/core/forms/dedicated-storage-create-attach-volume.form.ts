@@ -1,6 +1,6 @@
 import {
   DynamicInputHiddenField,
-  DynamicInputNumberField,
+  DynamicInputSizeField,
   DynamicSelectChipsVmField,
   DynamicSelectField,
   DynamicSlideToggleField
@@ -34,12 +34,12 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
         { key: 'PR16', value: 'P16000'}
       ]
     }),
-    new DynamicInputNumberField({
+    new DynamicInputSizeField({
       key: 'diskSizeInGB',
       label: 'Disk Size',
       placeholder: 'Enter disk size',
-      validators: { required: true, min: 1, max: 16384 },
-      hint: 'Allowed value is 1 - 16384',
+      validators: { required: true, minSize: 1, maxSize: 17592 },
+      hint: 'Allowed value is 1 - 17592',
       suffix: 'GB'
     }),
     new DynamicSlideToggleField({

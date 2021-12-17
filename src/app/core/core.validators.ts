@@ -131,6 +131,20 @@ export class CoreValidators {
     return CommonDefinition.REGEX_SHORT_CUSTOMER_NAME_PATTERN.test(control.value) ? null : { shortCustomerName: true };
   }
 
+  public static maxSize(maxSize: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let error = { 'maxSize': { actual: control.value, maxSize: maxSize } };
+      return +control.value > maxSize ? error : null;
+    };
+  }
+
+  public static minSize(minSize: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let error = { 'minSize': { actual: control.value, minSize: minSize } };
+      return +control.value < minSize ? error : null;
+    };
+  }
+
   /**
    * Validator that performs email validation
    *

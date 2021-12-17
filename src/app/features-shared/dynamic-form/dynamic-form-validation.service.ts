@@ -4,6 +4,7 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
+import { CoreValidators } from '@app/core';
 
 import { isNullOrEmpty } from '@app/utilities';
 import { DynamicFormFieldConfig } from './dynamic-form-field-config.interface';
@@ -22,6 +23,13 @@ export class DynamicFormValidationService {
     }
     if (control.hasError('max')) {
       return 'Must not exceed ' + control.errors.max.max;
+    }
+    if (control.hasError('minSize')) {
+      return 'Must not be less than ' + control.errors.minSize.minSize;
+    }
+    if (control.hasError('maxSize')) {
+      return `Must not exceed ${control.errors.maxSize.maxSize} for automation.
+        </br>Need larger? Talk to a storage specialist.`;
     }
     if (control.hasError('ipAddress')) {
       return 'Please enter a valid IP address.';
@@ -73,6 +81,12 @@ export class DynamicFormValidationService {
       }
       if (controlData.validators.max > 0) {
         validators.push(Validators.max(controlData.validators.max));
+      }
+      if (controlData.validators.minSize > 0) {
+        validators.push(CoreValidators.minSize(controlData.validators.minSize));
+      }
+      if (controlData.validators.maxSize > 0) {
+        validators.push(CoreValidators.maxSize(controlData.validators.maxSize));
       }
     }
 
