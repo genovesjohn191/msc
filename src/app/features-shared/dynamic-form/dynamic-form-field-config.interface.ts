@@ -39,6 +39,8 @@ export interface DynamicFormControlValidator {
   maxlength?: number;
   min?: number;
   max?: number;
+  minSize?: number;
+  maxSize?: number;
 }
 
 export interface DynamicFormControlSettings {
@@ -66,6 +68,7 @@ export type DynamicFormFieldType =
   | 'textbox-terraform-deployment-name'
   | 'textbox-random'
   | 'textbox-short-customer-name'
+  | 'textbox-size'
   | 'select-availability-zone'
   | 'select-bat'
   | 'select-chip-single-company'
@@ -108,6 +111,7 @@ export type DynamicFormFieldTemplate =
   | 'input-terraform-deployment-name'
   | 'input-random'
   | 'input-short-customer-name'
+  | 'input-size'
   | 'select-availability-zone'
   | 'select-bat'
   | 'select-chip-single-company'

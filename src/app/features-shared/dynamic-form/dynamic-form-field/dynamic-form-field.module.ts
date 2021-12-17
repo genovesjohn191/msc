@@ -45,6 +45,7 @@ import {
   DynamicSelectSoftwareSubscriptionProductTypeComponent
 } from './select-software-suscription-product-type/select-software-suscription-product-type.component';
 import { DynamicSelectReservationProductTypeComponent } from './select-reservation-product-type/select-reservation-product-type.component';
+import { DynamicInputSizeComponent } from './input-size/input-size.component';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -56,6 +57,7 @@ const exports: any[] | Type<any> = [
   DynamicInputTerraformDeploymentNameComponent,
   DynamicInputRandomComponent,
   DynamicInputShortCustomerNameComponent,
+  DynamicInputSizeComponent,
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
