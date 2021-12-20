@@ -2,7 +2,7 @@
   <div *ngIf="!processing && !hasError" class="monitoring-alerting-wrapper">
     <div *ngIf="!monitoringAlerting?.totalAlerts; else monitoringAlertingContent">
       <mcs-status-message type="info">
-        {{ 'reports.insights.techReview.empty' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </mcs-status-message>
     </div>
     <ng-template #monitoringAlertingContent>

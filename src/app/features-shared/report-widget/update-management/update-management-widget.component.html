@@ -78,11 +78,11 @@
                 mcsEventCategory="order-request-change"
                 mcsEventLabel="update-management-dashboard-insight">
               <div *ngIf="row.lastStatus === 'Succeeded'; else statusFailedTemplate">
-                {{ 'reports.insights.techReview.updateManagement.status.rollback' | translate }}
+                {{ 'action.rollback' | translate }}
               </div>
               <ng-template #statusFailedTemplate>
                 <div>
-                  {{ 'reports.insights.techReview.updateManagement.status.remediate' | translate }}
+                  {{ 'action.remediate' | translate }}
                 </div>
               </ng-template>
             </a>
@@ -102,7 +102,7 @@
         <mcs-loader size="medium"></mcs-loader>
       </div>
       <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-        {{ 'reports.noDataFound' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </div>
       <div *ngIf="dataSource?.hasError$ | async" text-center>
         <div class="listing-status-wrapper">
@@ -111,7 +111,7 @@
             mcsId
             mcsEventTracker="retry-loading-update-management-list"
             mcsEventCategory="update-management"
-            mcsEventLabel="dashboard-insight-page">{{ 'reports.retryLabel' | translate }}</a>.
+            mcsEventLabel="dashboard-insight-page">{{ 'message.tryAgain' | translate }}</a>.
         </div>
       </div>
     </mcs-item>

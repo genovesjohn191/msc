@@ -64,7 +64,7 @@
           </li>
           <li>
             <mcs-azure-tickets-widget (dataChange)="azureTickets($event)"
-            [title]="'label.openAzureTickets' | translate"
+              [title]="'label.openAzureTickets' | translate"
               [serviceId]="'AZ'"></mcs-azure-tickets-widget>
           </li>
           <li *mcsAccessControl="['OrderEdit', 'OrderView']; feature: ['EnableAzureServiceRequestSltReport']">

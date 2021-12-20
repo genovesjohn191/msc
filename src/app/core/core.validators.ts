@@ -131,17 +131,17 @@ export class CoreValidators {
     return CommonDefinition.REGEX_SHORT_CUSTOMER_NAME_PATTERN.test(control.value) ? null : { shortCustomerName: true };
   }
 
-  public static maxSize(maxSize: number): ValidatorFn {
+  public static maxSize(size: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      let error = { 'maxSize': { actual: control.value, maxSize: maxSize } };
-      return +control.value > maxSize ? error : null;
+      let error = { 'maxSize': { actual: control.value, maxSize: size } };
+      return +control.value > size ? error : null;
     };
   }
 
-  public static minSize(minSize: number): ValidatorFn {
+  public static minSize(size: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      let error = { 'minSize': { actual: control.value, minSize: minSize } };
-      return +control.value < minSize ? error : null;
+      let error = { 'minSize': { actual: control.value, minSize: size } };
+      return +control.value < size ? error : null;
     };
   }
 

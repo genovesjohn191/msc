@@ -5,6 +5,7 @@ import {
   OnDestroy,
   Injector
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import {
   BehaviorSubject,
   Subject,
@@ -21,14 +22,12 @@ import {
   McsReportingService
 } from '@app/core';
 import {
-  PerformanceAndScalabilityWidgetConfig,
   ReportMonthConfig,
   ReportPeriod
 } from '@app/features-shared/report-widget';
 import { MonitoringAlertingWidgetConfig } from '@app/features-shared/report-widget/monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import {
   McsFeatureFlag,
-  McsPermission,
   McsReportAscAlerts,
   McsReportAuditAlerts,
   McsReportInefficientVms,
@@ -41,10 +40,6 @@ import {
   McsReportVMRightsizing,
   RouteKey
 } from '@app/models';
-import {
-  MonitoringAlertingPeriod,
-  monitoringAlertingPeriodText
-} from '@app/models/enumerations/report-monitoring-alerting-period.enum';
 import { ChartItem } from '@app/shared';
 import {
   CommonDefinition,
@@ -62,21 +57,6 @@ interface PeriodOption {
   period: ReportPeriod;
 }
 
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
-
 @Component({
   selector: 'mcs-report-insights',
   templateUrl: './report-insights.component.html',
@@ -87,13 +67,6 @@ const months = [
   }
 })
 export class ReportInsightsComponent implements OnDestroy {
-  public monthOptions: PeriodOption[];
-  public monitoringAlertingPeriodOptions: PeriodOption[];
-
-  public get monitoringAlertingPeriodEnum(): any {
-    return MonitoringAlertingPeriod;
-  }
-
   public get cloudHealthUrl(): string  {
     return CommonDefinition.CLOUD_HEALTH_URL;
   }
@@ -116,60 +89,6 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public get azureVmRightsizingCloudHealthUrl(): string  {
     return `${CommonDefinition.CLOUD_HEALTH_URL}/reports/metrics/azure-vm-rightsizing/current`;
-  }
-
-  public set selectedResourceCostMonth(value: PeriodOption) {
-    this._selectedResourceCostMonth = value;
-    this.resourceMonthlyCostConfig = {
-      period: this._selectedResourceCostMonth.period.from
-    };
-
-    this._changeDetector.markForCheck();
-  }
-
-  public get selectedResourceCostMonth(): PeriodOption {
-    return this._selectedResourceCostMonth;
-  }
-
-  public set selectedAscAlertsMonth(value: PeriodOption) {
-    this._selectedAscAlertsMonth = value;
-    this.ascAlertsConfig = {
-      period: this._selectedAscAlertsMonth.period.from
-    };
-
-    this._changeDetector.markForCheck();
-  }
-
-  public get selectedAscAlertsMonth(): PeriodOption {
-    return this._selectedAscAlertsMonth;
-  }
-
-  public set selectedAuditAlertsMonth(value: PeriodOption) {
-    this._selectedAuditAlertsMonth = value;
-    this.auditAlertsConfig = {
-      period: this._selectedAuditAlertsMonth.period.from
-    };
-
-    this._changeDetector.markForCheck();
-  }
-
-  public get selectedAuditAlertsMonth(): PeriodOption {
-    return this._selectedAuditAlertsMonth;
-  }
-
-  public set selectedMonitoringAlertingPeriod(value: PeriodOption) {
-    this._selectedMonitoringAlertingPeriod = value;
-    this.monitoringAlertingConfig = {
-      period: {
-        from: this._selectedMonitoringAlertingPeriod.period.from,
-        until: this._selectedMonitoringAlertingPeriod.period.until,
-      }
-    };
-    this._changeDetector.markForCheck();
-  }
-
-  public get selectedMonitoringAlertingPeriod(): PeriodOption {
-    return this._selectedMonitoringAlertingPeriod;
   }
 
   public set subscriptionIdsFilter(value: string[]) {
@@ -212,42 +131,53 @@ export class ReportInsightsComponent implements OnDestroy {
     return RouteKey;
   }
 
+  public fcResourceCostMonthPeriod: FormControl;
+  public fcAscAlertMonthPeriod: FormControl;
+  public fcAuditAlertMonthPeriod: FormControl;
+  public fcMonitoringPeriod: FormControl;
+
+  public monthOptions: PeriodOption[];
   public _subscriptionIdsFilter: string[] = undefined;
   public _performanceSubscriptionIdsFilter: string = '';
 
-  public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
   public resourceMonthlyCostConfig: ReportMonthConfig;
   public auditAlertsConfig: ReportMonthConfig;
   public ascAlertsConfig: ReportMonthConfig;
   public monitoringAlertingConfig: MonitoringAlertingWidgetConfig
 
+  public selectedResourceCostMonth: PeriodOption;
+  public selectedAuditAlertsMonth: PeriodOption;
+  public selectedAscAlertsMonth: PeriodOption;
+  public selectedMonitoringAlertingPeriod: PeriodOption;
+
   public subscriptions: McsReportSubscription[];
   public performanceSubscriptions: McsReportSubscription[] = [{id: '', name: 'All'}];
 
   private _managementServices: McsReportManagementService[] = [];
-  private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
-  private _performanceSubscriptionFilterChange = new BehaviorSubject<string>('');
-  private _selectedResourceCostMonth: PeriodOption;
-  private _selectedAuditAlertsMonth: PeriodOption;
-  private _selectedAscAlertsMonth: PeriodOption;
-  private _selectedMonitoringAlertingPeriod: PeriodOption;
-  private _subscriptionSubject = new Subject();
-  private _destroySubject = new Subject<void>();
   private _exportDocumentDetails = new InsightsDocumentDetails();
   private _isPdfDownloadInProgress: boolean;
 
+  private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
+  private _performanceSubscriptionFilterChange = new BehaviorSubject<string>('');
+  private _subscriptionSubject = new Subject<void>();
+  private _destroySubject = new Subject<void>();
+  private _destroyPeriodSubject = new Subject<void>();
+
   public constructor(
     private _accessControlService: McsAccessControlService,
-    private reportService: McsReportingService,
     private _changeDetector: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
-    private _injector: Injector
+    private _injector: Injector,
+    private _reportService: McsReportingService
   ) {
     this._registerEvents();
+    this._registerFormControl();
     this._getSubscriptions();
     this._identifyNonEssentialManagementServiceExistence();
-    this._createMonthOptions();
-    this._createMonitoringAlertingPeriodOptions();
+    this._subscribeToResourceMonthPeriodControlChanges();
+    this._subscribeToAscMonthPeriodControlChanges();
+    this._subscribeToAuditMonthPeriodControlChanges();
+    this._subscribeToMonitoringPeriodControlChanges();
     this._listenToSubscriptionFilterChange();
     this._listenToPerformanceSubscriptionFilterChange();
   }
@@ -255,6 +185,7 @@ export class ReportInsightsComponent implements OnDestroy {
   public ngOnDestroy(): void {
     unsubscribeSafely(this._subscriptionSubject);
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._destroyPeriodSubject);
   }
 
   public onClickExportWord(): void {
@@ -340,6 +271,24 @@ export class ReportInsightsComponent implements OnDestroy {
     this._exportDocumentDetails.updateManagement = data;
   }
 
+  public getPeriodOptions(options: PeriodOption[]): void {
+    this.monthOptions = options;
+  }
+
+  public resourceMonthDataReceived(chartData: ChartItem[]) {
+    if (!isNullOrEmpty(chartData)) {
+      return;
+    }
+    if (!this.noDataForOneYear) {
+      this.selectedResourceCostMonth = this.monthOptions[this.indexOfSelectedMonth + 1];
+      this.fcResourceCostMonthPeriod.setValue(this.selectedResourceCostMonth);
+    }
+  }
+
+  public scrollToElement(el: HTMLElement) {
+    el.scrollIntoView({behavior: 'smooth'});
+  }
+
   public widgetsLoading(): boolean {
     let isCostsWidgetsLoading = this._isCostsWidgetsLoading();
     let isTechReviewWidgetsLoading = this.hasManagementService ? this._isTechReviewWidgetsLoading() : false;
@@ -367,6 +316,64 @@ export class ReportInsightsComponent implements OnDestroy {
       ascAlert === undefined;
   }
 
+  private _registerFormControl(): void {
+    this.fcResourceCostMonthPeriod = new FormControl('', []);
+    this.fcAscAlertMonthPeriod = new FormControl('', []);
+    this.fcAuditAlertMonthPeriod = new FormControl('', []);
+    this.fcMonitoringPeriod = new FormControl('', []);
+  }
+
+  private _subscribeToResourceMonthPeriodControlChanges(): void {
+    this.fcResourceCostMonthPeriod.valueChanges.pipe(
+      takeUntil(this._destroyPeriodSubject),
+    ).subscribe(change => {
+      this.selectedResourceCostMonth = change;
+      this.resourceMonthlyCostConfig = {
+        period: this.selectedResourceCostMonth.period.from
+      };
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  private _subscribeToAscMonthPeriodControlChanges(): void {
+    this.fcAscAlertMonthPeriod.valueChanges.pipe(
+      takeUntil(this._destroyPeriodSubject),
+    ).subscribe(change => {
+      this.selectedAscAlertsMonth = change;
+      this.ascAlertsConfig = {
+        period: this.selectedAscAlertsMonth.period.from
+      };
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  private _subscribeToAuditMonthPeriodControlChanges(): void {
+    this.fcAuditAlertMonthPeriod.valueChanges.pipe(
+      takeUntil(this._destroyPeriodSubject),
+    ).subscribe(change => {
+      this.selectedAuditAlertsMonth = change;
+      this.auditAlertsConfig = {
+        period: this.selectedAuditAlertsMonth.period.from
+      };
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  private _subscribeToMonitoringPeriodControlChanges(): void {
+    this.fcMonitoringPeriod.valueChanges.pipe(
+      takeUntil(this._destroyPeriodSubject),
+    ).subscribe(change => {
+      this.selectedMonitoringAlertingPeriod = change;
+      this.monitoringAlertingConfig = {
+        period: {
+          from: this.selectedMonitoringAlertingPeriod.period.from,
+          until: this.selectedMonitoringAlertingPeriod.period.until,
+        }
+      };
+      this._changeDetector.markForCheck();
+    });
+  }
+
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
       McsEvent.pdfDownloadEvent, this._pdfDownloadCompleted.bind(this));
@@ -378,7 +385,7 @@ export class ReportInsightsComponent implements OnDestroy {
   }
 
   private _getSubscriptions(): void {
-    this.reportService.getSubscriptions()
+    this._reportService.getSubscriptions()
     .pipe(
       takeUntil(this._subscriptionSubject))
     .subscribe((data) => {
@@ -390,7 +397,7 @@ export class ReportInsightsComponent implements OnDestroy {
   }
 
   private _identifyNonEssentialManagementServiceExistence(): void {
-    this.reportService.getManagementServices(false)
+    this._reportService.getManagementServices(false)
     .pipe(
       takeUntil(this._destroySubject),
       catchError((error) => {
@@ -425,85 +432,5 @@ export class ReportInsightsComponent implements OnDestroy {
       this._performanceSubscriptionIdsFilter = performanceSubscriptionIds;
       this._changeDetector.markForCheck();
     });
-  }
-
-  private _createMonthOptions(): void {
-    this.monthOptions = Array<PeriodOption>();
-    let currentDate = new Date();
-    let currentYear = currentDate.getFullYear();
-
-    for (let ctr = 0; ctr < 12; ctr++) {
-      let from = new Date(new Date().setMonth(currentDate.getMonth() - ctr));
-      let label = months[from.getMonth()];
-      if (currentYear !== from.getFullYear()) {
-        label += ` ${from.getFullYear()}`;
-      }
-      let period = { from, until: from };
-
-      this.monthOptions.push({label, period});
-    }
-
-    this.selectedResourceCostMonth = this.monthOptions[0];
-    this.selectedAuditAlertsMonth = this.monthOptions[0];
-    this.selectedAscAlertsMonth = this.monthOptions[0];
-  }
-
-  private _createMonitoringAlertingPeriodOptions(): void {
-    this.monitoringAlertingPeriodOptions = Array<PeriodOption>();
-    let monitoringAlertingPeriodRange = this._mapPeriodEnumToPeriodOptions(this.monitoringAlertingPeriodEnum, monitoringAlertingPeriodText);
-    const periodLength = monitoringAlertingPeriodRange.length;
-    for (let ctr = 0; ctr < periodLength; ctr++) {
-      let label = monitoringAlertingPeriodRange[ctr];
-      let period = this.setMonitoringAlertingPeriodRange(label);
-
-      this.monitoringAlertingPeriodOptions.push({label, period});
-    }
-    this.selectedMonitoringAlertingPeriod = this.monitoringAlertingPeriodOptions[0];
-  }
-
-  private _mapPeriodEnumToPeriodOptions(period: MonitoringAlertingPeriod, enumText: any): string[] {
-    let periodOptions = [];
-    Object.values(period)
-      .filter((objValue) => (typeof objValue === 'number'))
-      .map(objValue => periodOptions.push(enumText[objValue]));
-    return periodOptions;
-  }
-
-  private setMonitoringAlertingPeriodRange(label: string): ReportPeriod {
-    let currentDate = new Date();
-    if (label === monitoringAlertingPeriodText[1]) {
-      return {
-        from: new Date(new Date().setMonth(currentDate.getMonth() - 1)),
-        until: new Date(new Date())
-      };
-    } else if (label === monitoringAlertingPeriodText[2]) {
-      return {
-        from: new Date(new Date().setDate(currentDate.getDate() - 14)),
-        until: new Date(new Date())
-      };
-    } else if (label === monitoringAlertingPeriodText[3]) {
-      return {
-        from: new Date(new Date().setDate(currentDate.getDate() - 7)),
-        until: new Date(new Date())
-      };
-    } else if (label ===monitoringAlertingPeriodText[4]) {
-      return {
-        from:  new Date(new Date()),
-        until:  new Date(new Date())
-      };
-    }
-  }
-
-  public resourceMonthDataReceived(chartData: ChartItem[]) {
-    if (!isNullOrEmpty(chartData)) {
-      return;
-    }
-    if (!this.noDataForOneYear) {
-      this.selectedResourceCostMonth = this.monthOptions[this.indexOfSelectedMonth + 1];
-    }
-  }
-
-  public scrollToElement(el: HTMLElement) {
-    el.scrollIntoView({behavior: 'smooth'});
   }
 }

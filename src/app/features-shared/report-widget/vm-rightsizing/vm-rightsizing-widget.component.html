@@ -2,7 +2,7 @@
   <div *ngIf="!processing && !hasError; else error">
     <div *ngIf="empty; else vmRightsizing">
       <mcs-status-message type="info">
-        {{ 'reports.insights.costs.vmRightsizing.empty' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </mcs-status-message>
     </div> 
     <ng-template #vmRightsizing>
@@ -28,7 +28,7 @@
     <mcs-status-message type="error">
       {{ 'reports.errorMessage' | translate }}
       <a style="margin-left: 5px;" mcsId (click)="getVMRightsizingSummary()">
-        {{ 'reports.retryLabel' | translate }}
+        {{ 'message.tryAgain' | translate }}
       </a>
     </mcs-status-message>
   </ng-template>
@@ -161,7 +161,7 @@
         <mcs-loader size="medium"></mcs-loader>
       </div>
       <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-        {{ 'reports.insights.costs.vmRightsizing.empty' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </div>
       <div *ngIf="dataSource?.hasError$ | async" text-center>
         <span margin-right-small>{{ 'reports.errorMessage' | translate }}</span>
@@ -169,7 +169,7 @@
           mcsId="retry-datasource"
           mcsEventTracker="retry-vm-rightsizing"
           mcsEventCategory="dashboard-navigation"
-          mcsEventLabel="vm-rightsizing-listing">{{ 'reports.retryLabel' | translate }}</a>
+          mcsEventLabel="vm-rightsizing-listing">{{ 'message.tryAgain' | translate }}</a>
       </div>
     </mcs-item>
   </div>

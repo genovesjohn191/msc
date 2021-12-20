@@ -1,0 +1,8 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ 'label.period' | translate }}</mat-label>
+  <mat-select [formControl]="ngControl?.control">
+    <mat-option *ngFor="let period of periodOptions" [value]="period">
+      {{ period.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

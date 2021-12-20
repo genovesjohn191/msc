@@ -1,10 +1,8 @@
-<div class="hide-on-print">
-  <mat-form-field appearance="outline">
-    <mat-label>{{ 'label.month' | translate }}</mat-label>
-    <mat-select [formControl]="ngControl?.control">
-      <mat-option *ngFor="let month of monthOptions" [value]="month">
-        {{ month.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
+<mat-form-field appearance="outline">
+  <mat-label>{{ 'label.month' | translate }}</mat-label>
+  <mat-select [formControl]="ngControl?.control">
+    <mat-option *ngFor="let month of monthOptions" [value]="month">
+      {{ month.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

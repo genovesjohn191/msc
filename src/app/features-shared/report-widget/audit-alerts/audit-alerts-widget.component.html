@@ -53,7 +53,7 @@
         <mcs-loader size="medium"></mcs-loader>
       </div>
       <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-        {{ 'reports.noDataFound' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </div>
       <div *ngIf="dataSource?.hasError$ | async" text-center>
         <div class="listing-status-wrapper">
@@ -62,7 +62,7 @@
             mcsId
             mcsEventTracker="retry-loading-audit-alerts-list"
             mcsEventCategory="audit-alerts"
-            mcsEventLabel="dashboard-insight-page">{{ 'reports.retryLabel' | translate }}</a>.
+            mcsEventLabel="dashboard-insight-page">{{ 'message.tryAgain' | translate }}</a>.
         </div>
       </div>
     </mcs-item>
