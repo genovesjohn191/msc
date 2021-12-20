@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Injector,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 
@@ -47,6 +49,9 @@ export class FieldSelectMonthPeriodComponent
   extends FormFieldBaseComponent2<any>
   implements IFieldSelectMonthPeriod, OnInit {
 
+  @Output()
+  public periodOption: EventEmitter<PeriodOption[]> = new EventEmitter<PeriodOption[]>();
+
   public monthOptions: PeriodOption[];
 
   constructor(_injector: Injector) {
@@ -72,7 +77,7 @@ export class FieldSelectMonthPeriodComponent
 
       this.monthOptions.push({label, period});
     }
-
+    this.periodOption.emit(this.monthOptions);
     this.ngControl.control.setValue(this.monthOptions[0]);
   }
 }

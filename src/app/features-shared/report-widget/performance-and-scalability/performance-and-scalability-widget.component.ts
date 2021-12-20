@@ -21,11 +21,6 @@ import { unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core';
 import { ReportWidgetBase } from '../report-widget.base';
 
-export interface PerformanceAndScalabilityWidgetConfig {
-  period: Date,
-  subscriptionIds: string;
-}
-
 @Component({
   selector: 'mcs-performance-and-scalability-widget',
   templateUrl: './performance-and-scalability-widget.component.html',

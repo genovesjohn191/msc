@@ -2,7 +2,7 @@
   <div class="resource-compliance-wrapper" *ngIf="!hasError && !processing; else errorResourceCompliance">
     <div *ngIf="empty; else resourceComplianceData">
       <mcs-status-message type="info">
-        {{ 'reports.insights.techReview.empty' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </mcs-status-message>
     </div>
     <ng-template #resourceComplianceData>
@@ -41,7 +41,7 @@
         </h4>
         <div *ngIf="emptyComplianceState; else complianceStateChart">
           <mcs-status-message type="info">
-            {{ 'reports.insights.techReview.empty' | translate }}
+            {{ 'message.noDataFound' | translate }}
           </mcs-status-message>
         </div>
         <ng-template #complianceStateChart>

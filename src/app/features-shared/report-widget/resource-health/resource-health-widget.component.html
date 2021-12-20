@@ -2,7 +2,7 @@
   <div class="resource-health-wrapper" *ngIf="!processing && !hasError">
     <div *ngIf="empty; else resourceHealth">
       <mcs-status-message type="info">
-        {{ 'reports.insights.techReview.empty' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </mcs-status-message>
     </div>
     <ng-template #resourceHealth>

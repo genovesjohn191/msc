@@ -2,7 +2,7 @@
   <div *ngIf="!hasError && !processing" class="operational-savings-wrapper">
     <div *ngIf="empty; else operationalSavingsContent">
       <mcs-status-message type="info">
-        {{ 'reports.insights.techReview.empty' | translate }}
+        {{ 'message.noDataFound' | translate }}
       </mcs-status-message>
     </div>
     <ng-template #operationalSavingsContent>

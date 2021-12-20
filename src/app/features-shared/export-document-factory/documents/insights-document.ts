@@ -27,7 +27,7 @@ import { InsightsDocumentDetails } from '../models/report-insights';
 import { DashboardExportDocumentType } from '../dashboard-export-document-type';
 import { IDashboardExportDocument } from '../dashboard-export-document-interface';
 
-const cloudhealthText = 'reports.insights.vmCloudHealthLink';
+const cloudhealthText = 'label.vmWareCloudHealth';
 
 export class InsightsDocument implements IDashboardExportDocument {
   private _translateService: TranslateService;

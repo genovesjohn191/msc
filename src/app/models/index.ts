@@ -107,6 +107,7 @@ export * from './enumerations/network-db-vlan-status.enum';
 export * from './enumerations/temperature.enum';
 export * from './enumerations/management-domain.enum';
 export * from './enumerations/azure-module.enum';
+export * from './enumerations/report-monitoring-alerting-period.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';

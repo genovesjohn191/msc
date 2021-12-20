@@ -4,7 +4,7 @@
     <h3>
       {{ 'reports.overview.platformSecurityAdvisoriesWidget.title' | translate }}
     </h3>
-    <div mcsAlign="end">
+    <div mcsAlign="end" class="hide-on-print">
       <mcs-field-select-month-period [formControl]="fcMonthPeriod"></mcs-field-select-month-period>
     </div>
   </mcs-item>
@@ -118,7 +118,7 @@
             mcsId
             mcsEventTracker="retry-loading-platform-security-advisories-list"
             mcsEventCategory="platform-security-advisories"
-            mcsEventLabel="dashboard-overview-page">{{ 'reports.retryLabel' | translate }}</a>.
+            mcsEventLabel="dashboard-overview-page">{{ 'message.tryAgain' | translate }}</a>.
         </div>
       </div>
     </mcs-item>

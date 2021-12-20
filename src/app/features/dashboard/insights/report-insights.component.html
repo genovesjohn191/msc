@@ -44,14 +44,14 @@
                 mcsEventTracker="navigate-to-cloudhealth"
                 mcsEventCategory="cloudhealth"
                 mcsEventLabel="dashboard-insight-page">
-                {{ 'reports.insights.vmCloudHealthLink' | translate }}
+                {{ 'label.vmWareCloudHealth' | translate }}
               </a>
             </span>
           </div>
           <!-- Subscriptions -->
           <div>
             <mat-form-field appearance="outline">
-              <mat-label>{{ 'reports.insights.subscriptionText' | translate }}</mat-label>
+              <mat-label>{{ 'label.subscriptions' | translate }}</mat-label>
               <mat-select multiple [(value)]="subscriptionIdsFilter">
                 <mat-option *ngFor="let subscription of subscriptions" [value]="subscription.id">
                   {{ subscription.name }}
@@ -61,7 +61,7 @@
           </div>
         </div>
         <div class="insight-header costs" #costsSection>
-          <h1><span class="show-on-print-only">1. </span>{{ 'reports.insights.costs.label' | translate }}</h1>
+          <h1><span class="show-on-print-only">1. </span>{{ 'label.costs' | translate }}</h1>
         </div>
         <section>
           <div class="sub-section">
@@ -83,17 +83,10 @@
             <!-- Resource Cost -->
             <div class="options-container">
               <div>
-                <h2><span class="show-on-print-only">1.2 </span>{{ 'reports.insights.costs.resourceCost.title' | translate }} {{ selectedResourceCostMonth.label }}</h2>
+                <h2><span class="show-on-print-only">1.2 </span>{{ 'reports.insights.costs.resourceCost.title' | translate }} {{ selectedResourceCostMonth?.label }}</h2>
               </div>
               <div class="hide-on-print">
-                <mat-form-field appearance="outline">
-                  <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
-                  <mat-select [(ngModel)]="selectedResourceCostMonth">
-                    <mat-option *ngFor="let opt of monthOptions" [value]="opt">
-                      {{ opt.label }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+                <mcs-field-select-month-period [formControl]="fcResourceCostMonthPeriod" (periodOption)="getPeriodOptions($event)"></mcs-field-select-month-period>
               </div>
             </div>
             <div class="widget-label label-with-dropdown">
@@ -107,8 +100,7 @@
               {{ 'reports.insights.costs.resourceCost.subTitle' | translate }}
             </div>
             <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig" [noDataForOneYear]="noDataForOneYear" (dataReceived)="resourceMonthDataReceived($event)"
-              (chartChange)="monthlyCostUri($event)"
-            ></mcs-resource-monthly-cost-widget>
+              (chartChange)="monthlyCostUri($event)"></mcs-resource-monthly-cost-widget>
             <mat-divider></mat-divider>
 
             <!-- Virtual Machine Breakdown -->
@@ -177,7 +169,7 @@
         <div #techReview>
           <ng-container *ngIf="hasManagementService">
             <div class="insight-header tech-review">
-              <h1><span class="show-on-print-only">2. </span>{{ 'reports.insights.techReview.label' | translate }}</h1>
+              <h1><span class="show-on-print-only">2. </span>{{ 'label.techReview' | translate }}</h1>
             </div>
             <section>
               <div class="sub-section">
@@ -223,7 +215,7 @@
                   </div>
                   <div class="hide-on-print">
                     <mat-form-field appearance="outline">
-                      <mat-label>{{ 'reports.insights.subscriptionText' | translate }}</mat-label>
+                      <mat-label>{{ 'label.subscriptions' | translate }}</mat-label>
                       <mat-select [(value)]="performanceSubscriptionIdsFilter">
                         <mat-option *ngFor="let subscription of performanceSubscriptions" [value]="subscription.id">
                           {{ subscription.name }}
@@ -253,14 +245,7 @@
                     <h2><span class="show-on-print-only">2.5 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
                   </div>
                   <div class="hide-on-print">
-                    <mat-form-field appearance="outline">
-                      <mat-label>{{ 'reports.insights.periodLabel' | translate }}</mat-label>
-                      <mat-select [(value)]="selectedMonitoringAlertingPeriod">
-                        <mat-option *ngFor="let opt of monitoringAlertingPeriodOptions" [value]="opt">
-                          {{ opt.label }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
+                    <mcs-field-select-monitoring-period [formControl]="fcMonitoringPeriod"></mcs-field-select-monitoring-period>
                   </div>
                 </div>
                 <div class="widget-label label-with-dropdown">
@@ -284,14 +269,7 @@
                       <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.ascAlerts.title' | translate }}</h2>
                     </div>
                     <div class="hide-on-print">
-                      <mat-form-field appearance="outline">
-                        <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
-                        <mat-select [(ngModel)]="selectedAscAlertsMonth">
-                          <mat-option *ngFor="let opt of monthOptions" [value]="opt">
-                            {{ opt.label }}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
+                      <mcs-field-select-month-period [formControl]="fcAscAlertMonthPeriod"></mcs-field-select-month-period>
                     </div>
                   </div>
                   <mcs-asc-alerts-widget [config]="ascAlertsConfig" (dataChange)="ascAlertsDataChange($event)"></mcs-asc-alerts-widget>
@@ -304,14 +282,7 @@
                     <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.auditAlerts.title' | translate }}</h2>
                   </div>
                   <div class="hide-on-print">
-                    <mat-form-field appearance="outline">
-                      <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
-                      <mat-select [(ngModel)]="selectedAuditAlertsMonth">
-                        <mat-option *ngFor="let opt of monthOptions" [value]="opt">
-                          {{ opt.label }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
+                    <mcs-field-select-month-period [formControl]="fcAuditAlertMonthPeriod"></mcs-field-select-month-period>
                   </div>
                 </div>
                 <div class="widget-label label-with-dropdown">

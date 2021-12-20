@@ -23,7 +23,7 @@
             <ng-template #error>
               <small  read-only>
                 Failed to retrieve {{ serviceDescription(serviceInfo) }}.
-                <a (click)="serviceInfo.getData(serviceInfo.id)"><small>{{ 'reports.retryLabel' | translate }}</small></a>
+                <a (click)="serviceInfo.getData(serviceInfo.id)"><small>{{ 'message.tryAgain' | translate }}</small></a>
               </small>
             </ng-template>
           </ng-template>

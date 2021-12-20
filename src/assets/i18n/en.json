@@ -187,16 +187,11 @@
   },
   "reports": {
     "errorMessage": "Something went wrong while retrieving your data.",
-    "retryLabel": "Try Again",
-    "noDataFound": "No data found",
     "overview": {
       "azureResourcesWidget": {
-        "title": "Azure Resources",
-        "cloudHealthLinkLabel": "View in CloudHealth"
+        "title": "Azure Resources"
       },
       "azureTicketsWidget": {
-        "newTicketLinkLabel": "New",
-        "moreTicketsLinkLabel": "View All",
         "empty": "No open tickets.",
         "noTicketViewPermission": "This information could not be loaded as you do not have permission to view it."
       },
@@ -256,12 +251,7 @@
     },
     "insights": {
       "subtitle": "Insights gives you visibility into your Azure environment, powered by",
-      "vmCloudHealthLink": "VMware CloudHealth.",
-      "subscriptionText": "Subscriptions",
-      "monthLabel": "Month",
-      "periodLabel": "Period",
       "costs": {
-        "label": "Costs",
         "serviceOverview": {
           "title": "Services Overview",
           "subTitle": "associated with Azure resource types by month."
@@ -285,8 +275,7 @@
           "title": "VM Rightsizing",
           "subTitle": "A list of VMs where savings could be found through rightsizing.",
           "labelBelowChart": "These insights show how well your VMs are utilised in terms of the workloads running on them, how metrics such as CPU, Memory and Virtual Disk I/O contribute to VM utilisation, and opportunities for rightsizing VMs thereby saving costs and optimising workloads.",
-          "efficiencyEmpty": "No Data",
-          "empty": "No data found"
+          "efficiencyEmpty": "No Data"
         },
         "inefficientVms": {
           "title": "Inefficient VMs",
@@ -295,8 +284,6 @@
         }
       },
       "techReview": {
-        "label": "Tech Review",
-        "empty": "No data found",
         "security": {
           "title": "Security",
           "azureSecurityCenter": "Azure Security Center",
@@ -346,11 +333,7 @@
         },
         "updateManagement": {
           "title": "Update Management",
-          "subTitle": "An overview of the state of each of your managed VMs which are configured for update scheduling; when they were last updated and whether the attempt was successful.",
-          "status": {
-            "remediate": "Remediate",
-            "rollback": "Rollback"
-          }
+          "subTitle": "An overview of the state of each of your managed VMs which are configured for update scheduling; when they were last updated and whether the attempt was successful."
         }
       }
     },
@@ -3618,7 +3601,14 @@
     "vlans": "VLANs",
     "deleteZoneRecord": "Delete Zone Record",
     "addZoneRecord": "Add Zone Record",
-    "discardChanges": "Discard Changes"
+    "discardChanges": "Discard Changes",
+    "viewAll": "View All",
+    "viewInCloudHealth": "View in CloudHealth",
+    "vmWareCloudHealth": "VMware CloudHealth",
+    "subscriptions": "Subscriptions",
+    "period": "Period",
+    "costs": "Costs",
+    "techReview": "Tech Review"
   },
   "action": {
     "add": "Add",
@@ -3656,7 +3646,9 @@
     "resume": "Resume",
     "stop": "Stop",
     "suspend": "Suspend",
-    "reserveNewSubnet": "Reserve a new subnet"
+    "reserveNewSubnet": "Reserve a new subnet",
+    "remediate": "Remediate",
+    "rollback": "Rollback"
   },
   "message": {
     "notYetAvailable": "Not yet available",
@@ -3664,6 +3656,7 @@
     "markupPercent": "{{markup}}% of consumption RRP",
     "loadingItems": "Loading items...",
     "noRecordsFound": "No records found.",
+    "tryAgain": "Try Again",
     "editToView": "Edit to view",
     "dataFieldRequired": "Data field is required.",
     "createRecordExist": "Cannot create <strong>{{name}}</strong> record. The Record already exists.",
@@ -3725,7 +3718,6 @@
     "noStorageProfileUtilisation": "No storage profiles to display.",
     "noAlertTitleDialog": "Unknown Alert",
     "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>"
-
   },
   "tooltip": {
     "exportWord": "Export Word Document",

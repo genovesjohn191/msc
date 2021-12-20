@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReportWidgetModule } from '@app/features-shared';
+import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
 import { SharedModule } from '@app/shared';
 
 import { DashboardComponent } from './dashboard.component';
@@ -18,6 +19,7 @@ import { ReportOverviewComponent } from './overview';
     ReportInsightsComponent,
   ],
   imports: [
+    FormFieldsModule,
     SharedModule,
     ReportWidgetModule,
     RouterModule.forChild(dashboardRoutes)

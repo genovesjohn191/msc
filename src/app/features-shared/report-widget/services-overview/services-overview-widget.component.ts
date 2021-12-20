@@ -20,7 +20,10 @@ import {
   CommonDefinition,
   unsubscribeSafely
 } from '@app/utilities';
-import { CoreRoutes, McsReportingService } from '@app/core';
+import {
+  CoreRoutes,
+  McsReportingService
+} from '@app/core';
 import { RouteKey } from '@app/models';
 
 interface ServiceInfo {
