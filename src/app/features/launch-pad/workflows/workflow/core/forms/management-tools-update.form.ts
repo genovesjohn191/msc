@@ -26,7 +26,8 @@ export const updateInManagementToolsForm: LaunchPadForm = {
       key: 'hostName',
       label: 'Hostname',
       placeholder: 'Enter a hostname',
-      validators: { required: true }
+      validators: { required: true },
+      useHostnamePattern: true
     }),
     new DynamicSelectChipsManagementDomainField({
       key: 'managementDomain',
