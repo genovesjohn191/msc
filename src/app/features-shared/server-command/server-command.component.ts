@@ -186,7 +186,7 @@ export class ServerCommandComponent {
         this._apiService.sendServerPowerState(
           this.server.id,
           createObject(McsServerPowerstateCommand, {
-            command: this.server.vmwareTools.hasTools ? VmPowerstateCommand.Shutdown : VmPowerstateCommand.PowerOff,
+            command: this.server.vmwareTools.hasToolsRunning ? VmPowerstateCommand.Shutdown : VmPowerstateCommand.PowerOff,
             clientReferenceObject: {
               serverId: this.server.id
             }
@@ -207,7 +207,7 @@ export class ServerCommandComponent {
         this._apiService.sendServerPowerState(
           this.server.id,
           createObject(McsServerPowerstateCommand, {
-            command: this.server.vmwareTools.hasTools ? VmPowerstateCommand.Restart : VmPowerstateCommand.Reset,
+            command: this.server.vmwareTools.hasToolsRunning ? VmPowerstateCommand.Restart : VmPowerstateCommand.Reset,
             clientReferenceObject: {
               serverId: this.server.id
             }
@@ -408,26 +408,26 @@ export class ServerCommandComponent {
       case ServerCommand.Stop:
         dialogConfirmText = this._translateService.instant('action.stop');
 
-        if (this.server.vmwareTools?.hasTools) {
-          dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWT.title');
-          dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWT.message');
+        if (this.server.vmwareTools?.hasToolsRunning) {
+          dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.title');
+          dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.message');
         }
         else {
-          dialogTitle = this._translateService.instant('dialog.serverStopSingleNoVMWT.title');
-          dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWT.message');
+          dialogTitle = this._translateService.instant('dialog.serverStopSingleNoVMWTRunning.title');
+          dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWTRunning.message');
         }
         break;
 
       case ServerCommand.Restart:
         dialogConfirmText = this._translateService.instant('action.restart');
 
-        if (this.server.vmwareTools?.hasTools) {
-          dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWT.title');
-          dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWT.message');
+        if (this.server.vmwareTools?.hasToolsRunning) {
+          dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.title');
+          dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.message');
         }
         else {
-          dialogTitle = this._translateService.instant('dialog.serverRestartSingleNoVMWT.title');
-          dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWT.message');
+          dialogTitle = this._translateService.instant('dialog.serverRestartSingleNoVMWTRunning.title');
+          dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWTRunning.message');
         }
         break;
     }

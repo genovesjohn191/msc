@@ -3782,25 +3782,25 @@
       "title": "Resume Server",
       "message": "After you resume a server, you cannot return to the state that it was in when you suspended it. To return to the same state repeatedly, a snapshot is required.\r\n\nAre you sure you wish to continue?"
     },
-    "serverRestartSingleNoVMWT": {
+    "serverRestartSingleNoVMWTRunning": {
       "title": "Restart Server",
-      "message": "This server does not have VMware Tools installed and cannot be shut down gracefully before restarting. It will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
+      "message": "This server does not have VMware Tools running and cannot be shut down gracefully before restarting. It will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
     },
-    "serverRestartSingleWithVMWT": {
+    "serverRestartSingleWithVMWTRunning": {
       "title": "Restart Server",
       "message": "This server will be shut down gracefully before restarting.\r\n\nAre you sure you wish to continue?"
     },
-    "serverRestartMultipleNoVMWT": {
+    "serverRestartMultipleNoVMWTRunning": {
       "title": "Restart Servers",
-      "message": "These servers do not have VMware Tools installed and cannot be shut down gracefully before restarting. These will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
+      "message": "These servers do not have VMware Tools running and cannot be shut down gracefully before restarting. These will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
     },
-    "serverRestartMultipleWithVMWT": {
+    "serverRestartMultipleWithVMWTRunning": {
       "title": "Restart Servers",
       "message": "These servers will be shut down gracefully before restarting.\r\n\nAre you sure you wish to continue?"
     },
-    "serverRestartMultipleMixedVMWT": {
+    "serverRestartMultipleMixedVMWTRunning": {
       "title": "Restart Servers",
-      "message": "One or more of the servers you selected do not have VMware Tools installed and cannot be shut down gracefully before restarting. These will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
+      "message": "One or more of the servers you selected do not have VMware Tools running and cannot be shut down gracefully before restarting. These will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
     },
     "serverStopSingle": {
       "title": "Stop Server",
@@ -3816,7 +3816,7 @@
     },
     "serverStopSingleNoVMWT": {
       "title": "Stop Server",
-      "message": "This server does not have VMware Tools installed and cannot be shut down gracefully. It will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
+      "message": "This server does not have VMware Tools running and cannot be shut down gracefully. It will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },
     "serverStopSingleWithVMWT": {
       "title": "Stop Server",
@@ -3824,7 +3824,7 @@
     },
     "serverStopMultipleNoVMWT": {
       "title": "Stop Servers",
-      "message": "These servers do not have VMware Tools installed and cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
+      "message": "These servers do not have VMware Tools running and cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },
     "serverStopMultipleWithVMWT": {
       "title": "Stop Servers",
@@ -3832,7 +3832,7 @@
     },
     "serverStopMultipleMixedVMWT": {
       "title": "Stop Servers",
-      "message": "One or more of the servers you selected do not have VMware Tools installed and cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
+      "message": "One or more of the servers you selected do not have VMware Tools running and cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },
     "sessionIdle": {
       "title": "Hey, are you still there?",
