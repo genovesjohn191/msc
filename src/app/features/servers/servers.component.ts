@@ -427,10 +427,10 @@ export class ServersComponent implements OnInit, OnDestroy {
     let dialogMessage = '';
     let dialogConfirmText = '';
 
-    let isVMWTInstalledValues = this.dataSelection.getSelectedItems().map(item => item.vmwareTools?.hasTools);
+    let isVMWTRunningValues = this.dataSelection.getSelectedItems().map(item => item.vmwareTools?.hasTools);
     let isMixed = false;
-    if (!isNullOrEmpty(isVMWTInstalledValues || isVMWTInstalledValues.length > 1)) {
-      isMixed = [...new Set(isVMWTInstalledValues)].length > 1;
+    if (!isNullOrEmpty(isVMWTRunningValues || isVMWTRunningValues.length > 1)) {
+      isMixed = [...new Set(isVMWTRunningValues)].length > 1;
     };
 
     switch (action) {
@@ -439,28 +439,28 @@ export class ServersComponent implements OnInit, OnDestroy {
 
         if (this.dataSelection.getSelectedItems().length > 1) {
           if (isMixed) {
-            dialogTitle = this._translateService.instant('dialog.serverStopMultipleMixedVMWT.title');
-            dialogMessage = this._translateService.instant('dialog.serverStopMultipleMixedVMWT.message');
+            dialogTitle = this._translateService.instant('dialog.serverStopMultipleMixedVMWTRunning.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopMultipleMixedVMWTRunning.message');
           }
           else {
-            if (isVMWTInstalledValues[0]) {
-              dialogTitle = this._translateService.instant('dialog.serverStopMultipleWithVMWT.title');
-              dialogMessage = this._translateService.instant('dialog.serverStopMultipleWithVMWT.message');
+            if (isVMWTRunningValues[0]) {
+              dialogTitle = this._translateService.instant('dialog.serverStopMultipleWithVMWTRunning.title');
+              dialogMessage = this._translateService.instant('dialog.serverStopMultipleWithVMWTRunning.message');
             }
             else {
-              dialogTitle = this._translateService.instant('dialog.serverStopMultipleNoVMWT.title');
-              dialogMessage = this._translateService.instant('dialog.serverStopMultipleNoVMWT.message');
+              dialogTitle = this._translateService.instant('dialog.serverStopMultipleNoVMWTRunning.title');
+              dialogMessage = this._translateService.instant('dialog.serverStopMultipleNoVMWTRunning.message');
             }
           }
         }
         else {
-          if (isVMWTInstalledValues[0]) {
-            dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWT.title');
-            dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWT.message');
+          if (isVMWTRunningValues[0]) {
+            dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.message');
           }
           else {
-            dialogTitle = this._translateService.instant('dialog.serverStopSingleNoVMWT.title');
-            dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWT.message');
+            dialogTitle = this._translateService.instant('dialog.serverStopSingleNoVMWTRunning.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWTRunning.message');
           }
         }
         break;
@@ -470,28 +470,28 @@ export class ServersComponent implements OnInit, OnDestroy {
 
         if (this.dataSelection.getSelectedItems().length > 1) {
           if (isMixed) {
-            dialogTitle = this._translateService.instant('dialog.serverRestartMultipleMixedVMWT.title');
-            dialogMessage = this._translateService.instant('dialog.serverRestartMultipleMixedVMWT.message');
+            dialogTitle = this._translateService.instant('dialog.serverRestartMultipleMixedVMWTRunning.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartMultipleMixedVMWTRunning.message');
           }
           else {
-            if (isVMWTInstalledValues[0]) {
-              dialogTitle = this._translateService.instant('dialog.serverRestartMultipleWithVMWT.title');
-              dialogMessage = this._translateService.instant('dialog.serverRestartMultipleWithVMWT.message');
+            if (isVMWTRunningValues[0]) {
+              dialogTitle = this._translateService.instant('dialog.serverRestartMultipleWithVMWTRunning.title');
+              dialogMessage = this._translateService.instant('dialog.serverRestartMultipleWithVMWTRunning.message');
             }
             else {
-              dialogTitle = this._translateService.instant('dialog.serverRestartMultipleNoVMWT.title');
-              dialogMessage = this._translateService.instant('dialog.serverRestartMultipleNoVMWT.message');
+              dialogTitle = this._translateService.instant('dialog.serverRestartMultipleNoVMWTRunning.title');
+              dialogMessage = this._translateService.instant('dialog.serverRestartMultipleNoVMWTRunning.message');
             }
           }
         }
         else {
-          if (isVMWTInstalledValues[0]) {
-            dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWT.title');
-            dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWT.message');
+          if (isVMWTRunningValues[0]) {
+            dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.message');
           }
           else {
-            dialogTitle = this._translateService.instant('dialog.serverRestartSingleNoVMWT.title');
-            dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWT.message');
+            dialogTitle = this._translateService.instant('dialog.serverRestartSingleNoVMWTRunning.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWTRunning.message');
           }
         }
         break;

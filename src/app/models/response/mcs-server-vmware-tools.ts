@@ -31,4 +31,8 @@ export class McsServerVmwareTools {
   public get hasTools(): boolean {
     return this.version > 0;
   }
+
+  public get hasToolsRunning(): boolean {
+    return this.runningStatus === RunningStatus.Running;
+  }
 }
