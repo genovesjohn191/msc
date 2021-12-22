@@ -50,7 +50,7 @@ export class DynamicFormValidationService {
       return 'Incorrect FQDN domain format';
     }
     if (control.hasError('hostName')) {
-      return 'Incorrect host name format';
+      return 'Incorrect hostname format';
     }
     if (control.hasError('shortCustomerName')) {
       return 'Incorrect short customer name format';

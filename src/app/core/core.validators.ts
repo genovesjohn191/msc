@@ -50,7 +50,7 @@ export class CoreValidators {
    * { 'hostName': true }
    */
   public static hostName(control: AbstractControl): ValidationErrors | null {
-    return CommonDefinition.REGEX_SERVER_NAME_PATTERN.test(control.value) ? null : { hostName: true };
+    return CommonDefinition.REGEX_HOSTNAME_PATTERN.test(control.value) ? null : { hostName: true };
   }
 
   /**

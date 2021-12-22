@@ -1,3 +1,5 @@
+import { ValidatorFn } from '@angular/forms';
+import { CoreValidators } from '@app/core';
 import { CommonDefinition } from '@app/utilities';
 import {
   DynamicFormControlSettings,
@@ -9,6 +11,8 @@ import { DynamicInputTextField } from '../input-text/input-text';
 export class DynamicInputHostNameField extends DynamicInputTextField {
   // Overrides
   public type: DynamicFormFieldType = 'textbox-host-name';
+
+  public useHostnamePattern?: boolean = false;
 
   public constructor(options: {
     key: string;
@@ -22,7 +26,15 @@ export class DynamicInputHostNameField extends DynamicInputTextField {
     dependents?: string[];
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
     settings?: DynamicFormControlSettings;
+    useHostnamePattern?: boolean;
   }) {
     super(options);
+    this.useHostnamePattern = options.useHostnamePattern || false;
+  }
+
+  public configureValidators(validators: ValidatorFn[]) {
+    if(this.useHostnamePattern){
+      validators.push(CoreValidators.hostName);
+    }
   }
 }
