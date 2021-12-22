@@ -3814,23 +3814,23 @@
       "title": "Suspend Server",
       "message": "Suspending a server will save its current state and pause any operations that are in progress.\r\n\nAre you sure you wish to continue?"
     },
-    "serverStopSingleNoVMWT": {
+    "serverStopSingleNoVMWTRunning": {
       "title": "Stop Server",
       "message": "This server does not have VMware Tools running and cannot be shut down gracefully. It will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },
-    "serverStopSingleWithVMWT": {
+    "serverStopSingleWithVMWTRunning": {
       "title": "Stop Server",
       "message": "This server will be shut down gracefully.\r\n\nAre you sure you wish to continue?"
     },
-    "serverStopMultipleNoVMWT": {
+    "serverStopMultipleNoVMWTRunning": {
       "title": "Stop Servers",
       "message": "These servers do not have VMware Tools running and cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },
-    "serverStopMultipleWithVMWT": {
+    "serverStopMultipleWithVMWTRunning": {
       "title": "Stop Servers",
       "message": "These servers will be shut down gracefully.\r\n\nAre you sure you wish to continue?"
     },
-    "serverStopMultipleMixedVMWT": {
+    "serverStopMultipleMixedVMWTRunning": {
       "title": "Stop Servers",
       "message": "One or more of the servers you selected do not have VMware Tools running and cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },

@@ -33,6 +33,6 @@ export class McsServerVmwareTools {
   }
 
   public get hasToolsRunning(): boolean {
-    return this.runningStatus === "Running";
+    return this.runningStatus === RunningStatus.Running;
   }
 }
