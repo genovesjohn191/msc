@@ -199,7 +199,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
     return this.generateCustomHtmlTooltip(
       billingTitle,
       billingViewModel.items,
-      billingViewModel.includeMininumCommentNote &&
+      billingViewModel.includeMinimumCommentNote &&
       !billingFound.hasMetMinimumCommitment &&
       billingFound.minimumCommitmentDollars &&
       this._translate.instant('message.minimumSpendCommitmentNotMet')

@@ -33,6 +33,7 @@ import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingSummaryItem } from '../models/billing-summary-item';
+import { BillingKnownProductTypes } from '@app/models/enumerations/bill-summary-product-type';
 
 export class BillingSummaryOperation
   extends BillingOperationBase
@@ -96,7 +97,9 @@ export class BillingSummaryOperation
 
     billingGroups.forEach(billingGroup => {
       billingGroup.parentServices?.forEach(parentService => {
-        if (isNullOrUndefined(parentService.productType)) { return; }
+        if ((isNullOrUndefined(parentService.productType) || (!BillingKnownProductTypes.some(i => i.key.includes(parentService.productType.toUpperCase()))))) {
+          return;
+        }
 
         // Append Parent Service
         this._appendBillingSummaryToMap(
@@ -110,7 +113,9 @@ export class BillingSummaryOperation
 
         // Append Child Services Data
         parentService?.childBillingServices?.forEach(childService => {
-          if (isNullOrUndefined(childService.productType)) { return; }
+          if ((isNullOrUndefined(childService.productType) || (!BillingKnownProductTypes.some(i => i.key.includes(childService.productType.toUpperCase()))))) {
+            return;
+          }
 
           this._appendBillingSummaryToMap(
             this._generateItemKey(childService.productType, getDateOnly(billingGroup.microsoftChargeMonth)),
@@ -361,122 +366,17 @@ export class BillingSummaryOperation
   private _registerBillingStructMap(): void {
     let defaultStructProps = ['total', 'microsoftChargeMonth', 'macquarieBillMonth'];
 
-    this._billingStructMap.set('AZUREESSENTIALSCSP',
-      item => new BillingOperationViewModel(
-        `Azure Essentials CSP`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        false
-      )
-    );
-
-    this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
-      item => new BillingOperationViewModel(
-        `Azure Essentials Enterprise Agreement`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        false
-      )
-    );
-
-    this._billingStructMap.set('MANAGEDAZURECSP',
-      item => new BillingOperationViewModel(
-        `Managed Azure CSP`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        false
-      )
-    );
-
-    this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
-      item => new BillingOperationViewModel(
-        `Managed Azure Enterprise Agreement`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        false
-      )
-    );
-
-    this._billingStructMap.set('CSPLICENSES',
-      item => new BillingOperationViewModel(
-        `CSP Licenses`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        false
-      )
-    );
-
-    this._billingStructMap.set('AZURESOFTWARESUBSCRIPTION',
-      item => new BillingOperationViewModel(
-        `Software Subscriptions`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        false
-      )
-    );
-
-    this._billingStructMap.set('AZUREVIRTUALDESKTOP',
-      item => new BillingOperationViewModel(
-        `Azure Virtual Desktop`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        false
-      )
-    );
-
-    this._billingStructMap.set('AZUREESSENTIALSCSP',
-      item => new BillingOperationViewModel(
-        `Azure Essentials CSP`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
-      item => new BillingOperationViewModel(
-        `Azure Essentials Enterprise Agreement`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('MANAGEDAZURECSP',
-      item => new BillingOperationViewModel(
-        `Managed Azure CSP`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
-      item => new BillingOperationViewModel(
-        `Managed Azure Enterprise Agreement`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
-      item => new BillingOperationViewModel(
-        `Azure Product Consumption`,
-        this._getTooltipOptionsInfo(item, 'total', 'usdPerUnit', 'microsoftChargeMonth', 'macquarieBillMonth'),
-        false,
-        item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('AZURERESERVATION',
-      item => new BillingOperationViewModel(
-        `Azure Reservation`,
-        this._getTooltipOptionsInfo(item, ...defaultStructProps),
-        false,
-        item.isProjection
-      )
-    );
+    //create view model for each known billing product type
+    BillingKnownProductTypes.forEach( (e) => {
+      this._billingStructMap.set(e.key,
+        item => new BillingOperationViewModel(
+          e.friendlyName,
+          this._getTooltipOptionsInfo(item,...(!(e.aggregatedCustomTooltipFields.length > 0)? defaultStructProps : e.aggregatedCustomTooltipFields)),
+          false, //this is always false for aggregate-level items
+          (e.includeProjectionSuffix)? item.isProjection : false
+        )
+      );
+    });
   }
 
 }
