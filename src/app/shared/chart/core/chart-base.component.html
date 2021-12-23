@@ -13,5 +13,5 @@
   [yaxis]="options.yaxis">
 </apx-chart>
 <mcs-status-message type="info" [class.hidden]="hasData">
-  No billing information to display
+  {{ noDataMessage || 'No chart items to display' }}
 </mcs-status-message>

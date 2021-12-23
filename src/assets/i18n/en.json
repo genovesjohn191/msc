@@ -3651,6 +3651,8 @@
     "rollback": "Rollback"
   },
   "message": {
+    "noChartItems": "No chart items to display",
+    "noBillingInformation": "No billing information to display",
     "notYetAvailable": "Not yet available",
     "minimumSpendCommitmentNotMet": "The minimum Azure spend for this element was not met, so the charge defaulted to the Minimum Spend Commitment.",
     "markupPercent": "{{markup}}% of consumption RRP",

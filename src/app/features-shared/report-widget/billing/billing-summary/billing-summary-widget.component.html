@@ -4,6 +4,7 @@
       class="custom-chart"
       [config]="chartConfig"
       [data]="chartItems$ | async"
+      [noDataMessage]="'message.noBillingInformation' | translate"
       (chartChange)="updateChartUri($event)">
     </mcs-vertical-bar-chart>
   </ng-container>

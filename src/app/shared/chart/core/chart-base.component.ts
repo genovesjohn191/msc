@@ -131,6 +131,9 @@ export class ChartComponentBase {
   public chartChange = new EventEmitter<any>();
 
   @Input()
+  public noDataMessage: string;
+
+  @Input()
   public set config(value: ChartConfig) {
     if (isNullOrEmpty(value) || JSON.stringify(value) === JSON.stringify(this._config)) {
       return;

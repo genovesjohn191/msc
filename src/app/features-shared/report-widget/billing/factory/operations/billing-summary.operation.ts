@@ -313,7 +313,7 @@ export class BillingSummaryOperation
   }
 
   private _generateBillingTitle(billingViewModel: BillingOperationViewModel): string {
-    if (isNullOrEmpty(billingViewModel)) { return null; }
+    if (isNullOrEmpty(billingViewModel)) { return ''; }
 
     return billingViewModel?.includeProjectionSuffix ?
       `${billingViewModel.title} ${PROJECT_TEXT}` : billingViewModel?.title;
