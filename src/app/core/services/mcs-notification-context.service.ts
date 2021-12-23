@@ -121,7 +121,7 @@ export class McsNotificationContextService implements McsDisposable {
   }
 
   private _onUserChanged(user: McsIdentity): void {
-    if (isNullOrEmpty(user)) { return; }
+    if (isNullOrEmpty(user?.userId) || user?.isAnonymous) { return; }
     this.subscribeToActiveJobs();
   }
 

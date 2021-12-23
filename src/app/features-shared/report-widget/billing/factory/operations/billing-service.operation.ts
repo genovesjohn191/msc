@@ -285,10 +285,10 @@ export class BillingServiceOperation
   }
 
   private _generateBillingTitle(billingViewModel: BillingOperationViewModel): string {
-    if (isNullOrEmpty(billingViewModel)) { return null; }
+    if (isNullOrEmpty(billingViewModel)) { return ''; }
 
     return billingViewModel?.includeProjectionSuffix ?
-      `${billingViewModel.title} ${PROJECT_TEXT}` : billingViewModel?.title;
+      `${billingViewModel?.title} ${PROJECT_TEXT}` : billingViewModel?.title;
   }
 
   private _generateBillingName(item: string): string {
@@ -410,7 +410,7 @@ export class BillingServiceOperation
       )
     );
 
-    this._billingSettingsMap.set('minimumUserCommitment', item => 
+    this._billingSettingsMap.set('minimumUserCommitment', item =>
       new McsOption(
         item.minimumCommitmentUsers,
         this.translate.instant('label.minimumUserCommitment')
