@@ -50,8 +50,14 @@
                 [mcsContextualHelp]="'orderVdcScale.vdc.contextualHelp' | translate">
 
                 <mcs-option *ngFor="let resource of resources$ | async" [value]="resource"
-                  [selected]="(selectedServiceId$ | async) === resource.serviceId">
-                  {{ resource.name }}
+                  [selected]="(selectedServiceId$ | async) === resource.serviceId" [disabled]="!resourceIsValid(resource)">
+                  <span
+                      [ngStyle]="{'pointer-events': 'auto'}"
+                      [mcsTooltip]="resourceToolTipText(resource)"
+                      [mcsTooltipShow]="!resourceIsValid(resource)"
+                      [mcsTooltipPosition]="'right'">
+                      {{ resource.name }}
+                  </span>
                 </mcs-option>
               </mcs-select>
             </mcs-form-field>

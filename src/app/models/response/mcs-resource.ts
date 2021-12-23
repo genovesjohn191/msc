@@ -36,6 +36,9 @@ export class McsResource extends McsEntityBase {
   @JsonProperty()
   public serviceChangeAvailable: boolean = undefined;
 
+  @JsonProperty()
+  public isStretched: boolean = undefined;
+
   @JsonProperty({ target: McsResourceCompute })
   public compute: McsResourceCompute = undefined;
 
