@@ -1,41 +1,5 @@
 export let BillingKnownProductTypes = [
   {
-    key: 'AZUREESSENTIALSCSP',
-    friendlyName: 'Azure Essentials CSP',
-    aggregatedCustomTooltipFields: [],
-    detailCustomTooltipFields: [],
-    detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: false,
-    detailUseAzureDescription: false
-  },
-  {
-    key: 'AZUREESSENTIALSENTERPRISEAGREEMENT',
-    friendlyName: 'Azure Essentials Enterprise Agreement',
-    aggregatedCustomTooltipFields: [],
-    detailCustomTooltipFields: [],
-    detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: false,
-    detailUseAzureDescription: false
-  },
-  {
-    key: 'MANAGEDAZURECSP',
-    friendlyName: 'Managed Azure CSP',
-    aggregatedCustomTooltipFields: [],
-    detailCustomTooltipFields: [],
-    detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: false,
-    detailUseAzureDescription: false
-  },
-  {
-    key: 'MANAGEDAZUREENTERPRISEAGREEMENT',
-    friendlyName: 'Managed Azure Enterprise Agreement',
-    aggregatedCustomTooltipFields: [],
-    detailCustomTooltipFields: [],
-    detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: false,
-    detailUseAzureDescription: false
-  },
-  {
     key: 'CSPLICENSES',
     friendlyName: 'CSP Licenses',
     aggregatedCustomTooltipFields: [],
@@ -43,7 +7,6 @@ export let BillingKnownProductTypes = [
     'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: false,
     detailUseAzureDescription: true
   },
   {
@@ -54,7 +17,6 @@ export let BillingKnownProductTypes = [
     'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: false,
     detailUseAzureDescription: true
   },
   {
@@ -64,7 +26,6 @@ export let BillingKnownProductTypes = [
     detailCustomTooltipFields: ['total', 'minimumUserCommitment', 'userQuantity',
     'chargePerUserDollars', 'plan', 'linkedConsumptionService'],
     detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: false,
     detailUseAzureDescription: true
   },
   {
@@ -75,7 +36,6 @@ export let BillingKnownProductTypes = [
     'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: true,
-    includeProjectionSuffix: true,
     detailUseAzureDescription: false
   },
   {
@@ -86,7 +46,6 @@ export let BillingKnownProductTypes = [
     'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: true,
-    includeProjectionSuffix: true,
     detailUseAzureDescription: false
   },
   {
@@ -97,7 +56,6 @@ export let BillingKnownProductTypes = [
     'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: true,
-    includeProjectionSuffix: false,
     detailUseAzureDescription: false
   },
   {
@@ -108,7 +66,6 @@ export let BillingKnownProductTypes = [
     'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: true,
     detailUseAzureDescription: false
   },
   {
@@ -119,7 +76,6 @@ export let BillingKnownProductTypes = [
     'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: true,
     detailUseAzureDescription: true
   },
   {
@@ -130,7 +86,6 @@ export let BillingKnownProductTypes = [
     'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: true,
     detailUseAzureDescription: true
   },
   {
@@ -141,7 +96,6 @@ export let BillingKnownProductTypes = [
     'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: false,
-    includeProjectionSuffix: true,
     detailUseAzureDescription: true,
   }
 ];
