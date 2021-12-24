@@ -33,7 +33,7 @@ import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingSummaryItem } from '../models/billing-summary-item';
-import { BillingKnownProductTypes } from '@app/models/enumerations/bill-summary-product-type';
+import { BillingKnownProductTypes } from '../models/bill-summary-known-product-type';
 
 export class BillingSummaryOperation
   extends BillingOperationBase
@@ -97,7 +97,7 @@ export class BillingSummaryOperation
 
     billingGroups.forEach(billingGroup => {
       billingGroup.parentServices?.forEach(parentService => {
-        if ((isNullOrUndefined(parentService.productType) || (!BillingKnownProductTypes.some(i => i.key.includes(parentService.productType.toUpperCase()))))) {
+        if ((isNullOrUndefined(parentService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(parentService.productType.toUpperCase()))))) {
           return;
         }
 
@@ -113,7 +113,7 @@ export class BillingSummaryOperation
 
         // Append Child Services Data
         parentService?.childBillingServices?.forEach(childService => {
-          if ((isNullOrUndefined(childService.productType) || (!BillingKnownProductTypes.some(i => i.key.includes(childService.productType.toUpperCase()))))) {
+          if ((isNullOrUndefined(childService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(childService.productType.toUpperCase()))))) {
             return;
           }
 
