@@ -460,7 +460,7 @@ export class BillingServiceOperation
           ((BillingKnownProductType.detailUseAzureDescription)? item.azureDescription : item.billingDescription) + ` - ` + item.serviceId,
           this._getTooltipOptionsInfo(item,...BillingKnownProductType.detailCustomTooltipFields),
           BillingKnownProductType.detailIncludeMinimumCommentNote,
-          (BillingKnownProductType.includeProjectionSuffix)? item.isProjection : false
+          (item.isProjection)? item.isProjection : false
         )
       );
     });

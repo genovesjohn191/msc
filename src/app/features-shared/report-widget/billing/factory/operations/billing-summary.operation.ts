@@ -373,7 +373,7 @@ export class BillingSummaryOperation
           BillingKnownProductType.friendlyName,
           this._getTooltipOptionsInfo(item,...(!(BillingKnownProductType.aggregatedCustomTooltipFields.length > 0)? defaultStructProps : BillingKnownProductType.aggregatedCustomTooltipFields)),
           false, //this is always false for aggregate-level items
-          (BillingKnownProductType.includeProjectionSuffix)? item.isProjection : false
+          (item.isProjection)? item.isProjection : false
         )
       );
     });
