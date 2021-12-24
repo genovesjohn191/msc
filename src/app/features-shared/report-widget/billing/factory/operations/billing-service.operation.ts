@@ -31,6 +31,7 @@ import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingServiceItem } from '../models/billing-service-item';
+import { BillingKnownProductTypes } from '../models/bill-summary-known-product-type';
 
 export class BillingServiceOperation
   extends BillingOperationBase
@@ -97,7 +98,9 @@ export class BillingServiceOperation
 
     billingGroups.forEach(billingGroup => {
       billingGroup.parentServices?.forEach(parentService => {
-        if (isNullOrUndefined(parentService.productType)) { return; }
+        if ((isNullOrUndefined(parentService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(parentService.productType.toUpperCase()))))) {
+          return;
+        }
 
         // Append Parent Service
         let parentBillingServiceItem = createObject(BillingServiceItem, {
@@ -134,7 +137,9 @@ export class BillingServiceOperation
 
         // Append Child Services Data
         parentService.childBillingServices?.forEach(childService => {
-          if (isNullOrUndefined(childService.productType)) { return; }
+          if ((isNullOrUndefined(childService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(childService.productType.toUpperCase()))))) {
+            return;
+          }
 
           let childBillingServiceItem = createObject(BillingServiceItem, {
             id: Guid.newGuid().toString(),
@@ -447,129 +452,24 @@ export class BillingServiceOperation
   }
 
   private _registerBillingStructMap(): void {
-    this._billingStructMap.set('CSPLICENSES',
-      item => new BillingOperationViewModel(
-        `${item.azureDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'installedQuantity', 'discountOffRrp',
-          'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        false, false
-      )
-    );
 
-    this._billingStructMap.set('AZURESOFTWARESUBSCRIPTION',
-      item => new BillingOperationViewModel(
-        `${item.azureDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
-          'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        false, false
-      )
-    );
-
-    this._billingStructMap.set('AZUREVIRTUALDESKTOP',
-      item => new BillingOperationViewModel(
-        `${item.azureDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'minimumUserCommitment', 'userQuantity',
-          'chargePerUserDollars', 'plan', 'linkedConsumptionService'),
-        false, false
-      )
-    );
-
-    this._billingStructMap.set('AZUREESSENTIALSCSP',
-      item => new BillingOperationViewModel(
-        `${item.billingDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'minimumSpendCommitment', 'managementCharges',
-          'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        true, item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT',
-      item => new BillingOperationViewModel(
-        `${item.billingDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'minimumSpendCommitment', 'managementCharges',
-          'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        true, item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('MANAGEDAZURECSP',
-      item => new BillingOperationViewModel(
-        `${item.billingDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'minimumSpendCommitment', 'managementCharges',
-          'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        true, item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('MANAGEDAZUREENTERPRISEAGREEMENT',
-      item => new BillingOperationViewModel(
-        `${item.billingDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'minimumSpendCommitment', 'managementCharges',
-          'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        true, item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('AZUREPRODUCTCONSUMPTION',
-      item => new BillingOperationViewModel(
-        `${item.azureDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'usdPerUnit', 'discountOffRrp', 'linkManagementService',
-          'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        false, item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('AZUREPRODUCTCONSUMPTIONENTERPRISEAGREEMENT',
-      item => new BillingOperationViewModel(
-        `${item.azureDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'discountOffRrp', 'linkManagementService',
-          'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        false, item.isProjection
-      )
-    );
-
-    this._billingStructMap.set('AZURERESERVATION',
-      item => new BillingOperationViewModel(
-        `${item.azureDescription} - ${item.serviceId}`,
-        this._getTooltipOptionsInfo(item,
-          'total', 'installedQuantity', 'discountOffRrp', 'linkManagementService',
-          'managementChargesParent', 'tenantName', 'initialDomain', 'primaryDomain',
-          'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'),
-        false, item.isProjection
-      )
-    );
+    //create view model for each known billing product type
+    BillingKnownProductTypes.forEach((BillingKnownProductType) => {
+      this._billingStructMap.set(BillingKnownProductType.key,
+        item => new BillingOperationViewModel(
+          ((BillingKnownProductType.detailUseAzureDescription)? item.azureDescription : item.billingDescription) + ` - ` + item.serviceId,
+          this._getTooltipOptionsInfo(item,...BillingKnownProductType.detailCustomTooltipFields),
+          BillingKnownProductType.detailIncludeMinimumCommentNote,
+          (BillingKnownProductType.includeProjectionSuffix)? item.isProjection : false
+        )
+      );
+    });
   }
 
   private _registerBillingNameMap(): void {
-    this._billingNameMap.set('AZUREESSENTIALSCSP', `Azure Essentials CSP`);
-    this._billingNameMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT', `Azure Essentials Enterprise Agreement`);
-    this._billingNameMap.set('MANAGEDAZURECSP', `Managed Azure CSP`);
-    this._billingNameMap.set('MANAGEDAZUREENTERPRISEAGREEMENT', `Managed Azure Enterprise Agreement`);
-    this._billingNameMap.set('CSPLICENSES', `CSP Licenses`);
-    this._billingNameMap.set('AZURESOFTWARESUBSCRIPTION', `Software Subscriptions`);
-    this._billingNameMap.set('AZUREESSENTIALSCSP', `Azure Essentials CSP`);
-    this._billingNameMap.set('AZUREESSENTIALSENTERPRISEAGREEMENT', `Azure Essentials Enterprise Agreement`);
-    this._billingNameMap.set('MANAGEDAZURECSP', `Managed Azure CSP`);
-    this._billingNameMap.set('MANAGEDAZUREENTERPRISEAGREEMENT', `Managed Azure Enterprise Agreement`);
-    this._billingNameMap.set('AZUREPRODUCTCONSUMPTION', `Azure Product Consumption`);
-    this._billingNameMap.set('AZURERESERVATION', `Azure Reservation`);
+    BillingKnownProductTypes.forEach((BillingKnownProductType) => {
+      this._billingNameMap.set(BillingKnownProductType.key,BillingKnownProductType.friendlyName);
+    });
   }
 
   private _getTooltipOptionsInfo(item: BillingServiceItem, ...propertyNames: string[]): McsOption[] {

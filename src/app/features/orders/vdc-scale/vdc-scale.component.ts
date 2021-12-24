@@ -66,6 +66,7 @@ import {
   convertUrlParamsKeyToLowerCase,
   compareStrings
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 import { VdcScaleService } from './vdc-scale.service';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -119,6 +120,7 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
     private _apiService: McsApiService,
     private _eventDispatcher: EventBusDispatcherService,
     private _errorHandlerService: McsErrorHandlerService,
+    private _translate: TranslateService
   ) {
     super(
       _vdcScaleService,
@@ -192,6 +194,14 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
     return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && this._vdcScale.hasChanged;
   }
 
+  public resourceToolTipText(resource: McsResource): string {
+    if (resource.isStretched) {
+      return this._translate.instant('orderVdcScale.vdcIsInvalid.stretched');
+    } else if (!resource.serviceChangeAvailable) {
+      return this._translate.instant('orderVdcScale.vdcIsInvalid.serviceChangeAvailable');
+    }
+  }
+
   /**
    * Event that emits when the resource is change
    * @param resource current resource selected
@@ -226,6 +236,10 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
         ]
       })
     );
+  }
+
+  public resourceIsValid(resource: McsResource): boolean {
+    return resource.serviceChangeAvailable && !resource.isStretched;
   }
 
   /**

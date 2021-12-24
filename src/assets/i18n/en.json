@@ -484,6 +484,10 @@
       "description": "Your VDC is being scaled and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
       "dataInProgress": "Preparing the VDC for scaling. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
+    },
+    "vdcIsInvalid": {
+      "serviceChangeAvailable": "This service cannot be modified because it is currently being provisioned.",
+      "stretched": "Stretched VDCs cannot currently be scaled via the Portal. Please contact your account team for more information."
     }
   },
   "orderVdcStorageExpand": {
