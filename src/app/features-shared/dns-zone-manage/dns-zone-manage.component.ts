@@ -114,27 +114,45 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     unsubscribeSafely(this.processOnGoing$);
   }
 
-  public onClickAddDnsZoneRecord(): void {
-    this._formGroupService.touchAllFormFields(this.addViewModel?.fgDnsZone);
-    let allAreValid = this._formGroupService.allFormFieldsValid(this.addViewModel?.fgDnsZone);
-    if (!allAreValid) { return; }
+  public validateRecordConflict(isExistingRecord: boolean,existingRecord?: DnsZoneViewModel): boolean {
+    let thisRecord = {
+      zoneType: (isExistingRecord) ? existingRecord.recordInfo?.zoneType : this.addViewModel.fcZoneType?.value,
+      hostName: (isExistingRecord) ? existingRecord.recordInfo?.hostName : this.addViewModel.fcHostName?.value,
+      data: (isExistingRecord) ? existingRecord.recordInfo?.data : this.addViewModel.fcData?.value,
+      id: (isExistingRecord) ? existingRecord.recordInfo?.id : null
+    }
 
-    // Validate first if the record exists, otherwise display error message
+    // Validate first if a conflicting record exists, otherwise display error message
+    // Also check for CNAME record that has a conflicting name with any other record (special case)
     let recordFound = this.dataSource.findRecord(item =>
-      item.fcZoneType?.value === this.addViewModel.fcZoneType?.value &&
-      item.fcHostName?.value === this.addViewModel.fcHostName?.value &&
-      item.fcTarget?.value === this.addViewModel.fcTarget?.value);
+          thisRecord.zoneType === DnsRecordType.CNAME &&
+          thisRecord.hostName === item.fcHostName?.value &&
+          thisRecord.id !== item.recordInfo.id)
+      ||
+        this.dataSource.findRecord(item =>
+          thisRecord.zoneType === item.fcZoneType?.value &&
+          thisRecord.hostName === item.fcHostName?.value &&
+          thisRecord.data === item.fcData?.value &&
+          thisRecord.id !== item.recordInfo.id);
 
     if (recordFound) {
       this._dialogService.openMessage({
         type: DialogActionType.Error,
-        title: this._translateService.instant('label.addZoneRecord'),
-        message: this._translateService.instant('message.createRecordExist', {
+        title: this._translateService.instant('label.saveDnsRecord'),
+        message: this._translateService.instant('message.recordExists', {
           name: this.addViewModel.fcTarget?.value
         })
       });
-      return;
+      return false;
     }
+    return true;
+  }
+
+  public onClickAddDnsZoneRecord(): void {
+    this._formGroupService.touchAllFormFields(this.addViewModel?.fgDnsZone);
+    let allAreValid = this._formGroupService.allFormFieldsValid(this.addViewModel?.fgDnsZone);
+    if (!allAreValid) { return; }
+    if (!this.validateRecordConflict(false)) { return; }
 
     let zoneRecord = this._createRequestPayloadByViewModel(this.addViewModel);
     this.processOnGoing$.next(true);
@@ -158,6 +176,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     this._formGroupService.touchAllFormFields(record.fgDnsZone);
     let allAreValid = this._formGroupService.allFormFieldsValid(record.fgDnsZone);
     if (!allAreValid) { return; }
+    if (!this.validateRecordConflict(true,record)) { return; }
 
     let zoneRecord = this._createRequestPayloadByViewModel(record);
     record.setProgressState(true);
@@ -209,6 +228,13 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
         );
       })
     ).subscribe();
+  }
+
+  public isReservedRecord(record: DnsZoneViewModel): boolean {
+    if (record.recordInfo?.zoneType === DnsRecordType.NS && record.recordInfo?.hostName === '@') {
+      return true;
+    }
+    return false;
   }
 
   public onClickEditDnsZoneRecord(record: DnsZoneViewModel): void {

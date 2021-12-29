@@ -48,7 +48,7 @@
               {{ 'message.changeOrderNote' | translate }}
             </mcs-status-message>
           </ng-container>
-  
+
           <ng-template #orderBillingTemplate>
 
             <ng-container *ngIf="billing$ | async as billingDetails">
@@ -108,7 +108,7 @@
 
       <!-- Order Details -->
       <section margin-top-xlarge>
-        <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
+        <p>{{ chargeDescriptionText }}</p>
 
         <!-- Loading animation -->
         <mcs-busy-ribbon *ngIf="isUpdatingCharges" theme="dark" margin-bottom-small>
@@ -166,7 +166,7 @@
                 {{ row.charges?.excessUsageFeePerGbInCurrency }}
               </td>
             </ng-container>
-        
+
             <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
             <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
           </table>
@@ -189,7 +189,7 @@
         <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions" [mcsContextualHelp]="'orderDetailsStep.deliveryType.helptext' | translate">
           <span>{{ 'orderDetailsStep.deliveryType.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges">
-            <mcs-select required [formControl]="fcDeliveryType" mcsId="select-delivery-type">
+            <mcs-select required [formControl]="fcDeliveryType" (selectionChange)="onChangeDeliveryType($event)" mcsId="select-delivery-type">
               <ng-container>
                 <mcs-option [value]="deliveryTypeEnum.Standard">
                   {{ 'orderDetailsStep.deliveryType.standardOption' | translate: {standardLeadTimeHours: standardLeadTimeHours} }}

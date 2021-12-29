@@ -1572,7 +1572,8 @@
         "none": "Your server does not currently have InView provisioned. Access statistics such as uptime, CPU, RAM, disk, network latency and more by speaking to your account manager about InView."
       },
       "goToinviewButtonLabel": "Go to InView",
-      "raiseinviewButtonLabel": "Raise InView Level"
+      "raiseinviewButtonLabel": "Raise InView Level",
+      "pendingButtonTooltip": "The InView service for this server is currently pending and will be available soon."
     },
     "vmBackup": {
       "title": "VM Backup",
@@ -1908,7 +1909,9 @@
       "contextualHelp": "A custom description for your order."
     },
     "orderDetails": {
-      "description": "Review the charges for this order below.",
+      "newOrderChargeDescription": "Review the charges for your new service(s) below.",
+      "changeOrderChargeDescription": "Review the updated charges for your service(s) below.",
+      "configChangeUnspecifiedOrderChargeDescription": "Review the charges for your order below.",
       "totalLabel": "<strong>TOTAL</strong>",
       "noLineItems": "No items to display.",
       "errorLineItems": "Something went wrong while processing your request. Please try again later."
@@ -2898,9 +2901,12 @@
     "dataSingular": "Notification",
     "dataPlural": "Notifications",
     "tableHeader": {
+      "id": "id",
       "status": "Status",
-      "user": "User",
       "notification": "Notification",
+      "serviceId": "Service ID",
+      "targetCompany": "Target Company",
+      "user": "User",
       "startTime": "Start Time",
       "completed": "Completed",
       "vdc": "VDC"
@@ -3430,6 +3436,7 @@
     "storageProfile": "Storage Profile",
     "tag": "Tag",
     "tags": "Tags",
+    "targetCompany": "Target Company",
     "targetComputer": "Target VM",
     "temperature": "Temperature",
     "tenant": "Tenant",
@@ -3604,7 +3611,7 @@
     "vni": "VNI",
     "vlans": "VLANs",
     "deleteZoneRecord": "Delete Zone Record",
-    "addZoneRecord": "Add Zone Record",
+    "saveDnsRecord": "Save DNS Record",
     "discardChanges": "Discard Changes",
     "viewAll": "View All",
     "viewInCloudHealth": "View in CloudHealth",
@@ -3665,11 +3672,12 @@
     "tryAgain": "Try Again",
     "editToView": "Edit to view",
     "dataFieldRequired": "Data field is required.",
-    "createRecordExist": "Cannot create <strong>{{name}}</strong> record. The Record already exists.",
+    "recordExists": "Cannot save record. A record with a conflicting name and/or target already exists.",
     "discardChanges": "This will discard your changes. Do you want to proceed?",
     "deleteZoneRecord": "This will delete the <strong>{{dnsTarget}}</strong> record. Do you want to proceed?",
     "dnsDescription": "Select a zone below to manage its DNS records. Please note, record changes can take up to 72 hours to propagate.",
     "zoneDescription": "The TTL for this zone is {{ttlSeconds}} seconds. If a TTL is not specified when creating or editing a record below, this TTL will be used instead. When adding or editing a record, all existing records of the same type will inherit that record's TTL.<br><br>If a domain name or value is specified with a trailing period, it will be interpreted as fully-qualified.",
+    "reservedDnsRecord": "This record is reserved and cannot be modified.",
     "noSolutionsDisplay": "No solutions to be displayed.",
     "noProductsDisplay": "No products to be displayed.",
     "productEnquireNow": "Choose your preferred contact method and we'll get in touch to discuss this product more with you.",

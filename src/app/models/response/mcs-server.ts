@@ -77,6 +77,9 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   public osAutomationAvailable: boolean = undefined;
 
   @JsonProperty()
+  public inviewPending: boolean = undefined;
+
+  @JsonProperty()
   public serviceChangeAvailable: boolean = undefined;
 
   @JsonProperty()

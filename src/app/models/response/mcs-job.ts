@@ -46,6 +46,9 @@ export class McsJob extends McsEntityBase {
   public batchId: string = undefined;
 
   @JsonProperty()
+  public targetCompanyName: string = undefined;
+
+  @JsonProperty()
   public referenceId: string = undefined;
 
   @JsonProperty({ target: McsTask })

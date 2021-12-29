@@ -15,7 +15,8 @@
       </mcs-grid-row>
       <ng-container *ngIf="raiseInviewButtonsShown(server) || !server.isInviewNone">
         <mcs-grid-row *mcsExclusiveForAccount="'default'">
-          <mcs-item>
+          <mcs-item [mcsTooltip]="'serverServices.inview.pendingButtonTooltip' | translate"
+          [mcsTooltipShow]="(!server.isInviewNone && server.inviewPending)">
             <ng-container *ngIf="!server.isInviewNone">
               <a mcsButton size="xsmall"
                 mcsId="goto-inview-level"
@@ -24,7 +25,7 @@
                 mcsEventLabel="goto-inview-level-button"
                 [href]="inviewUrl()"
                 target="_blank"
-                [disabled]="server.isProcessing">
+                [disabled]="server.isProcessing || (!server.isInviewNone && server.inviewPending)">
                 {{ 'serverServices.inview.goToinviewButtonLabel' | translate }}
               </a>
             </ng-container>
@@ -36,7 +37,7 @@
                   mcsEventCategory="server"
                   mcsEventLabel="raise-inview-level-button"
                   (click)="onRaiseInviewLevel(server)"
-                  [disabled]="server.isProcessing && server.serviceChangeAvailable">
+                  [disabled]="server.isProcessing || !server.serviceChangeAvailable || (!server.isInviewNone && server.inviewPending)">
                   {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
                 </button>
               </ng-container>
