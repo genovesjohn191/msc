@@ -137,7 +137,7 @@ export class BillingSummaryOperation
       if (isNullOrEmpty(billingItems)) { return; }
 
       let totalChargeDollars = billingItems
-        ?.map(item => item.finalChargeDollars)
+        ?.map(item => item.gstExclusiveChargeDollars)
         .reduce((total, next) => total + next, 0);
 
       let productType = productTypeKey.split(KEY_SEPARATOR)[0];
@@ -149,7 +149,7 @@ export class BillingSummaryOperation
       service.isProjection = billingItems[0].isProjection;
       service.microsoftChargeMonth = billingItems[0].microsoftChargeMonth;
       service.macquarieBillMonth = billingItems[0].macquarieBillMonth;
-      service.finalChargeDollars = totalChargeDollars;
+      service.gstExclusiveChargeDollars = totalChargeDollars;
       service.usdPerUnit = billingItems[0].usdPerUnit;
       service.sortDate = getDateOnly(new Date(+actualDate));
       service.timestamp = +actualDate;
@@ -176,7 +176,7 @@ export class BillingSummaryOperation
         id: billingSummary.id,
         name: billingTitle,
         xValue: billingSummary.microsoftChargeMonth,
-        yValue: billingSummary.finalChargeDollars
+        yValue: billingSummary.gstExclusiveChargeDollars
       } as ChartItem);
     });
     return this.reportingService.fillMissingChartItems(chartItems);
@@ -268,8 +268,8 @@ export class BillingSummaryOperation
     let serviceFound = this._billingSummaryItemsMap.get(productTypeKey);
     let services = serviceFound;
 
-    let finalChargeDollars = data instanceof McsReportBillingService ?
-      data.finalChargeDollars : data.finalChargeDollars;
+    let gstExclusiveChargeDollars = data instanceof McsReportBillingService ?
+      data.gstExclusiveChargeDollars : data.gstExclusiveChargeDollars;
 
     let newService = new BillingSummaryItem();
     newService.id = Guid.newGuid().toString();
@@ -277,7 +277,7 @@ export class BillingSummaryOperation
     newService.isProjection = isProjection;
     newService.microsoftChargeMonth = this.datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear');
     newService.macquarieBillMonth = this.datePipe.transform(getDateOnly(billMonth), 'shortMonthYear');
-    newService.finalChargeDollars = finalChargeDollars;
+    newService.gstExclusiveChargeDollars = gstExclusiveChargeDollars;
     newService.usdPerUnit = usdPerUnit;
     newService.sortDate = getDateOnly(chargeMonth);
     newService.timestamp = getTimestamp(chargeMonth);
@@ -327,7 +327,7 @@ export class BillingSummaryOperation
   private _registerSettingsMap(): void {
     this._billingSettingsMap.set('total', item =>
       new McsOption(
-        this.currencyPipe.transform(item.finalChargeDollars),
+        this.currencyPipe.transform(item.gstExclusiveChargeDollars),
         this.translate.instant('label.total')
       )
     );

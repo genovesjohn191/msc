@@ -108,7 +108,7 @@ export class BillingServiceOperation
           azureDescription: parentService.azureDescription || parentService.billingDescription,
           billingDescription: parentService.billingDescription,
           discountPercent: parentService.discountPercent,
-          finalChargeDollars: parentService.finalChargeDollars,
+          gstExclusiveChargeDollars: parentService.gstExclusiveChargeDollars,
           hasMetMinimumCommitment: parentService.hasMetMinimumCommitment,
           initialDomain: parentService.tenant?.initialDomain,
           installedQuantity: parentService.installedQuantity,
@@ -146,7 +146,7 @@ export class BillingServiceOperation
             azureDescription: childService.azureDescription || childService.billingDescription,
             billingDescription: childService.billingDescription,
             discountPercent: childService.discountPercent,
-            finalChargeDollars: childService.finalChargeDollars,
+            gstExclusiveChargeDollars: childService.gstExclusiveChargeDollars,
             hasMetMinimumCommitment: childService.hasMetMinimumCommitment,
             initialDomain: childService.tenant?.initialDomain,
             installedQuantity: childService.installedQuantity,
@@ -197,7 +197,7 @@ export class BillingServiceOperation
         id: billingService.id,
         name: billingTitle,
         xValue: billingService.microsoftChargeMonth,
-        yValue: billingService.finalChargeDollars
+        yValue: billingService.gstExclusiveChargeDollars
       } as ChartItem;
 
       chartItems.push(chartItem);
@@ -303,7 +303,7 @@ export class BillingServiceOperation
   private _registerSettingsMap(): void {
     this._billingSettingsMap.set('total', item =>
       new McsOption(
-        this.currencyPipe.transform(item.finalChargeDollars),
+        this.currencyPipe.transform(item.gstExclusiveChargeDollars),
         this.translate.instant('label.total')
       )
     );
