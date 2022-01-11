@@ -16,7 +16,6 @@ import {
   McsIdentity,
   McsJob,
   McsJobConnection,
-  McsPermission,
   NetworkStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -269,10 +268,10 @@ export class McsNotificationJobService implements McsDisposable {
    * Event that gets emitted when the user has been changed
    */
   private _onUserChanged(user: McsIdentity): void {
-    if (isNullOrEmpty(user)) { return; }
-    // Prevent the stomp from connecting when the session is already timedout
-    let sessionTimedOut = this._sessionHandlerService.sessionTimedOut;
-    if (sessionTimedOut) { return; }
+    if (this._sessionHandlerService.sessionTimedOut ||
+      isNullOrEmpty(user?.userId) ||
+      user?.isAnonymous) { return; }
+
     this._connectStomp();
   }
 }
