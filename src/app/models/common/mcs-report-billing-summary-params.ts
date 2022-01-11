@@ -12,8 +12,8 @@ export class McsReportBillingSummaryParams extends McsQueryParam {
   @JsonProperty({ name: 'active' })
   public active: boolean = undefined;
 
-  @JsonProperty({ name: 'final_charge_dollars' })
-  public finalChargeDollars: number = undefined;
+  @JsonProperty({ name: 'gst_exclusive_charge_dollars' })
+  public gstExclusiveChargeDollars: number = undefined;
 
   @JsonProperty({ name: 'has_met_minimum_commitment' })
   public hasMetMininumCommitment: boolean = undefined;

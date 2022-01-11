@@ -26,8 +26,8 @@ export abstract class BillingOperationBase {
   }
 
   protected isDateGreaterThanExpiry(timestamp: number): boolean {
-    let novemberDate = new Date();
-    novemberDate.setFullYear(2021, 10, 1);
-    return compareDates(new Date(timestamp), novemberDate) !== -1;
+    let octoberDate = new Date();
+    octoberDate.setFullYear(2021, 9, 31);
+    return compareDates(new Date(timestamp), octoberDate) !== -1;
   }
 }
