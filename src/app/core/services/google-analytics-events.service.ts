@@ -79,7 +79,9 @@ export class GoogleAnalyticsEventsService {
    * @param user User to be set on the GTM
    */
   private _setUser(user: McsIdentity) {
-    let identity = user.hashedId.split('.');
+    let identity = user.hashedId?.split('.');
+    if (isNullOrEmpty(identity)) { return; }
+
     dataLayer.push({
       'userID': identity[0],
       'companyGroup': identity[1],
