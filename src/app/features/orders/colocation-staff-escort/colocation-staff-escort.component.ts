@@ -488,7 +488,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
                             `${this._userAccount.firstName} ${this._userAccount.lastName}`,
               attendeeOrganization: (isEscorteeSomeoneElse) ? this.fcOrganization.value : this._company.name,
               attendeeJobTitle: (isEscorteeSomeoneElse) ? this.fcJobTitle.value : this._userAccount.jobTitle,
-              attendeeMobileNumber: this._formatMobileNumber(),
+              attendeeMobileNumber: this._getMobileNumber(),
               attendeeEmailAddress: (isEscorteeSomeoneElse) ? this.fcEmail.value : this._userAccount.emailAddress,
               arrivalDate: new Date(this.fcAttendanceDate.value),
               arrivalTime: this._formatTime(this.fcArrivalTime.value),
@@ -586,15 +586,8 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     this.fcEmail.setValue('');
   }
 
-  private _formatMobileNumber(): string {
-    let userPhoneNumber: string = this._userAccount.phoneNumber;
-    if (this.isEscorteeSomeoneElse(this.fcEscortee.value) || this.isImpersonating) {
-      let userInputNumber = formatStringToPhoneNumber(this.fcMobile.value,
-                                                      CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN,
-                                                      true);
-      return userInputNumber;
-    } else {
-      return userPhoneNumber;
-    }
+  private _getMobileNumber(): string {
+    return this.isEscorteeSomeoneElse(this.fcEscortee.value) || this.isImpersonating ? 
+      this.fcMobile.value : this._userAccount.phoneNumber;
   }
 }
