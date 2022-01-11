@@ -4,7 +4,7 @@ export class BillingSummaryItem {
   public isProjection: boolean;
   public microsoftChargeMonth: string;
   public macquarieBillMonth: string;
-  public finalChargeDollars: number;
+  public gstExclusiveChargeDollars: number;
   public usdPerUnit: number;
   public sortDate: Date;
   public timestamp?: number;
