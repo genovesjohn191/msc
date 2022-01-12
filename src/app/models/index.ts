@@ -167,6 +167,7 @@ export * from './request/mcs-network-db-network-delete';
 export * from './request/mcs-network-db-network-update'
 export * from './request/mcs-network-db-network-reserve';
 export * from './request/mcs-network-db-vlan-action';
+export * from './request/mcs-network-dns-zone-ttl-request';
 
 /** Response */
 export * from './response/mcs-availability-zone';

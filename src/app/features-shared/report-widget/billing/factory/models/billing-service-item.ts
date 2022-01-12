@@ -6,7 +6,7 @@ export class BillingServiceItem {
   public macquarieBillMonth: string;
   public azureDescription: string;
   public isProjection: boolean;
-  public finalChargeDollars: number;
+  public gstExclusiveChargeDollars: number;
   public installedQuantity: number;
   public usdPerUnit: number;
   public discountPercent: number;

@@ -113,23 +113,9 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderServerManagedScale },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'server-managed-scale',
-    component: ServerManagedScaleComponent,
-    data: { routeId: RouteKey.OrderServerManagedScale },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
 
   {
     path: 'change/vdc-scale',
-    component: VdcScaleComponent,
-    data: { routeId: RouteKey.OrderVdcScale },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'vdc-scale',
     component: VdcScaleComponent,
     data: { routeId: RouteKey.OrderVdcScale },
     canActivate: [ McsPrivateCloudOnlyGuard ]
@@ -141,23 +127,9 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderVdcStorageExpand },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'vdc-storage-expand',
-    component: VdcStorageExpandComponent,
-    data: { routeId: RouteKey.OrderVdcStorageExpand },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
 
   {
     path: 'add/vdc-storage',
-    component: VdcStorageCreateComponent,
-    data: { routeId: RouteKey.OrderVdcStorageCreate },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'vdc-storage-create',
     component: VdcStorageCreateComponent,
     data: { routeId: RouteKey.OrderVdcStorageCreate },
     canActivate: [ McsPrivateCloudOnlyGuard ]
@@ -169,23 +141,9 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderServiceInviewRaise },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'services/inview',
-    component: ServiceInviewRaiseComponent,
-    data: { routeId: RouteKey.OrderServiceInviewRaise },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
 
   {
     path: 'change/services/custom',
-    component: ServiceCustomChangeComponent,
-    data: { routeId: RouteKey.OrderServiceCustomChange },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'services/custom-change',
     component: ServiceCustomChangeComponent,
     data: { routeId: RouteKey.OrderServiceCustomChange },
     canActivate: [ McsPrivateCloudOnlyGuard ]
@@ -197,13 +155,6 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderHostedDnsChange },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'hosted-dns-change',
-    component: HostedDnsChangeComponent,
-    data: { routeId: RouteKey.OrderHostedDnsChange },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
 
   {
     path: 'change/colocation/staff-escort',
@@ -211,13 +162,7 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderColocationStaffEscort },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'colocation/staff-escort',
-    component: ColocationStaffEscortComponent,
-    data: { routeId: RouteKey.OrderColocationStaffEscort },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
+
   {
     path: 'change/colocation/device-restart',
     component: ColocationDeviceRestartComponent,
@@ -260,23 +205,9 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderMsLicenseCountChange },
     canActivate: [ McsPublicCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'ms-license-count-change',
-    component: MsLicenseCountChangeComponent,
-    data: { routeId: RouteKey.OrderMsLicenseCountChange },
-    canActivate: [ McsPublicCloudOnlyGuard ]
-  },
 
   {
     path: 'change/ms-request',
-    component: MsRequestChangeComponent,
-    data: { routeId: RouteKey.OrderMsRequestChange },
-    canActivate: [ McsPublicCloudOnlyGuard ]
-  },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'ms-request-change',
     component: MsRequestChangeComponent,
     data: { routeId: RouteKey.OrderMsRequestChange },
     canActivate: [ McsPublicCloudOnlyGuard ]
@@ -288,13 +219,6 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderRemoteHands },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'remote-hands',
-    component: RemoteHandsComponent,
-    data: { routeId: RouteKey.OrderRemoteHands },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
 
   {
     path: 'change/request-patch',
@@ -302,13 +226,7 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderServerRequestPatch },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-  {
-    // TODO: Deprecated - Remove when orch is ready
-    path: 'request-patch',
-    component: ServerRequestPatchComponent,
-    data: { routeId: RouteKey.OrderServerRequestPatch },
-    canActivate: [ McsPrivateCloudOnlyGuard ]
-  },
+
   {
     path: 'change/internet-port-plan',
     component: ChangeInternetPortPlanComponent,

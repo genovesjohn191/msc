@@ -1,0 +1,24 @@
+@import "../../../styles/shared/base";
+
+.warning {
+  @include display-flex(row);
+  margin-bottom: $space-small;
+
+  small {
+    padding-left: $space-small;
+  }
+}
+
+input.number {
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    display: none;
+  }
+}
+
+mat-error {
+  @include font-size($font-size-small);
+  margin-left: -10px;
+}

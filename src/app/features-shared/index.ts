@@ -48,6 +48,7 @@ export * from './system-message-form/system-message-form';
 export * from './dynamic-form/dynamic-form-field-config.interface';
 export * from './terraform-tag-change-dialog/terraform-tag-change-dialog.component';
 export * from './terraform-deployment-rename-dialog/terraform-deployment-rename-dialog.component';
+export * from './dns-zone-dialogs/dns-zone-ttl-edit-dialog.component';
 
 /** Context Menu Link */
 export * from './context-menu-link/context-menu-link.component';

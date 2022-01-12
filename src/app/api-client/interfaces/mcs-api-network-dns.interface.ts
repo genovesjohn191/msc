@@ -5,6 +5,8 @@ import {
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
   McsNetworkDnsSummary,
+  McsNetworkDnsZone,
+  McsNetworkDnsZoneTtlRequest,
   McsQueryParam
 } from '@app/models';
 
@@ -40,4 +42,10 @@ export interface IMcsApiNetworkDnsService {
     zoneId: string,
     recordId: string
   ): Observable<McsApiSuccessResponse<boolean>>;
+
+  updateNetworkDnsZoneTTL(
+    dnsId: string,
+    zoneId: string,
+    request: McsNetworkDnsZoneTtlRequest
+  ): Observable<McsApiSuccessResponse<McsNetworkDnsZone>>
 }

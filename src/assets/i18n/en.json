@@ -3281,7 +3281,8 @@
     "createNetworkDbNetwork": "Something went wrong while creating this network. Please try again.",
     "getAzureReservations": "Something went wrong while retrieving your list of Reservations. Please try again.",
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving your list of Software Subscriptions. Please try again.",
-    "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again."
+    "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again.",
+    "updateGeneric": "Something went wrong while saving. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3533,6 +3534,7 @@
     "records": "Records",
     "target": "Target",
     "ttlSeconds": "TTL (Seconds) - 600",
+    "ttl": "TTL (Seconds)",
     "elements": "Elements",
     "events": "Events",
     "primary": "Primary",
@@ -3729,6 +3731,7 @@
     "invalidIpAddress": "Please enter a valid private IP address.",
     "validationMin": "Must not be less than ",
     "validationMax": "Must not exceed ",
+    "validationIntOnly": "Must be an integer",
     "vdcNewSubnet": "A new subnet will be created for this network.",
     "noStorageProfileUtilisation": "No storage profiles to display.",
     "noAlertTitleDialog": "Unknown Alert",
@@ -3927,6 +3930,10 @@
       "title": "Change tag for '{{ deployment }}'",
       "warning": "Always check Deployment Variables against a module's Default Variables after modifying the tag.\r\nThe updated module tag will not take effect until an Apply operation has been performed on the deployment.",
       "existingTag": "Existing tag: {{ tag }}"
+    },
+    "dnsZoneTtlEdit":{
+      "title": "Edit Zone TTL",
+      "message": "Specify the new TTL for this zone.\r\n\nThis will automatically be reset to 10800 seconds after 72 hours. Any existing records that have no custom TTL set will inherit this TTL."
     }
   },
   "snackBar": {

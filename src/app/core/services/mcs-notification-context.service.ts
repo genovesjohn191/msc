@@ -32,6 +32,7 @@ import {
 import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsNotificationJobService } from './mcs-notification-job.service';
+import { McsSessionHandlerService } from './mcs-session-handler.service';
 
 /**
  * MCS notification context service
@@ -49,7 +50,8 @@ export class McsNotificationContextService implements McsDisposable {
   constructor(
     private _notificationJobService: McsNotificationJobService,
     private _apiService: McsApiService,
-    private _eventDispatcher: EventBusDispatcherService
+    private _eventDispatcher: EventBusDispatcherService,
+    private _sessionHandlerService: McsSessionHandlerService
   ) {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
@@ -121,7 +123,10 @@ export class McsNotificationContextService implements McsDisposable {
   }
 
   private _onUserChanged(user: McsIdentity): void {
-    if (isNullOrEmpty(user?.userId) || user?.isAnonymous) { return; }
+    if (this._sessionHandlerService.sessionTimedOut ||
+      isNullOrEmpty(user?.userId) ||
+      user?.isAnonymous) { return; }
+
     this.subscribeToActiveJobs();
   }
 

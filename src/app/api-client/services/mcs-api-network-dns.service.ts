@@ -8,6 +8,8 @@ import {
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
   McsNetworkDnsSummary,
+  McsNetworkDnsZone,
+  McsNetworkDnsZoneTtlRequest,
   McsQueryParam
 } from '@app/models';
 import {
@@ -97,6 +99,22 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
     return this._apiClientService.delete(mcsApiRequestParameter).pipe(
       map((response) =>
         McsApiSuccessResponse.deserializeResponse<boolean>(Boolean, response)
+      )
+    );
+  }
+
+  public updateNetworkDnsZoneTTL(
+    dnsId: string,
+    zoneId: string,
+    request: McsNetworkDnsZoneTtlRequest
+  ): Observable<McsApiSuccessResponse<McsNetworkDnsZone>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/ttl`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(request);
+
+    return this._apiClientService.put(mcsApiRequestParameter).pipe(
+      map((response) =>
+        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsZone>(McsNetworkDnsZone, response)
       )
     );
   }
