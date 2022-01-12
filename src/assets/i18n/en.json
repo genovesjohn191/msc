@@ -3275,7 +3275,8 @@
     "createNetworkDbNetwork": "Something went wrong while creating this network. Please try again.",
     "getAzureReservations": "Something went wrong while retrieving your list of Reservations. Please try again.",
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving your list of Software Subscriptions. Please try again.",
-    "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again."
+    "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again.",
+    "updateGeneric": "Something went wrong while saving. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3526,6 +3527,7 @@
     "records": "Records",
     "target": "Target",
     "ttlSeconds": "TTL (Seconds) - 600",
+    "ttl": "TTL (Seconds)",
     "elements": "Elements",
     "events": "Events",
     "primary": "Primary",
@@ -3669,7 +3671,8 @@
     "discardChanges": "This will discard your changes. Do you want to proceed?",
     "deleteZoneRecord": "This will delete the <strong>{{dnsTarget}}</strong> record. Do you want to proceed?",
     "dnsDescription": "Select a zone below to manage its DNS records. Please note, record changes can take up to 72 hours to propagate.",
-    "zoneDescription": "The TTL for this zone is {{ttlSeconds}} seconds. If a TTL is not specified when creating or editing a record below, this TTL will be used instead. When adding or editing a record, all existing records of the same type will inherit that record's TTL.<br><br>If a domain name or value is specified with a trailing period, it will be interpreted as fully-qualified.",
+    "ttlDescription": "The TTL for this zone is {{ttlSeconds}} seconds.",
+    "zoneDescription": "If a TTL is not specified when creating or editing a record below, this TTL will be used instead. When adding or editing a record, all existing records of the same type will inherit that record's TTL.\r\n\n If a domain name or value is specified with a trailing period, it will be interpreted as fully-qualified.",
     "noSolutionsDisplay": "No solutions to be displayed.",
     "noProductsDisplay": "No products to be displayed.",
     "productEnquireNow": "Choose your preferred contact method and we'll get in touch to discuss this product more with you.",
@@ -3720,6 +3723,7 @@
     "invalidIpAddress": "Please enter a valid private IP address.",
     "validationMin": "Must not be less than ",
     "validationMax": "Must not exceed ",
+    "validationIntOnly": "Must be an integer",
     "vdcNewSubnet": "A new subnet will be created for this network.",
     "noStorageProfileUtilisation": "No storage profiles to display.",
     "noAlertTitleDialog": "Unknown Alert",
@@ -3918,6 +3922,10 @@
       "title": "Change tag for '{{ deployment }}'",
       "warning": "Always check Deployment Variables against a module's Default Variables after modifying the tag.\r\nThe updated module tag will not take effect until an Apply operation has been performed on the deployment.",
       "existingTag": "Existing tag: {{ tag }}"
+    },
+    "dnsZoneTtlEdit":{
+      "title": "Edit Zone TTL",
+      "message": "Specify the new TTL for this zone.\r\n\nThis will automatically be reset to 10800 seconds after 72 hours. Any existing records that have no custom TTL set will inherit this TTL."
     }
   },
   "snackBar": {
