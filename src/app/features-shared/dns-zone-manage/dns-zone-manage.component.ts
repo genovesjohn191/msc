@@ -230,13 +230,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     ).subscribe();
   }
 
-  public isReservedRecord(record: DnsZoneViewModel): boolean {
-    if (record.recordInfo?.zoneType === DnsRecordType.NS && record.recordInfo?.hostName === '@') {
-      return true;
-    }
-    return false;
-  }
-
   public onClickEditDnsZoneRecord(record: DnsZoneViewModel): void {
     record.updating = true;
     this._changeDetectorRef.markForCheck();

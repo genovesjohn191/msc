@@ -265,6 +265,13 @@ export class DnsZoneViewModel {
       this.fcZoneType.dirty;
   }
 
+  public get isReservedRecord(): boolean {
+    if (this.recordInfo?.zoneType === DnsRecordType.NS && this.recordInfo?.hostName === '@') {
+      return true;
+    }
+    return false;
+  }
+
   public setDefaultValues(): DnsZoneViewModel {
     if (this.targetForCreate) {
       setTimeout(() => { this.fcZoneType.setValue(DnsRecordType.A); });
