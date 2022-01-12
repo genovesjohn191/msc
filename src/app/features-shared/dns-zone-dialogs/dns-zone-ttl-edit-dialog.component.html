@@ -1,0 +1,26 @@
+<span mat-dialog-title>{{ data.title }}</span>
+
+<div mat-dialog-content class="mat-typography">
+  <p>{{ data.message }}</p>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>{{ 'label.ttl' | translate }}</mat-label>
+        <input #control matInput type="number" class="number"
+          formControlName="fcTtlSecondsInput"
+          [mcsId]="id"
+          required
+          [min]="minValue"
+          [max]="maxValue"
+          step="1"
+          [(ngModel)]="data.ttlSeconds"/>
+        <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+        </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<mat-dialog-actions align="end" class="space-between">
+  <button mat-button [mat-dialog-close]="false">{{ 'action.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.ttlSeconds" [disabled]="!valid">{{ 'action.save' | translate }}</button>
+</mat-dialog-actions>
+

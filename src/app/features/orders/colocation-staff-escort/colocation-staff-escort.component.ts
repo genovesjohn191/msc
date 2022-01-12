@@ -587,7 +587,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   }
 
   private _getMobileNumber(): string {
-    return this.isEscorteeSomeoneElse(this.fcEscortee.value) || this.isImpersonating ? 
+    return this.isEscorteeSomeoneElse(this.fcEscortee.value) || this.isImpersonating ?
       this.fcMobile.value : this._userAccount.phoneNumber;
   }
 }

@@ -269,7 +269,9 @@ import {
   McsReportStorageResourceUtilisation,
   McsObjectProjectParams,
   McsReportRecentServiceRequestSlt,
-  McsObjectCrispObject
+  McsObjectCrispObject,
+  McsNetworkDnsZone,
+  McsNetworkDnsZoneTtlRequest
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -551,6 +553,19 @@ export class McsApiService {
     return this._networkDnsApi.deleteNetworkDnsZoneRecord(dnsId, zoneId, recordId).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteNetworkDnsZoneRecord'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public updateNetworkDnsZoneTTL(
+    dnsId: string,
+    zoneId: string,
+    request: McsNetworkDnsZoneTtlRequest
+  ): Observable<McsNetworkDnsZone> {
+    return this._networkDnsApi.updateNetworkDnsZoneTTL(dnsId, zoneId, request).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateGeneric'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
