@@ -18,7 +18,8 @@ import {
   McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
-  McsTableEvents
+  McsTableEvents,
+  McsAccessControlService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -51,10 +52,21 @@ import {
 
 export class NotificationsComponent implements OnDestroy {
 
+  private _isInLPContext(): boolean {
+    let _isImpersonating = !!this._authenticationIdentity.activeAccountStatus;
+    if (this._accessControlService.hasPermission(['InternalEngineerAccess']) && !_isImpersonating) {
+      return true;
+    }
+    return false;
+  }
+
   public readonly dataSource: McsTableDataSource2<McsJob>;
   public readonly dataEvents: McsTableEvents<McsJob>;
-  public readonly defaultColumnFilters: McsFilterInfo[] = [
+  public readonly defaultColumnFilters = [
+    createObject(McsFilterInfo, { value: false, exclude: false, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'notification' }),
+    ...this._isInLPContext()? [createObject(McsFilterInfo, { value: false, exclude: false, id: 'serviceId' })] : [],
+    ...this._isInLPContext()? [createObject(McsFilterInfo, { value: true, exclude: false, id: 'targetCompany' })] : [],
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'user' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'startTime' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'completed' })
@@ -69,6 +81,7 @@ export class NotificationsComponent implements OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _navigationService: McsNavigationService,
+    private _accessControlService: McsAccessControlService,
   ) {
     this.dataSource = new McsTableDataSource2(this._getJobs.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {

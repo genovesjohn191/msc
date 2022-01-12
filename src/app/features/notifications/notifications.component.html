@@ -37,6 +37,20 @@
 
       <!-- Table -->
       <table mat-table [dataSource]="dataSource">
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.id' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mcs-item>
+              <span>
+                {{ row.id }}
+              </span>
+            </mcs-item>
+          </td>
+        </ng-container>
+
         <!-- Notification Column -->
         <ng-container matColumnDef="notification">
           <th mat-header-cell *matHeaderCellDef>
@@ -55,6 +69,26 @@
                 {{ row.summaryInformation }}
               </span>
             </mcs-item>
+          </td>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container matColumnDef="serviceId">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.serviceId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <span [innerHTML]="row.clientReferenceObject?.serviceId | mcsDataLabel: 'None/Unknown'"></span>
+          </td>
+        </ng-container>
+
+        <!-- Target Company Column -->
+        <ng-container matColumnDef="targetCompany">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.targetCompany' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <span [innerHTML]="row.targetCompanyName | mcsDataLabel: 'Unknown'"></span>
           </td>
         </ng-container>
 

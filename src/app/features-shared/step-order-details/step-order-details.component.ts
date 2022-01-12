@@ -225,6 +225,17 @@ export class StepOrderDetailsComponent
     return ItemType;
   }
 
+  public get chargeDescriptionText(): string  {
+    if (this.orderItemType?.itemType === ItemType.New) {
+      return this._translate.instant('orderDetailsStep.orderDetails.newOrderChargeDescription');
+    } else if (this.orderItemType?.itemType === ItemType.Change) {
+      if (this.orderItemType?.itemChangeType === ItemChangeType.Change) {
+        return this._translate.instant('orderDetailsStep.orderDetails.changeOrderChargeDescription');
+      }
+      return this._translate.instant('orderDetailsStep.orderDetails.configChangeUnspecifiedOrderChargeDescription');
+    }
+  }
+
   public get billingDetailsFallbackText(): string {
     let orderHasContractTerm = this.orderItemType?.itemChangeType === ItemChangeType.Change;
     let orderIsNew = this.orderItemType?.itemType === ItemType.New;
@@ -272,7 +283,7 @@ export class StepOrderDetailsComponent
     if (isTimeOutsideBusinessHours) {
       date = this._setTimeToBusinessHours(date, minDateHour);
     }
-    let minDateTime  = this.addStandarLeadTimeHoursToMinDate(date, this.standardLeadTimeHours);
+    let minDateTime = ((this.fcDeliveryType.value === DeliveryType.Standard) ? this.addStandarLeadTimeHoursToMinDate(date, this.standardLeadTimeHours) : this.addAcceleratedLeadTimeHoursToMinDate(date, this.acceleratedLeadTimeHours));
     minDateTime = this._adjustDateMinutesByStepMinute(minDateTime);
     if (minDateTime.getDay() === Day.Saturday) {
       minDateTime = addHoursToDate(minDateTime, 48);
@@ -331,11 +342,10 @@ export class StepOrderDetailsComponent
    * Checks if schedule control should be shown
    */
   public get showSchedule(): boolean {
-    let isStandardDelivery = (this.fcDeliveryType.value === DeliveryType.Standard);
     let isWorkFlowSubmitOrAwaiting = (this.fcWorkflowAction.value === WorkflowStatus.AwaitingApproval
       || this.fcWorkflowAction.value === WorkflowStatus.Submitted);
     let isSchedulable = getSafeProperty(this.orderItemType, (obj) => obj.isSchedulable, false);
-    let result = (isStandardDelivery && isWorkFlowSubmitOrAwaiting && isSchedulable);
+    let result = (isWorkFlowSubmitOrAwaiting && isSchedulable);
 
     return result;
   }
@@ -356,6 +366,10 @@ export class StepOrderDetailsComponent
     }
   }
 
+  public onChangeDeliveryType(): void {
+    this._updateMinimumScheduleDate();
+  }
+
   public addStandarLeadTimeHoursToMinDate(date: Date, standardLeadTimeHours: number): Date {
     let minDate = date;
     let numOfDaysToAdd = Math.floor(standardLeadTimeHours/10);
@@ -371,6 +385,33 @@ export class StepOrderDetailsComponent
       let remainingStandardLeadTimeHourToAdd =  (additionalHour) + (date.getMinutes()/60);
       let newDate = addDaysToDate(date, 1);
       minDate = new Date(newDate.setHours(this.businessHourStartTime + remainingStandardLeadTimeHourToAdd));
+    }
+    let count = 0;
+    while(count < numOfDaysToAdd){
+      minDate = new Date(minDate.setDate(minDate.getDate() + 1));
+      let isDateOnWeekend = minDate.getDay() !== Day.Saturday && minDate.getDay() !== Day.Sunday;
+      if(isDateOnWeekend) {
+        count++;
+      }
+    }
+    return new Date(minDate);
+  }
+
+  public addAcceleratedLeadTimeHoursToMinDate(date: Date, acceleratedLeadTimeHours: number): Date {
+    let minDate = date;
+    let numOfDaysToAdd = Math.floor(acceleratedLeadTimeHours/10);
+    let numOfHoursToAdd =  +(((acceleratedLeadTimeHours/10) % 1)*10).toFixed();
+    if (numOfHoursToAdd > 0) {
+      minDate = new Date(addHoursToDate(minDate, numOfHoursToAdd));
+    }
+    let timeHour = minDate.getHours() + (minDate.getMinutes()/60);
+    let isDateOutsideBusinessHours = (timeHour >= this.businessHourEndTime) || (date.getDate() < minDate.getDate());
+    if (isDateOutsideBusinessHours) {
+      let businessEndTimeAndCurrentHourDifference =  this.businessHourEndTime - date.getHours();
+      let additionalHour = numOfHoursToAdd - businessEndTimeAndCurrentHourDifference;
+      let remainingAcceleratedLeadTimeHourToAdd =  (additionalHour) + (date.getMinutes()/60);
+      let newDate = addDaysToDate(date, 1);
+      minDate = new Date(newDate.setHours(this.businessHourStartTime + remainingAcceleratedLeadTimeHourToAdd));
     }
     let count = 0;
     while(count < numOfDaysToAdd){
@@ -446,14 +487,11 @@ export class StepOrderDetailsComponent
     let dateValue = getSafeProperty(this.fcDateSchedule, (obj) => obj.value, this.minDate.toDateString());
     let timeValue = getSafeProperty(this.fcTimeSchedule, (obj) => obj.value, this.minDate.toLocaleTimeString());
     if (this.hasLeadTimeOptions) {
-      let standardLeadTimeHour = (this.showSchedule === true) ?
+      orderDetails.schedule = (this.showSchedule === true) ?
                                   this._mergeDateAndTime(dateValue, timeValue) :
                                   this.minDate.toISOString();
 
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
-      orderDetails.schedule = (orderDetails.deliveryType === DeliveryType.Accelerated) ?
-                              addHoursToDate(new Date(), this.acceleratedLeadTimeHours).toISOString()
-                            : standardLeadTimeHour;
     }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
