@@ -3678,7 +3678,7 @@
     "dnsDescription": "Select a zone below to manage its DNS records. Please note, record changes can take up to 72 hours to propagate.",
     "ttlDescription": "The TTL for this zone is {{ttlSeconds}} seconds.",
     "zoneDescription": "If a TTL is not specified when creating or editing a record below, this TTL will be used instead. When adding or editing a record, all existing records of the same type will inherit that record's TTL.\r\n\n If a domain name or value is specified with a trailing period, it will be interpreted as fully-qualified.",
-    "reservedDnsRecord": "This record is reserved and cannot be modified.",
+    
     "noSolutionsDisplay": "No solutions to be displayed.",
     "noProductsDisplay": "No products to be displayed.",
     "productEnquireNow": "Choose your preferred contact method and we'll get in touch to discuss this product more with you.",
