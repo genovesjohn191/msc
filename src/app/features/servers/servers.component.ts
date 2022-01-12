@@ -236,7 +236,7 @@ export class ServersComponent implements OnInit, OnDestroy {
         if (result?.action !== DialogResultAction.Confirm) { return; }
         this.dataSelection.getSelectedItems().forEach((server) => {
           let powerState = new McsServerPowerstateCommand();
-          powerState.command = server.vmwareTools.hasTools ? VmPowerstateCommand.Shutdown : VmPowerstateCommand.PowerOff;
+          powerState.command = server.vmwareTools.hasToolsRunning ? VmPowerstateCommand.Shutdown : VmPowerstateCommand.PowerOff;
           powerState.clientReferenceObject = {
             serverId: server.id
           };
@@ -256,7 +256,7 @@ export class ServersComponent implements OnInit, OnDestroy {
         if (result?.action !== DialogResultAction.Confirm) { return; }
         this.dataSelection.getSelectedItems().forEach((server) => {
           let powerState = new McsServerPowerstateCommand();
-          powerState.command = server.vmwareTools.hasTools ? VmPowerstateCommand.Restart : VmPowerstateCommand.Reset;
+          powerState.command = server.vmwareTools.hasToolsRunning ? VmPowerstateCommand.Restart : VmPowerstateCommand.Reset;
           powerState.clientReferenceObject = {
             serverId: server.id
           };
@@ -427,7 +427,7 @@ export class ServersComponent implements OnInit, OnDestroy {
     let dialogMessage = '';
     let dialogConfirmText = '';
 
-    let isVMWTRunningValues = this.dataSelection.getSelectedItems().map(item => item.vmwareTools?.hasTools);
+    let isVMWTRunningValues = this.dataSelection.getSelectedItems().map(item => item.vmwareTools?.hasToolsRunning);
     let isMixed = false;
     if (!isNullOrEmpty(isVMWTRunningValues || isVMWTRunningValues.length > 1)) {
       isMixed = [...new Set(isVMWTRunningValues)].length > 1;
