@@ -61,7 +61,8 @@
                     <span read-only>{{ noServicesFallbackText | translate }}</span>
                   </ng-template>
                 </mcs-item>
-                <mcs-item orientation="block">
+                <ng-container *ngIf="fcFirewallServices?.value">
+                  <mcs-item orientation="block">
                     <div>{{removeRuleLabel}}</div>
                     <div formArrayName="faSharedRuleForm">
                       <mcs-accordion [multi]="true">
@@ -86,13 +87,14 @@
                       {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.addBtnLabel' | translate }}
                     </button>
                   </div>
-                </mcs-item>
-                <!-- SMAC Shared Form -->
-                <mcs-item orientation="block">
-                    <mcs-smac-shared-form #fgSmacSharedForm [config]="smacSharedFormConfig$ | async"
-                    (dataChange)="onChangeSharedForm($event)">
-                    </mcs-smac-shared-form>
-                </mcs-item>
+                  </mcs-item>
+                  <!-- SMAC Shared Form -->
+                  <mcs-item orientation="block">
+                      <mcs-smac-shared-form #fgSmacSharedForm [config]="smacSharedFormConfig$ | async"
+                      (dataChange)="onChangeSharedForm($event)">
+                      </mcs-smac-shared-form>
+                  </mcs-item>
+                </ng-container>
 
                 <div class="action-items">
                     <button mcsButton arrow="right" mcsWizardStepNext [disabled]="!formIsValid" mcsId="step-1-next"

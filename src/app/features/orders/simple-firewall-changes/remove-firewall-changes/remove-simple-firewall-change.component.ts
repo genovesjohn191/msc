@@ -310,6 +310,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
         });
         this._firewallCount = this.firewallOptions?.length;
         this.isLoading = false;
+        this._changeDetectionRef.detectChanges();
       }
     );
   }
