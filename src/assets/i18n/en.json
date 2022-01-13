@@ -556,7 +556,7 @@
       },
       "inview": {
         "label": {
-          "unavailable": "InView information is not yet available for this server.",
+          "unavailable": "This service cannot be modified because it is currently being provisioned.",
           "none": "This service does not currently have InView configured. Please speak to your Macquarie Cloud Services accounts team about enabling InView.",
           "standard": "The InView level for this service is currently Standard. It will be raised to Premium.",
           "premium": "The InView level for this service is currently Premium. This is the highest InView level."

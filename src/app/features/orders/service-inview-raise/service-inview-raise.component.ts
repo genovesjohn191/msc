@@ -257,6 +257,13 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   }
 
   /**
+   * Returns true when InView is pending
+   */
+  public inviewPending(server: McsServer): boolean {
+    return getSafeProperty(server, (obj) => obj.inviewPending, false);
+  }
+
+  /**
    * Register jobs/notifications events
    */
   private _registerEvents(): void {

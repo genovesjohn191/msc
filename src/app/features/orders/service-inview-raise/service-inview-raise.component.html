@@ -59,8 +59,15 @@
                     *ngFor="let serverGroup of serversGroup">
 
                     <mcs-option *ngFor="let server of serverGroup.servers" [value]="server"
-                      [selected]="(selectedServiceId$ | async) === server.serviceId">
-                      {{ server.name }} <span read-only>- {{ server.inviewLevelLabel }}</span>
+                      [selected]="(selectedServiceId$ | async) === server.serviceId"
+                      [disabled]="inviewPending(server)">
+                      <span
+                      [ngStyle]="{'pointer-events': 'auto'}"
+                      [mcsTooltipShow]="inviewPending(server)"
+                      [mcsTooltipPosition]="'right'"
+                      [mcsTooltip]="'serverServices.inview.pendingButtonTooltip' | translate">
+                      {{ server.name }}
+                      <span read-only>- {{ server.inviewLevelLabel }}</span></span>
                     </mcs-option>
                   </mcs-option-group>
 
