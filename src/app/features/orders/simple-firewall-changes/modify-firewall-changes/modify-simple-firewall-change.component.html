@@ -60,39 +60,41 @@
                   </ng-template>
                 </mcs-item>
 
-                <mcs-item orientation="block">
-                  <div>{{modifyRuleLabel}}</div>
-                  <div formArrayName="faSharedRuleForm">
-                    <mcs-accordion [multi]="true">
-                      <mcs-accordion-panel *ngFor="let formItem of faSharedRuleForm?.controls; index as i" [expanded]="i === 0" margin-top-small>
-                        <mcs-accordion-panel-header mcsPanelHeaderDef>
-                          <span>{{ 'orderSimpleFirewallChanges.detailsStep.modify.tabHeader' | translate: { index: i+1 } }}</span>
-                        </mcs-accordion-panel-header>
-                            <mcs-firewall-changes-shared-rule [formGroup]="formItem"
-                              (dataChange)="onChangeToApplyFormDataChange()"
-                              [ruleActionType]="ruleActionType">
-                            </mcs-firewall-changes-shared-rule>
-                          <mcs-item orientation="separated" margin-top-small *ngIf="isChangeItemRemovable(faSharedRuleForm?.controls?.length)">
-                            <button mcsButton color="error" mcsId="remove-list-item" (click)="removeChangeItem(i)">
-                              {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.removeBtnLabel' | translate }}
-                            </button>
-                          </mcs-item>
-                      </mcs-accordion-panel>
-                    </mcs-accordion>
-                  </div>
-                  <div class="action-items" margin-top-medium margin-bottom-none>
-                    <button mcsButton mcsId="add-list-item" (click)="addChangeItem()">
-                      {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.addBtnLabel' | translate }}
-                    </button>
-                  </div>
-                </mcs-item>
-
-                <!-- SMAC Shared Form -->
-                <mcs-item orientation="block">
-                    <mcs-smac-shared-form #fgSmacSharedForm [config]="smacSharedFormConfig$ | async"
-                    (dataChange)="onChangeSharedForm($event)">
-                    </mcs-smac-shared-form>
-                </mcs-item>
+                <ng-container *ngIf="fcFirewallServices?.value">
+                  <mcs-item orientation="block">
+                    <div>{{modifyRuleLabel}}</div>
+                    <div formArrayName="faSharedRuleForm">
+                      <mcs-accordion [multi]="true">
+                        <mcs-accordion-panel *ngFor="let formItem of faSharedRuleForm?.controls; index as i" [expanded]="i === 0" margin-top-small>
+                          <mcs-accordion-panel-header mcsPanelHeaderDef>
+                            <span>{{ 'orderSimpleFirewallChanges.detailsStep.modify.tabHeader' | translate: { index: i+1 } }}</span>
+                          </mcs-accordion-panel-header>
+                              <mcs-firewall-changes-shared-rule [formGroup]="formItem"
+                                (dataChange)="onChangeToApplyFormDataChange()"
+                                [ruleActionType]="ruleActionType">
+                              </mcs-firewall-changes-shared-rule>
+                            <mcs-item orientation="separated" margin-top-small *ngIf="isChangeItemRemovable(faSharedRuleForm?.controls?.length)">
+                              <button mcsButton color="error" mcsId="remove-list-item" (click)="removeChangeItem(i)">
+                                {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.removeBtnLabel' | translate }}
+                              </button>
+                            </mcs-item>
+                        </mcs-accordion-panel>
+                      </mcs-accordion>
+                    </div>
+                    <div class="action-items" margin-top-medium margin-bottom-none>
+                      <button mcsButton mcsId="add-list-item" (click)="addChangeItem()">
+                        {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.addBtnLabel' | translate }}
+                      </button>
+                    </div>
+                  </mcs-item>
+  
+                  <!-- SMAC Shared Form -->
+                  <mcs-item orientation="block">
+                      <mcs-smac-shared-form #fgSmacSharedForm [config]="smacSharedFormConfig$ | async"
+                      (dataChange)="onChangeSharedForm($event)">
+                      </mcs-smac-shared-form>
+                  </mcs-item>
+                </ng-container>
 
                 <div class="action-items">
                     <button mcsButton arrow="right" mcsWizardStepNext [disabled]="!formIsValid" mcsId="step-1-next"
