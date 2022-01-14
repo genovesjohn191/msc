@@ -23,7 +23,3 @@
 mat-error {
   @include font-size($font-size-small);
 }
-
-mat-error.dynamic-field-error {
-  margin-top: -15px;
-}
