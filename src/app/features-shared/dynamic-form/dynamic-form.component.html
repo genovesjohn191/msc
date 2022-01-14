@@ -170,7 +170,7 @@
         <mcs-dff-slide-toggle-field *ngSwitchCase="'slide-toggle'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-slide-toggle-field>
-        <mat-error *ngIf="!isValidField(input.key)" class="dynamic-field-error" [innerHTML]="getErrorMessage(input.key)">
+        <mat-error *ngIf="!isValidField(input.key)" [innerHTML]="getErrorMessage(input.key)">
         </mat-error>
       </div>
     </div>
