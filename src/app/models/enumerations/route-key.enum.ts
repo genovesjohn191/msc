@@ -35,6 +35,10 @@ export enum RouteKey {
   Azure,
   AzureSoftwareSubscriptions,
   AzureSubscriptions,
+  AzureManagementServices,
+  AzureManagementServicesDetails,
+  AzureManagementServicesDetailsOverview,
+  AzureManagementServicesDetailsChildren,
   AzureResources,
   AzureReservations,
 
@@ -138,6 +142,10 @@ export enum RouteKey {
 
   PrivateCloudDashboard,
   PrivateCloudDashboardOverview,
+
+  HybridCloud,
+  Extenders,
+  ApplicationRecovery,
 
   HttpErrorPage
 }

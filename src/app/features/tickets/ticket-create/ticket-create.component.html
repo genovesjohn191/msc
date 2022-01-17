@@ -210,6 +210,14 @@
               <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (vmBackup$ | async), serviceTitle: 'VM Backup'}">
               </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (extenders$ | async), serviceTitle: 'Extenders'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (applicationRecovery$ | async), serviceTitle: 'Application Recovery'}">
+              </ng-container>
             </mcs-select>
           </mcs-form-field>
         </mcs-section>
@@ -226,7 +234,7 @@
                 <ng-container *mcsOptionGroupLabel>
                   {{ azureResource.groupName }}
                 </ng-container>
-        
+
                 <mcs-option [value]="option.value" *ngFor="let option of azureResource.options">
                   {{ option.text }}
                 </mcs-option>

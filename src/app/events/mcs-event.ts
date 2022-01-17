@@ -1,6 +1,9 @@
 import { AccountChangeEvent } from './items/account-change.event';
 import { DataChangeAggregationTargetsEvent } from './items/data-change-aggregation-targets-event';
 import { DataChangeAzureManagedServicesEvent } from './items/data-change-azure-managed-services.event';
+import { DataChangeAzureManagementServicesEvent } from './items/data-change-azure-management-services.event';
+import { DataChangeExtendersEvent } from './items/data-change-extenders.event';
+import { DataChangeApplicationRecoveryEvent } from './items/data-change-application-recovery.event';
 import { DataChangeAzureReservationsEvent } from './items/data-change-azure-reservations.event';
 import { DataChangeAzureResourcesEvent } from './items/data-change-azure-resources.event';
 import { DataChangeAzureSoftwareSubscriptionsEvent } from './items/data-change-azure-software-subscriptions.event';
@@ -147,6 +150,9 @@ export class McsEvent {
   public static dataChangeAggregationTargets = new DataChangeAggregationTargetsEvent();
   public static dataChangeAzureResources = new DataChangeAzureResourcesEvent();
   public static dataChangeAzureManagedServices = new DataChangeAzureManagedServicesEvent();
+  public static dataChangeAzureManagementServices = new DataChangeAzureManagementServicesEvent();
+  public static dataChangeExtenders = new DataChangeExtendersEvent();
+  public static dataChangeApplicationRecovery = new DataChangeApplicationRecoveryEvent();
   public static dataChangeAzureReservations = new DataChangeAzureReservationsEvent();
   public static dataChangeAzureSoftwareSubscriptions = new DataChangeAzureSoftwareSubscriptionsEvent();
   public static dataChangeDnsListing = new DnsListingEvent();

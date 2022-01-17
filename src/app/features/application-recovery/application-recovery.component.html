@@ -1,0 +1,155 @@
+<mcs-page [header]="'applicationRecovery.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <ng-container *ngIf="isSorting; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count"  *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalCount | mcsPlural:
+                  ('applicationRecovery.dataSingular' | translate) : ('applicationRecovery.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'applicationRecovery.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="application-recovery-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'applicationRecovery.columnFilter' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        storageKey="application-recovery"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
+
+      <!-- Table -->
+      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="billingDescription" disableClear>
+            {{ 'columnHeader.name' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <span [innerHTML]="row.billingDescription | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Service Type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.type' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <span [innerHTML]="row.ApplicationRecoveryTypeLabel | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Journal History Column -->
+        <ng-container matColumnDef="journalHistory">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.journalHistory' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <span [innerHTML]="row.ApplicationRecoveryJournalHistoryLabel | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Journal Size Column -->
+        <ng-container matColumnDef="journalSize">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="journalSizeGb" hidden-small>
+            {{ 'columnHeader.journalSize' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.journalSizeGB }} GB
+          </td>
+        </ng-container>
+
+        <!-- Virtual Machines Column -->
+        <ng-container matColumnDef="virtualMachines">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="virtualMachineQuantity" hidden-small>
+            {{ 'columnHeader.virtualMachines' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.virtualMachineQuantity }}
+          </td>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container matColumnDef="serviceId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="serviceId" hidden-small>
+            {{ 'columnHeader.serviceId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <span [innerHTML]="row.serviceId | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef hidden-small></th>
+          <td mat-cell *matCellDef="let row" text-center hidden-small>
+            <mcs-context-menu-link mcsStopPropagation
+              [serviceId]="row.serviceId"
+              [serviceChangeAvailable]="row.serviceChangeAvailable"
+              [hasMenuButton]="true"
+              [eventCategory]="'application-recovery'"
+              [eventLabel]="'application-recovery-listing-page'">
+            </mcs-context-menu-link>
+          </td>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+      </table>
+
+      <!-- Table Status -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          <span>{{ 'applicationRecovery.noRecordsFoundMessage' | translate }}</span>
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'applicationRecovery.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-application-recovery-list"
+              mcsEventCategory="application-recovery"
+              mcsEventLabel="application-recovery-listing-page">{{ 'applicationRecovery.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

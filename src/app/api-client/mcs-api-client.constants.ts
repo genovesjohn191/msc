@@ -28,6 +28,9 @@ import { McsApiMockInterceptor } from './interceptors/mcs-api-mock.interceptor';
 import { McsApiAccountService } from './services/mcs-api-account.service';
 import { McsApiAzureResourcesService } from './services/mcs-api-azure-resources.service';
 import { McsApiAzureServicesService } from './services/mcs-api-azure-services.service';
+import { McsApiAzureManagementServicesService } from './services/mcs-api-azure-management-services.service';
+import { McsApiExtendersService } from './services/mcs-api-extenders.service';
+import { McsApiApplicationRecoveryService } from './services/mcs-api-application-recovery.service';
 import { McsApiAzureReservationsService } from './services/mcs-api-azure-reservations.service';
 import { McsApiReportsService } from './services/mcs-api-reports.service';
 import { McsApiWorkflowsService } from './services/mcs-api-workflows.services';
@@ -50,6 +53,9 @@ export const apiClientProviders: Provider[] = [
   McsApiAuthService,
   McsApiAzureResourcesService,
   McsApiAzureServicesService,
+  McsApiAzureManagementServicesService,
+  McsApiExtendersService,
+  McsApiApplicationRecoveryService,
   McsApiAzureReservationsService,
   McsApiAzureSoftwareSubscriptionsService,
   McsApiBatsService,

@@ -20,5 +20,7 @@ export enum TicketServiceType {
   StandarsSquareMetres = 'Standard Square Metres',
   VdcStorage = 'VDC Storage',
   Vdcs = 'VDCs',
-  VmBackup = 'VM Backup'
+  VmBackup = 'VM Backup',
+  Extenders = 'Extenders',
+  ApplicationRecovery = 'Application Recovery'
 }

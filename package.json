@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --ssl --ssl-key ssl/dev-portal.key --ssl-cert ssl/dev-portal.crt",
+    "start": "ng serve --ssl --ssl-key ssl/dev-portal.key --ssl-cert ssl/dev-portal.crt --port=8080",
     "build": "node --max_old_space_size=3000 ./node_modules/@angular/cli/bin/ng build",
     "clean": "rm -rf node_modules",
     "reinstall": "yarn run clean && yarn install",
