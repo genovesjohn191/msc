@@ -1,32 +1,33 @@
-import { ActivatedRoute } from '@angular/router';
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
-import {
-  Observable,
-  BehaviorSubject,
-  Subscription,
   throwError,
-  Subject
+  BehaviorSubject,
+  Observable,
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
+  catchError,
   finalize,
-  tap,
   map,
   shareReplay,
   switchMap,
-  catchError,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   CoreValidators,
   IMcsNavigateAwayGuard,
@@ -35,38 +36,39 @@ import {
   McsNavigationService
 } from '@app/core';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  animateFactory,
-  getSafeProperty,
-  CommonDefinition,
-  createObject
-} from '@app/utilities';
-import { McsFormGroupDirective } from '@app/shared';
-import {
-  TicketType,
-  ticketTypeText,
   serviceTypeText,
+  ticketTypeText,
+  HardwareType,
+  HttpStatusCode,
+  McsApiCollection,
+  McsAzureResource,
   McsFileInfo,
   McsOption,
-  RouteKey,
-  McsTicketCreate,
-  McsTicketCreateAttachment,
+  McsOptionGroup,
+  McsPermission,
   McsResource,
   McsServer,
-  McsOptionGroup,
-  McsAzureResource,
-  McsPermission,
-  McsApiCollection,
-  HttpStatusCode,
-  HardwareType
+  McsTicketCreate,
+  McsTicketCreateAttachment,
+  RouteKey,
+  TicketType
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import { McsFormGroupDirective } from '@app/shared';
+import {
+  animateFactory,
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import {
   TicketService,
   TicketServiceType
 } from '../shared';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -316,7 +318,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       CoreValidators.required
     ]);
 
-    this.fcReference = new FormControl('', []);
+    this.fcReference = new FormControl('', [
+      CoreValidators.maxLength(15)
+    ]);
 
     this.fcSummary = new FormControl('', [
       CoreValidators.required

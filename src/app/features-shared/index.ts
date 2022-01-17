@@ -73,3 +73,8 @@ export * from './form-fields/field-select-dns-zone-type/field-select-dns-zone-ty
 export * from './form-fields/field-select-dns-zone-type/field-select-dns-zone-type.component';
 export * from './form-fields/field-select-tree-view/field-select-tree-view';
 export * from './form-fields/field-select-tree-view/field-select-tree-view.component';
+
+export * from './form-fields/field-select/field-select.datasource';
+export * from './form-fields/field-select/field-select.component';
+export * from './form-fields/field-select/field-select.pipe';
+export * from './form-fields/field-select/services/field-select.service';

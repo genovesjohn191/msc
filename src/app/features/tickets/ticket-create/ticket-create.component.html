@@ -20,82 +20,40 @@
     <div class="contextual-help-page-wrapper limited-view">
       <form [formGroup]="fgCreateTicket" mcsFormGroup>
         <!-- Ticket Type -->
-        <mcs-form-field>
-          <mcs-select mcsId="select-type" required
-            [placeholder]="'ticketCreate.placeholders.type' | translate"
-            (selectionChange)='onChangeTicketType()'
-            [formControl]="fcType"
-            [mcsContextualHelp]="'ticketCreate.contextualHelp.type' | translate">
+        <mcs-field-select size="auto"
+          mcsId="select-type"
+          [label]="'label.type' | translate"
+          [dataSource]="'TicketType' | mcsFieldSelect"
+          [formControl]="fcType"
+          [mcsContextualHelp]="'ticketCreate.contextualHelp.type' | translate">
+        </mcs-field-select>
 
-            <mcs-option-group>
-              <ng-container *mcsOptionGroupHeader>
-                {{ 'ticketCreate.typeHeader' | translate }}
-              </ng-container>
-              <mcs-option *ngFor="let ticketType of ticketTypeList"
-                [value]="ticketType.value">
-                {{ ticketType.text }}
-              </mcs-option>
-            </mcs-option-group>
-          </mcs-select>
-
-          <mcs-error mcsError errorState="required">
-            {{ 'ticketCreate.errors.typeRequired' | translate }}
-          </mcs-error>
-        </mcs-form-field>
-
-        <!-- Reference -->
-        <mcs-form-field>
-          <input mcsInput mcsSetFocus #referenceInput
-            mcsId="input-reference"
-            [placeholder]="'ticketCreate.placeholders.reference' | translate" maxlength="15"
-            [formControl]="fcReference"
-            [mcsContextualHelp]="'ticketCreate.contextualHelp.reference' | translate">
-
-          <mcs-hint mcsHint align="start">
-            {{ 'ticketCreate.hints.reference' | translate: { max_char: referenceInput.maxLength } }}
-          </mcs-hint>
-          <mcs-hint mcsHint align="end">
-            {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
-          </mcs-hint>
-        </mcs-form-field>
+        <!-- Reference No. -->
+        <mcs-field-input size="auto"
+          mcsId="input-reference"
+          [label]="'label.reference' | translate"
+          [maxLength]="15"
+          [formControl]="fcReference"
+          [mcsContextualHelp]="'ticketCreate.contextualHelp.reference' | translate">
+        </mcs-field-input>
 
         <!-- Summary -->
-        <mcs-form-field>
-          <input mcsInput #summaryInput required
-            mcsId="input-summary"
-            [placeholder]="'ticketCreate.placeholders.summary' | translate" maxlength="80"
-            [formControl]="fcSummary"
-            [mcsContextualHelp]="'ticketCreate.contextualHelp.summary' | translate">
-
-          <mcs-hint mcsHint align="start">
-            {{ 'ticketCreate.hints.summary' | translate: { max_char: summaryInput.maxLength } }}
-          </mcs-hint>
-          <mcs-hint mcsHint align="end">
-            {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
-          </mcs-hint>
-          <mcs-error mcsError errorState="required">
-            {{ 'ticketCreate.errors.summaryRequired' | translate }}
-          </mcs-error>
-        </mcs-form-field>
+        <mcs-field-input size="auto"
+          mcsId="input-summary"
+          [label]="'label.summary' | translate"
+          [maxLength]="80"
+          [formControl]="fcSummary"
+          [mcsContextualHelp]="'ticketCreate.contextualHelp.summary' | translate">
+        </mcs-field-input>
 
         <!-- Details -->
-        <mcs-form-field>
-          <textarea mcsInput rows="3" #detailsInput required
-            mcsId="input-details"
-            [placeholder]="'ticketCreate.placeholders.details' | translate" maxlength="4000"
-            [formControl]="fcDetails"
-            [mcsContextualHelp]="'ticketCreate.contextualHelp.details' | translate"></textarea>
-
-          <mcs-hint mcsHint align="start">
-            {{ 'ticketCreate.hints.details' | translate: { max_char: detailsInput.maxLength } }}
-          </mcs-hint>
-          <mcs-hint mcsHint align="end">
-            {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
-          </mcs-hint>
-          <mcs-error mcsError errorState="required">
-            {{ 'ticketCreate.errors.detailsRequired' | translate }}
-          </mcs-error>
-        </mcs-form-field>
+        <mcs-field-input-textarea size="auto"
+          mcsId="input-details"
+          [label]="'label.details' | translate"
+          [maxLength]="4000"
+          [formControl]="fcDetails"
+          [mcsContextualHelp]="'ticketCreate.contextualHelp.details' | translate">
+        </mcs-field-input-textarea>
 
         <!-- Services -->
         <mcs-section [mcsContextualHelp]="'ticketCreate.contextualHelp.services' | translate" >
@@ -226,7 +184,7 @@
                 <ng-container *mcsOptionGroupLabel>
                   {{ azureResource.groupName }}
                 </ng-container>
-        
+
                 <mcs-option [value]="option.value" *ngFor="let option of azureResource.options">
                   {{ option.text }}
                 </mcs-option>

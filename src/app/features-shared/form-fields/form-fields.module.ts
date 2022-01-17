@@ -10,6 +10,7 @@ import { FieldErrorMessageDirective } from './field-directives/field-error-messa
 import { FieldInputDatePickerComponent } from './field-input-date-picker/field-input-date-picker.component';
 import { FieldInputNoteComponent } from './field-input-note/field-input-note.component';
 import { FieldInputNumberArrowComponent } from './field-input-number-arrow/field-input-number-arrow.component';
+import { FieldInputTextareaComponent } from './field-input-textarea/field-input-textarea.component';
 import { FieldInputTimePickerComponent } from './field-input-time-picker.component/field-input-time-picker.component';
 import { FieldInputUrlComponent } from './field-input-url/field-input-url.component';
 import { FieldInputComponent } from './field-input/field-input.component';
@@ -20,6 +21,10 @@ import { FieldSelectDnsZoneTypeComponent } from './field-select-dns-zone-type/fi
 import { FieldSelectMonitoringPeriodComponent } from './field-select-monitoring-period/field-select-monitoring-period.component';
 import { FieldSelectMonthPeriodComponent } from './field-select-month-period/field-select-month-period.component';
 import { FieldSelectTreeViewComponent } from './field-select-tree-view/field-select-tree-view.component';
+import { FieldSelectComponent } from './field-select/field-select.component';
+import { FieldSelectPipe } from './field-select/field-select.pipe';
+import { FieldSelectService } from './field-select/field-select.service';
+import { MCS_FIELD_SELECT_TOKEN } from './field-select/services/field-select.service';
 import { InputInlineEditComponent } from './input-inline-edit/input-inline-edit.component';
 import { OrderListBoxComponent } from './order-listbox/order-listbox.component';
 import { SelectColocationDeviceComponent } from './select-colocation-service/select-colocation-service.component';
@@ -43,6 +48,10 @@ const exports: any[] | Type<any> = [
   FieldInputNumberArrowComponent,
   FieldInputTimePickerComponent,
   FieldInputUrlComponent,
+  FieldInputTextareaComponent,
+
+  FieldSelectComponent,
+  FieldSelectPipe,
   FieldSelectContactComponent,
   FieldSelectDnsZoneTypeComponent,
   FieldSelectTreeViewComponent,
@@ -50,6 +59,7 @@ const exports: any[] | Type<any> = [
   FieldSelectBillingAccountComponent,
   FieldSelectBillingServiceComponent,
   FieldSelectMonthPeriodComponent,
+
   OrderListBoxComponent,
   SelectColocationDeviceComponent,
   SelectManagementTagComponent
@@ -61,7 +71,10 @@ const exports: any[] | Type<any> = [
   exports: [...exports],
   providers: [
     SharedModule,
-    McsApiService
+    McsApiService,
+
+    // Token based settings
+    { provide: MCS_FIELD_SELECT_TOKEN, useClass: FieldSelectService }
   ]
 })
 export class FormFieldsModule { }

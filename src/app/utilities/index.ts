@@ -5,6 +5,9 @@ export * from './tools/tree-source/tree-item';
 export * from './tools/tree-source/tree-utility';
 export * from './tools/document-utility/document-utility';
 export * from './tools/document-utility/export-to-pdf-utility';
+export * from './tools/data-process/data-process';
+export * from './tools/data-process/data-process-status';
+export * from './tools/data-process/data-process.interface';
 
 export * from './functions/mcs-crypto.function';
 export * from './functions/mcs-url.function';

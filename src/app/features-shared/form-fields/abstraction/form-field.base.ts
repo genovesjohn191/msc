@@ -28,7 +28,9 @@ import {
   isArray,
   isNullOrEmpty,
   isNullOrUndefined,
+  unsubscribeSafely,
   IJsonObject,
+  McsDisposable,
   McsSizeType
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
@@ -38,7 +40,7 @@ import { IFormField } from './form-field.interface';
 
 @Component({ template: '' })
 export abstract class FormFieldBaseComponent2<TValue>
-  implements IFormField, ControlValueAccessor {
+  implements McsDisposable, IFormField, ControlValueAccessor {
 
   @Input()
   public id: string;
@@ -72,6 +74,18 @@ export abstract class FormFieldBaseComponent2<TValue>
 
   @Input()
   public label: string;
+
+  @Input()
+  public suffix: string;
+
+  @Input()
+  public prefix: string;
+
+  @Input()
+  public startHint: string;
+
+  @Input()
+  public endHint: string;
 
   @Input()
   public includeNone: boolean;
@@ -157,13 +171,23 @@ export abstract class FormFieldBaseComponent2<TValue>
 
     this.ngControl?.valueChanges.pipe(
       takeUntil(this.destroySubject),
-      tap(() => this.changeDetectorRef.markForCheck())
+      tap(() => {
+        this.changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
+
+    this.ngControl?.statusChanges.pipe(
+      takeUntil(this.destroySubject),
+      tap(() => {
+        this._updateMessageInterpolations();
+        this.changeDetectorRef.markForCheck();
+      })
     ).subscribe();
 
     // We need to update the form control validators here since ngOnInit does not yet
     // obtain the registered validators.
     this._updateFormControlValidators();
-    this._updateMessageInterpolations();
+
   }
 
   public registerOnTouched(fn: () => void): void {
@@ -181,6 +205,10 @@ export abstract class FormFieldBaseComponent2<TValue>
 
   public registerCustomValidators(...validatorFn: ValidatorFn[]): void {
     this._customValidators = validatorFn;
+  }
+
+  public dispose(): void {
+    unsubscribeSafely(this.destroySubject);
   }
 
   protected propagateFormControlChanges(

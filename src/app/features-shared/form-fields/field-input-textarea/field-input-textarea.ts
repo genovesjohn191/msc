@@ -1,6 +1,6 @@
 import { IFormField } from '../abstraction/form-field.interface';
 
-export interface IFieldInputUrl extends IFormField {
+export interface IFieldInputTextarea extends IFormField {
   minLength: number;
   maxLength: number;
 }

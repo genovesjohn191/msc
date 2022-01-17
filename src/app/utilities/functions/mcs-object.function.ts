@@ -1,8 +1,8 @@
-import {
-  Subscription,
-  Subject
-} from 'rxjs';
 import _ from 'lodash';
+import {
+  Subject,
+  Subscription
+} from 'rxjs';
 
 /**
  * This will check if the inputted object is null/undefined or empty,
@@ -136,4 +136,27 @@ export function createObject<T, K>(target: new (...args: any[]) => T, fields: Fi
     throw new Error(`Unable to find prototype of ${target} object`);
   }
   return Object.assign(new target(), fields);
+}
+
+export interface IRawObject { [key: string]: any; }
+/**
+ * Converts raw object to string
+ * @param rawObject Raw object to be converted
+ */
+export function convertRawObjectToString(rawObject: IRawObject): string {
+  if (isNullOrEmpty(rawObject)) { return ''; }
+  let objectKeys = Object.keys(rawObject) || [];
+  let classesOutput: string[] = [];
+
+  objectKeys.forEach((objectKey) => {
+    let objectValue = rawObject[objectKey];
+    if (isNullOrEmpty(objectValue)) { return; }
+
+    if (typeof (objectValue) === 'boolean' && objectValue) {
+      classesOutput.push(objectKey);
+      return;
+    }
+    classesOutput.push(`${objectKey}-${objectValue}`);
+  });
+  return classesOutput.join(' ');
 }

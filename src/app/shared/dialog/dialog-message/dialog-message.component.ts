@@ -1,16 +1,17 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
-  ViewEncapsulation,
   TemplateRef,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ViewEncapsulation
 } from '@angular/core';
-import { McsStatusSettingsBase } from '@app/core';
 import { McsStatusType } from '@app/utilities';
-import { DialogMessageConfig } from './dialog-message-config';
-import { DialogRef } from '../dialog-ref/dialog-ref';
+
+import { DialogSettingsBase } from '../abstraction/dialog-settings.base';
 import { DIALOG_DATA } from '../dialog-config';
+import { DialogRef } from '../dialog-ref/dialog-ref';
+import { DialogMessageConfig } from './dialog-message-config';
 
 @Component({
   selector: 'mcs-dialog-message',
@@ -22,7 +23,7 @@ import { DIALOG_DATA } from '../dialog-config';
   }
 })
 
-export class DialogMessageComponent extends McsStatusSettingsBase  {
+export class DialogMessageComponent extends DialogSettingsBase  {
 
   constructor(
     _changeDetectorRef: ChangeDetectorRef,
