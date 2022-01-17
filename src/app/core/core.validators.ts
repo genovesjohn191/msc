@@ -101,6 +101,7 @@ export class CoreValidators {
    * Validator that performs url values validation
    */
   public static url(control: AbstractControl): ValidationErrors | null {
+    if (isNullOrEmpty(control.value)) { return null; }
     return CommonDefinition.REGEX_URL_PATTERN.test(control.value) ?
       null : { url: true };
   }

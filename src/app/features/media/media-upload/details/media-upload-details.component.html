@@ -4,137 +4,68 @@
 
     <form [formGroup]="fgMediaUpload" mcsFormGroup>
       <!-- Resource Select -->
-      <mcs-form-field>
-        <mcs-select [formControl]="fcResources" required autoSelect="false"
-          mcsId="select-resource"
-          (selectionChange)="onChangeResource($event)"
-          [placeholder]="'mediaUpload.mediaStepDetails.selectResources' | translate"
-          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectResourcesHelp' | translate">
-
-          <mcs-option-group>
-            <ng-container *mcsOptionGroupHeader>
-              VDC
-            </ng-container>
-            <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
-              {{ resource.name }}
-            </mcs-option>
-          </mcs-option-group>
-        </mcs-select>
-
-        <mcs-error mcsError errorState="required">
-          {{ 'mediaUpload.mediaStepDetails.errors.selectResourceRequired' | translate }}
-        </mcs-error>
-      </mcs-form-field>
+      <mcs-field-select size="auto"
+        mcsId="select-resource"
+        [label]="'label.resource' | translate"
+        [dataSource]="'Resource' | mcsFieldSelect"
+        [formControl]="fcResources"
+        [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectResourcesHelp' | translate">
+      </mcs-field-select>
 
       <!-- Catalog Select -->
-      <mcs-form-field>
-        <mcs-select [formControl]="fcCatalogs" required mcsId="select-catalog" autoSelect="false"
-          [placeholder]="'mediaUpload.mediaStepDetails.selectCatalog' | translate"
-          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectCatalogHelp' | translate">
-
-          <mcs-option-group>
-            <ng-container *mcsOptionGroupHeader>
-              {{ 'mediaUpload.mediaStepDetails.selectCatalogHeader' | translate }}
-            </ng-container>
-            <mcs-option *ngFor="let catalog of resourceCatalogs$ | async"
-              [value]="catalog">
-              {{ catalog.name }}
-            </mcs-option>
-          </mcs-option-group>
-        </mcs-select>
-
-        <mcs-error mcsError errorState="required">
-          {{ 'mediaUpload.mediaStepDetails.errors.selectResourceCatalog' | translate }}
-        </mcs-error>
-      </mcs-form-field>
+      <mcs-field-select size="auto"
+        mcsId="select-catalog"
+        [label]="'label.catalog' | translate"
+        [dataSource]="'ResourceCatalog' | mcsFieldSelect: { data: resourceIdChange$ }"
+        [formControl]="fcCatalogs"
+        [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectCatalogHelp' | translate">
+      </mcs-field-select>
 
       <!-- Media Name  -->
       <mcs-grid [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaNameHelp' | translate">
         <mcs-grid-row [gapSize]="7">
           <mcs-grid-column sizeLg="10">
-            <mcs-form-field>
-              <input mcsInput #mediaName required mcsSetFocus mcsId="input-media-name"
-                [placeholder]="'mediaUpload.mediaStepDetails.mediaName' | translate" maxlength="25"
-                [formControl]="fcMediaName">
 
-              <mcs-hint mcsHint align="start">
-                <mcs-hint-message type="maxChar"
-                  [value]="mediaName.maxLength">
-                </mcs-hint-message>
-              </mcs-hint>
-              <mcs-hint mcsHint align="end">
-                {{ mediaName.value.length }} / {{ mediaName.maxLength }}
-              </mcs-hint>
-
-              <mcs-error mcsError errorState="required">
-                {{ 'mediaUpload.mediaStepDetails.errors.mediaNameRequired' | translate }}
-              </mcs-error>
-              <mcs-error mcsError errorState="mediaNameInvalid">
-                {{ 'mediaUpload.mediaStepDetails.errors.mediaNameInvalid' | translate }}
-              </mcs-error>
-            </mcs-form-field>
+            <!-- Name -->
+            <mcs-field-input size="auto"
+              mcsId="input-media-name"
+              [label]="'label.media' | translate"
+              [maxLength]="25"
+              [formControl]="fcMediaName">
+            </mcs-field-input>
           </mcs-grid-column>
+
           <mcs-grid-column sizeLg="2">
-            <mcs-form-field>
-              <mcs-select placeholder="ext" [formControl]="fcMediaExtension" required autoSelect="false">
-                <mcs-option *ngFor="let extension of mediaExtensions$ | async" [value]="extension">
-                  {{ extension }}
-                </mcs-option>
-              </mcs-select>
-            </mcs-form-field>
+            <!-- Extension -->
+            <mcs-field-select size="auto"
+              mcsId="select-media-extension"
+              [label]="'label.ext' | translate"
+              [dataSource]="'MediaExtension' | mcsFieldSelect"
+              [formControl]="fcMediaExtension">
+            </mcs-field-select>
           </mcs-grid-column>
         </mcs-grid-row>
       </mcs-grid>
 
       <!-- Media URL  -->
-      <mcs-form-field>
-        <input mcsInput #mediaUrl required mcsId="input-media-url"
-          [placeholder]="'mediaUpload.mediaStepDetails.mediaUrl' | translate" maxlength="300"
-          [formControl]="fcMediaUrl"
-          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaUrlHelp' | translate"
-          (blur)="onBlurMediaUrl()">
-
-        <mcs-suffix *ngIf="mediaUrlStatusIconKey">
-          <mcs-icon [key]="mediaUrlStatusIconKey" size="small" ></mcs-icon>
-        </mcs-suffix>
-
-        <mcs-hint mcsHint align="start" *ngIf="urlInfoMessage">
-          <mcs-data-status-warning>{{ urlInfoMessage }}</mcs-data-status-warning>
-        </mcs-hint>
-        <mcs-hint mcsHint align="start" *ngIf="!urlInfoMessage">
-          <mcs-hint-message type="maxChar"
-            [value]="mediaUrl.maxLength"></mcs-hint-message>
-        </mcs-hint>
-        <mcs-hint mcsHint align="end">
-          {{ mediaUrl.value.length }} / {{ mediaUrl.maxLength }}
-        </mcs-hint>
-
-        <mcs-error mcsError errorState="required">
-          {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlRequired' | translate }}
-        </mcs-error>
-        <mcs-error mcsError errorState="url">
-          {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlInvalid' | translate }}
-        </mcs-error>
-        <mcs-error mcsError errorState="urlValidationError">
-          {{ urlInfoMessage }}
-        </mcs-error>
-      </mcs-form-field>
+      <mcs-field-input-url size="auto"
+        mcsId="input-media-url"
+        [label]="'label.url' | translate"
+        [suffix]="mediaUrlStatusIconKey"
+        [maxLength]="300"
+        [interpolations]="urlErrorObj"
+        [formControl]="fcMediaUrl"
+        [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaUrlHelp' | translate">
+      </mcs-field-input-url>
 
       <!-- Media Description  -->
-      <mcs-form-field>
-        <input mcsInput #mediaDescription mcsId="input-media-description"
-          [placeholder]="'mediaUpload.mediaStepDetails.mediaDescription' | translate" maxlength="1000"
-          [formControl]="fcMediaDescription"
-          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaDescriptionHelp' | translate">
-
-        <mcs-hint mcsHint align="start">
-          <mcs-hint-message type="maxChar"
-            [value]="mediaDescription.maxLength"></mcs-hint-message>
-        </mcs-hint>
-        <mcs-hint mcsHint align="end">
-          {{ mediaDescription.value.length }} / {{ mediaDescription.maxLength }}
-        </mcs-hint>
-      </mcs-form-field>
+      <mcs-field-input size="auto"
+        mcsId="input-media-description"
+        [label]="'label.description' | translate"
+        [maxLength]="1000"
+        [formControl]="fcMediaDescription"
+        [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaDescriptionHelp' | translate">
+      </mcs-field-input>
     </form>
 
     <!-- Wizard Actions -->

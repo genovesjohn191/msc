@@ -34,7 +34,7 @@ mat-form-field.mat-form-field {
   // For outline appearance
   &.mat-form-field-appearance-outline {
     $mcs-form-label-float-interval: 1.5rem;
-    $mcs-form-prefix-suffix-interval: 0.2rem;
+    $mcs-form-prefix-suffix-interval: 0;// 0.2rem;
     $mcs-form-top-border-size: 0.45rem;
     $mcs-form-infix-border-size: 0.8rem;
     $mcs-form-infix-padding: 0.6rem 0;

@@ -1,8 +1,17 @@
 <mat-form-field appearance="outline">
   <mat-label>{{ displayedLabel }}</mat-label>
 
-  <input matInput
+  <input matInput #inputField
     [formControl]="ngControl?.control">
 
+  <div matSuffix *ngIf="suffix">
+    <mcs-icon [key]="suffix" size="small"></mcs-icon>
+  </div>
+  <div matPrefix *ngIf="prefix">
+    <mcs-icon [key]="prefix" size="small"></mcs-icon>
+  </div>
+
   <mat-error mcsFieldErrorMessage="inputUrl">{{ displayedErrorMessage }}</mat-error>
+  <mat-hint *ngIf="startHint" align="start">{{ startHint }}</mat-hint>
+  <mat-hint *ngIf="endHint" align="end">{{ endHint }}</mat-hint>
 </mat-form-field>

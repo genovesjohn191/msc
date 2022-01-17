@@ -1,0 +1,20 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ displayedLabel }}</mat-label>
+
+  <mat-select [formControl]="ngControl?.control" [multiple]="multiple">
+    <ng-container *ngIf="optionItems$ | async as optionItems">
+      <mat-option *ngFor="let optionItem of optionItems"
+        [value]="optionItem.value">
+        {{ optionItem.text }}
+      </mat-option>
+    </ng-container>
+  </mat-select>
+
+  <mcs-loader size="small"
+    matSuffix *ngIf="dataProcess?.inProgress$ | async">
+  </mcs-loader>
+
+  <mat-error mcsFieldErrorMessage="select">{{ displayedErrorMessage }}</mat-error>
+  <mat-hint *ngIf="startHint" align="start">{{ startHint }}</mat-hint>
+  <mat-hint *ngIf="endHint" align="end">{{ endHint }}</mat-hint>
+</mat-form-field>

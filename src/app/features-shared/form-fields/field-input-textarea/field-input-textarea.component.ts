@@ -5,26 +5,27 @@ import {
   Injector,
   Input,
   OnDestroy,
+  OnInit,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import { unsubscribeSafely } from '@app/utilities';
 
 import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
-import { IFieldInput } from './field-input';
+import { IFieldInputTextarea } from './field-input-textarea';
 
 @Component({
-  selector: 'mcs-field-input',
-  templateUrl: './field-input.component.html',
+  selector: 'mcs-field-input-textarea',
+  templateUrl: './field-input-textarea.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'mcs-field-input'
+    'class': 'mcs-field-input-textarea'
   }
 })
-export class FieldInputComponent
+export class FieldInputTextareaComponent
   extends FormFieldBaseComponent2<string>
-  implements IFieldInput, OnDestroy {
+  implements IFieldInputTextarea, OnInit, OnDestroy {
 
   @Input()
   public minLength: number;
@@ -32,11 +33,14 @@ export class FieldInputComponent
   @Input()
   public maxLength: number;
 
-  @ViewChild('inputField')
-  public inputField: ElementRef<HTMLInputElement>;
+  @ViewChild('textareaField')
+  public textareaField: ElementRef<HTMLTextAreaElement>;
 
   constructor(_injector: Injector) {
     super(_injector);
+  }
+
+  public ngOnInit(): void {
   }
 
   public ngOnDestroy(): void {
@@ -63,7 +67,7 @@ export class FieldInputComponent
     if (!this.maxLength && !this.minLength) { return null; }
 
     return this.maxLength > 0 ?
-      `${this.inputField?.nativeElement.value?.length} / ${this.maxLength}` :
-      `${this.inputField?.nativeElement.value?.length} / ${this.minLength}`;
+      `${this.textareaField?.nativeElement.value?.length} / ${this.maxLength}` :
+      `${this.textareaField?.nativeElement.value?.length} / ${this.minLength}`;
   }
 }

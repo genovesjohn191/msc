@@ -1,12 +1,12 @@
 import { ChangeDetectorRef } from '@angular/core';
 import {
   isNullOrEmpty,
-  McsStatusType,
+  CommonDefinition,
   McsStatusColorType,
-  CommonDefinition
+  McsStatusType
 } from '@app/utilities';
 
-export abstract class McsStatusSettingsBase {
+export abstract class DialogSettingsBase {
 
   /**
    * Returns the color type based on the status
