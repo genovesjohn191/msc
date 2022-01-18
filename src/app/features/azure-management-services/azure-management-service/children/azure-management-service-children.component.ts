@@ -77,8 +77,7 @@ export class AzureManagementServiceChildrenComponent extends AzureManagementServ
     this.azureManagementServiceChildrenColumns = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'name' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' })
     ];
     this.azureManagementServiceChildrenDatasource.registerColumnsFilterInfo(this.azureManagementServiceChildrenColumns);
   }
