@@ -9,4 +9,6 @@
     [ngStyle]="{'overflow': 'hidden'}"></textarea>
 
   <mat-error mcsFieldErrorMessage="inputNote">{{ displayedErrorMessage }}</mat-error>
+  <mat-hint *ngIf="startHint" align="start">{{ startHint }}</mat-hint>
+  <mat-hint *ngIf="endHint" align="end">{{ endHint }}</mat-hint>
 </mat-form-field>

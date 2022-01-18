@@ -1,3 +1,4 @@
+import { McsOption } from '../common/mcs-option';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum TicketType {
@@ -59,6 +60,35 @@ export const ticketTypeText = {
   [TicketType.System]: 'System',
   [TicketType.TroubleTicket]: 'Trouble Ticket'
 };
+
+export const ticketTypeOptions = [
+  new McsOption(TicketType.AdminTask, ticketTypeText[TicketType.AdminTask]),
+  new McsOption(TicketType.Applications, ticketTypeText[TicketType.Applications]),
+  new McsOption(TicketType.Backup, ticketTypeText[TicketType.Backup]),
+  new McsOption(TicketType.Carrier, ticketTypeText[TicketType.Carrier]),
+  new McsOption(TicketType.Colocation, ticketTypeText[TicketType.Colocation]),
+  new McsOption(TicketType.Compute, ticketTypeText[TicketType.Compute]),
+  new McsOption(TicketType.Enquiry, ticketTypeText[TicketType.Enquiry]),
+  new McsOption(TicketType.Facilities, ticketTypeText[TicketType.Facilities]),
+  new McsOption(TicketType.Fleetview, ticketTypeText[TicketType.Fleetview]),
+  new McsOption(TicketType.Handover, ticketTypeText[TicketType.Handover]),
+  new McsOption(TicketType.Inview, ticketTypeText[TicketType.Inview]),
+  new McsOption(TicketType.Macquarieview, ticketTypeText[TicketType.Macquarieview]),
+  new McsOption(TicketType.Networking, ticketTypeText[TicketType.Networking]),
+  new McsOption(TicketType.PlannedOutage, ticketTypeText[TicketType.PlannedOutage]),
+  new McsOption(TicketType.PortalsMgmtTools, ticketTypeText[TicketType.PortalsMgmtTools]),
+  new McsOption(TicketType.Provisioning, ticketTypeText[TicketType.Provisioning]),
+  new McsOption(TicketType.RepetitiveBounce, ticketTypeText[TicketType.RepetitiveBounce]),
+  new McsOption(TicketType.SecureInternetGateway, ticketTypeText[TicketType.SecureInternetGateway]),
+  new McsOption(TicketType.Security, ticketTypeText[TicketType.Security]),
+  new McsOption(TicketType.SecurityFacilities, ticketTypeText[TicketType.SecurityFacilities]),
+  new McsOption(TicketType.ServiceDegradation, ticketTypeText[TicketType.ServiceDegradation]),
+  new McsOption(TicketType.ServiceDeliveryProvisioning, ticketTypeText[TicketType.ServiceDeliveryProvisioning]),
+  new McsOption(TicketType.ServiceOutage, ticketTypeText[TicketType.ServiceOutage]),
+  new McsOption(TicketType.Storage, ticketTypeText[TicketType.Storage]),
+  new McsOption(TicketType.System, ticketTypeText[TicketType.System]),
+  new McsOption(TicketType.TroubleTicket, ticketTypeText[TicketType.TroubleTicket])
+]
 
 /**
  * Enumeration serializer and deserializer methods

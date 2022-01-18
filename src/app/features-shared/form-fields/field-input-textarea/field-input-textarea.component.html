@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ displayedLabel }}</mat-label>
+
+  <textarea matInput #textareaField
+    rows="3"
+    [formControl]="ngControl?.control"></textarea>
+
+  <mat-error mcsFieldErrorMessage="inputTextarea">{{ displayedErrorMessage }}</mat-error>
+  <mat-hint *ngIf="startHint" align="start">{{ startHint }}</mat-hint>
+  <mat-hint *ngIf="endHint" align="end">{{ endHint }}</mat-hint>
+</mat-form-field>

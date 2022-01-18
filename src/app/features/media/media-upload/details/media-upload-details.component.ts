@@ -8,10 +8,10 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  debounceTime,
   distinctUntilChanged,
   finalize,
-  map,
-  shareReplay,
+  takeUntil,
   tap
 } from 'rxjs/operators';
 
@@ -39,7 +39,6 @@ import {
   McsResourceCatalog,
   McsResourceCatalogItemCreate
 } from '@app/models';
-import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import {
   getSafeProperty,
@@ -59,12 +58,14 @@ export class MediaUploadDetailsComponent
   implements OnInit, OnDestroy, IMcsNavigateAwayGuard {
 
   public resources$: Observable<McsResource[]>;
+  public resourceIdChange$ = new BehaviorSubject<string>(null);
+
   public mediaUrlValidationInProgress$: Observable<boolean>;
   public resourceCatalogs$: Observable<McsResourceCatalog[]>;
   public selectedResource$: Observable<McsResource>;
-  public selectedResourceId: string;
 
-  public urlInfoMessage: string;
+  public urlInfoMessage: any;
+  public urlErrorObj: any;
   public mediaExtensions$: Observable<string[]>;
 
   // Form variables
@@ -93,13 +94,12 @@ export class MediaUploadDetailsComponent
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
-    private _apiService: McsApiService,
     private _mediaUploadService: MediaUploadService
   ) { }
 
   public ngOnInit() {
     this._registerFormGroup();
-    this._subsribeToResources();
+    this._subsribeToResourceChange();
     this._subscribeToMediaUrlValidationInProgress();
     this._subscribeToMediaExtensions();
   }
@@ -123,18 +123,12 @@ export class MediaUploadDetailsComponent
   }
 
   /**
-   * Event that emits whenever a resource has been change
-   */
-  public onChangeResource(resource: McsResource): void {
-    if (isNullOrEmpty(resource)) { return; }
-    this._subscribeToResourceCatalogs(resource.id);
-  }
-
-  /**
    * Event that emits when the media url textbox has lost focused
    */
-  public onBlurMediaUrl(): void {
-    if (this.fcMediaUrl.hasError('url')) { return; }
+  public onChangeMediaUrl(): void {
+    if (this.fcMediaUrl.pristine ||
+      this.fcMediaUrl.hasError('url')) { return; }
+
     this._mediaUrlValidationInProgressChange.next(true);
     this.fcMediaUrl.markAsPending();
     this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
@@ -147,9 +141,13 @@ export class MediaUploadDetailsComponent
     ).pipe(
       catchError((httpError: McsApiErrorContext) => {
         if (isNullOrEmpty(httpError)) { return EMPTY; }
+
         this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_SVG_ERROR;
-        this.urlInfoMessage = getSafeProperty(httpError, (obj) => obj.details.errorMessages[0]);
-        this.fcMediaUrl.setErrors({ urlValidationError: true });
+        this.urlErrorObj = {
+          urlError: getSafeProperty(httpError, (obj) => obj.details.errorMessages[0])
+        };
+        this.fcMediaUrl.setErrors({ validationError: true });
+        this._changeDetectorRef.markForCheck();
         return EMPTY;
       })
     ).subscribe((response) => {
@@ -157,6 +155,7 @@ export class MediaUploadDetailsComponent
       this.fcMediaUrl.updateValueAndValidity();
       this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_SVG_SUCCESS;
       this.urlInfoMessage = getSafeProperty(response, (obj) => obj[0].message);
+      this._changeDetectorRef.markForCheck();
     });
   }
 
@@ -204,13 +203,14 @@ export class MediaUploadDetailsComponent
   /**
    * Subscribes to all the resources on the repository
    */
-  private _subsribeToResources(): void {
-    this.resources$ = this._apiService.getResources().pipe(
-      map((response) =>
-        getSafeProperty(response, (obj) => obj.collection)
-          .filter((resource) => !resource.isDedicated)
-      )
-    );
+  private _subsribeToResourceChange(): void {
+    this.fcResources.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap((resource: McsResource) => {
+        if (isNullOrEmpty(resource?.id)) { return; }
+        this.resourceIdChange$.next(resource?.id);
+      })
+    ).subscribe();
   }
 
   /**
@@ -219,20 +219,6 @@ export class MediaUploadDetailsComponent
   public _subscribeToMediaUrlValidationInProgress(): void {
     this.mediaUrlValidationInProgress$ = this._mediaUrlValidationInProgressChange.asObservable().pipe(
       distinctUntilChanged()
-    );
-  }
-
-  /**
-   * Subscribes to resource catalogs
-   * @param resourceId Resource id of the catalogs
-   */
-  private _subscribeToResourceCatalogs(resourceId: string): void {
-    if (isNullOrEmpty(resourceId)) { return; }
-
-    this.resourceCatalogs$ = this._apiService.getResourceCatalogs(resourceId).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection)),
-      tap(() => this._resetFormFields()),
-      shareReplay(1)
     );
   }
 
@@ -261,13 +247,20 @@ export class MediaUploadDetailsComponent
       CoreValidators.required
     ]);
     this.fcMediaUrl = new FormControl('', [
-      CoreValidators.required,
-      CoreValidators.url
+      CoreValidators.required
     ]);
-    this.fcMediaUrl.valueChanges.subscribe(() => {
-      this.mediaUrlStatusIconKey = undefined;
-      this.urlInfoMessage = undefined;
-    });
+    this.fcMediaUrl.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      debounceTime(2000),
+      distinctUntilChanged(),
+      tap(() => {
+        this.mediaUrlStatusIconKey = null;
+        this.urlInfoMessage = null;
+
+        this.onChangeMediaUrl();
+        this._changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
     this.fcMediaDescription = new FormControl('', []);
 
     // Register Form Groups using binding

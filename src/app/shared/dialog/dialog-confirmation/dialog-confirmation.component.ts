@@ -1,16 +1,17 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
-  ViewEncapsulation,
   TemplateRef,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ViewEncapsulation
 } from '@angular/core';
-import { McsStatusSettingsBase } from '@app/core';
 import { McsStatusType } from '@app/utilities';
-import { DialogConfirmation } from './dialog-confirmation-data';
-import { DialogRef } from '../dialog-ref/dialog-ref';
+
+import { DialogSettingsBase } from '../abstraction/dialog-settings.base';
 import { DIALOG_DATA } from '../dialog-config';
+import { DialogRef } from '../dialog-ref/dialog-ref';
+import { DialogConfirmation } from './dialog-confirmation-data';
 
 @Component({
   selector: 'mcs-dialog-confirmation',
@@ -21,8 +22,7 @@ import { DIALOG_DATA } from '../dialog-config';
     'class': 'dialog-confirmation-wrapper'
   }
 })
-
-export class DialogConfirmationComponent extends McsStatusSettingsBase {
+export class DialogConfirmationComponent extends DialogSettingsBase {
 
   constructor(
     _changeDetectorRef: ChangeDetectorRef,

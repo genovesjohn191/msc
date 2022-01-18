@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FeaturesSharedModule } from '@app/features-shared';
 import { SharedModule } from '@app/shared';
+
 import { TicketActivityComponent } from './shared';
-import { TicketsComponent } from './tickets.component';
-import { TicketComponent } from './ticket/ticket.component';
 import { TicketCreateComponent } from './ticket-create/ticket-create.component';
+import { TicketComponent } from './ticket/ticket.component';
+import { TicketsComponent } from './tickets.component';
 import {
   ticketsProviders,
   ticketsRoutes
@@ -19,6 +21,7 @@ import {
   ],
   imports: [
     SharedModule,
+    FeaturesSharedModule,
     RouterModule.forChild(ticketsRoutes)
   ],
   providers: [
