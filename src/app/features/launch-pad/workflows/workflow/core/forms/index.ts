@@ -23,3 +23,5 @@ export * from './microsoft-software-subscription-provision.form';
 
 export * from './server-backup-provision.form';
 export * from './vm-backup-provision.form';
+
+export * from './avd-provision-host-pool.form';

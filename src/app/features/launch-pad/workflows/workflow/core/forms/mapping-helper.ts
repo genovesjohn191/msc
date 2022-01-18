@@ -1,6 +1,7 @@
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 
 export enum CrispAttributeNames {
+  AvdCspConsSrvc= 'AVD_CSP_CONS_SRVC',
   BaasRetentionReq = 'BAAS_RETENTION_REQ',
   BillFreq = 'BILL_FREQ',
   DailyBackupQuota = 'DAILY-BACKUP-QUOTA',

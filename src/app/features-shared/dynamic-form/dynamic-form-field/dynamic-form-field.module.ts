@@ -46,6 +46,11 @@ import {
 } from './select-software-suscription-product-type/select-software-suscription-product-type.component';
 import { DynamicSelectReservationProductTypeComponent } from './select-reservation-product-type/select-reservation-product-type.component';
 import { DynamicInputSizeComponent } from './input-size/input-size.component';
+import { DynamicInputSubscriptionIdComponent } from './input-subscription-id/input-subscription-id.component';
+import { DynamicSelectVmSizeComponent } from './select-vm-size/select-vm-size.component';
+import { DynamicSelectLocationComponent } from './select-location/select-location.component';
+import { DynamicSelectResourceGroupComponent } from './select-resource-group/select-resource-group.component';
+import { DynamicSelectAzureResourceComponent } from './select-azure-resource/select-azure-resource.component';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -58,6 +63,7 @@ const exports: any[] | Type<any> = [
   DynamicInputRandomComponent,
   DynamicInputShortCustomerNameComponent,
   DynamicInputSizeComponent,
+  DynamicInputSubscriptionIdComponent,
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
@@ -70,7 +76,9 @@ const exports: any[] | Type<any> = [
   DynamicSelectChipsTerraformTagComponent,
   DynamicSelectChipsVmComponent,
   DynamicSelectComponent,
+  DynamicSelectAzureResourceComponent,
   DynamicSelectGroupComponent,
+  DynamicSelectLocationComponent,
   DynamicSelectMultipleComponent,
   DynamicSelectMultipleNetworkDbPodsComponent,
   DynamicSelectNetworkComponent,
@@ -82,11 +90,13 @@ const exports: any[] | Type<any> = [
   DynamicSelectChipsServiceComponent,
   DynamicSelectSoftwareSubscriptionProductTypeComponent,
   DynamicSelectReservationProductTypeComponent,
+  DynamicSelectResourceGroupComponent,
   DynamicSelectStorageProfileComponent,
   DynamicSelectTenantComponent,
   DynamicSelectTerraformModuleTypeComponent,
   DynamicSelectVdcComponent,
   DynamicSelectVmComponent,
+  DynamicSelectVmSizeComponent,
   DynamicSlideToggleComponent
 ];
 

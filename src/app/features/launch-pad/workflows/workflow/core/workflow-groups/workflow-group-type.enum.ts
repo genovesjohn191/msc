@@ -35,6 +35,8 @@ export enum WorkflowGroupId {
   MicrosoftCreateSubscription = 700000,
   MicrosoftProvisionReservation = 700001,
   MicrosoftSoftwareSubscriptionProvision = 700002,
+
+  AvdProvisionHostPool = 800000,
 }
 
 export const workflowGroupIdText = {
@@ -66,5 +68,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.MicrosoftCreateSubscription]: 'Create Microsoft Subscription',
   [WorkflowGroupId.MicrosoftProvisionReservation]: 'Provision Microsoft Reservation',
   [WorkflowGroupId.MicrosoftSoftwareSubscriptionProvision]: 'Provision Microsoft Software Subscription',
+
+  [WorkflowGroupId.AvdProvisionHostPool]: 'Provision AVD Host Pool',
 }
 

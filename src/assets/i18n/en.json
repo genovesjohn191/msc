@@ -3282,7 +3282,11 @@
     "getAzureReservations": "Something went wrong while retrieving your list of Reservations. Please try again.",
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving your list of Software Subscriptions. Please try again.",
     "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again.",
-    "updateGeneric": "Something went wrong while saving. Please try again."
+    "updateGeneric": "Something went wrong while saving. Please try again.",
+    "getLocations": "Something went wrong while retrieving your locations. Please try again.",
+    "getLocation": "Something went wrong while retrieving your locaiton. Please try again.",
+    "getVmSizes": "Something went wrong while retrieving your VM Sizes. Please try again.",
+    "getVmSize": "Something went wrong while retrieving your VM Size. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3750,7 +3754,8 @@
     "vdcNewSubnet": "A new subnet will be created for this network.",
     "noStorageProfileUtilisation": "No storage profiles to display.",
     "noAlertTitleDialog": "Unknown Alert",
-    "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>"
+    "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>",
+    "emptySubscriptionId": "Unable to find the subscription ID for this item. Please ensure that it has a 'CSP Consumption Service' populated in CRISP and that service is properly installed."
   },
   "tooltip": {
     "exportWord": "Export Word Document",
