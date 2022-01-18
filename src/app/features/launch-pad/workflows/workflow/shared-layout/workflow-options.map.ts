@@ -30,4 +30,6 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.ServerBackupProvision, 'Provision server backup.'],
 
   [WorkflowGroupId.VmBackupProvision, 'Provision virtual machine backup.'],
+
+  [WorkflowGroupId.AvdProvisionHostPool, 'Provision AVD Host Pool.'],
 ]);

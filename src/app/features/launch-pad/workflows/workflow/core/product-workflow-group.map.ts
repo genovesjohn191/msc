@@ -22,6 +22,12 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
+    [ ProductType.AzureVirtualDesktop,
+      [
+        WorkflowGroupId.AvdProvisionHostPool
+      ]
+    ],
+
     [ ProductType.BrickFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,

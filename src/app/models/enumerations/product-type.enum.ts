@@ -16,6 +16,7 @@ export enum ProductType {
   AzureEssentialsCsp,
   AzureEssentialsEnterpriseAgreement,
   AzureOperationsServiceRequest,
+  AzureVirtualDesktop,
   ManagedAzureServices,
   AzureProductConsumption,
   AzureProductConsumptionEnterpriseAgreement,

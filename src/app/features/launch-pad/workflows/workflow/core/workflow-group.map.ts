@@ -2,6 +2,7 @@ import { Type } from '@angular/core';
 
 import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 import {
+  AvdProvisionHostPoolWorkflowGroup,
   DedicatedStorageUnmaskVolumeWorkflowGroup,
   DedicatedStorageIncreaseVolumeWorkflowGroup,
   DedicatedStorageAttachVolumeClusterWorkflowGroup,
@@ -29,6 +30,8 @@ import { WorkflowGroup } from './workflow-group.interface';
 
 // Workflow: Assign IDs to workflow groups
 export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new Map([
+  [ WorkflowGroupId.AvdProvisionHostPool,  AvdProvisionHostPoolWorkflowGroup ],
+
   [ WorkflowGroupId.DedicatedStorageAttachVolume, DedicatedStorageAttachVolumeWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageAttachVolumeCluster, DedicatedStorageAttachVolumeClusterWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageCreateAttachVolume, DedicatedStorageCreateAndAttachVolumeWorkflowGroup ],
