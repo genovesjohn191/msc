@@ -49,6 +49,12 @@ export class DynamicFormValidationService {
     if (control.hasError('fqdnDomain')) {
       return 'Incorrect FQDN domain format';
     }
+    if (control.hasError('accountUpn')) {
+      return 'Incorrect account UPN format';
+    }
+    if (control.hasError('profileStorageAccountName')) {
+      return 'Incorrect profile storage account name format';
+    }
     if (control.hasError('hostName')) {
       return 'Incorrect hostname format';
     }

@@ -25,3 +25,5 @@ export * from './microsoft-software-subscription-provision.workflow';
 
 export * from './server-backup-provision.workflow';
 export * from './vm-backup-provision.workflow';
+
+export * from './avd-provision-host-pool.workflow';

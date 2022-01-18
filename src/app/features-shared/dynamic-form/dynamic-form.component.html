@@ -38,6 +38,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-size-field>
 
+        <mcs-dff-input-subscription-id-field *ngSwitchCase="'input-subscription-id'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-subscription-id-field>
+
         <mcs-dff-input-terraform-deployment-name-field *ngSwitchCase="'input-terraform-deployment-name'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-terraform-deployment-name-field>
@@ -107,6 +111,14 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-group-field>
 
+        <mcs-dff-select-azure-resource-field *ngSwitchCase="'select-azure-resource'"
+        #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+      </mcs-dff-select-azure-resource-field>
+
+        <mcs-dff-select-location-field *ngSwitchCase="'select-location'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-location-field>
+
         <mcs-dff-select-multiple-field *ngSwitchCase="'select-multiple'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-multiple-field>
@@ -139,6 +151,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-retention-period-field>
 
+        <mcs-dff-select-resource-group-field *ngSwitchCase="'select-resource-group'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-resource-group-field>
+
         <mcs-dff-select-software-subscription-product-type-field *ngSwitchCase="'select-software-subscription-product-type'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-software-subscription-product-type-field>
@@ -166,6 +182,10 @@
         <mcs-dff-select-vm-field *ngSwitchCase="'select-vm'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-vm-field>
+
+        <mcs-dff-select-vm-size-field *ngSwitchCase="'select-vm-size'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-vm-size-field>
 
         <mcs-dff-slide-toggle-field *ngSwitchCase="'slide-toggle'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">

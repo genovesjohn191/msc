@@ -1,0 +1,17 @@
+<mat-form-field
+  *ngIf="visible && (config.value | mcsIsNotNullOrEmpty)"
+  appearance="outline"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
+
+  <input #control matInput type="text"
+    [mcsId]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [placeholder]="config.placeholder"
+    [(ngModel)]="config.value"
+    (input)="valueChange($event)"/>
+</mat-form-field>
+<mat-error *ngIf="!(config.value | mcsIsNotNullOrEmpty)">
+  {{ 'message.emptySubscriptionId' | translate }}
+</mat-error>

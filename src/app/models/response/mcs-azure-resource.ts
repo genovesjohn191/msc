@@ -32,6 +32,9 @@ export class McsAzureResource extends McsEntityBase {
   public resourceGroupName: string = undefined;
 
   @JsonProperty()
+  public resourceGroupId: string = undefined;
+
+  @JsonProperty()
   public tagCount: number = undefined;
 
   @JsonProperty({ target: McsAzureResourceTag })

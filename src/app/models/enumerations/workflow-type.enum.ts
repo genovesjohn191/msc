@@ -1,6 +1,7 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum WorkflowType {
+  AvdProvisionHostPool = 'launchpad.avd.provisionHostPool',
   ManagedVmCreate = 'launchpad.managedvm.create',
 
   ManagementToolsAdd = 'launchpad.managementtools.add',

@@ -128,6 +128,16 @@ export class CoreValidators {
     return CommonDefinition.REGEX_FQDN_DOMAIN_PATTERN.test(control.value) ? null : { fqdnDomain: true };
   }
 
+  public static profileStorageAccountName(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_PROFILE_STORAGE_ACCOUNT_NAME_PATTERN.test(control.value) ?
+      null : { profileStorageAccountName: true };
+  }
+
+  public static accountUpn(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_ACCOUNT_UPN_PATTERN.test(control.value) ?
+      null : { accountUpn: true };
+  }
+
   public static shortCustomerName(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_SHORT_CUSTOMER_NAME_PATTERN.test(control.value) ? null : { shortCustomerName: true };
   }

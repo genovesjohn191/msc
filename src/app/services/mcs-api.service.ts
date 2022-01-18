@@ -31,6 +31,7 @@ import {
   IMcsApiIdentityService,
   IMcsApiJobsService,
   IMcsApiLicensesService,
+  IMcsApiLocationsService,
   IMcsApiMediaService,
   IMcsApiMetadataService,
   IMcsApiNetworkDbService,
@@ -45,6 +46,7 @@ import {
   IMcsApiTerraformService,
   IMcsApiTicketsService,
   IMcsApiToolsService,
+  IMcsApiVmSizesService,
   IMcsApiWorkflowsService,
   McsApiAccountFactory,
   McsApiAuthFactory,
@@ -63,6 +65,7 @@ import {
   McsApiIdentityFactory,
   McsApiJobsFactory,
   McsApiLicensesFactory,
+  McsApiLocationsFactory,
   McsApiMediaFactory,
   McsApiMetadataFactory,
   McsApiNetworkDbFactory,
@@ -77,6 +80,7 @@ import {
   McsApiTerraformFactory,
   McsApiTicketsFactory,
   McsApiToolsFactory,
+  McsApiVmSizesFactory,
   McsApiWorkflowsFactory
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
@@ -271,7 +275,9 @@ import {
   McsReportRecentServiceRequestSlt,
   McsObjectCrispObject,
   McsNetworkDnsZone,
-  McsNetworkDnsZoneTtlRequest
+  McsNetworkDnsZoneTtlRequest,
+  McsLocation,
+  McsVmSize
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -347,6 +353,7 @@ export class McsApiService {
   private readonly _identityApi: IMcsApiIdentityService;
   private readonly _jobsApi: IMcsApiJobsService;
   private readonly _licensesApi: IMcsApiLicensesService;
+  private readonly _locationsApi: IMcsApiLocationsService;
   private readonly _mediaApi: IMcsApiMediaService;
   private readonly _metadataApi: IMcsApiMetadataService;
   private readonly _networkDbApi: IMcsApiNetworkDbService;
@@ -362,6 +369,7 @@ export class McsApiService {
   private readonly _terraformApi: IMcsApiTerraformService;
   private readonly _ticketsApi: IMcsApiTicketsService;
   private readonly _toolsService: IMcsApiToolsService;
+  private readonly _vmSizesApi: IMcsApiVmSizesService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
 
 
@@ -410,6 +418,7 @@ export class McsApiService {
     this._jobsApi = apiClientFactory.getService(new McsApiJobsFactory());
     this._identityApi = apiClientFactory.getService(new McsApiIdentityFactory());
     this._licensesApi = apiClientFactory.getService(new McsApiLicensesFactory());
+    this._locationsApi = apiClientFactory.getService(new McsApiLocationsFactory());
     this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
     this._metadataApi = apiClientFactory.getService(new McsApiMetadataFactory());
     this._networkDbApi = apiClientFactory.getService(new McsApiNetworkDbFactory());
@@ -424,6 +433,7 @@ export class McsApiService {
     this._terraformApi = apiClientFactory.getService(new McsApiTerraformFactory());
     this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
+    this._vmSizesApi = apiClientFactory.getService(new McsApiVmSizesFactory());
     this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
 
 
@@ -2221,6 +2231,42 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTenants'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getLocations(query?: McsQueryParam): Observable<McsApiCollection<McsLocation>> {
+    return this._locationsApi.getLocations(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getLocations'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getLocation(id: string): Observable<McsLocation> {
+    return this._locationsApi.getLocation(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getLocation'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getVmSizes(query?: McsQueryParam): Observable<McsApiCollection<McsVmSize>> {
+    return this._vmSizesApi.getVmSizes(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVmSizes'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getVMSize(id: string): Observable<McsVmSize> {
+    return this._vmSizesApi.getVmSize(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVmSize'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

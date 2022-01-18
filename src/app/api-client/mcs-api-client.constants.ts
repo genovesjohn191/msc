@@ -40,6 +40,8 @@ import { McsApiCloudHealthAlertService } from './services/mcs-api-cloudhealth-al
 import { McsApiNetworkDbService } from './services/mcs-api-network-db.service';
 import { McsApiAzureSoftwareSubscriptionsService } from './services/mcs-api-azure-software-subscriptions.service';
 import { McsApiAuthService } from './services/mcs-api-auth.service';
+import { McsApiVMSizesService } from './services/mcs-api-vm-sizes.service';
+import { McsApiLocationsService } from './services/mcs-api-locations.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
@@ -63,6 +65,7 @@ export const apiClientProviders: Provider[] = [
   McsApiInternetService,
   McsApiJobsService,
   McsApiLicensesService,
+  McsApiLocationsService,
   McsApiMediaService,
   McsApiMetadataService,
   McsApiNetworkDbService,
@@ -78,6 +81,7 @@ export const apiClientProviders: Provider[] = [
   McsApiTerraformService,
   McsApiTicketsService,
   McsApiToolsService,
+  McsApiVMSizesService,
   McsApiWorkflowsService
 ];
 
