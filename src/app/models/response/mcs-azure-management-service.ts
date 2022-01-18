@@ -18,7 +18,7 @@ export class McsAzureManagementService extends McsEntityBase {
   public mcaContact: string = undefined;
 
   @JsonProperty()
-  public isEssentials: string = undefined;
+  public isEssentials: boolean = undefined;
 
   @JsonProperty()
   public azureActiveDirectoryDomainName: string = undefined;
