@@ -85,7 +85,13 @@
             {{ 'columnHeader.network' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.networkName }}
+            <a [mcsRouterLink]="[routeKeyEnum.LaunchPadNetworkDbNetworkDetails, row.networkId?.toString()]"
+              mcsId mcsStopPropagation
+              mcsEventTracker="navigate-to-network"
+              mcsEventCategory="network"
+              mcsEventLabel="vlan-listing-page">
+              {{ row.networkName }}
+            </a>
           </td>
         </ng-container>
 

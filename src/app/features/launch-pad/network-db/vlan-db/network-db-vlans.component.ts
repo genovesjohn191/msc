@@ -19,7 +19,8 @@ import {
   McsFilterInfo,
   McsNetworkDbVlan,
   NetworkDbVlanStatus,
-  networkDbVlanStatusText
+  networkDbVlanStatusText,
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -93,6 +94,10 @@ export class NetworkDbVlansComponent implements OnDestroy {
 
   public getStatusText(status: NetworkDbVlanStatus): string {
     return networkDbVlanStatusText[status];
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbVlan>> {
