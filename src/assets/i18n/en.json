@@ -3698,6 +3698,7 @@
     "saveDnsRecord": "Save DNS Record",
     "discardChanges": "Discard Changes",
     "viewAll": "View All",
+    "viewAllElliptic": "View all...",
     "viewInCloudHealth": "View in CloudHealth",
     "vmWareCloudHealth": "VMware CloudHealth",
     "subscriptions": "Subscriptions",
