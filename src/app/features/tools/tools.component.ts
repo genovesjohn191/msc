@@ -43,6 +43,7 @@ export class ToolsComponent implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'access' })
   ];
+  public overflowsShown = [];
 
   constructor(
     _injector: Injector,
@@ -56,6 +57,7 @@ export class ToolsComponent implements OnDestroy {
 
     this.dataSource = new McsTableDataSource2(this._getPortals.bind(this));
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
+
   }
 
   public ngOnDestroy() {
@@ -64,6 +66,14 @@ export class ToolsComponent implements OnDestroy {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
+  }
+
+  public showOverflow(portal: string)  {
+    this.overflowsShown.push(portal);
+  }
+
+  public overflowShown(portal: string)  {
+    if (this.overflowsShown.includes(portal)) { return true; }
   }
 
   private _initializeToolDescriptionMap(): void {
