@@ -2,6 +2,7 @@
   <mat-label>{{ displayedLabel }}</mat-label>
 
   <input matInput #inputField
+    [maxLength]="maxLength"
     [formControl]="ngControl?.control">
 
   <mat-error mcsFieldErrorMessage="input">{{ displayedErrorMessage }}</mat-error>
