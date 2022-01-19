@@ -7,4 +7,7 @@ export class McsPlatform extends McsEntityBase {
 
   @JsonProperty()
   public hasPublicCloud: boolean = undefined;
+
+  @JsonProperty()
+  public hasHybridCloud: boolean = undefined;
 }

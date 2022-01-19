@@ -20,6 +20,9 @@ import {
   IMcsApiAzureReservationsService,
   IMcsApiAzureResourcesService,
   IMcsApiAzureServicesService,
+  IMcsApiAzureManagementServicesService,
+  IMcsApiExtendersService,
+  IMcsApiApplicationRecoveryService,
   IMcsApiAzureSoftwareSubscriptionsService,
   IMcsApiBatsService,
   IMcsApiCatalogService,
@@ -54,6 +57,9 @@ import {
   McsApiAzureReservationsFactory,
   McsApiAzureResourceFactory,
   McsApiAzureServicesFactory,
+  McsApiAzureManagementServicesFactory,
+  McsApiExtendersFactory,
+  McsApiApplicationRecoveryFactory,
   McsApiAzureSoftwareSubscriptionsFactory,
   McsApiBatsFactory,
   McsApiCatalogFactory,
@@ -107,6 +113,10 @@ import {
   McsAzureResourceQueryParams,
   McsAzureService,
   McsAzureServicesRequestParams,
+  McsAzureManagementService,
+  McsAzureManagementServiceChild,
+  McsExtenderService,
+  McsApplicationRecovery,
   McsAzureSoftwareSubscription,
   McsBackUpAggregationTarget,
   McsBatLinkedService,
@@ -292,6 +302,9 @@ import { McsAccountRepository } from './repositories/mcs-account.repository';
 import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
+import { McsAzureManagementServicesRepository } from './repositories/mcs-azure-management-services.repository';
+import { McsExtendersRepository } from './repositories/mcs-extenders.repository';
+import { McsApplicationRecoveryRepository } from './repositories/mcs-application-recovery.repository';
 import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
@@ -317,6 +330,9 @@ export class McsApiService {
   private readonly _accountRepository: McsAccountRepository;
   private readonly _azureResourceRepository: McsAzureResourcesRepository;
   private readonly _azureServicesRepository: McsAzureServicesRepository;
+  private readonly _azureManagementServicesRepository: McsAzureManagementServicesRepository;
+  private readonly _extendersRepository: McsExtendersRepository;
+  private readonly _applicationRecoveryRepository: McsApplicationRecoveryRepository;
   private readonly _azureReservationsRepository: McsAzureReservationsRepository;
   private readonly _azureSoftwareSubscriptionsRepository: McsAzureSoftwareSubscriptionsRepository;
   private readonly _batsRepository: McsBatsRepository;
@@ -340,6 +356,9 @@ export class McsApiService {
   private readonly _authApi: IMcsApiAuthService;
   private readonly _azureResourcesApi: IMcsApiAzureResourcesService;
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
+  private readonly _azureManagementServicesApi: IMcsApiAzureManagementServicesService;
+  private readonly _extendersApi: IMcsApiExtendersService;
+  private readonly _applicationRecoveryApi: IMcsApiApplicationRecoveryService;
   private readonly _azureReservationsApi: IMcsApiAzureReservationsService;
   private readonly _azureSoftwareSubscriptionsApi: IMcsApiAzureSoftwareSubscriptionsService;
   private readonly _batsApi: IMcsApiBatsService;
@@ -379,6 +398,9 @@ export class McsApiService {
     this._accountRepository = _injector.get(McsAccountRepository);
     this._azureResourceRepository = _injector.get(McsAzureResourcesRepository);
     this._azureServicesRepository = _injector.get(McsAzureServicesRepository);
+    this._azureManagementServicesRepository = _injector.get(McsAzureManagementServicesRepository);
+    this._extendersRepository = _injector.get(McsExtendersRepository);
+    this._applicationRecoveryRepository = _injector.get(McsApplicationRecoveryRepository);
     this._azureReservationsRepository = _injector.get(McsAzureReservationsRepository);
     this._azureSoftwareSubscriptionsRepository = _injector.get(McsAzureSoftwareSubscriptionsRepository);
     this._batsRepository = _injector.get(McsBatsRepository);
@@ -405,6 +427,9 @@ export class McsApiService {
     this._authApi = apiClientFactory.getService(new McsApiAuthFactory());
     this._azureResourcesApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
+    this._azureManagementServicesApi = apiClientFactory.getService(new McsApiAzureManagementServicesFactory());
+    this._extendersApi = apiClientFactory.getService(new McsApiExtendersFactory());
+    this._applicationRecoveryApi = apiClientFactory.getService(new McsApiApplicationRecoveryFactory());
     this._azureReservationsApi = apiClientFactory.getService(new McsApiAzureReservationsFactory());
     this._azureSoftwareSubscriptionsApi = apiClientFactory.getService(new McsApiAzureSoftwareSubscriptionsFactory());
     this._batsApi = apiClientFactory.getService(new McsApiBatsFactory());
@@ -1813,6 +1838,91 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureServices'))
       ),
       map((response) => this._mapToCollection(response, this._azureServicesRepository.getTotalRecordsCount()))
+    );
+  }
+
+  public getAzureManagementServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsAzureManagementService>> {
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._azureManagementServicesApi.getAzureManagementServices(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureManagementServices'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
+    let azureManagementServices = isNullOrEmpty(query) ?
+      this._azureManagementServicesRepository.getAll() :
+      this._azureManagementServicesRepository.filterBy(query);
+
+    return azureManagementServices.pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureManagementServices'))
+      ),
+      map((response) => this._mapToCollection(response, this._azureManagementServicesRepository.getTotalRecordsCount()))
+    );
+  }
+
+  public getAzureManagementServiceById(id: string): Observable<McsAzureManagementService> {
+    return this._azureManagementServicesApi.getAzureManagementServiceById(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureManagementService'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getAzureManagementServiceChildren(id: string): Observable<McsApiCollection<McsAzureManagementServiceChild>> {
+    return this._azureManagementServicesApi.getAzureManagementServiceChildren(id).pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureManagementServiceChildren'))
+      )
+    );
+  }
+
+  public getExtenders(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsExtenderService>> {
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._extendersApi.getExtenders(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getExtenders'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
+    let extenders = isNullOrEmpty(query) ?
+      this._extendersRepository.getAll() :
+      this._extendersRepository.filterBy(query);
+
+    return extenders.pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getExtenders'))
+      ),
+      map((response) => this._mapToCollection(response, this._extendersRepository.getTotalRecordsCount()))
+    );
+  }
+
+  public getApplicationRecovery(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsApplicationRecovery>> {
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._applicationRecoveryApi.getApplicationRecovery(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getApplicationRecovery'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
+    let applicationRecovery = isNullOrEmpty(query) ?
+      this._applicationRecoveryRepository.getAll() :
+      this._applicationRecoveryRepository.filterBy(query);
+
+    return applicationRecovery.pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getApplicationRecovery'))
+      ),
+      map((response) => this._mapToCollection(response, this._applicationRecoveryRepository.getTotalRecordsCount()))
     );
   }
 

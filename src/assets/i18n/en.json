@@ -49,9 +49,15 @@
         "resources": "Resources",
         "subscriptions": "Subscriptions",
         "reservations": "Reservations",
-        "softwareSubscriptions": "Software Subscriptions"
+        "softwareSubscriptions": "Software Subscriptions",
+        "managementServices": "Management"
       },
       "licenses": "Licenses"
+    },
+    "hybridCloud": {
+      "label": "Hybrid Cloud",
+      "extenders": "Extenders",
+      "applicationRecovery": "Application Recovery"
     },
     "tools": "Other Tools",
     "catalog": "Products",
@@ -2580,6 +2586,37 @@
       "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the linked services for this Backup Aggregation Target."
     }
   },
+  "azureManagementServices": {
+    "header": "Management Services",
+    "leftPanelHeader": "Management Services Filter",
+    "loading": "Loading...",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Management services.",
+    "noRecordsFoundMessage": "There are no Management services to display.",
+    "noData": "No results to display.",
+    "columnFilter": "Column Filter",
+    "dataSingular": "Management Service",
+    "dataPlural": "Management Services",
+    "raiseTicket": "Raise a Ticket",
+    "retry": "Try again shortly"
+  },
+  "azureManagementService": {
+    "leftPanelHeader":"Management Services Filter",
+    "overview": {
+      "label": "Overview",
+      "properties": {
+        "title":"Overview",
+        "type":"Type",
+        "children":"Children",
+        "serviceId":"Service ID"
+      }
+    },
+    "children": {
+      "label": "Children",
+      "description": "Please note that new services may take a few minutes to appear here after initial provisioning.",
+      "noContent": "No children have been identified for this Management Service.",
+      "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the children for this Management Service."
+    }
+  },
   "azureSubscriptions": {
     "header": "Subscriptions",
     "leftPanelHeader": "Subscriptions Filter",
@@ -2621,6 +2658,28 @@
     "columnFilter": "Column Filter",
     "dataSingular": "Software Subscription",
     "dataPlural": "Software Subscriptions"
+  },
+  "extenders": {
+    "header": "Extenders",
+    "leftPanelHeader": "Extenders Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Extenders.",
+    "noRecordsFoundMessage": "There are no Extenders to display.",
+    "columnFilter": "Column Filter",
+    "dataSingular": "Extender",
+    "dataPlural": "Extenders",
+    "raiseTicket": "Raise a Ticket",
+    "retry": "Try again shortly"
+  },
+  "applicationRecovery": {
+    "header": "Application Recovery",
+    "leftPanelHeader": "Application Recovery Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of Application Recovery services.",
+    "noRecordsFoundMessage": "There are no Application Recovery services to display.",
+    "columnFilter": "Column Filter",
+    "dataSingular": "Application Recovery Service",
+    "dataPlural": "Application Recovery Services",
+    "raiseTicket": "Raise a Ticket",
+    "retry": "Try again shortly"
   },
   "dnsListing": {
     "header": "DNS Services",
@@ -3209,6 +3268,10 @@
     "getAccount": "Something went wrong while retrieving your account details. Please try again.",
     "getAzureResources": "Something went wrong while retrieving your Azure resources. Please try again.",
     "getAzureServices": "Something went wrong while retrieving your Azure services. Please try again.",
+    "getAzureManagementServices": "Something went wrong while retrieving your Public Cloud Management services. Please try again.",
+    "getAzureManagementServiceChildren": "Something went wrong while retrieving the children for your Public Cloud Management service. Please try again.",
+    "getExtenders": "Something went wrong while retrieving your Extenders. Please try again.",
+    "getApplicationRecovery": "Something went wrong while retrieving your Application Recovery services. Please try again.",
     "getNetworkDnsById": "Something went wrong while retrieving this DNS service. Please try again.",
     "getSubscriptions": "Something went wrong while retrieving your subscription information. Please try again.",
     "getManagementServices": "Something went wrong while retrieving your management services. Please try again.",
@@ -3329,6 +3392,7 @@
     "billingFrequency": "Billing Frequency",
     "billingTerm": "Billing Term",
     "catalog": "OS Edition",
+    "children": "Children",
     "code": "Code",
     "commitmentEndDate": "Commitment End Date",
     "companyId": "Company ID",
@@ -3356,6 +3420,7 @@
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",
     "hostingEngineer": "Hosting Engineer",
+    "haMode": "HA Mode",
     "hourlyCharge": "Hourly Charge",
     "id": "ID",
     "isInfrastructure": "Is Infrastructure",
@@ -3365,6 +3430,8 @@
     "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
     "isPrimary": "Type",
+    "journalHistory": "Journal History",
+    "journalSize": "Journal Size",
     "label": "Label",
     "lastEndTime": "Last End Time",
     "lastStartTime": "Last Start Time",
@@ -3373,6 +3440,7 @@
     "lastUpdatedBy": "Last Updated By",
     "lastUpdatedDate": "Last Updated Date",
     "link": "Link",
+    "linkedService": "Linked Service",
     "loggedBy": "Logged By",
     "loggedOn": "Logged On",
     "managementIp": "Management IP",
@@ -3421,6 +3489,7 @@
     "serialNumber": "Serial Number",
     "server": "Server",
     "service": "Service",
+    "serviceEnd": "Service End",
     "serviceId": "Service ID",
     "severity": "Severity",
     "shortDescription": "Short Description",
@@ -3469,6 +3538,7 @@
     "vApp": "vApp",
     "vdc": "VDC",
     "version": "Version",
+    "virtualMachines": "Virtual Machines",
     "vlan": "VLAN",
     "vmName":"VM Name",
     "vniId":"VNI ID",

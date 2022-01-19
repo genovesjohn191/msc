@@ -304,6 +304,57 @@
     "documentTitle": "Reservations - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnableAzureReservations"
   },
+  "azureManagementServices": {
+    "enumKey": "AzureManagementServices",
+    "enumCategory": "PublicCloud",
+    "navigationPath": "management-services",
+    "enumPlatform": "Public",
+    "documentTitle": "Management Services - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnablePublicCloudManagementServiceListing"
+  },
+  "azureManagementServicesDetails": {
+    "enumPlatform": "Public",
+    "enumCategory": "Azure",
+    "enumKey": "AzureManagementServicesDetails",
+    "navigationPath": "management-services",
+    "documentTitle": "Management Services - Macquarie Cloud Services"
+  },
+  "azureManagementServicesDetailsOverview": {
+    "enumPlatform": "Public",
+    "enumCategory": "Azure",
+    "enumKey": "AzureManagementServicesDetailsOverview",
+    "navigationPath": "overview",
+    "documentTitle": "Management Service Overview - Macquarie Cloud Services"
+  },
+  "azureManagementServicesDetailsChildren": {
+    "enumPlatform": "Public",
+    "enumCategory": "Azure",
+    "enumKey": "AzureManagementServicesDetailsChildren",
+    "navigationPath": "children",
+    "documentTitle": "Management Service Children - Macquarie Cloud Services"
+  },
+  "hybridCloud": {
+    "enumPlatform": "Hybrid",
+    "enumKey": "HyrbidCloud",
+    "navigationPath": "hybrid-cloud",
+    "documentTitle": "Hybrid Cloud"
+  },
+  "extenders": {
+    "enumKey": "Extenders",
+    "enumCategory": "extenders",
+    "navigationPath": "hybrid-cloud/extenders",
+    "enumPlatform": "Hybrid",
+    "documentTitle": "Extenders - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnableExtenderListing"
+  },
+  "applicationRecovery": {
+    "enumKey": "ApplicationRecovery",
+    "enumCategory": "applicationRecovery",
+    "navigationPath": "hybrid-cloud/application-recovery",
+    "enumPlatform": "Hybrid",
+    "documentTitle": "Application Recovery - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnableApplicationRecoveryListing"
+  },
   "console": {
     "enumPlatform": "Private",
     "enumKey": "Console",

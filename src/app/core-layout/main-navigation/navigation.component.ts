@@ -55,6 +55,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _showLaunchPadVlanDbSubmenu: boolean;
   private _showPrivateCloudMenu: boolean;
   private _showPublicCloudMenu: boolean;
+  private _showHybridCloudMenu: boolean;
   private _showComputeSubmenu: boolean;
   private _showNetworkSubmenu: boolean;
   private _showStorageSubmenu: boolean;
@@ -92,6 +93,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get showPublicCloudMenu(): boolean {
     return this._showPublicCloudMenu;
+  }
+
+  public get showHybridCloudMenu(): boolean {
+    return this._showHybridCloudMenu;
   }
 
   public get showComputeSubmenu(): boolean {
@@ -188,6 +193,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._routeSettingsService.isPublicCloudRoute;
   }
 
+  public get isHybridCloudRoute(): boolean {
+    return this._routeSettingsService.isHybridCloudRoute;
+  }
+
   public get hasLaunchPadAccess(): boolean {
     return this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad]);
   }
@@ -202,6 +211,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get hasPublicCloudAccess(): boolean {
     return this._authenticationIdentity.platformSettings.hasPublicCloud;
+  }
+
+  public get hasHybridCloudAccess(): boolean {
+    return ((this._authenticationIdentity.platformSettings.hasHybridCloud) &&
+            (this._accessControlService.hasAccessToFeature([McsFeatureFlag.HybridCloud])) &&
+            (this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.ApplicationRecoveryListing])));
   }
 
   public get workflowReportingLink(): string {
@@ -269,6 +284,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._initLaunchPadNav();
     this._initPrivateCloudNav();
     this._initPublicCloudNav();
+    this._initHybridCloudNav();
 
     this._showOrdersMenu = (this._navInitialized && this._showOrdersMenu)
       ? this._showOrdersMenu
@@ -332,6 +348,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._showAzureSubMenu = (this._navInitialized && this._showAzureSubMenu)
       ? this._showAzureSubMenu
       : this.selectedCategory === RouteCategory.Azure;
+  }
+
+  private _initHybridCloudNav(): void {
+    this._showHybridCloudMenu = (this._navInitialized && this._showHybridCloudMenu)
+      ? this._showHybridCloudMenu
+      : this.hasHybridCloudAccess && this.isHybridCloudRoute;
   }
 
   private _updateOnCompanySwitch(): void {

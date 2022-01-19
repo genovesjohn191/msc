@@ -1,0 +1,71 @@
+<ng-container *ngIf="selectedAzureManagementService$ | async as selectedAzureManagementService">
+
+  <mcs-page [header]="selectedAzureManagementService.billingDescription">
+
+    <!-- Left Panel -->
+    <mcs-left-panel *mcsLeftPanelDef="'azureManagementService.leftPanelHeader' | translate">
+      <!-- listing panel -->
+      <mcs-left-panel-item *mcsLeftPanelItemDef>
+        <div class="listing-panel-wrapper">
+          <mcs-search #search mcsId="azure-management-service-listing-panel-search"></mcs-search>
+
+          <mcs-list-panel [dataSource]="listviewDatasource" [config]="listviewDatasource?.config?.panelSettings">
+            <ng-container *mcsListPanelContent="let azureManagementService">
+              <a [mcsRouterLink]="[routeKeyEnum.AzureManagementServicesDetails, azureManagementService.id]"
+                mcsId="select-azure-management-service"
+                mcsEventTracker="azure-management-services-list-panel-item"
+                mcsEventCategory="public-cloud"
+                mcsEventLabel="azure-management-service-detail-view-list-panel">
+                <mcs-option [value]="azureManagementService"
+                  [selected]="selectedAzureManagementService.id === azureManagementService.id">
+                  <mcs-item>
+                    <span [innerHTML]="azureManagementService.billingDescription | mcsDataLabel"></span>
+                  </mcs-item>
+                </mcs-option>
+              </a>
+            </ng-container>
+          </mcs-list-panel>
+        </div>
+      </mcs-left-panel-item>
+    </mcs-left-panel>
+
+    <mcs-content-panel *mcsContentPanelDef>
+      <div class="routing-tab-wrapper">
+        <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+          <!-- Overview Tab -->
+          <mcs-tab [label]="'azureManagementService.overview.label' | translate" id="overview">
+          </mcs-tab>
+
+          <!-- Children Tab -->
+          <mcs-tab
+            [label]="'azureManagementService.children.label' | translate" id="children">
+          </mcs-tab>
+
+          <ng-container mcsTabHeaderCustom>
+            <mcs-context-menu-link *ngIf="selectedAzureManagementService$ | async as selectedAzureManagementService"
+              mcsAlign="end"
+              [serviceId]="selectedAzureManagementService.serviceId"
+              [serviceChangeAvailable]="selectedAzureManagementService.serviceChangeAvailable"
+              [hasMenuButton]="true"
+              [eventCategory]="'azure-management-service'"
+              [eventLabel]="'azure-management-service-details-page'">
+            </mcs-context-menu-link>
+          </ng-container>
+        </mcs-tab-group>
+
+        <!-- Tab content for routing tab -->
+        <div class="routing-tab-content-wrapper limited-view">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </mcs-content-panel>
+  </mcs-page>
+
+  <mcs-help-widget *mcsAccessControl="['TicketCreate']"
+    [serviceId]="selectedAzureManagementService.serviceId"
+    mcsEventTracker="azure-management-services-help"
+    mcsEventCategory="help"
+    mcsEventLabel="help-panel">
+  </mcs-help-widget>
+
+</ng-container>
