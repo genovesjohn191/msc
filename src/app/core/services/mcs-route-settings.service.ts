@@ -68,12 +68,20 @@ export class McsRouteSettingsService implements McsDisposable {
     return this._identity.platformSettings.hasPublicCloud;
   }
 
+  public get hasHybridCloudPlatform(): boolean {
+    return this._identity.platformSettings.hasHybridCloud;
+  }
+
   public get isPrivateCloudRoute(): boolean {
     return this.selectedPlatform === RoutePlatform.Private;
   }
 
   public get isPublicCloudRoute(): boolean {
     return this.selectedPlatform === RoutePlatform.Public;
+  }
+
+  public get isHybridCloudRoute(): boolean {
+    return this.selectedPlatform === RoutePlatform.Hybrid;
   }
 
   /**
@@ -141,8 +149,12 @@ export class McsRouteSettingsService implements McsDisposable {
       activeRouteDetails.enumPlatform === RoutePlatform.Public && this._identity.platformSettings.hasPublicCloud;
     let hasAccessToActivePrivateCloudRoute: boolean =
       activeRouteDetails.enumPlatform === RoutePlatform.Private && this._identity.platformSettings.hasPrivateCloud;
+    let hasAccessToActiveHybridCloudRoute: boolean =
+      activeRouteDetails.enumPlatform === RoutePlatform.Hybrid && this._identity.platformSettings.hasHybridCloud;
 
-    let hasAccessToTargetPlatform = hasAccessToActivePublicCloudRoute || hasAccessToActivePrivateCloudRoute;
+    let hasAccessToTargetPlatform = hasAccessToActivePublicCloudRoute ||
+        hasAccessToActivePrivateCloudRoute ||
+        hasAccessToActiveHybridCloudRoute;
 
     if (hasAccessToTargetPlatform) {
       return true;

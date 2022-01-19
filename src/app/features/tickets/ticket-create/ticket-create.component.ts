@@ -51,7 +51,8 @@ import {
   McsTicketCreate,
   McsTicketCreateAttachment,
   RouteKey,
-  TicketType
+  TicketType,
+  McsFeatureFlag
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -107,6 +108,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public dns$: Observable<TicketService[]>;
   public reservations$: Observable<TicketService[]>;
   public softwareSubscriptions$: Observable<TicketService[]>;
+  public extenders$: Observable<TicketService[]>;
+  public applicationRecovery$: Observable<TicketService[]>;
 
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
@@ -171,6 +174,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToDns();
     this._subscribesToAzureReservations();
     this._subscribesToAzureSoftwareSubscriptions();
+    this._subscribesToExtenders();
+    this._subscribesToApplicationRecovery();
   }
 
   public ngOnDestroy() {
@@ -776,6 +781,45 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             `${subscription.name} (${subscription.serviceId})`,
             subscription.serviceId,
             TicketServiceType.SoftwareSubscriptions
+          ));
+      })
+    );
+  }
+
+  private _subscribesToExtenders(): void {
+    if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.HybridCloud], true)) ||
+       (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
+         return;
+       }
+
+    this.extenders$ = this._apiService.getExtenders().pipe(
+      map((response) => {
+        let extenders = getSafeProperty(response, (obj) => obj.collection);
+        return extenders.filter((extender) => getSafeProperty(extender, (obj) => obj.serviceId))
+          .map((extender) => new TicketService(
+            `${extender.billingDescription} (${extender.serviceId})`,
+            extender.serviceId,
+            TicketServiceType.Extenders
+          ));
+      })
+    );
+  }
+
+  private _subscribesToApplicationRecovery(): void {
+    if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) ||
+       (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
+         return;
+       }
+
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) { return; }
+    this.applicationRecovery$ = this._apiService.getApplicationRecovery().pipe(
+      map((response) => {
+        let applicationRecovery = getSafeProperty(response, (obj) => obj.collection);
+        return applicationRecovery.filter((applicationRecoveryItem) => getSafeProperty(applicationRecoveryItem, (obj) => obj.serviceId))
+          .map((applicationRecoveryItem) => new TicketService(
+            `${applicationRecoveryItem.billingDescription} (${applicationRecoveryItem.serviceId})`,
+            applicationRecoveryItem.serviceId,
+            TicketServiceType.ApplicationRecovery
           ));
       })
     );

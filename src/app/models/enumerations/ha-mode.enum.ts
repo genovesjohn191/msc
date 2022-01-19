@@ -1,14 +1,24 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum HaMode {
-  Unknown,
   Standalone,
   ActivePassive,
   ActiveActive,
   Elbc,
   Dual,
-  Enabled
+  Enabled,
+  ColdStandby
 }
+
+export const HaModeText = {
+  [HaMode.Standalone]: 'Standalone',
+  [HaMode.ActivePassive]: 'Active-Passive',
+  [HaMode.ActiveActive]: 'Active-Active',
+  [HaMode.Elbc]: 'ELBC',
+  [HaMode.Dual]: 'Dual',
+  [HaMode.Enabled]: 'Enabled',
+  [HaMode.ColdStandby]: 'Cold Standby'
+};
 
 /**
  * Enumeration serializer and deserializer methods

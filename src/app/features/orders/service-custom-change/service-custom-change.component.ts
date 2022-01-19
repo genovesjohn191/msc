@@ -40,7 +40,9 @@ import {
   McsOrderWizardBase,
   CoreValidators,
   OrderRequester,
-  IMcsFormGroup
+  IMcsFormGroup,
+  McsAccessControlService,
+  McsAuthenticationIdentity
 } from '@app/core';
 import { McsApiService } from '@app/services';
 import {
@@ -55,7 +57,8 @@ import {
   RouteKey,
   DeliveryType,
   McsServer,
-  McsResource
+  McsResource,
+  McsFeatureFlag
 } from '@app/models';
 import {
   OrderDetails,
@@ -99,6 +102,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public vmBackup$: Observable<CustomChangeService[]>;
   public antiVirus$: Observable<CustomChangeService[]>;
   public hids$: Observable<CustomChangeService[]>;
+  public extenders$: Observable<CustomChangeService[]>;
+  public applicationRecoveryServices$: Observable<CustomChangeService[]>;
 
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
@@ -136,7 +141,9 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     private _customChangeService: ServiceCustomChangeService,
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
-    private _activatedRoute: ActivatedRoute
+    private _activatedRoute: ActivatedRoute,
+    private _accessControlService: McsAccessControlService,
+    private _authenticationIdentity: McsAuthenticationIdentity
   ) {
     super(
       _customChangeService,
@@ -167,6 +174,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToAntiVirusServices();
     this._subscribeToHidsServices();
     this._subscribeToDnsServices();
+    this._subscribeToExtenderServices();
+    this._subscribeToApplicationRecoveryServices();
     this._subscribeToSmacSharedFormConfig();
   }
 
@@ -579,6 +588,54 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             return {
               name: `${dns.billingDescription} (${dns.serviceId})`,
               serviceId: dns.serviceId
+            } as CustomChangeService;
+          });
+      })
+    );
+  }
+
+  /**
+   * Subscribe to Extender services
+   */
+  private _subscribeToExtenderServices(): void {
+    if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.HybridCloud], true)) ||
+       (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
+         return;
+       }
+
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.HybridCloud], true)) { return; }
+    this.extenders$ = this._apiService.getExtenders().pipe(
+      map((response) => {
+        let extenders = getSafeProperty(response, (obj) => obj.collection);
+        return extenders.filter((extender) => getSafeProperty(extender, (obj) => obj.serviceId))
+          .map((extender) => {
+            return {
+              name: `${extender.billingDescription} (${extender.serviceId})`,
+              serviceId: extender.serviceId
+            } as CustomChangeService;
+          });
+      })
+    );
+  }
+
+  /**
+   * Subscribe to Application Recovery services
+   */
+  private _subscribeToApplicationRecoveryServices(): void {
+    if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) ||
+       (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
+         return;
+       }
+
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) { return; }
+    this.applicationRecoveryServices$ = this._apiService.getApplicationRecovery().pipe(
+      map((response) => {
+        let applicationRecoveryServices = getSafeProperty(response, (obj) => obj.collection);
+        return applicationRecoveryServices.filter((applicationRecoveryService) => getSafeProperty(applicationRecoveryService, (obj) => obj.serviceId))
+          .map((applicationRecoveryService) => {
+            return {
+              name: `${applicationRecoveryService.billingDescription} (${applicationRecoveryService.serviceId})`,
+              serviceId: applicationRecoveryService.serviceId
             } as CustomChangeService;
           });
       })

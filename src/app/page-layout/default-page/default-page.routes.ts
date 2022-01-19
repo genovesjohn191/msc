@@ -98,6 +98,12 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () =>
           import('../../features/azure-subscriptions/azure-subscriptions.module').then(m => m.AzureSubscriptionsModule)
       },
+      {
+        path: 'management-services',
+        data: { routeId: RouteKey.AzureManagementServices },
+        loadChildren: () =>
+          import('../../features/azure-management-services/azure-management-services.module').then(m => m.AzureManagementServicesModule)
+      },
       // Deprecated - FUSION-5845: redirect the old path of azure subscriptions
       {
         path: 'azure/managed-services',
@@ -124,6 +130,18 @@ export const defaultPageRoutes: Routes = [
         data: { routeId: RouteKey.PrivateCloudDashboard },
         loadChildren: () => import('../../features/private-cloud-dashboard/private-cloud-dashboard.module')
           .then(m => m.PrivateCloudDashboardModule)
+      },
+      {
+        path: 'hybrid-cloud/extenders',
+        data: { routeId: RouteKey.Extenders },
+        loadChildren: () =>
+          import('../../features/extenders/extenders.module').then(m => m.ExtendersModule)
+      },
+      {
+        path: 'hybrid-cloud/application-recovery',
+        data: { routeId: RouteKey.ApplicationRecovery },
+        loadChildren: () =>
+          import('../../features/application-recovery/application-recovery.module').then(m => m.ApplicationRecoveryModule)
       },
       // New routes must be added on top of this error route page
       {

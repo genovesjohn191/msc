@@ -438,6 +438,19 @@
               </li>
             </ul>
           </li>
+          <!-- Management Services -->
+          <!--<li *mcsAccessControl="[]; feature: 'EnableAzureManagementServicesListing'">-->
+          <li *mcsAccessControl="[]; feature: ['EnablePublicCloudManagementServiceListing']">
+            <a [mcsRouterLink]="routeKeyEnum.AzureManagementServices"
+              mcsRouterLinkActive="active"
+              class="sub-navigation-item unstyled-link"
+              mcsId="management-services-link"
+              mcsEventTracker="navigate-to-azure-management-services"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav">
+              {{ 'navigation.publicCloud.azure.managementServices' | translate }}
+            </a>
+          </li>
           <!-- Licenses -->
           <li>
             <a [mcsRouterLink]="routeKeyEnum.Licenses"
@@ -447,6 +460,39 @@
               mcsEventLabel="main-nav"
               mcsRouterLinkActive="active">
               {{ 'navigation.licenses' | translate }}
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- Hybrid Cloud -->
+      <li *ngIf="hasHybridCloudAccess">
+        <a (click)="toggleThis('showHybridCloudMenu')"
+          [class.active]="isHybridCloudRoute"
+          mcsId="hybrid-cloud-access-link">
+          {{ 'navigation.hybridCloud.label' | translate }}
+          <mcs-icon [key]="showHybridCloudMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+        </a>
+        <ul *ngIf="showHybridCloudMenu">
+          <!-- Extenders -->
+          <li *mcsAccessControl="[]; feature: ['EnableExtenderListing']">
+            <a [mcsRouterLink]="routeKeyEnum.Extenders"
+              mcsId="extenders-link"
+              mcsEventTracker="navigate-to-extenders"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav"
+              mcsRouterLinkActive="active">
+              {{ 'navigation.hybridCloud.extenders' | translate }}
+            </a>
+          </li>
+          <!-- Application Recovery -->
+          <li *mcsAccessControl="[]; feature: ['EnableApplicationRecoveryListing']">
+            <a [mcsRouterLink]="routeKeyEnum.ApplicationRecovery"
+              mcsId="application-recovery-link"
+              mcsEventTracker="navigate-to-application-recovery"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav"
+              mcsRouterLinkActive="active">
+              {{ 'navigation.hybridCloud.applicationRecovery' | translate }}
             </a>
           </li>
         </ul>
