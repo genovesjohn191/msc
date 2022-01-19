@@ -30,8 +30,8 @@
           </th>
           <td mat-cell *matCellDef="let row" text-top>
             <ng-container *ngIf="row.resourceSpecific; else notResourceSpecific">
-              <div *ngFor="let access of row.portalAccess">
-                <a *ngIf="access.name && access.url" [href]="access.url" target="_blank"
+              <div *ngFor="let access of row.portalAccess; let accessIndex = index;">
+                <a *ngIf="(access.name && access.url) && (accessIndex <= 10 || overflowShown(row.name))" [href]="access.url" target="_blank"
                   mcsId="select-tool"
                   mcsEventTracker="navigate-to-othertools"
                   mcsEventCategory="tools"
@@ -39,17 +39,18 @@
                   <span *ngIf="access.billingDescription">{{ access.billingDescription }} - </span>
                   {{ access.name }}</a>
               </div>
+              <a read-only *ngIf="row.portalAccess.length > 10 && !overflowShown(row.name)" (click)=showOverflow(row.name)>{{ 'label.viewAllElliptic' | translate }}</a>
             </ng-container>
             <ng-template #notResourceSpecific>
-              <div *ngFor="let access of row.portalAccess">
-                <a *ngIf="access.url" [href]="access.url" target="_blank"
+              <div *ngFor="let access of row.portalAccess; let accessIndex = index;">
+                <a *ngIf="(access.url) && (accessIndex <= 10 || overflowShown(row.name))" [href]="access.url" target="_blank"
                   mcsId="select-tool"
                   mcsEventTracker="navigate-to-othertools"
                   mcsEventCategory="tools"
                   mcsEventLabel="tools-listing-page">{{row.name }}</a>
               </div>
+              <a read-only *ngIf="row.portalAccess.length > 10 && !overflowShown(row.name)" (click)=showOverflow(row.name)>{{ 'label.viewAllElliptic' | translate }}</a>
             </ng-template>
-            
           </td>
         </ng-container>
 
