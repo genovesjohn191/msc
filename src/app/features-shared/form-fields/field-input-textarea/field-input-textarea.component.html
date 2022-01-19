@@ -3,6 +3,7 @@
 
   <textarea matInput #textareaField
     rows="3"
+    [maxLength]="maxLength"
     [formControl]="ngControl?.control"></textarea>
 
   <mat-error mcsFieldErrorMessage="inputTextarea">{{ displayedErrorMessage }}</mat-error>
