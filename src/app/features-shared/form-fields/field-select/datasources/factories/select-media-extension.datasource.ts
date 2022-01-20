@@ -28,8 +28,8 @@ export class SelectMediaExtensionDatasource extends FieldSelectDatasource {
 
   public connect(): Observable<McsOption[]> {
     return of([
-      new McsOption(CommonDefinition.FILE_EXTENSION_ISO, CommonDefinition.FILE_EXTENSION_ISO),
-      new McsOption(CommonDefinition.FILE_EXTENSION_OVA, CommonDefinition.FILE_EXTENSION_OVA)
+      new McsOption(`.${CommonDefinition.FILE_EXTENSION_ISO}`, CommonDefinition.FILE_EXTENSION_ISO),
+      new McsOption(`.${CommonDefinition.FILE_EXTENSION_OVA}`, CommonDefinition.FILE_EXTENSION_OVA)
     ]).pipe(
       takeUntil(this._destroySubject)
     );
