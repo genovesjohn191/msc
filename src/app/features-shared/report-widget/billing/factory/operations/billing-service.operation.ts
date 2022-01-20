@@ -310,7 +310,7 @@ export class BillingServiceOperation
 
     this._billingSettingsMap.set('usdPerUnit', item => {
       let usdPerUnitValue = null;
-      if (this.isDateGreaterThanExpiry(item.timestamp) && !item.isProjection) {
+      if (this.isDateGreaterThanExpiry(item.timestamp)) {
         if (isNullOrUndefined(item.usdPerUnit)) {
           usdPerUnitValue = this.translate.instant('message.notYetAvailable');
         } else {
