@@ -107,13 +107,13 @@ export class McsAuthenticationService {
       switchMap(identity => {
         if (isNullOrEmpty(identity)) { return of(null); }
 
+        this._setUserIdentity(identity);
+        if (identity?.isAnonymous) { return of(identity); }
+
         // Set extension trigger
         if (this.isNewOAuthEnabled) {
           this.setExtensionTrigger(identity.expiry);
         }
-
-        this._setUserIdentity(identity);
-        if (identity?.isAnonymous) { return of(identity); }
 
         return combinedCalls.pipe(
           map(([platform, links]) => {
@@ -160,6 +160,8 @@ export class McsAuthenticationService {
   }
 
   private setExtensionTrigger(expiry: Date): void {
+    if (isNullOrEmpty(expiry)) { return; }
+
     let refreshTimeInSeconds = (expiry.getTime() - Date.now()) / 1000;
     let willExpiresSoon = refreshTimeInSeconds < 300;
     if (willExpiresSoon) {
@@ -184,9 +186,9 @@ export class McsAuthenticationService {
       return false;
     }
 
-    this._apiService.extendSession().subscribe(()=> {
-        this.authenticateUser().subscribe();
-      }
+    this._apiService.extendSession().subscribe(() => {
+      this.authenticateUser().subscribe();
+    }
     );
 
     return true;
