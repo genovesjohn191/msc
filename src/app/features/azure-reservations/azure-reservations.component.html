@@ -49,7 +49,8 @@
             {{ 'columnHeader.name' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.name }}
+            <span [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -59,7 +60,8 @@
             {{ 'columnHeader.productName' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.productName }}
+            <span [innerHTML]="row.productName | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -79,7 +81,8 @@
             {{ 'columnHeader.type' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.reservationType }}
+            <span [innerHTML]="row.reservationType | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -89,7 +92,8 @@
             {{ 'columnHeader.status' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.status }}
+            <span [innerHTML]="row.status | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -99,7 +103,8 @@
             {{ 'columnHeader.billingFrequency' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.billingFrequency }}
+            <span [innerHTML]="row.billingFrequency | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -109,7 +114,8 @@
             {{ 'columnHeader.term' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.billingTerm }}
+            <span [innerHTML]="row.billingTerm | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -119,7 +125,8 @@
             {{ 'columnHeader.scope' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.scope }}
+            <span [innerHTML]="row.scope | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -128,8 +135,17 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header="serviceId" disableClear>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row">
-            {{ row.serviceId }}
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <ng-container *ngIf="row.serviceId; else NoServiceId">
+              <span>{{ row.serviceId }}</span>
+            </ng-container>
+            <ng-template #NoServiceId>
+              <mcs-data-status-empty
+                [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+                [mcsTooltipShow]="!row.serviceId">
+                {{ 'label.unknown' | translate }}
+              </mcs-data-status-empty>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -139,7 +155,8 @@
             {{ 'columnHeader.reservationOrderId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.reservationOrderId }}
+            <span [innerHTML]="row.reservationOrderId | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -149,7 +166,8 @@
             {{ 'columnHeader.id' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.provisioningId }}
+            <span [innerHTML]="row.provisioningId | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -160,7 +178,7 @@
             <ng-container *mcsAccessControl="['TicketCreate']">
               <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
                 mcsPopover placement="bottom" orientation="left" theme="light"
-                padding="none" [content]="actionContent" mcsCursor="pointer">
+                padding="none" [content]="actionContent" mcsCursor="pointer" *ngIf="row.serviceId">
               </mcs-icon>
               <ng-template #actionContent>
                 <div class="cog-actions-wrapper">

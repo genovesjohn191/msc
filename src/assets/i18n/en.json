@@ -2639,7 +2639,7 @@
     "columnFilter": "Column Filter",
     "dataSingular": "Resource",
     "dataPlural": "Resources",
-    "requestChange": "Request a Change",
+    "requestChange": "Place a Service Request",
     "raiseTicket": "Raise a Ticket",
     "viewAzurePortal": "View in Azure Portal",
     "retry": "Try again shortly",
@@ -2761,7 +2761,8 @@
     "noCommitmentEndDateLabel": "Unknown",
     "noParentIdLabel": "None",
     "changeLicenseCount": "Change license count",
-    "retry": "Try again shortly"
+    "retry": "Try again shortly",
+    "raiseTicket": "Raise a Ticket"
   },
   "networkDb": {
     "backToNetworks": "Back To Networks",
@@ -3391,7 +3392,6 @@
     "billingDescription": "Description",
     "billingFrequency": "Billing Frequency",
     "billingTerm": "Billing Term",
-    "catalog": "OS Edition",
     "children": "Children",
     "code": "Code",
     "commitmentEndDate": "Commitment End Date",
@@ -3460,6 +3460,7 @@
     "oneOffCharge": "One-off Charge",
     "operationName": "Operation Name",
     "orderId": "Order ID",
+    "osEdition": "OS Edition",
     "osType": "OS Type",
     "parent": "Parent",
     "plan": "Plan",
@@ -3475,6 +3476,7 @@
     "possibleSavings": "Possible Savings",
     "productType": "Product Type",
     "projectManager": "Project Manager",
+    "ram": "RAM",
     "region": "Region",
     "reservationOrderId": "Reservation Order ID",
     "reservedHours": "Reserved Hours",
@@ -3536,6 +3538,7 @@
     "utilisation": "Utilisation",
     "utilizationThisMonth": "Utilization this Month (Hours)",
     "vApp": "vApp",
+    "vCPU": "vCPU",
     "vdc": "VDC",
     "version": "Version",
     "virtualMachines": "Virtual Machines",
@@ -3704,7 +3707,9 @@
     "subscriptions": "Subscriptions",
     "period": "Period",
     "costs": "Costs",
-    "techReview": "Tech Review"
+    "techReview": "Tech Review",
+    "ticketingOrderingUnavailable": "Tickets and ordering are currently unavailable for this service.",
+    "unknown": "Unknown"
   },
   "action": {
     "add": "Add",

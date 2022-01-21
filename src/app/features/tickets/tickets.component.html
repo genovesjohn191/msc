@@ -63,7 +63,10 @@
               mcsId="select-ticket"
               mcsEventTracker="navigate-to-ticket"
               mcsEventCategory="ticket"
-              mcsEventLabel="ticket-listing-page">{{ row.ticketNumber }}</a>
+              mcsEventLabel="ticket-listing-page">
+              <span [innerHTML]="row.ticketNumber | mcsDataLabel: 'Pending'">
+              </span>
+            </a>
           </td>
         </ng-container>
 

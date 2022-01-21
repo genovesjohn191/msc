@@ -115,8 +115,16 @@
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            <span [innerHTML]="row.serviceId | mcsDataLabel: 'Unknown'">
-            </span>
+            <ng-container *ngIf="row.serviceId; else NoServiceId">
+              <span>{{ row.serviceId }}</span>
+            </ng-container>
+            <ng-template #NoServiceId>
+              <mcs-data-status-empty
+                [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+                [mcsTooltipShow]="!row.serviceId">
+                {{ 'label.unknown' | translate }}
+              </mcs-data-status-empty>
+            </ng-template>
           </td>
         </ng-container>
 
