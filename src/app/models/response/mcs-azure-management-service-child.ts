@@ -3,7 +3,7 @@ import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   AzureManagementServiceChildType,
   AzureManagementServiceChildTypeSerialization,
-  AzureManagementServiceChildTypeText
+  azureManagementServiceChildTypeText
 } from '../enumerations/azure-management-service-child-type.enum';
 
 export class McsAzureManagementServiceChild extends McsEntityBase {
@@ -30,7 +30,7 @@ export class McsAzureManagementServiceChild extends McsEntityBase {
    * Returns the service type label
    */
   public get AzureManagementServiceChildTypeLabel(): string {
-    return AzureManagementServiceChildTypeText[this.productType] || null;
+    return azureManagementServiceChildTypeText[this.productType] || null;
   }
 
 }

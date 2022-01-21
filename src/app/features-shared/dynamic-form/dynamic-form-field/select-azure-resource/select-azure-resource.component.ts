@@ -96,10 +96,10 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
     }
 
     collectionOptions = collection.filter((resource) => resource.resourceGroupId === this._resourceGroupId);
-
     let resourceByType = collectionOptions.filter((resource) => resource.type === this.config.resourceType);
+    let items = resourceByType.sort((a, b) => a.name.localeCompare(b.name));
 
-    resourceByType.forEach((item) => {
+    items.forEach((item) => {
       let id = this.config?.useNameAsKey ? item.name : item.azureId;
 
       options.push({ type: 'flat', key: id, value: item.name });

@@ -81,7 +81,7 @@ describe(`Core Validators Tests`, () => {
       let formControl = new FormControl('', Validators.required);
       formControl.setValue('-505-samplehost');
       let hostNameValidator = CoreValidators.hostName(formControl);
-      expect(hostNameValidator).toEqual(null);
+      expect(hostNameValidator).toEqual({ hostName: true });
     });
 
     it('should return hostName true given invalid host name', () => {

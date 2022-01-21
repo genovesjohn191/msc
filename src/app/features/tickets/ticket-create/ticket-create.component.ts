@@ -811,7 +811,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
          return;
        }
 
-    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) { return; }
+    if (!this._accessControlService.hasAccessToFeature(
+      [McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) { return; }
+
     this.applicationRecovery$ = this._apiService.getApplicationRecovery().pipe(
       map((response) => {
         let applicationRecovery = getSafeProperty(response, (obj) => obj.collection);

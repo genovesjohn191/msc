@@ -36,7 +36,8 @@ export class McsApiAzureManagementServicesService implements IMcsApiAzureManagem
     );
   }
 
-  public getAzureManagementServiceById(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureManagementService>> {
+  public getAzureManagementServiceById(id: string, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsAzureManagementService>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/management-services/${id}`;
     requestParameter.optionalHeaders = optionalHeaders;

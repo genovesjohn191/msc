@@ -216,8 +216,8 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       contextualHelp: 'The image to be used.',
       validators: { required: true },
       options: [
-        { key: 'Windows 10 multisession', value: 'avd-win10-21h1-images'},
-        { key: 'Windows 10 multisession with Office 365', value: 'avd-win10-21h1-o365-images'}
+        { key: 'avd-win10-21h1-images', value: 'Windows 10 multisession'},
+        { key: 'avd-win10-21h1-o365-images', value: 'Windows 10 multisession with Office 365'}
       ]
     }),
     new DynamicInputTextField({

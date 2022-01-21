@@ -6,7 +6,7 @@ export enum ApplicationRecoveryType {
   ApplicationRecovery
 }
 
-export const ApplicationRecoveryTypeText = {
+export const applicationRecoveryTypeText = {
   [ApplicationRecoveryType.Unknown]: 'Unknown',
   [ApplicationRecoveryType.AzureApplicationRecovery]: 'Azure Recover',
   [ApplicationRecoveryType.ApplicationRecovery]: 'LAUNCH™ Application Recovery'

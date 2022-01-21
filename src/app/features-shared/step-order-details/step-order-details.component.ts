@@ -283,7 +283,9 @@ export class StepOrderDetailsComponent
     if (isTimeOutsideBusinessHours) {
       date = this._setTimeToBusinessHours(date, minDateHour);
     }
-    let minDateTime = ((this.fcDeliveryType.value === DeliveryType.Standard) ? this.addStandarLeadTimeHoursToMinDate(date, this.standardLeadTimeHours) : this.addAcceleratedLeadTimeHoursToMinDate(date, this.acceleratedLeadTimeHours));
+    let minDateTime = ((this.fcDeliveryType.value === DeliveryType.Standard) ?
+      this.addStandarLeadTimeHoursToMinDate(date, this.standardLeadTimeHours) :
+      this.addAcceleratedLeadTimeHoursToMinDate(date, this.acceleratedLeadTimeHours));
     minDateTime = this._adjustDateMinutesByStepMinute(minDateTime);
     if (minDateTime.getDay() === Day.Saturday) {
       minDateTime = addHoursToDate(minDateTime, 48);

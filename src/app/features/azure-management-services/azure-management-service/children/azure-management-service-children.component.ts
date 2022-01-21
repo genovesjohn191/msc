@@ -140,7 +140,8 @@ export class AzureManagementServiceChildrenComponent extends AzureManagementServ
     this._changeDetectorRef.markForCheck();
   }
 
-  private _getAzureManagementServiceChildren(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureManagementServiceChild>> {
+  private _getAzureManagementServiceChildren(_param: McsMatTableQueryParam):
+    Observable<McsMatTableContext<McsAzureManagementServiceChild>> {
     return this._azureManagementServiceChildrenChange.pipe(
       takeUntil(this._destroySubject),
       filter(response => !isNullOrUndefined(response)),

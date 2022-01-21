@@ -15,7 +15,7 @@ export enum JournalHistory {
   ThirtyDays = 720
 }
 
-export const JournalHistoryText = {
+export const journalHistoryText = {
   [JournalHistory.Unknown]: 'Unknown',
   [JournalHistory.FourHours]: '4 Hours',
   [JournalHistory.OneDay]: '1 Day',

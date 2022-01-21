@@ -1,12 +1,12 @@
 import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
-  ApplicationRecoveryTypeText,
   ApplicationRecoveryType,
-  ApplicationRecoveryTypeSerialization
+  ApplicationRecoveryTypeSerialization,
+  applicationRecoveryTypeText
 } from '../enumerations/application-recovery-type.enum';
 import {
-  JournalHistoryText,
+  journalHistoryText,
   JournalHistory,
   JournalHistorySerialization
 } from '../enumerations/journal-history.enum';
@@ -47,13 +47,13 @@ export class McsApplicationRecovery extends McsEntityBase {
    * Returns the service type label
    */
   public get ApplicationRecoveryTypeLabel(): string {
-    return ApplicationRecoveryTypeText[this.productType] || null;
+    return applicationRecoveryTypeText[this.productType] || null;
   }
 
   /**
    * Returns the journal history label
    */
   public get ApplicationRecoveryJournalHistoryLabel(): string {
-    return JournalHistoryText[this.journalHistory] || null;
+    return journalHistoryText[this.journalHistory] || null;
   }
 }

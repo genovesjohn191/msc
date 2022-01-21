@@ -24,7 +24,8 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
 
     [ ProductType.AzureVirtualDesktop,
       [
-        WorkflowGroupId.AvdProvisionHostPool
+        WorkflowGroupId.AvdProvisionHostPool,
+        WorkflowGroupId.VmsAvdHostPoolAdd
       ]
     ],
 

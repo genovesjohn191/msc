@@ -7,7 +7,7 @@ export enum AzureManagementServiceChildType {
   AzureSoftwareSubscription
 }
 
-export const AzureManagementServiceChildTypeText = {
+export const azureManagementServiceChildTypeText = {
   [AzureManagementServiceChildType.AzureProductConsumption]: 'Azure Product Consumption',
   [AzureManagementServiceChildType.AzureProductConsumptionEnterpriseAgreement]: 'Azure Product Consumption Enterprise Agreement',
   [AzureManagementServiceChildType.AzureReservation]: 'Azure Reservation',

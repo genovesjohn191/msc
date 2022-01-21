@@ -27,3 +27,4 @@ export * from './server-backup-provision.workflow';
 export * from './vm-backup-provision.workflow';
 
 export * from './avd-provision-host-pool.workflow';
+export * from './vms-avd-host-pool-add.workflow';

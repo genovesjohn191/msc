@@ -61,8 +61,10 @@ export class DynamicSelectVmSizeComponent extends DynamicSelectFieldComponentBas
 
   protected filter(collection: McsVmSize[]): FlatOption[] {
     let options: FlatOption[] = [];
+    // sort alphabetically
+    let items = collection.sort((a, b) => a.name.localeCompare(b.name));
 
-    collection.forEach((item) => {
+    items.forEach((item) => {
       options.push({ type: 'flat', key: item.id, value: item.name });
     });
 

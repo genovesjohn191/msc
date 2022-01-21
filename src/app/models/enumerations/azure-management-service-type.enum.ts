@@ -5,7 +5,7 @@ export enum AzureManagementServiceType {
   Managed
 }
 
-export const AzureManagementServiceTypeText = {
+export const azureManagementServiceTypeText = {
   [AzureManagementServiceType.Essentials]: 'Essentials',
   [AzureManagementServiceType.Managed]: 'Managed'
 };

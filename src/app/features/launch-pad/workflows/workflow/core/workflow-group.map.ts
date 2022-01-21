@@ -24,13 +24,15 @@ import {
   ServerBackupProvisionWorkflowGroup,
   VmBackupProvisionWorkflowGroup,
   VdcNetworkCreateWorkflowGroup,
-  VdcNetworkCreateCustomWorkflowGroup
+  VdcNetworkCreateCustomWorkflowGroup,
+  VmsAvdHostPoolAddWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 
 // Workflow: Assign IDs to workflow groups
 export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new Map([
   [ WorkflowGroupId.AvdProvisionHostPool,  AvdProvisionHostPoolWorkflowGroup ],
+  [ WorkflowGroupId.VmsAvdHostPoolAdd,  VmsAvdHostPoolAddWorkflowGroup ],
 
   [ WorkflowGroupId.DedicatedStorageAttachVolume, DedicatedStorageAttachVolumeWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageAttachVolumeCluster, DedicatedStorageAttachVolumeClusterWorkflowGroup ],

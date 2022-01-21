@@ -6,7 +6,7 @@ export enum ExtenderType {
   LaunchExtender
 }
 
-export const ExtenderTypeText = {
+export const extenderTypeText = {
   [ExtenderType.Unknown]: 'Unknown',
   [ExtenderType.AzureExtend]: 'Azure Extend',
   [ExtenderType.LaunchExtender]: 'LAUNCH™ Extender'

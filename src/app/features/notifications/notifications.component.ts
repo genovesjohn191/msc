@@ -51,22 +51,14 @@ import {
 })
 
 export class NotificationsComponent implements OnDestroy {
-
-  private _isInLPContext(): boolean {
-    let _isImpersonating = !!this._authenticationIdentity.activeAccountStatus;
-    if (this._accessControlService.hasPermission(['InternalEngineerAccess']) && !_isImpersonating) {
-      return true;
-    }
-    return false;
-  }
-
   public readonly dataSource: McsTableDataSource2<McsJob>;
   public readonly dataEvents: McsTableEvents<McsJob>;
+  public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'notification' }),
-    ...this._isInLPContext()? [createObject(McsFilterInfo, { value: false, exclude: false, id: 'serviceId' })] : [],
-    ...this._isInLPContext()? [createObject(McsFilterInfo, { value: true, exclude: false, id: 'targetCompany' })] : [],
+    createObject(McsFilterInfo, { value: false, exclude: false, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'targetCompany' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'user' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'startTime' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'completed' })
@@ -142,6 +134,25 @@ export class NotificationsComponent implements OnDestroy {
       map(response => new McsMatTableContext(response?.collection,
         response?.totalCollectionCount))
     );
+  }
+
+  private _isInLPContext(): boolean {
+    let _isImpersonating = !!this._authenticationIdentity.activeAccountStatus;
+    if (this._accessControlService.hasPermission(['InternalEngineerAccess']) && !_isImpersonating) {
+      return true;
+    }
+    return false;
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id === 'serviceId') {
+      return this._isInLPContext();
+    }
+
+    if (filter.id === 'targetCompany') {
+      return this._isInLPContext();
+    }
+    return true;
   }
 
   /**

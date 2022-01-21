@@ -17,7 +17,8 @@ export interface IMcsApiAzureManagementServicesService {
   /**
    * Gets a Azure Management service by ID
    */
-  getAzureManagementServiceById(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsAzureManagementService>>;
+  getAzureManagementServiceById(id: string, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsAzureManagementService>>;
 
   /**
    * Get all the Azure Management Service's children

@@ -1,13 +1,13 @@
 import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
-  HaModeText,
+  haModeText,
   HaMode,
   HaModeSerialization
 } from '../enumerations/ha-mode.enum';
 
 import {
-  ExtenderTypeText,
+  extenderTypeText,
   ExtenderType,
   ExtenderTypeSerialization
 } from '../enumerations/extender-type.enum';
@@ -51,7 +51,7 @@ export class McsExtenderService extends McsEntityBase {
    * Returns the HA Mode label
    */
   public get HaModeText(): string {
-    return HaModeText[this.haMode] ||
+    return haModeText[this.haMode] ||
            null;
   }
 
@@ -59,7 +59,7 @@ export class McsExtenderService extends McsEntityBase {
    * Returns the service type label
    */
   public get ExtenderTypeText(): string {
-    return ExtenderTypeText[this.productType] ||
+    return extenderTypeText[this.productType] ||
            null;
   }
 
