@@ -25,3 +25,4 @@ export * from './server-backup-provision.form';
 export * from './vm-backup-provision.form';
 
 export * from './avd-provision-host-pool.form';
+export * from './vms-avd-host-pool-add.form';

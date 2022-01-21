@@ -1,7 +1,7 @@
 import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
-  AzureManagementServiceTypeText,
+  azureManagementServiceTypeText,
   AzureManagementServiceType,
   AzureManagementServiceTypeSerialization
 } from '../enumerations/azure-management-service-type.enum';
@@ -36,6 +36,7 @@ export class McsAzureManagementService extends McsEntityBase {
    * Returns the Azure Management Service type
    */
   public get AzureManagementServiceType(): string {
-    return this.isEssentials ? AzureManagementServiceTypeText[AzureManagementServiceType.Essentials] : AzureManagementServiceTypeText[AzureManagementServiceType.Managed];
+    return this.isEssentials ? azureManagementServiceTypeText[AzureManagementServiceType.Essentials] :
+      azureManagementServiceTypeText[AzureManagementServiceType.Managed];
   }
 }

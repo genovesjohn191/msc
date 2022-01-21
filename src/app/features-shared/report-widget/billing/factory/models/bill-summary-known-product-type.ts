@@ -1,4 +1,4 @@
-export let BillingKnownProductTypes = [
+export let billingKnownProductTypes = [
   {
     key: 'CSPLICENSES',
     friendlyName: 'CSP Licenses',

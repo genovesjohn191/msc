@@ -627,11 +627,14 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
          return;
        }
 
-    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) { return; }
+    if (!this._accessControlService.hasAccessToFeature(
+      [McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)
+    ) { return; }
     this.applicationRecoveryServices$ = this._apiService.getApplicationRecovery().pipe(
       map((response) => {
         let applicationRecoveryServices = getSafeProperty(response, (obj) => obj.collection);
-        return applicationRecoveryServices.filter((applicationRecoveryService) => getSafeProperty(applicationRecoveryService, (obj) => obj.serviceId))
+        return applicationRecoveryServices.filter(
+          (applicationRecoveryService) => getSafeProperty(applicationRecoveryService, (obj) => obj.serviceId))
           .map((applicationRecoveryService) => {
             return {
               name: `${applicationRecoveryService.billingDescription} (${applicationRecoveryService.serviceId})`,

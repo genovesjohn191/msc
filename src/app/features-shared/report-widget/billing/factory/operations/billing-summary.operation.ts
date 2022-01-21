@@ -33,7 +33,7 @@ import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingSummaryItem } from '../models/billing-summary-item';
-import { BillingKnownProductTypes } from '../models/bill-summary-known-product-type';
+import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
 
 export class BillingSummaryOperation
   extends BillingOperationBase
@@ -97,7 +97,8 @@ export class BillingSummaryOperation
 
     billingGroups.forEach(billingGroup => {
       billingGroup.parentServices?.forEach(parentService => {
-        if ((isNullOrUndefined(parentService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(parentService.productType.toUpperCase()))))) {
+        if ((isNullOrUndefined(parentService.productType) || (!billingKnownProductTypes.some(
+          billingKnownProductType => billingKnownProductType.key.includes(parentService.productType.toUpperCase()))))) {
           return;
         }
 
@@ -113,7 +114,9 @@ export class BillingSummaryOperation
 
         // Append Child Services Data
         parentService?.childBillingServices?.forEach(childService => {
-          if ((isNullOrUndefined(childService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(childService.productType.toUpperCase()))))) {
+          if ((isNullOrUndefined(childService.productType) ||
+            (!billingKnownProductTypes.some(
+              billingKnownProductType => billingKnownProductType.key.includes(childService.productType.toUpperCase()))))) {
             return;
           }
 
@@ -366,13 +369,14 @@ export class BillingSummaryOperation
   private _registerBillingStructMap(): void {
     let defaultStructProps = ['total', 'microsoftChargeMonth', 'macquarieBillMonth'];
 
-    //create view model for each known billing product type
-    BillingKnownProductTypes.forEach((BillingKnownProductType) => {
-      this._billingStructMap.set(BillingKnownProductType.key,
+    // create view model for each known billing product type
+    billingKnownProductTypes.forEach((billingKnownProductType) => {
+      this._billingStructMap.set(billingKnownProductType.key,
         item => new BillingOperationViewModel(
-          BillingKnownProductType.friendlyName,
-          this._getTooltipOptionsInfo(item,...(!(BillingKnownProductType.aggregatedCustomTooltipFields.length > 0)? defaultStructProps : BillingKnownProductType.aggregatedCustomTooltipFields)),
-          false, //this is always false for aggregate-level items
+          billingKnownProductType.friendlyName,
+          this._getTooltipOptionsInfo(item,...(!(billingKnownProductType.aggregatedCustomTooltipFields.length > 0)
+            ? defaultStructProps : billingKnownProductType.aggregatedCustomTooltipFields)),
+          false, // this is always false for aggregate-level items
           (item.isProjection)? item.isProjection : false
         )
       );

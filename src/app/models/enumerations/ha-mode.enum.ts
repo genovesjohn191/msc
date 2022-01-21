@@ -10,7 +10,7 @@ export enum HaMode {
   ColdStandby
 }
 
-export const HaModeText = {
+export const haModeText = {
   [HaMode.Standalone]: 'Standalone',
   [HaMode.ActivePassive]: 'Active-Passive',
   [HaMode.ActiveActive]: 'Active-Active',

@@ -35,7 +35,8 @@ export class McsApiApplicationRecoveryService implements IMcsApiApplicationRecov
     );
   }
 
-  public getApplicationRecoveryById(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsApplicationRecovery>> {
+  public getApplicationRecoveryById(id: string, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsApplicationRecovery>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/hybrid-cloud/application-recovery/${id}`;
     requestParameter.optionalHeaders = optionalHeaders;

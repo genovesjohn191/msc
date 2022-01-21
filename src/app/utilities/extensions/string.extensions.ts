@@ -18,7 +18,7 @@ String.prototype.truncate = function (truncateLength: number) {
     this;
 }
 
-String.prototype.toDefinedGreyHex = function (index: number) {
+String.prototype.toDefinedGreyHex = (index: number) => {
   let definedColors = [
     '#8F8F8F', '#E1E1E1', '#D4D4D4',
     '#676767', '#A5A5A5', '#808080',
@@ -32,7 +32,7 @@ String.prototype.toDefinedGreyHex = function (index: number) {
   return definedColors[actualIndex];
 }
 
-String.prototype.toRandomGreyHex = function () {
+String.prototype.toRandomGreyHex = () => {
   let v = (Math.random() * (256) | 0).toString(16);
   return `#` + v + v + v;
 }

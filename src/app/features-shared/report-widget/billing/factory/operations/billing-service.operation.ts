@@ -31,7 +31,7 @@ import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingServiceItem } from '../models/billing-service-item';
-import { BillingKnownProductTypes } from '../models/bill-summary-known-product-type';
+import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
 
 export class BillingServiceOperation
   extends BillingOperationBase
@@ -98,7 +98,8 @@ export class BillingServiceOperation
 
     billingGroups.forEach(billingGroup => {
       billingGroup.parentServices?.forEach(parentService => {
-        if ((isNullOrUndefined(parentService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(parentService.productType.toUpperCase()))))) {
+        if ((isNullOrUndefined(parentService.productType) || (!billingKnownProductTypes.some(
+          billingKnownProductType => billingKnownProductType.key.includes(parentService.productType.toUpperCase()))))) {
           return;
         }
 
@@ -137,7 +138,9 @@ export class BillingServiceOperation
 
         // Append Child Services Data
         parentService.childBillingServices?.forEach(childService => {
-          if ((isNullOrUndefined(childService.productType) || (!BillingKnownProductTypes.some(BillingKnownProductType => BillingKnownProductType.key.includes(childService.productType.toUpperCase()))))) {
+          if ((isNullOrUndefined(childService.productType) ||
+            (!billingKnownProductTypes.some(
+              billingKnownProductType => billingKnownProductType.key.includes(childService.productType.toUpperCase()))))) {
             return;
           }
 
@@ -453,13 +456,13 @@ export class BillingServiceOperation
 
   private _registerBillingStructMap(): void {
 
-    //create view model for each known billing product type
-    BillingKnownProductTypes.forEach((BillingKnownProductType) => {
-      this._billingStructMap.set(BillingKnownProductType.key,
+    // create view model for each known billing product type
+    billingKnownProductTypes.forEach((billingKnownProductType) => {
+      this._billingStructMap.set(billingKnownProductType.key,
         item => new BillingOperationViewModel(
-          ((BillingKnownProductType.detailUseAzureDescription)? item.azureDescription : item.billingDescription) + ` - ` + item.serviceId,
-          this._getTooltipOptionsInfo(item,...BillingKnownProductType.detailCustomTooltipFields),
-          BillingKnownProductType.detailIncludeMinimumCommentNote,
+          ((billingKnownProductType.detailUseAzureDescription)? item.azureDescription : item.billingDescription) + ` - ` + item.serviceId,
+          this._getTooltipOptionsInfo(item,...billingKnownProductType.detailCustomTooltipFields),
+          billingKnownProductType.detailIncludeMinimumCommentNote,
           (item.isProjection)? item.isProjection : false
         )
       );
@@ -467,8 +470,8 @@ export class BillingServiceOperation
   }
 
   private _registerBillingNameMap(): void {
-    BillingKnownProductTypes.forEach((BillingKnownProductType) => {
-      this._billingNameMap.set(BillingKnownProductType.key,BillingKnownProductType.friendlyName);
+    billingKnownProductTypes.forEach((billingKnownProductType) => {
+      this._billingNameMap.set(billingKnownProductType.key,billingKnownProductType.friendlyName);
     });
   }
 
