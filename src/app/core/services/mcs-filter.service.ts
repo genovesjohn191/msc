@@ -47,8 +47,9 @@ export class McsFilterService {
 
     if (isNullOrEmpty(savedSettings)) { return defaultSettings; }
     let comparisonResult = compareArrays(
-      Array.from(savedSettings.keys()),
-      Array.from(defaultSettings.keys())
+      Array.from(savedSettings),
+      Array.from(defaultSettings),
+      (_first, _second) => { return _first.id === _second.id }
     );
     return comparisonResult === 0 ? savedSettings : defaultSettings;
   }

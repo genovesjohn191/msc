@@ -62,7 +62,9 @@
               mcsEventTracker="navigate-to-media"
               mcsEventCategory="media"
               mcsEventLabel="media-listing-page">
-              {{ row.name }}</a>
+              <span [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
+              </span>
+            </a>
           </td>
         </ng-container>
 
@@ -82,7 +84,11 @@
             {{ 'columnHeader.uploadedDate' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
+            <ng-container *ngIf="row.createdOn">
             {{ row.createdOn | mcsStdDateFormat }}
+            </ng-container>
+            <span *ngIf="!row.createdOn" [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -92,7 +98,8 @@
             {{ 'columnHeader.vdc' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.resourceName }}
+            <span [innerHTML]="row.resourceName | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 

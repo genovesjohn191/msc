@@ -180,13 +180,46 @@
           </td>
         </ng-container>
 
-        <!-- Catalog Column -->
-        <ng-container matColumnDef="catalog">
+        <!-- OS Edition Column -->
+        <ng-container matColumnDef="osEdition">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall>
-            {{ 'columnHeader.catalog' | translate }}
+            {{ 'columnHeader.osEdition' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            {{ row.operatingSystem?.edition }}
+            <span [innerHTML]="row.operatingSystem?.edition | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- vCPU Column -->
+        <ng-container matColumnDef="vCPU">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.vCPU' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            <ng-container *ngIf="row.compute?.cpuCount > 0; else NoCpu">
+              <span>{{ row.compute?.cpuCount | number }}</span>
+            </ng-container>
+            <ng-template #NoCpu>
+              <span [innerHTML]="row.compute?.cpuCount > 0 | mcsDataLabel: 'Unknown'">
+              </span>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- RAM Column -->
+        <ng-container matColumnDef="ram">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.ram' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            <ng-container *ngIf="row.compute?.memoryMB > 0; else NoRam">
+              <span>{{ row.compute?.memoryMB | mcsDataSize: 'MB' }}</span>
+            </ng-container>
+            <ng-template #NoRam>
+              <span [innerHTML]="row.compute?.memoryMB > 0 | mcsDataLabel: 'Unknown'">
+              </span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -234,8 +267,21 @@
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-small matTooltip="{{ row.billingDescription }}">
-            {{ row.serviceId }}
+          <td mat-cell *matCellDef="let row" hidden-small [mcsTooltip]="row.billingDescription" [mcsTooltipShow]="row.billingDescription">
+              <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
+                <span>{{ row.serviceId }}</span>
+              </ng-container>
+              <ng-template #noServiceIdTemplate>
+                <span *ngIf="row.isSelfManaged"
+                [innerHTML]="row.serviceId | mcsDataLabel: 'N/A'">
+                </span>
+                <mcs-data-status-empty
+                  *ngIf="!row.isSelfManaged"
+                  [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+                  [mcsTooltipShow]="!row.serviceId">
+                  {{ 'label.unknown' | translate }}
+                </mcs-data-status-empty>
+              </ng-template>
           </td>
         </ng-container>
 
@@ -250,18 +296,19 @@
               mcsEventTracker="navigate-to-resource"
               mcsEventCategory="server"
               mcsEventLabel="server-listing-page">
-              {{ row.platform?.resourceName }}
+              <span [innerHTML]="row.platform?.resourceName | mcsDataLabel: 'Unknown'">
+              </span>
             </a>
           </td>
         </ng-container>
-
-        <!-- VApp Column -->
+        <!-- vApp Column -->
         <ng-container matColumnDef="vApp">
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.vApp' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.vApp }}
+            <span [innerHTML]="row.vApp | mcsDataLabel: 'None'">
+            </span>
           </td>
         </ng-container>
 

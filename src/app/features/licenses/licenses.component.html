@@ -78,7 +78,8 @@
             {{ 'columnHeader.name' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.name }}
+            <span [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -88,7 +89,8 @@
             {{ 'columnHeader.quantity' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.quantity }}
+            <span [innerHTML]="row.quantity | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -98,7 +100,8 @@
             {{ 'columnHeader.unit' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.unit }}
+            <span [innerHTML]="row.unit | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -108,7 +111,8 @@
             {{ 'columnHeader.status' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.statusLabel }}
+            <span [innerHTML]="row.statusLabel | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -118,7 +122,16 @@
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.serviceId | uppercase }}
+            <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
+              <span>{{ row.serviceId }}</span>
+            </ng-container>
+            <ng-template #noServiceIdTemplate>
+              <mcs-data-status-empty
+                [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+                [mcsTooltipShow]="!row.serviceId">
+                {{ 'label.unknown' | translate }}
+              </mcs-data-status-empty>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -128,7 +141,8 @@
             {{ 'columnHeader.offerId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.offerId | uppercase }}
+            <span [innerHTML]="row.offerId | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -139,6 +153,8 @@
           </th>
           <td mat-cell *matCellDef="let row">
             {{ row.pcSubscriptionId | uppercase }}
+            <span [innerHTML]="row.pcSubscriptionId | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -163,12 +179,8 @@
             {{ 'columnHeader.parent' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            <ng-container *ngIf="(row.parentId); else NoParentId">
-              <span> {{  row.parentServiceId | uppercase }}</span>
-            </ng-container>
-            <ng-template #NoParentId>
-                <span>{{'licenses.noParentIdLabel' | translate}}</span>
-            </ng-template>
+            <span [innerHTML]="row.parentServiceId | mcsDataLabel: 'None'">
+            </span>
           </td>
         </ng-container>
 
@@ -176,24 +188,38 @@
         <ng-container matColumnDef="action" *mcsAccessControl="['OrderEdit'];">
           <th mat-header-cell *matHeaderCellDef hidden-small></th>
           <td mat-cell *matCellDef="let row" text-center hidden-small>
-            <ng-container *ngIf="!isLicenseDisabled(dataSource?.dataRecords$ | async, row)
-              && isCurrentLicenseHasNoActiveJob(row, activeJobs$ | async) && row.serviceId">
-              <mcs-icon mcsStopPropagation [key]="ellipsisIconKey" size="large"
-                mcsPopover placement="bottom" orientation="left" theme="light"
-                padding="none" [content]="actionContent" mcsCursor="pointer">
-              </mcs-icon>
-              <ng-template #actionContent>
-                <div class="cog-actions-wrapper">
-                  <a mcsButton="basic" color="white" labelPlacement="left"
-                    (click)="onChangeLicenseCount(row)"
-                    mcsId="license-count-change"
-                    mcsEventTracker="license-count-change"
-                    mcsEventCategory="license"
-                    mcsEventLabel="license-listing">
-                    {{ 'licenses.changeLicenseCount' | translate }}
-                  </a>
-                </div>
-              </ng-template>
+            <ng-container *ngIf="row.serviceId && (row.subscriptionId || row.pcSubscriptionId) &&
+              !isLicenseDisabled(dataSource?.dataRecords$ | async, row)
+              && isCurrentLicenseHasNoActiveJob(row, activeJobs$ | async)">
+                <mcs-icon mcsStopPropagation [key]="ellipsisIconKey" size="large"
+                  mcsPopover placement="bottom" orientation="left" theme="light"
+                  padding="none" [content]="actionContent" mcsCursor="pointer">
+                </mcs-icon>
+                <ng-template #actionContent>
+                  <div class="cog-actions-wrapper" *ngIf="!isLicenseDisabled(dataSource?.dataRecords$ | async, row)
+                    && isCurrentLicenseHasNoActiveJob(row, activeJobs$ | async)">
+                    <a mcsButton="basic" color="white" labelPlacement="left"
+                      (click)="onChangeLicenseCount(row)"
+                      mcsId="license-count-change"
+                      mcsEventTracker="license-count-change"
+                      mcsEventCategory="license"
+                      mcsEventLabel="license-listing">
+                      {{ 'licenses.changeLicenseCount' | translate }}
+                    </a>
+                  </div>
+                  <ng-container *mcsAccessControl="['TicketCreate']">
+                      <div class="cog-actions-wrapper">
+                        <a mcsButton="basic" color="white" labelPlacement="left"
+                          (click)="onRaiseTicket(row)"
+                          mcsId="license-raise-ticket"
+                          mcsEventTracker="license-raise-ticket"
+                          mcsEventCategory="license"
+                          mcsEventLabel="license-listing">
+                          {{ 'licenses.raiseTicket' | translate }}
+                        </a>
+                      </div>
+                  </ng-container>
+                </ng-template>
             </ng-container>
           </td>
         </ng-container>

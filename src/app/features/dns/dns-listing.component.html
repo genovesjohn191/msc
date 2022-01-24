@@ -43,8 +43,9 @@
         <th mat-header-cell *matHeaderCellDef hidden-small>
           {{ 'columnHeader.billingDescription' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small
-          [innerHtml]="row.billingDescription | mcsDataLabel: unavailableText">
+        <td mat-cell *matCellDef="let row" hidden-small>
+          <span [innerHTML]="row.billingDescription | mcsDataLabel: 'Unknown'">
+          </span>
         </td>
       </ng-container>
 
@@ -63,8 +64,17 @@
         <th mat-header-cell *matHeaderCellDef hidden-small>
           {{ 'columnHeader.serviceId' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small
-          [innerHtml]="row.serviceId | mcsDataLabel: unavailableText">
+        <td mat-cell *matCellDef="let row" hidden-small>
+          <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
+            <span>{{ row.serviceId }}</span>
+          </ng-container>
+          <ng-template #noServiceIdTemplate>
+            <mcs-data-status-empty
+              [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+              [mcsTooltipShow]="!row.serviceId">
+              {{ 'label.unknown' | translate }}
+            </mcs-data-status-empty>
+          </ng-template>
         </td>
       </ng-container>
 
@@ -83,7 +93,7 @@
          <th mat-header-cell *matHeaderCellDef hidden-small></th>
          <td mat-cell *matCellDef="let row" hidden-small text-center>
            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
-            *ngIf="actionsEnabled(row)"
+            *ngIf="actionsEnabled(row) && row.serviceId"
              mcsPopover placement="bottom" orientation="left" theme="light"
              padding="none" [content]="actionContent" mcsCursor="pointer">
            </mcs-icon>
@@ -101,17 +111,19 @@
                   </a>
               </div>
               </ng-container>
-            <div *mcsAccessControl="['TicketCreate']"
-              class="cog-actions-wrapper">
-              <a mcsButton="basic" color="white" labelPlacement="left"
-                [href]="onRaiseTicket(row)"
-                mcsId="dns-raise-ticket"
-                mcsEventTracker="navigate-to-raise-ticket"
-                mcsEventCategory="dns"
-                mcsEventLabel="dns-listing-page">
-                {{ 'dnsListing.raiseTicket' | translate }}
-              </a>
-            </div>
+              <ng-container *ngIf="row.serviceId">
+                <div *mcsAccessControl="['TicketCreate']"
+                  class="cog-actions-wrapper">
+                  <a mcsButton="basic" color="white" labelPlacement="left"
+                    [href]="onRaiseTicket(row)"
+                    mcsId="dns-raise-ticket"
+                    mcsEventTracker="navigate-to-raise-ticket"
+                    mcsEventCategory="dns"
+                    mcsEventLabel="dns-listing-page">
+                    {{ 'dnsListing.raiseTicket' | translate }}
+                  </a>
+                </div>
+              </ng-container>
           </ng-template>
          </td>
        </ng-container>

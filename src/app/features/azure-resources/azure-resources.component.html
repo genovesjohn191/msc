@@ -75,7 +75,8 @@
             {{ 'columnHeader.name' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.name }}
+            <span [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -85,7 +86,8 @@
             {{ 'columnHeader.type' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.typeFriendlyName }}
+            <span [innerHTML]="row.typeFriendlyName | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -95,7 +97,12 @@
             {{ 'columnHeader.resourceGroup' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.resourceGroupName }}
+            <span *ngIf="row.type === 'microsoft.resources/subscriptions/resourcegroups'"
+            [innerHTML]="row.resourceGroupName | mcsDataLabel: 'N/A'">
+            </span>
+            <span *ngIf="row.type !== 'microsoft.resources/subscriptions/resourcegroups'"
+            [innerHTML]="row.resourceGroupName | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -105,7 +112,16 @@
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.serviceId }}
+            <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
+              <span>{{ row.serviceId }}</span>
+            </ng-container>
+            <ng-template #noServiceIdTemplate>
+              <mcs-data-status-empty
+                [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+                [mcsTooltipShow]="!row.serviceId">
+                {{ 'label.unknown' | translate }}
+              </mcs-data-status-empty>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -115,7 +131,8 @@
             {{ 'columnHeader.subscription' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.subscriptionName }}
+            <span [innerHTML]="row.subscriptionName | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -125,7 +142,8 @@
             {{ 'columnHeader.subscriptionId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.subscriptionId }}
+            <span [innerHTML]="row.subscriptionId | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -138,6 +156,8 @@
             <span *ngIf="row.tagCount" mcsCursor="pointer">
               <mat-icon [matTooltip]="getTagsList(row.tags)" (mouseover)="getTags(row)">local_offer</mat-icon>
             </span>
+            <span *ngIf="!row.tagCount" [innerHTML]="row.tagCount | mcsDataLabel: 'None'">
+            </span>
           </td>
         </ng-container>
 
@@ -147,32 +167,38 @@
           <td mat-cell *matCellDef="let row" text-center hidden-small>
             <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
               mcsPopover placement="bottom" orientation="left" theme="light"
-              padding="none" [content]="actionContent" mcsCursor="pointer">
+              padding="none" [content]="actionContent" mcsCursor="pointer" *ngIf="row.serviceId || row.subscriptionId || row.portalUrl">
             </mcs-icon>
             <ng-template #actionContent>
-              <div *mcsAccessControl="['OrderEdit']"
-                class="cog-actions-wrapper">
-                <a mcsButton="basic" color="white" labelPlacement="left"
-                  (click)="onRequestChange(row)"
-                  mcsId="azure-resource-request-change"
-                  mcsEventTracker="azure-resource-request-change"
-                  mcsEventCategory="azure resource"
-                  mcsEventLabel="azure-resource-listing-page">
-                  {{ 'azureResources.requestChange' | translate }}
-                </a>
-              </div>
-              <div *mcsAccessControl="['TicketCreate']"
-                class="cog-actions-wrapper">
-                <a mcsButton="basic" color="white" labelPlacement="left"
-                  (click)="onRaiseTicket(row)"
-                  mcsId="azure-resource-raise-ticket"
-                  mcsEventTracker="azure-resource-raise-ticket"
-                  mcsEventCategory="azure resource"
-                  mcsEventLabel="azure-resource-listing-page">
-                  {{ 'azureResources.raiseTicket' | translate }}
-                </a>
-              </div>
-              <div class="cog-actions-wrapper">
+              <ng-container *mcsAccessControl="['OrderEdit']">
+                <ng-container *ngIf="row.serviceId && row.subscriptionId">
+                  <div class="cog-actions-wrapper">
+                    <a mcsButton="basic" color="white" labelPlacement="left"
+                      (click)="onRequestChange(row)"
+                      mcsId="azure-resource-request-change"
+                      mcsEventTracker="azure-resource-request-change"
+                      mcsEventCategory="azure resource"
+                      mcsEventLabel="azure-resource-listing-page">
+                      {{ 'azureResources.requestChange' | translate }}
+                    </a>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-container *mcsAccessControl="['TicketCreate']">
+                <ng-container *ngIf="row.serviceId">
+                  <div class="cog-actions-wrapper">
+                    <a mcsButton="basic" color="white" labelPlacement="left"
+                      (click)="onRaiseTicket(row)"
+                      mcsId="azure-resource-raise-ticket"
+                      mcsEventTracker="azure-resource-raise-ticket"
+                      mcsEventCategory="azure resource"
+                      mcsEventLabel="azure-resource-listing-page">
+                      {{ 'azureResources.raiseTicket' | translate }}
+                    </a>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <div class="cog-actions-wrapper" *ngIf="row.portalUrl">
                 <a mcsButton="basic" color="white" labelPlacement="left"
                   href="{{ row.portalUrl }}"
                   target="_blank"

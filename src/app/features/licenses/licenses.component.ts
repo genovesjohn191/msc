@@ -173,6 +173,15 @@ export class LicensesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Navigate to create a ticket
+   */
+  public onRaiseTicket(service: McsLicense): void {
+    return isNullOrEmpty(service.serviceId) ?
+      this._navigationService.navigateTo(RouteKey.TicketCreate) :
+      this._navigationService.navigateTo(RouteKey.TicketCreate, [], { queryParams: { serviceId: service.serviceId}});
+  }
+
+  /**
    * Returns true if the selected license is suspended, pending or trial license,
    * Also check its parent if it has similar status
    */
