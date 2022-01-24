@@ -62,7 +62,7 @@ export class RecentServiceRequestSltWidgetComponent {
   }
 
   public descriptionTooltip(text: string): string {
-    return text.length < maxTextLength ? '' : text;
+    return (text && (text.length < maxTextLength)) ? '' : text;
   }
 
   public hasAccessToAzureServiceRequest(): boolean {
