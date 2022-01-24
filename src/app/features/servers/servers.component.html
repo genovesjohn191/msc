@@ -268,10 +268,10 @@
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small [mcsTooltip]="row.billingDescription" [mcsTooltipShow]="row.billingDescription">
-              <ng-container *ngIf="row.serviceId; else NoServiceId">
+              <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
                 <span>{{ row.serviceId }}</span>
               </ng-container>
-              <ng-template #NoServiceId>
+              <ng-template #noServiceIdTemplate>
                 <span *ngIf="row.isSelfManaged"
                 [innerHTML]="row.serviceId | mcsDataLabel: 'N/A'">
                 </span>

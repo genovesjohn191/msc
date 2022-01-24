@@ -65,7 +65,8 @@
             {{ 'columnHeader.inviewLevel' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ inviewLevelLabel(row.inviewLevel) }}
+            <span [innerHTML]="inviewLevelLabel(row.inviewLevel) | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -75,10 +76,10 @@
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            <ng-container *ngIf="row.serviceId; else NoServiceId">
+            <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
               <span>{{ row.serviceId }}</span>
             </ng-container>
-            <ng-template #NoServiceId>
+            <ng-template #noServiceIdTemplate>
               <mcs-data-status-empty
                 [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
                 [mcsTooltipShow]="!row.serviceId">
