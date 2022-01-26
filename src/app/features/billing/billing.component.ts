@@ -18,6 +18,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Injector,
   OnDestroy,
   OnInit
 } from '@angular/core';
@@ -46,6 +47,8 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 import { BillingSummaryService } from './billing.service';
+import { DashboardExportDocumentManager } from '@app/features-shared/export-document-factory/dashboard-export-document-manager';
+import { DashboardExportDocumentType } from '@app/features-shared/export-document-factory/dashboard-export-document-type';
 
 type tabGroupType = 'summary' | 'service' | 'tabular';
 
@@ -58,6 +61,8 @@ export class BillingComponent implements OnInit, OnDestroy {
   public selectedTabId$: Observable<string>;
   public fcBillingAccount = new FormControl('');;
 
+  private _isCsvDownloadInProgress: boolean = true;
+
   private _routerHandler: Subscription;
   private _destroySubject = new Subject<void>();
   private _billingSummariesCache = new BehaviorSubject<Array<McsReportBillingServiceGroup>>(null);
@@ -69,7 +74,8 @@ export class BillingComponent implements OnInit, OnDestroy {
     private _navigationService: McsNavigationService,
     private _translate: TranslateService,
     private _apiService: McsApiService,
-    private _datePipe: StdDateFormatPipe
+    private _datePipe: StdDateFormatPipe,
+    private _injector: Injector,
   ) {
     this._registerEvents();
     this._subscribeToBillingAccountControlChanges();
@@ -87,6 +93,10 @@ export class BillingComponent implements OnInit, OnDestroy {
     return CommonDefinition.ASSETS_SVG_INFO;
   }
 
+  public get csvDownloadInProgress(): boolean {
+    return this._isCsvDownloadInProgress;
+  }
+
   public ngOnInit(): void {
     this._changeDetectorRef.markForCheck();
   }
@@ -101,6 +111,35 @@ export class BillingComponent implements OnInit, OnDestroy {
       RouteKey.Billing,
       [tab.id as tabGroupType]
     );
+  }
+
+  public onClickExportCsv(): void {
+    this._isCsvDownloadInProgress = true;
+    this._changeDetectorRef.markForCheck();
+    let dateParams = this._getAssociatedDates();
+
+    let query = new McsReportBillingSummaryParams();
+    query.microsoftChargeMonthRangeBefore = dateParams.before;
+    query.microsoftChargeMonthRangeAfter = dateParams.after;
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_CONTENT_TYPE, 'text/csv'],
+    ]);
+
+    this._apiService.getBillingSummariesCsv(query, optionalHeaders).pipe(
+      catchError(error => {
+        this._isCsvDownloadInProgress = false;
+        this._changeDetectorRef.markForCheck();
+        return throwError(error);
+      })
+    ).subscribe((response: Blob) => {
+      this._isCsvDownloadInProgress = false;
+      this._changeDetectorRef.markForCheck();
+
+      DashboardExportDocumentManager.initializeFactories()
+      .getCreationFactory(DashboardExportDocumentType.CsvDocument)
+      .exportDocument(response, DashboardExportDocumentType.CsvDocument, this._injector)
+    });
   }
 
   private _registerEvents(): void {
@@ -144,6 +183,7 @@ export class BillingComponent implements OnInit, OnDestroy {
   ): void {
     this._apiService.getBillingSummaries(query).pipe(
       map(response => {
+        this._isCsvDownloadInProgress = false;
         if (isNullOrEmpty(response?.collection)) { return []; }
         this._billingSummariesCache.next(response?.collection.slice());
         return this._filterServicesRecords(response?.collection, billingAccountIds);
@@ -153,6 +193,7 @@ export class BillingComponent implements OnInit, OnDestroy {
         this._billingSummaryService.billingSummaryProcessingStatus.setSuccessful(filteredRecords);
       }),
       catchError(error => {
+        this._isCsvDownloadInProgress = false;
         this._billingSummaryService.billingSummaryProcessingStatus.setError();
         return throwError(() => error);
       })

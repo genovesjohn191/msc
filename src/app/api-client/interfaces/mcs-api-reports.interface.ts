@@ -100,6 +100,10 @@ export interface IMcsApiReportsService {
 
   getBillingSummaries(query?: McsReportBillingSummaryParams): Observable<McsApiSuccessResponse<McsReportBillingServiceGroup[]>>;
 
+  getBillingSummariesCsv(
+    query?: McsReportBillingSummaryParams,
+    optionalHeaders?: Map<string, any>): Observable<any>;
+
   getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>>;
 
   getRecentServiceRequestSlt(): Observable<McsApiSuccessResponse<McsReportRecentServiceRequestSlt[]>>;

@@ -1964,6 +1964,18 @@ export class McsApiService {
     );
   }
 
+  public getBillingSummariesCsv(
+    query?: McsReportBillingSummaryParams,
+    optionalHeaders?: Map<string, any>
+  ): Observable<any> {
+    return this._reportsApi.getBillingSummariesCsv(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBillingSummariesCsv'))
+      ),
+      map((response) => response)
+    );
+  }
+
   public getSubscriptions(): Observable<McsApiCollection<McsReportSubscription>> {
     return this._reportsApi.getSubscriptions().pipe(
       catchError((error) =>

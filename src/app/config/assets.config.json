@@ -112,7 +112,8 @@
     "small-lock-black": "small-lock-black.svg",
     "unfold-more-black": "unfold-more-black.svg",
     "word-black": "word-black.svg",
-    "pdf-black": "pdf-black.svg"
+    "pdf-black": "pdf-black.svg",
+    "csv": "csv.svg"
   },
   "gifIcons": {
     "loader-spinner": "loader-spinner.gif",

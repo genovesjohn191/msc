@@ -5,4 +5,5 @@ export enum DashboardExportDocumentType {
   PdfInsights = 3,
   MsWordPrivateCloudDashboard = 4,
   PdfPrivateCloudDashboard = 5,
+  CsvDocument = 6
 }
