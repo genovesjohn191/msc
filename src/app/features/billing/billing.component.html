@@ -2,6 +2,19 @@
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
+      <!-- CSV Icon -->
+      <mcs-action-item mcsResponsivePanelItem hidden-small
+        [disabled]="csvDownloadInProgress"
+        [mcsTooltip]="'tooltip.exportCsv' | translate"
+        (click)="onClickExportCsv($event)">
+        <mcs-icon key="csv" size="large" mcsCursor="pointer"></mcs-icon>
+      </mcs-action-item>
+      <ng-container *ngIf="csvDownloadInProgress">
+        <mcs-loader size="small"
+          [mcsTooltip]="'tooltip.tooltipText' | translate"
+          mcsTooltipPosition="right"></mcs-loader>
+      </ng-container>
+
       <div mcsAlign="end" padding-right-xlarge>
         <mcs-field-select-billing-account
           [selectedAllByDefault]="true" 

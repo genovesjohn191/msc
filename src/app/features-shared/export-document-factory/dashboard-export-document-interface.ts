@@ -5,7 +5,8 @@ import { OverviewDocumentDetails } from './models/report-overview';
 
 type ReportingDetails = OverviewDocumentDetails |
   InsightsDocumentDetails |
-  PrivateCloudDashboardOverviewDocumentDetails;
+  PrivateCloudDashboardOverviewDocumentDetails |
+  Blob;
 
 export interface IDashboardExportDocument {
   exportDocument(itemDetails: ReportingDetails, docType: number, injector: Injector): void;

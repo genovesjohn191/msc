@@ -3346,6 +3346,7 @@
     "getAzureReservations": "Something went wrong while retrieving your list of Reservations. Please try again.",
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving your list of Software Subscriptions. Please try again.",
     "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again.",
+    "getBillingSummariesCsv": "Something went wrong while exporting your bill summary. Please try again.",
     "updateGeneric": "Something went wrong while saving. Please try again.",
     "getLocations": "Something went wrong while retrieving your locations. Please try again.",
     "getLocation": "Something went wrong while retrieving your locaiton. Please try again.",
@@ -3836,6 +3837,7 @@
   "tooltip": {
     "exportWord": "Export Word Document",
     "exportPdf": "Export PDF Document",
+    "exportCsv": "Export CSV Document",
     "tooltipText": "Downloading..."
   },
   "dialog": {

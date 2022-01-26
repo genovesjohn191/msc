@@ -476,6 +476,23 @@ export class McsApiReportsService implements IMcsApiReportsService {
     );
   }
 
+  public getBillingSummariesCsv(
+    query?: McsReportBillingSummaryParams,
+    optionalHeaders?: Map<string, any>
+  ): Observable<any> {
+    if (isNullOrEmpty(query)) { query = new McsReportBillingSummaryParams(); }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/billing';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
+    mcsApiRequestParameter.responseType = 'blob';
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => response)
+    );
+  }
+
   public getPlatformSecurityAdvisories(
     query?: McsReportParams
   ): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>> {

@@ -1,6 +1,7 @@
 import { isNullOrUndefined } from '@app/utilities';
 import { IDashboardExportDocument } from './dashboard-export-document-interface';
 import { DashboardExportDocumentType } from './dashboard-export-document-type';
+import { CsvDocument } from './documents/csv-document';
 import { InsightsDocument } from './documents/insights-document';
 import { OverviewDocument } from './documents/overview-document';
 import { PrivateCloudDashboardOverviewDocument } from './documents/private-cloud-dashboard-overview-document';
@@ -31,5 +32,6 @@ export class DashboardExportDocumentManager {
     this._documentFactoriesMap.set(DashboardExportDocumentType.PdfInsights, new InsightsDocument());
     this._documentFactoriesMap.set(DashboardExportDocumentType.MsWordPrivateCloudDashboard, new PrivateCloudDashboardOverviewDocument());
     this._documentFactoriesMap.set(DashboardExportDocumentType.PdfPrivateCloudDashboard, new PrivateCloudDashboardOverviewDocument());
+    this._documentFactoriesMap.set(DashboardExportDocumentType.CsvDocument, new CsvDocument());
   }
 }
