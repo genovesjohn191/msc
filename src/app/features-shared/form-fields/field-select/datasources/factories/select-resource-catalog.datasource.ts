@@ -40,7 +40,6 @@ export class SelectResourceCatalogDatasource extends FieldSelectDatasource {
     prerequisite.data.pipe(
       takeUntil(this._destroySubject),
       switchMap(resourceId => {
-        console.log(resourceId);
         if (isNullOrEmpty(resourceId)) { return of([]); }
 
         return this._apiService.getResourceCatalogs(resourceId).pipe(
