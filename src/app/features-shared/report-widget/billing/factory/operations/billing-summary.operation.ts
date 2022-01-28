@@ -21,6 +21,7 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   removeSpaces,
+  hashString,
   Guid
 } from '@app/utilities';
 
@@ -34,6 +35,7 @@ import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingSummaryItem } from '../models/billing-summary-item';
 import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
+import { billingColors } from '../models/bill-summary-colors';
 
 export class BillingSummaryOperation
   extends BillingOperationBase
@@ -237,27 +239,13 @@ export class BillingSummaryOperation
       .filter(name => !isNullOrUndefined(name));
     if (isNullOrEmpty(uniqueNames)) { return; }
 
-    let createdColors = uniqueNames.map(name => name?.toHex());
-    let colorsFunc = createdColors.map((color, index) =>
-      itemFunc => this._colorFunc(itemFunc, color, index, seriesItems));
-
-    return colorsFunc;
-  }
-
-  private _colorFunc(
-    opts: any,
-    definedColor: string,
-    index: number,
-    seriesItems: BillingSummaryItem[][]
-  ): string {
-    if (isNullOrEmpty(seriesItems)) { return definedColor; }
-
-    let serviceFound = seriesItems[opts.seriesIndex][opts.dataPointIndex];
-    if (isNullOrEmpty(serviceFound)) { return definedColor; }
-
-    let billingStruct = this._getBillingViewModelByItem(serviceFound);
-    let billingTitle = this._generateBillingTitle(billingStruct);
-    return billingTitle?.includes(PROJECT_TEXT) ? definedColor.toDefinedGreyHex(index) : definedColor;
+    // Use predefined colours for each item
+    // If predefined colours run out, hashes each distinct name and uses it as seed for hex colour generation
+    let createdColors = uniqueNames?.map((name, nameIndex) => {
+      return (nameIndex < billingColors.length)? billingColors[nameIndex++] : hashString(name).toHex();
+    });
+    return createdColors.map((color, index) =>
+      itemFunc => color);
   }
 
   private _appendBillingSummaryToMap(
@@ -278,8 +266,8 @@ export class BillingSummaryOperation
     newService.id = Guid.newGuid().toString();
     newService.productType = productTypeKey;
     newService.isProjection = isProjection;
-    newService.microsoftChargeMonth = this.datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear');
-    newService.macquarieBillMonth = this.datePipe.transform(getDateOnly(billMonth), 'shortMonthYear');
+    newService.microsoftChargeMonth = this.datePipe.transform(getDateOnly(chargeMonth), 'shortMonthYear') + (isProjection ? '*' : '');
+    newService.macquarieBillMonth = this.datePipe.transform(getDateOnly(billMonth), 'shortMonthYear') + (isProjection ? '*' : '');
     newService.gstExclusiveChargeDollars = gstExclusiveChargeDollars;
     newService.usdPerUnit = usdPerUnit;
     newService.sortDate = getDateOnly(chargeMonth);

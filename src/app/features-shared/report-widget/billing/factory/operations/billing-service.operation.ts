@@ -20,6 +20,7 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   removeSpaces,
+  hashString,
   Guid
 } from '@app/utilities';
 
@@ -32,6 +33,7 @@ import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingServiceItem } from '../models/billing-service-item';
 import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
+import { billingColors } from '../models/bill-summary-colors';
 
 export class BillingServiceOperation
   extends BillingOperationBase
@@ -114,8 +116,8 @@ export class BillingServiceOperation
           initialDomain: parentService.tenant?.initialDomain,
           installedQuantity: parentService.installedQuantity,
           isProjection: billingGroup.isProjection,
-          macquarieBillMonth: this.datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
-          microsoftChargeMonth: this.datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
+          macquarieBillMonth: this.datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
+          microsoftChargeMonth: this.datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
           markupPercent: parentService.markupPercent,
           microsoftIdentifier: parentService.microsoftId,
           minimumCommitmentDollars: parentService.minimumCommitmentDollars,
@@ -154,8 +156,8 @@ export class BillingServiceOperation
             initialDomain: childService.tenant?.initialDomain,
             installedQuantity: childService.installedQuantity,
             isProjection: billingGroup.isProjection,
-            macquarieBillMonth: this.datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear'),
-            microsoftChargeMonth: this.datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear'),
+            macquarieBillMonth: this.datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
+            microsoftChargeMonth: this.datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
             markupPercent: childService.markupPercent,
             microsoftIdentifier: childService.microsoftId,
             minimumCommitmentDollars: childService.minimumCommitmentDollars,
@@ -259,27 +261,13 @@ export class BillingServiceOperation
       .filter(name => !isNullOrUndefined(name));
     if (isNullOrEmpty(uniqueNames)) { return; }
 
-    let createdColors = uniqueNames?.map(name => name.toHex());
-    let colorsFunc = createdColors.map((color, index) =>
-      itemFunc => this._colorFunc(itemFunc, color, index, seriesItems));
-
-    return colorsFunc;
-  }
-
-  private _colorFunc(
-    opts: any,
-    definedColor: string,
-    index: number,
-    seriesItems: BillingServiceItem[][]
-  ): string {
-    if (isNullOrEmpty(seriesItems)) { return definedColor; }
-
-    let serviceFound = seriesItems[opts.seriesIndex][opts.dataPointIndex];
-    if (isNullOrEmpty(serviceFound)) { return definedColor; }
-
-    let billingStruct = this._getBillingViewModelByItem(serviceFound);
-    let billingTitle = this._generateBillingTitle(billingStruct);
-    return billingTitle?.includes(PROJECT_TEXT) ? definedColor.toDefinedGreyHex(index) : definedColor;
+    // Use predefined colours for each item
+    // If predefined colours run out, hashes each distinct name and uses it as seed for hex colour generation
+    let createdColors = uniqueNames?.map((name, nameIndex) => {
+      return (nameIndex < billingColors.length)? billingColors[nameIndex++] : hashString(name).toHex();
+    });
+    return createdColors.map((color, index) =>
+      itemFunc => color);
   }
 
   private _getBillingViewModelByItem(service: BillingServiceItem): BillingOperationViewModel {
