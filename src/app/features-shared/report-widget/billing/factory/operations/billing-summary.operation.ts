@@ -27,8 +27,7 @@ import {
 
 import {
   BillingOperationBase,
-  KEY_SEPARATOR,
-  PROJECT_TEXT
+  KEY_SEPARATOR
 } from '../abstractions/billing-operation.base';
 import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationData } from '../models/billing-operation-data';
@@ -311,8 +310,7 @@ export class BillingSummaryOperation
   private _generateBillingTitle(billingViewModel: BillingOperationViewModel): string {
     if (isNullOrEmpty(billingViewModel)) { return ''; }
 
-    return billingViewModel?.includeProjectionSuffix ?
-      `${billingViewModel.title} ${PROJECT_TEXT}` : billingViewModel?.title;
+    return billingViewModel?.title;
   }
 
   private _registerSettingsMap(): void {

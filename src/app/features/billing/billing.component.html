@@ -17,7 +17,7 @@
 
       <div mcsAlign="end" padding-right-xlarge>
         <mcs-field-select-billing-account
-          [selectedAllByDefault]="true" 
+          [selectedAllByDefault]="true"
           [formControl]="fcBillingAccount">
         </mcs-field-select-billing-account>
       </div>
@@ -26,10 +26,11 @@
 
   <!-- Page Content -->
   <mcs-content-panel *mcsContentPanelDef>
-    <mcs-item orientation="inline" padding-bottom-xlarge>
+    <mcs-item orientation="inline-block" padding-bottom-xlarge>
       <div padding-right-medium><mcs-icon [key]="statusIconKey" size="large"></mcs-icon></div>
       <div>
         <span [innerHTML]="headerDescription"></span>
+        <ul [style.marginTop.px]="0" [innerHTML]="headerDescriptionOuterList"></ul>
         <!-- <a href="{{ learnMoreLink }}"
           target="_blank"
           mcsId="azure-performance"

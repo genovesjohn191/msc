@@ -24,10 +24,7 @@ import {
   Guid
 } from '@app/utilities';
 
-import {
-  BillingOperationBase,
-  PROJECT_TEXT
-} from '../abstractions/billing-operation.base';
+import { BillingOperationBase } from '../abstractions/billing-operation.base';
 import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
@@ -283,8 +280,7 @@ export class BillingServiceOperation
   private _generateBillingTitle(billingViewModel: BillingOperationViewModel): string {
     if (isNullOrEmpty(billingViewModel)) { return ''; }
 
-    return billingViewModel?.includeProjectionSuffix ?
-      `${billingViewModel?.title} ${PROJECT_TEXT}` : billingViewModel?.title;
+    return billingViewModel?.title;
   }
 
   private _generateBillingName(item: string): string {
