@@ -22,4 +22,9 @@ export interface Search extends McsSearch {
    * Show or hide the loader of search component
    */
   showLoading(showLoading: boolean): void;
+
+  /**
+   * Clears the search field value
+   */
+  clear(): void;
 }

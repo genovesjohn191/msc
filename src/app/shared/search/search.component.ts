@@ -127,4 +127,10 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
     this.searchChangedStream.emit(this);
     this._changeDetectorRef.markForCheck();
   }
+
+  public clear(): void {
+    this._defaultValue = '';
+    this.keyword = this._defaultValue;
+    this._notifySearchKeywordChange();
+  }
 }

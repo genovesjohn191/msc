@@ -21,7 +21,7 @@ import {
 import { McsEvent } from '@app/events';
 import {
   McsFilterInfo,
-  McsQueryParam,
+  McsTicketQueryParams,
   McsTicket,
   RouteKey
 } from '@app/models';
@@ -53,6 +53,10 @@ export class TicketsComponent {
   public readonly defaultColumnFilters: McsFilterInfo[];
 
   public urlParamSearchKeyword: string;
+  public selectedTabIndex: number = 0;
+  public isTabChanged: boolean = false;
+
+  private _search: Search;
 
   constructor(
     _injector: Injector,
@@ -70,17 +74,18 @@ export class TicketsComponent {
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketNumber' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'summary' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'loggedBy' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'loggedOn' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastUpdatedDate' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastUpdatedBy' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerReference' })
     ];
   }
 
   @ViewChild('search')
   public set search(value: Search) {
-    if (!isNullOrEmpty(value)) {
+    if (!isNullOrEmpty(value) && this._search !== value ) {
+      this._search = value;
       this.dataSource.registerSearch(value);
     }
   }
@@ -116,6 +121,12 @@ export class TicketsComponent {
     return companyIdHeader ? companyIdHeader : this._authenticationIdentity.user?.companyId;
   }
 
+  public onTabChanged(): void {
+    this.isTabChanged = true;
+    this.retryDatasource();
+    this._search.clear();
+  }
+
   /**
    * Whether to show attribution text or not in logged by column
    */
@@ -146,7 +157,7 @@ export class TicketsComponent {
   }
 
   private _getTickets(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTicket>> {
-    let queryParam = new McsQueryParam();
+    let queryParam = new McsTicketQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     let queryParamSearch = getSafeProperty(param, obj => obj.search.keyword);
@@ -154,12 +165,17 @@ export class TicketsComponent {
     let searchKeyword = isNullOrEmpty(param.search) ? this.urlParamSearchKeyword : queryParamSearch;
     queryParam.keyword = searchKeyword;
 
+    if(this.selectedTabIndex < 2){
+      queryParam.state = this.selectedTabIndex === 0 ? 'open' : 'closed';
+    }
+
     let ticketSortPredicate = (firstRecord: McsTicket, secondRecord: McsTicket) =>
       compareDates(secondRecord.updatedOn, firstRecord.updatedOn);
 
     return this._apiService.getTickets(queryParam).pipe(
       map(response => {
         let sortedCollections = response?.collection?.sort(ticketSortPredicate);
+        this.isTabChanged = false;
         return new McsMatTableContext(sortedCollections, response?.totalCollectionCount);
       })
     );

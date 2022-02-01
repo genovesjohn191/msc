@@ -17,15 +17,6 @@
       </mcs-top-panel-item>
     </ng-container>
 
-    <mcs-top-panel-item *mcsTopPanelItemDef overflow-auto>
-      <div class="listing-action-wrapper">
-        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
-          <span>{{ totalCount | mcsPlural:
-                ('tickets.dataSingular' | translate) : ('tickets.dataPlural' | translate) }}
-          </span>
-        </div>
-      </div>
-    </mcs-top-panel-item>
   </mcs-top-panel>
 
   <!-- Left Panel -->
@@ -46,6 +37,14 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged()">
+      <mat-tab label="Open" id="open">
+      </mat-tab>
+      <mat-tab label="Closed" id="closed">
+      </mat-tab>
+      <mat-tab label="All" id="all">
+      </mat-tab>
+    </mat-tab-group>
 
     <div class="listing-table-wrapper">
       <!-- Search -->
@@ -95,9 +94,9 @@
         </ng-container>
 
         <!-- Logged By Column -->
-        <ng-container matColumnDef="loggedBy">
+        <ng-container matColumnDef="createdBy">
           <th mat-header-cell *matHeaderCellDef hidden-small>
-            {{ 'columnHeader.loggedBy' | translate }}
+            {{ 'columnHeader.createdBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.requestor }}
@@ -109,9 +108,9 @@
         </ng-container>
 
         <!-- Logged On Column -->
-        <ng-container matColumnDef="loggedOn">
+        <ng-container matColumnDef="createdOn">
           <th mat-header-cell *matHeaderCellDef hidden-small>
-            {{ 'columnHeader.loggedOn' | translate }}
+            {{ 'columnHeader.createdOn' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.createdOn | mcsStdDateFormat }}
@@ -119,9 +118,9 @@
         </ng-container>
 
         <!-- Last Updated Date Column -->
-        <ng-container matColumnDef="lastUpdatedDate">
+        <ng-container matColumnDef="updatedOn">
           <th mat-header-cell *matHeaderCellDef hidden-small>
-            {{ 'columnHeader.lastUpdatedDate' | translate }}
+            {{ 'columnHeader.updatedOn' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.updatedOn | mcsStdDateFormat }}
@@ -129,9 +128,9 @@
         </ng-container>
 
         <!-- Last Updated By Column -->
-        <ng-container matColumnDef="lastUpdatedBy">
+        <ng-container matColumnDef="updatedBy">
           <th mat-header-cell *matHeaderCellDef hidden-small>
-            {{ 'columnHeader.lastUpdatedBy' | translate }}
+            {{ 'columnHeader.updatedBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.updatedBy }}
@@ -154,7 +153,7 @@
 
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+        <tr [hidden]="(dataSource?.isInProgress$ | async) && isTabChanged" mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
           mcsCursor="pointer"
           (click)="navigateToTicket(row)"
           mcsId="ticket-row"
