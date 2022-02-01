@@ -51,7 +51,8 @@ describe('ServerComponent', () => {
         keyword: '',
         searchChangedStream: new EventEmitter(),
         searching: false,
-        showLoading() { return true; }
+        showLoading() { return true; },
+        clear() {}
       };
     });
   }));

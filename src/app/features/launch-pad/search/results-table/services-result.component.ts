@@ -96,6 +96,8 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
 
   public showLoading(showLoading: boolean): void { }
 
+  public clear(): void { }
+
   public ngOnDestroy(): void {
     unsubscribeSafely(this.searchChangedStream);
     this.dataSource.disconnect(null);

@@ -96,6 +96,8 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
 
   public showLoading(showLoading: boolean): void { }
 
+  public clear(): void { }
+
   public onSortChange(sortState: Sort) {
     this.isSorting = true;
     this._sortDirection = sortState.direction;
