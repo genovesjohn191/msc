@@ -26,7 +26,8 @@ import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 @Injectable()
 export class McsAuthenticationService {
   public get isNewOAuthEnabled(): boolean {
-    return this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled';
+    // return this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled';
+    return true;
   }
 
   constructor(
