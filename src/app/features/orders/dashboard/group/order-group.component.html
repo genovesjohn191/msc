@@ -11,17 +11,23 @@
             <h2>{{ 'orderGroups.newLabel' | translate }}</h2>
           </ng-container>
 
-          <section *ngIf="groupDetails.newOrders | mcsIsNotNullOrEmpty; else noNewOrdersTemplate">
+          <section *ngIf="hasActiveOrders(groupDetails.newOrders); else noNewOrdersTemplate">
             <div padding-bottom-small *ngFor="let newOrder of groupDetails.newOrders">
-              <a (click)="executeOrderAvailable(newOrder.productOrderType)">
-                <span>{{ newOrder.orderAction }}</span>
-              </a><br/>
-              <span read-only>{{ newOrder.orderName }}</span>
-              <mcs-contextual-catalog-link
-                [isIcon]="true"
-                [eventLabel]="newOrder.orderName + '-product-catalog-link'"
-                [orderProductId]="newOrder.productId">
-              </mcs-contextual-catalog-link>
+              <div *ngIf="!isUnknown(newOrder)">
+                <div [matTooltip]="'orderGroups.tooltipComingSoonNewOrder' | translate"
+                  [matTooltipDisabled]="!isComingSoon(newOrder)">
+                  <a (click)="executeOrderAvailable(newOrder.productOrderType)"
+                    [disabled]="isComingSoon(newOrder)">
+                    <span>{{ newOrder.orderAction }}</span>
+                  </a>
+                </div>
+                <span read-only>{{ newOrder.orderName }}</span>
+                <mcs-contextual-catalog-link
+                  [isIcon]="true"
+                  [eventLabel]="newOrder.orderName + '-product-catalog-link'"
+                  [orderProductId]="newOrder.productId">
+                </mcs-contextual-catalog-link>
+              </div>
             </div>
           </section>
 
@@ -38,17 +44,23 @@
             <h2>{{ 'orderGroups.changeLabel' | translate }}</h2>
           </ng-container>
 
-          <section *ngIf="groupDetails.changeOrders | mcsIsNotNullOrEmpty; else noChangeOrdersTemplate">
+          <section *ngIf="hasActiveOrders(groupDetails.changeOrders); else noChangeOrdersTemplate">
             <div padding-bottom-small *ngFor="let changeOrder of groupDetails.changeOrders">
-              <a (click)="executeOrderAvailable(changeOrder.productOrderType)">
-                <span>{{ changeOrder.orderAction }}</span>
-              </a><br/>
-              <span read-only>{{ changeOrder.orderName }}</span>
-              <mcs-contextual-catalog-link
-                [isIcon]="true"
-                [eventLabel]="changeOrder.orderName + '-product-catalog-link'"
-                [orderProductId]="changeOrder.productId">
-              </mcs-contextual-catalog-link>
+              <div *ngIf="!isUnknown(changeOrder)">
+                <div [matTooltip]="'orderGroups.tooltipComingSoonChange' | translate"
+                  [matTooltipDisabled]="!isComingSoon(changeOrder)">
+                  <a (click)="executeOrderAvailable(changeOrder.productOrderType)"
+                    [disabled]="isComingSoon(changeOrder)">
+                    <span>{{ changeOrder.orderAction }}</span>
+                  </a>
+                </div>
+                <span read-only>{{ changeOrder.orderName }}</span>
+                <mcs-contextual-catalog-link
+                  [isIcon]="true"
+                  [eventLabel]="changeOrder.orderName + '-product-catalog-link'"
+                  [orderProductId]="changeOrder.productId">
+                </mcs-contextual-catalog-link>
+              </div>
             </div>
           </section>
 

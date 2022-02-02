@@ -17,10 +17,12 @@ import {
 } from '@app/models';
 import {
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  isNullOrUndefined
 } from '@app/utilities';
 import { OrderEventContext } from './strategy/order-event.context';
 import { orderEventMap } from './strategy/order-event.map';
+import { OrderAvailabilityState } from '@app/models/enumerations/order-availability-state.enum';
 
 interface OrderGroupDetails {
   changeOrders: McsOrderAvailableItemType[];
@@ -73,5 +75,21 @@ export class OrderGroupComponent implements OnChanges {
         groupDetails.newOrders.push(orderItem);
     });
     this.orderGroupDetails$ = of(groupDetails);
+  }
+
+  public isComingSoon(changeOrder: McsOrderAvailableItemType): boolean {
+    return changeOrder.availabilityState === OrderAvailabilityState.ComingSoon;
+  }
+
+  public isUnknown(changeOrder: McsOrderAvailableItemType): boolean {
+    return !(changeOrder.availabilityState === OrderAvailabilityState.ComingSoon
+      || changeOrder.availabilityState === OrderAvailabilityState.Active);
+  }
+
+  public hasActiveOrders(orderList: McsOrderAvailableItemType[]): boolean {
+    if(isNullOrEmpty(orderList)) { return false; }
+
+    let availableOrders = orderList.find(order => !this.isUnknown(order));
+    return !isNullOrUndefined(availableOrders);
   }
 }
