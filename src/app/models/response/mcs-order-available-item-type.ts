@@ -3,6 +3,10 @@ import {
   ItemType,
   ItemTypeSerialization
 } from '../enumerations/item-type.enum';
+import {
+  OrderAvailabilityState,
+  OrderAvailabilityStateSerialization
+} from '../enumerations/order-availability-state.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsOrderAvailableItemType extends McsEntityBase {
@@ -44,4 +48,10 @@ export class McsOrderAvailableItemType extends McsEntityBase {
 
   @JsonProperty()
   public acceleratedLeadTimeHours: number = undefined;
+
+  @JsonProperty({
+    serializer: OrderAvailabilityStateSerialization,
+    deserializer: OrderAvailabilityStateSerialization
+  })
+  public availabilityState: OrderAvailabilityState = undefined;
 }

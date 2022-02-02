@@ -445,7 +445,9 @@
     "newLabel": "Add",
     "noNewOrdersMessage": "No Add operations to display.",
     "changeLabel": "Change",
-    "noChangeOrdersMessage": "No Change operations to display."
+    "noChangeOrdersMessage": "No Change operations to display.",
+    "tooltipComingSoonChange": "Coming soon. In the meantime, you may be able to place this request directly via your account team.",
+    "tooltipComingSoonNewOrder": "Coming soon. In the meantime, you may be able to place this order directly via your account team."
   },
   "orderServerManagedScale": {
     "back": "Back",
