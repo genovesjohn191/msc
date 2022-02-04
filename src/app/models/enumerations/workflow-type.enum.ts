@@ -32,8 +32,9 @@ export enum WorkflowType {
 
   VdcNetworkCreate = 'launchpad.vdcnetwork.create',
 
+  VfwAllocate = 'launchpad.firewall.allocateVirtual',
   VfwDeprovision = 'launchpad.firewall.deprovisionVirtual',
-  FirewallProvisionAdom = 'launchpad.firewall.provisionAdom',
+  FirewallProvisionAdom = 'launchpad.firewall.provisionAdom'
 }
 
 /**
