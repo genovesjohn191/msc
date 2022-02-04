@@ -26,7 +26,8 @@ import {
   VdcNetworkCreateWorkflowGroup,
   VdcNetworkCreateCustomWorkflowGroup,
   VmsAvdHostPoolAddWorkflowGroup,
-  FirewallProvisionAdomWorkflowGroup
+  FirewallProvisionAdomWorkflowGroup,
+  VfwDeprovisionWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 
@@ -65,4 +66,5 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.VmBackupProvision,  VmBackupProvisionWorkflowGroup ],
 
   [ WorkflowGroupId.FirewallProvisionAdom, FirewallProvisionAdomWorkflowGroup],
+  [ WorkflowGroupId.VfwDeprovision, VfwDeprovisionWorkflowGroup ],
 ]);

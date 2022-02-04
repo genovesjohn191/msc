@@ -34,5 +34,6 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.AvdProvisionHostPool, 'Provision AVD Host Pool.'],
   [WorkflowGroupId.VmsAvdHostPoolAdd, 'Add VMs to AVD Host Pool.'],
 
+  [WorkflowGroupId.VfwDeprovision, 'Deprovision Virtual Firewall'],
   [WorkflowGroupId.FirewallProvisionAdom, 'Provision Firewall ADOM'],
 ]);

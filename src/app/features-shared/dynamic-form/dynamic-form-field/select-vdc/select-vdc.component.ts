@@ -31,7 +31,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
 
 @Component({
   selector: 'mcs-dff-select-vdc-field',
-  templateUrl: '../shared-template/select-group.component.html',
+  templateUrl: './select-vdc.component.html',
   styleUrls: ['../dynamic-form-field.scss'],
   providers: [
     {
@@ -92,7 +92,6 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     return this._apiService.getResources(null, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => {
-
         let returnValue = response && response.collection.filter((resource) =>
           !isNullOrEmpty(resource.availabilityZone));
 
@@ -121,7 +120,12 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
       let name = `${item.availabilityZone} (${item.name})`;
       let id = this.config.useServiceIdAsKey ? item.serviceId : item.id;
-      let option = { key: id, value: name } as FlatOption;
+      let option = { key: id, value: name, disabled: false } as FlatOption;
+
+      if(this.config.disableStretched && item.isStretched) {
+        option.disabled = true;
+        option.hint = 'Stretched';
+      }
 
       if (existingGroup) {
         // Add option to existing group
