@@ -57,6 +57,7 @@ export interface DynamicFormFieldDataChangeEventParam {
 
 export type DynamicFormFieldType =
   'textbox-account-upn'
+  | 'textbox-adom-name'
   | 'textbox-domain'
   | 'textbox-fqdn-domain'
   | 'textbox-hidden'
@@ -86,6 +87,8 @@ export type DynamicFormFieldType =
   | 'select'
   | 'select-azure-resource'
   | 'select-azure-subscription'
+  | 'select-forti-manager'
+  | 'select-forti-analyzer'
   | 'select-gateway-ip'
   | 'select-group'
   | 'select-location'
@@ -135,6 +138,8 @@ export type DynamicFormFieldTemplate =
   | 'select'
   | 'select-azure-resource'
   | 'select-azure-subscription'
+  | 'select-forti-manager'
+  | 'select-forti-analyzer'
   | 'select-gateway-ip'
   | 'select-group'
   | 'select-location'

@@ -190,6 +190,14 @@
         <mcs-dff-slide-toggle-field *ngSwitchCase="'slide-toggle'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-slide-toggle-field>
+
+        <mcs-dff-select-forti-manager *ngSwitchCase="'select-forti-manager'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-forti-manager>
+
+        <mcs-dff-select-forti-analyzer *ngSwitchCase="'select-forti-analyzer'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-forti-analyzer>
         <mat-error *ngIf="!isValidField(input.key)" [innerHTML]="getErrorMessage(input.key)">
         </mat-error>
       </div>

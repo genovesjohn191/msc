@@ -287,7 +287,9 @@ import {
   McsNetworkDnsZone,
   McsNetworkDnsZoneTtlRequest,
   McsLocation,
-  McsVmSize
+  McsVmSize,
+  McsFirewallFortiManager,
+  McsFirewallFortiAnalyzer
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -1626,6 +1628,24 @@ export class McsApiService {
     return this._firewallsApi.getFirewallPolicies(id, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewallPolicies'))
+      ),
+      map((response) => this._mapToCollection(response))
+    );
+  }
+
+  public getFirewallFortiManagers(query?: McsQueryParam): Observable<McsApiCollection<McsFirewallFortiManager>> {
+    return this._firewallsApi.getFirewallFortiManagers(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewallFortiManagers'))
+      ),
+      map((response) => this._mapToCollection(response))
+    );
+  }
+
+  public getFirewallFortiAnalyzers(query?: McsQueryParam): Observable<McsApiCollection<McsFirewallFortiAnalyzer>> {
+    return this._firewallsApi.getFirewallFortiAnalyzers(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewallFortiAnalyzers'))
       ),
       map((response) => this._mapToCollection(response))
     );

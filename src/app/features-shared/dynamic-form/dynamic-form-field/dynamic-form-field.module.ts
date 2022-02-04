@@ -51,6 +51,8 @@ import { DynamicSelectVmSizeComponent } from './select-vm-size/select-vm-size.co
 import { DynamicSelectLocationComponent } from './select-location/select-location.component';
 import { DynamicSelectResourceGroupComponent } from './select-resource-group/select-resource-group.component';
 import { DynamicSelectAzureResourceComponent } from './select-azure-resource/select-azure-resource.component';
+import { DynamicSelectFortiManagerComponent } from './select-forti-manager/select-forti-manager.component';
+import { DynamicSelectFortiAnalyzerComponent } from './select-forti-analyzer/select-forti-analyzer.component';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -75,6 +77,8 @@ const exports: any[] | Type<any> = [
   DynamicSelectChipsTerraformModuleComponent,
   DynamicSelectChipsTerraformTagComponent,
   DynamicSelectChipsVmComponent,
+  DynamicSelectFortiManagerComponent,
+  DynamicSelectFortiAnalyzerComponent,
   DynamicSelectComponent,
   DynamicSelectAzureResourceComponent,
   DynamicSelectGroupComponent,

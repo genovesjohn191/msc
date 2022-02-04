@@ -3,7 +3,9 @@ import {
   McsQueryParam,
   McsApiSuccessResponse,
   McsFirewall,
-  McsFirewallPolicy
+  McsFirewallPolicy,
+  McsFirewallFortiManager,
+  McsFirewallFortiAnalyzer
 } from '@app/models';
 
 export interface IMcsApiFirewallsService {
@@ -26,4 +28,16 @@ export interface IMcsApiFirewallsService {
    * @param query Query predicate that serves as the parameter of the endpoint
    */
   getFirewallPolicies( id: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewallPolicy[]>>;
+
+  /**
+   * Get all fortimanager instances (MCS API Response)
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getFirewallFortiManagers(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewallFortiManager[]>>;
+
+   /**
+    * Get all fortianalyzer instances (MCS API Response)
+    * @param query Query predicate that serves as the parameter of the endpoint
+    */
+  getFirewallFortiAnalyzers(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewallFortiAnalyzer[]>>;
 }

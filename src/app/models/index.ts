@@ -186,6 +186,8 @@ export * from './response/mcs-company';
 export * from './response/mcs-firewall';
 export * from './response/mcs-firewall-policy';
 export * from './response/mcs-firewall-utm';
+export * from './response/mcs-firewall-forti-manager';
+export * from './response/mcs-firewall-forti-analyzer';
 export * from './response/mcs-billing';
 export * from './response/mcs-billing-site';
 export * from './response/mcs-billing-cost-centre';

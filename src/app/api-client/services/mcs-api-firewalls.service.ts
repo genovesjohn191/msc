@@ -6,6 +6,8 @@ import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
   McsFirewall,
+  McsFirewallFortiAnalyzer,
+  McsFirewallFortiManager,
   McsFirewallPolicy,
   McsQueryParam
 } from '@app/models';
@@ -78,6 +80,52 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsFirewallPolicy[]>(McsFirewallPolicy, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getFirewallFortiManagers(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewallFortiManager[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/private-cloud/firewalls/forti-managers';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsFirewallFortiManager[]>(McsFirewallFortiManager, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getFirewallFortiAnalyzers(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewallFortiAnalyzer[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/private-cloud/firewalls/forti-analyzers';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsFirewallFortiAnalyzer[]>(McsFirewallFortiAnalyzer, response);
           return apiResponse;
         })
       );

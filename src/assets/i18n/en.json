@@ -3255,6 +3255,8 @@
     "getFirewalls": "Something went wrong while retrieving your firewalls.",
     "getFirewall": "Something went wrong while retrieving the details for this firewall.",
     "getFirewallPolicies": "Something went wrong while retrieving your firewall policies.",
+    "getFirewallFortiManagers": "Something went wrong while retrieving FortiManagers.",
+    "getFirewallFortiAnalyzers": "Something went wrong while retrieving FortiAnalyzers.",
     "getServerConsole": "Something went wrong while retrieving the console image for this server.",
     "getSystemMessages": "Something went wrong while retrieving the list of system messages.",
     "getSystemMessage": "Something went wrong while retrieving the details for this system message.",

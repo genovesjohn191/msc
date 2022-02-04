@@ -1,4 +1,5 @@
 export * from './input-account-upn/input-account-upn';
+export * from './input-adom-name/input-adom-name';
 export * from './input-domain/input-domain';
 export * from './input-fqdn-domain/input-fqdn-domain';
 export * from './input-hidden/input-hidden';
@@ -27,6 +28,8 @@ export * from './select-chips-company/select-chips-company';
 export * from './select-chips-terraform-module/select-chips-terraform-module';
 export * from './select-chips-terraform-tag/select-chips-terraform-tag';
 export * from './select-chips-vm/select-chips-vm';
+export * from './select-forti-manager/select-forti-manager';
+export * from './select-forti-analyzer/select-forti-analyzer';
 export * from './select-group/select-group';
 export * from './select-location/select-location';
 export * from './select-multiple/select-multiple';
