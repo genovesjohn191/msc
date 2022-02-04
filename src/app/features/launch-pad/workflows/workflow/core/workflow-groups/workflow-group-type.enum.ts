@@ -39,7 +39,8 @@ export enum WorkflowGroupId {
   AvdProvisionHostPool = 800000,
   VmsAvdHostPoolAdd = 800001,
 
-  FirewallProvisionAdom = 900002
+  VfwDeprovision = 900001,
+  FirewallProvisionAdom = 900002,
 }
 
 export const workflowGroupIdText = {
@@ -75,6 +76,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.AvdProvisionHostPool]: 'Provision AVD Host Pool',
   [WorkflowGroupId.VmsAvdHostPoolAdd]: 'Add VMs to AVD Host Pool',
 
+  [WorkflowGroupId.VfwDeprovision]: 'Deprovision Virtual Firewall',
   [WorkflowGroupId.FirewallProvisionAdom]: 'Provision Firewall ADOM',
 }
 
