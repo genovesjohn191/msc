@@ -29,5 +29,6 @@ export * from './vm-backup-provision.workflow';
 export * from './avd-provision-host-pool.workflow';
 export * from './vms-avd-host-pool-add.workflow';
 
-export * from './firewall-provision-adom.workflow';
+export * from './vfw-allocate.workflow';
 export * from './vfw-deprovision.workflow';
+export * from './firewall-provision-adom.workflow';

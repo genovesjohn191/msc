@@ -15,6 +15,7 @@ export enum CrispAttributeNames {
   Ic2Storage = 'IC2_STORAGE',
   Ic2StorageTier = 'IC2_STORAGE_TIER',
   Ic2Vcpu = 'IC2_VCPU',
+  Ic2Version = 'IC2_VERSION',
   Ic2Vram = 'IC2_VRAM',
   Ic2WinLic = 'IC2_WINLIC',
   IntelliDeuNominatedBackup = 'INTELLI-DEU-NOMINATED-BACKUP',
