@@ -224,6 +224,7 @@ export class CommonDefinition {
     = /^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/;
   public static REGEX_PROFILE_STORAGE_ACCOUNT_NAME_PATTERN = /^[a-zA-Z0-9]{1,15}$/;
   public static REGEX_ACCOUNT_UPN_PATTERN = /^.*[^-_.]$/;
+  public static REGEX_ADOM_NAME_PATTERN = /^[a-zA-Z0-9]+_[0-9]+$/;
   public static REGEX_SHORT_CUSTOMER_NAME_PATTERN = /^[a-zA-Z0-9]{1,16}$/;
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
   public static REGEX_NUMERIC_PATTERN = /^-?\d*?$/;

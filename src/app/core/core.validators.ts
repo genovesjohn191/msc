@@ -138,6 +138,11 @@ export class CoreValidators {
       null : { accountUpn: true };
   }
 
+  public static adomName(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_ADOM_NAME_PATTERN.test(control.value) ?
+      null : { adomName: true };
+  }
+
   public static shortCustomerName(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_SHORT_CUSTOMER_NAME_PATTERN.test(control.value) ? null : { shortCustomerName: true };
   }

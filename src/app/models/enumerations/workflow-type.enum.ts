@@ -30,7 +30,9 @@ export enum WorkflowType {
 
   VmBackupProvision = 'launchpad.vmbackup.provision',
 
-  VdcNetworkCreate = 'launchpad.vdcnetwork.create'
+  VdcNetworkCreate = 'launchpad.vdcnetwork.create',
+
+  FirewallProvisionAdom = 'launchpad.firewall.provisionAdom',
 }
 
 /**

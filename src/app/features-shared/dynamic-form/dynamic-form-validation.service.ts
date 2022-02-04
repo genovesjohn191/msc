@@ -52,6 +52,9 @@ export class DynamicFormValidationService {
     if (control.hasError('accountUpn')) {
       return 'Incorrect account UPN format';
     }
+    if (control.hasError('adomName')) {
+      return 'Incorrect ADOM name format';
+    }
     if (control.hasError('profileStorageAccountName')) {
       return 'Incorrect profile storage account name format';
     }
