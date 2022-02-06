@@ -34,6 +34,12 @@ export class McsLicense extends McsEntityBase {
   public quantity: number = 0;
 
   @JsonProperty()
+  public minimumQuantity: number = 0;
+
+  @JsonProperty()
+  public maximumQuantity: number = 0;
+
+  @JsonProperty()
   public billingCycle: string = undefined;
 
   @JsonProperty({

@@ -104,6 +104,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   private _licensesHasValueChange: BehaviorSubject<boolean>;
   private _childLicensesFcConfig: LicenseCountFormControlConfig[] = [];
   private _licenseCache: McsLicense[] = [];
+  private _fetchedLicenseDetail: String[] = [];
 
   private _errorStatus: number;
   private _licenseCount: number;
@@ -165,15 +166,15 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
-  public get baseLicenseCountMin(): number {
-    return DEFAULT_LICENSE_COUNT_MIN;
+  public licenseCountMin(license?: McsLicense): number {
+    return license?.minimumQuantity? license.minimumQuantity:DEFAULT_LICENSE_COUNT_MIN;
   }
 
-  public get baseLicenseCountMax(): number {
-    return DEFAULT_LICENSE_COUNT_MAX;
+  public licenseCountMax(license?: McsLicense): number {
+    return license?.maximumQuantity? license.maximumQuantity:DEFAULT_LICENSE_COUNT_MAX;
   }
 
-  public get baseLicenseCountStep(): number {
+  public get licenseCountStep(): number {
     return DEFAULT_LICENSE_COUNT_STEP;
   }
 
@@ -194,16 +195,16 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
   }
 
-  public get licenseCountQuantityErrorMessages(): FieldErrorMessage {
+  public licenseCountQuantityErrorMessages(license: McsLicense): FieldErrorMessage {
     return createObject(FieldErrorMessage, {
       required: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountRequired'),
       numeric: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountNumeric'),
       min: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountMinimum',
-        { min_value: this.baseLicenseCountMin }),
+        { min_value: this.licenseCountMin(license) }),
       max: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountMaximum',
-        { max_value: this.baseLicenseCountMax }),
+        { max_value: this.licenseCountMax(license) }),
       step: this.translateService.instant('orderMsLicenseCountChange.detailsStep.licenseCountValid',
-        { step: this.baseLicenseCountStep })
+        { step: this.licenseCountStep })
     });
   }
 
@@ -213,7 +214,20 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
 
   public onChangeLicense(license: McsLicense, childLicensesFcConfig: LicenseCountFormControlConfig[]): void {
     if (isNullOrEmpty(license)) { return; }
-    this._resetChildLisences(license, childLicensesFcConfig);
+    //get this license and any child licenses from the cache
+    let relatedLicenses = this._licenseCache.filter((cachedLicense) => ((license.id === cachedLicense.id) || (license.id === cachedLicense.parentId)));
+    let totalRelatedLicenses = relatedLicenses.length;
+    let retrievedRelatedLicenses = 0;
+    relatedLicenses.forEach((relatedLicense) => {
+      if (!this._fetchedLicenseDetail.includes(relatedLicense.id))  {
+          this._apiService.getLicense(relatedLicense.id).subscribe(response => {
+            this._fetchedLicenseDetail.push(relatedLicense.id);
+            relatedLicense = Object.assign(relatedLicense,response);
+            this._resetLicenses(license, childLicensesFcConfig);
+          });
+      }
+      this._resetLicenses(license, childLicensesFcConfig);
+    });
   }
 
   public onSubmitOrder(submitDetails: OrderDetails): void {
@@ -280,9 +294,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     this.fcLicenseCount = new FormControl('', [
       CoreValidators.required,
       CoreValidators.numeric,
-      (control) => CoreValidators.min(this.baseLicenseCountMin)(control),
-      (control) => CoreValidators.max(this.baseLicenseCountMax)(control),
-      (control) => CoreValidators.step(this.baseLicenseCountStep)(control)
+      (control) => CoreValidators.step(this.licenseCountStep)(control)
     ]);
 
     this.fgMsLicenseCount = this._formBuilder.group({
@@ -358,7 +370,15 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     });
   }
 
-  private _resetChildLisences(parentLicense: McsLicense, childLicensesFcConfig: LicenseCountFormControlConfig[]): void {
+  private _resetLicenses(parentLicense: McsLicense, childLicensesFcConfig: LicenseCountFormControlConfig[]): void {
+    this.fcLicenseCount.setValidators([
+      CoreValidators.required,
+      CoreValidators.numeric,
+      CoreValidators.min(this.licenseCountMin(parentLicense)),
+      CoreValidators.max(this.licenseCountMax(parentLicense)),
+      CoreValidators.step(this.licenseCountStep)
+    ]);
+
     let childLicenses = this._licenseCache.filter((licenseCache) => parentLicense.id === licenseCache.parentId);
     this._msLicenseCountChangeService.clearOrderItems();
     this._childLicensesFcConfigChange.next([]);
@@ -380,9 +400,9 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
       let childFormControl = new FormControl(license.quantity, [
         CoreValidators.required,
         CoreValidators.numeric,
-        (control) => CoreValidators.min(this.baseLicenseCountMin)(control),
-        (control) => CoreValidators.max(this.baseLicenseCountMax)(control),
-        (control) => CoreValidators.step(this.baseLicenseCountStep)(control)
+        (control) => CoreValidators.min(this.licenseCountMin(license))(control),
+        (control) => CoreValidators.max(this.licenseCountMax(license))(control),
+        (control) => CoreValidators.step(this.licenseCountStep)(control)
       ]);
       let childFormControlName = `fcChildLicense${index}`;
       childLicensesFcConfig.push({ childFormControlName, license, referenceId: Guid.newGuid().toString() });

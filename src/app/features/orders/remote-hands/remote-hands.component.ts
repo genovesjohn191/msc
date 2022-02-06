@@ -396,6 +396,14 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
       fcFloorLevel: this.fcFloorLevel,
       fcRackNumber: this.fcRackNumber
     });
+
+    this.fcRackService.valueChanges.pipe(
+      tap((value) => {
+        if (!isNullOrEmpty(value)) {
+          this.fcRackNumber.setValue(value.rackIdentifier);
+        }
+      })
+    ).subscribe();
   }
 
 

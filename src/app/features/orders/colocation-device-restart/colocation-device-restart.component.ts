@@ -261,6 +261,14 @@ export class ColocationDeviceRestartComponent extends McsOrderWizardBase impleme
       fcDeviceNameLabel: this.fcDeviceNameLabel,
       fcRestartInstruction: this.fcRestartInstruction
     });
+
+    this.fcColocationService.valueChanges.pipe(
+      tap((value) => {
+        if (!isNullOrEmpty(value)) {
+          this.fcRackNumber.setValue(value.rackIdentifier);
+        }
+      })
+    ).subscribe();
   }
 
   /**

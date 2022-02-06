@@ -10,6 +10,9 @@ export class McsColocationRack extends McsServiceBase {
   @JsonProperty()
   public description: string = undefined;
 
+  @JsonProperty()
+  public rackIdentifier: string = undefined;
+
   public get colocationGroup(): string {
     return colocationTypeText[ColocationType.Racks];
   }

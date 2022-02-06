@@ -116,9 +116,9 @@
                   [disabled]="!fcLicenses?.value?.isChangeable">
                   <mcs-field-input-number-arrow
                     [formControl]="fcLicenseCount"
-                    [minValue]="baseLicenseCountMin"
-                    [maxValue]="baseLicenseCountMax"
-                    [errorMessage]="licenseCountQuantityErrorMessages"
+                    [minValue]="licenseCountMin(fcLicenses?.value)"
+                    [maxValue]="licenseCountMax(fcLicenses?.value)"
+                    [errorMessage]="licenseCountQuantityErrorMessages(fcLicenses?.value)"
                     [suffix]="fcLicenses?.value?.unit"
                     [mcsId]="'input-ms-license-count'"
                     [eventCategory]="'order'"
@@ -196,9 +196,9 @@
                           [disabled]="!childLicensesFcItem?.license?.isChangeable">
                           <mcs-field-input-number-arrow
                             [formControl]="getFormControl(childLicensesFcItem?.childFormControlName)"
-                            [minValue]="baseLicenseCountMin"
-                            [maxValue]="baseLicenseCountMax"
-                            [errorMessage]="licenseCountQuantityErrorMessages"
+                            [minValue]="licenseCountMin(childLicensesFcItem?.license)"
+                            [maxValue]="licenseCountMax(childLicensesFcItem?.license)"
+                            [errorMessage]="licenseCountQuantityErrorMessages(childLicensesFcItem?.license)"
                             [suffix]="childLicensesFcItem?.license?.unit"
                             [mcsId]="'input-ms-license-count'"
                             [eventCategory]="'order'"
@@ -238,9 +238,11 @@
               </div>
             </ng-container>
             <ng-template #licenseNoServiceIdTemplate>
-              <mcs-item>
-                <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.noServiceId' | translate }}</span>
-              </mcs-item>
+              <ng-container *ngIf="fcLicenses?.value">
+                <mcs-item>
+                  <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.noServiceId' | translate }}</span>
+                </mcs-item>
+              </ng-container>
             </ng-template>
           </form>
         </mcs-wizard-step>
