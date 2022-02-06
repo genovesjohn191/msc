@@ -1,4 +1,21 @@
+$tooltip-color: $color-white;
+$tooltip-bg-color: rgba($color-black, 0.87);
+$tooltip-border-radius: 2px;
+$tooltip-padding: $space-xsmall $space-small;
+$tooltip-max-width: 500px;
+
 .mat-tooltip {
-  white-space: pre-line !important;
-  max-width: 800px !important;
+  @include display-flex(column);
+  //white-space: pre-line !important;
+  position: relative;
+  max-width: $tooltip-max-width !important;
+
+  border-radius: $tooltip-border-radius !important;
+  margin: $space-small;
+  padding: $tooltip-padding;
+
+  color: $tooltip-color;
+  background-color: $tooltip-bg-color;
+
+  font-size: inherit;
 }

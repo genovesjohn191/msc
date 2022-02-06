@@ -1799,6 +1799,15 @@ export class McsApiService {
     );
   }
 
+  public getLicense(id: string): Observable<McsLicense> {
+    return this._licensesApi.getLicense(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getLicense'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public getAccount(): Observable<McsAccount> {
     return this._accountApi.getAccount().pipe(
       catchError((error) =>

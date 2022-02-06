@@ -431,6 +431,14 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     ).subscribe();
 
     this._subscribeAttendanceDetailsChanges();
+
+    this.fcColocationService.valueChanges.pipe(
+      tap((value) => {
+        if (!isNullOrEmpty(value)) {
+          this.fcRackIdentifier.setValue(value.rackIdentifier);
+        }
+      })
+    ).subscribe();
   }
 
   /**
