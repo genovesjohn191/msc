@@ -14,7 +14,7 @@
           <section *ngIf="hasActiveOrders(groupDetails.newOrders); else noNewOrdersTemplate">
             <div padding-bottom-small *ngFor="let newOrder of groupDetails.newOrders">
               <div *ngIf="!isUnknown(newOrder)">
-                <div [matTooltip]="'orderGroups.tooltipComingSoonNewOrder' | translate"
+                <div [matTooltip]="'orderGroups.tooltipComingSoon' | translate"
                   [matTooltipDisabled]="!isComingSoon(newOrder)">
                   <a (click)="executeOrderAvailable(newOrder.productOrderType)"
                     [disabled]="isComingSoon(newOrder)">
@@ -47,7 +47,7 @@
           <section *ngIf="hasActiveOrders(groupDetails.changeOrders); else noChangeOrdersTemplate">
             <div padding-bottom-small *ngFor="let changeOrder of groupDetails.changeOrders">
               <div *ngIf="!isUnknown(changeOrder)">
-                <div [matTooltip]="'orderGroups.tooltipComingSoonChange' | translate"
+                <div [matTooltip]="'orderGroups.tooltipComingSoon' | translate"
                   [matTooltipDisabled]="!isComingSoon(changeOrder)">
                   <a (click)="executeOrderAvailable(changeOrder.productOrderType)"
                     [disabled]="isComingSoon(changeOrder)">
