@@ -59,11 +59,11 @@ export class NetworkDbNetworkCreateComponent extends BasicJobFormComponentBase<M
       label: 'Company',
       placeholder: 'Search for name or company ID...',
       validators: { required: true },
-      allowCustomInput: true,
+      allowCustomInput: false,
       maxItems: 1,
       eventName: 'company-change',
       dependents: ['name','serviceId'],
-      contextualHelp: 'Select a company to create this network for, or manually enter a custom company name.'
+      contextualHelp: 'Select a company to create this network for.'
     }),
     new DynamicSelectChipsServiceField({
       key: 'serviceId',
@@ -101,7 +101,7 @@ export class NetworkDbNetworkCreateComponent extends BasicJobFormComponentBase<M
     let properties = form.getRawValue();
 
     return {
-      companyId: isNullOrEmpty(properties.company) ? null :  properties.company[0].value,
+      companyId: properties.company[0].value,
       name: properties.name,
       description: properties.description,
       serviceId: !isNullOrEmpty(properties.serviceId) ? properties.serviceId[0].label.toString() : null,
