@@ -34,6 +34,7 @@ export * from './select-group/select-group';
 export * from './select-location/select-location';
 export * from './select-multiple/select-multiple';
 export * from './select-multiple-network-db-pods/select-multiple-network-db-pods';
+export * from './select-network-db-pod/select-network-db-pod';
 export * from './select-network/select-network';
 export * from './select-network-vlan/select-network-vlan';
 export * from './select-gateway-ip/select-gateway-ip';

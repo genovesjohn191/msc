@@ -26,6 +26,7 @@ import { DynamicSelectChipsVmComponent } from './select-chips-vm/select-chips-vm
 import { DynamicSelectChipsComponent } from './select-chips/select-chips.component';
 import { DynamicSelectGroupComponent } from './select-group/select-group.component';
 import { DynamicSelectMultipleComponent } from './select-multiple/select-multiple.component';
+import { DynamicSelectNetworkDbPodComponent } from './select-network-db-pod/select-network-db-pod.component';
 import { DynamicSelectMultipleNetworkDbPodsComponent } from './select-multiple-network-db-pods/select-multiple-network-db-pods.component';
 import { DynamicSelectNetworkDbUseCaseComponent } from './select-network-db-usecase/select-network-db-use-case.component';
 import { DynamicSelectNetworkComponent } from './select-network/select-network.component';
@@ -86,6 +87,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectLocationComponent,
   DynamicSelectMultipleComponent,
   DynamicSelectMultipleNetworkDbPodsComponent,
+  DynamicSelectNetworkDbPodComponent,
   DynamicSelectNetworkComponent,
   DynamicSelectGatewayIpComponent,
   DynamicSelectNetworkVlanComponent,
