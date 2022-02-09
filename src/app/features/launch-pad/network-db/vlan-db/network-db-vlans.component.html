@@ -75,7 +75,13 @@
             {{ 'columnHeader.pod' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
+            <span>
             {{ row.podName }}
+            </span>
+            <span read-only *ngIf="row.podSiteName">
+              <br/>
+              ({{ row.podSiteName }})
+            </span>
           </td>
         </ng-container>
 
@@ -92,6 +98,26 @@
               mcsEventLabel="vlan-listing-page">
               {{ row.networkName }}
             </a>
+            <span read-only *ngIf="row.networkServiceId">
+              <br/>
+              ({{ row.networkServiceId }})
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Network Company Column -->
+        <ng-container matColumnDef="networkCompany">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.networkCompany' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            <span *ngIf="row.networkCompanyName">
+              {{ row.networkCompanyName }}
+              <br/>
+            </span>
+            <span read-only *ngIf="row.networkCompanyId">
+              ({{ row.networkCompanyId }})
+            </span>
           </td>
         </ng-container>
 

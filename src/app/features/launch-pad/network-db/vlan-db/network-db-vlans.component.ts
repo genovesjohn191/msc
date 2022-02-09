@@ -49,6 +49,7 @@ export class NetworkDbVlansComponent implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'isInfrastructure' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'pod' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'network' }),
+    createObject(McsFilterInfo, { value: false, exclude: false, id: 'networkCompany' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),

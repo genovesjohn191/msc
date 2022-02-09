@@ -3459,6 +3459,7 @@
     "multicastIpAddress": "Multicast IP Address",
     "name": "Name",
     "network": "Network",
+    "networkCompany": "Network Company",
     "networkName": "Network Name",
     "notification": "Notification",
     "number": "Number",

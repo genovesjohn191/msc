@@ -34,6 +34,15 @@ export class McsNetworkDbVlan {
   public networkName: string = undefined;
 
   @JsonProperty()
+  public networkCompanyId: number = undefined;
+
+  @JsonProperty()
+  public networkCompanyName: string = undefined;
+
+  @JsonProperty()
+  public networkServiceId: string = undefined;
+
+  @JsonProperty()
   public createdBy: string = undefined;
 
   @JsonProperty({
@@ -52,8 +61,8 @@ export class McsNetworkDbVlan {
   public updatedOn: Date = undefined;
 
   @JsonProperty()
-  public podSiteId?: number = undefined;
+  public podSiteId: number = undefined;
 
   @JsonProperty()
-  public podSiteName?: string = undefined;
+  public podSiteName: string = undefined;
 }
