@@ -184,6 +184,8 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * @param submitDetails Submit details of the order
    */
   public onSubmitOrder(submitDetails: OrderDetails): void {
+    // get orderId and save in session storage for automation
+    sessionStorage.setItem('order-id', this.orderId);
     if (isNullOrEmpty(submitDetails)) { return; }
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
