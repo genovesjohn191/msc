@@ -37,4 +37,5 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.VfwAllocate, 'Allocate Virtual Firewall'],
   [WorkflowGroupId.VfwDeprovision, 'Deprovision Virtual Firewall'],
   [WorkflowGroupId.FirewallProvisionAdom, 'Provision Firewall ADOM'],
+  [WorkflowGroupId.FirewallDeprovision, 'Deprovision Physical Firewall'],
 ]);

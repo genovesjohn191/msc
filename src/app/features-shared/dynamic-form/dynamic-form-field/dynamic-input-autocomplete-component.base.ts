@@ -115,6 +115,11 @@ export abstract class DynamicInputAutocompleteFieldComponentBase<T>
     this.setValue(inputControl.value);
   }
 
+  public getOptionValue(opt: FlatOption) {
+    if (isNullOrEmpty(opt)) { return }
+    return opt.value;
+  }
+
   public abstract setValue(value: string): void;
 
   public abstract selected(event: MatAutocompleteSelectedEvent): void;

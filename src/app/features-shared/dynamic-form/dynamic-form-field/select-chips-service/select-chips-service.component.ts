@@ -92,7 +92,7 @@ export class DynamicSelectChipsServiceComponent extends DynamicSelectChipsFieldC
 
     // Add our custom value to the array
     let validCustomInput = this.config.allowCustomInput && !isNullOrEmpty(value?.trim())
-      && CommonDefinition.REGEX_NETWORK_SERVICE_ID_PATTERN.test(value);
+      && CommonDefinition.REGEX_DUMMY_SERVICE_ID_PATTERN.test(value);
     if (validCustomInput) {
       this._tryAddChip({
         value: value.trim(),
