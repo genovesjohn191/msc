@@ -167,6 +167,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-storage-profile-field>
 
+        <mcs-dff-select-service-field *ngSwitchCase="'select-service'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-service-field>
+
         <mcs-dff-select-tenant-field *ngSwitchCase="'select-tenant'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-tenant-field>

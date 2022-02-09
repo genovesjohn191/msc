@@ -41,6 +41,7 @@ export * from './select-network-db-usecase/select-network-db-use-case';
 export * from './select-os/select-os';
 export * from './select-retention-period/select-retention-period';
 export * from './select-chips-service/select-chips-service';
+export * from './select-service/select-service';
 export * from './select-software-suscription-product-type/select-software-suscription-product-type';
 export * from './select-reservation-product-type/select-reservation-product-type';
 export * from './select-resource-group/select-resource-group';

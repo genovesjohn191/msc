@@ -263,7 +263,7 @@ export class CommonDefinition {
   public static REGEX_DNS_TYPE_PTR = /^(?:(?:\d+\.)*\d+(?:-in\.addr\.arpa\.)?)$/;
 
   public static REGEX_DUMMY_SERVICE_ID_PATTERN = /^([mM][xX|0-9]?[mM][gG][mM][tT])[0-9]{7,10}$/;
-  public static REGEX_NETWORK_SERVICE_ID_PATTERN = /^([mM][xX|0-9]?[mM][gG][mM][tT])[0-9]{7,10}$/;
+  public static REGEX_FIREWALL_SERVICE_ID_PATTERN = /^[mM][1-9pPwWxX][dD][fF][wW][0-9]{6,9}$/;
   public static REGEX_HOSTNAME_PATTERN = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]))$/;
 
   /** Session count */
