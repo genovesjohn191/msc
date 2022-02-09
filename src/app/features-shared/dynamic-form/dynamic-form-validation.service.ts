@@ -55,6 +55,9 @@ export class DynamicFormValidationService {
     if (control.hasError('adomName')) {
       return 'Incorrect ADOM name format';
     }
+    if (control.hasError('dummyServiceId')) {
+      return 'Incorrect format';
+    }
     if (control.hasError('profileStorageAccountName')) {
       return 'Incorrect profile storage account name format';
     }

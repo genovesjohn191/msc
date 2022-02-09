@@ -31,6 +31,7 @@ export * from './vms-avd-host-pool-add.workflow';
 
 export * from './vfw-allocate.workflow';
 export * from './vfw-deprovision.workflow';
+export * from './vfw-provision.workflow';
 export * from './firewall-provision-adom.workflow';
 export * from './firewall-deprovision.workflow';
 export * from './firewall-allocate.workflow';
