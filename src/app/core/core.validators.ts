@@ -143,6 +143,11 @@ export class CoreValidators {
       null : { adomName: true };
   }
 
+  public static dummyServiceId(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_DUMMY_SERVICE_ID_PATTERN.test(control.value) ?
+      null : { dummyServiceId: true };
+  }
+
   public static shortCustomerName(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_SHORT_CUSTOMER_NAME_PATTERN.test(control.value) ? null : { shortCustomerName: true };
   }

@@ -15,6 +15,7 @@ export * from './input-profile-storage-account-name/input-profile-storage-accoun
 export * from './input-text/input-text';
 export * from './input-size/input-size';
 export * from './input-subscription-id/input-subscription-id';
+export * from './input-vrf-name/input-vrf-name';
 export * from './select/select';
 export * from './select-azure-resource/select-azure-resource';
 export * from './select-availability-zone/select-availability-zone';

@@ -73,6 +73,7 @@ export type DynamicFormFieldType =
   | 'textbox-short-customer-name'
   | 'textbox-size'
   | 'textbox-subscription-id'
+  | 'textbox-vrf-name'
   | 'select-availability-zone'
   | 'select-bat'
   | 'select-chip-single-company'
