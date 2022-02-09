@@ -6,6 +6,7 @@ export enum CrispAttributeNames {
   BillFreq = 'BILL_FREQ',
   DailyBackupQuota = 'DAILY-BACKUP-QUOTA',
   DesignatedUsage = 'DESIGNATED_USAGE',
+  FirewallType = 'FWALL_TYPE',
   HipsProtectionLvl = 'HIPS_PROTECTION_LVL',
   Ic2Access = 'IC2_ACCESS',
   Ic2DiskSpace = 'IC2_DISK_SPACE',
@@ -28,6 +29,7 @@ export enum CrispAttributeNames {
   ReservedTerm = 'RESERVED_TERM',
   ServerLink = 'SERVER_LINK',
   SkuId = 'SKU_ID',
+  UseCase = 'USE_CASE'
 }
 
 export const findCrispElementAttribute:

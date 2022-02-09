@@ -35,6 +35,7 @@ export const vfwAllocateForm: LaunchPadForm = {
         {key: 'Large', value: 'Large'}
         ],
       validators: { required: true },
+      contextualHelp: 'The size of the firewall.'
     }),
   ],
 

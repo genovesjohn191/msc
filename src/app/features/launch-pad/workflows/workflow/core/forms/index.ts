@@ -31,3 +31,4 @@ export * from './vfw-allocate.form';
 export * from './vfw-deprovision.form';
 export * from './firewall-provision-adom.form';
 export * from './firewall-deprovision.form';
+export * from './firewall-allocate.form';
