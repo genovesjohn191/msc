@@ -1817,7 +1817,18 @@ export class McsApiService {
     );
   }
 
-  public getAzureResources(query?: McsAzureResourceQueryParams): Observable<McsApiCollection<McsAzureResource>> {
+  public getAzureResources(query?: McsAzureResourceQueryParams, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsAzureResource>> {
+    
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._azureResourcesApi.getAzureResources(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResources'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
     let azureResources = isNullOrEmpty(query) ?
       this._azureResourceRepository.getAll() :
       this._azureResourceRepository.filterBy(query);
@@ -2385,8 +2396,8 @@ export class McsApiService {
     );
   }
 
-  public getLocations(query?: McsQueryParam): Observable<McsApiCollection<McsLocation>> {
-    return this._locationsApi.getLocations(query).pipe(
+  public getLocations(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsLocation>> {
+    return this._locationsApi.getLocations(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getLocations'))
       ),
@@ -2403,8 +2414,8 @@ export class McsApiService {
     );
   }
 
-  public getVmSizes(query?: McsQueryParam): Observable<McsApiCollection<McsVmSize>> {
-    return this._vmSizesApi.getVmSizes(query).pipe(
+  public getVmSizes(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVmSize>> {
+    return this._vmSizesApi.getVmSizes(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVmSizes'))
       ),

@@ -6,6 +6,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
   Observable,
+  of,
   Subject,
   Subscription,
   throwError
@@ -17,9 +18,15 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-import { McsAzureService } from '@app/models';
+import {
+  McsAzureService,
+  McsAzureServicesRequestParams
+} from '@app/models';
 import { McsApiService } from '@app/services';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicFieldComponentBase } from '../dynamic-field-component.base';
@@ -43,6 +50,7 @@ import { DynamicInputSubscriptionIdField } from './input-subscription-id';
 export class DynamicInputSubscriptionIdComponent extends DynamicFieldComponentBase {
   public config: DynamicInputSubscriptionIdField;
   private _linkedServiceId: string;
+  private _companyId: string = '';
   private _destroySubject: Subject<void> = new Subject<void>();
 
   private currentServiceCall: Subscription;
@@ -55,6 +63,11 @@ export class DynamicInputSubscriptionIdComponent extends DynamicFieldComponentBa
     switch (params.eventName) {
       case 'linked-service-id-change':
         this._linkedServiceId = params.value;
+        this.mapServiceId();
+        break;
+
+      case 'company-change':
+        this._companyId = params.value;
         this.mapServiceId();
         break;
     }
@@ -86,7 +99,16 @@ export class DynamicInputSubscriptionIdComponent extends DynamicFieldComponentBa
   }
 
   protected callService(): Observable<McsAzureService[]> {
-    return this._apiService.getAzureServices().pipe(
+    if (isNullOrEmpty(this._companyId)) { return of([]); }
+
+    let param = new McsAzureServicesRequestParams();
+    param.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
+    return this._apiService.getAzureServices(param, optionalHeaders).pipe(
       takeUntil(this._destroySubject),
       map((response) => response && response.collection));
   }

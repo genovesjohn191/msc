@@ -12,7 +12,6 @@ import {
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiVmSizesService } from '../interfaces/mcs-api-vm-sizes.interface';
-import { HttpClient } from '@angular/common/http';
 
 /**
  * VM Size Services Class
@@ -20,16 +19,16 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class McsApiVMSizesService implements IMcsApiVmSizesService {
 
-  constructor(private _mcsApiService: McsApiClientHttpService, private httpClient: HttpClient) { }
+  constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getVmSizes(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsVmSize[]>> {
+  public getVmSizes(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsVmSize[]>> {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/vm-sizes';
     mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
-
-    let url = '../../../assets/mock-data/vm-size.json';
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
