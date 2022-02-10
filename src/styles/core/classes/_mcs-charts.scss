@@ -35,7 +35,7 @@ $chart-max-width: 25rem;
       word-break: break-all;
     }
 
-    &:last-child() {
+    &:last-child {
       margin-bottom: $space-small;
     }
   }

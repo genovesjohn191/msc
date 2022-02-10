@@ -1,17 +1,18 @@
 import {
-  Injectable,
-  NgZone,
-  ElementRef
-} from '@angular/core';
-import {
-  Subject,
-  Subscription,
+  fromEvent,
   merge,
-  fromEvent
+  Subject,
+  Subscription
 } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
-import { isNullOrEmpty } from '@app/utilities';
+
+import {
+  ElementRef,
+  Injectable,
+  NgZone
+} from '@angular/core';
 import { Scrollable } from '@app/shared';
+import { isNullOrEmpty } from '@app/utilities';
 
 const DEFAULT_SCROLL_TIME = 20;
 
@@ -228,6 +229,6 @@ export class McsScrollDispatcherService {
    * Notify the scrolled stream
    */
   private _notifyStream(): void {
-    this._onScroll.next();
+    this._onScroll.next(null);
   }
 }

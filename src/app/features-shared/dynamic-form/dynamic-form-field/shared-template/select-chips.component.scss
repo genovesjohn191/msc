@@ -1,4 +1,4 @@
-@import "../../../../../styles/shared/base";
+@import "base";
 
 .box.cdk-drag-animating {
   @include transition(transform 250ms cubic-bezier(0, 0, 0.2, 1));

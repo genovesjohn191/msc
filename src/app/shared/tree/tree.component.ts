@@ -1,32 +1,34 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  AfterContentInit,
-  OnDestroy,
-  Output,
-  EventEmitter,
-  ContentChildren,
-  QueryList,
-  NgZone
-} from '@angular/core';
-import {
-  Subject,
-  Observable,
   defer,
-  merge
+  merge,
+  Observable,
+  Subject
 } from 'rxjs';
 import {
-  take,
   switchMap,
+  take,
   takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChildren,
+  EventEmitter,
+  NgZone,
+  OnDestroy,
+  Output,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { TreeNodeComponent } from './tree-node/tree-node.component';
+
 import { TreeNode } from './tree-node/tree-node';
+import { TreeNodeComponent } from './tree-node/tree-node.component';
 
 @Component({
   selector: 'mcs-tree',
@@ -53,7 +55,7 @@ export class TreeComponent<T> implements AfterContentInit, OnDestroy {
    */
   private readonly _treeNodesSelectionChanges: Observable<TreeNodeComponent<T>> = defer(() => {
     if (!isNullOrEmpty(this.treeNodes)) {
-      return merge<TreeNodeComponent<T>>(
+      return merge(
         ...this.treeNodes.map((treeNode) => treeNode.selectionChange)
       );
     }

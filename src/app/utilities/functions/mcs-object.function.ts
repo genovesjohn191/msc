@@ -46,7 +46,7 @@ export function unsubscribeSafely(subscriber: Subscription | Subject<any>): void
   if (subscriber instanceof Subscription) {
     subscriber.unsubscribe();
   } else {
-    subscriber.next();
+    subscriber.next(null);
     subscriber.complete();
   }
 }

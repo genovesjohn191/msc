@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 // Responsive Breakpoints
 // Usage:
 // .page-wrap {
@@ -79,8 +81,8 @@
 @mixin font-size($sizeValue: 16, $lineHeightValue: $sizeValue * 1.5) {
   font-size: $sizeValue + px;
   line-height: $lineHeightValue + px;
-  font-size: ($sizeValue / 16) + rem;
-  line-height: ($lineHeightValue / 16) + rem;
+  font-size: math.div($sizeValue, 16) + rem;
+  line-height: math.div($lineHeightValue, 16) + rem;
 }
 
 // Box Sizing

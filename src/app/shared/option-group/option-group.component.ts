@@ -83,7 +83,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    */
   private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
     if (!isNullOrEmpty(this._options)) {
-      return merge<OptionComponent>(...this._options.map((option) => option.selectionChange));
+      return merge(...this._options.map((option) => option.selectionChange));
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),
@@ -96,7 +96,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    */
   private readonly _optionsActiveChanges: Observable<OptionComponent> = defer(() => {
     if (!isNullOrEmpty(this._options)) {
-      return merge<OptionComponent>(...this._options.map((option) => option.activeChange));
+      return merge(...this._options.map((option) => option.activeChange));
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),
@@ -109,7 +109,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    */
   private readonly _optionsVisibilityChanges: Observable<OptionComponent> = defer(() => {
     if (!isNullOrEmpty(this._options)) {
-      return merge<OptionComponent>(...this._options.map((option) => option.visibilityChange));
+      return merge(...this._options.map((option) => option.visibilityChange));
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),

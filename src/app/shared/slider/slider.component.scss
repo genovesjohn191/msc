@@ -1,4 +1,5 @@
-@import "../../../styles/shared/base";
+@use 'sass:math';
+@import "base";
 
 // Main slider wrapper variables
 $slider-thickness: 48px;
@@ -130,8 +131,8 @@ $slider-focus-ring-size: 30px;
     background-color: $slider-fill-bg-color;
     @extend %_slider-cursor;
     position: absolute;
-    right: -$slider-thumb-size / 2;
-    bottom: -$slider-thumb-size / 2;
+    right: math.div(-$slider-thumb-size, 2);
+    bottom: math.div(-$slider-thumb-size, 2);
     @include box-sizing(border-box);
     width: $slider-thumb-size;
     height: $slider-thumb-size;
@@ -278,7 +279,7 @@ $slider-focus-ring-size: 30px;
 
   .slider-content-wrapper {
     height: $slider-track-thickness;
-    top: ($slider-thickness - $slider-track-thickness) / 2;
+    top: math.div($slider-thickness - $slider-track-thickness,  2);
     left: $slider-padding;
     right: $slider-padding;
 
@@ -327,15 +328,15 @@ $slider-focus-ring-size: 30px;
     top: 50%;
 
     .slider-focus-ring {
-      top: -$slider-focus-ring-size / 2;
-      right: -$slider-focus-ring-size / 2;
+      top: math.div(-$slider-focus-ring-size, 2);
+      right: math.div(-$slider-focus-ring-size, 2);
     }
 
     .slider-thumb-label {
-      right: -$slider-thumb-label-size / 2;
+      right: math.div(-$slider-thumb-label-size, 2);
       top: -($slider-thumb-label-size + $slider-thumb-arrow-gap);
       @include transform(
-        translateY($slider-thumb-label-size / 2 + $slider-thumb-arrow-gap)
+        translateY(math.div($slider-thumb-label-size, 2) + $slider-thumb-arrow-gap)
         scale(0.01)
         rotate(45deg)
       );
@@ -363,7 +364,7 @@ $slider-focus-ring-size: 30px;
     width: $slider-track-thickness;
     top: $slider-padding;
     bottom: $slider-padding;
-    left: ($slider-thickness - $slider-track-thickness) / 2;
+    left: math.div(($slider-thickness - $slider-track-thickness), 2);
 
     &:after {
       width: $slider-track-thickness;
@@ -408,15 +409,15 @@ $slider-focus-ring-size: 30px;
     left: 50%;
 
     .slider-focus-ring {
-      bottom: -$slider-focus-ring-size / 2;
-      left: -$slider-focus-ring-size / 2;
+      bottom: math.div(-$slider-focus-ring-size, 2);
+      left: math.div(-$slider-focus-ring-size, 2);
     }
 
     .slider-thumb-label {
-      bottom: -$slider-thumb-label-size / 2;
+      bottom: math.div(-$slider-thumb-label-size, 2);
       left: -($slider-thumb-label-size + $slider-thumb-arrow-gap);
       @include transform(
-        translateX($slider-thumb-label-size / 2 + $slider-thumb-arrow-gap)
+        translateX(math.div($slider-thumb-label-size, 2) + $slider-thumb-arrow-gap)
         scale(0.01)
         rotate(-45deg)
       );

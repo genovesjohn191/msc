@@ -1,3 +1,4 @@
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +8,6 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { MatTextareaAutosize } from '@angular/material/input';
 import { unsubscribeSafely } from '@app/utilities';
 
 import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
@@ -26,24 +26,26 @@ export class FieldInputNoteComponent
   extends FormFieldBaseComponent2<string>
   implements IFieldInputNote, OnInit, OnDestroy {
 
-  @ViewChild('autoSize', { read: MatTextareaAutosize })
-  private _autoSize: MatTextareaAutosize;
+  @ViewChild('autoSize', { read: CdkTextareaAutosize })
+  private _autoSize: CdkTextareaAutosize;
 
   constructor(_injector: Injector) {
     super(_injector);
   }
 
   public ngOnInit(): void {
-    this._updateTextAreaSize();
+    this._updateTextAreaSizeManually();
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this.destroySubject);
   }
 
-  private _updateTextAreaSize(): void {
+  private _updateTextAreaSizeManually(): void {
+    // We need to update the size manually because
+    // the full width auto adjust of mat-form-field size
+    // could not be calculated when it is set to prior.
     setTimeout(() => {
-      this._autoSize.matTextareaAutosize = true;
       this._autoSize.resizeToFitContent(true);
     });
   }

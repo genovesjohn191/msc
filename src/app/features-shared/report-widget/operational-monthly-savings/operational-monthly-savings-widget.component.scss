@@ -1,4 +1,4 @@
-@import "../../../../styles/shared/base";
+@import "base";
 
 .operational-savings-container {
   margin-bottom: $space-large;
@@ -31,7 +31,7 @@
     @include print() {
       overflow: auto;
     }
-  
+
     tr {
       td:last-child {
         text-align: right;

@@ -1,4 +1,4 @@
-@import '../../../styles/shared/base';
+@import 'base';
 
 // Header definitions
 $header-bg-color: $color-black;
@@ -28,7 +28,7 @@ $header-small-padding: $space-medium;
     width: 100%;
     background-color: transparent;
   }
-  
+
   .dark-logo {
     img {
       position: absolute;

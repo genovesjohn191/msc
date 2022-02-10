@@ -29,7 +29,7 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  emitLatestMap,
+  exhaustLatestMap,
   getSafeProperty,
   isNullOrEmpty,
   isNullOrUndefined,
@@ -299,7 +299,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _subscribeAndExecuteNewOrder(): void {
     this._orderDirector.orderRequestChange().pipe(
       takeUntil(this._orderRequestedSubject),
-      emitLatestMap((response) => this._executeOrderRequest(response))
+      exhaustLatestMap((response) => this._executeOrderRequest(response))
     ).subscribe();
   }
 

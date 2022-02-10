@@ -254,25 +254,25 @@ export class PopoverDirective implements OnInit, OnDestroy {
     }
   }
 
-  public setTopOrientation(elementPosition: ClientRect) {
+  public setTopOrientation(elementPosition: DOMRect) {
     let topPosition = elementPosition.height * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.top = `${-topPosition}px`;
   }
 
-  public setBottomOrientation(elementPosition: ClientRect) {
+  public setBottomOrientation(elementPosition: DOMRect) {
     let bottomPosition = elementPosition.height * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.bottom = `${-bottomPosition}px`;
   }
 
-  public setLeftOrientation(elementPosition: ClientRect) {
+  public setLeftOrientation(elementPosition: DOMRect) {
     let leftPosition = elementPosition.width * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.left = `${-leftPosition}px`;
   }
 
-  public setRightOrientation(elementPosition: ClientRect) {
+  public setRightOrientation(elementPosition: DOMRect) {
     let rightPosition = elementPosition.width * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.right = `${-rightPosition}px`;

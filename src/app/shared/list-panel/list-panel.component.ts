@@ -91,7 +91,7 @@ export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy 
    * Combine streams of all option click change
    */
   private readonly _optionsClickEvents: Observable<OptionComponent> = defer(() => {
-    return merge<OptionComponent>(...this._options.map((option) => option.clickChange));
+    return merge(...this._options.map((option) => option.clickChange));
   });
 
   constructor(
