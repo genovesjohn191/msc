@@ -4,7 +4,10 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   takeUntil,
   map,
@@ -12,10 +15,12 @@ import {
 } from 'rxjs/operators';
 
 import {
+  CommonDefinition,
   isNullOrEmpty
 } from '@app/utilities';
 import {
   McsAzureResource,
+  McsQueryParam,
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -46,6 +51,7 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
 
   // Filter variables
   private _resourceGroupId: string = '';
+  private _companyId: string = '';
 
   constructor(
     private _apiService: McsApiService,
@@ -66,6 +72,10 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
         this._resourceGroupId = params.value?.resourceGroupId;
         this.retrieveOptions();
         break;
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
     }
   }
 
@@ -81,8 +91,16 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
   }
 
   protected callService(): Observable<McsAzureResource[]> {
+    if (isNullOrEmpty(this._companyId)) { return of([]); }
 
-    return this._apiService.getAzureResources().pipe(
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
+    let param = new McsQueryParam();
+    param.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+
+    return this._apiService.getAzureResources(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => response && response.collection),
       shareReplay(1));

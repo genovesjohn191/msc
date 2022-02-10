@@ -4,9 +4,13 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, map } from 'rxjs/operators';
 import {
-  Observable
+  takeUntil,
+  map
+} from 'rxjs/operators';
+import {
+  Observable,
+  of
 } from 'rxjs';
 
 import { McsApiService } from '@app/services';
@@ -21,6 +25,10 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { DynamicSelectVmSizeField } from '..';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-select-vm-size-field',
@@ -40,6 +48,8 @@ import { DynamicSelectVmSizeField } from '..';
 export class DynamicSelectVmSizeComponent extends DynamicSelectFieldComponentBase<McsVmSize> {
   public config: DynamicSelectVmSizeField;
 
+  private _companyId: string = '';
+
   public constructor(
     private _apiService: McsApiService,
     _changeDetectorRef: ChangeDetectorRef
@@ -48,13 +58,24 @@ export class DynamicSelectVmSizeComponent extends DynamicSelectFieldComponentBas
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
-    throw new Error('Method not implemented.');
+    switch (params.eventName) {
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+    }
   }
 
   protected callService(): Observable<McsVmSize[]> {
+    if (isNullOrEmpty(this._companyId)) { return of([]); }
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
     let param = new McsQueryParam();
 
-    return this._apiService.getVmSizes(param).pipe(
+    return this._apiService.getVmSizes(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => response && response.collection));
   }

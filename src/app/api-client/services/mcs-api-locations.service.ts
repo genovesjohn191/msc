@@ -12,7 +12,6 @@ import {
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiLocationsService } from '../interfaces/mcs-api-locations.interface';
-import { HttpClient } from '@angular/common/http';
 
 /**
  * Locations Services Class
@@ -20,16 +19,16 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class McsApiLocationsService implements IMcsApiLocationsService {
 
-  constructor(private _mcsApiService: McsApiClientHttpService, private httpClient: HttpClient) { }
+  constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getLocations(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsLocation[]>> {
+  public getLocations(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsLocation[]>> {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/locations';
     mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
-
-    let url = '../../../assets/mock-data/locations.json';
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

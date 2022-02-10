@@ -30,7 +30,18 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['customerShortName'],
+      dependents: [
+        'customerShortName',
+        'subscriptionId',
+        'avdResourceGroup',
+        'vnetResourceGroup',
+        'vnet',
+        'subnet',
+        'domainControllerResourceGroup',
+        'domainControllerVM',
+        'location',
+        'vmSize'
+      ],
     }),
     new DynamicInputHiddenField({
       key: 'linkedService',

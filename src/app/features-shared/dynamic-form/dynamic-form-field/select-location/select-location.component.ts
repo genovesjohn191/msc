@@ -4,9 +4,13 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, map } from 'rxjs/operators';
 import {
-  Observable
+  takeUntil,
+  map
+} from 'rxjs/operators';
+import {
+  Observable,
+  of
 } from 'rxjs';
 
 import { McsApiService } from '@app/services';
@@ -21,6 +25,10 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { DynamicSelectLocationField } from './select-location';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-select-location-field',
@@ -40,6 +48,8 @@ import { DynamicSelectLocationField } from './select-location';
 export class DynamicSelectLocationComponent extends DynamicSelectFieldComponentBase<McsLocation> {
   public config: DynamicSelectLocationField;
 
+  private _companyId: string = '';
+
   public constructor(
     private _apiService: McsApiService,
     _changeDetectorRef: ChangeDetectorRef
@@ -48,13 +58,24 @@ export class DynamicSelectLocationComponent extends DynamicSelectFieldComponentB
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
-    throw new Error('Method not implemented.');
+    switch (params.eventName) {
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+    }
   }
 
   protected callService(): Observable<McsLocation[]> {
+    if (isNullOrEmpty(this._companyId)) { return of([]); }
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
     let param = new McsQueryParam();
 
-    return this._apiService.getLocations(param).pipe(
+    return this._apiService.getLocations(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => response && response.collection));
   }

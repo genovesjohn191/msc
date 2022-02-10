@@ -10,8 +10,8 @@ export interface IMcsApiAzureResourcesService {
   /**
    * Gets all azure resources
    */
-  getAzureResources(query?: McsAzureResourceQueryParams): Observable<McsApiSuccessResponse<McsAzureResource[]>>;
-
+  getAzureResources(query?: McsAzureResourceQueryParams, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsAzureResource[]>>;
 
   /**
    * Gets all azure resources by subscription id

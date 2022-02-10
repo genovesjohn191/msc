@@ -17,12 +17,14 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  public getAzureResources(query?: McsAzureResourceQueryParams): Observable<McsApiSuccessResponse<McsAzureResource[]>> {
+  public getAzureResources(query?: McsAzureResourceQueryParams, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsAzureResource[]>> {
     if (isNullOrEmpty(query)) { query = new McsAzureResourceQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/resources';
     mcsApiRequestParameter.searchParameters = McsAzureResourceQueryParams.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiHttpService.get(mcsApiRequestParameter)
       .pipe(

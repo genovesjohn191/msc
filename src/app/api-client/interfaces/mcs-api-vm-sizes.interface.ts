@@ -11,7 +11,7 @@ export interface IMcsApiVmSizesService {
    * Get VM Sizes (MCS API Response)
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getVmSizes(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsVmSize[]>>;
+  getVmSizes(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsVmSize[]>>;
 
   /**
    * Get VM Sizes by ID (MCS API Response)
