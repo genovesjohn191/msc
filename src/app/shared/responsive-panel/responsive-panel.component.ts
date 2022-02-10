@@ -106,7 +106,7 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
    */
   private readonly _itemsClickEvents: Observable<ResponsivePanelItemDirective> = defer(() => {
     if (!isNullOrEmpty(this.panelItems)) {
-      return merge<ResponsivePanelItemDirective>(
+      return merge(
         ...this.panelItems.map((panelItem) => panelItem.clickChange)
       );
     }

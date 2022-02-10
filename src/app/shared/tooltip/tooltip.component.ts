@@ -105,7 +105,7 @@ export class TooltipComponent {
   public afterVisibilityAnimation(e: AnimationEvent): void {
     let hideElement = e.toState === 'void' && this.visible === false;
     if (hideElement) {
-      this._onHide.next();
+      this._onHide.next(null);
     }
   }
 

@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
-var gulpSass = require('gulp-sass');
+var gulpSass = require('gulp-sass')(require('sass'));
 var gulpRename = require('gulp-rename');
 
 function buildProductScss(_done) {

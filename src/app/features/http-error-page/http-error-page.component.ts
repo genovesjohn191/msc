@@ -1,20 +1,21 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { Location } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { HttpStatusCode } from '@app/models';
 import {
-  unsubscribeSafely,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-http-error-page',
@@ -79,7 +80,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         this._preserveUrl(params.get('preservedUrl'));
         // We need to set manually the notFound error since there
         // are no parameter code in that case
-        if (this.errorCode === 0) {
+        if (!this.errorCode) {
           this.errorCode = HttpStatusCode.NotFound;
         }
         this._setTextContent(this.errorCode);

@@ -1,5 +1,18 @@
 import { isNullOrEmpty } from './mcs-object.function';
 
+export interface IMcsClientRect {
+  bottom: number;
+  left: number;
+  right: number;
+  top: number;
+
+  height: number;
+  width: number;
+
+  x?: number;
+  y?: number;
+}
+
 /**
  * Get style of the element based on the property given
  *
@@ -41,7 +54,7 @@ export function getOffsetParent(element: HTMLElement): HTMLElement {
  * This is an absolute position from the viewport.
  * @param element Target element to get the offset value
  */
-export function getElementOffset(element: HTMLElement): ClientRect {
+export function getElementOffset(element: HTMLElement): IMcsClientRect {
   // get element bounding client rectangle from the viewport
   let elementBoundingBox = element.getBoundingClientRect();
 
@@ -59,7 +72,7 @@ export function getElementOffset(element: HTMLElement): ClientRect {
     bottom: elementBoundingBox.bottom + viewportOffset.top,
     left: elementBoundingBox.left + viewportOffset.left,
     right: elementBoundingBox.right + viewportOffset.left
-  };
+  } as IMcsClientRect;
 
   return elementOffset;
 }
@@ -69,8 +82,8 @@ export function getElementOffset(element: HTMLElement): ClientRect {
  * This is an absolute position from its ancestor element.
  * @param element Target element to get the position
  */
-export function getElementPosition(element: HTMLElement): ClientRect {
-  let elementPosition: ClientRect;
+export function getElementPosition(element: HTMLElement): IMcsClientRect {
+  let elementPosition: IMcsClientRect;
 
   if (getElementStyle(element, 'position') === 'fixed') {
     elementPosition = element.getBoundingClientRect();
@@ -80,7 +93,7 @@ export function getElementPosition(element: HTMLElement): ClientRect {
     elementPosition = getElementOffset(element);
 
     if (parentStaticElement !== document.documentElement) {
-      let parentOffset: ClientRect;
+      let parentOffset: IMcsClientRect;
       parentOffset = getElementOffset(parentStaticElement);
 
       parentOffset.top += parentStaticElement.clientTop;
@@ -136,14 +149,14 @@ export function getElementPositionFromHost(
   let placementPrimary = placement.split('-')[0] || 'top';
   let placementSecondary = placement.split('-')[1] || 'center';
 
-  let targetElementPosition: ClientRect = {
+  let targetElementPosition = {
     height: targetElementBoundingBox.height || targetElement.offsetHeight,
     width: targetElementBoundingBox.width || targetElement.offsetWidth,
     top: 0,
     bottom: targetElementBoundingBox.height || targetElement.offsetHeight,
     left: 0,
     right: targetElementBoundingBox.width || targetElement.offsetWidth
-  };
+  } as IMcsClientRect;
 
   switch (placementPrimary) {
     case 'top':

@@ -1,39 +1,39 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
-  SimpleChanges,
-  EventEmitter,
+  OnInit,
   Output,
-  OnInit
+  SimpleChanges
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import {
-  McsServerBackupServer,
-  backupStatusTypeSubtitleLabel,
-  ServerServicesView,
-  BackupStatusType,
-  backupStatusTypeMap,
+  McsAccessControlService,
+  McsDateTimeService
+} from '@app/core';
+import {
   backupServerStatusTypeLabel,
   backupStatusLabel,
+  backupStatusTypeMap,
+  backupStatusTypeSubtitleLabel,
+  BackupStatusType,
   McsServer,
-  ServerServicesAction,
-  ServiceOrderState,
+  McsServerBackupServer,
   RouteKey,
-  McsFeatureFlag
+  ServerServicesAction,
+  ServerServicesView,
+  ServiceOrderState
 } from '@app/models';
 import {
-  CommonDefinition,
-  replacePlaceholder,
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  replacePlaceholder,
+  CommonDefinition
 } from '@app/utilities';
-import {
-  McsDateTimeService,
-  McsAccessControlService
-} from '@app/core';
-import { ServerServiceDetailBase } from '../server-service-detail.base';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
+import { ServerServiceDetailBase } from '../server-service-detail.base';
 
 // TODO: Extract this when the generic date time service is created
 const BACKUP_TIMEZONE = CommonDefinition.TIMEZONE_SYDNEY;
@@ -149,7 +149,7 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   }
 
   public onCreateNewTicket(): void {
-    this.createNewTicket.next();
+    this.createNewTicket.next(null);
   }
 
   private _registerProvisionStateBitmap(): void {

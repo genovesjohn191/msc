@@ -1,30 +1,36 @@
 import {
-  Component,
-  forwardRef,
-  ChangeDetectorRef
-} from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+  of,
+  Observable
+} from 'rxjs';
+import {
+  map,
+  takeUntil
+} from 'rxjs/operators';
 
 import {
-  CommonDefinition,
-  isNullOrEmpty
-} from '@app/utilities';
-import { McsApiService } from '@app/services';
+  forwardRef,
+  ChangeDetectorRef,
+  Component
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
   McsAzureService,
   McsAzureServicesRequestParams,
   McsTenant
 } from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+
 import {
   DynamicFormFieldDataChangeEventParam,
   DynamicFormFieldOnChangeEvent,
   FlatOption
 } from '../../dynamic-form-field-config.interface';
-import { DynamicSelectAzureSubscriptionField } from './select-azure-subscription';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
-import { collectExternalReferences } from '@angular/compiler';
+import { DynamicSelectAzureSubscriptionField } from './select-azure-subscription';
 
 @Component({
   selector: 'mcs-dff-select-azure-subscription-field',

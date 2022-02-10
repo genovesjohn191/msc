@@ -1,14 +1,15 @@
 import {
-  Component,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { AnimationEvent } from '@angular/animations';
-import {
   Observable,
   Subject
 } from 'rxjs';
+
+import { AnimationEvent } from '@angular/animations';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewEncapsulation
+} from '@angular/core';
 import { animateFactory } from '@app/utilities';
 
 @Component({
@@ -87,7 +88,7 @@ export class ContextualHelpComponent {
   public afterVisibilityAnimation(e: AnimationEvent): void {
     let hideElement = e.toState === 'void' && this.visible === false;
     if (hideElement) {
-      this._onHide.next();
+      this._onHide.next(null);
     }
   }
 

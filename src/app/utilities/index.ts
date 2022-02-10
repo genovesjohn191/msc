@@ -35,7 +35,7 @@ export * from './interfaces/mcs-disposable.interface';
 export * from './interfaces/mcs-datasource';
 export * from './interfaces/mcs-search';
 
-export * from './rxjs-operators/emitLatestMap';
+export * from './rxjs-operators/exhaust-latest-map';
 
 export * from './utilities.types';
 export * from './common.definition';

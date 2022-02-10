@@ -1,14 +1,15 @@
-import {
-  NgForm,
-  FormGroupDirective,
-  FormControl
-} from '@angular/forms';
-import { NgControl } from '@angular/forms';
 import { Subject } from 'rxjs';
+
 import {
+  FormControl,
+  FormGroupDirective,
+  NgControl,
+  NgForm
+} from '@angular/forms';
+import {
+  defaultErrorStateMatcher,
   isNullOrEmpty,
-  ErrorStateMatcher,
-  defaultErrorStateMatcher
+  ErrorStateMatcher
 } from '@app/utilities';
 
 /** An interface which allows a control to work inside of a `MdFormField`. */
@@ -28,6 +29,9 @@ export abstract class McsFormFieldControlBase<T> {
   /** Whether the control is in an error state. */
   public errorState: boolean;
 
+  /** Error state matcher to be used in checking error forms */
+  public errorStateMatcher: ErrorStateMatcher = defaultErrorStateMatcher;
+
   /** The value of the control. */
   public abstract value: T;
 
@@ -36,9 +40,6 @@ export abstract class McsFormFieldControlBase<T> {
 
   /** The element Placeholder for this control */
   public abstract placeholder: string;
-
-  /** Error state matcher to be used in checking error forms */
-  public abstract errorStateMatcher: ErrorStateMatcher = defaultErrorStateMatcher;
 
   /** Whether the control is required. */
   public abstract required: boolean;

@@ -1,4 +1,4 @@
-@import "../../../styles/shared/base";
+@import "base";
 
 .image-wrapper {
   @include display-inline-flex(row);

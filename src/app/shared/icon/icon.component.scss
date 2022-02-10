@@ -1,4 +1,4 @@
-@import "../../../styles/shared/base";
+@import "base";
 
 $notification-bell-width-no-running-job: 19px;
 $notification-bell-width-with-running-job: 25px;
@@ -23,12 +23,12 @@ $notification-bell-clapper-animation: bell-clapper-rotate-right-to-left 1.5s inf
       min-width: $notification-bell-width-with-running-job;
       @include animation($notification-bell-animation);
     }
-    
+
     #clapper-group {
       transform-origin: top center;
       @include animation($notification-bell-clapper-animation);
     }
-    
+
     @keyframes bell-rotate-left-to-right {
       0% {
         transform: rotate(-30deg)
@@ -40,7 +40,7 @@ $notification-bell-clapper-animation: bell-clapper-rotate-right-to-left 1.5s inf
         transform: rotate(-30deg)
       }
     }
-    
+
     @keyframes bell-clapper-rotate-right-to-left {
       0% {
         transform: rotate(0deg)

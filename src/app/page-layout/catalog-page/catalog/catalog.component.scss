@@ -1,5 +1,3 @@
-@import "../../../../styles/shared/base";
-
 .catalog-wrapper {
   display: block;
 
@@ -11,7 +9,8 @@
   }
 }
 
-
+// NOTE: do not change any import in this file
+// since we're using it outside of portal
 @import "../../../../styles/shared/base";
 @import "../../../../styles/core/fonts";
 @import "../../../../styles/core/elements/mcs-anchor";
