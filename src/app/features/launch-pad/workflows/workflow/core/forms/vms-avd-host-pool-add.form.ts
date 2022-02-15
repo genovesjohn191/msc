@@ -22,7 +22,7 @@ export const vmsAvdHostPoolAddForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['customerShortName'],
+      dependents: ['customerShortName', 'subscriptionId', 'avdResourceGroup'],
     }),
     new DynamicInputHiddenField({
       key: 'linkedService',
@@ -51,7 +51,7 @@ export const vmsAvdHostPoolAddForm: LaunchPadForm = {
       label: 'Domain Join Account UPN',
       placeholder: 'Enter domain join account UPN',
       contextualHelp: 'User or service account UPN with sufficient privileges to domain join virtual machines.',
-      validators: { required: true, maxlength: 20 }
+      validators: { required: true, maxlength: 1024 }
     }),
     new DynamicInputPasswordField({
       key: 'domainJoinPassword',
