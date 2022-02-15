@@ -126,7 +126,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       label: 'Azure Admin Account UPN',
       placeholder: 'Enter azure admin account UPN',
       contextualHelp: 'Local Azure AD account with Global Administrator AAD role and Owner role on the specified subscription. Accounts with MFA enforced are not supported.',
-      validators: { required: true, maxlength: 20 }
+      validators: { required: true, maxlength: 1024 }
     }),
     new DynamicInputPasswordField({
       key: 'azureAdminPassword',
@@ -140,7 +140,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       label: 'Domain Join Account UPN',
       placeholder: 'Enter domain join account UPN',
       contextualHelp: 'User or service account UPN with sufficient privileges to domain join virtual machines.',
-      validators: { required: true, maxlength: 20 }
+      validators: { required: true, maxlength: 1024 }
     }),
     new DynamicInputPasswordField({
       key: 'domainJoinPassword',
