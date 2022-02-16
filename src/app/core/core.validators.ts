@@ -138,6 +138,18 @@ export class CoreValidators {
       null : { accountUpn: true };
   }
 
+  /**
+   * Validator that performs ou path validation
+   * e.g. of valid values
+   * CN=UNIAGE$,CN=Users,DC=gr-u,DC=it
+   * for more examples see: https://www.regextester.com/106556
+   */
+  public static ouPath(control: AbstractControl): ValidationErrors | null {
+    if (isNullOrEmpty(control.value)) { return null; }
+    return CommonDefinition.REGEX_OU_PATH.test(control.value) ?
+      null : { ouPath: true };
+  }
+
   public static adomName(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_ADOM_NAME_PATTERN.test(control.value)
       || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?

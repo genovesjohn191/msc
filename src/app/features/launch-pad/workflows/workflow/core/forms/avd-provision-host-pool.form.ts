@@ -3,6 +3,7 @@ import {
   DynamicInputAccountUpnField,
   DynamicInputHiddenField,
   DynamicInputNumberField,
+  DynamicInputOuPathField,
   DynamicInputPasswordField,
   DynamicInputProfileStorageAccountNameField,
   DynamicInputShortCustomerNameField,
@@ -148,6 +149,14 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       placeholder: 'Enter domain join password',
       contextualHelp: 'The password for the specified domain join account UPN.',
       validators: { required: true }
+    }),
+    new DynamicInputOuPathField({
+      key: 'ouPath',
+      label: 'OU Path',
+      value: '',
+      placeholder: 'Enter OU Path',
+      contextualHelp: 'The Organizational Unit the host pool VMs will join. E.g. OU=orgunit,DC=domain,DC=com,dc=au.',
+      validators: { required: false }
     }),
     new DynamicInputTextField({
       key: 'avdUserGroup',

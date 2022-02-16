@@ -70,6 +70,9 @@ export class DynamicFormValidationService {
     if (control.hasError('shortCustomerName')) {
       return 'Incorrect short customer name format';
     }
+    if (control.hasError('ouPath')) {
+      return 'Incorrect OU Path format';
+    }
   }
 
   public getValidators(controlData: DynamicFormFieldConfig): ValidatorFn[] {
