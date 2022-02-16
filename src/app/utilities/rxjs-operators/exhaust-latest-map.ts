@@ -20,22 +20,27 @@ export function exhaustLatestMap<T, O extends ObservableInput<any>>(
     let innerSub: Subscriber<T> | null = null;
     let isComplete = false;
 
-    let pendingItem: T;
-    let activeItem: T;
-    let hasPendingSubs: boolean;
+    let recentValue: T;
 
     source.subscribe(
       new OperatorSubscriber(
         subscriber,
         (outerValue) => {
-          if (!innerSub) {
-            innerSub = new OperatorSubscriber(subscriber, undefined, () => {
-              innerSub = null;
-              if (isComplete) { subscriber.complete(); }
-            });
-            innerFrom(project(outerValue, index++))
-              .subscribe(() => innerSub.next());
-          }
+          recentValue = outerValue;
+          if (innerSub) { return; }
+
+          innerSub = new OperatorSubscriber(subscriber, undefined, () => {
+            if (recentValue && recentValue !== outerValue) {
+              innerFrom(project(recentValue, index++)).subscribe(innerSub as any);
+              recentValue = null;
+              return;
+            }
+
+            innerSub = null;
+            if (isComplete) { subscriber.complete(); }
+          });
+
+          innerFrom(project(outerValue, index++)).subscribe(innerSub as any);
         },
         () => {
           isComplete = true;

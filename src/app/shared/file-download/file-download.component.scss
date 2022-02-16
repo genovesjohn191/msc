@@ -1,4 +1,4 @@
-@import "base";
+@import "shared/index";
 
 .file-download-wrapper {
   @include display-flex(row);
