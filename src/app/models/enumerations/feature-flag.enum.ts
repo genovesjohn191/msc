@@ -53,4 +53,6 @@ export enum McsFeatureFlag {
   StorageProfileBreakdown = 'EnableStorageProfileBreakdown',
 
   ServerOsUpdates = 'EnableServerOsUpdates',
+
+  NewOAuth = 'EnableOAuthV2'
 }
