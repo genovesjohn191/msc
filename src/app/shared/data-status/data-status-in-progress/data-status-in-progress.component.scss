@@ -1,4 +1,4 @@
-@import "base";
+@import "shared/index";
 
 .data-status-in-progress-wrapper {
   @include display-flex(row);

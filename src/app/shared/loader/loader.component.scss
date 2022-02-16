@@ -1,4 +1,4 @@
-@import "base";
+@import "shared/index";
 
 .loader-wrapper {
   @include display-inline-flex(row);

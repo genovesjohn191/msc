@@ -1,4 +1,4 @@
-@import "base";
+@import "shared/index";
 
 .grid-column-wrapper {
   @include display-flex(column);

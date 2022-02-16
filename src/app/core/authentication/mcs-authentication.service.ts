@@ -11,7 +11,10 @@ import {
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { AppState } from '@app/app.service';
-import { McsIdentity } from '@app/models';
+import {
+  McsFeatureFlag,
+  McsIdentity
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
@@ -21,13 +24,13 @@ import {
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsSessionService } from '../session/session.service';
+import { McsAccessControlService } from './mcs-access-control.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
 export class McsAuthenticationService {
   public get isNewOAuthEnabled(): boolean {
-    // return this._cookieService.getItem(CommonDefinition.OAUTH2_NEW) === 'enabled';
-    return true;
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.NewOAuth]);
   }
 
   constructor(
@@ -36,6 +39,7 @@ export class McsAuthenticationService {
     private _cookieService: McsCookieService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
+    private _accessControlService: McsAccessControlService,
     private _coreConfig: CoreConfig
   ) { }
 
