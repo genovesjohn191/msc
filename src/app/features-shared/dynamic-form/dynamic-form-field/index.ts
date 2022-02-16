@@ -5,6 +5,7 @@ export * from './input-fqdn-domain/input-fqdn-domain';
 export * from './input-hidden/input-hidden';
 export * from './input-host-name/input-host-name';
 export * from './input-ip/input-ip';
+export * from './input-ou-path/input-ou-path';
 export * from './input-password/input-password';
 export * from './input-network-db-network-name/input-network-db-network-name';
 export * from './input-number/input-number';
