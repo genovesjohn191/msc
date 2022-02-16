@@ -2,15 +2,15 @@ import {
   McsFeatureFlag,
   WorkflowType
 } from '@app/models';
-import { vfwProvisionForm } from '../forms';
+import { firewallProvisionForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 
-export class VfwProvisionWorkflowGroup implements WorkflowGroup {
+export class FirewallProvisionWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
-    id: WorkflowType.VfwProvision,
-    title: 'Provision Virtual Firewall',
-    form: vfwProvisionForm,
+    id: WorkflowType.FirewallProvisionAdom,
+    title: 'Provision Physical Firewall',
+    form: firewallProvisionForm,
     featureFlag: McsFeatureFlag.WorkflowsFirewall
   };
 }

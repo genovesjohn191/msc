@@ -1,5 +1,5 @@
 import { DynamicFormFieldConfigBase } from '@app/features-shared/dynamic-form';
-import { McsObjectCrispElementServiceAttribute } from '@app/models';
+import { McsObjectCrispElementService, McsObjectCrispElementServiceAttribute } from '@app/models';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 
 export interface LaunchPadForm {
@@ -8,6 +8,6 @@ export interface LaunchPadForm {
   mapContext?: (context: WorkflowGroupSaveState)
   => { key: string, value: any }[]
 
-  mapCrispElementAttributes?: (attributes: McsObjectCrispElementServiceAttribute[])
+  mapCrispElementAttributes?: (attributes: McsObjectCrispElementServiceAttribute[], associatedServices?: McsObjectCrispElementService[])
   => { key: string, value: any }[]
 }

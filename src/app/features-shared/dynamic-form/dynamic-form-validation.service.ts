@@ -55,8 +55,11 @@ export class DynamicFormValidationService {
     if (control.hasError('adomName')) {
       return 'Incorrect ADOM name format';
     }
-    if (control.hasError('dummyServiceId')) {
+    if (control.hasError('format')) {
       return 'Incorrect format';
+    }
+    if (control.hasError('containsQuestionMark')) {
+      return 'Must not contain a question mark (?)';
     }
     if (control.hasError('profileStorageAccountName')) {
       return 'Incorrect profile storage account name format';

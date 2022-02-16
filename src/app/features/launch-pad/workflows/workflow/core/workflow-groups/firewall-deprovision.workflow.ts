@@ -1,4 +1,5 @@
 import {
+  McsFeatureFlag,
   WorkflowType
 } from '@app/models';
 import { firewallDeprovisionForm } from '../forms';
@@ -9,6 +10,7 @@ export class FirewallDeprovisionWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
     id: WorkflowType.FirewallDeprovision,
     title: 'Deprovision Physical Firewall',
-    form: firewallDeprovisionForm
+    form: firewallDeprovisionForm,
+    featureFlag: McsFeatureFlag.WorkflowsFirewall
   };
 }

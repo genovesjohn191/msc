@@ -1,4 +1,5 @@
 import {
+  McsFeatureFlag,
   WorkflowType
 } from '@app/models';
 import { firewallProvisionAdomForm } from '../forms';
@@ -9,6 +10,7 @@ export class FirewallProvisionAdomWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
     id: WorkflowType.FirewallProvisionAdom,
     title: 'Provision Firewall ADOM',
-    form: firewallProvisionAdomForm
+    form: firewallProvisionAdomForm,
+    featureFlag: McsFeatureFlag.WorkflowsFirewall
   };
 }

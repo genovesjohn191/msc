@@ -151,13 +151,25 @@ export class CoreValidators {
   }
 
   public static adomName(control: AbstractControl): ValidationErrors | null {
-    return CommonDefinition.REGEX_ADOM_NAME_PATTERN.test(control.value) ?
+    return CommonDefinition.REGEX_ADOM_NAME_PATTERN.test(control.value)
+      || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
       null : { adomName: true };
   }
 
+  public static containsQuestionMark(control: AbstractControl): ValidationErrors | null {
+    return control.value.toString().indexOf('?') === -1 ?
+      null : { containsQuestionMark: true };
+  }
+
   public static dummyServiceId(control: AbstractControl): ValidationErrors | null {
-    return CommonDefinition.REGEX_DUMMY_SERVICE_ID_PATTERN.test(control.value) ?
-      null : { dummyServiceId: true };
+    return CommonDefinition.REGEX_DUMMY_SERVICE_ID_PATTERN.test(control.value)
+      || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
+      null : { format: true };
+  }
+
+  public static firewallServiceId(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_FIREWALL_SERVICE_ID_PATTERN.test(control.value) ?
+      null : { format: true };
   }
 
   public static shortCustomerName(control: AbstractControl): ValidationErrors | null {

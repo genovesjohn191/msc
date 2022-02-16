@@ -25,19 +25,21 @@ export const firewallProvisionAdomForm: LaunchPadForm = {
     new DynamicSelectFortiManagerField({
       key: 'fortiManager',
       label: 'FortiManager',
+      validators: { required: true },
       contextualHelp: 'The FortiManager instance to provision the ADOM on.'
     }),
     new DynamicSelectFortiAnalyzerField({
       key: 'fortiAnalyzer',
       label: 'FortiAnalyzer',
+      validators: { required: true },
       contextualHelp: 'The FortiAnalyzer instance to provision the ADOM on.'
     }),
     new DynamicInputAdomNameField({
       key: 'adomName',
       label: 'ADOM Name',
       placeholder: 'ADOM Name',
-      validators: { required: true, maxlength: 35 },
-      contextualHelp: 'The name of the ADOM to provision.'
+      validators: { maxlength: 35 },
+      contextualHelp: 'The name of the ADOM to provision. If left blank, this will be based on target company name.'
     })
   ],
 

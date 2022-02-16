@@ -37,12 +37,12 @@ export const vfwProvisionForm: LaunchPadForm = {
     new DynamicSelectVdcField({
       key: 'vdc',
       label: 'VDC',
-      contextualHelp: 'The VDC this firewall is provisioned in. For stretched VDCs, please speak to a specialist.',
       eventName: 'resource-change',
       validators: { required: true },
       settings: { preserve: true },
       useServiceIdAsKey: true,
-      disableStretched: true
+      disableStretched: true,
+      contextualHelp: 'The VDC to configure the firewall in. For stretched VDCs, please speak to a specialist.'
     }),
     new DynamicSelectField({
       key: 'size',
@@ -53,43 +53,47 @@ export const vfwProvisionForm: LaunchPadForm = {
         {key: 'Large', value: 'Large'}
         ],
       validators: { required: true },
+      contextualHelp: 'The size of the firewall.'
     }),
     new DynamicInputPasswordField({
       key: 'password',
       label: 'Password',
       placeholder: 'Password',
-      contextualHelp: 'The password to configure on the firewall.',
-      validators: { required: true }
+      excludeQuestionMark: true,
+      validators: { required: true },
+      contextualHelp: 'The password to configure on the firewall.'
     }),
     new DynamicVrfNameField({
       key: 'primaryManagementVrf',
-      label: 'Primary Management VRF',
-      placeholder: 'Primary Management VRF',
-      contextualHelp: 'The name of the primary management VRF to configure on the firewall.'
+      label: 'Management VRF',
+      placeholder: 'Management VRF',
+      contextualHelp: 'The name of the management VRF to configure on the firewall.'
     }),
     new DynamicInputHostNameField({
       key: 'primaryHostname',
-      label: 'Primary Hostname',
-      placeholder: 'Primary Management VRF',
-      contextualHelp: 'The primary hostname to configure on the firewall.',
+      label: 'Hostname',
+      placeholder: 'Hostname',
+      contextualHelp: 'The hostname to configure on the firewall.',
       validators: { required: true }
     }),
     new DynamicSelectFortiManagerField({
       key: 'fortiManager',
       label: 'FortiManager',
-      contextualHelp: 'The FortiManager instance to provision the ADOM on.'
+      validators: { required: true },
+      contextualHelp: 'The FortiManager instance to provision the firewall for.'
     }),
     new DynamicSelectFortiAnalyzerField({
       key: 'fortiAnalyzer',
       label: 'FortiAnalyzer',
-      contextualHelp: 'The FortiAnalyzer instance to provision the ADOM on.'
+      validators: { required: true },
+      contextualHelp: 'The FortiAnalyzer instance to provision the firewall for.'
     }),
     new DynamicInputAdomNameField({
       key: 'adomName',
       label: 'ADOM Name',
       placeholder: 'ADOM Name',
-      validators: { required: true, maxlength: 35 },
-      contextualHelp: 'The name of the ADOM to provision.'
+      validators: { maxlength: 35 },
+      contextualHelp: 'The Administrative domain to provision the firewall for. If left blank, this will be based on target company name.'
     })
   ],
 
