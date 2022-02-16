@@ -1,4 +1,5 @@
 import {
+  McsFeatureFlag,
   ProductType,
   WorkflowType
 } from '@app/models';
@@ -11,6 +12,7 @@ export class VfwAllocateWorkflowGroup implements WorkflowGroup {
     id: WorkflowType.VfwAllocate,
     crispProductType: ProductType.VirtualFirewall,
     title: 'Allocate Virtual Firewall',
-    form: vfwAllocateForm
+    form: vfwAllocateForm,
+    featureFlag: McsFeatureFlag.WorkflowsFirewall
   };
 }

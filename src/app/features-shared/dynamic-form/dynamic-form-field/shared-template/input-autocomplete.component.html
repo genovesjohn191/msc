@@ -17,9 +17,7 @@
     [required]="required"
     [hidden]="disabled"
     [placeholder]="config.placeholder"
-    [formControl]="inputCtrl"
-    [maxlength]="config.validators?.maxlength"
-    [minlength]="config.validators?.minlength"
+    [(value)]="config.value"
     (change)="setValue(valueInput.value)"
     matInput
     [matAutocomplete]="auto">

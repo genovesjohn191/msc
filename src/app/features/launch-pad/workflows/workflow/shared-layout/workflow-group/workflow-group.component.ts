@@ -339,7 +339,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         form: workflowGroup.parent.form,
         serviceId: this.context.serviceId,
         productId: this.context.productId,
-        crispElementServiceAttributes: response.serviceAttributes
+        crispElementServiceAttributes: response.serviceAttributes,
+        associatedServices: response.associatedServices
       });
 
       this._context.config = {
@@ -408,14 +409,15 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     form: LaunchPadForm;
     serviceId?: string;
     productId?: string;
-    crispElementServiceAttributes?: McsObjectCrispElementServiceAttribute[]
+    crispElementServiceAttributes?: McsObjectCrispElementServiceAttribute[],
+    associatedServices?: McsObjectCrispElementService[]
   }): WorkflowData {
 
     return {
       id : options.id,
       serviceId: options.serviceId,
       productId: options.productId,
-      propertyOverrides: this._buildPropertyOverrides(options.form, options.crispElementServiceAttributes),
+      propertyOverrides: this._buildPropertyOverrides(options.form, options.crispElementServiceAttributes, options.associatedServices),
     };
   }
 
@@ -441,7 +443,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
 
   private _buildPropertyOverrides(
     form: LaunchPadForm,
-    crispAttributes: McsObjectCrispElementServiceAttribute[] = []): { key: string, value: any }[] {
+    crispAttributes: McsObjectCrispElementServiceAttribute[] = [],
+    associatedServices: McsObjectCrispElementService[] = []): { key: string, value: any }[] {
 
     let propertyOverrides: Array<{ key: string, value: any }> = [];
 
@@ -454,7 +457,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     // Add CRISP attributes to form field overrides
     let hasCrispAttributeOverrides = !isNullOrEmpty(form.mapCrispElementAttributes) && !isNullOrEmpty(crispAttributes);
     if (hasCrispAttributeOverrides) {
-      let crispOverrides = form.mapCrispElementAttributes(crispAttributes);
+      let crispOverrides = form.mapCrispElementAttributes(crispAttributes, associatedServices);
       propertyOverrides = propertyOverrides.concat(crispOverrides);
     }
 

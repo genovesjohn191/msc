@@ -1,4 +1,5 @@
 import {
+  McsFeatureFlag,
   WorkflowType
 } from '@app/models';
 import { firewallAllocateForm } from '../forms';
@@ -9,6 +10,7 @@ export class FirewallAllocateWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
     id: WorkflowType.FirewallAllocate,
     title: 'Allocate Physical Firewall',
-    form: firewallAllocateForm
+    form: firewallAllocateForm,
+    featureFlag: McsFeatureFlag.WorkflowsFirewall
   };
 }

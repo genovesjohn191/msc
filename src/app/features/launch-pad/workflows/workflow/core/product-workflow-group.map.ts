@@ -157,6 +157,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.ManagementToolsUpdate,
         WorkflowGroupId.FirewallProvisionAdom,
         WorkflowGroupId.FirewallAllocate,
+        WorkflowGroupId.FirewallProvision,
         WorkflowGroupId.FirewallDeprovision
       ]
     ],

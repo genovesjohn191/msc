@@ -61,25 +61,12 @@ export class DynamicSelectServiceComponent extends DynamicInputAutocompleteField
     switch (params.eventName) {
       case 'company-change':
         this._companyId = params.value;
-        this.config.value = '';
-        this.inputCtrl.setValue('');
-        this.valueChange(this.config.value);
         this.retrieveOptions();
         break;
     }
   }
 
   public setValue(value: string): void {
-    value = value?.trim();
-    if(!isNullOrEmpty(value) && this.config.pattern.test(value)){
-      this._trySetValue(value);
-    }
-    else {
-      this._trySetValue('');
-    }
-  }
-
-  private _trySetValue(value: string): void {
     this.config.value = value;
     this.valueChange(this.config.value);
   }
@@ -98,7 +85,7 @@ export class DynamicSelectServiceComponent extends DynamicInputAutocompleteField
 
   public selected(event: MatAutocompleteSelectedEvent): void {
     let option = event.option.value as FlatOption;
-    this._trySetValue(option.value);
+    this.setValue(option.value);
   }
 
   public getOptionValue(opt: FlatOption) {
@@ -123,6 +110,13 @@ export class DynamicSelectServiceComponent extends DynamicInputAutocompleteField
   }
 
   protected filter(collection: McsObjectCrispObject[]): FlatOption[] {
+    if (!isNullOrEmpty(this.config.initialValue)) {
+      // Force the control to reselect the initial value
+      this.writeValue(this.config.initialValue);
+      // Force the form to check the validty of the control
+      this.valueChange(this.config.initialValue);
+    }
+
     let options: FlatOption[] = [];
 
     let deduplicatedList = collection.filter((e, i) => {
