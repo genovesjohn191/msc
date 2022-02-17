@@ -58,7 +58,8 @@
             {{ 'columnHeader.message' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" [mcsTextTruncate]="row.message">
-            {{ row.message }}
+            <span [innerHTML]="row.message | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -68,7 +69,13 @@
             {{ 'columnHeader.start' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.start | mcsStdDateFormat: 'default' }}
+            <ng-container *ngIf="row.start; else noStart">
+              {{ row.start | mcsStdDateFormat: 'default' }}
+            </ng-container>
+            <ng-template #noStart>
+              <span [innerHTML]="row.start | mcsDataLabel: 'None'">
+              </span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -78,7 +85,13 @@
             {{ 'columnHeader.expiry' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.expiry | mcsStdDateFormat: 'default' }}
+            <ng-container *ngIf="row.expiry; else noExpiry">
+              {{ row.expiry | mcsStdDateFormat: 'default' }}
+            </ng-container>
+            <ng-template #noExpiry>
+              <span [innerHTML]="row.expiry | mcsDataLabel: 'None'">
+              </span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -88,7 +101,8 @@
             {{ 'columnHeader.type' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.typeLabel }}
+            <span [innerHTML]="row.typeLabel | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -98,7 +112,8 @@
             {{ 'columnHeader.severity' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.severityLabel }}
+            <span [innerHTML]="row.severityLabel | mcsDataLabel: 'N/A'">
+            </span>
           </td>
         </ng-container>
 
@@ -108,7 +123,8 @@
             {{ 'columnHeader.enabled' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.enabledLabel }}
+            <span [innerHTML]="row.enabledLabel | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -117,8 +133,14 @@
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.createdOn' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.createdOn | mcsStdDateFormat: 'default' }}
+          <td mat-cell *matCellDef="let row">
+            <ng-container *ngIf="row.createdOn; else noCreatedOn">
+              {{ row.createdOn | mcsStdDateFormat: 'default' }}
+            </ng-container>
+            <ng-template #noCreatedOn>
+              <span [innerHTML]="row.createdOn | mcsDataLabel: 'Unknown'">
+              </span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -128,7 +150,8 @@
             {{ 'columnHeader.createdBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.createdBy }}
+            <span [innerHTML]="row.createdBy | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
@@ -137,8 +160,14 @@
           <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.updatedOn' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.updatedOn | mcsStdDateFormat: 'default' }}
+          <td mat-cell *matCellDef="let row">
+            <ng-container *ngIf="row.updatedOn; else noUpdatedOn">
+              {{ row.updatedOn | mcsStdDateFormat: 'default' }}
+            </ng-container>
+            <ng-template #noUpdatedOn>
+              <span [innerHTML]="row.updatedOn | mcsDataLabel: 'N/A'">
+              </span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -148,7 +177,8 @@
             {{ 'columnHeader.updatedBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.updatedBy }}
+            <span [innerHTML]="row.updatedBy | mcsDataLabel: 'N/A'">
+            </span>
           </td>
         </ng-container>
 
