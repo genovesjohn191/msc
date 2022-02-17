@@ -7,11 +7,12 @@
 // ------------------------------------------------------
 $mcs-black: (
   50: #000000,
-  100: #0a0a0a,
+  100: #0A0A0A,
   200: #101010,
-  300: #1b1b1b,
+  300: #1B1B1B,
   400: #262626,
-  500: #383838,
+  500: #101010,
+  700: #000000,
   contrast: (
     50: $black-87-opacity,
     100: $black-87-opacity,
@@ -19,67 +20,21 @@ $mcs-black: (
     300: $black-87-opacity,
     400: $black-87-opacity,
     500: $black-87-opacity,
+    700: $black-87-opacity
   ),
 );
 
-$mcs-primary: (
-  base: $color-primary-01,
-  tint: $color-primary-02,
-  shade: $color-primary-00,
-  contrast: (
-    base: $color-black,
-    tint: $color-black,
-    shade: $color-black,
-  ),
-);
-$mcs-material-primary: mat.define-palette($mcs-primary, base, tint, shade);
-
-$mcs-accent: (
-  base: $color-black,
-  tint: #262626,
-  shade: $color-black,
-  contrast: (
-    base: $black-87-opacity,
-    tint: $black-87-opacity,
-    shade: $black-87-opacity,
-  ),
-);
-$mcs-material-accent: mat.define-palette($mcs-accent, base, tint, shade);
-
-$mcs-error: (
-  base: $color-red-00,
-  tint: $color-red-01,
-  shade: $color-red-00,
-  contrast: (
-    base: $color-black,
-    tint: $color-black,
-    shade: $color-black,
-  ),
-);
-$mcs-material-error: mat.define-palette($mcs-error, base, tint, shade);
-
-$mcs-material-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $mcs-material-primary,
-      accent: $mcs-material-accent,
-      warn: $mcs-material-error,
-    ),
-  )
-);
-
-// $mcs-primary: mat.define-palette($mat-cyan);
-// $mcs-accent: mat.define-palette($mcs-black);
-// $mcs-warn: mat.define-palette($mat-red);
-// $mcs-theme: mat.define-light-theme($mcs-primary, $mcs-accent, $mcs-warn);
-
-@include mat.all-component-themes($mcs-material-theme);
-
-// Material icon settings
-// ------------------------------------------------------
+$mcs-primary: mat.define-palette($mat-cyan);
+$mcs-accent: mat.define-palette($mcs-black);
+$mcs-warn: mat.define-palette($mat-red);
+$mcs-theme: mat.define-light-theme($mcs-primary, $mcs-accent, $mcs-warn);
 $normal-value: "normal";
 $font-feature-setting: "liga";
 
+@include mat.all-component-themes($mcs-theme);
+
+// Material icon settings
+// ------------------------------------------------------
 .material-icons {
   font-family: "Material Icons";
   font-weight: $normal-value;
@@ -102,8 +57,6 @@ $font-feature-setting: "liga";
   z-index: $zindex-overlay;
 }
 
-// Material custom typography settings
-// ------------------------------------------------------
 $custom-typography: mat-typography-config(
   $font-family: $font-default,
   $headline: mat-typography-level($font-size-large, $line-height-large, 700),

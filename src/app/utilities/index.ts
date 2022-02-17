@@ -43,8 +43,3 @@ export * from './common.definition';
 export * from './json-serializer';
 
 export * from './enumerations/keyboard-key';
-
-// Import all the extensions here so they're declared globally
-import './extensions/keyboard-event.extension';
-import './extensions/string.extensions';
-import './extensions/array.extensions';
