@@ -6,7 +6,7 @@ $tooltip-max-width: 500px;
 
 .mat-tooltip {
   @include display-flex(column);
-  //white-space: pre-line !important;
+  white-space: pre-line !important;
   position: relative;
   max-width: $tooltip-max-width !important;
 
