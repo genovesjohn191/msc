@@ -20,7 +20,7 @@ export enum McsFeatureFlag {
   PlatformSecurityAdvisory = 'EnablePlatformSecurityAdvisoryListing',
   AzureServiceRequestSltReport = 'EnableAzureServiceRequestSltReport',
   HybridCloud = 'EnableHybridCloud',
-  PublicCloudManagementServiceListing = 'EnablePublicCloudManagementServiceListing',
+  AzureManagementServiceListing = 'EnableAzureManagementServiceListing',
   ExtenderListing = 'EnableExtenderListing',
   ApplicationRecoveryListing = 'EnableApplicationRecoveryListing',
 

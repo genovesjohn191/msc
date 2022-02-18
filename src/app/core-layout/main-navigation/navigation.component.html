@@ -439,8 +439,7 @@
             </ul>
           </li>
           <!-- Management Services -->
-          <!--<li *mcsAccessControl="[]; feature: 'EnableAzureManagementServicesListing'">-->
-          <li *mcsAccessControl="[]; feature: ['EnablePublicCloudManagementServiceListing']">
+          <li *mcsAccessControl="[]; feature: ['EnableAzureManagementServiceListing']">
             <a [mcsRouterLink]="routeKeyEnum.AzureManagementServices"
               mcsRouterLinkActive="active"
               class="sub-navigation-item unstyled-link"

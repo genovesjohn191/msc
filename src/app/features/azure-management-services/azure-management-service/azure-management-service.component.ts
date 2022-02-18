@@ -185,7 +185,7 @@ export class AzureManagementServiceComponent implements OnInit, OnDestroy {
    * Sorting predicate for group
    */
   private _sortAzureManagementServicePredicate(first: McsAzureManagementService, second: McsAzureManagementService): number {
-    return compareStrings(first.billingDescription, second.billingDescription);
+    return compareStrings(first.description, second.description);
   }
 
   /**

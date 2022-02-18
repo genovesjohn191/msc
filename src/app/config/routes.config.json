@@ -310,7 +310,7 @@
     "navigationPath": "management-services",
     "enumPlatform": "Public",
     "documentTitle": "Management Services - Macquarie Cloud Services",
-    "requiredFeatureFlag": "EnablePublicCloudManagementServiceListing"
+    "requiredFeatureFlag": "EnableAzureManagementServiceListing"
   },
   "azureManagementServicesDetails": {
     "enumPlatform": "Public",

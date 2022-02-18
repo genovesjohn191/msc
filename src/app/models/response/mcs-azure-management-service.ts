@@ -12,7 +12,7 @@ export class McsAzureManagementService extends McsEntityBase {
   public id: string = undefined;
 
   @JsonProperty()
-  public billingDescription: string = undefined;
+  public description: string = undefined;
 
   @JsonProperty()
   public mcaContact: string = undefined;

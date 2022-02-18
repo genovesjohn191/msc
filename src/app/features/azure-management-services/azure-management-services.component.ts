@@ -57,7 +57,6 @@ export class AzureManagementServicesComponent {
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'children' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];

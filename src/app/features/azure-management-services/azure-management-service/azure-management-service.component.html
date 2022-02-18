@@ -1,6 +1,6 @@
 <ng-container *ngIf="selectedAzureManagementService$ | async as selectedAzureManagementService">
 
-  <mcs-page [header]="selectedAzureManagementService.billingDescription">
+  <mcs-page [header]="selectedAzureManagementService.description">
 
     <!-- Left Panel -->
     <mcs-left-panel *mcsLeftPanelDef="'azureManagementService.leftPanelHeader' | translate">
@@ -19,7 +19,7 @@
                 <mcs-option [value]="azureManagementService"
                   [selected]="selectedAzureManagementService.id === azureManagementService.id">
                   <mcs-item>
-                    <span [innerHTML]="azureManagementService.billingDescription | mcsDataLabel"></span>
+                    <span [innerHTML]="azureManagementService.description | mcsDataLabel"></span>
                   </mcs-item>
                 </mcs-option>
               </a>
