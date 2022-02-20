@@ -29,9 +29,7 @@ import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
 export class McsAuthenticationService {
-  public get isNewOAuthEnabled(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.NewOAuth]);
-  }
+  public isNewOAuthEnabled = false;
 
   constructor(
     private _appState: AppState,
@@ -39,7 +37,7 @@ export class McsAuthenticationService {
     private _cookieService: McsCookieService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _accessControlService: McsAccessControlService,
+    private _accessControl: McsAccessControlService,
     private _coreConfig: CoreConfig
   ) { }
 
@@ -113,12 +111,11 @@ export class McsAuthenticationService {
         if (isNullOrEmpty(identity)) { return of(null); }
 
         this._setUserIdentity(identity);
+        this.isNewOAuthEnabled = this._accessControl.hasAccessToFeature(McsFeatureFlag.NewOAuth);
         if (identity?.isAnonymous) { return of(identity); }
 
         // Set extension trigger
-        if (this.isNewOAuthEnabled) {
-          this.setExtensionTrigger(identity.expiry);
-        }
+        this.setExtensionTrigger(identity.expiry);
 
         return combinedCalls.pipe(
           map(([platform, links]) => {
@@ -165,7 +162,7 @@ export class McsAuthenticationService {
   }
 
   private setExtensionTrigger(expiry: Date): void {
-    if (isNullOrEmpty(expiry)) { return; }
+    if (isNullOrEmpty(expiry) || !this.isNewOAuthEnabled) { return; }
 
     let refreshTimeInSeconds = (expiry.getTime() - Date.now()) / 1000;
     let willExpiresSoon = refreshTimeInSeconds < 300;
