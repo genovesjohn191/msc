@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  serializeObjectToJson
+} from '@app/utilities';
 import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
@@ -33,17 +36,11 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
   public getSites(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbSite[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/sites';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -58,17 +55,11 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
   }
 
   public getPods(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbPod[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/pods';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -83,17 +74,11 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
   }
 
   public getVlans(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbVlan[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/vlans';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -108,17 +93,11 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
   }
 
   public getVnis(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbVni[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/vnis';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -133,17 +112,11 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
   }
 
   public getUseCases(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbUseCase[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/use-cases';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -159,17 +132,11 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
 
   public getMulticastIps(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsNetworkDbMulticastIp[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/multicast-ip-addresses';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -185,19 +152,11 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
 
   public getNetworks(query?: McsNetworkDbNetworkQueryParams, optionalHeaders?: Map<string, any>):
   Observable<McsApiSuccessResponse<McsNetworkDbNetwork[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('name', query.name);
-    searchParams.set('company_id', query.companyId);
+    if (isNullOrEmpty(query)) { query = new McsNetworkDbNetworkQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/network-db/networks';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsNetworkDbNetworkQueryParams.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)

@@ -2,15 +2,18 @@ import {
   of,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   map,
   switchMap,
   takeUntil,
   tap
 } from 'rxjs/operators';
 
+import { Sort } from '@angular/material/sort';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,6 +23,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
 import {
   CoreRoutes,
   McsMatTableContext,
@@ -88,7 +92,11 @@ export class AzureDeploymentsComponent implements OnDestroy {
   private _routerHandler: Subscription;
   private _destroySubject = new Subject<void>();
   private _companyId: string;
+  private _sortDirection: string;
+  private _sortField: string;
+
   public formConfig$: Observable<DynamicFormFieldConfigBase[]>;
+  public isSorting: boolean;
 
   public readonly defaultColumnFilters = [
     // createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
@@ -250,6 +258,13 @@ export class AzureDeploymentsComponent implements OnDestroy {
     }
   }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _subscribeToQueryParams(): void {
     this._activatedRoute.queryParams.pipe(
       takeUntil(this._destroySubject),
@@ -281,10 +296,18 @@ export class AzureDeploymentsComponent implements OnDestroy {
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.companyId = this._companyId;
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getTerraformDeployments(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount))
-    );
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
+      }));
   }
 
   private _runDelete(deployment: McsTerraformDeployment): Observable<boolean> {

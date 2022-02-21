@@ -1,10 +1,10 @@
+import { JsonProperty } from '@app/utilities';
 import { McsQueryParam } from './mcs-query-param';
 
 export class McsAzureDeploymentsQueryParams extends McsQueryParam {
-  public companyId?: string;
-  public name?: string;
+  @JsonProperty({ name: 'company_id' })
+  public companyId?: string = undefined;
 
-  constructor() {
-    super();
-  }
+  @JsonProperty({ name: 'name' })
+  public name?: string = undefined;
 }
