@@ -34,19 +34,11 @@ export class McsApiTerraformService implements IMcsApiTerraformService {
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
   public getDeployments(query?: McsAzureDeploymentsQueryParams): Observable<McsApiSuccessResponse<McsTerraformDeployment[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsAzureDeploymentsQueryParams(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('company_id', query.companyId);
-    searchParams.set('name', query.name);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/terraform/deployments';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsAzureDeploymentsQueryParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
