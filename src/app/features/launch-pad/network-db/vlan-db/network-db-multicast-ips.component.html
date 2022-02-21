@@ -5,11 +5,18 @@
     <!-- Meta Data -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
-          <span>{{ totalCount | mcsPlural:
-                ('networkDb.multicastIps.dataSingular' | translate) : ('networkDb.multicastIps.dataPlural' | translate) }}
-          </span>
-        </div>
+        <ng-container *ngIf="isSorting; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalCount | mcsPlural:
+                  ('networkDb.multicastIps.dataSingular' | translate) : ('networkDb.multicastIps.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
       </div>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -37,11 +44,11 @@
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="network-db-multicast-ips-mobile-search"></mcs-search>
 
-      <table mat-table [dataSource]="dataSource" style="margin-top: 0">
+      <table mat-table [dataSource]="dataSource" margin-top-none matSort (matSortChange)="onSortChange($event)">
 
         <!-- IP Address Column -->
         <ng-container matColumnDef="ipAddress">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="ipAddress" disableClear>
             {{ 'columnHeader.ipAddress' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
@@ -51,7 +58,7 @@
 
         <!-- Description Column -->
         <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="description" disableClear>
             {{ 'columnHeader.description' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
@@ -61,7 +68,7 @@
 
         <!-- Site Column -->
         <ng-container matColumnDef="site">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="siteName" disableClear>
             {{ 'columnHeader.site' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
@@ -71,7 +78,7 @@
 
         <!-- Use Case Column -->
         <ng-container matColumnDef="useCase">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="useCaseName" disableClear>
             {{ 'columnHeader.useCase' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
@@ -81,7 +88,7 @@
 
         <!-- Updated On Column -->
         <ng-container matColumnDef="updatedOn">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="updatedOn" disableClear>
             {{ 'columnHeader.updatedOn' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -91,7 +98,7 @@
 
         <!-- Created By Column -->
         <ng-container matColumnDef="createdBy">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="createdBy" disableClear>
             {{ 'columnHeader.createdBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -101,7 +108,7 @@
 
         <!-- Created On Column -->
         <ng-container matColumnDef="createdOn">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="createdOn" disableClear>
             {{ 'columnHeader.createdOn' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -111,7 +118,7 @@
 
         <!-- Updated By Column -->
         <ng-container matColumnDef="updatedBy">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="updatedBy" disableClear>
             {{ 'columnHeader.updatedBy' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -120,7 +127,8 @@
         </ng-container>
 
         <!-- Header and Data row -->
-        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
         <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
       </table>
 

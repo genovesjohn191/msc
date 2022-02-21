@@ -5,8 +5,15 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Sort } from '@angular/material/sort';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   McsMatTableConfig,
@@ -41,6 +48,10 @@ import {
 export class NetworkDbPodsComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbPod>;
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
@@ -96,13 +107,29 @@ export class NetworkDbPodsComponent implements OnDestroy {
     return networkDbPodTypeText[status];
   }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbPod>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getNetworkDbPods(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
+      }));
   }
 }
