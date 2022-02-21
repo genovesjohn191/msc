@@ -64,7 +64,6 @@ export class NetworkDbNetworkEditComponent extends BasicJobEditComponentBase<Mcs
       key: 'company',
       label: 'Company',
       placeholder: 'Search for name or company ID...',
-      validators: { required: true },
       allowCustomInput: true,
       maxItems: 1,
       eventName: 'company-change',
