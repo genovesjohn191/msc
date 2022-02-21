@@ -89,7 +89,8 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
       this.isLoading = false;
       let match: boolean = result.totalCollectionCount > 0;
 
-      let matchName = match && result.collection[0].name.trim() === inputValue.trim();
+      let matchName = match && result.collection[0].name.trim() === inputValue.trim()
+        && this._companyId === result.collection[0].companyId;
       this._unique = !matchName;
       this.valueChange(inputValue);
     })
