@@ -6,7 +6,6 @@ import { BillingComponent } from './billing.component';
 import { BillingSummaryService } from './billing.service';
 import { BillingServiceComponent } from './service/billing-service.component';
 import { BillingSummaryComponent } from './summary/billing-summary.component';
-import { BillingTabularComponent } from './tabular/billing-tabular.component';
 
 /**
  * List of services for the main module
@@ -39,12 +38,7 @@ export const billingRoutes: Routes = [
         path: 'service',
         component: BillingServiceComponent,
         data: { routeId: RouteKey.BillingService }
-      },
-      {
-        path: 'tabular',
-        component: BillingTabularComponent,
-        data: { routeId: RouteKey.BillingTabular }
-      },
+      }
     ]
   }
 ];

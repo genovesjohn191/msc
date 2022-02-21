@@ -138,7 +138,6 @@ export enum RouteKey {
   Billing,
   BillingSummary,
   BillingService,
-  BillingTabular,
 
   PrivateCloudDashboard,
   PrivateCloudDashboardOverview,

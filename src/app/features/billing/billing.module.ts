@@ -11,14 +11,12 @@ import {
 } from './billing.constants';
 import { BillingServiceComponent } from './service/billing-service.component';
 import { BillingSummaryComponent } from './summary/billing-summary.component';
-import { BillingTabularComponent } from './tabular/billing-tabular.component';
 
 @NgModule({
   declarations: [
     BillingComponent,
     BillingSummaryComponent,
-    BillingServiceComponent,
-    BillingTabularComponent
+    BillingServiceComponent
   ],
   imports: [
     SharedModule,
