@@ -1,13 +1,13 @@
 <!-- Input Field -->
 <mat-form-field appearance="outline" #viewFormField
   class="mcs-tree-dropdown-trigger"
-  [class.mcs-tree-dropdown-trigger-fullwidth]="alwaysShowPanel">
+  [class.mcs-tree-dropdown-trigger-fullwidth]="alwaysShowPanel"
+  (click)="onTogglePanel()">
   <mat-label>{{ treeViewLabel }}</mat-label>
 
   <ng-container *ngIf="hideChips; else chipsView">
     <input matInput *ngIf="selectedNodes$ | async"
       [disabled]="disabled"
-      (click)="onTogglePanel()"
       (blur)="onBlurInput()"
       (keydown)="onKeyDown($event)"
       [formControl]="fcTreeSearch">
@@ -24,7 +24,6 @@
       <input matInput
         [disabled]="disabled"
         [placeholder]="displayedLabel"
-        (click)="onTogglePanel()"
         (blur)="onBlurInput()"
         (keydown)="onKeyDown($event)"
         [formControl]="fcTreeSearch"
