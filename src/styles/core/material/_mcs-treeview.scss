@@ -49,6 +49,10 @@
         max-height: 20rem;
         overflow-y: auto;
 
+        .mcs-tree-node-option {
+          @include display-flex(row);
+        }
+
         .mcs-node-expand-trigger {
           opacity: 0;
           width: 1rem;
