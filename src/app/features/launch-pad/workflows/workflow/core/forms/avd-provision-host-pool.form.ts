@@ -216,13 +216,13 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
     }),
     new DynamicInputNumberField({
       key: 'profilesStorageShareQuotaGB',
-      label: 'Profiles Storage Share Quota (GiB)',
+      label: 'Profiles Storage Share Quota (GB)',
       placeholder: 'Enter profile storage share quota',
-      contextualHelp: 'Quota for Azure Premium Files share, in GiB.',
+      contextualHelp: 'Quota for Azure Premium Files share, in GB.',
       validators: { required: true, min: 1, max: 99999 },
-      suffix: 'GiB',
+      suffix: 'GB',
       hint: 'Allowed value is 1 - 99999',
-    }),
+      }),
     new DynamicInputTextField({
       key: 'sharedImageGalleryName',
       label: 'Shared Image Gallery Name',
