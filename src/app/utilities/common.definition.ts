@@ -30,6 +30,9 @@ export class CommonDefinition {
   public static OTHER_TEXT = 'Others';
   public static NOT_APPLICABLE = 'N/A';
 
+  // Azure Resources Page
+  public static AZURE_RESOURCES_PAGE_SIZE_MAX = 999999;
+
   /** Others */
   public static SEARCH_TIME = 1000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
