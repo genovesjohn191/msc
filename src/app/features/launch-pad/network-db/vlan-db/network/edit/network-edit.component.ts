@@ -20,7 +20,11 @@ import {
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { createObject, isNullOrEmpty } from '@app/utilities';
+import {
+  createObject,
+  isNullOrEmpty,
+  isNullOrUndefined
+} from '@app/utilities';
 import {
   BasicJobEditComponentBase,
   BasicFormConfig,
@@ -157,7 +161,8 @@ export class NetworkDbNetworkEditComponent extends BasicJobEditComponentBase<Mcs
         whitelist: [this.network.name]
       },
       description: { value: this.network.description },
-      company: { value: [{ value: this.network.companyId, label: this.network.companyName }] },
+      company:  isNullOrUndefined(this.network.companyId) ?
+        null : { value: [{ value: this.network.companyId, label: this.network.companyName }] },
       serviceId: { value: this.network.serviceId },
       useCaseId: { value: this.network.useCaseId.toString() }
     });
