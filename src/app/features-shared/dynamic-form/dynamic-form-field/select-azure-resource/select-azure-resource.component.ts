@@ -64,14 +64,15 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
     switch (params.eventName) {
 
       case 'vnet-resource-change':
-        this._resourceGroupId = params.value?.resourceGroupId;
+        this._resourceGroupId = params.value?.id;
         this.retrieveOptions();
         break;
 
       case 'domain-controller-change':
-        this._resourceGroupId = params.value?.resourceGroupId;
+        this._resourceGroupId = params.value?.id;
         this.retrieveOptions();
         break;
+
       case 'company-change':
         this._companyId = params.value;
         this.retrieveOptions();
@@ -98,7 +99,7 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
     ]);
 
     let param = new McsQueryParam();
-    param.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+    param.pageSize = CommonDefinition.AZURE_RESOURCES_PAGE_SIZE_MAX;
 
     return this._apiService.getAzureResources(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
