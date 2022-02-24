@@ -55,9 +55,6 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
   public config: DynamicSelectResourceGroupField;
 
   // Filter variables
-  private _vnetResourceGroupId: string = '';
-  private _domainControllerResourceGroupId: string = '';
-  private _filterName: string;
   private _companyId: string = '';
 
   constructor(
@@ -69,18 +66,6 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     switch (params.eventName) {
-
-      case 'vnet-resource-change':
-        this._vnetResourceGroupId = params.value?.resourceGroupId;
-        this._filterName = params.eventName;
-        this.retrieveOptions();
-        break;
-
-      case 'domain-controller-change':
-        this._domainControllerResourceGroupId = params.value?.resourceGroupId;
-        this._filterName = params.eventName;
-        this.retrieveOptions();
-        break;
       case 'company-change':
         this._companyId = params.value;
         this.retrieveOptions();
@@ -108,7 +93,7 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
     ]);
 
     let param = new McsQueryParam();
-    param.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+    param.pageSize = CommonDefinition.AZURE_RESOURCES_PAGE_SIZE_MAX;
 
     return this._apiService.getAzureResources(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
@@ -119,14 +104,6 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
   protected filter(collection: McsAzureResource[]): FlatOption[] {
     let options: FlatOption[] = [];
     let collectionOptions = collection;
-    if (!isNullOrEmpty(this._vnetResourceGroupId) || !isNullOrEmpty(this._domainControllerResourceGroupId)) {
-      if (this._filterName === ResourceGroupEventName.DomainChange) {
-        collectionOptions = collection.filter((resource) => resource.resourceGroupId === this._domainControllerResourceGroupId);
-      }
-      if (this._filterName === ResourceGroupEventName.VnetChange) {
-        collectionOptions = collection.filter((resource) => resource.resourceGroupId === this._vnetResourceGroupId);
-      }
-    }
     let resourceByType = collectionOptions.filter((resource) => resource.type === this.config.resourceType);
     let items = resourceByType.sort((a, b) => a.name.localeCompare(b.name));
 

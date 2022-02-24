@@ -79,51 +79,28 @@ podTemplate(
     ]
 ) {
     node (label) {
-        try {
-            stage('Select tag') {
-                if (!deploy_latest) {
-                    tags = getTags(credentials_name, registry_location, image_name, tag_count)
-                    selected_tag = input(
-                        id: 'userInput', message: 'Promote:', parameters: [
-                            [$class: 'ChoiceParameterDefinition', choices: tags, description: 'Select an image tag', name: 'tag']
-                        ]
-                    )
-                } else {
-                    println "Will deploy ${image_name}:latest"
-                }
-            }
-            stage('Deploy the correct version') {
-                println "Deploying: ${deployment_names}"
-                deployment_names.split(',').each {
-                    println "You've chosen to deploy ${it} as ${registry_location}/${image_name}:${selected_tag}"
-                    sh "kubectl set image deployment ${it} ${it}=${registry_location}/${image_name}:${selected_tag} --record"
-                    sh "kubectl rollout status deployment ${it}"
-                }
-            }
-            stage('Update the build description') {
-                currentBuild.description = "${image_name}:${selected_tag}"
-            }
-            if (slack_notify_on_success) {
-                stage('Notify') {
-                    slackSend (
-                        color: '#00ff00', //green
-                        message: "LABORATORY - DEPLOYMENT SUCCESS: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
-                                "Deployed ${image_name}:${selected_tag} for ${deployment_names}\n"
-                    )
-                }
+        stage('Select tag') {
+            if (!deploy_latest) {
+                tags = getTags(credentials_name, registry_location, image_name, tag_count)
+                selected_tag = input(
+                    id: 'userInput', message: 'Promote:', parameters: [
+                        [$class: 'ChoiceParameterDefinition', choices: tags, description: 'Select an image tag', name: 'tag']
+                    ]
+                )
+            } else {
+                println "Will deploy ${image_name}:latest"
             }
         }
-        catch (e) {
-            // If there was an exception thrown, the build failed
-            currentBuild.result = "BUILD FAILED"
-            slackSend (
-                color: '#ff0000', //red
-                message: "LABORATORY - DEPLOYMENT FAILURE: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
-                        "Tried to deploy ${image_name}:${selected_tag} for ${deployment_names}\n" +
-                        "Error:\n" +
-                        "> ${e}\n" +
-                        "<${env.BUILD_URL}console|Jenkins Link>"
-            )
+        stage('Deploy the correct version') {
+            println "Deploying: ${deployment_names}"
+            deployment_names.split(',').each {
+                println "You've chosen to deploy ${it} as ${registry_location}/${image_name}:${selected_tag}"
+                sh "kubectl set image deployment ${it} ${it}=${registry_location}/${image_name}:${selected_tag} --record"
+                sh "kubectl rollout status deployment ${it}"
+            }
+        }
+        stage('Update the build description') {
+            currentBuild.description = "${image_name}:${selected_tag}"
         }
     }
 }

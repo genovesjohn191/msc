@@ -95,7 +95,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * Returns the orderId for the current order
    */
   public get orderId(): string {
-    return getSafeProperty(this._orderBase.order, (obj) => obj.orderId);
+    return getSafeProperty(this._orderBase.order, (obj) => obj.id);
   }
 
   /**
