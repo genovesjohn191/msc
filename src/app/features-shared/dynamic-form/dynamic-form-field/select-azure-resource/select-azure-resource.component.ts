@@ -48,9 +48,11 @@ import { DynamicSelectAzureResourceField } from './select-azure-resource';
 })
 export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldComponentBase<McsAzureResource> {
   public config: DynamicSelectAzureResourceField;
+  private azureResourcesCache: Observable<McsAzureResource[]>;
 
   // Filter variables
   private _resourceGroupId: string = '';
+  private _azureId: string = '';
   private _companyId: string = '';
 
   constructor(
@@ -62,13 +64,18 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     switch (params.eventName) {
-
-      case 'vnet-resource-change':
+      case 'vnet-resource-group-change':
         this._resourceGroupId = params.value?.id;
         this.retrieveOptions();
         break;
 
-      case 'domain-controller-change':
+      case 'vnet-change':
+        this._resourceGroupId = params.value?._resourceGroupId;
+        this._azureId = params.value?.azureId;
+        this.retrieveOptions();
+        break;
+
+      case 'domain-controller-resource-group-change':
         this._resourceGroupId = params.value?.id;
         this.retrieveOptions();
         break;
@@ -92,7 +99,7 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
   }
 
   protected callService(): Observable<McsAzureResource[]> {
-    if (isNullOrEmpty(this._companyId)) { return of([]); }
+    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._resourceGroupId)) { return of([]); }
 
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
@@ -101,22 +108,30 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
     let param = new McsQueryParam();
     param.pageSize = CommonDefinition.AZURE_RESOURCES_PAGE_SIZE_MAX;
 
-    return this._apiService.getAzureResources(param, optionalHeaders).pipe(
-      takeUntil(this.destroySubject),
-      map((response) => response && response.collection),
-      shareReplay(1));
+    if (isNullOrEmpty(this.azureResourcesCache))  {
+        let response = this._apiService.getAzureResources(param, optionalHeaders).pipe(
+          takeUntil(this.destroySubject),
+          map((response) => response && response.collection),
+          shareReplay(1)
+        );
+        this.azureResourcesCache = response;
+        return response;
+      } else  {
+        return this.azureResourcesCache;
+    }
   }
 
   protected filter(collection: McsAzureResource[]): FlatOption[] {
     let options: FlatOption[] = [];
     let collectionOptions = collection;
-    if (isNullOrEmpty(this._resourceGroupId)) {
+    if (isNullOrEmpty(this._resourceGroupId) && isNullOrEmpty(this._azureId)) {
       return options;
     }
 
-    collectionOptions = collection.filter((resource) => resource.resourceGroupId === this._resourceGroupId);
-    let resourceByType = collectionOptions.filter((resource) => resource.type === this.config.resourceType);
-    let items = resourceByType.sort((a, b) => a.name.localeCompare(b.name));
+    //this is a workaround until we have the proper subnets endpoint working, which ascertains what the Azure ID of each subnet's network is and uses that to filter
+    collectionOptions = isNullOrEmpty(this._azureId)? collectionOptions : collectionOptions.filter((resource) => (resource.azureId.split('/').slice(0, -2).join("/") === this._azureId));
+    collectionOptions = isNullOrEmpty(this._resourceGroupId)? collectionOptions : collectionOptions.filter((resource) => (resource.resourceGroupId === this._resourceGroupId));
+    let items = isNullOrEmpty(this.config.resourceType)? collectionOptions : collectionOptions.filter((resource) => resource.type.toUpperCase() === this.config.resourceType.toUpperCase()).sort((a, b) => a.name.localeCompare(b.name));
 
     items.forEach((item) => {
       let id = this.config?.useNameAsKey ? item.name : item.azureId;

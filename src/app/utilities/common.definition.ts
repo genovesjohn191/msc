@@ -225,7 +225,7 @@ export class CommonDefinition {
     = /^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$/;
   public static REGEX_FQDN_DOMAIN_PATTERN
     = /^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/;
-  public static REGEX_PROFILE_STORAGE_ACCOUNT_NAME_PATTERN = /^[a-zA-Z0-9]{1,15}$/;
+  public static REGEX_PROFILE_STORAGE_ACCOUNT_NAME_PATTERN = /^[a-z0-9]{3,24}$/;
   public static REGEX_ACCOUNT_UPN_PATTERN = /^.*[^-_.]$/;
   public static REGEX_OU_PATH = /^((CN=([^,]*)),)?((((?:CN|OU)=[^,]+,?)+),)?((DC=[^,]+,?)+)$/;
   public static REGEX_ADOM_NAME_PATTERN = /^[a-zA-Z0-9]+_[0-9]+$/;

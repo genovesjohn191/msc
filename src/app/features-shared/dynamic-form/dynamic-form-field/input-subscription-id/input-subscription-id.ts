@@ -24,6 +24,7 @@ export class DynamicInputSubscriptionIdField extends DynamicFormFieldConfigBase 
     prefix?: string;
     suffix?: string;
     settings?: DynamicFormControlSettings;
+    eventName?: DynamicFormFieldOnChangeEvent;
   }) {
     super(options);
   }

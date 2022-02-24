@@ -86,7 +86,7 @@ export class DynamicSelectVmSizeComponent extends DynamicSelectFieldComponentBas
     let items = collection.sort((a, b) => a.name.localeCompare(b.name));
 
     items.forEach((item) => {
-      options.push({ type: 'flat', key: item.id, value: item.name });
+      options.push({ type: 'flat', key: item.name, value: item.name });
     });
 
     return options;

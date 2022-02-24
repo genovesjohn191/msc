@@ -22,13 +22,16 @@ export const vmsAvdHostPoolAddForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['customerShortName', 'subscriptionId', 'avdResourceGroup'],
+      dependents: [
+        'subscriptionId',
+        'avdResourceGroup'
+      ]
     }),
     new DynamicInputHiddenField({
       key: 'linkedService',
       value: '',
       eventName: 'linked-service-id-change',
-      dependents: ['subscriptionId'],
+      dependents: ['subscriptionId']
     }),
     new DynamicInputSubscriptionIdField({
       key: 'subscriptionId',
@@ -36,6 +39,8 @@ export const vmsAvdHostPoolAddForm: LaunchPadForm = {
       placeholder: 'Enter subscription ID',
       contextualHelp: 'The subscription ID to use for this operation.',
       settings: { readonly: true, preserve: true },
+      eventName: 'linked-subscription-id-change',
+      dependents: ['avdResourceGroup'],
       validators: { required: true }
     }),
     new DynamicSelectResourceGroupField({

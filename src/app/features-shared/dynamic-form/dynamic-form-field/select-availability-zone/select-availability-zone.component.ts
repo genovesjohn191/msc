@@ -70,7 +70,7 @@ export class DynamicSelectAvailabilityZoneComponent extends DynamicSelectFieldCo
     let options: FlatOption[] = [];
 
     collection.forEach((item) => {
-      options.push({ type: 'flat', key: item.id, value: item.name });
+      options.push({ type: 'flat', key: item.name, value: item.name });
     });
 
     return options;
