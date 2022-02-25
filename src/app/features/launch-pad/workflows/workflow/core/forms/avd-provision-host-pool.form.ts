@@ -76,7 +76,8 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       key: 'location',
       label: 'Location',
       contextualHelp: 'Region where AVD is deployed.',
-      validators: { required: true }
+      validators: { required: true },
+      useNameAsKey: true
     }),
     new DynamicSelectResourceGroupField({
       key: 'avdResourceGroup',
