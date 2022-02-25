@@ -13,6 +13,7 @@ export class DynamicSelectAzureResourceField extends DynamicFormFieldConfigBase 
 
   public resourceType: string = '';
   public useNameAsKey: boolean = false;
+  public useAzureIdAsKey: boolean = false;
 
   public constructor(options: {
     key: string;
@@ -27,10 +28,12 @@ export class DynamicSelectAzureResourceField extends DynamicFormFieldConfigBase 
     settings?: DynamicFormControlSettings;
     resourceType?: string;
     useNameAsKey?: boolean;
+    useAzureIdAsKey?: boolean;
   }) {
     super(options);
 
     this.resourceType = options.resourceType;
     this.useNameAsKey = options.useNameAsKey || false;
+    this.useAzureIdAsKey = options.useAzureIdAsKey || false;
   }
 }

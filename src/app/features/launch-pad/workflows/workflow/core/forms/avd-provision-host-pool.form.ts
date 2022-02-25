@@ -35,11 +35,6 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
         'customerShortName',
         'subscriptionId',
         'avdResourceGroup',
-        'vnetResourceGroup',
-        'vnet',
-        'subnetName',
-        'domainControllerResourceGroup',
-        'domainControllerVM',
         'location',
         'vmSize'
       ],
@@ -57,11 +52,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       contextualHelp: 'The subscription ID to use for this operation.',
       settings: { readonly: true, preserve: true },
       eventName: 'linked-subscription-id-change',
-      dependents: [
-        'avdResourceGroup',
-        'vnetResourceGroup',
-        'domainControllerResourceGroup',
-      ],
+      dependents: [ 'avdResourceGroup' ],
       validators: { required: true }
     }),
     new DynamicInputShortCustomerNameField({
@@ -85,16 +76,21 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       contextualHelp: 'The resource group containing the existing AVD service.',
       validators: { required: true },
       resourceType: 'microsoft.resources/subscriptions/resourcegroups',
+      eventName: 'avd-resource-group-change',
+      dependents: [
+        'vnetResourceGroup',
+        'domainControllerResourceGroup',
+      ],
       useAzureIdAsKey: true
     }),
-    new DynamicSelectResourceGroupField({
+    new DynamicSelectAzureResourceField({
       key: 'vnetResourceGroup',
       label: 'VNET Resource Group',
       contextualHelp: 'The resource group containing the existing virtual network.',
       validators: { required: true },
       resourceType: 'microsoft.resources/subscriptions/resourcegroups',
       eventName: 'vnet-resource-group-change',
-      dependents: ['vnet','subnetName'],
+      dependents: ['vnet', 'subnetName'],
       useAzureIdAsKey: true
     }),
     new DynamicSelectAzureResourceField({
@@ -105,7 +101,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       resourceType: 'microsoft.network/virtualnetworks',
       eventName: 'vnet-change',
       dependents: ['subnetName'],
-      useNameAsKey: false
+      useAzureIdAsKey: true
     }),
     new DynamicSelectAzureResourceField({
       key: 'subnetName',
@@ -115,7 +111,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       resourceType: 'microsoft.network/virtualnetworks/subnets',
       useNameAsKey: true
     }),
-    new DynamicSelectResourceGroupField({
+    new DynamicSelectAzureResourceField({
       key: 'domainControllerResourceGroup',
       label: 'Domain Controller Resource Group',
       contextualHelp: 'The resource group containing the VM which has the domain controller on it.',
@@ -131,7 +127,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       contextualHelp: 'The VM with the domain controller on it.',
       validators: { required: true },
       resourceType: 'microsoft.compute/virtualmachines',
-      useNameAsKey: false
+      useAzureIdAsKey: true
     }),
     new DynamicInputAccountUpnField({
       key: 'azureAdminAccountUPN',
@@ -164,7 +160,6 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
     new DynamicInputOuPathField({
       key: 'ouPath',
       label: 'OU Path',
-      value: '',
       placeholder: 'Enter OU Path',
       contextualHelp: 'The Organizational Unit the host pool VMs will join. E.g. OU=orgunit,DC=domain,DC=com,dc=au.',
       validators: { required: false }
