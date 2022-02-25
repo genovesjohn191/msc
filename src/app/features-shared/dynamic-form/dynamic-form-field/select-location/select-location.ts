@@ -11,6 +11,8 @@ export class DynamicSelectLocationField extends DynamicFormFieldConfigBase {
   public type: DynamicFormFieldType = 'select-location';
   public template: DynamicFormFieldTemplate = 'select-location';
 
+  public useNameAsKey: boolean = false;
+
   public constructor(options: {
     key: string;
     label: string;
@@ -22,7 +24,10 @@ export class DynamicSelectLocationField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
+    useNameAsKey?: boolean;
   }) {
     super(options);
+
+    this.useNameAsKey = options.useNameAsKey || false;
   }
 }

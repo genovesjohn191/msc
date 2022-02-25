@@ -11,6 +11,8 @@ export class DynamicSelectAvailabilityZoneField extends DynamicFormFieldConfigBa
   public type: DynamicFormFieldType = 'select-availability-zone';
   public template: DynamicFormFieldTemplate = 'select-availability-zone';
 
+  public useNameAsKey: boolean = false;
+
   public constructor(options: {
     key: string;
     label: string;
@@ -22,7 +24,10 @@ export class DynamicSelectAvailabilityZoneField extends DynamicFormFieldConfigBa
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
+    useNameAsKey?: boolean;
   }) {
     super(options);
+
+    this.useNameAsKey = options.useNameAsKey || false;
   }
 }

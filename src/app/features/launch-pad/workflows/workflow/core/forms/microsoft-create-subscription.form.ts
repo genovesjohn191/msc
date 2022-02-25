@@ -41,7 +41,8 @@ export const microsoftCreateSubscriptionForm: LaunchPadForm = {
       key: 'location',
       label: 'Location',
       contextualHelp: 'Select an availability zone to create this subscription for. This will be used to set the location of the Log Analytics workspace that will be created. ',
-      validators: { required: true }
+      validators: { required: true },
+      useNameAsKey: true
     }),
   ],
 
