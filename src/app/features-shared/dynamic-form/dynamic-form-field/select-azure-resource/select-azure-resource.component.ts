@@ -8,21 +8,9 @@ import {
   Observable,
   of
 } from 'rxjs';
-import {
-  takeUntil,
-  map,
-  shareReplay
-} from 'rxjs/operators';
 
-import {
-  CommonDefinition,
-  isNullOrEmpty
-} from '@app/utilities';
-import {
-  McsAzureResource,
-  McsQueryParam,
-} from '@app/models';
-import { McsApiService } from '@app/services';
+import { isNullOrEmpty } from '@app/utilities';
+import { McsAzureResource } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
   DynamicFormFieldOnChangeEvent,
@@ -30,6 +18,7 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { DynamicSelectAzureResourceField } from './select-azure-resource';
+import { DynamicSelectResourceGroupService } from '../dynamic-select-resource-group.service';
 
 @Component({
   selector: 'mcs-dff-select-azure-resource-field',
@@ -48,15 +37,15 @@ import { DynamicSelectAzureResourceField } from './select-azure-resource';
 })
 export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldComponentBase<McsAzureResource> {
   public config: DynamicSelectAzureResourceField;
-  private azureResourcesCache: Observable<McsAzureResource[]>;
 
   // Filter variables
   private _resourceGroupId: string = '';
   private _azureId: string = '';
-  private _companyId: string = '';
+  private _linkedSubscriptionId: string;
+  private _isNotified: boolean = false;
 
   constructor(
-    private _apiService: McsApiService,
+    private _selectResourceService: DynamicSelectResourceGroupService,
     _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_changeDetectorRef);
@@ -66,30 +55,35 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
     switch (params.eventName) {
       case 'vnet-resource-group-change':
         this._resourceGroupId = params.value?.id;
+        this.clearFormField(false);
         this.retrieveOptions();
         break;
 
       case 'vnet-change':
-        this._resourceGroupId = params.value?._resourceGroupId;
+        this._resourceGroupId = params.value?.resourceGroupId;
         this._azureId = params.value?.azureId;
+        this.clearFormField(false);
         this.retrieveOptions();
         break;
 
       case 'domain-controller-resource-group-change':
         this._resourceGroupId = params.value?.id;
+        this.clearFormField(false);
         this.retrieveOptions();
         break;
 
-      case 'company-change':
-        this._companyId = params.value;
+      case 'avd-resource-group-change':
+        if (this._isNotified) { return; }
+        this._isNotified = true;
+        this._linkedSubscriptionId = this._selectResourceService?.subscriptionId;
         this.retrieveOptions();
         break;
+
     }
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
-    let dataValue = this.config?.useNameAsKey ? this.collection.find((item) => item.name === value)
-      : this.collection.find((item) => item.azureId === value);
+    let dataValue = this.setDataValue(value);
 
     this.dataChange.emit({
       value: dataValue,
@@ -98,47 +92,57 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
     });
   }
 
-  protected callService(): Observable<McsAzureResource[]> {
-    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._resourceGroupId)) { return of([]); }
+  private setDataValue(value: string): McsAzureResource {
+    if (isNullOrEmpty(value) || this.collection?.length === 0) { return; }
 
-    let optionalHeaders = new Map<string, any>([
-      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
-    ]);
-
-    let param = new McsQueryParam();
-    param.pageSize = CommonDefinition.AZURE_RESOURCES_PAGE_SIZE_MAX;
-
-    if (isNullOrEmpty(this.azureResourcesCache))  {
-        let response = this._apiService.getAzureResources(param, optionalHeaders).pipe(
-          takeUntil(this.destroySubject),
-          map((response) => response && response.collection),
-          shareReplay(1)
-        );
-        this.azureResourcesCache = response;
-        return response;
-      } else  {
-        return this.azureResourcesCache;
+    if (this.config?.useAzureIdAsKey) {
+      return this.collection.find((item) => item.azureId === value);
     }
+    if (this.config?.useNameAsKey) {
+      return this.collection.find((item) => item.name === value);
+    }
+    return this.collection.find((item) => item.id === value);
+  }
+
+  protected callService(): Observable<McsAzureResource[]> {
+    return of(this._selectResourceService.azureResources);
   }
 
   protected filter(collection: McsAzureResource[]): FlatOption[] {
     let options: FlatOption[] = [];
     let collectionOptions = collection;
-    if (isNullOrEmpty(this._resourceGroupId) && isNullOrEmpty(this._azureId)) {
-      return options;
+    if (collectionOptions?.length === 0) { return options; }
+
+    let fieldResourceGroup = (this.config?.key === 'vnetResourceGroup' ||  this.config?.key === 'domainControllerResourceGroup');
+    if (!fieldResourceGroup) {
+      if (isNullOrEmpty(this._resourceGroupId) && isNullOrEmpty(this._azureId)) { return options; }
+      // this is a workaround until we have the proper subnets endpoint working,
+      // which ascertains what the Azure ID of each subnet's network is and uses that to filter
+      collectionOptions = isNullOrEmpty(this._azureId) ? collectionOptions :
+        collectionOptions.filter((resource) => (resource.azureId.split('/').slice(0, -2).join("/") === this._azureId));
+      collectionOptions = isNullOrEmpty(this._resourceGroupId) ? collectionOptions :
+        collectionOptions.filter((resource) => (resource.resourceGroupId === this._resourceGroupId));
+    } else {
+      if (isNullOrEmpty(this._linkedSubscriptionId)) { return options; }
+      collectionOptions = collectionOptions.filter((resource) => (resource.subscriptionId === this._linkedSubscriptionId));
     }
 
-    //this is a workaround until we have the proper subnets endpoint working, which ascertains what the Azure ID of each subnet's network is and uses that to filter
-    collectionOptions = isNullOrEmpty(this._azureId)? collectionOptions : collectionOptions.filter((resource) => (resource.azureId.split('/').slice(0, -2).join("/") === this._azureId));
-    collectionOptions = isNullOrEmpty(this._resourceGroupId)? collectionOptions : collectionOptions.filter((resource) => (resource.resourceGroupId === this._resourceGroupId));
-    let items = isNullOrEmpty(this.config.resourceType)? collectionOptions : collectionOptions.filter((resource) => resource.type.toUpperCase() === this.config.resourceType.toUpperCase()).sort((a, b) => a.name.localeCompare(b.name));
+    let items = isNullOrEmpty(this.config.resourceType) ? collectionOptions :
+      collectionOptions.filter((resource) => resource.type.toUpperCase() === this.config.resourceType.toUpperCase())
+        .sort((a, b) => a.name.localeCompare(b.name));
 
     items.forEach((item) => {
-      let id = this.config?.useNameAsKey ? item.name : item.azureId;
-
+      let id = this.setOptionKey(item);
       options.push({ type: 'flat', key: id, value: item.name });
     });
 
     return options;
+  }
+
+  private setOptionKey(item: McsAzureResource): string {
+    if (isNullOrEmpty(item)) { return; }
+    if (this.config?.useNameAsKey) { return item?.name; }
+    if (this.config?.useAzureIdAsKey) { return item?.azureId; }
+    return item?.id;
   }
 }

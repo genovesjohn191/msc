@@ -171,6 +171,7 @@ export type DynamicFormFieldTemplate =
 export type DynamicFormFieldOnChangeEvent =
   ''
   | 'az-change'
+  | 'avd-resource-group-change'
   | 'bat-change'
   | 'company-change'
   | 'gateway-ip-change'
