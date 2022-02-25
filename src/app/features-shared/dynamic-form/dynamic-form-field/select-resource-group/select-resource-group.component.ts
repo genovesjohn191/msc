@@ -8,21 +8,9 @@ import {
   Observable,
   of
 } from 'rxjs';
-import {
-  takeUntil,
-  map,
-  shareReplay
-} from 'rxjs/operators';
 
-import {
-  CommonDefinition,
-  isNullOrEmpty
-} from '@app/utilities';
-import {
-  McsAzureResource,
-  McsQueryParam
-} from '@app/models';
-import { McsApiService } from '@app/services';
+import { isNullOrEmpty } from '@app/utilities';
+import { McsAzureResource } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
   DynamicFormFieldOnChangeEvent,
@@ -30,11 +18,8 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { DynamicSelectResourceGroupField } from './select-resource-group';
+import { DynamicSelectResourceGroupService } from '../dynamic-select-resource-group.service';
 
-export enum ResourceGroupEventName {
-  VnetChange = 'vnet-resource-group-change',
-  DomainChange = 'domain-controller-resource-group-change'
-}
 
 @Component({
   selector: 'mcs-dff-select-resource-group-field',
@@ -53,14 +38,13 @@ export enum ResourceGroupEventName {
 })
 export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldComponentBase<McsAzureResource> {
   public config: DynamicSelectResourceGroupField;
-  private azureResourceGroupsCache: Observable<McsAzureResource[]>;
 
   // Filter variables
   private _companyId: string = '';
   private _linkedSubscriptionId: string;
 
   constructor(
-    private _apiService: McsApiService,
+    private _selectResourceService: DynamicSelectResourceGroupService,
     _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_changeDetectorRef);
@@ -75,15 +59,15 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
 
       case 'linked-subscription-id-change':
         this._linkedSubscriptionId = params.value;
+        this._selectResourceService.setSubscriptionId(this._linkedSubscriptionId);
         this.retrieveOptions();
         break;
     }
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
-    let dataValue = this.config?.useAzureIdAsKey ? this.collection.find((item) => item.azureId === value)
-      : this.collection.find((item) => item.id === value);
-    if (this.config?.useNameAsKey) { dataValue = this.collection.find((item) => item.name === value) };
+    if (isNullOrEmpty(this.collection)) { return; }
+    let dataValue = this.collection.find((item) => item.azureId === value);
 
     this.dataChange.emit({
       value: dataValue,
@@ -94,42 +78,29 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
 
   protected callService(): Observable<McsAzureResource[]> {
     if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._linkedSubscriptionId)) { return of([]); }
-
-    let optionalHeaders = new Map<string, any>([
-      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
-    ]);
-
-    let param = new McsQueryParam();
-    param.pageSize = CommonDefinition.AZURE_RESOURCES_PAGE_SIZE_MAX;
-
-    if (isNullOrEmpty(this.azureResourceGroupsCache))  {
-      let response = this._apiService.getAzureResources(param, optionalHeaders).pipe(
-        takeUntil(this.destroySubject),
-        map((response) => response && response.collection),
-        shareReplay(1)
-      );
-      this.azureResourceGroupsCache = response;
-      return response;
-    } else  {
-      return this.azureResourceGroupsCache;
+    if (!isNullOrEmpty(this._selectResourceService.azureResources)) {
+      return of(this._selectResourceService.azureResources);
     }
+    return this._selectResourceService.getAzureResoures(this._companyId);
   }
 
   protected filter(collection: McsAzureResource[]): FlatOption[] {
     let options: FlatOption[] = [];
     let collectionOptions = collection;
-    //filtering on the UI instead of API because the API does not currently support subscription_id param at the same time as per_page param
-    collectionOptions = isNullOrEmpty(this._linkedSubscriptionId)? collectionOptions : collectionOptions.filter((resource) => (resource.subscriptionId === this._linkedSubscriptionId));
+    if (collectionOptions?.length === 0) { return options; }
+    // filtering on the UI instead of API
+    // because the API does not currently support subscription_id param at the same time as per_page param
+    collectionOptions = isNullOrEmpty(this._linkedSubscriptionId) ?
+      collectionOptions : collectionOptions.filter((resource) => (resource.subscriptionId === this._linkedSubscriptionId));
     let resourceByType = collectionOptions.filter((resource) => resource.type === this.config.resourceType);
     let items = resourceByType.sort((a, b) => a.name.localeCompare(b.name));
 
     items.forEach((item) => {
-      let id = this.config?.useAzureIdAsKey ? item.azureId : item.id;
-      if (this.config?.useNameAsKey) { id = item.name };
-
-      options.push({ type: 'flat', key: id, value: item.name });
+      options.push({ type: 'flat', key: item.azureId, value: item.name });
     });
-
+    if (!isNullOrEmpty(options)) {
+      this.notifyForDataChange('avd-resource-group-change', this.config.dependents, '');
+    }
     return options;
   }
 }
