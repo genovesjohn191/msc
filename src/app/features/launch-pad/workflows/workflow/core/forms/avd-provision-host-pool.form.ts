@@ -37,7 +37,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
         'avdResourceGroup',
         'vnetResourceGroup',
         'vnet',
-        'subnet',
+        'subnetName',
         'domainControllerResourceGroup',
         'domainControllerVM',
         'location',
@@ -56,6 +56,12 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       placeholder: 'Enter subscription ID',
       contextualHelp: 'The subscription ID to use for this operation.',
       settings: { readonly: true, preserve: true },
+      eventName: 'linked-subscription-id-change',
+      dependents: [
+        'avdResourceGroup',
+        'vnetResourceGroup',
+        'domainControllerResourceGroup',
+      ],
       validators: { required: true }
     }),
     new DynamicInputShortCustomerNameField({
@@ -86,8 +92,9 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       contextualHelp: 'The resource group containing the existing virtual network.',
       validators: { required: true },
       resourceType: 'microsoft.resources/subscriptions/resourcegroups',
-      eventName: 'vnet-resource-change',
-      dependents: ['vnet', 'subnet'],
+      eventName: 'vnet-resource-group-change',
+      dependents: ['vnet','subnetName'],
+      useAzureIdAsKey: true
     }),
     new DynamicSelectAzureResourceField({
       key: 'vnet',
@@ -95,14 +102,16 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       contextualHelp: 'The virtual network that VMs will be connected to.',
       validators: { required: true },
       resourceType: 'microsoft.network/virtualnetworks',
+      eventName: 'vnet-change',
+      dependents: ['subnetName'],
       useNameAsKey: false
     }),
     new DynamicSelectAzureResourceField({
-      key: 'subnet',
+      key: 'subnetName',
       label: 'Subnet',
       contextualHelp: 'The subnet that VMs will be placed in.',
       validators: { required: true },
-      resourceType: 'microsoft.network/subnets',
+      resourceType: 'microsoft.network/virtualnetworks/subnets',
       useNameAsKey: true
     }),
     new DynamicSelectResourceGroupField({
@@ -111,15 +120,16 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       contextualHelp: 'The resource group containing the VM which has the domain controller on it.',
       validators: { required: true },
       resourceType: 'microsoft.resources/subscriptions/resourcegroups',
-      eventName: 'domain-controller-change',
+      eventName: 'domain-controller-resource-group-change',
       dependents: ['domainControllerVM'],
+      useAzureIdAsKey: true
     }),
     new DynamicSelectAzureResourceField({
       key: 'domainControllerVM',
       label: 'Domain Controller VM',
       contextualHelp: 'The VM with the domain controller on it.',
       validators: { required: true },
-      resourceType: 'microsoft.Compute/virtualMachines',
+      resourceType: 'microsoft.compute/virtualmachines',
       useNameAsKey: false
     }),
     new DynamicInputAccountUpnField({
@@ -211,8 +221,8 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       key: 'profilesStorageAccountName',
       label: 'Profiles Storage Account Name',
       placeholder: 'Enter profile storage account name',
-      contextualHelp: 'Name of the Azure Premium Files storage account used for FSLogix profiles.',
-      validators: { required: true, maxlength: 15 }
+      contextualHelp: 'Name of the Azure Premium Files storage account used for FSLogix profiles. This must be lowercase and contain numbers and letters only.',
+      validators: { minlength: 3, required: true, maxlength: 24 }
     }),
     new DynamicInputNumberField({
       key: 'profilesStorageShareQuotaGB',
@@ -228,7 +238,7 @@ export const provisionAvdHostPoolForm: LaunchPadForm = {
       label: 'Shared Image Gallery Name',
       placeholder: 'Enter shared image gallery name',
       contextualHelp: 'Shared image gallery to store the customer\'s AVD image in.',
-      validators: { required: true }
+      validators: { maxlength: 80, required: true }
     }),
     new DynamicSelectField({
       key: 'vmImageName',
