@@ -70,15 +70,17 @@ export class DynamicSelectAvailabilityZoneComponent extends DynamicSelectFieldCo
     let options: FlatOption[] = [];
 
     collection.forEach((item) => {
-      options.push({ type: 'flat', key: item.name, value: item.name });
+      let id = this.config?.useNameAsKey ? item.name : item.id;
+      options.push({ type: 'flat', key: id, value: item.name });
     });
 
     return options;
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    let dataValue = this.config?.useNameAsKey? this.collection.find((item) => item.name === value) : this.collection.find((item) => item.id === value)
     this.dataChange.emit({
-      value: this.collection.find((item) => item.name === value),
+      value: dataValue,
       eventName,
       dependents
     });
