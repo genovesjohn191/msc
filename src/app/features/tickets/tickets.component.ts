@@ -123,6 +123,7 @@ export class TicketsComponent {
 
   public onTabChanged(): void {
     this.isTabChanged = true;
+    this.dataSource.clear();
     this.retryDatasource();
     this._search.clear();
   }
