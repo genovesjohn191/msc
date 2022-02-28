@@ -182,6 +182,10 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     return this;
   }
 
+  public clear(): void {
+    this._dataRecordsChange.next([]);
+  }
+
   public registerColumnFilter(columnFilter: ColumnFilter): McsTableDataSource2<TEntity> {
     if (this._columnFilter === columnFilter) { return this; }
     this._columnFilter = columnFilter;
