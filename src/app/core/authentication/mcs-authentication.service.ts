@@ -11,10 +11,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { AppState } from '@app/app.service';
-import {
-  McsFeatureFlag,
-  McsIdentity
-} from '@app/models';
+import { McsIdentity } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
@@ -24,12 +21,11 @@ import {
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsSessionService } from '../session/session.service';
-import { McsAccessControlService } from './mcs-access-control.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
 export class McsAuthenticationService {
-  public isNewOAuthEnabled = false;
+  public isNewOAuthEnabled = true;  // Always set to true since we're going to use the oAuth2
 
   constructor(
     private _appState: AppState,
@@ -37,7 +33,6 @@ export class McsAuthenticationService {
     private _cookieService: McsCookieService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _accessControl: McsAccessControlService,
     private _coreConfig: CoreConfig
   ) { }
 
@@ -111,7 +106,6 @@ export class McsAuthenticationService {
         if (isNullOrEmpty(identity)) { return of(null); }
 
         this._setUserIdentity(identity);
-        this.isNewOAuthEnabled = this._accessControl.hasAccessToFeature(McsFeatureFlag.NewOAuth);
         if (identity?.isAnonymous) { return of(identity); }
 
         // Set extension trigger
