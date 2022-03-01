@@ -8,9 +8,15 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { McsIpValidatorService } from '@app/core';
-import { McsNetworkDbNetworkQueryParams } from '@app/models';
+import {
+  McsNetworkDbNetwork,
+  McsNetworkDbNetworkQueryParams
+} from '@app/models';
 import { McsApiService } from '@app/services';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  isNullOrUndefined
+} from '@app/utilities';
 
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextComponent } from '../input-text/input-text.component';
@@ -36,7 +42,7 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
   public config: DynamicInputNetworkDbNetworkNameField;
 
   // Filter variables
-  private _companyId: string = '';
+  private _companyId: string = null;
   private _unique: boolean = true;
 
   public constructor(
@@ -49,7 +55,7 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     switch (params.eventName) {
       case 'company-change':
-        this._companyId = params.value;
+        this._companyId = isNullOrEmpty(params.value) ? null : params.value;
         this._configureValidators();
         this.focusOut(this.config.value);
         break;
@@ -73,7 +79,7 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
     this.isLoading = true;
 
     let queryParam = new McsNetworkDbNetworkQueryParams();
-    queryParam.pageSize = 1;
+    queryParam.pageSize = 10;
     queryParam.companyId = this._companyId;
     queryParam.name = inputValue;
 
@@ -87,11 +93,12 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
     }))
     .subscribe((result) => {
       this.isLoading = false;
-      let match: boolean = result.totalCollectionCount > 0;
-
-      let matchName = match && result.collection[0].name.trim() === inputValue.trim()
-        && this._companyId === result.collection[0].companyId;
-      this._unique = !matchName;
+      let match: McsNetworkDbNetwork = null;
+      if(result.totalCollectionCount > 0) {
+        match = result.collection.find(item => item.companyId=== this._companyId
+          && item.name.trim() === inputValue.trim());
+      }
+      this._unique = isNullOrUndefined(match);
       this.valueChange(inputValue);
     })
   }
