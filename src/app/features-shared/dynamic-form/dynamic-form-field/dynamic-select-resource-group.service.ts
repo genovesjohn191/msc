@@ -9,7 +9,7 @@ import {
 } from "rxjs";
 import {
   McsAzureResource,
-  McsQueryParam
+  McsAzureResourceQueryParams
 } from "@app/models";
 import { McsApiService } from "@app/services";
 import {
@@ -23,7 +23,7 @@ export class DynamicSelectResourceGroupService {
 
   private _azureResources: McsAzureResource[];
   private _companyId: string;
-  private _subscriptionId: string;
+  private _subscriptionUuid: string;
   private _resource$: Observable<McsAzureResource[]>;
 
   private _destroySubject = new Subject<void>();
@@ -32,12 +32,12 @@ export class DynamicSelectResourceGroupService {
     return this._azureResources;
   }
 
-  public get subscriptionId(): string {
-    return this._subscriptionId;
+  public get subscriptionUuid(): string {
+    return this._subscriptionUuid;
   }
 
-  public setSubscriptionId(subscriptionId: string): void {
-    this._subscriptionId = subscriptionId;
+  public setSubscriptionUuid(subscriptionUuid: string): void {
+    this._subscriptionUuid = subscriptionUuid;
   }
 
   public setCompanyId(id: string): void {
@@ -48,7 +48,7 @@ export class DynamicSelectResourceGroupService {
     this._azureResources = resources;
   }
 
-  public getAzureResoures(companyId: string): Observable<McsAzureResource[]> {
+  public getAzureResources(companyId: string, linkedSubscriptionUuid: string): Observable<McsAzureResource[]> {
     let sameCompany = this._companyId === companyId;
     if (!isNullOrEmpty(this._resource$) && sameCompany) {
       return of(this._azureResources);
@@ -57,8 +57,9 @@ export class DynamicSelectResourceGroupService {
       [CommonDefinition.HEADER_COMPANY_ID, companyId]
     ]);
 
-    let param = new McsQueryParam();
+    let param = new McsAzureResourceQueryParams();
     param.pageSize = CommonDefinition.AZURE_RESOURCES_PAGE_SIZE_MAX;
+    param.subscriptionId = linkedSubscriptionUuid;
     this.setCompanyId(companyId);
     this._resource$ = this._apiService.getAzureResources(param, optionalHeaders).pipe(
       takeUntil(this._destroySubject),

@@ -14,7 +14,8 @@
     [pattern]="config.pattern"
     [(ngModel)]="config.value"
     (focusout)="focusOut(control.value)"
-    (input)="valueChange($event)"/>
+    (input)="valueChange($event)"
+    autocomplete="off"/>
   <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
   <mat-hint align="end" *ngIf="config.validators?.maxlength > 0">{{control.value?.length || 0}}/{{ config.validators?.maxlength }}</mat-hint>
 </mat-form-field>
