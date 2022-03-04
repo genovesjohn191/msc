@@ -41,7 +41,7 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
 
   // Filter variables
   private _companyId: string = '';
-  private _linkedSubscriptionId: string;
+  private _linkedSubscriptionUuid: string;
 
   constructor(
     private _selectResourceService: DynamicSelectResourceGroupService,
@@ -58,8 +58,7 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
         break;
 
       case 'linked-subscription-id-change':
-        this._linkedSubscriptionId = params.value;
-        this._selectResourceService.setSubscriptionId(this._linkedSubscriptionId);
+        this._linkedSubscriptionUuid = params.value;
         this.retrieveOptions();
         break;
     }
@@ -77,21 +76,17 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
   }
 
   protected callService(): Observable<McsAzureResource[]> {
-    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._linkedSubscriptionId)) { return of([]); }
+    if (isNullOrEmpty(this._companyId) || isNullOrEmpty(this._linkedSubscriptionUuid)) { return of([]); }
     if (!isNullOrEmpty(this._selectResourceService.azureResources)) {
       return of(this._selectResourceService.azureResources);
     }
-    return this._selectResourceService.getAzureResoures(this._companyId);
+    return this._selectResourceService.getAzureResources(this._companyId, this._linkedSubscriptionUuid);
   }
 
   protected filter(collection: McsAzureResource[]): FlatOption[] {
     let options: FlatOption[] = [];
     let collectionOptions = collection;
     if (collectionOptions?.length === 0) { return options; }
-    // filtering on the UI instead of API
-    // because the API does not currently support subscription_id param at the same time as per_page param
-    collectionOptions = isNullOrEmpty(this._linkedSubscriptionId) ?
-      collectionOptions : collectionOptions.filter((resource) => (resource.subscriptionId === this._linkedSubscriptionId));
     let resourceByType = collectionOptions.filter((resource) => resource.type === this.config.resourceType);
     let items = resourceByType.sort((a, b) => a.name.localeCompare(b.name));
 

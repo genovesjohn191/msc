@@ -41,7 +41,6 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
   // Filter variables
   private _resourceGroupId: string = '';
   private _azureId: string = '';
-  private _linkedSubscriptionId: string;
   private _isNotified: boolean = false;
 
   constructor(
@@ -75,7 +74,6 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
       case 'avd-resource-group-change':
         if (this._isNotified) { return; }
         this._isNotified = true;
-        this._linkedSubscriptionId = this._selectResourceService?.subscriptionId;
         this.retrieveOptions();
         break;
 
@@ -111,7 +109,7 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
   protected filter(collection: McsAzureResource[]): FlatOption[] {
     let options: FlatOption[] = [];
     let collectionOptions = collection;
-    if (collectionOptions?.length === 0) { return options; }
+    if (isNullOrEmpty(collectionOptions)) { return options; }
 
     let fieldResourceGroup = (this.config?.key === 'vnetResourceGroup' ||  this.config?.key === 'domainControllerResourceGroup');
     if (!fieldResourceGroup) {
@@ -122,9 +120,6 @@ export class DynamicSelectAzureResourceComponent extends DynamicSelectFieldCompo
         collectionOptions.filter((resource) => (resource.azureId.split('/').slice(0, -2).join("/") === this._azureId));
       collectionOptions = isNullOrEmpty(this._resourceGroupId) ? collectionOptions :
         collectionOptions.filter((resource) => (resource.resourceGroupId === this._resourceGroupId));
-    } else {
-      if (isNullOrEmpty(this._linkedSubscriptionId)) { return options; }
-      collectionOptions = collectionOptions.filter((resource) => (resource.subscriptionId === this._linkedSubscriptionId));
     }
 
     let items = isNullOrEmpty(this.config.resourceType) ? collectionOptions :
