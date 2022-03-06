@@ -1,3 +1,5 @@
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -47,7 +49,6 @@ import { ListModule } from './list/list.module';
 import { LoaderModule } from './loader/loader.module';
 import { LoadingModule } from './loading/loading.module';
 import { MaterialModule } from './material.module';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { NoteModule } from './note/note.module';
 import { OptionGroupModule } from './option-group/option-group.module';
 import { OverlayModule } from './overlay/overlay.module';
@@ -66,6 +67,7 @@ import { SearchModule } from './search/search.module';
 import { SectionModule } from './section/section.module';
 import { SelectTagModule } from './select-tag/select-tag.module';
 import { SelectModule } from './select/select.module';
+import { SideSheetModule } from './side-sheet';
 import { SliderModule } from './slider/slider.module';
 import { SlidingPanelModule } from './sliding-panel/sliding-panel.module';
 import { SnackBarModule } from './snack-bar/snack-bar.module';
@@ -156,7 +158,8 @@ const exportedModules = [
   TreeModule,
   WidgetsModule,
   WizardModule,
-  DialogModule2
+  DialogModule2,
+  SideSheetModule
 ];
 
 @NgModule({

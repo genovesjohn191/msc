@@ -72,6 +72,12 @@
     </a>
   </div>
 
+  <div class="user-panel-item feedback-item" *mcsAccessControl="[]; feature: ['EnableFeedbackWidget']">
+    <a class="icon-content" (click)="onClickFeedbackWidget()">
+      <mat-icon>rate_review</mat-icon>
+    </a>
+  </div>
+
   <!-- User icon -->
   <div class="user-panel-item user-item">
     <mcs-item>

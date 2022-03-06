@@ -31,6 +31,7 @@ import {
   McsJob,
   RouteKey
 } from '@app/models';
+import { SideSheetService } from '@app/shared/side-sheet';
 import {
   isNullOrEmpty,
   refreshView,
@@ -39,7 +40,11 @@ import {
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
-import { SwitchAccountService } from '../../shared';
+import {
+  FeedbackSheetComponent,
+  FeedbackSheetConfig,
+  SwitchAccountService
+} from '../../shared';
 import { UserPanelService } from './user-panel.service';
 
 const NOTIFICATIONS_COUNT_LIMIT = 3;
@@ -79,7 +84,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationService: McsAuthenticationService,
     private _switchAccountService: SwitchAccountService,
-    private _userPanelService: UserPanelService
+    private _userPanelService: UserPanelService,
+    private _sidesheetService: SideSheetService
   ) {
     this.hasConnectionError = false;
     this.deviceType = Breakpoint.Large;
@@ -168,6 +174,17 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     }
 
     if (isMobileMode) { this.notificationsPopover.close(); }
+  }
+
+  public onClickFeedbackWidget(): void {
+    let sidesheetRef = this._sidesheetService.open(FeedbackSheetComponent, {
+      title: 'Send feedback to Macquarie',
+      data: {
+        message: 'Test Message'
+      } as FeedbackSheetConfig
+    });
+
+    sidesheetRef.afterClosed().subscribe();
   }
 
   /**

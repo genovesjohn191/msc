@@ -35,6 +35,15 @@ $notification-item-label-size: 18px;
     }
   }
 
+  .feedback-item {
+    .icon-content {
+      display: block;
+      position: relative;
+      height: 24px;
+      width: 24px;
+    }
+  }
+
   .notification-item {
     .icon-content {
       position: relative;

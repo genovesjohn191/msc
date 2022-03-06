@@ -3565,6 +3565,9 @@
     "enabled": "Enabled"
   },
   "label": {
+    "tellUsExperience": "Tell us your experience",
+    "cancel": "Cancel",
+    "submit": "Submit",
     "resource": "Resource",
     "media": "Media",
     "extension": "Extension",

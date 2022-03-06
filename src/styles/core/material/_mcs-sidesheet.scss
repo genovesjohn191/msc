@@ -1,0 +1,34 @@
+.mcs-sidesheet-overlay-panel {
+  top: 0;
+  bottom: 0;
+  right: 0;
+
+  mcs-sidesheet.mcs-sidesheet {
+    background-color: $light-bg-color;
+    @include display-flex(column);
+    height: 100%;
+    width: 20rem;
+
+    .mcs-sidesheet-title {
+      @include display-flex(row);
+      @include align-items(center);
+
+      background-color: $light-bg-color;
+      color: $color-text-dark;
+      padding: $space-medium;
+
+      .mcs-sidesheet-close {
+        align-self: flex-end;
+        margin-left: auto;
+      }
+    }
+
+    .mcs-sidesheet-content {
+      background-color: $light-bg-color;
+      color: $color-text-base;
+      padding: $space-medium;
+    }
+  }
+}
+
+

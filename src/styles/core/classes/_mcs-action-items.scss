@@ -2,12 +2,9 @@
 .action-items {
   @include display-flex(row);
   @include align-items(center);
-  justify-content: space-between;
+  justify-content: flex-end;
+  @include set-items-interval($space-medium, horizontal);
   margin-bottom: $space-medium;
-
-  > :only-child {
-    margin-left: auto;
-  }
 }
 
 // Action box
