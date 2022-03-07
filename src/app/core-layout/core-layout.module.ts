@@ -1,27 +1,30 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FeaturesSharedModule } from '@app/features-shared';
 /** Modules */
 import { SharedModule } from '@app/shared';
-/** Multiple Components */
-import { StateChangeNotificationsComponent } from './state-change-notifications';
-import { NavigationComponent } from './main-navigation';
-/** Layout Components */
-import { MainLoaderComponent } from './main-loader/main-loader.component';
+
 import { ContentComponent } from './content/content.component';
+/** Constants */
+import { coreLayoutProviders } from './core-layout.constants';
 import { FooterComponent } from './footer/footer.component';
 import {
   HeaderComponent,
   UserPanelComponent
 } from './header';
+/** Layout Components */
+import { MainLoaderComponent } from './main-loader/main-loader.component';
+import { NavigationComponent } from './main-navigation';
 import {
   AccountPanelComponent,
+  FeedbackSheetComponent,
   NotificationPanelComponent,
-  SwitchAccountComponent,
-  RecentCompaniesMaxPipe
+  RecentCompaniesMaxPipe,
+  SwitchAccountComponent
 } from './shared';
-/** Constants */
-import { coreLayoutProviders } from './core-layout.constants';
+/** Multiple Components */
+import { StateChangeNotificationsComponent } from './state-change-notifications';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,7 @@ import { coreLayoutProviders } from './core-layout.constants';
     NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
+    FeedbackSheetComponent,
     MainLoaderComponent,
     ContentComponent,
     FooterComponent,
@@ -40,13 +44,15 @@ import { coreLayoutProviders } from './core-layout.constants';
   imports: [
     CommonModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    FeaturesSharedModule
   ],
   exports: [
     AccountPanelComponent,
     NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
+    FeedbackSheetComponent,
     MainLoaderComponent,
     ContentComponent,
     FooterComponent,

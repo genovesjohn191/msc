@@ -1,0 +1,11 @@
+<div class="mcs-sidesheet-title">
+  <h4>{{ config?.title }}</h4>
+  <button mat-mini-fab color="primary" class="mcs-sidesheet-close" (click)="close()">
+    <mat-icon size="sm">close</mat-icon>
+  </button>
+</div>
+
+<div class="mcs-sidesheet-content"
+  mcsScrollable mcsScrollbarSize="small">
+  <ng-template mcsSideSheet></ng-template>
+</div>

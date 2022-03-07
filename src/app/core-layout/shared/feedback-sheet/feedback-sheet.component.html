@@ -1,0 +1,39 @@
+<section>
+  <mcs-divider color="dark"></mcs-divider>
+  <p>Thank you for taking the time to give us feedback.</p>
+
+  <mcs-alert type="info">
+    If you need help, please contact support
+  </mcs-alert>
+
+  <mcs-divider color="dark"></mcs-divider>
+
+  <p>*Are you satisfied with your experience?</p>
+
+  <mcs-field-input-textarea size="auto"
+    mcsId="feedback-experience"
+    [label]="'label.tellUsExperience' | translate"
+    [maxLength]="4000"
+    [formControl]="viewModel.fcExperience">
+  </mcs-field-input-textarea>
+
+  <mcs-divider color="dark"></mcs-divider>
+
+  <div class="action-items">
+    <button mcsButton="basic" mcsId="cancel-feedback"
+      mcsEventTracker="cancel-feedback"
+      mcsEventCategory="feedback"
+      mcsEventLabel="feedback-page"
+      (click)="onCancelFeedback()">
+      {{ 'label.cancel' | translate }}
+    </button>
+
+    <button mcsButton arrow="right" mcsId="send-feedback"
+      mcsEventTracker="submit-feedback"
+      mcsEventCategory="feedback"
+      mcsEventLabel="feedback-page"
+      (click)="onSubmitFeedback()">
+      {{ 'label.submit' | translate }}
+    </button>
+  </div>
+</section>

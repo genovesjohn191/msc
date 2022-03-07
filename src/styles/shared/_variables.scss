@@ -207,12 +207,14 @@ $readonly-color-on-dark: $color-grey-04;
 $divider-light-color: $color-grey-04;
 $divider-dark-color: $color-grey-01;
 
+$color-text-base: rgba($color-black, 0.90);
+$color-text-dark: $color-black;
+$color-text-light: $color-grey-02;
+
 // Shared background color
 $light-bg-color: $color-white;
 $dark-bg-color: rgba($color-black, 0.87);
 $primary-bg-color: $color-scheme-primary;
-
-// Shared background color
 $hover-bg-color: $color-grey-07;
 $selected-bg-color: rgba($color-grey-06, 0.8);
 $active-bg-color: rgba($color-grey-06, 0.4);
@@ -220,3 +222,8 @@ $active-bg-color: rgba($color-grey-06, 0.4);
 // Navigation
 $nav-default-width: 280px;
 $nav-wide-screen-width: 250px;
+
+// Icon sizes
+$icon-size-small: 24px;
+$icon-size-default: 32px;
+$icon-size-large: 40px;

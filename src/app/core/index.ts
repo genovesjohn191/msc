@@ -44,6 +44,8 @@ export * from './providers/mcs-assets.provider';
 export * from './base/mcs-form-field-control.base';
 export * from './base/mcs-wizard.base';
 export * from './base/mcs-listview-listing.base';
+export * from './base/mcs-page.base';
+export * from './base/mcs-viewmodel.base';
 
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
