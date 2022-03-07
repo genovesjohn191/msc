@@ -5,8 +5,17 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Sort } from '@angular/material/sort';
+
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+
 import {
   McsNavigationService,
   McsTableDataSource2,
@@ -52,6 +61,11 @@ export class AggregationTargetsComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
+
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -103,15 +117,31 @@ export class AggregationTargetsComponent {
     this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
   }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getBackupAggregationTargets(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsBackUpAggregationTarget>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getBackupAggregationTargets(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount))
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount)
+      })
     );
   }
 }

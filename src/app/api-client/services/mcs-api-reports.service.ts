@@ -31,7 +31,9 @@ import {
   McsReportUpdateManagement,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
-  McsRightSizingQueryParams
+  McsRightSizingQueryParams,
+  McsReportInefficientVmParams,
+  McsReportUpdateManagementParams
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 
@@ -224,18 +226,12 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>> {
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('period_start', query.periodStart);
-    searchParams.set('period_end', query.periodStart);
+  public getVMRightsizing(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>> {
+    if (isNullOrEmpty(query)) { query = new McsReportParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/vm-rightsizing';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsReportParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -344,13 +340,12 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getUpdateManagement(period?: string): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>> {
-    let searchParams = new Map<string, any>();
-    searchParams.set('period', period);
+  public getUpdateManagement(query?: McsReportUpdateManagementParams): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>> {
+    if (isNullOrEmpty(query)) { query = new McsReportUpdateManagementParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/update-management';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsReportUpdateManagementParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -385,21 +380,12 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getAuditAlerts(
-    periodStart?: string,
-    periodEnd?: string,
-    subscriptionIds?: string[]
-  ): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>> {
-    let searchParams = new Map<string, any>();
-    searchParams.set('period_start', periodStart);
-    searchParams.set('period_end', periodEnd);
-    if (!isNullOrEmpty(subscriptionIds)) {
-      searchParams.set('subscription_ids', subscriptionIds.join());
-    }
+  public getAuditAlerts(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>> {
+    if (isNullOrEmpty(query)) { query = new McsReportParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/audit-alerts';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsReportParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -412,19 +398,13 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getInefficientVms(
-    period?: string,
-    subscriptionIds?: string[]
-  ): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>> {
-    let searchParams = new Map<string, any>();
-    searchParams.set('period', period);
-    if (!isNullOrEmpty(subscriptionIds)) {
-      searchParams.set('subscription_ids', subscriptionIds.join());
-    }
+  public getInefficientVms(query?: McsReportInefficientVmParams):
+    Observable<McsApiSuccessResponse<McsReportInefficientVms[]>> {
+    if (isNullOrEmpty(query)) { query = new McsReportInefficientVmParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/inefficient-vms';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsReportInefficientVmParams.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -438,13 +418,11 @@ export class McsApiReportsService implements IMcsApiReportsService {
   }
 
   public getTopVmsByCost(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportTopVmsByCost[]>> {
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('per_page', query.pageSize);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/vm-costs';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -512,9 +490,11 @@ export class McsApiReportsService implements IMcsApiReportsService {
     );
   }
 
-  public getRecentServiceRequestSlt(): Observable<McsApiSuccessResponse<McsReportRecentServiceRequestSlt[]>> {
+  public getRecentServiceRequestSlt(query?: McsQueryParam):
+    Observable<McsApiSuccessResponse<McsReportRecentServiceRequestSlt[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/azure-service-request-slt';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter).pipe(
       map((response) => {

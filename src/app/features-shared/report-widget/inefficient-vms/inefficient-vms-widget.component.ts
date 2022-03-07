@@ -6,6 +6,8 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+
 import {
   Observable,
   throwError
@@ -21,6 +23,7 @@ import {
 } from '@app/core';
 import {
   McsFilterInfo,
+  McsReportInefficientVmParams,
   McsReportInefficientVms
 } from '@app/models';
 import {
@@ -48,6 +51,9 @@ export class InefficientVmsWidgetComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'utilizationThisMonth' }),
   ];
 
+  private _sortDirection: string;
+  private _sortField: string;
+
   @Input()
   public set subscriptionIds(value: string[]) {
     let subscriptionId = !isNullOrEmpty(value) ? value : [];
@@ -74,9 +80,22 @@ export class InefficientVmsWidgetComponent {
     this.dataSource.refreshDataRecords();
   }
 
+  public onSortChange(sortState: Sort) {
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getInefficientVms(): Observable<McsMatTableContext<McsReportInefficientVms>> {
     this.dataChange.emit(undefined);
-    return this._reportingService.getInefficientVms(this._period, this._subscriptionIds).pipe(
+
+    let queryParam = new McsReportInefficientVmParams();
+    queryParam.period = this._period;
+    queryParam.subscriptionIds = !isNullOrEmpty(this.subscriptionIds) ? this.subscriptionIds.join(): '';
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
+    return this._reportingService.getInefficientVms(queryParam).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
         this.dataChange.emit(dataSourceContext?.dataRecords);

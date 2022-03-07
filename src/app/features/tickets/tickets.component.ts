@@ -1,5 +1,11 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -8,6 +14,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Sort } from '@angular/material/sort';
 
 import {
   McsAuthenticationIdentity,
@@ -57,6 +64,10 @@ export class TicketsComponent {
   public isTabChanged: boolean = false;
 
   private _search: Search;
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -157,6 +168,13 @@ export class TicketsComponent {
     this._navigationService.navigateTo(RouteKey.TicketCreate);
   }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getTickets(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTicket>> {
     let queryParam = new McsTicketQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
@@ -165,17 +183,32 @@ export class TicketsComponent {
     this.urlParamSearchKeyword = this._activatedRoute.snapshot.queryParams.filter || undefined;
     let searchKeyword = isNullOrEmpty(param.search) ? this.urlParamSearchKeyword : queryParamSearch;
     queryParam.keyword = searchKeyword;
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     if(this.selectedTabIndex < 2){
       queryParam.state = this.selectedTabIndex === 0 ? 'open' : 'closed';
     }
 
-    let ticketSortPredicate = (firstRecord: McsTicket, secondRecord: McsTicket) =>
-      compareDates(secondRecord.updatedOn, firstRecord.updatedOn);
+    
 
     return this._apiService.getTickets(queryParam).pipe(
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
       map(response => {
-        let sortedCollections = response?.collection?.sort(ticketSortPredicate);
+        this.isSorting = false;
+        let sortedCollections: McsTicket[];
+
+        if (isNullOrEmpty(this._sortDirection) && isNullOrEmpty(this._sortField)) {
+          let ticketSortPredicate = (firstRecord: McsTicket, secondRecord: McsTicket) =>
+            compareDates(secondRecord.updatedOn, firstRecord.updatedOn);
+          sortedCollections = response?.collection?.sort(ticketSortPredicate);
+        } else {
+          sortedCollections = response?.collection;
+        }
+
         this.isTabChanged = false;
         return new McsMatTableContext(sortedCollections, response?.totalCollectionCount);
       })

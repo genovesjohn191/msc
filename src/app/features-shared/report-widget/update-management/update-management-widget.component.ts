@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  OnInit,
   Output,
   ViewEncapsulation
 } from '@angular/core';
@@ -16,6 +15,7 @@ import {
 } from 'rxjs/operators';
 import {
   McsFilterInfo,
+  McsQueryParam,
   McsReportUpdateManagement,
   RouteKey
 } from '@app/models';
@@ -29,6 +29,7 @@ import {
   createObject,
   isNullOrEmpty
 } from '@app/utilities';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-update-management-widget',
@@ -39,18 +40,12 @@ import {
     'class': 'widget-box'
   }
 })
-export class UpdateManagementWidgetComponent implements OnInit {
+export class UpdateManagementWidgetComponent {
   public readonly dataSource: McsTableDataSource2<McsReportUpdateManagement>;
+  public readonly defaultColumnFilters: McsFilterInfo[];
 
-  public readonly defaultColumnFilters = [
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'targetComputer' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'osType' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscription' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'resourceGroup' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastStartTime' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastEndTime' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastStatus' })
-  ];
+  private _sortDirection: string;
+  private _sortField: string;
 
   @Output()
   public dataChange= new EventEmitter<McsReportUpdateManagement[]>(null);
@@ -60,10 +55,16 @@ export class UpdateManagementWidgetComponent implements OnInit {
     private _navigationService: McsNavigationService,
   ) {
     this.dataSource = new McsTableDataSource2(this._getUpdateManagement.bind(this));
-  }
-
-  ngOnInit(): void {
-    this._initializeDataColumns();
+    this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'targetComputer' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'osType' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscription' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'resourceGroup' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastStartTime' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastEndTime' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastStatus' })
+    ];
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
   public retryDatasource(): void {
@@ -84,9 +85,20 @@ export class UpdateManagementWidgetComponent implements OnInit {
         RouteKey.OrderMsRequestChange, [], { queryParams: { serviceId: resource.subscriptionServiceId, resourceId: resource.azureId}});
   }
 
+  public onSortChange(sortState: Sort) {
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getUpdateManagement(): Observable<McsMatTableContext<McsReportUpdateManagement>> {
     this.dataChange.emit(undefined);
-    return this._reportingService.getUpdateManagement().pipe(
+
+    let queryParam = new McsQueryParam();
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
+    return this._reportingService.getUpdateManagement(queryParam).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
         this.dataChange.emit(dataSourceContext?.dataRecords);
@@ -97,9 +109,5 @@ export class UpdateManagementWidgetComponent implements OnInit {
         return throwError(error);
       })
     );
-  }
-
-  private _initializeDataColumns(): void {
-    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 }

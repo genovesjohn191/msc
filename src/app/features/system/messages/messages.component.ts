@@ -1,5 +1,11 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -9,6 +15,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Sort } from '@angular/material/sort';
+
 import {
   CoreRoutes,
   McsAccessControlService,
@@ -50,6 +58,11 @@ export class SystemMessagesComponent {
   public readonly dataSource: McsTableDataSource2<McsSystemMessage>;
   public readonly dataEvents: McsTableEvents<McsSystemMessage>;
   public readonly defaultColumnFilters: McsFilterInfo[];
+
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -123,6 +136,17 @@ export class SystemMessagesComponent {
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageCreate)]);
   }
 
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
+  }
+
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getSystemMessages(
     param: McsMatTableQueryParam
   ): Observable<McsMatTableContext<McsSystemMessage>> {
@@ -130,10 +154,19 @@ export class SystemMessagesComponent {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getSystemMessages(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount))
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection,
+          response?.totalCollectionCount)
+      })
     );
   }
 }
