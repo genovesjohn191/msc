@@ -4,7 +4,7 @@ import { McsQueryParam } from './mcs-query-param';
 
 export class McsReportParams extends McsQueryParam {
   @JsonProperty({ name: 'period_start' })
-  public periodStart: string = undefined;
+  public periodStart?: string = undefined;
 
   @JsonProperty({ name: 'period_end' })
   public periodEnd?: string = undefined;

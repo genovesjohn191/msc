@@ -28,7 +28,9 @@ import {
   McsReportUpdateManagement,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
-  McsRightSizingQueryParams
+  McsRightSizingQueryParams,
+  McsReportUpdateManagementParams,
+  McsReportInefficientVmParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -125,7 +127,7 @@ export class McsReportingService {
     return this._apiService.getOperationalMonthlySavings();
   }
 
-  public getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsReportVMRightsizing[]> {
+  public getVMRightsizing(query?: McsReportParams): Observable<McsReportVMRightsizing[]> {
     return this._apiService.getVMRightsizing(query);
   }
 
@@ -170,14 +172,8 @@ export class McsReportingService {
       }));
   }
 
-  public getUpdateManagement(period?: string): Observable<McsReportUpdateManagement[]> {
-    return this._apiService.getUpdateManagement(period).pipe(
-      map((response) => {
-        return response.sort(
-          (updateA, updateB) => new Date(updateB.lastStartTime).getTime() - new Date(updateA.lastStartTime).getTime()
-        );
-      })
-    );
+  public getUpdateManagement(query?: McsReportUpdateManagementParams): Observable<McsReportUpdateManagement[]> {
+    return this._apiService.getUpdateManagement(query);
   }
 
   public getAscAlerts(
@@ -186,17 +182,12 @@ export class McsReportingService {
     return this._apiService.getAscAlerts(periodStart, periodEnd);
   }
 
-  public getAuditAlerts(
-    periodStart?: string,
-    periodEnd?: string,
-    subscriptionIds?: string[]): Observable<McsReportAuditAlerts[]> {
-    return this._apiService.getAuditAlerts(periodStart, periodEnd, subscriptionIds);
+  public getAuditAlerts(query?: McsReportParams): Observable<McsReportAuditAlerts[]> {
+    return this._apiService.getAuditAlerts(query);
   }
 
-  public getInefficientVms(
-    period?: string,
-    subscriptionIds?: string[]): Observable<McsReportInefficientVms[]> {
-    return this._apiService.getInefficientVms(period, subscriptionIds);
+  public getInefficientVms(query?: McsReportInefficientVmParams): Observable<McsReportInefficientVms[]> {
+    return this._apiService.getInefficientVms(query);
   }
 
   public getTopVmsByCost(query?: McsQueryParam): Observable<McsReportTopVmsByCost[]> {
@@ -207,8 +198,8 @@ export class McsReportingService {
     return this._apiService.getPlatformSecurityAdvisories(query);
   }
 
-  public getRecentServiceRequestSlt(): Observable<McsReportRecentServiceRequestSlt[]> {
-    return this._apiService.getRecentServiceRequestSlt();
+  public getRecentServiceRequestSlt(query?: McsQueryParam): Observable<McsReportRecentServiceRequestSlt[]> {
+    return this._apiService.getRecentServiceRequestSlt(query);
   }
 
   public getComputeResourceTotals(): Observable<McsReportComputeResourceTotals> {

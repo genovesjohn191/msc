@@ -1,5 +1,5 @@
 import { AccountChangeEvent } from './items/account-change.event';
-import { DataChangeAggregationTargetsEvent } from './items/data-change-aggregation-targets-event';
+import { DataChangeAggregationTargetsEvent } from './items/data-change-aggregation-targets.event';
 import { DataChangeAzureManagedServicesEvent } from './items/data-change-azure-managed-services.event';
 import { DataChangeAzureManagementServicesEvent } from './items/data-change-azure-management-services.event';
 import { DataChangeExtendersEvent } from './items/data-change-extenders.event';

@@ -5,6 +5,7 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
 import {
   Observable,
   throwError
@@ -23,6 +24,7 @@ import {
 import {
   McsFeatureFlag,
   McsFilterInfo,
+  McsReportParams,
   McsReportRecentServiceRequestSlt,
   RouteKey
 } from '@app/models';
@@ -44,6 +46,9 @@ export class RecentServiceRequestSltWidgetComponent {
   public dataChange= new EventEmitter<McsReportRecentServiceRequestSlt[]>(null);
 
   public readonly dataSource: McsTableDataSource2<McsReportRecentServiceRequestSlt>;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'orderId' }),
@@ -78,9 +83,20 @@ export class RecentServiceRequestSltWidgetComponent {
     this.dataSource.refreshDataRecords();
   }
 
+  public onSortChange(sortState: Sort) {
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _getRecentServiceRequestSlt(): Observable<McsMatTableContext<McsReportRecentServiceRequestSlt>> {
     this.dataChange.emit(undefined);
-    return this._reportingService.getRecentServiceRequestSlt().pipe(
+
+    let queryParam = new McsReportParams();
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
+    return this._reportingService.getRecentServiceRequestSlt(queryParam).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
         this.dataChange.emit(dataSourceContext?.dataRecords);

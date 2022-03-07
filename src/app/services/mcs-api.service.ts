@@ -289,7 +289,9 @@ import {
   McsLocation,
   McsVmSize,
   McsFirewallFortiManager,
-  McsFirewallFortiAnalyzer
+  McsFirewallFortiAnalyzer,
+  McsReportInefficientVmParams,
+  McsReportUpdateManagementParams
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2126,7 +2128,7 @@ export class McsApiService {
     );
   }
 
-  public getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsReportVMRightsizing[]> {
+  public getVMRightsizing(query?: McsReportParams): Observable<McsReportVMRightsizing[]> {
     return this._reportsApi.getVMRightsizing(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVMRightsizing'))
@@ -2187,8 +2189,8 @@ export class McsApiService {
     );
   }
 
-  public getUpdateManagement(period?: string): Observable<McsReportUpdateManagement[]> {
-    return this._reportsApi.getUpdateManagement(period).pipe(
+  public getUpdateManagement(query?: McsReportUpdateManagementParams): Observable<McsReportUpdateManagement[]> {
+    return this._reportsApi.getUpdateManagement(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getUpdateManagement'))
       ),
@@ -2207,11 +2209,8 @@ export class McsApiService {
     );
   }
 
-  public getAuditAlerts(
-    periodStart?: string,
-    periodEnd?: string,
-    subscriptionIds?: string[]): Observable<McsReportAuditAlerts[]> {
-    return this._reportsApi.getAuditAlerts(periodStart, periodEnd, subscriptionIds).pipe(
+  public getAuditAlerts(query?: McsReportParams): Observable<McsReportAuditAlerts[]> {
+    return this._reportsApi.getAuditAlerts(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAuditAlerts'))
       ),
@@ -2219,11 +2218,8 @@ export class McsApiService {
     );
   }
 
-  public getInefficientVms(
-    period?: string,
-    subscriptionIds?: string[]
-  ): Observable<McsReportInefficientVms[]> {
-    return this._reportsApi.getInefficientVms(period, subscriptionIds).pipe(
+  public getInefficientVms(query?: McsReportInefficientVmParams): Observable<McsReportInefficientVms[]> {
+    return this._reportsApi.getInefficientVms(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInefficientVms'))
       ),
@@ -2249,8 +2245,8 @@ export class McsApiService {
     );
   }
 
-  public getRecentServiceRequestSlt(): Observable<McsReportRecentServiceRequestSlt[]> {
-    return this._reportsApi.getRecentServiceRequestSlt().pipe(
+  public getRecentServiceRequestSlt(query?: McsQueryParam): Observable<McsReportRecentServiceRequestSlt[]> {
+    return this._reportsApi.getRecentServiceRequestSlt(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getRecentServiceRequestSlt'))
       ),

@@ -19,20 +19,14 @@ export class McsApiBatsService implements IMcsApiBatsService {
 
   public getBackUpAggregationTargets(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsBackUpAggregationTarget[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
-    let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    requestParameter.endPoint = `/storage/backup/aggregation-targets`;
-    requestParameter.searchParameters = searchParams;
-    requestParameter.optionalHeaders = optionalHeaders;
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/storage/backup/aggregation-targets`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
-    return this._mcsApiHttpService.get(requestParameter)
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsBackUpAggregationTarget[]>(

@@ -28,7 +28,9 @@ import {
   McsReportUpdateManagement,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
-  McsRightSizingQueryParams
+  McsRightSizingQueryParams,
+  McsReportInefficientVmParams,
+  McsReportUpdateManagementParams
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -64,7 +66,7 @@ export interface IMcsApiReportsService {
 
   getOperationalMonthlySavings(): Observable<McsApiSuccessResponse<McsReportOperationalSavings>>;
 
-  getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>>;
+  getVMRightsizing(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>>;
 
   getVMRightsizingSummary(): Observable<McsApiSuccessResponse<McsReportVMRightsizingSummary>>;
 
@@ -81,20 +83,15 @@ export interface IMcsApiReportsService {
     periodEnd?: string,
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>>;
 
-  getUpdateManagement(period?: string): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>>;
+  getUpdateManagement(query?: McsReportUpdateManagementParams): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>>;
 
   getAscAlerts(
     periodStart?: string,
     periodEnd?: string): Observable<McsApiSuccessResponse<McsReportAscAlerts[]>>;
 
-  getAuditAlerts(
-    periodStart?: string,
-    periodEnd?: string,
-    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>>;
+  getAuditAlerts(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>>;
 
-  getInefficientVms(
-    period?: string,
-    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>>;
+  getInefficientVms(query?: McsReportInefficientVmParams): Observable<McsApiSuccessResponse<McsReportInefficientVms[]>>;
 
   getTopVmsByCost(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportTopVmsByCost[]>>;
 
@@ -106,7 +103,7 @@ export interface IMcsApiReportsService {
 
   getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>>;
 
-  getRecentServiceRequestSlt(): Observable<McsApiSuccessResponse<McsReportRecentServiceRequestSlt[]>>;
+  getRecentServiceRequestSlt(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportRecentServiceRequestSlt[]>>;
 
   getComputeResourceTotals(): Observable<McsApiSuccessResponse<McsReportComputeResourceTotals>>;
 

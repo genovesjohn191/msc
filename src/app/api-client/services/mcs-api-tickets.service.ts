@@ -26,19 +26,11 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
   public getTickets(query?: McsTicketQueryParams): Observable<McsApiSuccessResponse<McsTicket[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('state', query.state);
-    searchParams.set('service_id', query.serviceId);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

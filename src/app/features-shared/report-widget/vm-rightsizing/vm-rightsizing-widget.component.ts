@@ -32,9 +32,11 @@ import {
 } from '@app/core';
 import {
   McsFilterInfo,
+  McsQueryParam,
   McsReportVMRightsizing,
   RouteKey
 } from '@app/models';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-vm-rightsizing-widget',
@@ -58,6 +60,9 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
 
   public potentialRightsizingSavings: string;
   public vmRightSizing: McsReportVMRightsizing[];
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   private _destroySubject = new Subject<void>();
 
@@ -109,9 +114,20 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
     return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
   }
 
+  public onSortChange(sortState: Sort) {
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private getVMRightsizing(): Observable<McsMatTableContext<McsReportVMRightsizing>> {
     this.dataChange.emit(undefined);
-    return this._reportingService.getVMRightsizing().pipe(
+
+    let queryParam = new McsQueryParam();
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
+    return this._reportingService.getVMRightsizing(queryParam).pipe(
       map((response) => {
         let vmRightSizing: McsReportVMRightsizing[] = [];
         vmRightSizing.push(...cloneObject(response));

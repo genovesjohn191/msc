@@ -7,6 +7,8 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+
 import {
   Observable,
   throwError
@@ -22,7 +24,8 @@ import {
 } from '@app/core';
 import {
   McsFilterInfo,
-  McsReportAuditAlerts
+  McsReportAuditAlerts,
+  McsReportParams
 } from '@app/models';
 import {
   compareArrays,
@@ -82,6 +85,8 @@ export class AuditAlertsWidgetComponent implements OnInit {
   private _subscriptionIds: string[] = [];
   private _startPeriod: string = '';
   private _endPeriod: string = '';
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(private _reportingService: McsReportingService) {
     this.dataSource = new McsTableDataSource2(this._getAuditAlerts.bind(this));
@@ -95,13 +100,27 @@ export class AuditAlertsWidgetComponent implements OnInit {
     this.dataSource.refreshDataRecords();
   }
 
+  public onSortChange(sortState: Sort) {
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _initializeDataColumns(): void {
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
   private _getAuditAlerts(): Observable<McsMatTableContext<McsReportAuditAlerts>> {
     this.dataChange.emit(undefined);
-    return this._reportingService.getAuditAlerts(this._startPeriod, this._endPeriod, this._subscriptionIds).pipe(
+
+    let queryParam = new McsReportParams();
+    queryParam.periodStart = this._startPeriod;
+    queryParam.periodEnd = this._endPeriod
+    queryParam.subscriptionIds = !isNullOrEmpty(this.subscriptionIds) ? this.subscriptionIds.join(): '';
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
+    return this._reportingService.getAuditAlerts(queryParam).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
         this.dataChange.emit(dataSourceContext?.dataRecords);
