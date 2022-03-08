@@ -62,7 +62,12 @@
               </mcs-form-field>
               <span read-only>{{ noServicesFallbackText | translate }}</span>
             </mcs-item>
-            <ng-container *ngIf="fcLicenses?.value?.serviceId; else licenseNoServiceIdTemplate">
+
+            <mcs-item orientation="block" *ngIf="isLoading && fcLicenses?.value?.serviceId">
+              <mcs-loader size="small" [mcsTooltip]="loadingText" mcsTooltipPosition="right"></mcs-loader>
+            </mcs-item>
+
+            <ng-container *ngIf="!isLoading && fcLicenses?.value?.serviceId; else licenseNoServiceIdTemplate">
               <mcs-item orientation="block" *ngIf="(licenses$ | async) | mcsArrayHasElement"
                 [disabled]="isCurrentLicenseHasActiveJob(fcLicenses?.value?.serviceId, activeJob$ | async)"
                 [mcsContextualHelp]="'orderMsLicenseCountChange.detailsStep.baseLicense.labelHelpText' | translate">
@@ -116,14 +121,11 @@
                   [disabled]="!fcLicenses?.value?.isChangeable">
                   <mcs-field-input-number-arrow
                     [formControl]="fcLicenseCount"
-                    [minValue]="licenseCountMin(fcLicenses?.value)"
+                    [minValue]="minLicenseCountBase"
                     [maxValue]="licenseCountMax(fcLicenses?.value)"
                     [errorMessage]="licenseCountQuantityErrorMessages(fcLicenses?.value)"
                     [suffix]="fcLicenses?.value?.unit"
-                    [mcsId]="'input-ms-license-count'"
-                    [eventCategory]="'order'"
-                    [eventLabel]="'ms-license-count-change'"
-                    [eventTracker]="'input-ms-license-count'">
+                    [mcsId]="'input-ms-license-count'">
                   </mcs-field-input-number-arrow>
 
                   <mcs-hint mcsHint align="start">
@@ -131,6 +133,12 @@
                      {{ fcLicenses.value?.quantity }} {{ convertUnit(fcLicenses.value?.unit, fcLicenses.value?.quantity)}}
                      {{ fcLicenses.value?.updateQuantityLabel }}
                     </span>
+                  </mcs-hint>
+                  <mcs-hint *ngIf="hasCooldownPeriodLapsed(fcLicenses?.value)" mcsHint align="start">
+                    <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.cooldownPeriodLapsed' | translate }}</span>
+                  </mcs-hint>
+                  <mcs-hint *ngIf="getProRatedLabel(fcLicenses?.value)" mcsHint align="start">
+                    <span>{{ getProRatedLabel(fcLicenses?.value) }}</span>
                   </mcs-hint>
                 </mcs-item>
               </mcs-item>
@@ -196,14 +204,11 @@
                           [disabled]="!childLicensesFcItem?.license?.isChangeable">
                           <mcs-field-input-number-arrow
                             [formControl]="getFormControl(childLicensesFcItem?.childFormControlName)"
-                            [minValue]="licenseCountMin(childLicensesFcItem?.license)"
+                            [minValue]="getMinLicenseCount(childLicensesFcItem?.license)"
                             [maxValue]="licenseCountMax(childLicensesFcItem?.license)"
                             [errorMessage]="licenseCountQuantityErrorMessages(childLicensesFcItem?.license)"
                             [suffix]="childLicensesFcItem?.license?.unit"
-                            [mcsId]="'input-ms-license-count'"
-                            [eventCategory]="'order'"
-                            [eventLabel]="'ms-license-count-change'"
-                            [eventTracker]="'input-ms-license-count'">
+                            [mcsId]="'input-ms-license-count'">
                           </mcs-field-input-number-arrow>
 
                           <mcs-hint mcsHint align="start">
@@ -213,17 +218,17 @@
                              {{ childLicensesFcItem.updateQuantityLabel }}
                             </span>
                           </mcs-hint>
+                          <mcs-hint *ngIf="hasCooldownPeriodLapsed(childLicensesFcItem?.license)" mcsHint align="start">
+                            <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.cooldownPeriodLapsed' | translate }}</span>
+                          </mcs-hint>
+                          <mcs-hint *ngIf="getProRatedLabel(childLicensesFcItem?.license)" mcsHint align="start">
+                            <span>{{ getProRatedLabel(childLicensesFcItem?.license) }}</span>
+                          </mcs-hint>
                         </mcs-item>
                       </mcs-item>
                     </ng-container>
                   </ng-container>
                 </ng-container>
-              </mcs-item>
-
-              <mcs-item padding-top-medium *ngIf="(licenses$ | async) | mcsArrayHasElement">
-                <mcs-status-message type="info">
-                  {{ 'orderMsLicenseCountChange.detailsStep.note' | translate }}
-                </mcs-status-message>
               </mcs-item>
 
               <div class="action-items">
@@ -238,7 +243,7 @@
               </div>
             </ng-container>
             <ng-template #licenseNoServiceIdTemplate>
-              <ng-container *ngIf="fcLicenses?.value">
+              <ng-container *ngIf="fcLicenses?.value && !fcLicenses?.value?.serviceId">
                 <mcs-item>
                   <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.noServiceId' | translate }}</span>
                 </mcs-item>

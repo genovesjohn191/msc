@@ -50,7 +50,10 @@ import {
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  addDaysToDate,
+  getCurrentDate,
+  compareDates
 } from '@app/utilities';
 
 import { LicenseService } from './licenses.service';
@@ -71,10 +74,14 @@ export class LicensesComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'quantity' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'unit' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentStartDate' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentEndDate' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'autoRenewEnabled' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscriptionId' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentEndDate' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingCycle' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'termDuration' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'parent' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
@@ -239,6 +246,16 @@ export class LicensesComponent implements OnInit, OnDestroy {
       this._changeDetectorRef.markForCheck();
       return true;
     }
+  }
+
+  /**
+   * Returns true if license is expiring within 7 days
+   */
+  public isLicenseExpiring(license: McsLicense): boolean {
+    return (license.commercialAgreementType?.toUpperCase() === 'NCE'
+      && compareDates(license.commitmentEndDate, addDaysToDate(getCurrentDate(), 7)) < 1
+      && compareDates(license.commitmentEndDate, getCurrentDate()) === 1
+      && !license.autoRenewEnabled);
   }
 
   /**

@@ -152,9 +152,45 @@
             {{ 'columnHeader.subscriptionId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.pcSubscriptionId | uppercase }}
             <span [innerHTML]="row.pcSubscriptionId | mcsDataLabel: 'Unknown'">
             </span>
+          </td>
+        </ng-container>
+
+        <!-- Billing Frequency Column -->
+        <ng-container matColumnDef="billingCycle">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.billingFrequency' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <span [innerHTML]="row.billingCycle | titlecase | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Billing Frequency Column -->
+        <ng-container matColumnDef="termDuration">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.term' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <span [innerHTML]="row.termDuration | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Commitment Start Date Column-->
+        <ng-container matColumnDef="commitmentStartDate">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.commitmentStartDate' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <ng-container *ngIf="(row.commitmentStartDate); else NoCommitmentStartDate">
+              <span> {{  row.commitmentStartDate | mcsStdDateFormat: 'ddd, D MMMM, y' }}</span>
+            </ng-container>
+            <ng-template #NoCommitmentStartDate>
+              <span [mcsGreyedOut]="true">{{'licenses.noCommitmentDateLabel' | translate}}</span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -165,11 +201,29 @@
           </th>
           <td mat-cell *matCellDef="let row">
             <ng-container *ngIf="(row.commitmentEndDate); else NoCommitmentEndDate">
-              <span> {{  row.commitmentEndDate | mcsStdDateFormat: 'ddd, D MMMM, y' }}</span>
+              <mcs-item>
+                <div>
+                  <span *ngIf="isLicenseExpiring(row)" class="material-icons"
+                    [matTooltip]="'licenses.licenseExpiring' | translate" style="color: #ed1d2b;">
+                    warning
+                  </span>
+                </div>
+                <span> {{  row.commitmentEndDate | mcsStdDateFormat: 'ddd, D MMMM, y' }}</span>
+              </mcs-item>
             </ng-container>
             <ng-template #NoCommitmentEndDate>
-              <span [mcsGreyedOut]="true">{{'licenses.noCommitmentEndDateLabel' | translate}}</span>
+              <span [mcsGreyedOut]="true">{{'licenses.noCommitmentDateLabel' | translate}}</span>
             </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- Auto Renewal Column -->
+        <ng-container matColumnDef="autoRenewEnabled">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.autoRenewal' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <span [innerHTML]="row.autoRenewEnabled ? 'On' : 'Off'"></span>
           </td>
         </ng-container>
 

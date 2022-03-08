@@ -30,4 +30,7 @@ export class BillingServiceItem {
   public chargePerUserDollars: number;
   public plan: string;
   public linkedConsumptionService: string;
+
+  public billingFrequency: string;
+  public termDuration:string;
 }

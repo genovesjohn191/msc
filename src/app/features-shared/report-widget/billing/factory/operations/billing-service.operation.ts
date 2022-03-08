@@ -129,7 +129,9 @@ export class BillingServiceOperation
           userQuantity: parentService.userQuantity,
           chargePerUserDollars: parentService.chargePerUserDollars,
           plan: parentService.plan,
-          linkedConsumptionService: parentService.linkedConsumptionService
+          linkedConsumptionService: parentService.linkedConsumptionService,
+          billingFrequency: parentService.billingFrequency,
+          termDuration: parentService.termDuration
         });
         if (!filterPred || filterPred(parentBillingServiceItem)) {
           billingServiceItems.push(parentBillingServiceItem);
@@ -171,7 +173,9 @@ export class BillingServiceOperation
             userQuantity: childService.userQuantity,
             chargePerUserDollars: childService.chargePerUserDollars,
             plan: childService.plan,
-            linkedConsumptionService: childService.linkedConsumptionService
+            linkedConsumptionService: childService.linkedConsumptionService,
+            billingFrequency: parentService.billingFrequency,
+            termDuration: parentService.termDuration
           });
           if (!filterPred || filterPred(childBillingServiceItem)) {
             billingServiceItems.push(childBillingServiceItem);
@@ -322,6 +326,20 @@ export class BillingServiceOperation
       new McsOption(
         item.discountPercent && this.translate.instant('label.percentage', { value: item.discountPercent }),
         this.translate.instant('label.discountOffRrp')
+      )
+    );
+
+    this._billingSettingsMap.set('termDuration', item =>
+      new McsOption(
+        item.termDuration,
+        this.translate.instant('label.termDuration')
+      )
+    );
+
+    this._billingSettingsMap.set('billingFrequency', item =>
+      new McsOption(
+        item.billingFrequency,
+        this.translate.instant('label.billingFrequency')
       )
     );
 

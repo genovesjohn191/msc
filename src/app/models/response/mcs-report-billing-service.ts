@@ -14,4 +14,10 @@ export class McsReportBillingService extends McsReportBillingServiceSummary {
 
   @JsonProperty({ target: McsReportBillingServiceSummary })
   public childBillingServices: McsReportBillingServiceSummary[] = undefined;
+
+  @JsonProperty()
+  public billingFrequency: string = undefined;
+
+  @JsonProperty()
+  public termDuration: string = undefined;
 }

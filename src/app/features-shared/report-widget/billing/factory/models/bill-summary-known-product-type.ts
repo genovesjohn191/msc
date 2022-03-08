@@ -3,7 +3,7 @@ export let billingKnownProductTypes = [
     key: 'CSPLICENSES',
     friendlyName: 'CSP Licenses',
     aggregatedCustomTooltipFields: [],
-    detailCustomTooltipFields: ['total', 'installedQuantity', 'discountOffRrp',
+    detailCustomTooltipFields: ['total', 'installedQuantity', 'termDuration', 'billingFrequency', 'discountOffRrp',
     'tenantName', 'initialDomain', 'primaryDomain',
     'microsoftIdentifier', 'microsoftChargeMonth', 'macquarieBillMonth', 'serviceId'],
     detailIncludeMinimumCommentNote: false,

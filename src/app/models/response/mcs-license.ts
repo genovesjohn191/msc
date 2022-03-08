@@ -81,4 +81,19 @@ export class McsLicense extends McsEntityBase {
     deserializer: McsDateSerialization
   })
   public commitmentEndDate: Date = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public commitmentStartDate: Date = undefined;
+
+  @JsonProperty()
+  public termDuration: string = undefined;
+
+  @JsonProperty()
+  public commercialAgreementType: string = undefined;
+
+  @JsonProperty()
+  public autoRenewEnabled: boolean = undefined;
 }
