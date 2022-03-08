@@ -53,6 +53,10 @@ export class McsAuthenticationIdentity {
       AccountStatus.Default;
   }
 
+  public get isAuthenticated(): boolean {
+    return !isNullOrEmpty(this._user?.userId);
+  }
+
   public get isImpersonating(): boolean {
     return (!isNullOrEmpty(this.activeAccount.id) && (this.activeAccount.id !== this._user.companyId));
   }

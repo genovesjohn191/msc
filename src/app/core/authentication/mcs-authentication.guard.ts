@@ -1,4 +1,8 @@
-import { map } from 'rxjs/operators';
+import {
+  of,
+  Observable
+} from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import {
@@ -14,6 +18,7 @@ import { isNullOrEmpty } from '@app/utilities';
 
 import { McsNavigationService } from '../services/mcs-navigation.service';
 import { McsAccessControlService } from './mcs-access-control.service';
+import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { McsAuthenticationService } from './mcs-authentication.service';
 
 @Injectable()
@@ -21,6 +26,7 @@ export class McsAuthenticationGuard implements CanActivate {
 
   constructor(
     private _authenticationService: McsAuthenticationService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
     private _accesscontrolService: McsAccessControlService,
     private _navigationService: McsNavigationService
   ) { }
@@ -28,26 +34,29 @@ export class McsAuthenticationGuard implements CanActivate {
   public canActivate(
     _activatedRoute: ActivatedRouteSnapshot,
     _routerState: RouterStateSnapshot
-  ) {
+  ): Observable<boolean> {
+    if (this._authenticationIdentity.isAuthenticated) { return of(true); }
+
     // We need to update the return url here in order to cater the scenario
     // where the user manually entered the url while no user logged-in
     this._authenticationService.updateLoginReturnUrl(_routerState.url);
+
     return this._authenticationService.authenticateUser().pipe(
-      map(identity => {
+      exhaustMap(identity => {
         if (this._accesscontrolService.hasAccessToFeature(McsFeatureFlag.MaintenanceMode)) {
           this._navigationService.navigateTo(RouteKey.Maintenance);
-          return false;
+          return of(false);
         }
 
         if (identity?.isAnonymous) {
           this._accesscontrolService.setCatalogAccess(true);
           this._navigationService.navigateTo(RouteKey.Catalog);
-          return false;
+          return of(false);
         }
         if (!isNullOrEmpty(identity)) {
           this._accesscontrolService.setCatalogAccess(true);
         }
-        return !isNullOrEmpty(identity);
+        return of(!isNullOrEmpty(identity));
       })
     );
   }
