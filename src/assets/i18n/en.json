@@ -931,7 +931,8 @@
         "suspendedLabel": "This license-based subscription is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "noneStatusLabel": "Status unavailable",
         "noServiceId": "This license-based subscription has not completed provisioning. This item cannot be changed at this time. Please contact your accounts team for more information.",
-        "labelHelpText": "Increase or decrease this license depending on what you require for your organization. Your quantity must be at least 1. Please call your Macquarie Cloud Services account manager if you would like to suspend this item."
+        "labelHelpText": "Increase or decrease this license depending on what you require for your organization. Your quantity must be at least 1. Please call your Macquarie Cloud Services account manager if you would like to suspend this item.",
+        "cooldownPeriodLapsed": "This license's 72-hour cooldown period has lapsed and its quantity cannot be decreased."
       },
       "addons": {
         "label": "Add-Ons",
@@ -941,7 +942,9 @@
         "trialLabel": "This license-based subscription is currently subscribed to on a trial basis. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "pendingLabel": "This add-on is currently pending and will be provisioned shortly. This item cannot be changed at this time.",
         "suspendedLabel": "This add-on is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
-        "noneStatusLabel": "Status unavailable"
+        "noneStatusLabel": "Status unavailable",
+        "proRatedLabel24Hrs": "This license was purchased less than 24-hours ago. If decreased, a full refund will apply.",
+        "proRatedLabel72Hrs": "This license was purchased over 24-hours ago. If decreased, a pro-rated refund will apply."
       },
       "licenseCountRequired": "Enter quantity.",
       "licenseCountNumeric": "Please enter a valid number.",
@@ -2760,11 +2763,12 @@
     "columnFilter": "Column Filter",
     "dataSingular": "License",
     "dataPlural": "Licenses",
-    "noCommitmentEndDateLabel": "Unknown",
+    "noCommitmentDateLabel": "Unknown",
     "noParentIdLabel": "None",
     "changeLicenseCount": "Change license count",
     "retry": "Try again shortly",
-    "raiseTicket": "Raise a Ticket"
+    "raiseTicket": "Raise a Ticket",
+    "licenseExpiring": "This License will expire in 7 days or less."
   },
   "networkDb": {
     "backToNetworks": "Back To Networks",
@@ -3364,6 +3368,7 @@
   "columnHeader": {
     "value": "Value",
     "associatedServer": "Associated Server",
+    "autoRenewal": "Auto Renewal",
     "serviceType": "Service Type",
     "dailySchedule": "Daily Schedule",
     "files": "Files",
@@ -3400,6 +3405,7 @@
     "billingTerm": "Billing Term",
     "children": "Children",
     "code": "Code",
+    "commitmentStartDate": "Commitment Start Date",
     "commitmentEndDate": "Commitment End Date",
     "companyId": "Company ID",
     "companyName": "Company Name",
@@ -3628,6 +3634,7 @@
     "host": "Host",
     "records": "Records",
     "target": "Target",
+    "termDuration": "Term",
     "ttlSeconds": "TTL (Seconds) - 600",
     "ttl": "TTL (Seconds)",
     "elements": "Elements",
@@ -3647,6 +3654,7 @@
     "backup": "Backup",
     "backupAndSecurity": "Backup and Security",
     "billingAccounts": "Billing Accounts",
+    "billingFrequency": "Billing Frequency",
     "category": "Category",
     "closureDate": "Closure Date",
     "closureDetails": "Closure Details",
