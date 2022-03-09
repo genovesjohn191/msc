@@ -2655,7 +2655,9 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of reservations.",
     "columnFilter": "Column Filter",
     "dataSingular": "Reservation",
-    "dataPlural": "Reservations"
+    "dataPlural": "Reservations",
+    "noCommitmentDateLabel": "Unknown",
+    "reservationExpiring": "This Reservation will expire in 7 days or less."
   },
   "azureSoftwareSubscriptions": {
     "leftPanelHeader": "Software Subscription Filter",

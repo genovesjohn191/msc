@@ -34,8 +34,11 @@ import {
   Search
 } from '@app/shared';
 import {
+  addDaysToDate,
   CommonDefinition,
+  compareDates,
   createObject,
+  getCurrentDate,
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
@@ -60,6 +63,8 @@ export class AzureReservationsComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'quantity' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentStartDate' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentEndDate' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingFrequency' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'term' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'scope' }),
@@ -124,6 +129,15 @@ export class AzureReservationsComponent {
     isNullOrEmpty(service.serviceId) ?
       this._navigationService.navigateTo(RouteKey.TicketCreate) :
       this._navigationService.navigateTo(RouteKey.TicketCreate, [], { queryParams: { serviceId: service.serviceId}});
+  }
+
+  /**
+   * Returns true if reservation is expiring within 7 days
+   */
+   public isReservationExpiring(reservation: McsAzureReservation): boolean {
+    return (compareDates(reservation.commitmentEndDate, addDaysToDate(getCurrentDate(), 7)) < 1
+      && compareDates(reservation.commitmentEndDate, getCurrentDate()) === 1
+      && !reservation.autoRenewEnabled);
   }
 
   private _getAzureReservations(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureReservation>> {

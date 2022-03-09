@@ -1,4 +1,5 @@
 import { JsonProperty } from '@app/utilities';
+import { McsDateSerialization } from '..';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsAzureReservation extends McsEntityBase {
@@ -38,4 +39,19 @@ export class McsAzureReservation extends McsEntityBase {
 
   @JsonProperty()
   public provisioningId: string = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public commitmentEndDate: Date = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public commitmentStartDate: Date = undefined;
+
+  @JsonProperty()
+  public autoRenewEnabled: boolean = undefined;
 }
