@@ -283,7 +283,8 @@ export class OverviewDocument implements IDashboardExportDocument {
     if (!this.hasAccessToPlatformSecurityListing) { return ''; }
 
     let title = this._translate('reports.overview.platformSecurityAdvisoriesWidget.title');
-    let subTitle = `${this._translate('reports.overview.platformSecurityAdvisoriesWidget.subTitle')}`
+    let subTitle = this._translate('reports.overview.platformSecurityAdvisoriesWidget.subTitle');
+    let unavailable = this._translate('message.unavailable');
     let platformSecurityTable = '';
     platformSecurityTable += `
       <table style="width: 100%" data-pdfmake="{'headerRows':1}">
@@ -297,10 +298,10 @@ export class OverviewDocument implements IDashboardExportDocument {
           data.forEach(item => {
             platformSecurityTable += `
               <tr style="text-align: left;">
-                <td>${item.description}</td>
-                <td>${item.impactedServices.join(', ')}</td>
-                <td>${item.impactedRegions.join(', ')}</td>
-                <td>${this._formatDate(item.startTime, 'default')}</td>
+                <td>${item.description ? item.description : unavailable}</td>
+                <td>${item.impactedServices?.length > 0 ? item.impactedServices.join(', ') : unavailable}</td>
+                <td>${item.impactedRegions?.length > 0 ? item.impactedRegions.join(', ') : unavailable}</td>
+                <td>${item.startTime ? this._formatDate(item.startTime, 'mediumNoMs') : unavailable}</td>
               </tr>
             `;
           });
