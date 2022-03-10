@@ -13,9 +13,10 @@ import {
   McsResourceCatalogItemCreate,
   McsJob,
   McsValidation,
-  McsResourceCatalog
+  McsResourceCatalog,
+  McsQueryParam
 } from '@app/models';
-import { serializeObjectToJson } from '@app/utilities';
+import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiResourcesService } from '../interfaces/mcs-api-resources.interface';
 import { McsApiClientDefinition } from '../mcs-api-client.definition';
@@ -71,9 +72,13 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  public getResourceStorage(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceStorage[]>> {
+  public getResourceStorage(id: any, optionalHeaders?: Map<string, any>, query?: McsQueryParam):
+    Observable<McsApiSuccessResponse<McsResourceStorage[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/storage`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)

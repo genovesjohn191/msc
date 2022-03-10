@@ -6,10 +6,10 @@
   <ng-container [ngSwitch]="nicMethodType">
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
       <!-- NICs Table -->
-      <table mat-table [dataSource]="nicsDataSource">
+      <table mat-table [dataSource]="nicsDataSource" matSort (matSortChange)="onSortChange($event, server)">
         <!-- NIC Column -->
         <ng-container matColumnDef="nic">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="index" disableClear>
             {{ 'columnHeader.nic' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -26,7 +26,7 @@
 
         <!-- Network Column -->
         <ng-container matColumnDef="network">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="logicalNetworkName" disableClear>
             {{ 'columnHeader.network' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" text-wrap>
@@ -36,7 +36,7 @@
 
         <!-- Primary Column -->
         <ng-container matColumnDef="primary">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="isPrimary" disableClear>
             {{ 'columnHeader.primary' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -133,13 +133,14 @@
         </ng-container>
 
         <!-- Header and Data row -->
-        <tr mat-header-row *matHeaderRowDef="nicsDataSource?.dataColumns$ | async"></tr>
+        <tr mat-header-row *matHeaderRowDef="nicsDataSource?.dataColumns$ | async"
+          [disabled]="(nicsDataSource?.isInProgress$ | async) || isSorting"></tr>
         <tr mat-row *matRowDef="let row; columns: nicsDataSource?.dataColumns$ | async;"></tr>
       </table>
 
       <!-- Table Statuses -->
       <mcs-item orientation="block">
-        <div *ngIf="nicsDataSource?.isInProgress$ | async" align="center">
+        <div *ngIf="(nicsDataSource?.isInProgress$ | async) || isSorting" align="center">
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="nicsDataSource?.hasNoRecords$ | async" text-center>

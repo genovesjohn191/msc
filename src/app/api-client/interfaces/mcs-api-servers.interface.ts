@@ -171,7 +171,7 @@ export interface IMcsApiServersService {
   /**
    * This will get the server storage data from the API
    */
-  getServerStorage(serverId: any): Observable<McsApiSuccessResponse<McsServerStorageDevice[]>>;
+  getServerStorage(serverId: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServerStorageDevice[]>>;
 
   /**
    * Creates server storage based on the data provided
@@ -215,7 +215,7 @@ export interface IMcsApiServersService {
   /**
    * This will get the server networks from the API
    */
-  getServerNics(serverId: any): Observable<McsApiSuccessResponse<McsServerNic[]>>;
+  getServerNics(serverId: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServerNic[]>>;
 
   /**
    * Adds server nic based on the nic data provided
@@ -314,7 +314,7 @@ export interface IMcsApiServersService {
    * Gets the server vm backup details
    * @param serverId Server id to where the vm backup details will be coming from
    */
-  getServerBackupVmDetails(id: string): Observable<McsApiSuccessResponse<McsServerBackupVmDetails>>;
+  getServerBackupVmDetails(id: string, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServerBackupVmDetails>>;
 
   /**
    * Gets the servers with vm backup provision
@@ -331,7 +331,7 @@ export interface IMcsApiServersService {
    * Gets the server server backup details
    * @param serverId Server id to where the server backup details will be coming from
    */
-  getServerBackupServerDetails(id: string): Observable<McsApiSuccessResponse<McsServerBackupServerDetails>>;
+  getServerBackupServerDetails(id: string, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServerBackupServerDetails>>;
 
   /**
    * Gets the servers with server backup provision

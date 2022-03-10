@@ -113,6 +113,7 @@ export * from './enumerations/azure-management-service-child-type.enum';
 export * from './enumerations/application-recovery-type.enum';
 export * from './enumerations/journal-history.enum';
 export * from './enumerations/extender-type.enum';
+export * from './enumerations/sort-direction.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';

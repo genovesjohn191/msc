@@ -1,12 +1,10 @@
+import { JsonProperty } from '@app/utilities';
 import { McsQueryParam } from './mcs-query-param';
 
 export class McsServersQueryParams extends McsQueryParam {
-  public storageProfile?: string;
-  public expand?: boolean;
+  @JsonProperty({ name: 'storage_profile' })
+  public storageProfile?: string = undefined;
 
-  constructor() {
-    super();
-    this.storageProfile = '';
-    this.expand = false;
-  }
+  @JsonProperty({ name: 'expand' })
+  public expand?: boolean = undefined;
 }

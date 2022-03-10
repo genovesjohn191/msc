@@ -1,5 +1,11 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -8,6 +14,8 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+
 import {
   McsAccessControlService,
   McsMatTableContext,
@@ -57,6 +65,11 @@ export class FirewallsComponent {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
 
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
+
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
@@ -104,6 +117,17 @@ export class FirewallsComponent {
     this._navigationService.navigateTo(RouteKey.FirewallDetails, [firewall.id]);
   }
 
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
+  }
+
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _isColumnIncluded(filter: McsFilterInfo): boolean {
     if (filter.id !== 'serialNumber') { return true; }
     return this._accessControlService.hasPermission(['FirewallSerialNumberView']);
@@ -114,10 +138,19 @@ export class FirewallsComponent {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getFirewalls(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount))
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount)
+      })
     );
   }
 }

@@ -2,9 +2,11 @@ import {
   of,
   BehaviorSubject,
   Observable,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
+  catchError,
   filter,
   map,
   takeUntil,
@@ -19,6 +21,7 @@ import {
   OnDestroy,
   SimpleChanges
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -33,7 +36,8 @@ import {
   InviewLevel,
   McsFilterInfo,
   McsServerBackupServerDetails,
-  McsServerBackupServerLog
+  McsServerBackupServerLog,
+  McsQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -62,6 +66,10 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
 
   public readonly serverBackupLogsDatasource: McsTableDataSource2<McsServerBackupServerLog>;
   public readonly serverBackupLogsColumns: McsFilterInfo[];
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   private _serverBackupsChange = new BehaviorSubject<McsServerBackupServerLog[]>(null);
   private _destroySubject = new Subject<void>();
@@ -141,13 +149,24 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
     return statusIconKey;
   }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this._updateTableDataSource(this.serverId);
+  }
+
   /**
    * Initializes the data source of the server backup logs table
    */
   private _updateTableDataSource(serverid: string): void {
+    let queryParam = new McsQueryParam();
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
     let serverBackupApiSource: Observable<McsServerBackupServerLog[]>;
     if (!isNullOrEmpty(serverid)) {
-      serverBackupApiSource = this._apiService.getServerBackupServerDetails(serverid).pipe(
+      serverBackupApiSource = this._apiService.getServerBackupServerDetails(serverid, queryParam).pipe(
         map((response) => {
           this._serverBackupDetails = response;
           return getSafeProperty(response, (obj) => obj.logs);
@@ -158,7 +177,7 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
       );
     }
 
-    let tableDataSource = isNullOrEmpty(this._serverBackupLogsCache) ?
+    let tableDataSource = (isNullOrEmpty(this._serverBackupLogsCache) || !isNullOrEmpty(this._sortDirection)) ?
       serverBackupApiSource : this._serverBackupLogsCache;
     tableDataSource.subscribe(records => this._serverBackupsChange.next(records || []));
     this._changeDetector.markForCheck();
@@ -166,9 +185,16 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
 
   private _getServerBackups(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerBackupServerLog>> {
     return this._serverBackupsChange.pipe(
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
       takeUntil(this._destroySubject),
       filter(response => !isNullOrUndefined(response)),
-      map(response => new McsMatTableContext(response, response?.length))
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response, response?.length)
+      })
     );
   }
 }
