@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
-  McsPortal
+  McsPortal,
+  McsQueryParam
 } from '@app/models';
 
 export interface IMcsApiToolsService {
@@ -9,5 +10,5 @@ export interface IMcsApiToolsService {
   /**
    * Get all the portals from the API
    */
-  getPortals(): Observable<McsApiSuccessResponse<McsPortal[]>>;
+  getPortals(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsPortal[]>>;
 }

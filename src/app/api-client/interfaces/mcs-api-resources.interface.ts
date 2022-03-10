@@ -10,7 +10,8 @@ import {
   McsResourceCatalogItemCreate,
   McsJob,
   McsValidation,
-  McsResourceCatalog
+  McsResourceCatalog,
+  McsQueryParam
 } from '@app/models';
 
 export interface IMcsApiResourcesService {
@@ -36,7 +37,10 @@ export interface IMcsApiResourcesService {
    * Get resource storage by ID (MCS API Response)
    * @param id Resource identification
    */
-  getResourceStorage(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceStorage[]>>;
+  getResourceStorage(
+    id: any,
+    optionalHeaders?: Map<string, any>,
+    query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResourceStorage[]>>;
 
   getVdcStorage(resourceId: string, storageId: string): Observable<McsApiSuccessResponse<McsResourceStorage>>;
 

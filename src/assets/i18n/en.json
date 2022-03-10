@@ -2899,6 +2899,8 @@
     "header": "Other Tools",
     "description": "Macquarie Cloud Services have all the tools you need to manage your compute workloads. Occasionally you may want to do something that's not possible in the Macquarie Cloud Services portal, but available in our partner portals. You have permission to access the following partner portals.",
     "otherServicesTableCaption": "Other services we offer.",
+    "dataSingular": "Portal",
+    "dataPlural": "Portals",
     "table": {
       "descriptions": {
         "macquarieView": {

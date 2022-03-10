@@ -5,12 +5,19 @@
     <!-- Internet Ports Count -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
-                  ('internet.dataSingular' | translate) :
-                  ('internet.dataPlural' | translate) }}
-          </span>
-        </div>
+        <ng-container *ngIf="isSorting; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count">
+            <span>{{ totalRecordsCount | mcsPlural:
+                    ('internet.dataSingular' | translate) :
+                    ('internet.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
       </div>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -40,10 +47,10 @@
       <mcs-search *ngIf="isMobile" #search mcsId="internet-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <table mat-table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
          <!-- Service Column -->
          <ng-container matColumnDef="service">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="billingDescription" disableClear>
             {{ 'columnHeader.service' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
@@ -87,7 +94,7 @@
 
         <!-- Zone Column -->
         <ng-container matColumnDef="zone">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="availabilityZone" disableClear>
             {{ 'columnHeader.zone' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
@@ -98,7 +105,7 @@
 
         <!-- Service ID Column -->
         <ng-container matColumnDef="serviceId">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="serviceId" disableClear>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
@@ -130,7 +137,8 @@
         </ng-container>
 
         <!-- Header and Data row -->
-        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
         <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
           mcsCursor="pointer"
           (click)="navigateToInternet(row)"

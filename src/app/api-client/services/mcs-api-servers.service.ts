@@ -63,19 +63,11 @@ export class McsApiServersService implements IMcsApiServersService {
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
   public getServers(query?: McsServersQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServer[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
-    searchParams.set('storage_profile', query.storageProfile);
-    searchParams.set('expand', query.expand);
+    if (isNullOrEmpty(query)) { query = new McsServersQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/servers';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsServersQueryParams.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -409,10 +401,13 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  public getServerStorage(serverId: any):
+  public getServerStorage(serverId: any, query?: McsQueryParam):
     Observable<McsApiSuccessResponse<McsServerStorageDevice[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/disks`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -499,9 +494,12 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  public getServerNics(serverId: any): Observable<McsApiSuccessResponse<McsServerNic[]>> {
+  public getServerNics(serverId: any, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServerNic[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/nics`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -724,10 +722,13 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  public getServerBackupVmDetails(id: string):
+  public getServerBackupVmDetails(id: string, query?: McsQueryParam):
     Observable<McsApiSuccessResponse<McsServerBackupVmDetails>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/vm-backup/details`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -771,10 +772,13 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  public getServerBackupServerDetails(id: string):
+  public getServerBackupServerDetails(id: string, query?: McsQueryParam):
     Observable<McsApiSuccessResponse<McsServerBackupServerDetails>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/server-backup/details`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

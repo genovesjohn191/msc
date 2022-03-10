@@ -1,5 +1,11 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -8,6 +14,8 @@ import {
   Injector,
   OnDestroy
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+
 import {
   CoreConfig,
   McsMatTableContext,
@@ -18,11 +26,13 @@ import {
   McsFilterInfo,
   McsPortal,
   McsPortalAccess,
-  McsQueryParam
+  McsQueryParam,
+  SortDirection
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   cloneObject,
+  compareStrings,
   createObject,
   getSafeProperty,
   isNullOrEmpty
@@ -44,6 +54,11 @@ export class ToolsComponent implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'access' })
   ];
   public overflowsShown = [];
+
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -76,6 +91,13 @@ export class ToolsComponent implements OnDestroy {
     if (this.overflowsShown.includes(portal)) { return true; }
   }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   private _initializeToolDescriptionMap(): void {
     let descriptions = this._translateService.instant('tools.table.descriptions');
     this.toolDescriptionMap.set(descriptions.macquarieView.name, descriptions.macquarieView.description);
@@ -96,9 +118,16 @@ export class ToolsComponent implements OnDestroy {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
 
     return this._apiService.getPortals(queryParam).pipe(
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
       map((response) => {
+        this.isSorting = false;
         let macquarieTools: McsPortal[] = [];
 
         // Add Macquarie View
@@ -111,6 +140,13 @@ export class ToolsComponent implements OnDestroy {
         macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
         macquarieView.portalAccess = Array(macquarieViewPortalAccess);
         macquarieTools.push(macquarieView, ...cloneObject(response.collection));
+
+        // Temporary: will remove the sorting once the MacquarieView data is added in the API
+        if (this._sortDirection === SortDirection.Asc) {
+          macquarieTools.sort((a, b) => compareStrings(a.name, b.name));
+        } else if (this._sortDirection === SortDirection.Desc) {
+          macquarieTools.sort((a, b) => compareStrings(b.name, a.name));
+        }
 
         let dataItems = this._filterValidDataItem(macquarieTools);
         let dataSourceContext = new McsMatTableContext(dataItems, dataItems.length);

@@ -1,5 +1,11 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -8,6 +14,8 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+
 import {
   CoreRoutes,
   McsAccessControlService,
@@ -57,6 +65,11 @@ export class DnsListingComponent {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
 
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
+
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
@@ -102,18 +115,6 @@ export class DnsListingComponent {
     return this._translateService.instant('dnsListing.unavailable');;
   }
 
-  private _getNetworkDNS(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDnsBase>> {
-    let queryParam = new McsQueryParam();
-    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
-    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
-    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-
-    return this._apiService.getNetworkDns(queryParam).pipe(
-      map(response => new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount))
-    );
-  }
-
   public onRequestChange(dns: McsNetworkDnsBase): string {
     return isNullOrEmpty(dns.serviceId) ?
       CoreRoutes.getNavigationPath(RouteKey.OrderHostedDnsChange) :
@@ -124,16 +125,6 @@ export class DnsListingComponent {
     return isNullOrEmpty(dns.serviceId) ?
       CoreRoutes.getNavigationPath(RouteKey.TicketCreate) :
       `${CoreRoutes.getNavigationPath(RouteKey.TicketCreate)}?serviceId=${dns.serviceId}`;
-  }
-
-  private _isColumnIncluded(filter: McsFilterInfo): boolean {
-    if (filter.id === 'action') {
-      return this._accessControlService.hasPermission([
-        'OrderEdit',
-        'TicketCreate'
-      ]);
-    }
-    return true;
   }
 
   public isPrimary(isPrimaryDns: boolean): string {
@@ -158,5 +149,47 @@ export class DnsListingComponent {
   public navigateToDNSDetails(dns: McsNetworkDnsBase) {
     if (isNullOrEmpty(dns)) { return; }
     this._navigationService.navigateTo(RouteKey.DnsDetails, [dns.id]);
+  }
+
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
+  }
+
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id === 'action') {
+      return this._accessControlService.hasPermission([
+        'OrderEdit',
+        'TicketCreate'
+      ]);
+    }
+    return true;
+  }
+
+  private _getNetworkDNS(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDnsBase>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+
+    return this._apiService.getNetworkDns(queryParam).pipe(
+      catchError((error) => {
+        this.isSorting = false;
+        return throwError(error);
+      }),
+      map(response => {
+        this.isSorting = false;
+        return new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount)
+      })
+    );
   }
 }

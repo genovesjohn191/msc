@@ -25,17 +25,11 @@ export class McsApiMediaService implements IMcsApiMediaService {
   ) { }
 
   public getMedia(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResourceMedia[]>> {
-
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/resources/media';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

@@ -26,16 +26,11 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
   constructor(private _apiClientService: McsApiClientHttpService) { }
 
   public getNetworkDns(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsSummary[]>> {
-    // Set default values if null
-    let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
-    searchParams.set('page', query.pageIndex);
-    searchParams.set('per_page', query.pageSize);
-    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/networks/dns';
-    mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._apiClientService.get(mcsApiRequestParameter).pipe(
       map((response) =>
