@@ -649,8 +649,11 @@ export class McsApiService {
     );
   }
 
-  public getResourceStorages(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResourceStorage>> {
-    return this._resourcesApi.getResourceStorage(id, optionalHeaders).pipe(
+  public getResourceStorages(
+    id: string,
+    optionalHeaders?: Map<string, any>,
+    query?: McsQueryParam): Observable<McsApiCollection<McsResourceStorage>> {
+    return this._resourcesApi.getResourceStorage(id, optionalHeaders, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceStorages'))
       ),
@@ -785,8 +788,8 @@ export class McsApiService {
     );
   }
 
-  public getServerStorage(id: string): Observable<McsApiCollection<McsServerStorageDevice>> {
-    return this._serversApi.getServerStorage(id).pipe(
+  public getServerStorage(id: string, query?: McsQueryParam): Observable<McsApiCollection<McsServerStorageDevice>> {
+    return this._serversApi.getServerStorage(id, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerStorage'))
       ),
@@ -794,8 +797,8 @@ export class McsApiService {
     );
   }
 
-  public getServerNics(id: string): Observable<McsApiCollection<McsServerNic>> {
-    return this._serversApi.getServerNics(id).pipe(
+  public getServerNics(id: string, query?: McsQueryParam): Observable<McsApiCollection<McsServerNic>> {
+    return this._serversApi.getServerNics(id, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerNics'))
       ),
@@ -1173,8 +1176,8 @@ export class McsApiService {
     );
   }
 
-  public getServerBackupVmDetails(id: string): Observable<McsServerBackupVmDetails> {
-    return this._serversApi.getServerBackupVmDetails(id).pipe(
+  public getServerBackupVmDetails(id: string, query?: McsQueryParam): Observable<McsServerBackupVmDetails> {
+    return this._serversApi.getServerBackupVmDetails(id, query).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupVmDetails'))),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
@@ -1194,8 +1197,8 @@ export class McsApiService {
     );
   }
 
-  public getServerBackupServerDetails(id: string): Observable<McsServerBackupServerDetails> {
-    return this._serversApi.getServerBackupServerDetails(id).pipe(
+  public getServerBackupServerDetails(id: string, query?: McsQueryParam): Observable<McsServerBackupServerDetails> {
+    return this._serversApi.getServerBackupServerDetails(id, query).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServerDetails'))),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
@@ -1352,7 +1355,7 @@ export class McsApiService {
   }
 
   public getPortals(_query?: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
-    return this._toolsService.getPortals().pipe(
+    return this._toolsService.getPortals(_query).pipe(
       map((response) => this._mapToCollection(response.content, response.totalCount)),
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPortals'))

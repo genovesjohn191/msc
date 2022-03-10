@@ -10,10 +10,10 @@
   <p *ngIf="isInviewPremium">{{ 'serverServicesServerBackupDetails.inviewLabel' | translate }}</p>
 
   <!-- Table -->
-  <table mat-table [dataSource]="serverBackupLogsDatasource">
+  <table mat-table [dataSource]="serverBackupLogsDatasource" matSort (matSortChange)="onSortChange($event)">
     <!-- Status Column -->
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="logs.status" disableClear>
         {{ 'columnHeader.status' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" text-wrap>
@@ -30,7 +30,7 @@
 
     <!-- Start Date Column -->
     <ng-container matColumnDef="startDate">
-      <th mat-header-cell *matHeaderCellDef hidden-small>
+      <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="logs.startedOn" disableClear>
         {{ 'columnHeader.startDate' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" hidden-small>
@@ -40,7 +40,7 @@
 
     <!-- End Date Column -->
     <ng-container matColumnDef="endDate">
-      <th mat-header-cell *matHeaderCellDef hidden-small>
+      <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="logs.finishedOn" disableClear>
         {{ 'columnHeader.endDate' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" hidden-small>
@@ -70,7 +70,7 @@
 
     <!-- MB Modified Column -->
     <ng-container matColumnDef="mbModified">
-      <th mat-header-cell *matHeaderCellDef hidden-small>
+      <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="logs.modifiedMB" disableClear>
         {{ 'columnHeader.mbModified' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" hidden-small text-center>
@@ -80,7 +80,7 @@
 
     <!-- Data Protection Volume Column -->
     <ng-container matColumnDef="dataProtectionVolume">
-      <th mat-header-cell *matHeaderCellDef hidden-small>
+      <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="logs.dataProtectionVolumeGB" disableClear>
         {{ 'columnHeader.dataProtectionVolume' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" hidden-small text-center>
@@ -90,7 +90,7 @@
 
     <!-- Deduplication Ratio Column -->
     <ng-container matColumnDef="deduplicationRatio">
-      <th mat-header-cell *matHeaderCellDef hidden-small>
+      <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="logs.deduplicationRatio" disableClear>
         {{ 'columnHeader.deduplicationRatio' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" hidden-small text-center>
@@ -99,13 +99,14 @@
     </ng-container>
 
     <!-- Header and Data row -->
-    <tr mat-header-row *matHeaderRowDef="serverBackupLogsDatasource?.dataColumns$ | async"></tr>
+    <tr mat-header-row *matHeaderRowDef="serverBackupLogsDatasource?.dataColumns$ | async"
+      [disabled]="(serverBackupLogsDatasource?.isInProgress$ | async) || isSorting"></tr>
     <tr mat-row *matRowDef="let row; columns: serverBackupLogsDatasource?.dataColumns$ | async;"></tr>
   </table>
 
   <!-- Table Statuses -->
   <mcs-item orientation="block">
-    <div *ngIf="serverBackupLogsDatasource?.isInProgress$ | async" align="center">
+    <div *ngIf="(serverBackupLogsDatasource?.isInProgress$ | async) || isSorting" align="center">
       <mcs-loader size="medium"></mcs-loader>
     </div>
     <div *ngIf="serverBackupLogsDatasource?.hasNoRecords$ | async" text-center>

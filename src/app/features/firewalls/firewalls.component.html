@@ -3,11 +3,18 @@
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
-                ('firewalls.dataSingular' | translate) : ('firewalls.dataPlural' | translate) }}
-          </span>
-        </div>
+        <ng-container *ngIf="isSorting; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count"  *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalRecordsCount | mcsPlural:
+                  ('firewalls.dataSingular' | translate) : ('firewalls.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
       </div>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -37,10 +44,10 @@
       <mcs-search *ngIf="isMobile" #search mcsId="firewalls-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <table mat-table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
         <!-- Firewall Column -->
         <ng-container matColumnDef="firewall">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="managementName" disableClear>
             {{ 'columnHeader.firewall' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
@@ -83,7 +90,7 @@
 
         <!-- IP Address Column -->
         <ng-container matColumnDef="ipAddress">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="managementIpAddress" disableClear>
             {{ 'columnHeader.ipAddress' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -105,7 +112,7 @@
 
         <!-- Service ID Column -->
         <ng-container matColumnDef="serviceId">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="serviceId" disableClear>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" matTooltip="{{ row.billingDescription }}">
@@ -155,7 +162,8 @@
         </ng-container>
 
         <!-- Header and Data row -->
-        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
         <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
           mcsCursor="pointer"
           (click)="navigateToFirewall(row)"

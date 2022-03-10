@@ -5,6 +5,7 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
 import {
   Observable,
   throwError
@@ -39,7 +40,6 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-azure-software-subscriptions',

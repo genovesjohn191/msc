@@ -90,11 +90,18 @@
           </mcs-action-item>
         </mcs-responsive-panel>
 
-        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
-          <span>{{ totalCount | mcsPlural:
-                ('servers.dataSingular' | translate) : ('servers.dataPlural' | translate) }}
-          </span>
-        </div>
+        <ng-container *ngIf="isSorting; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalCount | mcsPlural:
+                  ('servers.dataSingular' | translate) : ('servers.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
       </div>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -123,7 +130,7 @@
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
 
-      <table mat-table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
         <!-- Selection Column -->
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef
@@ -149,7 +156,7 @@
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="name" disableClear>
             {{ 'columnHeader.server' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
@@ -182,7 +189,7 @@
 
         <!-- OS Edition Column -->
         <ng-container matColumnDef="osEdition">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="operatingSystem.edition" disableClear>
             {{ 'columnHeader.osEdition' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
@@ -225,7 +232,7 @@
 
         <!-- Tools Version Column -->
         <ng-container matColumnDef="toolsVersion">
-          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="vmwareTools.version" disableClear>
             {{ 'columnHeader.toolsVersion' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
@@ -244,7 +251,7 @@
 
         <!-- Management IP Column -->
         <ng-container matColumnDef="managementIp">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="ipAddress" disableClear>
             {{ 'columnHeader.managementIp' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -254,7 +261,7 @@
 
         <!-- Zone Column -->
         <ng-container matColumnDef="zone">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="availabilityZone" disableClear>
             {{ 'columnHeader.zone' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -264,7 +271,7 @@
 
         <!-- Service ID Column -->
         <ng-container matColumnDef="serviceId">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="serviceId" disableClear>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small [mcsTooltip]="row.billingDescription" [mcsTooltipShow]="row.billingDescription">
@@ -287,7 +294,7 @@
 
         <!-- Resource Column -->
         <ng-container matColumnDef="resource">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="platform.resourceName" disableClear>
             {{ 'columnHeader.resource' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small matTooltip="{{ getResourceBillingDescription(row.platform?.resourceId) }}">
@@ -328,7 +335,8 @@
         </ng-container>
 
         <!-- Header and Data row -->
-        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
         <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
           mcsCursor="pointer"
           [disabled]="row.isDisabled"

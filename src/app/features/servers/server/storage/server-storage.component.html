@@ -18,10 +18,10 @@
     <mcs-section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk">
 
       <!-- DISKs Table -->
-      <table mat-table [dataSource]="disksDataSource">
+      <table mat-table [dataSource]="disksDataSource" matSort (matSortChange)="onSortChange($event, server)">
         <!-- Storage Device Column -->
         <ng-container matColumnDef="storageDevice">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="name" disableClear>
             {{ 'columnHeader.storageDevice' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" text-wrap>
@@ -41,7 +41,7 @@
 
         <!-- Storage Profile Column -->
         <ng-container matColumnDef="storageProfile">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="storageProfile" disableClear>
             {{ 'columnHeader.storageProfile' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small text-wrap>
@@ -51,7 +51,7 @@
 
         <!-- Capacity Column -->
         <ng-container matColumnDef="capacity">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="sizeMB" disableClear>
             {{ 'columnHeader.capacity' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
@@ -89,13 +89,14 @@
         </ng-container>
 
         <!-- Header and Data row -->
-        <tr mat-header-row *matHeaderRowDef="disksDataSource?.dataColumns$ | async"></tr>
+        <tr mat-header-row *matHeaderRowDef="disksDataSource?.dataColumns$ | async"
+          [disabled]="(disksDataSource?.isInProgress$ | async) || isSorting"></tr>
         <tr mat-row *matRowDef="let row; columns: disksDataSource?.dataColumns$ | async;"></tr>
       </table>
 
       <!-- Table Statuses -->
       <mcs-item orientation="block">
-        <div *ngIf="disksDataSource?.isInProgress$ | async" align="center">
+        <div *ngIf="(disksDataSource?.isInProgress$ | async) || isSorting" align="center">
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="disksDataSource?.hasNoRecords$ | async" text-center>

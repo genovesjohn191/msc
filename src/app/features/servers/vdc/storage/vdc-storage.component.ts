@@ -6,6 +6,7 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import {
   map,
@@ -29,7 +30,8 @@ import {
   RouteKey,
   McsResource,
   McsFeatureFlag,
-  McsFilterInfo
+  McsFilterInfo,
+  McsQueryParam
 } from '@app/models';
 import { ColumnFilter } from '@app/shared';
 import { VdcDetailsBase } from '../vdc-details.base';
@@ -53,6 +55,10 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
 
   public expandedElement: McsResourceStorage;
   public selectedVdcStorageId: string;
+  public isSorting: boolean;
+
+  private _sortDirection: string;
+  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -146,6 +152,13 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
     );
   }
 
+  public onSortChange(sortState: Sort) {
+    this.isSorting = true;
+    this._sortDirection = sortState.direction;
+    this._sortField = sortState.active;
+    this.retryDatasource();
+  }
+
   /**
    * An abstract method that get notified when the vdc selection has been changed
    */
@@ -154,9 +167,14 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
   }
 
   private _getVdcStorage(): Observable<McsMatTableContext<McsResourceStorage>> {
+    let queryParam = new McsQueryParam();
+    queryParam.sortDirection = this._sortDirection;
+    queryParam.sortField = this._sortField;
+    let optionalHeaders = new Map<string, any>();
+
     return this.resource$.pipe(
       switchMap((selectedResource) => {
-        return this.apiService.getResourceStorages(selectedResource.id).pipe(
+        return this.apiService.getResourceStorages(selectedResource.id, optionalHeaders, queryParam).pipe(
         map(response => new McsMatTableContext(response?.collection,
           response?.totalCollectionCount)
         )
