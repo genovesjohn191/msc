@@ -13,16 +13,6 @@
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'azureManagementService.overview.properties.children' | translate }}:</span>
-          <ng-container *ngIf="azureManagementService.children === 0; else unknownChildrenTemplate">
-             <span>{{ azureManagementService.children }}</span>
-          </ng-container>
-          <ng-template #unknownChildrenTemplate>
-            <span [innerHTML]="azureManagementService.children | mcsDataLabel"></span>
-          </ng-template>
-        </mcs-item>
-
-        <mcs-item>
           <span>{{ 'azureManagementService.overview.properties.serviceId' | translate }}:</span>
           <span [innerHTML]="azureManagementService.serviceId | mcsDataLabel"></span>
         </mcs-item>
