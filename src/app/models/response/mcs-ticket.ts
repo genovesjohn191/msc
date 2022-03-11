@@ -22,7 +22,7 @@ import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTicket extends McsEntityBase {
   @JsonProperty()
-  public number: string = undefined;
+  public incidentId: string = undefined;
 
   @JsonProperty()
   public ticketNumber: string = undefined;
@@ -116,7 +116,7 @@ export class McsTicket extends McsEntityBase {
 
   constructor() {
     super();
-    this.number = undefined;
+    this.incidentId = undefined;
     this.ticketNumber = undefined;
     this.requestor = undefined;
     this.company = undefined;

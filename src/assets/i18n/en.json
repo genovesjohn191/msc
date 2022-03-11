@@ -2391,7 +2391,10 @@
     "columnFilter": "Column Filter",
     "tableSearch": "Table Search",
     "dataSingular": "Ticket",
-    "dataPlural": "Tickets"
+    "dataPlural": "Tickets",
+    "tooltip": {
+      "legacyTicketNumber": "Legacy ticket number: "
+    }
   },
   "ticket": {
     "header": "{{ticketType}} #",
@@ -3534,6 +3537,7 @@
     "temperature": "Temperature",
     "tenant": "Tenant",
     "term": "Term",
+    "ticketId": "Ticket ID",
     "ticketNumber": "Ticket Number",
     "tier": "Tier",
     "time": "Time",
@@ -3590,6 +3594,7 @@
     "users": "Users",
     "chargePerUser": "Charge Per User",
     "plan": "Plan",
+    "legacyTicketNumber": "Legacy Ticket Number",
     "linkedConsumptionService": "Linked Consumption Service",
     "audUsdExchangeRate": "AUD-USD Exchange Rate",
     "total": "Total",
