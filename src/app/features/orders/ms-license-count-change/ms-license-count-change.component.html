@@ -131,10 +131,10 @@
                   <mcs-hint mcsHint align="start">
                     <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
                      {{ fcLicenses.value?.quantity }} {{ convertUnit(fcLicenses.value?.unit, fcLicenses.value?.quantity)}}
-                     {{ fcLicenses.value?.updateQuantityLabel }}
+                     {{ getCountLabel(fcLicenses?.value, fcLicenseCount) }}
                     </span>
                   </mcs-hint>
-                  <mcs-hint *ngIf="hasCooldownPeriodLapsed(fcLicenses?.value)" mcsHint align="start">
+                  <mcs-hint *ngIf="showCooldownPeriodText(fcLicenses?.value)" mcsHint align="start">
                     <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.cooldownPeriodLapsed' | translate }}</span>
                   </mcs-hint>
                   <mcs-hint *ngIf="getProRatedLabel(fcLicenses?.value)" mcsHint align="start">
@@ -215,10 +215,10 @@
                             <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.hint' | translate }}
                              {{ childLicensesFcItem?.license?.quantity }}
                              {{ convertUnit(childLicensesFcItem?.license?.unit, childLicensesFcItem?.license?.quantity) }}
-                             {{ childLicensesFcItem.updateQuantityLabel }}
+                             {{ getCountLabel(childLicensesFcItem?.license, getFormControl(childLicensesFcItem?.childFormControlName)) }}
                             </span>
                           </mcs-hint>
-                          <mcs-hint *ngIf="hasCooldownPeriodLapsed(childLicensesFcItem?.license)" mcsHint align="start">
+                          <mcs-hint *ngIf="showCooldownPeriodText(childLicensesFcItem?.license)" mcsHint align="start">
                             <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.cooldownPeriodLapsed' | translate }}</span>
                           </mcs-hint>
                           <mcs-hint *ngIf="getProRatedLabel(childLicensesFcItem?.license)" mcsHint align="start">
