@@ -177,6 +177,11 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     return this.getMinLicenseCount(this.fcLicenses?.value);
   }
 
+  public showCooldownPeriodText(license: McsLicense){
+    return license?.commercialAgreementType?.toUpperCase() === COMMERCIAL_AGREEMENT_TYPE_NEW ?
+    this.hasCooldownPeriodLapsed(license) : false;
+  }
+
   public hasCooldownPeriodLapsed(license: McsLicense): boolean {
     if(isNullOrUndefined(license)){ return false }
     if(isNullOrUndefined(license.commitmentStartDate)) { return true }
@@ -185,10 +190,11 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   }
 
   public getMinLicenseCount(license: McsLicense): number {
-    if(isNullOrUndefined(license) || isNullOrUndefined(license.minimumQuantity)){
-      return DEFAULT_LICENSE_COUNT_MIN;
+    let minimumQuantity = isNullOrUndefined(license.minimumQuantity) ? DEFAULT_LICENSE_COUNT_MIN : license.minimumQuantity;
+    if(isNullOrUndefined(license) || license.commercialAgreementType?.toUpperCase() != COMMERCIAL_AGREEMENT_TYPE_NEW){
+      return minimumQuantity;
     }
-    return this.hasCooldownPeriodLapsed(license)? license.quantity : license.minimumQuantity;
+    return this.hasCooldownPeriodLapsed(license)? license.quantity : minimumQuantity;
   }
 
   public getProRatedLabel(license: McsLicense): string {
@@ -372,13 +378,17 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     ).subscribe();
   }
 
+  public getCountLabel(license: McsLicense, newValue: any): string{
+    if(isNullOrUndefined(newValue) || !newValue.valid
+      || license.quantity === +newValue.value){ return ''};
+    return this._updateCountLabel(true, license, newValue?.value);
+  }
+
   private _onLicenseCountDetailsChange(): void {
     this._msLicenseCountChangeService.clearOrderItems();
     let orderItems: McsOrderItemCreate[] = [];
 
     let baseLicenseHasChange = this.fcLicenses.value.quantity !== +this.fcLicenseCount.value;
-    this.fcLicenses.value.updateQuantityLabel = this._updateCountLabel(
-      baseLicenseHasChange, this.fcLicenses.value, this.fcLicenseCount.value);
     this._licensesHasValueChange.next(baseLicenseHasChange);
     if (baseLicenseHasChange) {
       orderItems.push(
@@ -390,7 +400,6 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
       let childFormControl: AbstractControl = this.fgMsLicenseCount.get(childLicenseConfig.childFormControlName);
       let childFormControlValue = getSafeProperty(childFormControl, (form) => form.value);
       let hasChange = childLicenseConfig.license.quantity !== +childFormControlValue;
-      childLicenseConfig.updateQuantityLabel = this._updateCountLabel(hasChange, childLicenseConfig.license, childFormControlValue);
       if (!isNullOrEmpty(childFormControlValue) && hasChange) {
         this._licensesHasValueChange.next(hasChange);
         orderItems.push(
