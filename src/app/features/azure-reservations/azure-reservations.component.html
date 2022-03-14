@@ -142,13 +142,13 @@
           <td mat-cell *matCellDef="let row">
             <ng-container *ngIf="(row.commitmentEndDate); else NoCommitmentEndDate">
               <mcs-item>
+                <span *ngIf="isReservationExpiring(row)" class="material-icons"
+                  [matTooltip]="'azureReservations.reservationExpiring' | translate" style="color: #ed1d2b;">
+                  warning
+                </span>
                 <div>
-                  <span *ngIf="isReservationExpiring(row)" class="material-icons"
-                    [matTooltip]="'azureReservations.reservationExpiring' | translate" style="color: #ed1d2b;">
-                    warning
-                  </span>
+                  <span> {{  row.commitmentEndDate | mcsStdDateFormat: 'ddd, D MMMM, y' }}</span>
                 </div>
-                <span> {{  row.commitmentEndDate | mcsStdDateFormat: 'ddd, D MMMM, y' }}</span>
               </mcs-item>
             </ng-container>
             <ng-template #NoCommitmentEndDate>

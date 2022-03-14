@@ -2667,7 +2667,9 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of software subscriptions.",
     "columnFilter": "Column Filter",
     "dataSingular": "Software Subscription",
-    "dataPlural": "Software Subscriptions"
+    "dataPlural": "Software Subscriptions",
+    "noCommitmentDateLabel": "Unknown",
+    "subscriptionExpiring": "This Software Subscription will expire in 7 days or less."
   },
   "extenders": {
     "header": "Extenders",
