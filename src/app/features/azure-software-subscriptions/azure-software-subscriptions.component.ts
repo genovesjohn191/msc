@@ -35,8 +35,11 @@ import {
   Search
 } from '@app/shared';
 import {
+  addDaysToDate,
   CommonDefinition,
+  compareDates,
   createObject,
+  getCurrentDate,
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
@@ -58,6 +61,8 @@ export class AzureSoftwareSubscriptionsComponent {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'quantity' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentStartDate' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentEndDate' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingTerm' }),
@@ -121,6 +126,15 @@ export class AzureSoftwareSubscriptionsComponent {
     isNullOrEmpty(service.serviceId) ?
       this._navigationService.navigateTo(RouteKey.TicketCreate) :
       this._navigationService.navigateTo(RouteKey.TicketCreate, [], { queryParams: { serviceId: service.serviceId}});
+  }
+
+  /**
+   * Returns true if subscription is expiring within 7 days
+   */
+   public isSubscriptionExpiring(subscription: McsAzureSoftwareSubscription): boolean {
+    return (compareDates(subscription.commitmentEndDate, addDaysToDate(getCurrentDate(), 7)) < 1
+      && compareDates(subscription.commitmentEndDate, getCurrentDate()) === 1
+      && !subscription.autoRenewEnabled);
   }
 
   private _getAzureSoftwareSubscriptions(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureSoftwareSubscription>> {
