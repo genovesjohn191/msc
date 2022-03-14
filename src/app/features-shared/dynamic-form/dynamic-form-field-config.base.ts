@@ -18,6 +18,7 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
   public label: string;
   public placeholder: string;
   public value?: any;
+  public foreignKeyValue?: string;
   public initialValue?: any;
   public eventName?: DynamicFormFieldOnChangeEvent;
   public dependents?: string[];
@@ -35,6 +36,7 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
     label?: string;
     placeholder?: string;
     value?: any;
+    foreignKeyValue?: string;
     options?: FlatOption[] | GroupedOption[];
     hint?: string;
     contextualHelp?: string;

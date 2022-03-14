@@ -52,6 +52,7 @@ export interface DynamicFormControlSettings {
 export interface DynamicFormFieldDataChangeEventParam {
   eventName: DynamicFormFieldOnChangeEvent;
   value: any;
+  foreignKeyValue?: string;
   dependents: string[];
 }
 
