@@ -400,7 +400,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
       let childFormControl: AbstractControl = this.fgMsLicenseCount.get(childLicenseConfig.childFormControlName);
       let childFormControlValue = getSafeProperty(childFormControl, (form) => form.value);
       let hasChange = childLicenseConfig.license.quantity !== +childFormControlValue;
-      if (!isNullOrEmpty(childFormControlValue) && hasChange) {
+      if (hasChange) {
         this._licensesHasValueChange.next(hasChange);
         orderItems.push(
           this._createOrderLineItem(childLicenseConfig.referenceId, childLicenseConfig.license.serviceId, childFormControl.value)
