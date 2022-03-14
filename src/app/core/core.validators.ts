@@ -30,7 +30,9 @@ export class CoreValidators {
    * { 'ipAddress': true }
    */
   public static ipAddress(control: AbstractControl): ValidationErrors | null {
-    return CommonDefinition.REGEX_IP_PATTERN.test(control.value) ? null : { ipAddress: true };
+    return CommonDefinition.REGEX_IP_PATTERN.test(control.value)
+      || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
+      null : { ipAddress: true };
   }
 
   /**

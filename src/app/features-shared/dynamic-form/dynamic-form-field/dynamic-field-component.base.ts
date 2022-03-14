@@ -152,6 +152,15 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
     }
   }
 
+  protected updateMandatoryValueConstraintBasedOnRequirement(required: boolean): void {
+    let hasValidators = !isNullOrEmpty(this.config.validators);
+    if (hasValidators) {
+      this.config.validators.required = required;
+    } else {
+      this.config.validators = { required };
+    }
+  }
+
   protected updateReadOnlyState(): void {
     this.disabled = this.config.settings && this.config.settings.readonly;
   }
