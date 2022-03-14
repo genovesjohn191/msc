@@ -57,7 +57,7 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
         break;
 
       case 'management-name-change':
-        this._updateBehavior(isNullOrEmpty(params.value));
+        this._updateBehavior(isNullOrEmpty(params.value), true);
         break;
 
       case 'company-change':
@@ -97,9 +97,12 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
     this.config.ipGatewayValidator = this._ipValidationService.ipGatewayValidator.bind(this);
   }
 
-  private _updateBehavior(required: boolean): void {
-    this.updateVisiblityBasedOnRequirement(required);
-
+  private _updateBehavior(required: boolean, mandatoryValueConstraintOnly?: boolean): void {
+    if (mandatoryValueConstraintOnly) {
+      this.updateMandatoryValueConstraintBasedOnRequirement(required);
+    } else  {
+      this.updateVisiblityBasedOnRequirement(required);
+    }
     this._changeDetectorRef.markForCheck();
   }
 }
