@@ -124,7 +124,11 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public getTicketHeader(ticket: McsTicket): string {
     if (isNullOrEmpty(ticket)) { return ''; }
-    return `${ticket.typeLabel} #${ticket.ticketNumber}`;
+    if (this._accessControlService.hasAccessToFeature('EnableTicketId'))  {
+      return `${ticket.typeLabel} ${ticket.incidentId}`;
+    } else {
+      return `${ticket.typeLabel} #${ticket.ticketNumber}`;
+    }
   }
 
   /**

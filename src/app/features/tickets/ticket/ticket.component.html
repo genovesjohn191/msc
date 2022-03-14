@@ -36,6 +36,12 @@
         <mcs-grid>
           <mcs-grid-row>
             <mcs-grid-column>
+              <ng-container *mcsAccessControl="[] feature: 'EnableTicketId'">
+                <mcs-item *ngIf="selectedTicket.ticketNumber">
+                  <span>{{ 'label.legacyTicketNumber' | translate }}:</span>
+                  <span [innerHTML]="selectedTicket.ticketNumber | mcsDataLabel"></span>
+                </mcs-item>
+              </ng-container>
               <mcs-item>
                 <span>{{ 'label.requestor' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.requestor | mcsDataLabel"></span>
@@ -126,7 +132,7 @@
               <ng-container mcsPresentationPanelHeader>
                 <h2>{{ 'label.services' | translate }}</h2>
               </ng-container>
-              
+
               <!-- Service ID -->
               <ng-container *ngIf="selectedTicket.serviceId | mcsIsNotNullOrEmpty; else noServices">
                 <mcs-list spacing="auto">

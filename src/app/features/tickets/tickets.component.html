@@ -46,7 +46,8 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'tickets.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="tickets"
-        [defaultFilters]="defaultColumnFilters">
+        [defaultFilters]="defaultColumnFilters"
+        [filterPredicate]="filterPredicate">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -68,7 +69,7 @@
 
       <!-- Table -->
       <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
-        <!-- ID Column -->
+        <!-- Ticket Number Column -->
         <ng-container matColumnDef="ticketNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="ticketNumber" disableClear>
             {{ 'columnHeader.ticketNumber' | translate }}
@@ -80,6 +81,25 @@
               mcsEventCategory="ticket"
               mcsEventLabel="ticket-listing-page">
               <span [innerHTML]="row.ticketNumber | mcsDataLabel: 'Pending'">
+              </span>
+            </a>
+          </td>
+        </ng-container>
+
+        <!-- Ticket ID Column -->
+        <ng-container matColumnDef="ticketId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="incidentId" disableClear>
+            {{ 'columnHeader.ticketId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
+              mcsId="select-ticket"
+              mcsEventTracker="navigate-to-ticket"
+              mcsEventCategory="ticket"
+              mcsEventLabel="ticket-listing-page">
+              <span [innerHTML]="row.incidentId | mcsDataLabel: 'Pending'"
+                    [mcsTooltip]="getLegacyTicketIdTooltipPrefix(row.ticketNumber)"
+                    [mcsTooltipShow]="row.ticketNumber">
               </span>
             </a>
           </td>

@@ -23,7 +23,8 @@ import {
   McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
-  McsTableEvents
+  McsTableEvents,
+  McsAccessControlService
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
@@ -45,6 +46,7 @@ import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-tickets',
@@ -69,19 +71,23 @@ export class TicketsComponent {
   private _sortDirection: string;
   private _sortField: string;
 
+  public readonly filterPredicate = this._isColumnIncluded.bind(this);
   constructor(
     _injector: Injector,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _activatedRoute: ActivatedRoute,
     private _cookieService: McsCookieService,
-    private _navigationService: McsNavigationService
+    private _navigationService: McsNavigationService,
+    private _accessControlService: McsAccessControlService,
+    private _translateService: TranslateService
   ) {
     this.dataSource = new McsTableDataSource2(this._getTickets.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeTickets
     });
     this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketId' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketNumber' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'summary' }),
@@ -190,7 +196,7 @@ export class TicketsComponent {
       queryParam.state = this.selectedTabIndex === 0 ? 'open' : 'closed';
     }
 
-    
+
 
     return this._apiService.getTickets(queryParam).pipe(
       catchError((error) => {
@@ -213,5 +219,19 @@ export class TicketsComponent {
         return new McsMatTableContext(sortedCollections, response?.totalCollectionCount);
       })
     );
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id === 'ticketId') {
+      return this._accessControlService.hasAccessToFeature('EnableTicketId');
+    }
+    if (filter.id === 'ticketNumber') {
+      return !this._accessControlService.hasAccessToFeature('EnableTicketId');
+    }
+    return true;
+  }
+
+  public getLegacyTicketIdTooltipPrefix(ticketNumber): string  {
+    return this._translateService.instant('tickets.tooltip.legacyTicketNumber')+ticketNumber;
   }
 }
