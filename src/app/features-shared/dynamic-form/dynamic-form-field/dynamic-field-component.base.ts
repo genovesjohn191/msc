@@ -58,16 +58,17 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
   }
 
   // Can be overriden to modify the value being sent
-  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any, foreignKeyValue?: string): void {
     this.dataChange.emit({
       value,
+      foreignKeyValue,
       eventName,
       dependents
     });
   }
 
   public valueChange(val: any): void {
-    this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value);
+    this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value, this.config.foreignKeyValue);
     this.propagateChange(this.config.value);
     this.afterDataChange.emit();
   }

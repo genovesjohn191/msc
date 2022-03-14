@@ -58,7 +58,7 @@ export class DynamicSelectResourceGroupComponent extends DynamicSelectFieldCompo
         break;
 
       case 'linked-subscription-id-change':
-        this._linkedSubscriptionUuid = params.value;
+        this._linkedSubscriptionUuid = params.foreignKeyValue;
         this.retrieveOptions();
         break;
     }

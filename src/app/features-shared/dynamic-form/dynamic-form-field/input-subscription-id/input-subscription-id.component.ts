@@ -92,6 +92,7 @@ export class DynamicInputSubscriptionIdComponent extends DynamicFieldComponentBa
         let serviceFound = services.find((service) => service.serviceId === this._linkedServiceId);
 
         if (!isNullOrEmpty(serviceFound)) {
+          this.config.foreignKeyValue = serviceFound.id;
           this.config.value = serviceFound.subscriptionId;
           this.valueChange(this.config.value);
         }
