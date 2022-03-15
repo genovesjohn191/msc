@@ -130,7 +130,7 @@
             <!-- Monthly Charge Column -->
             <ng-container matColumnDef="monthlyFee">
               <th mat-header-cell *matHeaderCellDef>
-                {{ 'columnHeader.monthlyFee' | translate }}
+                {{ 'columnHeader.monthlyCharge' | translate }}
               </th>
               <td mat-cell *matCellDef="let row" [mcsGreyedOut]="!(row.charges?.monthly | mcsIsNotNullOrUndefined)">
                 {{ row.charges?.monthlyInCurrency }}
