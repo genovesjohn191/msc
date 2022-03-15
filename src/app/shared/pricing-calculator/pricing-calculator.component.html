@@ -2,7 +2,7 @@
 <div #panelElement [@expansionVertical]="collapse ? 'collapsed' : 'expanded'">
   <div class="pricing-calculator-panel">
     <mcs-item orientation="separated">
-      <span>{{ 'pricingCalculator.oneOffCost' | translate }}</span>
+      <span>{{ 'pricingCalculator.oneOffCharge' | translate }}</span>
       <span>${{ order?.charges?.oneOff || 0 }}</span>
     </mcs-item>
   </div>
@@ -23,7 +23,7 @@
 <!-- Pricing calculator header -->
 <ng-template #headerTemplate>
   <mcs-item>
-    <span>{{ 'pricingCalculator.monthlyCost' | translate }}:</span>
+    <span>{{ 'pricingCalculator.monthlyCharge' | translate }}:</span>
     <span>${{ order?.charges?.monthly || 0 }}</span>
   </mcs-item>
 </ng-template>
