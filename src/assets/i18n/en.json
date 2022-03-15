@@ -402,17 +402,17 @@
     "contractTerm": "Contract Term",
     "contractTermSuffix": "Months",
     "contractTermCancellation": "30 Day Cancellation",
-    "totalOneOffCost": "Total One-Off Cost",
-    "totalMonthlyCost": "Total Monthly Cost",
+    "totalOneOffCharge": "Total One-Off Charge",
+    "totalMonthlyCharge": "Total Monthly Charge",
     "lineItemsLabel": "Line Items",
     "columnHeaders": {
       "description": "Item Description",
       "status": "Status",
       "costCentre": "Cost Centre",
       "billingSite": "Billing Site",
-      "monthlyCharge": "Monthly charge",
-      "hourlyCharge": "Hourly charge",
-      "oneOffCharge": "One-off charge",
+      "monthlyCharge": "Monthly Charge",
+      "hourlyCharge": "Hourly Charge",
+      "oneOffCharge": "One-Off Charge",
       "excessFeePerGB": "Excess Fee Per GB",
       "schedule": "Schedule",
       "deliveryType": "Delivery Type"
@@ -1983,9 +1983,9 @@
   },
   "pricingCalculator": {
     "loading": "Updating charges",
-    "monthlyCost": "Monthly",
-    "oneOffCost": "One-off",
-    "totalCost": "Total Cost"
+    "monthlyCharge": "Monthly",
+    "oneOffCharge": "One-Off",
+    "totalCharge": "Total Charge"
   },
   "helpWidget": {
     "title": "Help me...",
@@ -3479,7 +3479,7 @@
     "notification": "Notification",
     "number": "Number",
     "offerId": "Offer ID",
-    "oneOffCharge": "One-off Charge",
+    "oneOffCharge": "One-Off Charge",
     "operationName": "Operation Name",
     "orderId": "Order ID",
     "osEdition": "OS Edition",
