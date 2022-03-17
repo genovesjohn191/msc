@@ -299,8 +299,8 @@ export class OverviewDocument implements IDashboardExportDocument {
             platformSecurityTable += `
               <tr style="text-align: left;">
                 <td>${item.description ? item.description : unavailable}</td>
-                <td>${item.impactedServices?.length > 0 ? item.impactedServices.join(', ') : unavailable}</td>
-                <td>${item.impactedRegions?.length > 0 ? item.impactedRegions.join(', ') : unavailable}</td>
+                <td>${this._formatArrayString(item.impactedServices)}</td>
+                <td>${this._formatArrayString(item.impactedRegions)}</td>
                 <td>${item.startTime ? this._formatDate(item.startTime, 'mediumNoMs') : unavailable}</td>
               </tr>
             `;
@@ -327,6 +327,11 @@ export class OverviewDocument implements IDashboardExportDocument {
     }
     actualResponse += `${widgetHtml}<div>`;
     return actualResponse;
+  }
+
+  private _formatArrayString(value: string[]): string {
+    if (!Array.isArray(value)) { return value; }
+    return value.length > 0 ? value.join(', ') : 'Unavailable';
   }
 
   private _chartHtml(uri: string, width?: string): string {

@@ -236,18 +236,6 @@ export class StepOrderDetailsComponent
     }
   }
 
-  public get billingDetailsFallbackText(): string {
-    let orderHasContractTerm = this.orderItemType?.itemChangeType === ItemChangeType.Change;
-    let orderIsNew = this.orderItemType?.itemType === ItemType.New;
-    if (orderIsNew) {
-      return this._translate.instant('message.billingDetailsNew');
-    } else if (orderHasContractTerm) {
-      return this._translate.instant('message.billingDetailsWithContractTerm');
-    } else {
-      return this._translate.instant('message.billingDetailsWithoutContractTerm');
-    }
-  }
-
   public get hasLeadTimeOptions(): boolean {
     return getSafeProperty(this.orderItemType, (obj) => obj.hasLeadTimeOptions, false);
   }
