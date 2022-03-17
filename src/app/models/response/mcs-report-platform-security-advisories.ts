@@ -1,5 +1,6 @@
 import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsReportPlatformSecurityAdvisories extends McsEntityBase {
 
@@ -15,9 +16,9 @@ export class McsReportPlatformSecurityAdvisories extends McsEntityBase {
   @JsonProperty()
   public azureTrackingId: string = undefined;
 
-  @JsonProperty()
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
   public startTime: Date = undefined;
-
-  @JsonProperty()
-  public link: string = undefined;
 }

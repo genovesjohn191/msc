@@ -59,8 +59,7 @@ export class PlatformSecurityAdvisoriesWidgetComponent implements OnInit {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'impactedServices' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'impactedRegions' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'startTime' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'link' })
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'startTime' })
   ];
 
   private _startPeriod: string = '';
@@ -84,6 +83,7 @@ export class PlatformSecurityAdvisoriesWidgetComponent implements OnInit {
   }
 
   public isMultipleValue(value: string[]): boolean {
+    if (!Array.isArray(value)) { return; }
     return value?.length > 1;
   }
 
