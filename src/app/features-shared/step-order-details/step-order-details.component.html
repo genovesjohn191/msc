@@ -20,12 +20,7 @@
         <section>
           <h3>{{ 'orderDetailsStep.billingDetails.header' | translate }}</h3>
 
-          <ng-container *ngIf="!orderItemType?.contractTermApplicable; else orderContractTermTemplate">
-            <mcs-status-message type="info">
-              {{ billingDetailsFallbackText }}
-            </mcs-status-message>
-          </ng-container>
-          <ng-template #orderContractTermTemplate>
+          <ng-container *ngIf="orderItemType?.contractTermApplicable">
             <mcs-form-field>
               <mcs-select [formControl]="fcContractTerm"
                 mcsId="select-contract-term"
@@ -41,7 +36,7 @@
                 {{ 'orderDetailsStep.billingDetails.contractTermRequired' | translate }}
               </mcs-error>
             </mcs-form-field>
-          </ng-template>
+          </ng-container>
 
           <ng-container *ngIf="orderItemType?.itemType === orderTypeEnum.Change; else orderBillingTemplate">
             <mcs-status-message type="info">
