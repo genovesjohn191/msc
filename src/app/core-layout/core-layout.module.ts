@@ -18,6 +18,7 @@ import { MainLoaderComponent } from './main-loader/main-loader.component';
 import { NavigationComponent } from './main-navigation';
 import {
   AccountPanelComponent,
+  ConsoleSheetComponent,
   FeedbackSheetComponent,
   NotificationPanelComponent,
   RecentCompaniesMaxPipe,
@@ -33,6 +34,7 @@ import { StateChangeNotificationsComponent } from './state-change-notifications'
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
     FeedbackSheetComponent,
+    ConsoleSheetComponent,
     MainLoaderComponent,
     ContentComponent,
     FooterComponent,
@@ -53,6 +55,7 @@ import { StateChangeNotificationsComponent } from './state-change-notifications'
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
     FeedbackSheetComponent,
+    ConsoleSheetComponent,
     MainLoaderComponent,
     ContentComponent,
     FooterComponent,
