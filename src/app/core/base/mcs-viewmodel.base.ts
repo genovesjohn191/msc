@@ -25,8 +25,7 @@ export abstract class McsViewModelBase {
       this.formGroupService.scrollToFirstInvalidField(host);
     }
 
-    let allAreValid = this.formGroupService.allFormFieldsValid(this.fgGroup);
-    if (!allAreValid) { return; }
+    return this.formGroupService.allFormFieldsValid(this.fgGroup);
   }
 
   public reset(): void {

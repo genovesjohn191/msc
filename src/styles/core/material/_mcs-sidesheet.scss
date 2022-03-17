@@ -16,6 +16,7 @@
       background-color: $light-bg-color;
       color: $color-text-dark;
       padding: $space-medium;
+      border-bottom: 1px solid $border-color-light;
 
       .mcs-sidesheet-close {
         align-self: flex-end;

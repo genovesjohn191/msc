@@ -1,0 +1,32 @@
+<section>
+  <p>Select the VM to open the console.</p>
+
+  <form [formGroup]="viewModel.fgGroup">
+    <!-- Server Select -->
+    <mcs-field-select size="auto"
+      mcsId="select-server"
+      [label]="'label.server' | translate"
+      [dataSource]="'ServerConsole' | mcsFieldSelect"
+      [formControl]="viewModel.fcServer">
+    </mcs-field-select>
+  </form>
+
+  <!-- Action buttons -->
+  <div class="action-items">
+    <button mcsButton="basic" mcsId="cancel-console"
+      mcsEventTracker="cancel-console"
+      mcsEventCategory="console"
+      mcsEventLabel="header"
+      (click)="onCancelConsole()">
+      {{ 'label.cancel' | translate }}
+    </button>
+
+    <button mcsButton arrow="right" mcsId="view-console"
+      mcsEventTracker="view-console"
+      mcsEventCategory="console"
+      mcsEventLabel="header"
+      (click)="onViewConsole()">
+      {{ 'label.view-console' | translate }}
+    </button>
+  </div>
+</section>

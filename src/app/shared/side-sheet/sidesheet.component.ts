@@ -143,10 +143,12 @@ export class SideSheetComponent implements McsDisposable, OnInit, OnDestroy {
 
     // Validate and execute if safe closing func was defined
     let isNavigateAwayDefined = (this._portalComponentRef?.instance as IMcsNavigateAwayGuard)?.canNavigateAway;
+    if (!isNavigateAwayDefined) return true;
+
     if (isNavigateAwayDefined && (this._portalComponentRef?.instance as IMcsNavigateAwayGuard).canNavigateAway())
       return true;
 
-    let message = this._translate.instant('message.navigateAway');
+    let message = this._translate.instant('message.navigateAwaySheet');
     return window.confirm(message);
   }
 

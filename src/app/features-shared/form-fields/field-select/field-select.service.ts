@@ -1,12 +1,5 @@
-export enum SelectDatasourceType {
-  None = 0,
-  TicketType,
-  MediaExtension,
-  Resource,
-  ResourceCatalog
-}
-
 import { Injectable } from '@angular/core';
+import { McsAccessControlService } from '@app/core';
 import {
   FieldSelectDatasource,
   IFieldSelectService
@@ -21,6 +14,18 @@ import {
   SelectResourceDatasource,
   SelectTicketTypeDatasource
 } from './datasources';
+import { SelectServerConsoleDatasource } from './datasources/factories/select-server-console.datasource';
+import { SelectServerDatasource } from './datasources/factories/select-server.datasource';
+
+export enum SelectDatasourceType {
+  None = 0,
+  TicketType,
+  MediaExtension,
+  Resource,
+  ResourceCatalog,
+  Server,
+  ServerConsole
+}
 
 @Injectable({ providedIn: 'root' })
 export class FieldSelectService implements IFieldSelectService {
@@ -28,7 +33,8 @@ export class FieldSelectService implements IFieldSelectService {
 
   constructor(
     _translate: TranslateService,
-    _apiService: McsApiService
+    _apiService: McsApiService,
+    _accessControl: McsAccessControlService
   ) {
     this._selectDatasourceMap.set(SelectDatasourceType.TicketType,
       new SelectTicketTypeDatasource());
@@ -41,6 +47,12 @@ export class FieldSelectService implements IFieldSelectService {
 
     this._selectDatasourceMap.set(SelectDatasourceType.ResourceCatalog,
       new SelectResourceCatalogDatasource(_apiService));
+
+    this._selectDatasourceMap.set(SelectDatasourceType.Server,
+      new SelectServerDatasource(_apiService));
+
+    this._selectDatasourceMap.set(SelectDatasourceType.ServerConsole,
+      new SelectServerConsoleDatasource(_accessControl,_apiService));
   }
 
   public get(type: string, data?: any): FieldSelectDatasource {

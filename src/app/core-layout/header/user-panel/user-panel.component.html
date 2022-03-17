@@ -57,6 +57,14 @@
 </ng-template>
 
 <div class="user-panel-wrapper">
+  <!-- Console icon -->
+  <div class="user-panel-item console-item" *mcsAccessControl="[]; feature: ['EnableDedicatedVmConsole']">
+    <a class="icon-content" (click)="onClickConsoleWidget()">
+      <mcs-icon key="dos-prompt-grey"></mcs-icon>
+    </a>
+  </div>
+
+  <!-- Notification icon -->
   <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">
     <a class="icon-content"
       mcsPopover #notificationsPopover="mcsPopover"
@@ -72,6 +80,7 @@
     </a>
   </div>
 
+  <!-- Feedback icon -->
   <div class="user-panel-item feedback-item" *mcsAccessControl="[]; feature: ['EnableFeedbackWidget']">
     <a class="icon-content" (click)="onClickFeedbackWidget()">
       <mat-icon>rate_review</mat-icon>

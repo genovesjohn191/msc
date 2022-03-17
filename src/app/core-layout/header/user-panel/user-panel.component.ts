@@ -41,6 +41,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 import {
+  ConsoleSheetComponent,
   FeedbackSheetComponent,
   FeedbackSheetConfig,
   SwitchAccountService
@@ -182,6 +183,14 @@ export class UserPanelComponent implements OnInit, OnDestroy {
       data: {
         message: 'Test Message'
       } as FeedbackSheetConfig
+    });
+
+    sidesheetRef.afterClosed().subscribe();
+  }
+
+  public onClickConsoleWidget(): void {
+    let sidesheetRef = this._sidesheetService.open(ConsoleSheetComponent, {
+      title: this._translateService.instant('label.vm-console')
     });
 
     sidesheetRef.afterClosed().subscribe();

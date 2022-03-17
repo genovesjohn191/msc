@@ -3581,6 +3581,9 @@
     "enabled": "Enabled"
   },
   "label": {
+    "server": "Server",
+    "view-console": "View Console",
+    "vm-console": "VM Console",
     "tellUsExperience": "Tell us your experience",
     "cancel": "Cancel",
     "submit": "Submit",
@@ -3781,6 +3784,7 @@
     "rollback": "Rollback"
   },
   "message": {
+    "navigateAwaySheet": "Your changes may not be saved. Are you sure you want to close the sheet?",
     "minLength": "Minimum of {{count}} characters",
     "maxLength": "Maximum of {{count}} characters",
     "noChartItems": "No chart items to display",
