@@ -932,7 +932,7 @@
         "noneStatusLabel": "Status unavailable",
         "noServiceId": "This license-based subscription has not completed provisioning. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "labelHelpText": "Increase or decrease this license depending on what you require for your organization. Your quantity must be at least 1. Please call your Macquarie Cloud Services account manager if you would like to suspend this item.",
-        "cooldownPeriodLapsed": "This license's 72-hour cooldown period has lapsed and its quantity cannot be decreased."
+        "cooldownPeriodLapsed": "This license's 7-day cooldown period has lapsed and its quantity cannot be decreased."
       },
       "addons": {
         "label": "Add-Ons",
@@ -944,7 +944,7 @@
         "suspendedLabel": "This add-on is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "noneStatusLabel": "Status unavailable",
         "proRatedLabel24Hrs": "This license was purchased less than 24-hours ago. If decreased, a full refund will apply.",
-        "proRatedLabel72Hrs": "This license was purchased over 24-hours ago. If decreased, a pro-rated refund will apply."
+        "proRatedLabel168Hrs": "This license was purchased over 24-hours ago. If decreased, a pro-rated refund will apply."
       },
       "licenseCountRequired": "Enter quantity.",
       "licenseCountNumeric": "Please enter a valid number.",
