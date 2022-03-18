@@ -127,7 +127,7 @@ export class BillingComponent implements OnInit, OnDestroy {
     query.microsoftChargeMonthRangeAfter = dateParams.after;
 
     let optionalHeaders = new Map<string, any>([
-      [CommonDefinition.HEADER_CONTENT_TYPE, 'text/csv'],
+      [CommonDefinition.HEADER_ACCEPT, 'text/csv'],
     ]);
 
     this._apiService.getBillingSummariesCsv(query, optionalHeaders).pipe(
