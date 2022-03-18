@@ -185,7 +185,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   public hasCooldownPeriodLapsed(license: McsLicense): boolean {
     if(isNullOrUndefined(license)){ return false }
     if(isNullOrUndefined(license.commitmentStartDate)) { return true }
-    return compareDates(getCurrentDate(), addHoursToDate(license.commitmentStartDate, 72)) === 1
+    return compareDates(getCurrentDate(), addHoursToDate(license.commitmentStartDate, 168)) === 1
     && license.commercialAgreementType?.toUpperCase() === COMMERCIAL_AGREEMENT_TYPE_NEW;
   }
 
@@ -204,10 +204,10 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
         && license.commercialAgreementType?.toUpperCase() === COMMERCIAL_AGREEMENT_TYPE_NEW){
         return this.translateService.instant('orderMsLicenseCountChange.detailsStep.addons.proRatedLabel24Hrs');
       }
-      else if(compareDates(license?.commitmentStartDate, addHoursToDate(getCurrentDate(), -72)) === 1
+      else if(compareDates(license?.commitmentStartDate, addHoursToDate(getCurrentDate(), -168)) === 1
         && compareDates(license?.commitmentStartDate, getCurrentDate()) < 1
         && license.commercialAgreementType?.toUpperCase() === COMMERCIAL_AGREEMENT_TYPE_NEW){
-        return this.translateService.instant('orderMsLicenseCountChange.detailsStep.addons.proRatedLabel72Hrs');
+        return this.translateService.instant('orderMsLicenseCountChange.detailsStep.addons.proRatedLabel168Hrs');
       }
     }
     return null;
