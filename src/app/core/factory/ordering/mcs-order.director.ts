@@ -1,21 +1,23 @@
 import {
-  Subject,
-  Observable
+  Observable,
+  Subject
 } from 'rxjs';
 import {
-  debounceTime,
   distinctUntilChanged,
   tap
 } from 'rxjs/operators';
+
 import {
-  isNullOrUndefined,
+  cloneObject,
   compareJsons,
+  debounceTimeAfterFirst,
   getSafeProperty,
   isNullOrEmpty,
-  cloneObject
+  isNullOrUndefined
 } from '@app/utilities';
-import { McsOrderBuilder } from './mcs-order.builder';
+
 import { McsOrderRequest } from './mcs-order-request';
+import { McsOrderBuilder } from './mcs-order.builder';
 
 export enum OrderStateChange {
   Started = 2,
@@ -35,7 +37,7 @@ export class McsOrderDirector {
   public orderRequestChange(): Observable<McsOrderRequest> {
     return this._orderRequestReceived.pipe(
       tap(() => this._orderRequestState.next(OrderStateChange.Started)),
-      debounceTime(ORDER_CHANGE_INTERVAL),
+      debounceTimeAfterFirst(ORDER_CHANGE_INTERVAL),
       tap(() => this._orderRequestState.next(OrderStateChange.Ended)),
       distinctUntilChanged((prev, next) => compareJsons(prev, next) === 0)
     );

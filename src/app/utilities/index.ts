@@ -36,6 +36,8 @@ export * from './interfaces/mcs-datasource';
 export * from './interfaces/mcs-search';
 
 export * from './rxjs-operators/exhaust-latest-map';
+export * from './rxjs-operators/debounce-time-after';
+export * from './rxjs-operators/debounce-time-after-first';
 
 export * from './utilities.types';
 export * from './common.definition';
