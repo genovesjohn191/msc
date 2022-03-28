@@ -23,6 +23,7 @@ import { McsApiNetworkDnsService } from './services/mcs-api-network-dns.service'
 import { McsApiIdentityService } from './services/mcs-api-identity.service';
 import { McsApiPlatformService } from './services/mcs-api-platform.service';
 import { McsApiLicensesService } from './services/mcs-api-licenses.service';
+import { McsApiPlannedWorkService } from './services/mcs-api-planned-work.service';
 
 import { McsApiMockInterceptor } from './interceptors/mcs-api-mock.interceptor';
 import { McsApiAccountService } from './services/mcs-api-account.service';
@@ -88,7 +89,8 @@ export const apiClientProviders: Provider[] = [
   McsApiTicketsService,
   McsApiToolsService,
   McsApiVMSizesService,
-  McsApiWorkflowsService
+  McsApiWorkflowsService,
+  McsApiPlannedWorkService
 ];
 
 export const apiClientInterceptors: Provider[] = [

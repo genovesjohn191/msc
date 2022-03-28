@@ -11,6 +11,7 @@ import { DataChangeCompaniesEvent } from './items/data-change-companies.event';
 import { DataChangeConsoleEvent } from './items/data-change-console.event';
 import { DnsDetailsChangeEvent } from './items/data-change-dns-details.event';
 import { DnsListingEvent } from './items/data-change-dns-listing.event';
+import { DataChangePlannedWorkDetailsEvent } from './items/data-change-planned-work-details.event';
 import { DataChangeFirewallsEvent } from './items/data-change-firewalls.event';
 import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports.event';
 import { DataChangeJobsEvent } from './items/data-change-jobs.event';
@@ -159,6 +160,7 @@ export class McsEvent {
   public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
   public static dataChangeTerraformDeployments = new DataChangeTerraformDeploymentsEvent();
   public static dataChangeNetworkDbNetworksEvent = new DataChangeNetworkDbNetworksEvent();
+  public static dataChangePlannedWorkDetailsEvent = new DataChangePlannedWorkDetailsEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();

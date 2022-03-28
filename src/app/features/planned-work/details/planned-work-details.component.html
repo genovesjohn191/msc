@@ -1,0 +1,48 @@
+<mcs-page leftPanelExpandedByDefault="true"
+  [header]="('plannedWorkListing.details.header' | translate) + (selectedPlannedWork$ | async)?.referenceId">
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'plannedWorkListing.leftPanelHeader' | translate">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <div class="listing-panel-wrapper">
+        <mcs-search #search mcsId="planned-work-details-panel-search"></mcs-search>
+        <mcs-list-panel [dataSource]="listviewDatasource" [config]="listviewDatasource?.config?.panelSettings">
+          <ng-container *mcsListPanelContent="let entity">
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupLabel>
+                <span>{{ entity.name }}</span>
+              </ng-container>
+              <a *ngFor="let plannedWork of entity?.plannedWorkList"
+                [mcsRouterLink]="[routeKeyEnum.PlannedWorkDetails, plannedWork.id]"
+                mcsId="select-planned-work"
+                mcsEventTracker="select-planned-work"
+                mcsEventCategory="planned-work"
+                mcsEventLabel="planned-work-details-panel">
+                <mcs-option [value]="plannedWork" [selected]="selectedPlannedWorkId === plannedWork.id">
+                  <mcs-item>
+                    <span [innerHTML]="plannedWork.referenceId | mcsDataLabel"></span>
+                  </mcs-item>
+                </mcs-option>
+              </a>
+            </mcs-option-group>
+          </ng-container>
+        </mcs-list-panel>
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="routing-tab-wrapper" *mcsComponentHandler>
+      <ng-container *ngIf="selectedPlannedWork$ | async as selectedPlannedWork">
+        <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+          <!-- Overview Tab -->
+          <mcs-tab [label]="'plannedWorkListing.details.overview.tabName' | translate" id="overview">
+          </mcs-tab>
+        </mcs-tab-group>
+        <!-- Tab content for routing tab -->
+        <div class="routing-tab-content-wrapper limited-view">
+          <router-outlet></router-outlet>
+        </div>
+      </ng-container>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

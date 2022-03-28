@@ -2453,6 +2453,42 @@
       "worknotes": "This comment is visible to internal Macquarie users only."
     }
   },
+  "plannedWorkListing": {
+    "header": "Planned Work",
+    "leftPanelHeader": "Planned Work Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of planned work events.",
+    "noRecordsFoundMessage": "There are no planned work events to display in this category.",
+    "retry": "Try again shortly",
+    "loading": "Loading planned work events list",
+    "columnFilter": "Column Filter",
+    "tableSearch": "Table Search",
+    "dataSingular": "Planned Work Event",
+    "dataPlural": "Planned Work Events",
+    "noScheduleDate": "Unknown",
+    "noOutageDuration": "N/A",
+    "details": {
+      "header": "Planned Work # ",
+      "overview": {
+        "tabName": "Overview",
+        "basicInformation": {
+            "label": "Basic Information",
+            "referenceId": "Reference ID: ",
+            "status": "Status: ",
+            "type": "Type: ",
+            "summary": "Summary: "
+        },
+        "schedule": {
+          "label": "Schedule",
+          "plannedStart": "Planned Start: ",
+          "plannedEnd": "Planned End: ",
+          "outageDurationMinutes": "Outage Duration: "
+        },
+        "description": {
+          "label": "Description"
+        }
+      }
+    }
+  },
   "firewalls": {
     "header": "Firewalls",
     "description": "View details of your firewalls and firewall policies. Firewalls prevent malicious traffic from accessing services deployed in your environment.",
@@ -3369,7 +3405,8 @@
     "getLocations": "Something went wrong while retrieving your locations. Please try again.",
     "getLocation": "Something went wrong while retrieving your locaiton. Please try again.",
     "getVmSizes": "Something went wrong while retrieving your VM Sizes. Please try again.",
-    "getVmSize": "Something went wrong while retrieving your VM Size. Please try again."
+    "getVmSize": "Something went wrong while retrieving your VM Size. Please try again.",
+    "getPlannedWork": "Something went wrong while retrieving Planned Work. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3484,8 +3521,11 @@
     "orderId": "Order ID",
     "osEdition": "OS Edition",
     "osType": "OS Type",
+    "outageDurationMinutes": "Outage Duration",
     "parent": "Parent",
     "plan": "Plan",
+    "plannedStart": "Planned Start",
+    "plannedEnd": "Planned End",
     "pod": "POD",
     "podName": "POD Name",
     "portal": "Portal",
@@ -3499,6 +3539,7 @@
     "productType": "Product Type",
     "projectManager": "Project Manager",
     "ram": "RAM",
+    "referenceId": "Reference ID",
     "region": "Region",
     "reservationOrderId": "Reservation Order ID",
     "reservedHours": "Reserved Hours",
@@ -3689,6 +3730,7 @@
     "lastDeployment": "Last Deployment",
     "lastUpdated": "Last Updated",
     "learnMore": "Learn More",
+    "minutes": "Minutes",
     "moduleType": "Module Type",
     "month": "Month",
     "multicastIpAddress":"Multicast IP Address",
