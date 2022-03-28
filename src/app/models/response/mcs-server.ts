@@ -71,6 +71,9 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   public vCloudId: string = undefined;
 
   @JsonProperty()
+  public cpuHotPlugEnabled: boolean = undefined;
+
+  @JsonProperty()
   public vCenterId: string = undefined;
 
   @JsonProperty()

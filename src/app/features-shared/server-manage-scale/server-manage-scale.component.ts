@@ -1,7 +1,8 @@
 import { Subject } from 'rxjs';
 import {
   startWith,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -76,6 +77,7 @@ export class ServerManageScaleComponent
   public fgServerScale: FormGroup;
   public fcCustomMemory: FormControl;
   public fcCustomCpu: FormControl;
+  public fcRestartServer: FormControl;
 
   @Output()
   public dataChange = new EventEmitter<ServerManageScale>();
@@ -85,6 +87,9 @@ export class ServerManageScaleComponent
 
   @Input()
   public serverCompute?: McsServerCompute;
+
+  @Input()
+  public cpuHotPlugEnabled?: boolean;
 
   @Input()
   public get osType(): Os { return this._osType; }
@@ -121,6 +126,7 @@ export class ServerManageScaleComponent
   private _minimumMemoryGB: number;
   private _minimumMemoryByServerType: number = DEFAULT_MIN_MEMORY;
   private _osType: Os = Os.Linux;
+  private _restartServer: boolean;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -146,6 +152,7 @@ export class ServerManageScaleComponent
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
       this._subscribeToFormTouchedState();
+      this._subscribeToRestartServerControlChanges();
     });
   }
 
@@ -268,6 +275,7 @@ export class ServerManageScaleComponent
         this._scaleOutput.valid = true;
         break;
     }
+
     this._scaleOutput.hasChanged = this._scaleOutput.valid
       && (this.serverCpuUsed !== this._scaleOutput.cpuCount
         || this.serverMemoryUsedGB !== this._scaleOutput.memoryGB);
@@ -297,6 +305,7 @@ export class ServerManageScaleComponent
     this.fgServerScale.reset();
     this.fcCustomCpu.setValue(this.serverCpuUsed);
     this.fcCustomMemory.setValue(this.serverMemoryUsedGB);
+    this.fcRestartServer.setValue(false);
   }
 
   /**
@@ -369,6 +378,8 @@ export class ServerManageScaleComponent
       CoreValidators.custom(this._cpuStepIsValid.bind(this), 'cpuStep')
     ]);
 
+    this.fcRestartServer = new FormControl();
+
     // Create form group and bind the form controls
     this.fgServerScale = this._formBuilder.group([]);
     this.fgServerScale.statusChanges.pipe(
@@ -397,6 +408,7 @@ export class ServerManageScaleComponent
   private _registerAutoFormControls(): void {
     this.fgServerScale.removeControl('fcCustomMemory');
     this.fgServerScale.removeControl('fcCustomCpu');
+    this.fgServerScale.removeControl('fcRestartServer');
   }
 
   /**
@@ -405,6 +417,20 @@ export class ServerManageScaleComponent
   private _registerCustomFormControls(): void {
     this.fgServerScale.setControl('fcCustomMemory', this.fcCustomMemory);
     this.fgServerScale.setControl('fcCustomCpu', this.fcCustomCpu);
+    this.fgServerScale.setControl('fcRestartServer', this.fcRestartServer);
+  }
+
+  private _subscribeToRestartServerControlChanges(): void {
+    this.fcRestartServer.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      startWith([null]),
+      tap(() => {
+        this._scaleOutput.restartServer = this.fcRestartServer.value;
+        // Emit changes
+        this.dataChange.emit(this._scaleOutput);
+        this._changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
   }
 
   /**

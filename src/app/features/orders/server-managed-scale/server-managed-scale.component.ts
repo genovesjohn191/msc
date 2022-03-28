@@ -83,6 +83,7 @@ import { ServerManagedScaleService } from './server-managed-scale.service';
 type ScaleManageProperties = {
   cpuCount: number;
   memoryMB: number;
+  restartServer: boolean;
 };
 
 const SCALE_MANAGE_SERVER_REF_ID = Guid.newGuid().toString();
@@ -239,7 +240,8 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
             referenceId: SCALE_MANAGE_SERVER_REF_ID,
             properties: {
               cpuCount: manageScale.cpuCount,
-              memoryMB: convertGbToMb(manageScale.memoryGB)
+              memoryMB: convertGbToMb(manageScale.memoryGB),
+              restartServer: !server.cpuHotPlugEnabled ? true: manageScale.restartServer
             } as ScaleManageProperties,
             serviceId: server.serviceId
           })
@@ -397,6 +399,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    */
   private _resetScaleManagedServerState(): void {
     if (!isNullOrEmpty(this._componentHandler)) {
+      this._manageScale.hasChanged = false;
       this._componentHandler.recreateComponent();
     }
   }

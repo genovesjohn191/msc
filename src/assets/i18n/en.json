@@ -461,7 +461,6 @@
       "label": "Compute Size",
       "description": "This server currently has {{ram}} RAM and {{cpu}} vCPU",
       "contextualHelp": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
-      "warning": "Scaling this server will cause it to restart.",
       "serverChangeAvailableFalse": "This server cannot be modified because it is currently being provisioned.",
       "busy": "This server cannot be scaled because it is currently busy. Scaling can be performed once its current operation has completed."
     },
@@ -1502,7 +1501,6 @@
     "manageScale": {
       "header": "Manage RAM and vCPU",
       "description": "Scaling a server allows for adjustment of RAM and vCPU power.",
-      "warning": "Scaling this server will cause it to restart.",
       "scale": "Scale",
       "cancel": "Cancel",
       "scaling": "Scaling in progress."
@@ -3903,7 +3901,9 @@
     "noStorageProfileUtilisation": "No storage profiles to display.",
     "noAlertTitleDialog": "Unknown Alert",
     "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>",
-    "emptySubscriptionId": "Unable to find the subscription ID for this item. Please ensure that it has a 'CSP Consumption Service' populated in CRISP and that service is properly installed."
+    "emptySubscriptionId": "Unable to find the subscription ID for this item. Please ensure that it has a 'CSP Consumption Service' populated in CRISP and that service is properly installed.",
+    "scaleRestartServer": "CPU Hot Plug is disabled for this server, meaning scaling it will cause it to restart.",
+    "scaleRestartCheckbox": "Restart this server as part of the scaling process."
   },
   "tooltip": {
     "exportWord": "Export Word Document",

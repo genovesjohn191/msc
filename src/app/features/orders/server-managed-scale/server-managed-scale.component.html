@@ -80,6 +80,7 @@
                 [serverCompute]="fcManageServer?.value?.compute"
                 [minimumCpu]="minimumCpu"
                 [minimumMemoryGB]="minimumMemoryGB"
+                [cpuHotPlugEnabled]="fcManageServer?.value?.cpuHotPlugEnabled"
                 [mcsContextualHelp]="'orderServerManagedScale.vmDetails.contextualHelp' | translate"
                 (dataChange)="onScaleChanged($event, fcManageServer?.value)">
   
@@ -87,8 +88,9 @@
                   <h2>{{ 'orderServerManagedScale.vmDetails.label' | translate }}</h2>
                 </ng-container>
               </mcs-server-manage-scale>
-              <mcs-data-status-warning *ngIf="fcManageServer?.value?.isPoweredOn">
-                <span>{{ 'orderServerManagedScale.vmDetails.warning' | translate }}</span>
+
+              <mcs-data-status-warning *ngIf="!fcManageServer?.value?.cpuHotPlugEnabled">
+                <span>{{ 'message.scaleRestartServer' | translate }}</span>
               </mcs-data-status-warning>
             </div>
           </div>
