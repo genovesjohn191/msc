@@ -99,6 +99,33 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
+  "launchPadNetworkDbVlanDetails": {
+    "enumKey": "LaunchPadNetworkDbVlanDetails",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "launch-pad/network-db/vlan-db/vlans",
+    "documentTitle": "LaunchPad - VLAN DB VLAN Details",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbVlanDetailsOverview": {
+    "enumKey": "LaunchPadNetworkDbVlanDetailsOverview",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "overview",
+    "documentTitle": "LaunchPad - VLAN DB VLAN Overview",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
+  "launchPadNetworkDbVlanDetailsEvents": {
+    "enumKey": "LaunchPadNetworkDbVlanDetailsEvents",
+    "enumCategory": "LaunchPadVlanDb",
+    "navigationPath": "events",
+    "documentTitle": "LaunchPad - VLAN DB VLAN Events",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
+    "requireAllFeatures": true
+  },
   "launchPadNetworkDbVnis": {
     "enumKey": "LaunchPadNetworkDbVnis",
     "enumCategory": "LaunchPadVlanDb",

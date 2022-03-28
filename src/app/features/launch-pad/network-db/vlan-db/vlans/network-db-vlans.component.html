@@ -171,7 +171,13 @@
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
           [disabled]="dataSource?.isInProgress$ | async"></tr>
-        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          (click)="navigateToVlan(row)"
+          mcsId="vlan-{{ row.number }}"
+          mcsEventTracker="navigate-to-vlan"
+          mcsEventCategory="launchpad-network-db"
+          mcsEventLabel="vlans-listing-page"></tr>
       </table>
 
       <!-- Table Statuses -->
@@ -189,7 +195,7 @@
               mcsId
               mcsEventTracker="retry-loading-network-db-site-list"
               mcsEventCategory="launchpad-network-db"
-              mcsEventLabel="pod-listing-page">{{ 'networkDb.vlans.retry' | translate }}</a>.
+              mcsEventLabel="vlans-listing-page">{{ 'networkDb.vlans.retry' | translate }}</a>.
           </div>
         </div>
       </mcs-item>

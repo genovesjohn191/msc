@@ -3,12 +3,38 @@ import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 
 import { AzureDeploymentCreateComponent } from './azure-deployments/azure-deployment-create/azure-deployment-create.component';
-import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/history/azure-deployment-history.component';
 import { AzureDeploymentComponent } from './azure-deployments/azure-deployment/azure-deployment.component';
 import { AzureDeploymentResolver } from './azure-deployments/azure-deployment/azure-deployment.resolver';
+import { AzureDeploymentActivitiesComponent } from './azure-deployments/azure-deployment/history/azure-deployment-history.component';
 import { AzureDeploymentOverviewComponent } from './azure-deployments/azure-deployment/overview/azure-deployment-overview.component';
 import { AzureDeploymentsComponent } from './azure-deployments/azure-deployments.component';
+import { CrispOrdersComponent } from './dashboard/orders/crisp-orders.component';
+import { CrispOrderDetailsComponent } from './dashboard/orders/order/crisp-order-details.component';
+import { CrispOrderResolver } from './dashboard/orders/order/crisp-order.resolver';
+import { CrispOrderElementsComponent } from './dashboard/orders/order/elements/crisp-order-elements.component';
+import { DashboardProjectsComponent } from './dashboard/projects/dashboard-projects.component';
+import { DashboardProjectDetailsComponent } from './dashboard/projects/project/dashboard-project-details.component';
+import { DashboardProjectResolver } from './dashboard/projects/project/dashboard-project.resolver';
+import { DashboardProjectTasksComponent } from './dashboard/projects/project/tasks/dashboard-project-tasks.component';
 import { LaunchPadGuard } from './launch-pad.guard';
+import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
+import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
+import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
+import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
+import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
+import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
+import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.component';
+import { NetworkDbNetworkEditComponent } from './network-db/vlan-db/network/edit/network-edit.component';
+import { NetworkDbNetworkEventsComponent } from './network-db/vlan-db/network/events/network-db-network-events.component';
+import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/network-db-network.component';
+import { NetworkDbNetworkDetailsResolver } from './network-db/vlan-db/network/network-db-network.resolver';
+import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/overview/network-db-network-overview.component';
+import { NetworkDbNetworkVlansComponent } from './network-db/vlan-db/network/vlans/network-db-network-vlans.component';
+import { NetworkDbVlansComponent } from './network-db/vlan-db/vlans/network-db-vlans.component';
+import { NetworkVlanEventsComponent } from './network-db/vlan-db/vlans/vlan/events/vlan-events.component';
+import { NetworkVlanComponent } from './network-db/vlan-db/vlans/vlan/network-vlan.component';
+import { NetworkVlanResolver } from './network-db/vlan-db/vlans/vlan/network-vlan.resolver';
+import { NetworkVlanOverviewComponent } from './network-db/vlan-db/vlans/vlan/overview/vlan-overview.component';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
 import {
   companyIdParam,
@@ -18,28 +44,6 @@ import {
   worklowGroupIdParam,
   LaunchPadWorkflowLaunchComponent
 } from './workflows/workflow-launch.component';
-import { NetworkDbPodsComponent } from './network-db/network-db-pods.component';
-import { NetworkDbSitesComponent } from './network-db/network-db-sites.component';
-import { NetworkDbVlansComponent } from './network-db/vlan-db/network-db-vlans.component';
-import { NetworkDbVnisComponent } from './network-db/vlan-db/network-db-vnis.component';
-import { NetworkDbUseCasesComponent } from './network-db/vlan-db/network-db-use-cases.component';
-import { NetworkDbMulticastIpsComponent } from './network-db/vlan-db/network-db-multicast-ips.component';
-import { NetworkDbNetworksComponent } from './network-db/vlan-db/network-db-networks.component';
-import { CrispOrdersComponent } from './dashboard/orders/crisp-orders.component';
-import { CrispOrderDetailsComponent } from './dashboard/orders/order/crisp-order-details.component';
-import { CrispOrderElementsComponent } from './dashboard/orders/order/elements/crisp-order-elements.component';
-import { CrispOrderResolver } from './dashboard/orders/order/crisp-order.resolver';
-import { DashboardProjectsComponent } from './dashboard/projects/dashboard-projects.component';
-import { DashboardProjectResolver } from './dashboard/projects/project/dashboard-project.resolver';
-import { DashboardProjectDetailsComponent } from './dashboard/projects/project/dashboard-project-details.component';
-import { DashboardProjectTasksComponent } from './dashboard/projects/project/tasks/dashboard-project-tasks.component';
-import { NetworkDbNetworkDetailsComponent } from './network-db/vlan-db/network/network-db-network.component';
-import { NetworkDbNetworkDetailsResolver } from './network-db/vlan-db/network/network-db-network.resolver';
-import { NetworkDbNetworkCreateComponent } from './network-db/vlan-db/network-create/network-create.component';
-import { NetworkDbNetworkOverviewComponent } from './network-db/vlan-db/network/overview/network-db-network-overview.component';
-import { NetworkDbNetworkEventsComponent } from './network-db/vlan-db/network/events/network-db-network-events.component';
-import { NetworkDbNetworkEditComponent } from './network-db/vlan-db/network/edit/network-edit.component';
-import { NetworkDbNetworkVlansComponent } from './network-db/vlan-db/network/vlans/network-db-network-vlans.component';
 
 /**
  * List of routes for the main module
@@ -114,6 +118,31 @@ export const launchPadRoutes: Routes = [
     component: NetworkDbVlansComponent,
     data: { routeId: RouteKey.LaunchPadNetworkDbVlans },
     canActivate: [ LaunchPadGuard ]
+  },
+  {
+    path: 'network-db/vlan-db/vlans/:id',
+    component: NetworkVlanComponent,
+    data: { routeId: RouteKey.LaunchPadNetworkDbVlanDetails },
+    canActivate: [ LaunchPadGuard ],
+    resolve: { vlan: NetworkVlanResolver },
+    children: [
+      {
+        path: '',
+        redirectTo: 'overview',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.LaunchPadNetworkDbVlanDetailsOverview }
+      },
+      {
+        path: 'overview',
+        component: NetworkVlanOverviewComponent,
+        data: { routeId: RouteKey.LaunchPadNetworkDbVlanDetailsOverview }
+      },
+      {
+        path: 'events',
+        component: NetworkVlanEventsComponent,
+        data: { routeId: RouteKey.LaunchPadNetworkDbVlanDetailsEvents }
+      }
+    ]
   },
   {
     path: 'network-db/vlan-db/vnis',

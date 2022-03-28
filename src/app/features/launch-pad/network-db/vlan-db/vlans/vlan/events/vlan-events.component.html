@@ -1,0 +1,72 @@
+<mcs-presentation-panel mcsId="vlan-events">
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ 'label.events' | translate }}</h2>
+  </ng-container>
+
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.action' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <span [innerHTML]="row.action | mcsDataLabel: 'Unknown'"></span>
+      </td>
+    </ng-container>
+
+    <!-- User Column -->
+    <ng-container matColumnDef="user">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'columnHeader.user' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <span [innerHTML]="row.user | mcsDataLabel: 'Unknown'"></span>
+      </td>
+    </ng-container>
+
+    <!-- Network Name Column -->
+    <ng-container matColumnDef="networkName">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.networkName' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span [innerHTML]="row.networkName | mcsDataLabel: 'Unknown'"></span>
+      </td>
+    </ng-container>
+
+    <!-- Nework Service Id Column -->
+    <ng-container matColumnDef="networkServiceId">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.networkServiceId' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span [innerHTML]="row.networkServiceId | mcsDataLabel: 'None'"></span>
+      </td>
+    </ng-container>
+
+    <!-- Network Company Id Column -->
+    <ng-container matColumnDef="networkCompanyId">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.networkCompanyId' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span [innerHTML]="row.networkCompanyId | mcsDataLabel: 'None'"></span>
+      </td>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.date' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span [innerHTML]="(row.date | mcsStdDateFormat) | mcsDataLabel: 'Unknown'"></span>
+      </td>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+  </table>
+</mcs-presentation-panel>
