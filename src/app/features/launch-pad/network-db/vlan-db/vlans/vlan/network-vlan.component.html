@@ -1,0 +1,25 @@
+<mcs-page *ngIf="vlan$ | async as vlan" [header]="getTitle(vlan)">
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <mcs-action-item mcsId mcsAlign="end"
+        [mcsRouterLink]="routeKeyEnum.LaunchPadNetworkDbVlanDetails"
+        mcsEventTracker="navigate-to-network-vlan-listing"
+        mcsEventCategory="network-db"
+        mcsEventLabel="network-db-vlan-page">
+        <mcs-icon key="chevron-left-svg" size="small"></mcs-icon>
+        <span>{{ 'label.backToNetworkVlans' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-tab-group [selectedTabId]="tabEvents?.selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+      <mcs-tab [label]="'label.overview' | translate" id="overview"></mcs-tab>
+      <mcs-tab [label]="'label.events' | translate" id="events"></mcs-tab>
+    </mcs-tab-group>
+
+    <div class="routing-tab-content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

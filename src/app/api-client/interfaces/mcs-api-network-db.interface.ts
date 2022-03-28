@@ -3,23 +3,24 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsJob,
+  McsNetworkDbMazAaQueryParams,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
+  McsNetworkDbNetworkDelete,
   McsNetworkDbNetworkEvent,
   McsNetworkDbNetworkQueryParams,
+  McsNetworkDbNetworkReserve,
+  McsNetworkDbNetworkUpdate,
   McsNetworkDbPod,
+  McsNetworkDbPodMazAa,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
   McsNetworkDbVlan,
-  McsNetworkDbVni,
-  McsQueryParam,
-  McsNetworkDbNetworkDelete,
-  McsNetworkDbNetworkUpdate,
   McsNetworkDbVlanAction,
-  McsNetworkDbNetworkReserve,
-  McsNetworkDbMazAaQueryParams,
-  McsNetworkDbPodMazAa
+  McsNetworkDbVlanEvent,
+  McsNetworkDbVni,
+  McsQueryParam
 } from '@app/models';
 
 export interface IMcsApiNetworkDbService {
@@ -41,6 +42,18 @@ export interface IMcsApiNetworkDbService {
    * @param query Query predicate that serves as the parameter of the endpoint
    */
   getVlans(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbVlan[]>>;
+
+  /**
+   * Get the details of the VLAN
+   * @param id The VLAN's Id
+   */
+   getVlan(id: number): Observable<McsApiSuccessResponse<McsNetworkDbVlan>>;
+
+  /**
+   * Get network VLAN Events
+   * @param id The VLAN's Id
+   */
+  getVlanEvents(id: number): Observable<McsApiSuccessResponse<McsNetworkDbVlanEvent[]>>;
 
   /**
    * Get all the VNIs
@@ -65,7 +78,7 @@ export interface IMcsApiNetworkDbService {
    * @param query Query predicate that serves as the parameter of the endpoint
    */
   getNetworks(query?: McsNetworkDbNetworkQueryParams, optionalHeaders?: Map<string, any>):
-  Observable<McsApiSuccessResponse<McsNetworkDbNetwork[]>>;
+    Observable<McsApiSuccessResponse<McsNetworkDbNetwork[]>>;
 
   /**
    * Get network by ID (MCS API Response)
@@ -83,7 +96,7 @@ export interface IMcsApiNetworkDbService {
    * This will edit a network
    * @param payload Network data to update
    */
-   updateNetwork(id: string, payload: McsNetworkDbNetworkUpdate): Observable<McsApiSuccessResponse<McsJob>>;
+  updateNetwork(id: string, payload: McsNetworkDbNetworkUpdate): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * This will delete an existing network
@@ -123,5 +136,5 @@ export interface IMcsApiNetworkDbService {
    * @param id vlan id to recycle
    * @param payload client reference object data
    */
-   reserveNetworkVlan(id: string, payload: McsNetworkDbNetworkReserve): Observable<McsApiSuccessResponse<McsJob>>;
+  reserveNetworkVlan(id: string, payload: McsNetworkDbNetworkReserve): Observable<McsApiSuccessResponse<McsJob>>;
 }

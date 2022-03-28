@@ -15,14 +15,13 @@ import {
 } from '@angular/core';
 import {
   IMcsApiAccountService,
+  IMcsApiApplicationRecoveryService,
   IMcsApiAuthService,
   IMcsApiAvailabilityZonesService,
+  IMcsApiAzureManagementServicesService,
   IMcsApiAzureReservationsService,
   IMcsApiAzureResourcesService,
   IMcsApiAzureServicesService,
-  IMcsApiAzureManagementServicesService,
-  IMcsApiExtendersService,
-  IMcsApiApplicationRecoveryService,
   IMcsApiAzureSoftwareSubscriptionsService,
   IMcsApiBatsService,
   IMcsApiCatalogService,
@@ -30,6 +29,7 @@ import {
   IMcsApiColocationsService,
   IMcsApiCompaniesService,
   IMcsApiConsoleService,
+  IMcsApiExtendersService,
   IMcsApiFirewallsService,
   IMcsApiIdentityService,
   IMcsApiJobsService,
@@ -40,6 +40,7 @@ import {
   IMcsApiNetworkDbService,
   IMcsApiNetworkDnsService,
   IMcsApiOrdersService,
+  IMcsApiPlannedWorkService,
   IMcsApiPlatformService,
   IMcsApiReportsService,
   IMcsApiResourcesService,
@@ -52,14 +53,13 @@ import {
   IMcsApiVmSizesService,
   IMcsApiWorkflowsService,
   McsApiAccountFactory,
+  McsApiApplicationRecoveryFactory,
   McsApiAuthFactory,
   McsApiAvailabilityZonesFactory,
+  McsApiAzureManagementServicesFactory,
   McsApiAzureReservationsFactory,
   McsApiAzureResourceFactory,
   McsApiAzureServicesFactory,
-  McsApiAzureManagementServicesFactory,
-  McsApiExtendersFactory,
-  McsApiApplicationRecoveryFactory,
   McsApiAzureSoftwareSubscriptionsFactory,
   McsApiBatsFactory,
   McsApiCatalogFactory,
@@ -67,6 +67,7 @@ import {
   McsApiColocationsFactory,
   McsApiCompaniesFactory,
   McsApiConsoleFactory,
+  McsApiExtendersFactory,
   McsApiFirewallsFactory,
   McsApiIdentityFactory,
   McsApiJobsFactory,
@@ -77,6 +78,7 @@ import {
   McsApiNetworkDbFactory,
   McsApiNetworkDnsFactory,
   McsApiOrdersFactory,
+  McsApiPlannedWorkFactory,
   McsApiPlatformFactory,
   McsApiReportsFactory,
   McsApiResourcesFactory,
@@ -87,9 +89,7 @@ import {
   McsApiTicketsFactory,
   McsApiToolsFactory,
   McsApiVmSizesFactory,
-  McsApiWorkflowsFactory,
-  IMcsApiPlannedWorkService,
-  McsApiPlannedWorkFactory
+  McsApiWorkflowsFactory
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -108,17 +108,16 @@ import {
   McsApiErrorContext,
   McsApiErrorResponse,
   McsApiSuccessResponse,
+  McsApplicationRecovery,
   McsAvailabilityZone,
   McsAzureDeploymentsQueryParams,
+  McsAzureManagementService,
+  McsAzureManagementServiceChild,
   McsAzureReservation,
   McsAzureResource,
   McsAzureResourceQueryParams,
   McsAzureService,
   McsAzureServicesRequestParams,
-  McsAzureManagementService,
-  McsAzureManagementServiceChild,
-  McsExtenderService,
-  McsApplicationRecovery,
   McsAzureSoftwareSubscription,
   McsBackUpAggregationTarget,
   McsBatLinkedService,
@@ -139,7 +138,10 @@ import {
   McsCompany,
   McsConsole,
   McsEntityRequester,
+  McsExtenderService,
   McsFirewall,
+  McsFirewallFortiAnalyzer,
+  McsFirewallFortiManager,
   McsFirewallPolicy,
   McsIdentity,
   McsInternetPort,
@@ -147,6 +149,7 @@ import {
   McsJobConnection,
   McsKeyValue,
   McsLicense,
+  McsLocation,
   McsNetworkDbMazAaQueryParams,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
@@ -162,16 +165,21 @@ import {
   McsNetworkDbUseCase,
   McsNetworkDbVlan,
   McsNetworkDbVlanAction,
+  McsNetworkDbVlanEvent,
   McsNetworkDbVni,
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
   McsNetworkDnsSummary,
+  McsNetworkDnsZone,
+  McsNetworkDnsZoneTtlRequest,
+  McsNetworkVdcPrecheckVlan,
   McsObjectCrispElement,
+  McsObjectCrispObject,
   McsObjectCrispOrder,
   McsObjectCrispOrderQueryParams,
   McsObjectInstalledService,
-  McsNetworkVdcPrecheckVlan,
   McsObjectProject,
+  McsObjectProjectParams,
   McsObjectProjectTasks,
   McsObjectQueryParams,
   McsObjectVdcQueryParams,
@@ -182,6 +190,8 @@ import {
   McsOrderItem,
   McsOrderItemType,
   McsOrderWorkflow,
+  McsPlannedWork,
+  McsPlannedWorkQueryParams,
   McsPlatform,
   McsPortal,
   McsQueryParam,
@@ -189,21 +199,26 @@ import {
   McsReportAuditAlerts,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
+  McsReportComputeResourceTotals,
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportInefficientVms,
+  McsReportInefficientVmParams,
   McsReportIntegerData,
   McsReportManagementService,
   McsReportMonitoringAndAlerting,
   McsReportParams,
   McsReportPlatformSecurityAdvisories,
+  McsReportRecentServiceRequestSlt,
   McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
   McsReportServiceChangeInfo,
+  McsReportStorageResourceUtilisation,
   McsReportSubscription,
   McsReportTopVmsByCost,
   McsReportUpdateManagement,
+  McsReportUpdateManagementParams,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
   McsReservationProductType,
@@ -218,7 +233,6 @@ import {
   McsResourceNetwork,
   McsResourceStorage,
   McsResourceVApp,
-  McsRightSizingQueryParams,
   McsServer,
   McsServerAttachMedia,
   McsServerBackupServer,
@@ -280,22 +294,8 @@ import {
   McsTicketCreateComment,
   McsTicketQueryParams,
   McsValidation,
-  McsWorkflowCreate,
-  McsReportComputeResourceTotals,
-  McsReportStorageResourceUtilisation,
-  McsObjectProjectParams,
-  McsReportRecentServiceRequestSlt,
-  McsObjectCrispObject,
-  McsNetworkDnsZone,
-  McsNetworkDnsZoneTtlRequest,
-  McsLocation,
   McsVmSize,
-  McsFirewallFortiManager,
-  McsFirewallFortiAnalyzer,
-  McsReportInefficientVmParams,
-  McsReportUpdateManagementParams,
-  McsPlannedWork,
-  McsPlannedWorkQueryParams
+  McsWorkflowCreate
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -307,16 +307,16 @@ import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsRepository } from './core/mcs-repository.interface';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
+import { McsApplicationRecoveryRepository } from './repositories/mcs-application-recovery.repository';
+import { McsAzureManagementServicesRepository } from './repositories/mcs-azure-management-services.repository';
 import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
-import { McsAzureManagementServicesRepository } from './repositories/mcs-azure-management-services.repository';
-import { McsExtendersRepository } from './repositories/mcs-extenders.repository';
-import { McsApplicationRecoveryRepository } from './repositories/mcs-application-recovery.repository';
 import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
+import { McsExtendersRepository } from './repositories/mcs-extenders.repository';
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
@@ -1830,7 +1830,7 @@ export class McsApiService {
 
   public getAzureResources(query?: McsAzureResourceQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiCollection<McsAzureResource>> {
-    
+
     if (!isNullOrEmpty(optionalHeaders)) {
       return this._azureResourcesApi.getAzureResources(query, optionalHeaders).pipe(
         catchError((error) =>
@@ -2587,6 +2587,25 @@ export class McsApiService {
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
+
+  public getNetworkDbVlan(id: number): Observable<McsNetworkDbVlan> {
+    return this._networkDbApi.getVlan(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbVlan'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getNetworkDbVlanEvents(id: number): Observable<McsApiCollection<McsNetworkDbVlanEvent>> {
+    return this._networkDbApi.getVlanEvents(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVlanEvents'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
 
   public getNetworkDbVnis(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbVni>> {
     return this._networkDbApi.getVnis(query, optionalHeaders).pipe(

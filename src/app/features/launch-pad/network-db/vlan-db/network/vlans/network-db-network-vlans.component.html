@@ -124,7 +124,7 @@
                             </mcs-field-select-tree-view>
                     </mcs-item>
                 </div>
-                
+
                 <div *ngIf="!processingReservation && !hasReservationError" style="margin-top: 15px; width: 100%;" mcsAlign="end">
                     <button mat-raised-button color="primary"
                         [disabled]="!isValidPayload"
@@ -144,7 +144,7 @@
                     <br />
                     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                   </div>
-          
+
                   <div *ngIf="hasReservationError">
                     <mcs-status-message type="error">
                       {{ watchedReservationJob?.errorMessage || 'networkDb.vlans.reserveErrorMessage' | translate }}

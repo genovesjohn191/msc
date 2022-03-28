@@ -1,4 +1,13 @@
 import {
+  throwError,
+  Observable
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   Component,
   Injector,
@@ -7,29 +16,20 @@ import {
 } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
-
-import {
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsPageBase,
   McsTableDataSource2
 } from '@app/core';
 import {
+  networkDbVlanStatusText,
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
   McsNetworkDbVlan,
   NetworkDbVlanStatus,
-  networkDbVlanStatusText,
   RouteKey
 } from '@app/models';
-import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
   Paginator,
@@ -46,7 +46,7 @@ import {
   templateUrl: './network-db-vlans.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbVlansComponent implements OnDestroy {
+export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbVlan>;
   public isSorting: boolean;
@@ -68,9 +68,9 @@ export class NetworkDbVlansComponent implements OnDestroy {
   ];
 
   public constructor(
-    _injector: Injector,
-    private _apiService: McsApiService
+    injector: Injector,
   ) {
+    super(injector);
     this.dataSource = new McsTableDataSource2<McsNetworkDbVlan>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
   }
@@ -119,6 +119,10 @@ export class NetworkDbVlansComponent implements OnDestroy {
     this.retryDatasource();
   }
 
+  public navigateToVlan(vlan: McsNetworkDbVlan): void {
+    this.navigation.navigateTo(RouteKey.LaunchPadNetworkDbVlanDetails, [vlan.id?.toString()]);
+  }
+
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbVlan>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
@@ -127,7 +131,7 @@ export class NetworkDbVlansComponent implements OnDestroy {
     queryParam.sortDirection = this._sortDirection;
     queryParam.sortField = this._sortField;
 
-    return this._apiService.getNetworkDbVlans(queryParam).pipe(
+    return this.apiService.getNetworkDbVlans(queryParam).pipe(
       catchError((error) => {
         this.isSorting = false;
         return throwError(error);

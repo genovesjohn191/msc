@@ -357,6 +357,7 @@ export * from './response/mcs-network-db-network-event';
 export * from './response/mcs-network-db-pod';
 export * from './response/mcs-network-db-use-case';
 export * from './response/mcs-network-db-vlan';
+export * from './response/mcs-network-db-vlan-event';
 export * from './response/mcs-network-db-vni';
 export * from './response/mcs-network-db-site';
 export * from './response/mcs-network-db-pod-maz-aa';

@@ -3410,6 +3410,8 @@
     "inProgress": "Processing request..."
   },
   "columnHeader": {
+    "networkServiceId": "Network Service ID",
+    "networkCompanyId": "Network Company ID",
     "value": "Value",
     "associatedServer": "Associated Server",
     "autoRenewal": "Auto Renewal",
@@ -3620,6 +3622,8 @@
     "enabled": "Enabled"
   },
   "label": {
+    "basicInformation": "Basic Information",
+    "backToNetworkVlans": "Back To Network VLANS",
     "server": "Server",
     "view-console": "View Console",
     "vm-console": "VM Console",

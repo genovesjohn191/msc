@@ -1,34 +1,37 @@
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  isNullOrEmpty,
-  serializeObjectToJson
-} from '@app/utilities';
+
+import { Injectable } from '@angular/core';
 import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
   McsJob,
+  McsNetworkDbMazAaQueryParams,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
   McsNetworkDbNetworkCreate,
+  McsNetworkDbNetworkDelete,
   McsNetworkDbNetworkEvent,
   McsNetworkDbNetworkQueryParams,
+  McsNetworkDbNetworkReserve,
+  McsNetworkDbNetworkUpdate,
   McsNetworkDbPod,
+  McsNetworkDbPodMazAa,
   McsNetworkDbSite,
   McsNetworkDbUseCase,
   McsNetworkDbVlan,
-  McsNetworkDbVni,
-  McsQueryParam,
-  McsNetworkDbNetworkDelete,
-  McsNetworkDbNetworkUpdate,
   McsNetworkDbVlanAction,
-  McsNetworkDbNetworkReserve,
-  McsNetworkDbMazAaQueryParams,
-  McsNetworkDbPodMazAa
+  McsNetworkDbVlanEvent,
+  McsNetworkDbVni,
+  McsQueryParam
 } from '@app/models';
-import { McsApiClientHttpService } from '../mcs-api-client-http.service';
+import {
+  isNullOrEmpty,
+  serializeObjectToJson
+} from '@app/utilities';
+
 import { IMcsApiNetworkDbService } from '../interfaces/mcs-api-network-db.interface';
+import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 
 @Injectable()
 export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
@@ -87,6 +90,36 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsNetworkDbVlan[]>(McsNetworkDbVlan, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getVlan(id: number): Observable<McsApiSuccessResponse<McsNetworkDbVlan>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/vlans/${id}`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsNetworkDbVlan>(McsNetworkDbVlan, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getVlanEvents(id: number): Observable<McsApiSuccessResponse<McsNetworkDbVlanEvent[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/network-db/vlans/${id}/events`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsNetworkDbVlanEvent[]>(McsNetworkDbVlanEvent, response);
           return apiResponse;
         })
       );
