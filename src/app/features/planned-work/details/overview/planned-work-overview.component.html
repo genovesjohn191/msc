@@ -1,0 +1,92 @@
+<ng-container *ngIf="selectedPlannedWork$ | async as selectedPlannedWork">
+  <mcs-grid-row>
+    <!-- Basic Information -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="basic-information">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'plannedWorkListing.details.overview.basicInformation.label' | translate }}</h2>
+        </ng-container>
+          <mcs-item>
+            <span>{{ 'plannedWorkListing.details.overview.basicInformation.referenceId' | translate }}</span>
+            <span [innerHTML]="selectedPlannedWork.referenceId | mcsDataLabel: 'Unknown'"></span>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'plannedWorkListing.details.overview.basicInformation.status' | translate }}</span>
+            <span [innerHTML]="selectedPlannedWork.statusLabel | mcsDataLabel: 'Unknown'"></span>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'plannedWorkListing.details.overview.basicInformation.type' | translate }}</span>
+            <span [innerHTML]="selectedPlannedWork.typeLabel | mcsDataLabel: 'Unknown'"></span>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'plannedWorkListing.details.overview.basicInformation.summary' | translate }}</span>
+          </mcs-item>
+          <mcs-item>
+            <span [innerHTML]="selectedPlannedWork.summary | mcsDataLabel: 'None'"></span>
+          </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+
+    <!-- Schedule -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="schedule">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'plannedWorkListing.details.overview.schedule.label' | translate }}</h2>
+        </ng-container>
+          <mcs-item>
+            <span>{{ 'plannedWorkListing.details.overview.schedule.plannedStart' | translate }}</span>
+            <ng-container *ngIf="(selectedPlannedWork.plannedStart); else NoPlannedStart">
+              <mcs-item>
+                <div>
+                  <span>{{ selectedPlannedWork.plannedStart | mcsStdDateFormat }}</span>
+                </div>
+                <span class="material-icons" [matTooltip]="timeZone">info_outline</span>
+              </mcs-item>
+            </ng-container>
+            <ng-template #NoPlannedStart>
+              <span [mcsGreyedOut]="true">{{'plannedWorkListing.noScheduleDate' | translate}}</span>
+            </ng-template>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'plannedWorkListing.details.overview.schedule.plannedEnd' | translate }}</span>
+            <ng-container *ngIf="(selectedPlannedWork.plannedEnd); else NoPlannedEnd">
+              <mcs-item>
+                <div>
+                  <span>{{ selectedPlannedWork.plannedEnd | mcsStdDateFormat }}</span>
+                </div>
+                <span class="material-icons" [matTooltip]="timeZone">info_outline</span>
+              </mcs-item>
+            </ng-container>
+            <ng-template #NoPlannedEnd>
+              <span [mcsGreyedOut]="true">{{'plannedWorkListing.noScheduleDate' | translate}}</span>
+            </ng-template>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'plannedWorkListing.details.overview.schedule.outageDurationMinutes' | translate }}</span>
+            <ng-container *ngIf="(selectedPlannedWork.outageDuration !== null && selectedPlannedWork.outageDuration !== undefined); else NoOutageDuration">
+              <mcs-item>
+                <span>{{ selectedPlannedWork.outageDuration }} {{ 'label.minutes' | translate }}</span>
+              </mcs-item>
+            </ng-container>
+            <ng-template #NoOutageDuration>
+              <span [mcsGreyedOut]="true">{{'plannedWorkListing.noOutageDuration' | translate}}</span>
+            </ng-template>
+          </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+  <mcs-grid-row>
+    <!-- Description  -->
+    <mcs-grid-column sizeSm="12" hidden-small>
+      <mcs-presentation-panel mcsId="description">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'plannedWorkListing.details.overview.description.label' | translate }}</h2>
+        </ng-container>
+
+        <div>
+          <span [innerHTML]="selectedPlannedWork.description | mcsDataLabel: 'None'"></span>
+        </div>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</ng-container>

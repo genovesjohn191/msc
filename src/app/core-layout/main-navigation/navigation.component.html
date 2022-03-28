@@ -566,6 +566,18 @@
         </a>
       </li>
 
+      <!-- Planned Work -->
+      <li *mcsAccessControl="[]; feature: ['enablePlannedWork']">
+        <a [mcsRouterLink]="routeKeyEnum.PlannedWorkListing"
+          mcsId="planned-work-listing-link"
+          mcsEventTracker="navigate-to-planned-work-listing"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          mcsRouterLinkActive="active">
+          Planned Work
+        </a>
+      </li>
+
       <!-- Logout -->
       <li>
         <a mcsCursor="pointer" (click)="logout($event)"

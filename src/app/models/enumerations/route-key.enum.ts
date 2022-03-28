@@ -86,6 +86,10 @@ export enum RouteKey {
   Notifications,
   Notification,
 
+  PlannedWorkListing,
+  PlannedWorkDetails,
+  PlannedWorkDetailsOverview,
+
   ProductDetails, // Deprecated
 
   Catalog,

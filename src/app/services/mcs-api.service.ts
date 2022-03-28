@@ -87,7 +87,9 @@ import {
   McsApiTicketsFactory,
   McsApiToolsFactory,
   McsApiVmSizesFactory,
-  McsApiWorkflowsFactory
+  McsApiWorkflowsFactory,
+  IMcsApiPlannedWorkService,
+  McsApiPlannedWorkFactory
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -291,7 +293,9 @@ import {
   McsFirewallFortiManager,
   McsFirewallFortiAnalyzer,
   McsReportInefficientVmParams,
-  McsReportUpdateManagementParams
+  McsReportUpdateManagementParams,
+  McsPlannedWork,
+  McsPlannedWorkQueryParams
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -391,6 +395,7 @@ export class McsApiService {
   private readonly _tenantsApi: IMcsApiTenantsService;
   private readonly _terraformApi: IMcsApiTerraformService;
   private readonly _ticketsApi: IMcsApiTicketsService;
+  private readonly _plannedWorkApi: IMcsApiPlannedWorkService;
   private readonly _toolsService: IMcsApiToolsService;
   private readonly _vmSizesApi: IMcsApiVmSizesService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
@@ -454,6 +459,7 @@ export class McsApiService {
     this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
     this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
+    this._plannedWorkApi = apiClientFactory.getService(new McsApiPlannedWorkFactory());
     this._platformApi = apiClientFactory.getService(new McsApiPlatformFactory());
     this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
     this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
@@ -2732,6 +2738,24 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSoftwareSubscritionProductTypes'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getPlannedWork(query?: McsPlannedWorkQueryParams): Observable<McsApiCollection<McsPlannedWork>> {
+    return this._plannedWorkApi.getPlannedWork(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPlannedWork'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getPlannedWorkById(id: string): Observable<McsPlannedWork> {
+    return this._plannedWorkApi.getPlannedWorkById(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPlannedWork'))
+      )
     );
   }
 
