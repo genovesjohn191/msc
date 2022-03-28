@@ -107,6 +107,11 @@
             {{ 'serverShared.manageScale.errors.cpuInvalid' | translate: {step: cpuStep} }}
         </mcs-error>
       </mcs-form-field>
+
+      <mcs-checkbox *ngIf="cpuHotPlugEnabled"
+        [formControl]="fcRestartServer">
+        <div>{{ 'message.scaleRestartCheckbox' | translate }}</div>
+      </mcs-checkbox>
     </mcs-section>
   </div>
 </form>

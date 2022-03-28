@@ -247,7 +247,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         clientReferenceObject: {
           serverId: server.id,
           memoryMB: convertGbToMb(this.manageScale.memoryGB),
-          cpuCount: this.manageScale.cpuCount
+          cpuCount: this.manageScale.cpuCount,
+          restartServer: !server.cpuHotPlugEnabled ? true: this.manageScale.restartServer
         }
       })
     ).subscribe();

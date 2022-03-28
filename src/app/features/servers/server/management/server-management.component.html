@@ -339,14 +339,15 @@
           [osType]="server?.operatingSystem?.type"
           [resource]="resource$ | async"
           [serverCompute]="server.compute"
+          [cpuHotPlugEnabled]="server.cpuHotPlugEnabled"
           (dataChange)="onScaleChanged($event)">
           <ng-container mcsManageScaleHeader>
             <h2>Scaling {{ server.name }}</h2>
           </ng-container>
         </mcs-server-manage-scale>
 
-        <mcs-data-status-warning *ngIf="server.isPoweredOn">
-          <span>{{ 'serverManagement.manageScale.warning' | translate }}</span>
+        <mcs-data-status-warning *ngIf="!server.cpuHotPlugEnabled">
+          <span>{{ 'message.scaleRestartServer' | translate }}</span>
         </mcs-data-status-warning>
 
         <div class="action-items">

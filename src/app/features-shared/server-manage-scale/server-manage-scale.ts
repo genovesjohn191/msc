@@ -3,4 +3,5 @@ export class ServerManageScale {
   public cpuCount: number;
   public valid: boolean;
   public hasChanged: boolean;
+  public restartServer: boolean;
 }
