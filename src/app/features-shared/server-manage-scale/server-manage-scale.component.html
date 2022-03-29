@@ -108,10 +108,11 @@
         </mcs-error>
       </mcs-form-field>
 
-      <mcs-checkbox *ngIf="cpuHotPlugEnabled"
+      <!-- Comment out for now.  Blocked on Orch - FUSION 3445 and 3449-->
+      <!-- <mcs-checkbox *ngIf="cpuHotPlugEnabled"
         [formControl]="fcRestartServer">
         <div>{{ 'message.scaleRestartCheckbox' | translate }}</div>
-      </mcs-checkbox>
+      </mcs-checkbox> -->
     </mcs-section>
   </div>
 </form>
