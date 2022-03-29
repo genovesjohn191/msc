@@ -241,7 +241,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
             properties: {
               cpuCount: manageScale.cpuCount,
               memoryMB: convertGbToMb(manageScale.memoryGB),
-              restartServer: !server.cpuHotPlugEnabled ? true: manageScale.restartServer
+              restartServer: true //!server.cpuHotPlugEnabled ? true: manageScale.restartServer
             } as ScaleManageProperties,
             serviceId: server.serviceId
           })

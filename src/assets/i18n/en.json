@@ -3907,7 +3907,8 @@
     "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>",
     "emptySubscriptionId": "Unable to find the subscription ID for this item. Please ensure that it has a 'CSP Consumption Service' populated in CRISP and that service is properly installed.",
     "scaleRestartServer": "CPU Hot Plug is disabled for this server, meaning scaling it will cause it to restart.",
-    "scaleRestartCheckbox": "Restart this server as part of the scaling process."
+    "scaleRestartCheckbox": "Restart this server as part of the scaling process.",
+    "scaleServerWarning": "Scaling this server will cause it to restart."
   },
   "tooltip": {
     "exportWord": "Export Word Document",
