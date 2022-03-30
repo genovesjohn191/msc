@@ -1,4 +1,5 @@
-<mcs-form-field class="form-field-size-medium">
+<mcs-form-field class="form-field-size-medium"
+  [disabled]="isMaxMinIdentical">
   <div class="arrow-container">
     <button type="button"
       (mousedown)="onArrowUpMouseDownEvent(ngControl?.control?.value)"
