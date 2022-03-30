@@ -1,4 +1,10 @@
 import {
+  Subject,
+  takeUntil,
+  tap
+} from 'rxjs';
+
+import {
   ChangeDetectionStrategy,
   Component,
   Injector,
@@ -43,6 +49,7 @@ export class FieldInputNumberArrowComponent
 
   private _inputValue: number;
   private _arrowInterval: any;
+  private _destroySubject = new Subject<void>();
 
   constructor(_injector: Injector) {
     super(_injector);
@@ -56,8 +63,13 @@ export class FieldInputNumberArrowComponent
     return this._inputValue <= this.minValue;
   }
 
+  public get isMaxMinIdentical(): boolean {
+    return this.maxValue === this.minValue;
+  }
+
   public ngOnInit(): void {
     this._inputValue = this.ngControl.control.value;
+    this._subscribeToValueChange();
   }
 
   public inputInvalid(value: number): boolean {
@@ -100,5 +112,15 @@ export class FieldInputNumberArrowComponent
 
   public clearInterval(): void {
     clearInterval(this._arrowInterval);
+  }
+
+  private _subscribeToValueChange(): void {
+    this.ngControl.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(value => {
+        this._inputValue = value;
+        this.changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
   }
 }
