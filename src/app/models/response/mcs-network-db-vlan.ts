@@ -1,5 +1,7 @@
 import { JsonProperty } from '@app/utilities';
+
 import {
+  networkDbVlanStatusText,
   NetworkDbVlanStatus,
   NetworkDbVlanStatusSerialization
 } from '../enumerations/network-db-vlan-status.enum';
@@ -65,4 +67,24 @@ export class McsNetworkDbVlan {
 
   @JsonProperty()
   public podSiteName: string = undefined;
+
+  public get statusLabel(): string {
+    return networkDbVlanStatusText[this.status];
+  }
+
+  public get isInfrastructureLabel(): string {
+    return this.isInfrastructure ? 'Yes' : 'No';
+  }
+
+  public get podLabel(): string {
+    return `${this.podName} (${this.podSiteName})`;
+  }
+
+  public get networkLabel(): string {
+    return `${this.networkName} (${this.networkServiceId})`;
+  }
+
+  public get networkCompanyLabel(): string {
+    return `${this.networkCompanyName} (${this.networkCompanyId})`;
+  }
 }

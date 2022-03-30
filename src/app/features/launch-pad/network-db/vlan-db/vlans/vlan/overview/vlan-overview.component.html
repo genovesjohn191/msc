@@ -3,8 +3,52 @@
     <h2>{{ 'label.basicInformation' | translate }}</h2>
   </ng-container>
 
-  <!-- <mcs-item>
-    <span>{{ 'order.status' | translate }}:</span>
-    <span [innerHTML]="selectedOrder.description | mcsDataLabel"></span>
-  </mcs-item> -->
+  <ng-container *ngIf="vlan$ | async as vlan">
+    <mcs-item>
+      <span>{{ 'label.status' | translate }}:</span>
+      <span [innerHTML]="vlan.statusLabel | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+      <span>{{ 'label.isInfrastructure' | translate }}:</span>
+      <span>{{ vlan.isInfrastructureLabel }}</span>
+    </mcs-item>
+
+    <mcs-item>
+      <span>{{ 'label.pod' | translate }}:</span>
+      <span [innerHTML]="vlan.podLabel | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+      <span>{{ 'label.network' | translate }}:</span>
+      <span [innerHTML]="vlan.networkLabel | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+      <span>{{ 'label.networkCompany' | translate }}:</span>
+      <span [innerHTML]="vlan.networkCompanyLabel | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+      <span>{{ 'label.createdBy' | translate }}:</span>
+      <span [innerHTML]="vlan.createdBy | mcsDataLabel"></span>
+    </mcs-item>
+
+    <mcs-item>
+      <span>{{ 'label.createdOn' | translate }}:</span>
+      <span [innerHTML]="vlan.createdOn | mcsStdDateFormat"></span>
+    </mcs-item>
+
+    <ng-container *ngIf="vlan.updatedBy">
+      <mcs-item>
+        <span>{{ 'label.updatedBy' | translate }}:</span>
+        <span [innerHTML]="vlan.updatedBy | mcsDataLabel"></span>
+      </mcs-item>
+
+      <mcs-item>
+        <span>{{ 'label.updatedOn' | translate }}:</span>
+        <span [innerHTML]="vlan.updatedOn | mcsStdDateFormat"></span>
+      </mcs-item>
+    </ng-container>
+  </ng-container>
 </mcs-presentation-panel>

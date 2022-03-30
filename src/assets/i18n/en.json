@@ -3622,6 +3622,12 @@
     "enabled": "Enabled"
   },
   "label": {
+    "isInfrastructure": "Is Infrastructure",
+    "pod": "POD",
+    "network": "Network",
+    "networkCompany": "Network Company",
+    "createdOn": "Created On",
+    "updatedOn": "Updated On",
     "basicInformation": "Basic Information",
     "backToNetworkVlans": "Back To Network VLANS",
     "server": "Server",
@@ -3838,6 +3844,7 @@
     "markupPercent": "{{markup}}% of consumption RRP",
     "loadingItems": "Loading items...",
     "noRecordsFound": "No records found.",
+    "listRecordsError": "Sorry, something’s not right. We weren’t able to retrieve the list of records.",
     "tryAgain": "Try Again",
     "editToView": "Edit to view",
     "dataFieldRequired": "Data field is required.",

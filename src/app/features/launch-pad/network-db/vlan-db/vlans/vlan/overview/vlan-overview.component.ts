@@ -1,8 +1,6 @@
 import {
   map,
   takeUntil,
-  tap,
-  BehaviorSubject,
   Observable
 } from 'rxjs';
 
@@ -24,8 +22,6 @@ import { McsNetworkDbVlan } from '@app/models';
 export class NetworkVlanOverviewComponent extends McsPageBase implements OnInit, OnDestroy {
   public vlan$: Observable<McsNetworkDbVlan>;
 
-  private _vlanIdChange = new BehaviorSubject<string>(null);
-
   public constructor(
     injector: Injector
   ) {
@@ -40,10 +36,9 @@ export class NetworkVlanOverviewComponent extends McsPageBase implements OnInit,
   }
 
   private _subscribeToVlanResolver(): void {
-    this.activatedRoute.data.pipe(
+    this.vlan$ = this.activatedRoute.parent.data.pipe(
       takeUntil(this.destroySubject),
-      map(resolver => resolver?.vlan),
-      tap(vlan => this._vlanIdChange.next(vlan?.id))
-    ).subscribe();
+      map(resolver => resolver?.vlan)
+    );
   }
 }
