@@ -147,6 +147,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._coreConfig.macviewOrdersUrl;
   }
 
+  public get knowledgeBaseUrl(): string {
+    return this._coreConfig.knowledgeBaseUrl;
+  }
+
   public constructor(
     _injector: Injector,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -263,7 +267,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
       McsEvent.routeChange, this._onRouteChanged.bind(this));
 
     this._eventDispatcher.dispatch(McsEvent.routeChange);
-
   }
 
   private _onRouteChanged(routeInfo: McsRouteInfo): void {

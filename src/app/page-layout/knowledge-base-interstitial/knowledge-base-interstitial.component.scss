@@ -1,0 +1,31 @@
+@import "shared/index";
+
+.interstitial-page-wrapper {
+  @include display-flex(column);
+  height: 100%;
+
+  .interstitial-header {
+    @include flex(0 0 auto);
+  }
+
+  .interstitial-page-content {
+    @include display-flex(column);
+    @include align-items(center);
+    @include flex(1);
+    justify-content: center;
+
+    .interstitial-content {
+      max-width: 50%;
+      @include display-flex(column);
+      @include align-items(center);
+      @include set-items-interval($space-medium);
+      justify-content: center;
+    }
+
+    .interstitial-page-title {
+      color: $color-scheme-primary;
+      font-size: 2.7rem;
+      font-weight: bold;
+    }
+  }
+}

@@ -39,7 +39,8 @@ export class McsAuthenticationGuard implements CanActivate {
 
     // We need to update the return url here in order to cater the scenario
     // where the user manually entered the url while no user logged-in
-    this._authenticationService.updateLoginReturnUrl(_routerState.url);
+    // and also we need to consider internal users that has catalog permissions.
+    this._authenticationService.updateLoginReturnUrl(_routerState.url, true);
 
     return this._authenticationService.authenticateUser().pipe(
       exhaustMap(identity => {

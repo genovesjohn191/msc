@@ -53,6 +53,7 @@ export function coreConfig(): CoreConfig {
     termsAndConditionsUrl: resolveEnvVar(McsEnvironmentVariables.McsTermsAndConditionsUrl),
     inviewUrl: resolveEnvVar(McsEnvironmentVariables.McsInviewUrl),
     trendDsmUrl: resolveEnvVar(McsEnvironmentVariables.McsTrendDsmUrl),
+    knowledgeBaseUrl: resolveEnvVar(McsEnvironmentVariables.KnowledgeBaseUrl),
     imageRoot: resolveEnvVar(McsEnvironmentVariables.ImageRoot),
     iconRoot: resolveEnvVar(McsEnvironmentVariables.IconRoot),
     enryptionKey: resolveEnvVar(McsEnvironmentVariables.Ek)

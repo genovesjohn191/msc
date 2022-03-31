@@ -1,0 +1,27 @@
+@import "shared/index";
+
+$interstitial-user-panel-max-height: 80vh;
+$interstitial-user-panel-desktop-min-width: 250px;
+
+// Interstitial User Panel Layout
+.interstitial-user-panel-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+
+  mcs-item  {
+    display: block;
+  }
+
+  .interstitial-user-panel-item {
+    padding-right: 0;
+    display: block;
+
+    .user-info {
+      display: block;
+      padding-right: $space-large;
+      @include breakpoint(small) {
+        display: none;
+      }
+    }
+  }
+}

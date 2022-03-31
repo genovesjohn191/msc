@@ -27,6 +27,12 @@ export const appRoutes: Routes = [
     data: { routeId: RouteKey.SystemMessagePage }
   },
   {
+    path: 'kb',
+    loadChildren: () => import('./page-layout/knowledge-base-interstitial/knowledge-base-interstitial.module')
+      .then(m => m.KnowledgeBaseInterstitialModule),
+    data: { routeId: RouteKey.KnowledgeBaseInterstitial }
+  },
+  {
     path: '',
     loadChildren: () => import('./page-layout/default-page/default-page.module').then(m => m.DefaultPageModule)
   }

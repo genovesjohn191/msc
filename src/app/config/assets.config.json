@@ -113,7 +113,8 @@
     "unfold-more-black": "unfold-more-black.svg",
     "word-black": "word-black.svg",
     "pdf-black": "pdf-black.svg",
-    "csv": "csv.svg"
+    "csv": "csv.svg",
+    "hourglass-blue-svg": "hourglass-blue.svg"
   },
   "gifIcons": {
     "loader-spinner": "loader-spinner.gif",

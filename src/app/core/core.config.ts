@@ -112,4 +112,13 @@ export class CoreConfig {
    public set trendDsmUrl(value: string) {
      this._trendDsmUrl = value;
    }
+
+   /** Knowlege Base URL */
+   private _knowledgeBaseUrl: string;
+   public get knowledgeBaseUrl(): string {
+     return this._knowledgeBaseUrl;
+   }
+   public set knowledgeBaseUrl(value: string) {
+     this._knowledgeBaseUrl = value;
+   }
 }

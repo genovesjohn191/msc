@@ -153,5 +153,7 @@ export enum RouteKey {
   Extenders,
   ApplicationRecovery,
 
+  KnowledgeBaseInterstitial,
+
   HttpErrorPage
 }

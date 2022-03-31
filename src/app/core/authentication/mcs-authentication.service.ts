@@ -4,6 +4,7 @@ import {
   Observable
 } from 'rxjs';
 import {
+  finalize,
   map,
   switchMap
 } from 'rxjs/operators';
@@ -26,6 +27,7 @@ import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 @Injectable()
 export class McsAuthenticationService {
   public isNewOAuthEnabled = true;  // Always set to true since we're going to use the oAuth2
+  public coreCallsCompleted = false;
 
   constructor(
     private _appState: AppState,
@@ -60,9 +62,12 @@ export class McsAuthenticationService {
   /**
    * Updates the login return url to be called by SSO
    * @param url Url to be set in returnl url
+   * @param forceUpdate The flag whether to update the state or not. Default to false
    */
-  public updateLoginReturnUrl(url: string): void {
-    this._appState.set(CommonDefinition.APPSTATE_RETURN_URL_KEY, url);
+  public updateLoginReturnUrl(url: string, forceUpdate?: boolean): void {
+    if (forceUpdate || this._authenticationIdentity.isAuthenticated) {
+      this._appState.set(CommonDefinition.APPSTATE_RETURN_URL_KEY, url);
+    }
   }
 
   /**
@@ -103,10 +108,14 @@ export class McsAuthenticationService {
 
     return this._apiService.getIdentity().pipe(
       switchMap(identity => {
-        if (isNullOrEmpty(identity)) { return of(null); }
+        if (isNullOrEmpty(identity)) {
+          return of(null);
+        }
 
         this._setUserIdentity(identity);
-        if (identity?.isAnonymous) { return of(identity); }
+        if (identity?.isAnonymous) {
+          return of(identity);
+        }
 
         // Set extension trigger
         this.setExtensionTrigger(identity.expiry);
@@ -118,6 +127,9 @@ export class McsAuthenticationService {
             return identity;
           })
         );
+      }),
+      finalize(() => {
+        this.coreCallsCompleted = true;
       })
     );
   }
@@ -141,7 +153,6 @@ export class McsAuthenticationService {
     if (this.isNewOAuthEnabled) {
       _loginUrl = `${this._coreConfig.apiHost}/auth/login?source=`;
     }
-
     return `${_loginUrl}${_returnUrl}`;
   }
 
@@ -151,7 +162,6 @@ export class McsAuthenticationService {
     if (this.isNewOAuthEnabled) {
       _logoutUrl = `${this._coreConfig.apiHost}/auth/logout`;
     }
-
     return `${_logoutUrl}`;
   }
 
@@ -184,8 +194,7 @@ export class McsAuthenticationService {
 
     this._apiService.extendSession().subscribe(() => {
       this.authenticateUser().subscribe();
-    }
-    );
+    });
 
     return true;
   }

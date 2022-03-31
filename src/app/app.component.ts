@@ -1,25 +1,27 @@
-import {
-  Component,
-  ViewEncapsulation,
-  AfterViewInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  NgZone
-} from '@angular/core';
-import {
-  Router,
-  // import as RouterEvent to avoid confusion with the DOM Event
-  Event as RouterEvent,
-  NavigationStart,
-  NavigationEnd,
-  NavigationCancel,
-  NavigationError
-} from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import {
-  refreshView,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  NgZone,
+  OnDestroy,
+  ViewEncapsulation
+} from '@angular/core';
+import {
+  Event as RouterEvent,
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router
+} from '@angular/router';
+import { McsAuthenticationService } from '@app/core';
+
+import {
   animateFactory,
+  refreshView,
   unsubscribeSafely
 } from './utilities';
 
@@ -57,7 +59,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   constructor(
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private _authenticationService: McsAuthenticationService
   ) {
     this._isInitialDisplayed = true;
   }
@@ -126,7 +129,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
    * outside angular that is not reflected in the DOM
    */
   private _hideLoader(): void {
-    if (!this._isInitialDisplayed) { return; }
+    if (!this._authenticationService.coreCallsCompleted ||
+      !this._isInitialDisplayed) { return; }
+
     this._isInitialDisplayed = false;
     this.showLoadingScreen = false;
     this._changeDetectorRef.markForCheck();

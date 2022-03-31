@@ -71,6 +71,10 @@ export class AccountPanelComponent implements OnInit {
     return this._coreConfig.macviewChangePasswordUrl;
   }
 
+  public get knowledgeBaseUrl(): string {
+    return this._coreConfig.knowledgeBaseUrl;
+  }
+
   /**
    * Notify the subscriber for selection changed event
    * @param value Value to notify
