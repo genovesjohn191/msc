@@ -159,6 +159,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_ELLIPSIS_VERTICAL = 'ellipsis-vertical';
   public static ASSETS_SVG_ELLIPSIS_HORIZONTAL = 'ellipsis-horizontal';
   public static ASSETS_SVG_HELP = 'help';
+  public static ASSETS_SVG_HOURGLASS_BLUE = 'hourglass-blue-svg';
 
   public static ASSETS_SVG_SEARCH = 'search';
   public static ASSETS_SVG_NOTIFICATIONS = 'notifications';

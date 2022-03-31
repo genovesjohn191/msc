@@ -1,0 +1,23 @@
+@import "shared/index";
+
+// Header definitions
+$interstitial-header-bg-color: $color-black;
+$interstitial-header-color: $color-white;
+$interstitial-header-large-padding: $space-large;
+$interstitial-header-small-padding: $space-medium;
+
+.interstitial-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  z-index: $zindex-header;
+  height: $shared-header-panel-height;
+  padding-left: $interstitial-header-large-padding;
+  padding-right: $interstitial-header-large-padding;
+  background-color: $interstitial-header-bg-color;
+  color: $interstitial-header-color;
+
+  @include breakpoint(small) {
+    padding-left: $interstitial-header-small-padding;
+    padding-right: $interstitial-header-small-padding;
+  }
+}

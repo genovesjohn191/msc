@@ -16,5 +16,6 @@ window.ENV_CONFIG = {
   sessionExtensionWindowInSeconds: 'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS',
   imageRoot: 'MCS_IMAGE_ROOT',
   iconRoot: 'MCS_ICON_ROOT',
-  ek: 'MCS_EK'
+  ek: 'MCS_EK',
+  knowledgeBaseUrl: 'MCS_KNOWLEDGE_BASE_URL'
 };

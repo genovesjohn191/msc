@@ -67,6 +67,7 @@
       "history": "History"
     },
     "tickets": "Tickets",
+    "knowledgeBase": "Knowledge Base",
     "systemMessage": "System Message",
     "signOut": "Sign Out",
     "signIn": "Sign In",
@@ -2487,6 +2488,10 @@
       }
     }
   },
+  "knowledgeBaseInterstitial": {
+    "header": "One moment...",
+    "subtitle": "You are now being redirected to the Knowledge Base."
+  },
   "firewalls": {
     "header": "Firewalls",
     "description": "View details of your firewalls and firewall policies. Firewalls prevent malicious traffic from accessing services deployed in your environment.",
@@ -3080,6 +3085,7 @@
     "orders": "Orders",
     "manageUsers": "Manage Users",
     "changePassword": "Change Password",
+    "knowledgeBase": "Knowledge Base",
     "systemMessage": "System Messages"
   },
   "switchAccount": {

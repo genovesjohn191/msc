@@ -8,16 +8,6 @@
       <br />
     </div>
 
-    <mcs-list-item *mcsAccessControl="['TicketView']">
-      <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
-        (click)="notifySelectionChange('tickets')"
-        mcsId="tickets-link"
-        mcsEventTracker="navigate-to-tickets"
-        mcsEventCategory="navigation"
-        mcsEventLabel="user-panel">
-        {{ 'accountPanel.tickets' | translate }}
-      </a>
-    </mcs-list-item>
     <mcs-list-item *mcsAccessControl="['OrderView']">
       <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.OrdersHistory"
         (click)="notifySelectionChange('orders')"
@@ -29,6 +19,17 @@
       </a>
     </mcs-list-item>
 
+    <mcs-list-item *mcsAccessControl="['TicketView']">
+      <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
+        (click)="notifySelectionChange('tickets')"
+        mcsId="tickets-link"
+        mcsEventTracker="navigate-to-tickets"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">
+        {{ 'accountPanel.tickets' | translate }}
+      </a>
+    </mcs-list-item>
+
     <mcs-list-item>
       <a mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
         (click)="notifySelectionChange('change-password')"
@@ -37,6 +38,19 @@
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
         {{ 'accountPanel.changePassword' | translate }}
+      </a>
+    </mcs-list-item>
+
+    <mcs-list-item *mcsAccessControl="[]; feature: ['EnableKnowledgeBaseLink']">
+      <a
+        [href]="knowledgeBaseUrl"
+        target="_blank"
+        mcsCursor="pointer"
+        mcsId="knowledge-base-link"
+        mcsEventTracker="navigate-to-knowledge-base"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">
+        {{ 'accountPanel.knowledgeBase' | translate }}
       </a>
     </mcs-list-item>
     <mcs-list-item *mcsAccessControl="['SystemMessageView']; feature: 'EnableSystemMessages'">

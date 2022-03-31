@@ -9,6 +9,7 @@ export enum McsEnvironmentVariables {
   McsTermsAndConditionsUrl,
   McsInviewUrl,
   McsTrendDsmUrl,
+  KnowledgeBaseUrl,
   McsSessionExtensionWindowInSeconds,
   SentryDns,
   ImageRoot,
@@ -58,6 +59,9 @@ export function resolveEnvVar(envName: McsEnvironmentVariables, defaultValue: st
       break;
     case McsEnvironmentVariables.McsTrendDsmUrl:
       overrideValue = windowEnvironmentConfig.trendDsmUrl;
+      break;
+    case McsEnvironmentVariables.KnowledgeBaseUrl:
+      overrideValue = windowEnvironmentConfig.knowledgeBaseUrl;
       break;
     case McsEnvironmentVariables.McsSessionExtensionWindowInSeconds:
       overrideValue = windowEnvironmentConfig.sessionExtensionWindowInSeconds;

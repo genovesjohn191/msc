@@ -578,6 +578,20 @@
         </a>
       </li>
 
+      <!-- Knowledge Base -->
+      <li *mcsAccessControl="[]; feature: ['EnableKnowledgeBaseLink']">
+        <a
+          [href]="knowledgeBaseUrl"
+          target="_blank"
+          mcsId="knowledge-base-link"
+          mcsEventTracker="navigate-to-knowledge-base"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          mcsRouterLinkActive="active">
+          {{ 'navigation.knowledgeBase' | translate }}
+        </a>
+      </li>
+
       <!-- Logout -->
       <li>
         <a mcsCursor="pointer" (click)="logout($event)"

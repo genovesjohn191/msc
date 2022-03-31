@@ -728,24 +728,26 @@
   },
   "plannedWorkListing": {
     "enumKey": "PlannedWorkListing",
-    "enumCategory": "MakeAChange",
     "navigationPath": "planned-work",
     "requiredFeatureFlag": "EnablePlannedWork",
     "documentTitle": "Planned Work - Macquarie Cloud Services"
   },
   "plannedWorkDetails": {
     "enumKey": "PlannedWorkDetails",
-    "enumCategory": "MakeAChange",
     "navigationPath": "planned-work/details",
     "requiredFeatureFlag": "EnablePlannedWork",
     "documentTitle": "Planned Work Details - Macquarie Cloud Services"
   },
   "plannedWorkDetailsOverview": {
     "enumKey": "PlannedWorkDetailsOverview",
-    "enumCategory": "MakeAChange",
     "navigationPath": "overview",
     "requiredFeatureFlag": "EnablePlannedWork",
     "documentTitle": "Planned Work Overview - Macquarie Cloud Services"
+  },
+  "knowledgeBaseInterstitial": {
+    "enumKey": "KnowledgeBaseInterstitial",
+    "navigationPath": "kb",
+    "documentTitle": "Redirecting... - Macquarie Cloud Services"
   },
   "notifications": {
     "enumKey": "Notifications",
