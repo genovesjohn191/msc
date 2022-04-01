@@ -5,7 +5,7 @@ import { KnowledgeBaseInterstitialComponent } from './knowledge-base-interstitia
 
 export const knowledgeBaseInterstitialRoutes: Routes = [
   {
-    path: '',
+    path: '**',
     component: KnowledgeBaseInterstitialComponent,
     canActivate: [ McsAuthenticationGuard ]
   }
