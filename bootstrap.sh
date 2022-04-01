@@ -15,5 +15,6 @@ s,MCS_TREND_DSM_URL,'"${MCS_TREND_DSM_URL}"',g
 s,MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS,'"${MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS}"',g
 s,MCS_IMAGE_ROOT,'"${MCS_IMAGE_ROOT}"',g
 s,MCS_ICON_ROOT,'"${MCS_ICON_ROOT}"',g
-s,MCS_EK,'"${MCS_EK}"',g' assets/env.config.js;
+s,MCS_EK,'"${MCS_EK}"',g
+s,MCS_KNOWLEDGE_BASE_URL,'"${MCS_KNOWLEDGE_BASE_URL}"',g' assets/env.config.js;
 nginx -g 'daemon off;'
