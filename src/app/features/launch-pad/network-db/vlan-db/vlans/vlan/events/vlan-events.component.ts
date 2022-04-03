@@ -1,4 +1,5 @@
 import {
+  filter,
   map,
   of,
   switchMap,
@@ -30,7 +31,8 @@ import {
 import { ColumnFilter } from '@app/shared';
 import {
   createObject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  isNullOrUndefined
 } from '@app/utilities';
 
 @Component({
@@ -85,6 +87,7 @@ export class NetworkVlanEventsComponent extends McsPageBase implements OnInit, O
 
   private _getVlanEvents(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbVlanEvent>> {
     return this._vlanIdChange.pipe(
+      filter(response => !isNullOrUndefined(response)),
       switchMap(vlanId => {
         if (isNullOrEmpty(vlanId)) { return of(null); }
 

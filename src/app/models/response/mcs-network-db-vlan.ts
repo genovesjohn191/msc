@@ -77,14 +77,19 @@ export class McsNetworkDbVlan {
   }
 
   public get podLabel(): string {
-    return `${this.podName} (${this.podSiteName})`;
+    if (!this.podName && !this.podSiteName) { return null; }
+    return `${this.podName || 'Unknown'} (${this.podSiteName || 'Unknown'})`;
   }
 
   public get networkLabel(): string {
-    return `${this.networkName} (${this.networkServiceId})`;
+    if (!this.networkName && !this.networkServiceId) { return null; }
+    return this.networkServiceId ?
+      `${this.networkName || 'Unknown'} (${this.networkServiceId})` :
+      `${this.networkName}`;
   }
 
   public get networkCompanyLabel(): string {
-    return `${this.networkCompanyName} (${this.networkCompanyId})`;
+    if (!this.networkCompanyName && !this.networkCompanyId) { return null; }
+    return `${this.networkCompanyName || 'Unknown'} (${this.networkCompanyId || 'Unknown'})`;
   }
 }

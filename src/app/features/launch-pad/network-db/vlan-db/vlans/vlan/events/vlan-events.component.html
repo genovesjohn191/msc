@@ -1,8 +1,4 @@
 <mcs-presentation-panel mcsId="vlan-events">
-  <ng-container mcsPresentationPanelHeader>
-    <h2>{{ 'label.events' | translate }}</h2>
-  </ng-container>
-
   <table mat-table [dataSource]="dataSource">
 
     <!-- Action Column -->
@@ -76,7 +72,7 @@
       <mcs-loader size="medium"></mcs-loader>
     </div>
     <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-      {{ 'message.noRecordsFound' | translate }}
+      {{ 'message.noEventsToDisplay' | translate }}
     </div>
     <div *ngIf="dataSource?.hasError$ | async" text-center>
       <div class="listing-status-wrapper">

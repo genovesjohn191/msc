@@ -3840,6 +3840,7 @@
     "rollback": "Rollback"
   },
   "message": {
+    "noEventsToDisplay": "No events to display.",
     "navigateAwaySheet": "Your changes may not be saved. Are you sure you want to close the sheet?",
     "minLength": "Minimum of {{count}} characters",
     "maxLength": "Maximum of {{count}} characters",
