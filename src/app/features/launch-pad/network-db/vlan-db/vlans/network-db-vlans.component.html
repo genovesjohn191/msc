@@ -82,13 +82,16 @@
             {{ 'columnHeader.pod' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            <span>
-            {{ row.podName }}
-            </span>
-            <span read-only *ngIf="row.podSiteName">
-              <br/>
-              ({{ row.podSiteName }})
-            </span>
+            <ng-container *ngIf="!row.podLabel; else podNameView">
+              <span [innerHTML]="row.podLabel | mcsDataLabel: 'Unknown'"></span>
+            </ng-container>
+
+            <ng-template #podNameView>
+              <mcs-item orientation="block" spacing="xs">
+                <span [innerHTML]="row.podName | mcsDataLabel: 'Unknown'"></span>
+                <span read-only>(<span no-margin [innerHTML]="row.podSiteName | mcsDataLabel: 'Unknown'"></span>)</span>
+              </mcs-item>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -98,17 +101,22 @@
             {{ 'columnHeader.network' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            <a [mcsRouterLink]="[routeKeyEnum.LaunchPadNetworkDbNetworkDetails, row.networkId?.toString()]"
-              mcsId mcsStopPropagation
-              mcsEventTracker="navigate-to-network"
-              mcsEventCategory="network"
-              mcsEventLabel="vlan-listing-page">
-              {{ row.networkName }}
-            </a>
-            <span read-only *ngIf="row.networkServiceId">
-              <br/>
-              ({{ row.networkServiceId }})
-            </span>
+            <ng-container *ngIf="row.networkName; else networkView">
+              <mcs-item orientation="block" spacing="xs">
+                <a [mcsRouterLink]="[routeKeyEnum.LaunchPadNetworkDbNetworkDetails, row.networkId?.toString()]"
+                  mcsId mcsStopPropagation
+                  mcsEventTracker="navigate-to-network"
+                  mcsEventCategory="network"
+                  mcsEventLabel="vlan-listing-page">
+                  {{ row.networkName }}
+                </a>
+                <span read-only>(<span no-margin [innerHTML]="row.networkServiceId | mcsDataLabel: 'Unknown'"></span>)</span>
+              </mcs-item>
+            </ng-container>
+
+            <ng-template #networkView>
+              <span [innerHTML]="row.networkLabel | mcsDataLabel: 'Unknown'"></span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -118,13 +126,16 @@
             {{ 'columnHeader.networkCompany' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            <span *ngIf="row.networkCompanyName">
-              {{ row.networkCompanyName }}
-              <br/>
-            </span>
-            <span read-only *ngIf="row.networkCompanyId">
-              ({{ row.networkCompanyId }})
-            </span>
+            <ng-container *ngIf="!row.networkCompanyLabel; else networkCompanyView">
+              <span [innerHTML]="row.networkCompanyLabel | mcsDataLabel: 'None'"></span>
+            </ng-container>
+
+            <ng-template #networkCompanyView>
+              <mcs-item orientation="block" spacing="xs">
+                <span [innerHTML]="row.networkCompanyName | mcsDataLabel: 'Unknown'"></span>
+                <span read-only>(<span no-margin [innerHTML]="row.networkCompanyId | mcsDataLabel: 'Unknown'"></span>)</span>
+              </mcs-item>
+            </ng-template>
           </td>
         </ng-container>
 
