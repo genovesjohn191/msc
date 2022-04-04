@@ -51,7 +51,7 @@ export class NetworkVlanComponent extends McsPageBase implements OnInit, OnDestr
   }
 
   public getTitle(vlan: McsNetworkDbVlan): string {
-    return `VLAN-${vlan?.number}`;
+    return `VLAN ${vlan?.number}`;
   }
 
   public onTabChanged(tab: any) {

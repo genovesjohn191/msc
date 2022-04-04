@@ -72,10 +72,6 @@ export class McsNetworkDbVlan {
     return networkDbVlanStatusText[this.status];
   }
 
-  public get isInfrastructureLabel(): string {
-    return this.isInfrastructure ? 'Yes' : 'No';
-  }
-
   public get podLabel(): string {
     if (!this.podName && !this.podSiteName) { return null; }
     return `${this.podName || 'Unknown'} (${this.podSiteName || 'Unknown'})`;
