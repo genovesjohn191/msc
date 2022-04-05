@@ -26,7 +26,6 @@ export const vfwDeprovisionForm: LaunchPadForm = {
       eventName: 'resource-change',
       validators: { required: true },
       settings: { preserve: true },
-      useServiceIdAsKey: true,
       disableStretched: true
     }),
   ],

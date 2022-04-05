@@ -40,7 +40,6 @@ export const vfwProvisionForm: LaunchPadForm = {
       eventName: 'resource-change',
       validators: { required: true },
       settings: { preserve: true },
-      useServiceIdAsKey: true,
       disableStretched: true,
       contextualHelp: 'The VDC to configure the firewall in. For stretched VDCs, please speak to a specialist.'
     }),
