@@ -78,6 +78,7 @@ export const firewallProvisionForm: LaunchPadForm = {
       key: 'primaryManagementVrf',
       label: 'Primary Management VRF',
       placeholder: 'Primary Management VRF',
+      validators: { required: true },
       contextualHelp: 'The name of the primary management VRF to configure on the firewall.'
     }),
     new DynamicVrfNameField({
