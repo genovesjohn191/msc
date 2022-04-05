@@ -27,7 +27,7 @@ export const vfwProvisionForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['secondaryServiceId']
+      dependents: ['vdc']
     }),
     new DynamicInputHiddenField({
       key: 'serviceId',
@@ -67,6 +67,7 @@ export const vfwProvisionForm: LaunchPadForm = {
       key: 'primaryManagementVrf',
       label: 'Management VRF',
       placeholder: 'Management VRF',
+      validators: { required: true },
       contextualHelp: 'The name of the management VRF to configure on the firewall.'
     }),
     new DynamicInputHostNameField({
