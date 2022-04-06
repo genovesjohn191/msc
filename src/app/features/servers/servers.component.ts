@@ -1,11 +1,9 @@
 import {
   forkJoin,
   of,
-  Observable,
-  throwError
+  Observable
 } from 'rxjs';
 import {
-  catchError,
   concatMap,
   map,
   tap
@@ -20,7 +18,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
   McsMatTableContext,
@@ -36,15 +34,14 @@ import {
   serviceTypeText,
   McsFilterInfo,
   McsQueryParam,
+  McsResource,
   McsServer,
   McsServerDelete,
   McsServerPowerstateCommand,
   RouteKey,
   ServerCommand,
   ServiceType,
-  VmPowerstateCommand,
-  McsResource,
-  McsPermission
+  VmPowerstateCommand
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -78,15 +75,11 @@ import { ServersService } from './servers.service';
 export class ServersComponent implements OnInit, OnDestroy {
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
-  public isSorting: boolean;
 
   public readonly dataSource: McsTableDataSource2<McsServer>;
   public readonly dataSelection: McsTableSelection2<McsServer>;
   public readonly dataEvents: McsTableEvents<McsServer>;
   private resources: McsResource[] = [];
-
-  private _sortDirection: string;
-  private _sortField: string;
 
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
@@ -199,6 +192,13 @@ export class ServersComponent implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public toggleAllServersSelection() {
     if (isNullOrEmpty(this.dataSelection)) { return; }
     this.dataSelection.toggleAllItemsSelection((server) => !server.isProcessing);
@@ -222,13 +222,6 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
-  }
-
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
   }
 
   public startMultipleServers(): void {
@@ -382,16 +375,11 @@ export class ServersComponent implements OnInit, OnDestroy {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getServers(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)
       })

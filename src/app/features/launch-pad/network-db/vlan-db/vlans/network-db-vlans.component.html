@@ -110,7 +110,7 @@
                   mcsEventLabel="vlan-listing-page">
                   {{ row.networkName }}
                 </a>
-                <span read-only>(<span no-margin [innerHTML]="row.networkServiceId | mcsDataLabel: 'Unknown'"></span>)</span>
+                <span read-only *ngIf="row.networkServiceId">(<span no-margin [innerHTML]="row.networkServiceId"></span>)</span>
               </mcs-item>
             </ng-container>
 

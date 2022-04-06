@@ -90,7 +90,7 @@
           </mcs-action-item>
         </mcs-responsive-panel>
 
-        <ng-container *ngIf="isSorting; else totalCountTemplate">
+        <ng-container *ngIf="datasource?.isSorting$ | async; else totalCountTemplate">
           <div class="sorting-label">
             <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
           </div>
@@ -130,7 +130,7 @@
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
 
-      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+      <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
         <!-- Selection Column -->
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef

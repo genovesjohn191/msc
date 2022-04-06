@@ -1,46 +1,39 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
-  Component,
-  ChangeDetectorRef,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
   Injector,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
+import { MatSort } from '@angular/material/sort';
 import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
-
-import {
+  McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
-  McsMatTableQueryParam,
-  McsMatTableContext,
   McsTableEvents
 } from '@app/core';
 import { McsEvent } from '@app/events';
-import { McsApiService } from '@app/services';
 import {
-  RouteKey,
+  McsFilterInfo,
   McsInternetPort,
   McsQueryParam,
-  McsFilterInfo
+  RouteKey
 } from '@app/models';
-import {
-  isNullOrEmpty,
-  getSafeProperty,
-  createObject
-} from '@app/utilities';
+import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
   Paginator,
   Search
 } from '@app/shared';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-internet',
@@ -99,6 +92,13 @@ export class InternetComponent {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
   }
@@ -113,29 +113,16 @@ export class InternetComponent {
     this.dataSource.refreshDataRecords();
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
-
   private _getInternetPorts(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsInternetPort>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getInternetPorts(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)
       })

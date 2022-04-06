@@ -30,7 +30,7 @@
             mcsEventLabel="vlan-details-page">
             {{ vlan.networkName }}
           </a>
-          <span>(<span no-margin [innerHTML]="vlan.networkServiceId | mcsDataLabel: 'Unknown'"></span>)</span>
+          <span *ngIf="vlan.networkServiceId">(<span no-margin [innerHTML]="vlan.networkServiceId"></span>)</span>
         </mcs-item>
       </ng-container>
 

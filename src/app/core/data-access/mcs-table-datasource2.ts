@@ -11,6 +11,7 @@ import {
   distinctUntilChanged,
   exhaustMap,
   filter,
+  finalize,
   map,
   shareReplay,
   startWith,
@@ -20,6 +21,7 @@ import {
 } from 'rxjs/operators';
 
 import { CollectionViewer } from '@angular/cdk/collections';
+import { MatSort } from '@angular/material/sort';
 import {
   DataStatus,
   McsFilterInfo
@@ -66,12 +68,17 @@ export class McsMatTableContext<TEntity> {
 export class McsMatTableQueryParam {
   constructor(
     public search: Search,
-    public paginator: Paginator
+    public paginator: Paginator,
+    public sort: MatSort
   ) {
     if (isNullOrEmpty(this.paginator)) {
       this.paginator = Object.create({});
       this.paginator.pageIndex = CommonDefinition.PAGE_INDEX_DEFAULT;
       this.paginator.pageSize = CommonDefinition.PAGE_SIZE_MIN;
+    }
+
+    if (isNullOrEmpty(this.sort)) {
+      this.sort = Object.create({});
     }
   }
 }
@@ -85,6 +92,7 @@ type DatasourceType<TEntity> = McsMatTableContext<TEntity> |
 export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, McsDisposable {
   public dataColumns$: Observable<string[]>;
   public isInProgress$: Observable<boolean>;
+  public isSorting$: Observable<boolean>;
   public hasNoRecords$: Observable<boolean>;
   public hasError$: Observable<boolean>;
   public dataRecords$: Observable<TEntity[]>;
@@ -94,6 +102,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
   private _columnFilter: ColumnFilter;
   private _search: Search;
   private _paginator: Paginator;
+  private _sort: MatSort;
   private _configuration: McsMatTableConfig<TEntity>;
 
   private _datasourceFunc: DelegateSource<TEntity>;
@@ -101,11 +110,13 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
   private _dataColumnsChange = new BehaviorSubject<string[]>(null);
   private _dataStatusChange = new BehaviorSubject<DataStatus>(null);
   private _dataCountChange = new BehaviorSubject<number>(0);
+  private _sortingChange = new BehaviorSubject<boolean>(null);
   private _requestUpdate = new Subject<void>();
 
   private _destroySubject = new Subject<void>();
   private _searchSubject = new Subject<void>();
   private _pageSubject = new Subject<void>();
+  private _sortSubject = new Subject<void>();
   private _columnSelectorSubject = new Subject<void>();
 
   constructor(dataSource?: DatasourceType<TEntity>) {
@@ -117,6 +128,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     this._subscribeToDisplayedCountChange();
     this._subscribeToDataRecordsChange();
     this._subscribeToDataColumnsChange();
+    this._subscribeToSortingChange();
   }
 
   public connect(_collectionViewer: CollectionViewer): Observable<TEntity[]> {
@@ -179,6 +191,12 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
   public registerSearch(search: Search): McsTableDataSource2<TEntity> {
     this._search = search;
     this._subscribeToSearchChange();
+    return this;
+  }
+
+  public registerSort(sort: MatSort): McsTableDataSource2<TEntity> {
+    this._sort = sort;
+    this._subscribeToSortChange();
     return this;
   }
 
@@ -307,6 +325,19 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     ).subscribe();
   }
 
+  private _subscribeToSortChange(): void {
+    if (isNullOrEmpty(this._sort?.sortChange)) { return; }
+
+    this._sortSubject.next();
+    this._sort.sortChange.pipe(
+      takeUntil(this._sortSubject),
+      tap(() => {
+        this.refreshDataRecords();
+        this._sortingChange.next(true);
+      })
+    ).subscribe();
+  }
+
   private _subscribeToRequestUpdate(): void {
     this._requestUpdate.pipe(
       startWith([null]),
@@ -315,7 +346,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
         if (isNullOrUndefined(this._datasourceFunc)) { return of(null); }
 
         this._dataStatusChange.next(DataStatus.Active);
-        let tableParam = new McsMatTableQueryParam(this._search, this._paginator);
+        let tableParam = new McsMatTableQueryParam(this._search, this._paginator, this._sort);
 
         return this._datasourceFunc(tableParam).pipe(
           exhaustMap(response => {
@@ -341,6 +372,9 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
         this._dataStatusChange.next(response.totalCount > 0 ?
           DataStatus.Success : DataStatus.Empty
         );
+      }),
+      finalize(() => {
+        this._sortingChange.next(false);
       })
     ).subscribe();
   }
@@ -362,6 +396,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     } else {
       existingRecords.push(...records);
     }
+
     this._dataRecordsChange.next(existingRecords);
   }
 
@@ -439,6 +474,14 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     this.displayedCount$ = this._dataRecordsChange.pipe(
       takeUntil(this._destroySubject),
       map(records => records?.length || 0),
+      shareReplay(1)
+    );
+  }
+
+  private _subscribeToSortingChange(): void {
+    this.isSorting$ = this._sortingChange.pipe(
+      takeUntil(this._destroySubject),
+      distinctUntilChanged(),
       shareReplay(1)
     );
   }

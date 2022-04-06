@@ -1,11 +1,5 @@
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -15,7 +9,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -55,10 +49,6 @@ export class MediaComponent implements OnInit {
   public readonly defaultColumnFilters: McsFilterInfo[];
 
   public hasResources$: Observable<boolean>;
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
 
   public constructor(
     _injector: Injector,
@@ -105,6 +95,13 @@ export class MediaComponent implements OnInit {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public get addIconKey(): string {
     return CommonDefinition.ASSETS_SVG_PLUS;
   }
@@ -126,13 +123,6 @@ export class MediaComponent implements OnInit {
     this.dataSource.refreshDataRecords();
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   private _getResourceMedia(
     param: McsMatTableQueryParam
   ): Observable<McsMatTableContext<McsResourceMedia>> {
@@ -140,16 +130,11 @@ export class MediaComponent implements OnInit {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getMedia(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)
       })
