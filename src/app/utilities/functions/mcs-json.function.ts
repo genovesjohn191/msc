@@ -122,6 +122,26 @@ export function isJson(content: string | any): boolean {
 }
 
 /**
+ * Normalized and remove all associated empty from fields
+ */
+export function removeEmptyFields<T>(rawObject: T): any {
+  let originalObj = rawObject || {};
+  let objMap = new Map<any, any>();
+
+  Object.keys(originalObj)
+    ?.filter(itemKey => !isNullOrEmpty(originalObj[itemKey]))
+    ?.forEach(itemKey => {
+      let normalizedData = typeof originalObj[itemKey] !== 'object' ?
+        originalObj[itemKey] :
+        removeEmptyFields(originalObj[itemKey]);
+
+      objMap.set(itemKey, normalizedData);
+    });
+
+  return convertMapToJsonObject(objMap);
+}
+
+/**
  * Compares the two json as object and return the status based on the comparison method:
  *
  * -1 = firstString < secondString
@@ -132,8 +152,11 @@ export function isJson(content: string | any): boolean {
  * @param secondObject Second object to compare
  */
 export function compareJsons<T>(firstObject: T, secondObject: T): number {
-  let firstJsonString: string = JSON.stringify(firstObject || {});
-  let secondJsonString: string = JSON.stringify(secondObject || {});
+  let normalizedFirstObject = removeEmptyFields(firstObject);
+  let normalizedSecondObject = removeEmptyFields(secondObject);
+
+  let firstJsonString: string = JSON.stringify(normalizedFirstObject || {});
+  let secondJsonString: string = JSON.stringify(normalizedSecondObject || {});
 
   if (firstJsonString === secondJsonString) {
     return 0;
