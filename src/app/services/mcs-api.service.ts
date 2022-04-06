@@ -295,7 +295,8 @@ import {
   McsTicketQueryParams,
   McsValidation,
   McsVmSize,
-  McsWorkflowCreate
+  McsWorkflowCreate,
+  McsPlannedWorkAffectedService
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2775,6 +2776,24 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPlannedWork'))
       )
+    );
+  }
+
+  public getPlannedWorkIcs(id: string): Observable<Blob> {
+    return this._plannedWorkApi.getPlannedWorkIcs(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.downloadPlannedWorkIcs'))
+      )
+    );
+  }
+
+  public getPlannedWorkAffectedServices(id: string, query?: McsPlannedWorkQueryParams):
+    Observable<McsApiCollection<McsPlannedWorkAffectedService>> {
+    return this._plannedWorkApi.getPlannedWorkAffectedServices(id, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPlannedWorkAffectedServices'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

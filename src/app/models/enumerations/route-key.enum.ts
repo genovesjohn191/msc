@@ -92,6 +92,7 @@ export enum RouteKey {
   PlannedWorkListing,
   PlannedWorkDetails,
   PlannedWorkDetailsOverview,
+  PlannedWorkAffectedServices,
 
   ProductDetails, // Deprecated
 

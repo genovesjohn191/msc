@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { RouteKey } from '@app/models';
+import { PlannedWorkAffectedServicesComponent } from './details/affected-services/planned-work-affected-services.component';
 import { PlannedWorkOverviewComponent } from './details/overview/planned-work-overview.component';
 import { PlannedWorkDetailsComponent } from './details/planned-work-details.component';
 import { PlannedWorkDetailsResolver } from './details/planned-work-details.resolver';
@@ -41,6 +42,11 @@ export const plannedWorkRoutes: Routes = [
         path: 'overview',
         component: PlannedWorkOverviewComponent,
         data: { routeId: RouteKey.PlannedWorkDetailsOverview }
+      },
+      {
+        path: 'affected-services',
+        component: PlannedWorkAffectedServicesComponent,
+        data: { routeId: RouteKey.PlannedWorkAffectedServices }
       }
     ]
   },

@@ -267,6 +267,7 @@ export * from './response/mcs-ticket-attachment';
 export * from './response/mcs-ticket-closure-information';
 export * from './response/mcs-ticket-comment';
 export * from './response/mcs-planned-work';
+export * from './response/mcs-planned-work-affected-service';
 export * from './response/mcs-portal-access';
 export * from './response/mcs-portal';
 export * from './response/mcs-validation';
