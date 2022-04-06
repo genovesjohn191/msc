@@ -55,7 +55,14 @@ export class McsPlannedWork extends McsEntityBase {
    * Returns the status label equivalent
    */
   public get statusLabel(): string {
-    return plannedWorkStatusText[this.status];
+    switch(this.status){
+      case 2:
+        return 'In Progress';
+      case 3:
+        return 'In Review';
+      default:
+        return plannedWorkStatusText[this.status];
+    }
   }
 
   /**
@@ -63,22 +70,6 @@ export class McsPlannedWork extends McsEntityBase {
    */
   public get typeLabel(): string {
     return plannedWorkTypeText[this.type];
-  }
-
-  /**
-   * Returns the type label equivalent
-   */
-   public get isCurrentOrFuture(): boolean {
-    return compareDates(this.plannedEnd, getCurrentDate()) >= 0
-      && this.status !== PlannedWorkStatus.InReview;
-  }
-
-  /**
-   * Returns the type label equivalent
-   */
-   public get isPast(): boolean {
-    return compareDates(this.plannedEnd, getCurrentDate()) === -1 ||
-      this.status === PlannedWorkStatus.InReview;
   }
 
   /**

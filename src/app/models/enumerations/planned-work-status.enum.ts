@@ -1,19 +1,21 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum PlannedWorkStatus {
-  Scheduled = 0,
-  InProgress,
-  InReview,
+  Unknown = 0,
+  Scheduled,
+  Implement,
+  Review,
   Closed,
-  Unknown
+  Cancelled
 }
 
 export const plannedWorkStatusText = {
+  [PlannedWorkStatus.Unknown]: 'Unknown',
   [PlannedWorkStatus.Scheduled]: 'Scheduled',
-  [PlannedWorkStatus.InProgress]: 'In Progress',
-  [PlannedWorkStatus.InReview]: 'In Review',
+  [PlannedWorkStatus.Implement]: 'Implement',
+  [PlannedWorkStatus.Review]: 'Review',
   [PlannedWorkStatus.Closed]: 'Closed',
-  [PlannedWorkStatus.Unknown]: 'Unknown'
+  [PlannedWorkStatus.Closed]: 'Cancelled'
 };
 
 /**

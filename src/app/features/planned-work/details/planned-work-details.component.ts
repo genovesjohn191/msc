@@ -1,3 +1,4 @@
+import { saveAs } from 'file-saver';
 import {
   of,
   Observable,
@@ -6,6 +7,7 @@ import {
   forkJoin
 } from 'rxjs';
 import {
+  finalize,
   map,
   shareReplay,
   tap
@@ -46,7 +48,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { PlannedWorkDetailsService } from './planned-work-details.service';
 
-type tabGroupType = 'overview';
+type tabGroupType = 'overview' | 'affected-services';
 
 interface McsPlannedWorkCategory {
   name: string;
@@ -62,6 +64,7 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
   public readonly listviewDatasource: McsListviewDataSource2<McsPlannedWorkCategory>;
   public selectedPlannedWork$: Observable<McsPlannedWork>;
   public selectedTabId$: Observable<string>;
+  public isDownloadingIcs: boolean = false;
 
   private _destroySubject = new Subject<void>();
   private _routerHandler: Subscription;
@@ -100,10 +103,20 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
   }
 
   public onTabChanged(tab: any) {
-    this._navigationService.navigateTo(
-      RouteKey.PlannedWorkDetails,
-      [this._plannedWorkDetailsService.getPlannedWorkId(), tab.id as tabGroupType]
-    );
+    switch(tab.id){
+      case 'overview':
+        this._navigationService.navigateTo(
+          RouteKey.PlannedWorkDetails,
+          [this._plannedWorkDetailsService.getPlannedWorkId(), tab.id as tabGroupType]
+        );
+        break;
+      case 'affected-services':
+        this._navigationService.navigateTo(
+          RouteKey.PlannedWorkDetails,
+          [this._plannedWorkDetailsService.getPlannedWorkId(), tab.id as tabGroupType]
+        );
+        break;
+    }
   }
 
   @ViewChild('search')
@@ -123,6 +136,20 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
   
   public get selectedPlannedWorkId(): string {
     return this._plannedWorkDetailsService.getPlannedWorkId();
+  }
+
+  public downloadIcs(): void{
+    this.isDownloadingIcs = true;
+    let id = this._plannedWorkDetailsService.getPlannedWorkId();
+    this._apiService.getPlannedWorkIcs(id)
+        .pipe(
+          finalize(() => {
+            this.isDownloadingIcs = false;
+          }) 
+        )
+        .subscribe(blobResponse => {
+          saveAs(blobResponse, this._plannedWorkDetailsService.getPlannedWorkIcsFileName());
+        });
   }
 
   private _getPlannedWorkList(

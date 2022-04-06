@@ -2466,7 +2466,10 @@
     "noScheduleDate": "Unknown",
     "noOutageDuration": "N/A",
     "details": {
-      "header": "Planned Work # ",
+      "header": "Planned Work ",
+      "action": {
+        "downloadIcs": "Download ICS"
+      },
       "overview": {
         "tabName": "Overview",
         "basicInformation": {
@@ -2485,6 +2488,9 @@
         "description": {
           "label": "Description"
         }
+      },
+      "affectedServices": {
+        "tabName": "Affected Services"
       }
     }
   },
@@ -3410,7 +3416,9 @@
     "getLocation": "Something went wrong while retrieving your locaiton. Please try again.",
     "getVmSizes": "Something went wrong while retrieving your VM Sizes. Please try again.",
     "getVmSize": "Something went wrong while retrieving your VM Size. Please try again.",
-    "getPlannedWork": "Something went wrong while retrieving Planned Work. Please try again."
+    "downloadPlannedWorkIcs": "Something went wrong while downloading this Planned Work's ICS. Please try again.",
+    "getPlannedWork": "Something went wrong while retrieving Planned Work. Please try again.",
+    "getPlannedWorkAffectedServices": "Something went wrong while retrieving this Planned Work's affected services. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -3841,6 +3849,7 @@
   },
   "message": {
     "noEventsToDisplay": "No events to display.",
+    "noAffectedServicesToDisplay": "No affected services to display.",
     "navigateAwaySheet": "Your changes may not be saved. Are you sure you want to close the sheet?",
     "minLength": "Minimum of {{count}} characters",
     "maxLength": "Maximum of {{count}} characters",

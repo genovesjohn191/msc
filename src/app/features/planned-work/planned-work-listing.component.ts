@@ -17,7 +17,6 @@ import {
 import { Sort } from '@angular/material/sort';
 
 import {
-  McsDateTimeService,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -142,7 +141,7 @@ export class PlannedWorkListingComponent {
     this.retryDatasource();
     this._search.clear();
   }
-  
+
   private _getPlannedWorkList(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsPlannedWork>> {
     let queryParam = new McsPlannedWorkQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);

@@ -37,6 +37,27 @@
           <!-- Overview Tab -->
           <mcs-tab [label]="'plannedWorkListing.details.overview.tabName' | translate" id="overview">
           </mcs-tab>
+
+          <!-- Affected Services Tab -->
+          <mcs-tab [label]="'plannedWorkListing.details.affectedServices.tabName' | translate" id="affected-services">
+          </mcs-tab>
+
+          <!-- Action tab -->
+          <ng-container mcsTabHeaderCustom>
+            <mat-menu #actionMenu="matMenu" mcsAlign="end">
+              <button mat-menu-item (click)="downloadIcs()"
+                mcsId="download-ics"
+                mcsEventTracker="download-ics"
+                mcsEventCategory="planned-work"
+                mcsEventLabel="planned-work-details-page"
+                [disabled]="isDownloadingIcs">
+                {{ 'plannedWorkListing.details.action.downloadIcs' | translate }}
+              </button>
+            </mat-menu>
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+              <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+            </button>
+          </ng-container>
         </mcs-tab-group>
         <!-- Tab content for routing tab -->
         <div class="routing-tab-content-wrapper limited-view">

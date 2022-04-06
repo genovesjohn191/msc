@@ -24,4 +24,8 @@ export class PlannedWorkDetailsService {
   public setPlannedWorkDetails(data: McsPlannedWork): void {
     this._detailsChange.next(data);
   }
+
+  public getPlannedWorkIcsFileName(): string {
+    return `planned_work_${this._detailsChange.getValue().referenceId}`;
+  }
 }

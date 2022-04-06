@@ -1,0 +1,33 @@
+<ng-container>
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- ServiceId Column -->
+    <ng-container matColumnDef="serviceId">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.serviceId' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span [innerHTML]="row.serviceId | mcsDataLabel: 'None'"></span>
+      </td>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+  </table>
+
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+      {{ 'message.noAffectedServicesToDisplay' | translate }}
+    </div>
+    <div *ngIf="dataSource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
+        <span>{{ 'message.listRecordsError' | translate }}</span>
+      </div>
+    </div>
+  </mcs-item>
+</ng-container>

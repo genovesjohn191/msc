@@ -744,6 +744,12 @@
     "requiredFeatureFlag": "EnablePlannedWork",
     "documentTitle": "Planned Work Overview - Macquarie Cloud Services"
   },
+  "PlannedWorkAffectedServices": {
+    "enumKey": "PlannedWorkAffectedServices",
+    "navigationPath": "affected-services",
+    "requiredFeatureFlag": "EnablePlannedWork",
+    "documentTitle": "Planned Work Affected Services - Macquarie Cloud Services"
+  },
   "knowledgeBaseInterstitial": {
     "enumKey": "KnowledgeBaseInterstitial",
     "navigationPath": "kb",
