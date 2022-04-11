@@ -503,14 +503,18 @@
     "back": "Back",
     "vdc": {
       "label": "VDC",
-      "description": "Please select the VDC you wish to expand",
+      "description": "Please select the VDC containing the storage profile you wish to expand",
       "placeholder": "Select a VDC",
       "contextualHelp": "Choose a VDC."
     },
     "vdcStorage": {
+      "defaultProfile": "Default Storage Profile",
+      "otherProfiles": "Other Storage Profiles",
       "placeholder": "Select a storage profile",
       "contextualHelp": "Choose the storage profile to expand.",
-      "warningLabel": "This storage profile cannot be expanded as it does not have a service ID associated. Please contact your accounts team for assistance."
+      "ineligibleForServiceChangeWarningLabel": "This storage profile cannot currently be expanded. Please contact your account team for assistance.",
+      "stretchedUnsupportedWarningLabel": "Stretched storage cannot currently be expanded via Portal. Please contact your account team for assistance.",
+      "disabledWarningLabel": "This storage profile is disabled and cannot be expanded."
     },
     "vdcDetails": {
       "stepTitle": "Storage Profile Details",

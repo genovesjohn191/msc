@@ -36,7 +36,8 @@ import {
   McsErrorHandlerService,
   McsFormGroupService,
   McsOrderWizardBase,
-  OrderRequester
+  OrderRequester,
+  McsAccessControlService
 } from '@app/core';
 import {
   OrderDetails,
@@ -50,7 +51,8 @@ import {
   McsResource,
   McsResourceStorage,
   McsVdcStorageQueryParams,
-  OrderIdType
+  OrderIdType,
+  McsFeatureFlag
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -106,6 +108,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   private _vdcManageStorage: VdcManageStorage;
   private _errorStatus: number;
   private _resourcesCount: number;
+  private storageCount: number;
 
   /**
    * Returns the back icon key as string
@@ -118,13 +121,39 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     return this._errorStatus === HttpStatusCode.Forbidden;
   }
 
-  public get noServicesToDisplay(): boolean {
+  public get noVdcsToDisplay(): boolean {
     return !isNullOrEmpty(this._errorStatus) || this._resourcesCount === 0;
   }
 
-  public get noServicesFallbackText(): string {
-    if (!this.noServicesToDisplay) { return; }
+  public get noStorageToDisplay(): boolean {
+    return !isNullOrEmpty(this._errorStatus) || this.storageCount === 0;
+  }
+
+  public get noItemsFallbackText(): string {
+    if (!this.noVdcsToDisplay) { return; }
     return this.showPermissionErrorFallbackText ? 'message.noPermissionFallbackText' : 'message.noServiceToDisplay';
+  }
+
+  /**
+   * Returns appropriate validation label depending on the storage profile's issues (with prioritized scenarios)
+   */
+  public get fallbackLabel(): string {
+    if (!this.storageCount)
+    {
+        return 'message.noServiceToDisplay'
+    }
+    if (this.isStretched && !this._accessControlService.hasAccessToFeature([McsFeatureFlag.OrderingStretchedVdcStorageExpand]))
+    {
+        return 'orderVdcStorageExpand.vdcStorage.stretchedUnsupportedWarningLabel'
+    }
+    else if (this.isIneligibleForServiceChange)
+    {
+      return 'orderVdcStorageExpand.vdcStorage.ineligibleForServiceChangeWarningLabel'
+    }
+    else if (this.isDisabled && this._accessControlService.hasAccessToFeature([McsFeatureFlag.StorageProfileDisabledValidation]))
+    {
+      return 'orderVdcStorageExpand.vdcStorage.disabledWarningLabel'
+    }
   }
 
   /**
@@ -138,14 +167,29 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    * Returns true when all forms are valid
    */
   public get validVdcStorage(): boolean {
-    return this._vdcManageStorage.hasChanged && this._vdcManageStorage.valid && this.hasStorageServiceId;
+    return this._vdcManageStorage.hasChanged && this._vdcManageStorage.valid && !this.fallbackLabel;
   }
 
   /**
-   * Returns true the service id of the storage is not null
+   * Returns true if serviceChangeAvailable is false or serviceId is empty/null
    */
-  public get hasStorageServiceId(): boolean {
-    return getSafeProperty(this._selectedStorage, (obj) => !isNullOrEmpty(obj.serviceId), false);
+  public get isIneligibleForServiceChange(): boolean {
+    return !(getSafeProperty(this._selectedStorage, (obj) =>  !isNullOrEmpty(obj.serviceId), false) &&
+            getSafeProperty(this._selectedStorage, (obj) => !isNullOrEmpty(obj.serviceChangeAvailable), false));
+  }
+
+  /**
+   * Returns true if the storage profile is disabled
+   */
+  public get isDisabled(): boolean {
+    return !getSafeProperty(this._selectedStorage, (obj) => !isNullOrEmpty(obj.enabled), false);
+  }
+
+  /**
+   * Returns true if the storage profile is stretched
+   */
+  public get isStretched(): boolean {
+    return getSafeProperty(this._selectedStorage, (obj) => !isNullOrEmpty(obj.isStretched), false);
   }
 
   @ViewChild('fgManageStorage')
@@ -169,6 +213,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     private _formGroupService: McsFormGroupService,
     private _apiService: McsApiService,
     private _errorHandlerService: McsErrorHandlerService,
+    private _accessControlService: McsAccessControlService
   ) {
     super(
       _vdcStorageExpandService,
@@ -206,6 +251,9 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     this._selectedStorage = null;
     this._resetExpandVdcStorageState();
     this._getSelectedResource(resource);
+    if (!this.selectedVdcStorage) {
+      this._selectDefaultStorageProfile();
+    }
   }
 
   /**
@@ -342,8 +390,23 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   private _getSelectedResource(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
     this.selectedResource$ = this._apiService.getResource(resource.id).pipe(
+      map((response) => {
+        let storage = getSafeProperty(response, (obj) => obj.storage);
+        this.storageCount = storage?.length;
+        return resource;
+      }),
       shareReplay(1)
-    );
+    )
+  }
+
+  private _selectDefaultStorageProfile(): void  {
+    this.selectedResource$.subscribe(resource => {
+      let storage = resource.storage;
+      let storageProfileFound = storage.find(storage => storage.isDefault);
+      let fcStorageProfileValue = storageProfileFound ? storageProfileFound : null;
+      this.fcStorage.setValue(fcStorageProfileValue);
+      this.selectedVdcStorage = fcStorageProfileValue;
+    })
   }
 
   /**
