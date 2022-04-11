@@ -92,4 +92,16 @@ export class McsServerPermission {
   public get vmScale(): string[] {
     return this._server.isSelfManaged ? this.vmNicEdit : [McsPermission.OrderEdit];
   }
+
+  /**
+   * Returns the permission for Management IP
+   */
+  public get managementIP(): string[] {
+    switch(this._server.platform.type){
+      case PlatformType.VCloud:
+        return [McsPermission.ManagedCloudVmManagementIpView];
+      case PlatformType.VCenter:
+        return [McsPermission.DedicatedVmManagementIpView];
+    }
+  }
 }
