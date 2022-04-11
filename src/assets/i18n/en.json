@@ -1454,7 +1454,9 @@
       "zone": "Zone",
       "configuration": "Configuration",
       "vmwareTools": "Tools Version",
-      "vApp": "vApp"
+      "vApp": "vApp",
+      "ipAddress":"Management IP",
+      "noIpAddress": "Unknown"
     },
     "vmConsole": {
       "title": "VM Console",
