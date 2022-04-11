@@ -72,6 +72,18 @@
               <span>{{ 'serverManagement.vmProperties.vApp' | translate }}:</span>
               <span [innerHTML]="server.vApp"></span>
             </mcs-item>
+
+            <mcs-item *ngIf="!server.isSelfManaged">
+              <ng-container *mcsAccessControl="serverPermission.managementIP;">
+                <span>{{ 'serverManagement.vmProperties.ipAddress' | translate }}:</span>
+                <ng-container *ngIf="server.ipAddress; else NoIpAddress">
+                  <span [innerHTML]="server.ipAddress"></span>
+                </ng-container>
+                <ng-template #NoIpAddress>
+                  <span [mcsGreyedOut]="true">{{'serverManagement.vmProperties.noIpAddress' | translate}}</span>
+                </ng-template>
+              </ng-container>
+            </mcs-item>
           </mcs-presentation-panel>
         </mcs-grid-column>
 
