@@ -152,6 +152,12 @@ export class CoreValidators {
       null : { ouPath: true };
   }
 
+  public static networkName(control: AbstractControl): ValidationErrors | null {
+    if (isNullOrEmpty(control.value)) { return null; }
+    return CommonDefinition.REGEX_NETWORK_NAME.test(control.value) ?
+      null : { networkName: true };
+  }
+
   public static adomName(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_ADOM_NAME_PATTERN.test(control.value)
       || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
