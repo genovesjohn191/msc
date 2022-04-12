@@ -129,7 +129,7 @@
               </th>
               <td mat-cell *matCellDef="let row"
                 [mcsGreyedOut]="!(row.charges?.monthly | mcsIsNotNullOrUndefined)"
-                [matTooltip]="'Current: $'+row.oldCharges?.monthly"
+                [matTooltip]="row.oldCharges?.monthlyInCurrency"
                 [matTooltipDisabled]="!row.oldCharges?.monthly">
                 {{ row.charges?.monthlyInCurrency }}
               </td>
@@ -142,7 +142,7 @@
               </th>
               <td mat-cell *matCellDef="let row"
                 [mcsGreyedOut]="!(row.charges?.hourly | mcsIsNotNullOrUndefined)"
-                [matTooltip]="'Current: $'+row.oldCharges?.hourly"
+                [matTooltip]="row.oldCharges?.hourlyInCurrency"
                 [matTooltipDisabled]="!row.oldCharges?.hourly">
                 {{ row.charges?.hourlyInCurrency }}
               </td>
@@ -155,7 +155,7 @@
               </th>
               <td mat-cell *matCellDef="let row"
                 [mcsGreyedOut]="!(row.charges?.oneOff | mcsIsNotNullOrUndefined)"
-                [matTooltip]="'Current: $'+row.oldCharges?.oneOff"
+                [matTooltip]="row.oldCharges?.oneOffInCurrency"
                 [matTooltipDisabled]="!row.oldCharges?.oneOff">
                 {{ row.charges?.oneOffInCurrency }}
               </td>
@@ -168,7 +168,7 @@
               </th>
               <td mat-cell *matCellDef="let row"
                 [mcsGreyedOut]="!(row.charges?.excessUsageFeePerGB | mcsIsNotNullOrUndefined)"
-                [matTooltip]="'Current: $'+row.oldCharges?.excessUsageFeePerGB"
+                [matTooltip]="row.oldCharges?.excessUsageFeePerGbInCurrency"
                 [matTooltipDisabled]="!row.oldCharges?.excessUsageFeePerGB">
                 {{ row.charges?.excessUsageFeePerGbInCurrency }}
               </td>
