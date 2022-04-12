@@ -93,6 +93,9 @@ export class McsOrderItem extends McsEntityBase {
   @JsonProperty({ target: McsOrderCharge })
   public charges: McsOrderCharge = undefined;
 
+  @JsonProperty({ target: McsOrderCharge })
+  public oldCharges: McsOrderCharge = undefined;
+
   @JsonProperty()
   public properties: any = undefined;
 
