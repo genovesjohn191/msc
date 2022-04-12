@@ -1,5 +1,6 @@
 import { ValidatorFn } from '@angular/forms';
 import { CoreValidators } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import {
   DynamicFormControlSettings,
   DynamicFormFieldOnChangeEvent,
@@ -12,6 +13,7 @@ export class DynamicInputNetworkDbNetworkNameField extends DynamicInputTextField
   // Overrides
   public type: DynamicFormFieldType = 'textbox-network-db-network-name';
   public template: DynamicFormFieldTemplate = 'input-network-db-network-name';
+  public pattern: RegExp = CommonDefinition.REGEX_NETWORK_NAME;
 
   public whitelist: Array<string> = [];
   public nameUniquenessValidator?: (inputValue: any) => boolean = () => true;
@@ -36,6 +38,7 @@ export class DynamicInputNetworkDbNetworkNameField extends DynamicInputTextField
   }
 
   public configureValidators(validators: ValidatorFn[]) {
+    validators.push(CoreValidators.networkName);
     validators.push(CoreValidators.custom(
       this.nameUniquenessValidator.bind(this),
       'unique'
