@@ -31,6 +31,12 @@ export class McsResourceStorage extends McsEntityBase {
   @JsonProperty()
   public serviceChangeAvailable: boolean = undefined;
 
+  @JsonProperty()
+  public isStretched: boolean = undefined;
+
+  @JsonProperty()
+  public isDefault: boolean = undefined;
+
   /**
    * Returns storage toggle label
    */

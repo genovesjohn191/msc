@@ -53,7 +53,7 @@
               </mcs-option>
             </mcs-select>
           </mcs-form-field>
-          <span read-only>{{ noServicesFallbackText | translate }}</span>
+          <span read-only>{{ noItemsFallbackText | translate }}</span>
 
           <ng-container *ngIf="selectedResource$ | async as selectedResource">
               <div class="action-box" *mcsComponentHandler>
@@ -62,22 +62,45 @@
                   (selectionChange)="onChangeStorage($event)"
                   [placeholder]="'orderVdcStorageExpand.vdcStorage.placeholder' | translate"
                   [mcsContextualHelp]="'orderVdcStorageExpand.vdcStorage.contextualHelp' | translate"
-                  mcsId="select-storage">
-                  <mcs-option *ngFor="let storage of selectedResource.storage" [value]="storage"
-                    [selected]="(selectedStorage$ | async)?.id === storage.id">
-                    {{ storage.name }}
-                  </mcs-option>
+                  mcsId="select-storage"
+                  *ngIf="storageCount">
+                  <mcs-option-group>
+                    <ng-container *mcsOptionGroupHeader>
+                      {{ 'orderVdcStorageExpand.vdcStorage.defaultProfile' | translate }}
+                    </ng-container>
+                    <ng-container *ngFor="let storage of selectedResource.storage">
+                      <mcs-option *ngIf="storage?.isDefault" [value]="storage"
+                        [selected]="(selectedStorage$ | async)?.id === storage.id">
+                        {{ storage.name }}
+                      </mcs-option>
+                    </ng-container>
+                  </mcs-option-group>
+                  <mcs-option-group>
+                    <ng-container *mcsOptionGroupHeader>
+                      {{ 'orderVdcStorageExpand.vdcStorage.otherProfiles' | translate }}
+                    </ng-container>
+                    <ng-container *ngFor="let storage of selectedResource.storage">
+                      <mcs-option *ngIf="!storage?.isDefault" [value]="storage"
+                        [selected]="(selectedStorage$ | async)?.id === storage.id">
+                        {{ storage.name }}
+                      </mcs-option>
+                    </ng-container>
+                  </mcs-option-group>
                 </mcs-select>
-                <span read-only *ngIf="!hasStorageServiceId; else fgManageStorageTemplate">
-                  {{ 'orderVdcStorageExpand.vdcStorage.warningLabel' | translate }}
-                </span>
+                <ng-container>
+                  <span read-only *ngIf="!storageCount || (selectedVdcStorage && fallbackLabel); else fgManageStorageTemplate">
+                      {{ this.fallbackLabel | translate }}
+                  </span>
+                </ng-container>
 
                 <ng-template #fgManageStorageTemplate>
-                  <mcs-vdc-manage-storage #fgManageStorage
-                    [initialValue]="storageGB"
-                    [mcsContextualHelp]="'orderVdcStorageExpand.vdcDetails.contextualHelp' | translate"
-                    (dataChange)="onVdcStorageChange($event, fcResource?.value, fcStorage?.value)">
-                  </mcs-vdc-manage-storage>
+                  <ng-container *ngIf="selectedVdcStorage">
+                    <mcs-vdc-manage-storage #fgManageStorage
+                      [initialValue]="storageGB"
+                      [mcsContextualHelp]="'orderVdcStorageExpand.vdcDetails.contextualHelp' | translate"
+                      (dataChange)="onVdcStorageChange($event, fcResource?.value, fcStorage?.value)">
+                    </mcs-vdc-manage-storage>
+                  </ng-container>
               </ng-template>
               </div>
           </ng-container>

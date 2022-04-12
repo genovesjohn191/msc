@@ -19,14 +19,26 @@
         mcsId="select-storage"
         placeholder="Select storage profile">
 
-        <mcs-option-group>
-          <ng-container *mcsOptionGroupHeader>
-            Storage Profiles
-          </ng-container>
-          <mcs-option *ngFor="let storage of storages" [value]="storage">
-            {{ storage.name }}
-          </mcs-option>
-        </mcs-option-group>
+          <mcs-option-group>
+            <ng-container *mcsOptionGroupHeader>
+              {{ 'orderVdcStorageExpand.vdcStorage.defaultProfile' | translate }}
+            </ng-container>
+            <ng-container *ngFor="let storage of storages">
+              <mcs-option *ngIf="storage?.isDefault" [value]="storage">
+                {{ storage.name }}
+              </mcs-option>
+            </ng-container>
+          </mcs-option-group>
+          <mcs-option-group>
+            <ng-container *mcsOptionGroupHeader>
+              {{ 'orderVdcStorageExpand.vdcStorage.otherProfiles' | translate }}
+            </ng-container>
+            <ng-container *ngFor="let storage of storages">
+              <mcs-option *ngIf="!storage?.isDefault" [value]="storage">
+                {{ storage.name }}
+              </mcs-option>
+            </ng-container>
+          </mcs-option-group>
       </mcs-select>
     </mcs-form-field>
   </ng-container>
