@@ -291,18 +291,16 @@ export class ServerManageStorageComponent
     let noStorages = isNullOrEmpty(this.storages);
     if (noStorages) { return; }
 
-    let targetStorageFound = this.storages.find((storage) =>
-      storage.name === getSafeProperty(this.targetDisk, (obj) => obj.storageProfile)
-    );
-    let targetStorageToSelect = isNullOrEmpty(targetStorageFound) ?
-      this.storages[0] : targetStorageFound;
+      let storage = this.storages;
+      let storageProfileFound = storage.find(storage => storage.isDefault);
+      let fcStorageProfileValue = storageProfileFound ? storageProfileFound : null;
 
-    if (!isNullOrEmpty(this.fcSelectStorages)) {
-      this.fcSelectStorages.setValue(targetStorageToSelect);
+      if (!isNullOrEmpty(this.fcSelectStorages)) {
+        this.fcSelectStorages.setValue(fcStorageProfileValue);
 
-      let availableMemoryExceeded = !this.hasAvailableMemory;
-      if (availableMemoryExceeded) { this.fcSelectStorages.markAsTouched(); }
-    }
+        let availableMemoryExceeded = !this.hasAvailableMemory;
+        if (availableMemoryExceeded) { this.fcSelectStorages.markAsTouched(); }
+      }
   }
 
   /**

@@ -44,6 +44,7 @@ export enum McsFeatureFlag {
 
   OrderingServiceCustomChange = 'EnableOrderingServiceCustomRequest',
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
+  OrderingStretchedVdcStorageExpand = 'EnableOrderingStretchedVdcStorageExpand',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',
   DnsListing = 'EnablePrivateCloudNetworkDnsListing',
 
@@ -51,6 +52,7 @@ export enum McsFeatureFlag {
   ProvisionServiceRequest = 'EnableProvisionServiceRequest',
 
   StorageProfileBreakdown = 'EnableStorageProfileBreakdown',
+  StorageProfileDisabledValidation = 'EnableStorageProfileDisabledValidation',
 
   ServerOsUpdates = 'EnableServerOsUpdates',
 
