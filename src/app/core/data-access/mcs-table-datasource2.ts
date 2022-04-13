@@ -11,7 +11,6 @@ import {
   distinctUntilChanged,
   exhaustMap,
   filter,
-  finalize,
   map,
   shareReplay,
   startWith,
@@ -159,6 +158,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
   }
 
   public onCompletion(data?: TEntity[]): void {
+    this._sortingChange.next(false);
     if (!isNullOrEmpty(this._search)) {
       this._search.showLoading(false);
     }
@@ -372,9 +372,6 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
         this._dataStatusChange.next(response.totalCount > 0 ?
           DataStatus.Success : DataStatus.Empty
         );
-      }),
-      finalize(() => {
-        this._sortingChange.next(false);
       })
     ).subscribe();
   }
