@@ -90,7 +90,7 @@
           </mcs-action-item>
         </mcs-responsive-panel>
 
-        <ng-container *ngIf="datasource?.isSorting$ | async; else totalCountTemplate">
+        <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
           <div class="sorting-label">
             <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
           </div>
