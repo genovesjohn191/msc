@@ -1,11 +1,5 @@
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -13,25 +7,24 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
-import { Sort } from '@angular/material/sort';
-
 import {
+  McsAccessControlService,
   McsAuthenticationIdentity,
   McsCookieService,
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
-  McsTableEvents,
-  McsAccessControlService,
-  McsFilterPanelEvents
+  McsTableEvents
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
   McsFilterInfo,
-  McsTicketQueryParams,
   McsTicket,
+  McsTicketQueryParams,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -68,10 +61,7 @@ export class TicketsComponent {
   public isTabChanged: boolean = false;
 
   private _search: Search;
-  public isSorting: boolean;
 
-  private _sortDirection: string;
-  private _sortField: string;
 
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   constructor(
@@ -121,6 +111,13 @@ export class TicketsComponent {
   public set columnFilter(value: ColumnFilter) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
+    }
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
     }
   }
 
@@ -177,12 +174,7 @@ export class TicketsComponent {
     this._navigationService.navigateTo(RouteKey.TicketCreate);
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
+
 
   private _getTickets(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTicket>> {
     let queryParam = new McsTicketQueryParams();
@@ -192,8 +184,8 @@ export class TicketsComponent {
     this.urlParamSearchKeyword = this._activatedRoute.snapshot.queryParams.filter || undefined;
     let searchKeyword = isNullOrEmpty(param.search) ? this.urlParamSearchKeyword : queryParamSearch;
     queryParam.keyword = searchKeyword;
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     if(this.selectedTabIndex < 2){
       queryParam.state = this.selectedTabIndex === 0 ? 'open' : 'closed';
@@ -202,15 +194,12 @@ export class TicketsComponent {
 
 
     return this._apiService.getTickets(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
+
       map(response => {
-        this.isSorting = false;
+
         let sortedCollections: McsTicket[];
 
-        if (isNullOrEmpty(this._sortDirection) && isNullOrEmpty(this._sortField)) {
+        if (isNullOrEmpty(queryParam.sortDirection) && isNullOrEmpty(queryParam.sortField)) {
           let ticketSortPredicate = (firstRecord: McsTicket, secondRecord: McsTicket) =>
             compareDates(secondRecord.updatedOn, firstRecord.updatedOn);
           sortedCollections = response?.collection?.sort(ticketSortPredicate);

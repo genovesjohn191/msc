@@ -1,11 +1,5 @@
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -14,15 +8,14 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
+import { MatSort } from '@angular/material/sort';
 import {
   McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
-  McsTableDataSource2,
+  McsTableDataSource2
 } from '@app/core';
 import {
   McsFilterInfo,
@@ -40,7 +33,7 @@ import {
   createObject,
   getSafeProperty,
   isNullOrEmpty,
-  isNullOrUndefined,
+  isNullOrUndefined
 } from '@app/utilities';
 
 @Component({
@@ -69,11 +62,6 @@ export class PlannedWorkListingComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'outageDurationMinutes' })
   ];
 
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
-
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
@@ -84,7 +72,7 @@ export class PlannedWorkListingComponent {
       .registerConfiguration(new McsMatTableConfig(true));
     this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
-  
+
   @ViewChild('search')
   public set search(value: Search) {
     if (!isNullOrEmpty(value) && this._search !== value ) {
@@ -107,6 +95,13 @@ export class PlannedWorkListingComponent {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public navigateToPlannedWorkDetails(plannedWork: McsPlannedWork) {
     if (isNullOrEmpty(plannedWork)) { return; }
     this._navigationService.navigateTo(RouteKey.PlannedWorkDetails, [plannedWork.id]);
@@ -122,13 +117,6 @@ export class PlannedWorkListingComponent {
       return 'Times displayed are in your local time zone.';
     }
     return 'Time Zone: ' + timeZone;
-  }
-
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
   }
 
   private _isColumnIncluded(filter: McsFilterInfo): boolean {
@@ -150,8 +138,8 @@ export class PlannedWorkListingComponent {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     switch(this.selectedTabIndex){
       case 0:
@@ -163,12 +151,7 @@ export class PlannedWorkListingComponent {
     }
 
     return this._apiService.getPlannedWork(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
       })
     );

@@ -5,7 +5,7 @@
   <mcs-top-panel *mcsTopPanelDef>
    <mcs-top-panel-item *mcsTopPanelItemDef>
      <div class="listing-action-wrapper">
-      <ng-container *ngIf="isSorting; else totalCountTemplate">
+      <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
         <div class="sorting-label">
           <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
         </div>
@@ -54,7 +54,7 @@
     <mcs-search *ngIf="isMobile" #search mcsId="planned-work-mobile-search"></mcs-search>
 
      <!-- Table -->
-     <table mat-table  #table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+     <table mat-table  #table [dataSource]="dataSource" matSort #sort="matSort">
 
       <!-- Id Column -->
       <ng-container matColumnDef="id">
@@ -97,7 +97,7 @@
           [innerHtml]="row.typeLabel | mcsDataLabel: 'Unknown'">
         </td>
       </ng-container>
-      
+
       <!-- Summary Column -->
       <ng-container matColumnDef="summary">
         <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="summary" disableClear>

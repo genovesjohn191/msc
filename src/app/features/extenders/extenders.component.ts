@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -5,26 +8,7 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
-import {
-  McsExtenderService,
-  McsQueryParam,
-  McsFilterInfo,
-  RouteKey
-} from '@app/models';
-import {
-  CommonDefinition,
-  createObject,
-  getSafeProperty,
-  isNullOrEmpty
-} from '@app/utilities';
+import { MatSort } from '@angular/material/sort';
 import {
   McsFilterPanelEvents,
   McsMatTableContext,
@@ -33,14 +17,25 @@ import {
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
-import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
+import {
+  McsExtenderService,
+  McsFilterInfo,
+  McsQueryParam,
+  RouteKey
+} from '@app/models';
+import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
   Paginator,
   Search
 } from '@app/shared';
-import { Sort } from '@angular/material/sort';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-extenders',
@@ -66,10 +61,6 @@ export class ExtendersComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
-
-  private _sortDirection: string;
-  private _sortField: string;
-  public isSorting: boolean;
 
   constructor(
     _injector: Injector,
@@ -105,11 +96,11 @@ export class ExtendersComponent {
     }
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
   }
 
   private _getExtenders(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsExtenderService>> {
@@ -117,16 +108,11 @@ export class ExtendersComponent {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getExtenders(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)
       })

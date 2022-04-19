@@ -1,49 +1,42 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
-  Component,
   ChangeDetectionStrategy,
-  Injector,
   ChangeDetectorRef,
+  Component,
+  Injector,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
+import { MatSort } from '@angular/material/sort';
 import {
-  catchError,
-  map
-} from 'rxjs/operators';
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-
-import {
+  McsFilterPanelEvents,
+  McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
-  McsTableEvents,
-  McsMatTableQueryParam,
-  McsMatTableContext,
-  McsFilterPanelEvents
+  McsTableEvents
 } from '@app/core';
-import {
-  McsBackUpAggregationTarget,
-  McsQueryParam,
-  RouteKey,
-  InviewLevel,
-  inviewLevelText,
-  McsFilterInfo
-} from '@app/models';
-import {
-  createObject,
-  getSafeProperty,
-  isNullOrEmpty
-} from '@app/utilities';
-import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
+import {
+  inviewLevelText,
+  InviewLevel,
+  McsBackUpAggregationTarget,
+  McsFilterInfo,
+  McsQueryParam,
+  RouteKey
+} from '@app/models';
+import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
   Paginator,
   Search
 } from '@app/shared';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-aggregation-targets',
@@ -63,11 +56,6 @@ export class AggregationTargetsComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
-
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -103,6 +91,13 @@ export class AggregationTargetsComponent {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public inviewLevelLabel(inview: InviewLevel): string {
     return inviewLevelText[inview];
   }
@@ -120,30 +115,20 @@ export class AggregationTargetsComponent {
     this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
+
 
   private _getBackupAggregationTargets(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsBackUpAggregationTarget>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getBackupAggregationTargets(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
+
       map(response => {
-        this.isSorting = false;
-        return new McsMatTableContext(response?.collection,
-        response?.totalCollectionCount)
+        return new McsMatTableContext(response?.collection, response?.totalCollectionCount)
       })
     );
   }

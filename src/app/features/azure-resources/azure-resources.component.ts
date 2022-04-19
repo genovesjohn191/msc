@@ -1,6 +1,6 @@
 import {
-  Observable,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   catchError,
@@ -14,6 +14,7 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import {
   McsFilterPanelEvents,
   McsMatTableContext,
@@ -42,7 +43,6 @@ import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-azure-resources',
@@ -67,10 +67,6 @@ export class AzureResourcesComponent {
 
   public tagName: string;
   public tagValue: string;
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -106,11 +102,11 @@ export class AzureResourcesComponent {
     }
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
   }
 
   public get cogIconKey(): string {
@@ -202,16 +198,11 @@ export class AzureResourcesComponent {
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.tagName = this.tagName;
     queryParam.tagValue = this.tagValue;
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getAzureResources(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)
       })

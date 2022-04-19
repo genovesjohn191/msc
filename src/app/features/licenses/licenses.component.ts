@@ -1,10 +1,8 @@
 import {
   Observable,
-  Subject,
-  throwError
+  Subject
 } from 'rxjs';
 import {
-  catchError,
   map,
   shareReplay,
   takeUntil
@@ -19,6 +17,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
 import {
   McsAccessControlService,
@@ -47,18 +46,17 @@ import {
   Search
 } from '@app/shared';
 import {
+  addDaysToDate,
+  compareDates,
   createObject,
+  getCurrentDate,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition,
-  addDaysToDate,
-  getCurrentDate,
-  compareDates
+  CommonDefinition
 } from '@app/utilities';
 
 import { LicenseService } from './licenses.service';
-import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-licenses',
@@ -91,10 +89,6 @@ export class LicensesComponent implements OnInit, OnDestroy {
   public activeJobs$: Observable<McsJob[]>;
   public licenses$: Observable<McsLicense[]>;
   private _destroySubject = new Subject<void>();
-
-  public isSorting: boolean;
-  private _sortDirection: string;
-  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -134,6 +128,13 @@ export class LicensesComponent implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public get addIconKey(): string {
     return CommonDefinition.ASSETS_SVG_PLUS;
   }
@@ -157,13 +158,6 @@ export class LicensesComponent implements OnInit, OnDestroy {
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
-  }
-
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
   }
 
   /**
@@ -288,16 +282,11 @@ export class LicensesComponent implements OnInit, OnDestroy {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getLicenses(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)
       })

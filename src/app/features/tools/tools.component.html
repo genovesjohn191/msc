@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <ng-container *ngIf="isSorting; else totalCountTemplate">
+        <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
           <div class="sorting-label">
             <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
           </div>
@@ -22,7 +22,7 @@
   <mcs-content-panel *mcsContentPanelDef>
 
     <div class="listing-table-wrapper limited-view">
-      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+      <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
         <!-- Service Column -->
         <ng-container matColumnDef="portal">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="name" disableClear>

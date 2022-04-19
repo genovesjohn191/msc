@@ -5,7 +5,7 @@
     <!-- Notifications Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <ng-container *ngIf="isSorting; else totalCountTemplate">
+        <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
           <div class="sorting-label">
             <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
           </div>
@@ -46,7 +46,7 @@
       <mcs-search *ngIf="isMobile" #search mcsId="notifications-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+      <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
         <!-- ID Column -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>
@@ -60,7 +60,7 @@
             </mcs-item>
           </td>
         </ng-container>
-      
+
         <!-- Notification Column -->
         <ng-container matColumnDef="notification">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="description" disableClear>

@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -5,14 +8,7 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
+import { MatSort } from '@angular/material/sort';
 import {
   McsFilterPanelEvents,
   McsMatTableContext,
@@ -36,14 +32,13 @@ import {
 } from '@app/shared';
 import {
   addDaysToDate,
-  CommonDefinition,
   compareDates,
   createObject,
   getCurrentDate,
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
-import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-azure-reservations',
@@ -75,10 +70,6 @@ export class AzureReservationsComponent {
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
-
-  public isSorting: boolean;
-  private _sortDirection: string;
-  private _sortField: string;
 
   constructor(
     _injector: Injector,
@@ -114,15 +105,15 @@ export class AzureReservationsComponent {
     }
   }
 
-  public retryDatasource(): void {
-    this.dataSource.refreshDataRecords();
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
   /**
@@ -148,16 +139,11 @@ export class AzureReservationsComponent {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getAzureReservations(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)
       })
