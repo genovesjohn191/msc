@@ -21,6 +21,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -79,6 +80,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsServer>;
   public readonly dataSelection: McsTableSelection2<McsServer>;
   public readonly dataEvents: McsTableEvents<McsServer>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   private resources: McsResource[] = [];
 
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
@@ -116,6 +118,7 @@ export class ServersComponent implements OnInit, OnDestroy {
       dataClearEvent: McsEvent.dataClearServers,
       entityDeleteEvent: McsEvent.entityDeletedEvent
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnInit() {

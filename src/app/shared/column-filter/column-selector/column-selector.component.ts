@@ -5,14 +5,17 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import { McsFilterService } from '@app/core';
 import { McsFilterInfo } from '@app/models';
 import {
   isNullOrEmpty,
+  isNullOrUndefined,
   unsubscribeSafely
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,7 +31,7 @@ import { ColumnFilter } from '../column-filter.interface';
     'class': 'column-selector-wrapper'
   }
 })
-export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnDestroy {
+export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnChanges, OnDestroy {
   @Input()
   public storageKey: string;
 
@@ -40,6 +43,9 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnDestroy 
 
   @Input()
   public triggerable: boolean;
+
+  @Input()
+  public filterPanelExpanded: boolean;
 
   public filters = new Array<McsFilterInfo>();
   public filtersChange = new BehaviorSubject<McsFilterInfo[]>([]);
@@ -53,6 +59,13 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnDestroy 
   public ngOnInit(): void {
     this._validateDefaultFilters();
     this._initializeFilterSettings();
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    let leftPanelChange = changes['filterPanelExpanded'];
+    if (!isNullOrUndefined(leftPanelChange?.previousValue)) {
+      this.notifyDataChange();
+    }
   }
 
   public ngOnDestroy(): void {
@@ -98,6 +111,7 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnDestroy 
       if (isNullOrEmpty(filter)) { return; }
       convertedArrayToMap.set(filter.id, filter);
     });
-    this._filterService.saveFilterSettings(this.storageKey, convertedArrayToMap);
+
+    this._filterService.saveFilterSettings(this.storageKey, convertedArrayToMap, this.filterPanelExpanded);
   }
 }

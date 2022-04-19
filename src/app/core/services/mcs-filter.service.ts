@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { McsFilterInfo } from '@app/models';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import {
+  McsFilterInfo,
+  McsFilterPanel
+} from '@app/models';
 import {
   compareArrays,
   convertJsonToMapObject,
@@ -18,7 +23,8 @@ export class McsFilterService {
 
   constructor(
     private _storageService: McsStorageService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this._filters = new Map<string, any>();
     this.load();
@@ -59,8 +65,10 @@ export class McsFilterService {
    * @param key Key for the item
    * @param value Value to be saved on the item
    */
-  public saveFilterSettings(key: string, value: Map<string, McsFilterInfo>): void {
-    this._storageService.setItem(key, convertMapToJsonObject(value));
+  public saveFilterSettings(key: string, value: Map<string, McsFilterInfo>, filterPanelExpanded?: boolean): void {
+    let expand = createObject(McsFilterPanel, { expanded: filterPanelExpanded });
+    let filterInfo = {...expand, ...convertMapToJsonObject(value)};
+    this._storageService.setItem(key, filterInfo);
   }
 
   /**
@@ -110,6 +118,11 @@ export class McsFilterService {
     let convertedFilters = new Array<McsFilterInfo>();
 
     mapFilters.forEach((filterValue, filterKey) => {
+      if (filterKey === 'expanded') {
+        this._eventDispatcher.dispatch(McsEvent.filterPanelToggle,
+          createObject(McsFilterPanel, { expanded: filterValue }));
+        return;
+      }
       convertedFilters.push(
         createObject<any, McsFilterInfo>(McsFilterInfo, {
           ...filterValue,

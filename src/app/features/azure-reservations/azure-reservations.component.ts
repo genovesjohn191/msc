@@ -14,6 +14,7 @@ import {
   map
 } from 'rxjs/operators';
 import {
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -57,6 +58,7 @@ export class AzureReservationsComponent {
 
   public readonly dataSource: McsTableDataSource2<McsAzureReservation>;
   public readonly dataEvents: McsTableEvents<McsAzureReservation>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'productName' }),
@@ -88,6 +90,7 @@ export class AzureReservationsComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAzureReservations
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

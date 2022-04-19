@@ -26,6 +26,7 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import {
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -54,6 +55,7 @@ export class AzureSubscriptionsComponent {
 
   public readonly dataSource: McsTableDataSource2<McsAzureService>;
   public readonly dataEvents: McsTableEvents<McsAzureService>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
@@ -75,6 +77,7 @@ export class AzureSubscriptionsComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAzureManagedServices
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

@@ -1,4 +1,4 @@
-<mcs-page [header]="'aggregationTargets.header' | translate">
+<mcs-page [header]="'aggregationTargets.header' | translate" [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
@@ -30,7 +30,8 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'aggregationTargets.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="aggregationTargets"
-        [defaultFilters]="defaultColumnFilters">
+        [defaultFilters]="defaultColumnFilters"
+        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

@@ -62,6 +62,10 @@ export class PageComponent implements AfterViewInit {
   @Input()
   public leftPanelExpandedByDefault: boolean = false;
 
+  @Input()
+  public set filterPanelCollapsed(collapsed: boolean) {
+    this._changePanelDisplay(collapsed);
+  }
   /**
    * Determine weather the left panel is collapsed
    */

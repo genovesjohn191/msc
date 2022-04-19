@@ -15,6 +15,7 @@ import {
   map
 } from 'rxjs/operators';
 import {
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -57,6 +58,7 @@ export class AzureSoftwareSubscriptionsComponent {
 
   public readonly dataSource: McsTableDataSource2<McsAzureSoftwareSubscription>;
   public readonly dataEvents: McsTableEvents<McsAzureSoftwareSubscription>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
@@ -85,6 +87,7 @@ export class AzureSoftwareSubscriptionsComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAzureSoftwareSubscriptions
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

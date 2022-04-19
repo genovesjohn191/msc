@@ -17,6 +17,7 @@ import {
 import { Sort } from '@angular/material/sort';
 
 import {
+  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -50,6 +51,7 @@ import {
 })
 export class PlannedWorkListingComponent {
   public readonly dataSource: McsTableDataSource2<McsPlannedWork>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   private _search: Search;
   public selectedTabIndex: number = 0;
   public isTabChanged: boolean = false;
@@ -80,6 +82,7 @@ export class PlannedWorkListingComponent {
   ) {
     this.dataSource = new McsTableDataSource2<McsPlannedWork>(this._getPlannedWorkList.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
   
   @ViewChild('search')

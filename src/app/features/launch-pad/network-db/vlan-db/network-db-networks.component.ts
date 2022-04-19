@@ -16,6 +16,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -50,6 +51,7 @@ export class NetworkDbNetworksComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbNetwork>;
   public readonly dataEvents: McsTableEvents<McsNetworkDbNetwork>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _sortDirection: string;
@@ -78,6 +80,7 @@ export class NetworkDbNetworksComponent implements OnDestroy {
       dataChangeEvent: McsEvent.dataChangeNetworkDbNetworksEvent,
       entityDeleteEvent: McsEvent.entityDeletedEvent
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnDestroy(): void {

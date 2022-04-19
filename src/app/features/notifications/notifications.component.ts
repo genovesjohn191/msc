@@ -25,7 +25,8 @@ import {
   McsNavigationService,
   McsTableDataSource2,
   McsTableEvents,
-  McsAccessControlService
+  McsAccessControlService,
+  McsFilterPanelEvents
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -59,6 +60,7 @@ import {
 export class NotificationsComponent implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsJob>;
   public readonly dataEvents: McsTableEvents<McsJob>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'id' }),
@@ -90,6 +92,7 @@ export class NotificationsComponent implements OnDestroy {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeJobs
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
     this._registerEvents();
   }
 

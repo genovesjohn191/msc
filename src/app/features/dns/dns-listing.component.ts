@@ -12,6 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import {
   CoreRoutes,
   McsAccessControlService,
+  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -48,7 +49,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class DnsListingComponent {
   public readonly dataSource: McsTableDataSource2<McsNetworkDnsBase>;
   public readonly dataEvents: McsTableEvents<McsNetworkDnsBase>;
-
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'billingDescription' }),
@@ -72,6 +73,7 @@ export class DnsListingComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeDnsListing
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

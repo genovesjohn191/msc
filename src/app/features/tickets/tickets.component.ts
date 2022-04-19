@@ -24,7 +24,8 @@ import {
   McsNavigationService,
   McsTableDataSource2,
   McsTableEvents,
-  McsAccessControlService
+  McsAccessControlService,
+  McsFilterPanelEvents
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
@@ -59,6 +60,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class TicketsComponent {
   public readonly dataSource: McsTableDataSource2<McsTicket>;
   public readonly dataEvents: McsTableEvents<McsTicket>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[];
 
   public urlParamSearchKeyword: string;
@@ -86,6 +88,7 @@ export class TicketsComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeTickets
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketId' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketNumber' }),

@@ -21,7 +21,8 @@ import {
   McsTableDataSource2,
   McsTableEvents,
   McsMatTableQueryParam,
-  McsMatTableContext
+  McsMatTableContext,
+  McsFilterPanelEvents
 } from '@app/core';
 import {
   McsBackUpAggregationTarget,
@@ -54,6 +55,7 @@ export class AggregationTargetsComponent {
 
   public readonly dataSource: McsTableDataSource2<McsBackUpAggregationTarget>;
   public readonly dataEvents: McsTableEvents<McsBackUpAggregationTarget>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'aggregationTarget' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'retentionPeriod' }),
@@ -77,6 +79,7 @@ export class AggregationTargetsComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAggregationTargets
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

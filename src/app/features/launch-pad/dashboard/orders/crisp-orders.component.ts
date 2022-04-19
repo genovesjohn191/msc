@@ -18,6 +18,7 @@ import {
 
 import {
   McsAuthenticationIdentity,
+  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -52,6 +53,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 export class CrispOrdersComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsObjectCrispOrder>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _state: CrispOrderState = 'OPEN';
@@ -77,6 +79,7 @@ export class CrispOrdersComponent implements OnDestroy {
   ) {
     this.dataSource = new McsTableDataSource2<McsObjectCrispOrder>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
 
   }
 

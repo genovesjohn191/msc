@@ -1,4 +1,5 @@
-<mcs-page [header]="'licenses.header' | translate">
+<mcs-page [header]="'licenses.header' | translate"
+  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <ng-container *mcsAccessControl="['OrderEdit'];">
@@ -59,7 +60,8 @@
       <mcs-column-selector #columnFilter
         storageKey="licenses"
         [defaultFilters]="defaultColumnFilters"
-        [filterPredicate]="filterPredicate">
+        [filterPredicate]="filterPredicate"
+        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
       </mcs-column-selector>
     </mcs-left-panel-item>
 

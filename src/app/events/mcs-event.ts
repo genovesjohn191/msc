@@ -35,6 +35,7 @@ import { EntityCreatedEvent } from './items/entity-created.event';
 import { EntityDeletedEvent } from './items/entity-deleted.event';
 import { EntityUpdatedEvent } from './items/entity-updated.event';
 import { ErrorShowEvent } from './items/error-show.event';
+import { FilterPanelToggleEvent } from './items/filter-panel-toggle-event';
 import { InternetChangePortPlanSelectedEvent } from './items/internet-change-port-plan-selected.event';
 import { JobBackupAggregationTargetAddEvent } from './items/job-backup-aggregation-target-add.event';
 import { JobCurrentUserEvent } from './items/job-current-user.event';
@@ -105,6 +106,7 @@ import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-select
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
   public static navToggle = new NavToggleEvent();
+  public static filterPanelToggle = new FilterPanelToggleEvent();
   public static accountChange = new AccountChangeEvent();
   public static userChange = new UserChangeEvent();
   public static sessionTimedOut = new SessionTimedOutEvent();

@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 import {
   CoreRoutes,
   McsAuthenticationIdentity,
+  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -45,6 +46,7 @@ import {
 export class DashboardProjectsComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsObjectProject>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   private _state: CrispOrderState = 'OPEN';
 
   public readonly defaultColumnFilters = [
@@ -65,6 +67,7 @@ export class DashboardProjectsComponent implements OnDestroy {
   ) {
     this.dataSource = new McsTableDataSource2<McsObjectProject>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public get routeKeyEnum(): any {

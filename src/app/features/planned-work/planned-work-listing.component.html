@@ -1,4 +1,5 @@
-<mcs-page [header]="'plannedWorkListing.header'| translate">
+<mcs-page [header]="'plannedWorkListing.header'| translate"
+  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
 
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
@@ -32,6 +33,7 @@
     <mcs-column-selector #columnFilter
       storageKey="plannedWorkListing"
       [defaultFilters]="defaultColumnFilters"
+      [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded"
       [filterPredicate]="filterPredicate">
     </mcs-column-selector>
     </mcs-left-panel-item>

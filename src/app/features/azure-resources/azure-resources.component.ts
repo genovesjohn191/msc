@@ -15,6 +15,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -52,6 +53,7 @@ export class AzureResourcesComponent {
 
   public readonly dataSource: McsTableDataSource2<McsAzureResource>;
   public readonly dataEvents: McsTableEvents<McsAzureResource>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
@@ -80,6 +82,7 @@ export class AzureResourcesComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAzureResources
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

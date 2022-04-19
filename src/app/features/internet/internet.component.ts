@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -45,6 +46,7 @@ export class InternetComponent {
 
   public readonly dataSource: McsTableDataSource2<McsInternetPort>;
   public readonly dataEvents: McsTableEvents<McsInternetPort>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'service' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'speed' }),
@@ -69,6 +71,7 @@ export class InternetComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeInternetPorts
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -107,7 +110,6 @@ export class InternetComponent {
     if (isNullOrEmpty(internet)) { return; }
     this._navigationService.navigateTo(RouteKey.InternetDetails, [internet.id]);
   }
-
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();

@@ -395,6 +395,7 @@ export * from './common/mcs-selection';
 export * from './common/mcs-selection-change';
 export * from './common/mcs-file-info';
 export * from './common/mcs-filter-info';
+export * from './common/mcs-filter-panel';
 export * from './common/mcs-comment';
 export * from './common/mcs-point';
 export * from './common/mcs-option';

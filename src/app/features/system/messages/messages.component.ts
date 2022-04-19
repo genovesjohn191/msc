@@ -20,6 +20,7 @@ import { Sort } from '@angular/material/sort';
 import {
   CoreRoutes,
   McsAccessControlService,
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2,
@@ -57,6 +58,7 @@ import {
 export class SystemMessagesComponent {
   public readonly dataSource: McsTableDataSource2<McsSystemMessage>;
   public readonly dataEvents: McsTableEvents<McsSystemMessage>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[];
 
   public isSorting: boolean;
@@ -76,6 +78,7 @@ export class SystemMessagesComponent {
       dataChangeEvent: McsEvent.dataChangeSystemMessages,
       dataClearEvent: McsEvent.dataClearSystemMessage
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'message' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'start' }),

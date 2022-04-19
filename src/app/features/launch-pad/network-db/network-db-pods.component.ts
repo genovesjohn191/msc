@@ -16,6 +16,7 @@ import {
 } from 'rxjs/operators';
 
 import {
+  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -48,6 +49,7 @@ import {
 export class NetworkDbPodsComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbPod>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _sortDirection: string;
@@ -72,6 +74,7 @@ export class NetworkDbPodsComponent implements OnDestroy {
   ) {
     this.dataSource = new McsTableDataSource2<McsNetworkDbPod>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnDestroy(): void {

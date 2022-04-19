@@ -1,4 +1,5 @@
-<mcs-page [header]="'networkDb.sites.header' | translate">
+<mcs-page [header]="'networkDb.sites.header' | translate"
+  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
@@ -32,7 +33,8 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'networkDb.sites.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="network-db-sites"
-        [defaultFilters]="defaultColumnFilters">
+        [defaultFilters]="defaultColumnFilters"
+        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

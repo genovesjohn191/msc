@@ -22,6 +22,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   McsAccessControlService,
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -68,6 +69,7 @@ export class LicensesComponent implements OnInit, OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsLicense>;
   public readonly dataEvents: McsTableEvents<McsLicense>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
@@ -108,6 +110,7 @@ export class LicensesComponent implements OnInit, OnDestroy {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeLicenses
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

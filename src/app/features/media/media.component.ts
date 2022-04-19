@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -46,6 +47,7 @@ import {
 export class MediaComponent implements OnInit {
   public readonly dataSource: McsTableDataSource2<McsResourceMedia>;
   public readonly dataEvents: McsTableEvents<McsResourceMedia>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[];
 
   public hasResources$: Observable<boolean>;
@@ -68,6 +70,7 @@ export class MediaComponent implements OnInit {
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'vdc' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'attachedTo' })
     ];
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnInit() {

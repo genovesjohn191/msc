@@ -26,6 +26,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import {
   CoreRoutes,
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -85,6 +86,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsTerraformDeployment>;
   public readonly dataSelection: McsTableSelection2<McsTerraformDeployment>;
   public readonly dataEvents: McsTableEvents<McsTerraformDeployment>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
 
   @ViewChild('deleteDeploymentTemplate', { read: TemplateRef })
   public deleteDeploymentTemplate: TemplateRef<any>;
@@ -126,6 +128,7 @@ export class AzureDeploymentsComponent implements OnDestroy {
       dataChangeEvent: McsEvent.dataChangeTerraformDeployments,
       dataClearEvent: McsEvent.dataClearTerraformDeployments
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
 
     this._subscribeToQueryParams();
   }

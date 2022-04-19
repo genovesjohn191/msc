@@ -21,7 +21,8 @@ import {
   McsAuthenticationIdentity,
   McsTableDataSource2,
   McsMatTableQueryParam,
-  McsMatTableContext
+  McsMatTableContext,
+  McsFilterPanelEvents
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -55,6 +56,7 @@ export class OrdersComponent {
   }
 
   public readonly dataSource: McsTableDataSource2<McsOrder>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
@@ -76,6 +78,7 @@ export class OrdersComponent {
     private _authenticationIdentity: McsAuthenticationIdentity,
   ) {
     this.dataSource = new McsTableDataSource2(this._getOrders.bind(this));
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')

@@ -11,6 +11,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
+  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -46,6 +47,7 @@ import {
 export class FirewallsComponent {
   public readonly dataSource: McsTableDataSource2<McsFirewall>;
   public readonly dataEvents: McsTableEvents<McsFirewall>;
+  public readonly filterPanelEvents: McsFilterPanelEvents;
 
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
@@ -69,6 +71,7 @@ export class FirewallsComponent {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeFirewalls
     });
+    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public get routeKeyEnum(): any {

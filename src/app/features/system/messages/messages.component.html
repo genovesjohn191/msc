@@ -1,4 +1,5 @@
-<mcs-page [header]="'systemMessages.header' | translate">
+<mcs-page [header]="'systemMessages.header' | translate"
+  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -45,7 +46,8 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'systemMessages.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         storageKey="system-message"
-        [defaultFilters]="defaultColumnFilters">
+        [defaultFilters]="defaultColumnFilters"
+        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
