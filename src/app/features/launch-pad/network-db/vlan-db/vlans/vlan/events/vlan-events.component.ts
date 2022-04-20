@@ -69,6 +69,10 @@ export class NetworkVlanEventsComponent extends McsPageBase implements OnInit, O
     }
   }
 
+  public get featureName(): string {
+    return 'vlan-events';
+  }
+
   public ngOnInit(): void {
     this._subscribeToVlanResolver();
   }

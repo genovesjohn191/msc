@@ -78,6 +78,10 @@ export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
     this.filterPanelEvents = new McsFilterPanelEvents(injector);
   }
 
+  public get featureName(): string {
+    return 'network-db-vlans';
+  }
+
   public ngOnDestroy(): void {
     this.dataSource.disconnect(null);
   }

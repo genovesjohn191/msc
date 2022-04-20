@@ -17,6 +17,7 @@ import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -50,7 +51,7 @@ import { TranslateService } from '@ngx-translate/core';
     'class': 'block'
   }
 })
-export class TicketsComponent {
+export class TicketsComponent extends McsPageBase {
   public readonly dataSource: McsTableDataSource2<McsTicket>;
   public readonly dataEvents: McsTableEvents<McsTicket>;
   public readonly filterPanelEvents: McsFilterPanelEvents;
@@ -60,10 +61,10 @@ export class TicketsComponent {
   public selectedTabIndex: number = 0;
   public isTabChanged: boolean = false;
 
+  public readonly filterPredicate = this._isColumnIncluded.bind(this);
+
   private _search: Search;
 
-
-  public readonly filterPredicate = this._isColumnIncluded.bind(this);
   constructor(
     _injector: Injector,
     private _apiService: McsApiService,
@@ -74,6 +75,7 @@ export class TicketsComponent {
     private _accessControlService: McsAccessControlService,
     private _translateService: TranslateService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getTickets.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeTickets
@@ -121,8 +123,8 @@ export class TicketsComponent {
     }
   }
 
-  public retryDatasource(): void {
-    this.dataSource.refreshDataRecords();
+  public get featureName(): string {
+    return 'tickets';
   }
 
   public get addIconKey(): string {
@@ -136,6 +138,10 @@ export class TicketsComponent {
   public get activeCompanyId(): string {
     let companyIdHeader: string = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
     return companyIdHeader ? companyIdHeader : this._authenticationIdentity.user?.companyId;
+  }
+
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
   public onTabChanged(): void {
@@ -174,8 +180,6 @@ export class TicketsComponent {
     this._navigationService.navigateTo(RouteKey.TicketCreate);
   }
 
-
-
   private _getTickets(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsTicket>> {
     let queryParam = new McsTicketQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
@@ -190,8 +194,6 @@ export class TicketsComponent {
     if(this.selectedTabIndex < 2){
       queryParam.state = this.selectedTabIndex === 0 ? 'open' : 'closed';
     }
-
-
 
     return this._apiService.getTickets(queryParam).pipe(
 

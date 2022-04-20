@@ -10,11 +10,15 @@ import {
   convertJsonToMapObject,
   convertMapToJsonObject,
   createObject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  isNullOrUndefined
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
 import { McsStorageService } from '../services/mcs-storage.service';
+
+// Custom definition for other than data columns
+export const FILTER_LEFT_PANEL_ID = 'leftPanelFilter';
 
 @Injectable()
 export class McsFilterService {
@@ -31,44 +35,38 @@ export class McsFilterService {
   }
 
   /**
-   * Gets the filter settings based on the key
+   * Gets filter settings based on the key provided
    * @param key Key to be obtained from the settings or saved settings
-   * @deprecated Key alone was not use anymore. Use the getFilterSettings2 instead
+   * @param defaultFilters Default filter settings
    */
-  public getFilterSettings(key: string): McsFilterInfo[] {
+  public getFilterSettings(key: string, defaultFilters?: McsFilterInfo[]): McsFilterInfo[] {
     let savedSettings = this._getSavedSettings(key);
-    let defaultSettings = this._getDefaultSettings(key);
+    if (isNullOrUndefined(defaultFilters)) { return savedSettings; }
 
-    if (isNullOrEmpty(savedSettings)) { return defaultSettings; }
-    let comparisonResult = compareArrays(
-      Array.from(savedSettings.keys()),
-      Array.from(defaultSettings.keys())
-    );
-    return comparisonResult === 0 ? savedSettings : defaultSettings;
-  }
-
-  public getFilterSettings2(key: string, defaultFilters: McsFilterInfo[]): McsFilterInfo[] {
-    let savedSettings = this._getSavedSettings(key);
     let defaultSettings = defaultFilters;
-
     if (isNullOrEmpty(savedSettings)) { return defaultSettings; }
+
     let comparisonResult = compareArrays(
       Array.from(savedSettings),
       Array.from(defaultSettings),
       (_first, _second) => { return _first.id === _second.id }
     );
-    return comparisonResult === 0 ? savedSettings : defaultSettings;
+    return comparisonResult <= 0 ? savedSettings : defaultSettings;
   }
 
   /**
    * Saves the filter settings based on the key and new value
    * @param key Key for the item
-   * @param value Value to be saved on the item
+   * @param filters Value to be saved on the item
    */
-  public saveFilterSettings(key: string, value: Map<string, McsFilterInfo>, filterPanelExpanded?: boolean): void {
-    let expand = createObject(McsFilterPanel, { expanded: filterPanelExpanded });
-    let filterInfo = {...expand, ...convertMapToJsonObject(value)};
-    this._storageService.setItem(key, filterInfo);
+  public saveFilterSettings(key: string, filters: McsFilterInfo[]): void {
+    let convertedArrayToMap = new Map<string, McsFilterInfo>();
+    filters?.forEach(filter => {
+      if (isNullOrEmpty(filter)) { return; }
+      convertedArrayToMap.set(filter.id, filter);
+    });
+
+    this._storageService.setItem(key, convertMapToJsonObject(convertedArrayToMap));
   }
 
   /**

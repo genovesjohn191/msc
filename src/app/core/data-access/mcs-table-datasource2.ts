@@ -42,6 +42,8 @@ import {
   McsDisposable
 } from '@app/utilities';
 
+import { FILTER_LEFT_PANEL_ID } from '../services/mcs-filter.service';
+
 export class McsMatTableConfig<TEntity> {
 
   /**
@@ -293,7 +295,8 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
             return !this._columnFilter.filterPredicate ? item.value :
               this._columnFilter.filterPredicate(item) && item.value;
           })
-          .map(item => item.id);
+          .map(item => item.id)
+          .filter(id => id !== FILTER_LEFT_PANEL_ID);
 
         this._dataColumnsChange.next(displayedColumns);
       })

@@ -57,6 +57,10 @@ export class PlannedWorkAffectedServicesComponent extends McsPageBase implements
       .registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
+  public get featureName(): string {
+    return 'planned-work-affected-services';
+  }
+
   @ViewChild('columnFilter')
   public set columnFilter(value: ColumnFilter) {
     if (!isNullOrEmpty(value)) {

@@ -37,6 +37,8 @@ export abstract class McsPageBase implements McsDisposable {
     this.navigation = injector.get<McsNavigationService>(McsNavigationService);
   }
 
+  public abstract get featureName(): string;
+
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
   }

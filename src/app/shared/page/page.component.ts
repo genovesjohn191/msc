@@ -1,21 +1,29 @@
 import {
-  Component,
-  Input,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild,
+  Component,
   ContentChild,
-  AfterViewInit,
-  ViewEncapsulation,
   ElementRef,
+  Input,
   Renderer2,
-  ViewContainerRef
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {
+  FILTER_LEFT_PANEL_ID,
+  McsAccessControlService,
+  McsFilterService
+} from '@app/core';
+import { McsFilterInfo } from '@app/models';
+import {
+  createObject,
   isNullOrEmpty,
+  isNullOrUndefined,
   CommonDefinition
 } from '@app/utilities';
-import { PageHeaderDirective } from './page-header.directive';
+
 import {
   ContentPanelDefDirective,
   ContentPanelPlaceholderDirective
@@ -24,12 +32,12 @@ import {
   LeftPanelDefDirective,
   LeftPanelPlaceholderDirective
 } from './left-panel';
+import { PageHeaderDirective } from './page-header.directive';
+import { PageService } from './page.service';
 import {
   TopPanelDefDirective,
   TopPanelPlaceholderDirective
 } from './top-panel';
-import { PageService } from './page.service';
-import { McsAccessControlService } from '@app/core';
 
 @Component({
   selector: 'mcs-page',
@@ -43,6 +51,20 @@ import { McsAccessControlService } from '@app/core';
 })
 
 export class PageComponent implements AfterViewInit {
+  @Input()
+  public storageKey: string;
+
+  @Input()
+  public header: string;
+
+  @Input()
+  public leftPanelExpandedByDefault: boolean = false;
+
+  // Deprecated Remove this
+  @Input()
+  public set filterPanelCollapsed(collapsed: boolean) {
+    this._changePanelDisplay(collapsed);
+  }
 
   @ViewChild('pageLeftElement', { static: true })
   public pageLeftElement: ElementRef;
@@ -56,16 +78,6 @@ export class PageComponent implements AfterViewInit {
   @ContentChild(PageHeaderDirective)
   public headerTemplate: PageHeaderDirective;
 
-  @Input()
-  public header: string;
-
-  @Input()
-  public leftPanelExpandedByDefault: boolean = false;
-
-  @Input()
-  public set filterPanelCollapsed(collapsed: boolean) {
-    this._changePanelDisplay(collapsed);
-  }
   /**
    * Determine weather the left panel is collapsed
    */
@@ -117,6 +129,7 @@ export class PageComponent implements AfterViewInit {
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef,
     private _pageService: PageService,
+    private _filterService: McsFilterService,
     private _accessControlService: McsAccessControlService
   ) {
     this.hasLeftPanel = true;
@@ -152,8 +165,7 @@ export class PageComponent implements AfterViewInit {
           .createEmbeddedView(this._topPanelDefinition.template);
       }
 
-      this._pageService.leftPanelIsVisible = this.leftPanelExpandedByDefault;
-
+      this._initializePanelBySettings();
       this._initializeLeftPanelDisplay();
     });
   }
@@ -177,6 +189,17 @@ export class PageComponent implements AfterViewInit {
   }
 
   /**
+   * Initializes panel by settings
+   */
+  private _initializePanelBySettings(): void {
+    if (isNullOrEmpty(this.storageKey)) { return; }
+
+    let savedSettings = this._filterService.getFilterSettings(this.storageKey);
+    let leftPanelFound = savedSettings.find(savedItem => savedItem.id === FILTER_LEFT_PANEL_ID);
+    this._pageService.leftPanelIsVisible = leftPanelFound?.value;
+  }
+
+  /**
    * Change the panel display in which determines wheather the left panel is collapsed
    * @param collapse Collapse flag of the left panel
    */
@@ -190,6 +213,29 @@ export class PageComponent implements AfterViewInit {
       this._renderer.removeClass(this.pageLeftElement.nativeElement, 'left-panel-collapsed');
       this._pageService.leftPanelIsVisible = true;
     }
+
+    this._savePanelSettings(this._pageService.leftPanelIsVisible);
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _savePanelSettings(visibility: boolean): void {
+    if (isNullOrEmpty(this.storageKey)) { return; }
+
+    let savedFilterSettings = this._filterService.getFilterSettings(this.storageKey);
+    let leftPanelFound = savedFilterSettings.find(savedItem => savedItem.id === FILTER_LEFT_PANEL_ID);
+
+    if (isNullOrUndefined(leftPanelFound)) {
+      let leftPanelDef = createObject(McsFilterInfo, {
+        id: FILTER_LEFT_PANEL_ID,
+        value: visibility,
+        exclude: true,
+        text: 'expanded'
+      });
+      savedFilterSettings.splice(0, 0, leftPanelDef);
+    }
+    else {
+      leftPanelFound.value = visibility
+    }
+    this._filterService.saveFilterSettings(this.storageKey, savedFilterSettings);
   }
 }

@@ -1,5 +1,5 @@
-<mcs-page [header]="'tickets.header' | translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName" [header]="'tickets.header' | translate">
+
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -46,7 +46,7 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'tickets.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="tickets"
+        [storageKey]="featureName"
         [defaultFilters]="defaultColumnFilters"
         [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded"
         [filterPredicate]="filterPredicate">

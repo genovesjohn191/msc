@@ -14,13 +14,14 @@ import {
 import { McsFilterService } from '@app/core';
 import { McsFilterInfo } from '@app/models';
 import {
+  addOrUpdateArrayRecord,
   isNullOrEmpty,
   isNullOrUndefined,
   unsubscribeSafely
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ColumnFilter } from '../column-filter.interface';
+import { ColumnFilter } from './column-filter.interface';
 
 @Component({
   selector: 'mcs-column-selector',
@@ -64,7 +65,7 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnChanges,
   public ngOnChanges(changes: SimpleChanges): void {
     let leftPanelChange = changes['filterPanelExpanded'];
     if (!isNullOrUndefined(leftPanelChange?.previousValue)) {
-      this.notifyDataChange();
+      // this.notifyDataChange();
     }
   }
 
@@ -90,7 +91,7 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnChanges,
   }
 
   private _initializeFilterSettings(): void {
-    this.filters = this._filterService.getFilterSettings2(this.storageKey, this.defaultFilters);
+    this.filters = this._filterService.getFilterSettings(this.storageKey, this.defaultFilters);
     this.filtersChange.next(this.filters);
     this._changeDetectorRef.markForCheck();
   }
@@ -106,12 +107,14 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnChanges,
   }
 
   private _saveSettings(): void {
-    let convertedArrayToMap = new Map<string, McsFilterInfo>();
-    this.filters.forEach(filter => {
-      if (isNullOrEmpty(filter)) { return; }
-      convertedArrayToMap.set(filter.id, filter);
+    let savedFilters = this._filterService.getFilterSettings(this.storageKey);
+    let updatedFilters = this.filters;
+
+    updatedFilters?.forEach(updatedFilter => {
+      addOrUpdateArrayRecord(savedFilters, updatedFilter, true,
+        savedFilter => savedFilter.id === updatedFilter.id);
     });
 
-    this._filterService.saveFilterSettings(this.storageKey, convertedArrayToMap, this.filterPanelExpanded);
+    this._filterService.saveFilterSettings(this.storageKey, savedFilters);
   }
 }

@@ -28,6 +28,10 @@ export class NetworkVlanOverviewComponent extends McsPageBase implements OnInit,
     super(injector);
   }
 
+  public get featureName(): string {
+    return 'vlan-overview';
+  }
+
   public ngOnInit(): void {
     this._subscribeToVlanResolver();
   }

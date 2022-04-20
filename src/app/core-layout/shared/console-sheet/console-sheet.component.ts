@@ -35,6 +35,10 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
     this.viewModel = new ConsoleSheetViewModel(injector);
   }
 
+  public get featureName(): string {
+    return 'console-sheet';
+  }
+
   public ngOnInit(): void {
   }
 

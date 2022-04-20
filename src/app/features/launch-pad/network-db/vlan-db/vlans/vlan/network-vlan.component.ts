@@ -41,6 +41,10 @@ export class NetworkVlanComponent extends McsPageBase implements OnInit, OnDestr
     this.tabEvents = new McsTabEvents(injector);
   }
 
+  public get featureName(): string {
+    return 'network-vlan';
+  }
+
   public ngOnInit(): void {
     this._subscribeToVlanResolve();
   }

@@ -35,6 +35,10 @@ export class FeedbackSheetComponent extends McsPageBase implements OnInit, OnDes
     this.viewModel = new FeedbackSheetViewModel(injector);
   }
 
+  public get featureName(): string {
+    return 'feedback-sheet';
+  }
+
   public ngOnInit(): void {
   }
 
