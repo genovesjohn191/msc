@@ -16,10 +16,10 @@ import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
   McsAuthenticationIdentity,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -52,10 +52,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NotificationsComponent implements OnDestroy {
+export class NotificationsComponent extends McsPageBase implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsJob>;
   public readonly dataEvents: McsTableEvents<McsJob>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'id' }),
@@ -78,11 +77,11 @@ export class NotificationsComponent implements OnDestroy {
     private _navigationService: McsNavigationService,
     private _accessControlService: McsAccessControlService,
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getJobs.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeJobs
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
     this._registerEvents();
   }
 
@@ -116,6 +115,10 @@ export class NotificationsComponent implements OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._accountChangeHandler);
+  }
+
+  public get featureName(): string {
+    return 'notifications';
   }
 
   public get activeCompany(): McsCompany {

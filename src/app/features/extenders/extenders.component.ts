@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -42,7 +42,7 @@ import {
   templateUrl: './extenders.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExtendersComponent {
+export class ExtendersComponent extends McsPageBase {
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
@@ -50,7 +50,6 @@ export class ExtendersComponent {
 
   public readonly dataSource: McsTableDataSource2<McsExtenderService>;
   public readonly dataEvents: McsTableEvents<McsExtenderService>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
@@ -68,11 +67,11 @@ export class ExtendersComponent {
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getExtenders.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeExtenders
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -101,6 +100,10 @@ export class ExtendersComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'extenders';
   }
 
   private _getExtenders(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsExtenderService>> {

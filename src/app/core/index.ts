@@ -78,7 +78,6 @@ export * from './data-access/mcs-table-datasource2';
 export * from './data-access/mcs-table-selection2';
 export * from './data-access/mcs-table-events';
 export * from './data-access/mcs-tab.events';
-export * from './data-access/mcs-filter-panel.events';
 
 // Interfaces
 export * from './interfaces/mcs-fallible.interface';

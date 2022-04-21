@@ -13,7 +13,6 @@ import {
   McsAccessControlService,
   McsAuthenticationIdentity,
   McsCookieService,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -54,8 +53,17 @@ import { TranslateService } from '@ngx-translate/core';
 export class TicketsComponent extends McsPageBase {
   public readonly dataSource: McsTableDataSource2<McsTicket>;
   public readonly dataEvents: McsTableEvents<McsTicket>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
-  public readonly defaultColumnFilters: McsFilterInfo[];
+  public readonly defaultColumnFilters: McsFilterInfo[] = [
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketNumber' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'summary' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerReference' })
+  ];
 
   public urlParamSearchKeyword: string;
   public selectedTabIndex: number = 0;
@@ -80,18 +88,6 @@ export class TicketsComponent extends McsPageBase {
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeTickets
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
-    this.defaultColumnFilters = [
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketId' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'ticketNumber' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'summary' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerReference' })
-    ];
   }
 
   @ViewChild('search')

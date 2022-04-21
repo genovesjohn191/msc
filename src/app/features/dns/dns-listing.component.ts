@@ -12,11 +12,11 @@ import { MatSort } from '@angular/material/sort';
 import {
   CoreRoutes,
   McsAccessControlService,
-  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -46,10 +46,9 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './dns-listing.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DnsListingComponent {
+export class DnsListingComponent extends McsPageBase {
   public readonly dataSource: McsTableDataSource2<McsNetworkDnsBase>;
   public readonly dataEvents: McsTableEvents<McsNetworkDnsBase>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'billingDescription' }),
@@ -67,13 +66,13 @@ export class DnsListingComponent {
     private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2<McsNetworkDnsBase>(this._getNetworkDNS.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
 
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeDnsListing
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -102,6 +101,10 @@ export class DnsListingComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'dnsListing';
   }
 
   public get cogIconKey(): string {

@@ -21,10 +21,10 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsServerPermission,
   McsTableDataSource2,
   McsTableEvents,
@@ -73,14 +73,13 @@ import { ServersService } from './servers.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ServersComponent implements OnInit, OnDestroy {
+export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
 
   public readonly dataSource: McsTableDataSource2<McsServer>;
   public readonly dataSelection: McsTableSelection2<McsServer>;
   public readonly dataEvents: McsTableEvents<McsServer>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   private resources: McsResource[] = [];
 
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
@@ -111,6 +110,7 @@ export class ServersComponent implements OnInit, OnDestroy {
     private _dialogService2: DialogService2,
     private _serversService: ServersService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getServers.bind(this));
     this.dataSelection = new McsTableSelection2(this.dataSource, true);
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
@@ -118,7 +118,6 @@ export class ServersComponent implements OnInit, OnDestroy {
       dataClearEvent: McsEvent.dataClearServers,
       entityDeleteEvent: McsEvent.entityDeletedEvent
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnInit() {
@@ -128,6 +127,10 @@ export class ServersComponent implements OnInit, OnDestroy {
   public ngOnDestroy() {
     this.dataSource.disconnect(null);
     this.dataEvents.dispose();
+  }
+
+  public get featureName(): string {
+    return 'servers';
   }
 
   public get routeKeyEnum(): any {

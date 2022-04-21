@@ -60,11 +60,8 @@ export class PageComponent implements AfterViewInit {
   @Input()
   public leftPanelExpandedByDefault: boolean = false;
 
-  // Deprecated Remove this
   @Input()
-  public set filterPanelCollapsed(collapsed: boolean) {
-    this._changePanelDisplay(collapsed);
-  }
+  public defaultFilters: McsFilterInfo[];
 
   @ViewChild('pageLeftElement', { static: true })
   public pageLeftElement: ElementRef;
@@ -195,7 +192,7 @@ export class PageComponent implements AfterViewInit {
     if (isNullOrEmpty(this.storageKey)) { return; }
 
     let savedSettings = this._filterService.getFilterSettings(this.storageKey);
-    let leftPanelFound = savedSettings.find(savedItem => savedItem.id === FILTER_LEFT_PANEL_ID);
+    let leftPanelFound = savedSettings?.find(savedItem => savedItem.id === FILTER_LEFT_PANEL_ID);
     this._pageService.leftPanelIsVisible = leftPanelFound?.value;
   }
 
@@ -221,8 +218,8 @@ export class PageComponent implements AfterViewInit {
   private _savePanelSettings(visibility: boolean): void {
     if (isNullOrEmpty(this.storageKey)) { return; }
 
-    let savedFilterSettings = this._filterService.getFilterSettings(this.storageKey);
-    let leftPanelFound = savedFilterSettings.find(savedItem => savedItem.id === FILTER_LEFT_PANEL_ID);
+    let savedFilterSettings = this._filterService.getFilterSettings(this.storageKey, this.defaultFilters);
+    let leftPanelFound = savedFilterSettings?.find(savedItem => savedItem.id === FILTER_LEFT_PANEL_ID);
 
     if (isNullOrUndefined(leftPanelFound)) {
       let leftPanelDef = createObject(McsFilterInfo, {

@@ -16,7 +16,6 @@ import {
 } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -50,7 +49,6 @@ import {
 export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbVlan>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _sortDirection: string;
@@ -75,7 +73,6 @@ export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
     super(injector);
     this.dataSource = new McsTableDataSource2<McsNetworkDbVlan>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
-    this.filterPanelEvents = new McsFilterPanelEvents(injector);
   }
 
   public get featureName(): string {

@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -42,7 +42,7 @@ import {
   templateUrl: './azure-subscriptions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AzureSubscriptionsComponent {
+export class AzureSubscriptionsComponent extends McsPageBase {
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
@@ -50,7 +50,6 @@ export class AzureSubscriptionsComponent {
 
   public readonly dataSource: McsTableDataSource2<McsAzureService>;
   public readonly dataEvents: McsTableEvents<McsAzureService>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
@@ -64,11 +63,11 @@ export class AzureSubscriptionsComponent {
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getAzureServices.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAzureManagedServices
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -97,6 +96,10 @@ export class AzureSubscriptionsComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'azureSubscriptions';
   }
 
   private _getAzureServices(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureService>> {

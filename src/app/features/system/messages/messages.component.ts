@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
 import {
   CoreRoutes,
   McsAccessControlService,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -48,11 +48,21 @@ import {
     'class': 'block'
   }
 })
-export class SystemMessagesComponent {
+export class SystemMessagesComponent extends McsPageBase {
   public readonly dataSource: McsTableDataSource2<McsSystemMessage>;
   public readonly dataEvents: McsTableEvents<McsSystemMessage>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
-  public readonly defaultColumnFilters: McsFilterInfo[];
+  public readonly defaultColumnFilters: McsFilterInfo[] = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'message' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'start' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'expiry' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'severity' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'enabled' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' })
+  ];;
 
   constructor(
     _injector: Injector,
@@ -61,24 +71,16 @@ export class SystemMessagesComponent {
     private _apiService: McsApiService,
     private _router: Router
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getSystemMessages.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeSystemMessages,
       dataClearEvent: McsEvent.dataClearSystemMessage
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
-    this.defaultColumnFilters = [
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'message' }),
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'start' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'expiry' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'severity' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'enabled' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedBy' })
-    ];
+  }
+
+  public get featureName(): string {
+    return 'system-message';
   }
 
   public get routeKeyEnum(): any {

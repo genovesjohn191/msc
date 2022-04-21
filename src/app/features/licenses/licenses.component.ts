@@ -21,10 +21,10 @@ import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
 import {
   McsAccessControlService,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -63,11 +63,10 @@ import { LicenseService } from './licenses.service';
   templateUrl: './licenses.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LicensesComponent implements OnInit, OnDestroy {
+export class LicensesComponent extends McsPageBase implements OnInit, OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsLicense>;
   public readonly dataEvents: McsTableEvents<McsLicense>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
@@ -100,11 +99,11 @@ export class LicensesComponent implements OnInit, OnDestroy {
     private _licenseService: LicenseService,
     private _navigationService: McsNavigationService,
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getLicenses.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeLicenses
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -133,6 +132,10 @@ export class LicensesComponent implements OnInit, OnDestroy {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'licenses';
   }
 
   public get addIconKey(): string {

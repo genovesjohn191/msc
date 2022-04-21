@@ -1,5 +1,6 @@
-<mcs-page [header]="'servers.header' | translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'servers.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
@@ -117,9 +118,8 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'servers.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="servers"
+        [storageKey]="featureName"
         [defaultFilters]="defaultColumnFilters"
-        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded"
         [filterPredicate]="filterPredicate">
       </mcs-column-selector>
     </mcs-left-panel-item>

@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -42,11 +42,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InternetComponent {
+export class InternetComponent extends McsPageBase {
 
   public readonly dataSource: McsTableDataSource2<McsInternetPort>;
   public readonly dataEvents: McsTableEvents<McsInternetPort>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'service' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'speed' }),
@@ -67,11 +66,11 @@ export class InternetComponent {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getInternetPorts.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeInternetPorts
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -100,6 +99,10 @@ export class InternetComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'internetPorts';
   }
 
   public get routeKeyEnum(): typeof RouteKey {

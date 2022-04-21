@@ -1,5 +1,6 @@
-<mcs-page [header]="'media.header' | translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'media.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <ng-container *ngIf="hasResources$ | async">
@@ -44,9 +45,8 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'media.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="media"
-        [defaultFilters]="defaultColumnFilters"
-        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
+        [storageKey]="featureName"
+        [defaultFilters]="defaultColumnFilters">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

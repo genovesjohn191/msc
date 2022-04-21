@@ -16,10 +16,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -47,11 +47,10 @@ import { McsEvent } from '@app/events';
   templateUrl: './network-db-networks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbNetworksComponent implements OnDestroy {
+export class NetworkDbNetworksComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbNetwork>;
   public readonly dataEvents: McsTableEvents<McsNetworkDbNetwork>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _sortDirection: string;
@@ -75,12 +74,12 @@ export class NetworkDbNetworksComponent implements OnDestroy {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2<McsNetworkDbNetwork>(this._getTableData.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeNetworkDbNetworksEvent,
       entityDeleteEvent: McsEvent.entityDeletedEvent
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnDestroy(): void {
@@ -107,6 +106,10 @@ export class NetworkDbNetworksComponent implements OnDestroy {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'network-db-networks';
   }
 
   public retryDatasource(): void {

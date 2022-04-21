@@ -1,4 +1,6 @@
-<mcs-page [storageKey]="featureName" [header]="'tickets.header' | translate">
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'tickets.header' | translate">
 
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
@@ -48,7 +50,6 @@
       <mcs-column-selector #columnFilter
         [storageKey]="featureName"
         [defaultFilters]="defaultColumnFilters"
-        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded"
         [filterPredicate]="filterPredicate">
       </mcs-column-selector>
     </mcs-left-panel-item>

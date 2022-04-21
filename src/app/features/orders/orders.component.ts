@@ -11,10 +11,10 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsAuthenticationIdentity,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2
 } from '@app/core';
 import {
@@ -42,7 +42,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrdersComponent {
+export class OrdersComponent extends McsPageBase {
 
   public get routeKeyEnum(): any {
     return RouteKey;
@@ -53,7 +53,6 @@ export class OrdersComponent {
   }
 
   public readonly dataSource: McsTableDataSource2<McsOrder>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
@@ -69,8 +68,8 @@ export class OrdersComponent {
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getOrders.bind(this));
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -99,6 +98,10 @@ export class OrdersComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'orders';
   }
 
   /**

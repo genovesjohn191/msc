@@ -1,5 +1,5 @@
-<mcs-page [header]="'azureManagementServices.header' | translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName" [defaultFilters]="defaultColumnFilters"
+  [header]="'azureManagementServices.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
@@ -30,9 +30,8 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureManagementServices.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="azureManagementServices"
-        [defaultFilters]="defaultColumnFilters"
-        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
+        [storageKey]="featureName"
+        [defaultFilters]="defaultColumnFilters">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

@@ -1,5 +1,6 @@
-<mcs-page [header]="'orders.header' | translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'orders.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -33,9 +34,8 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'orders.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="orders"
-        [defaultFilters]="defaultColumnFilters"
-        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
+        [storageKey]="featureName"
+        [defaultFilters]="defaultColumnFilters">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

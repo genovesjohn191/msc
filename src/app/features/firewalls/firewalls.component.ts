@@ -11,10 +11,10 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -44,10 +44,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FirewallsComponent {
+export class FirewallsComponent extends McsPageBase {
   public readonly dataSource: McsTableDataSource2<McsFirewall>;
   public readonly dataEvents: McsTableEvents<McsFirewall>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
 
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
@@ -67,11 +66,11 @@ export class FirewallsComponent {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getFirewalls.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeFirewalls
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public get routeKeyEnum(): any {
@@ -108,6 +107,10 @@ export class FirewallsComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'firewalls';
   }
 
   public navigateToFirewall(firewall: McsFirewall): void {

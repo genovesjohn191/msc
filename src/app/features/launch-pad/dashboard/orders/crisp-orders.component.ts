@@ -18,11 +18,11 @@ import {
 
 import {
   McsAuthenticationIdentity,
-  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2
 } from '@app/core';
 import {
@@ -50,10 +50,9 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
   templateUrl: './crisp-orders.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrispOrdersComponent implements OnDestroy {
+export class CrispOrdersComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsObjectCrispOrder>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _state: CrispOrderState = 'OPEN';
@@ -77,10 +76,9 @@ export class CrispOrdersComponent implements OnDestroy {
     private _identity: McsAuthenticationIdentity,
     private _navigationService: McsNavigationService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2<McsObjectCrispOrder>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
-
   }
 
   public ngOnDestroy(): void {
@@ -113,6 +111,10 @@ export class CrispOrdersComponent implements OnDestroy {
     this._sortDirection = sortState.direction;
     this._sortField = sortState.active;
     this.retryDatasource();
+  }
+
+  public get featureName(): string {
+    return 'crisp-orders';
   }
 
   public retryDatasource(): void {

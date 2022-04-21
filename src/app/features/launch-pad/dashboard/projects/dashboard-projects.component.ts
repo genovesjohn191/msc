@@ -12,11 +12,11 @@ import { map } from 'rxjs/operators';
 import {
   CoreRoutes,
   McsAuthenticationIdentity,
-  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2
 } from '@app/core';
 import {
@@ -43,10 +43,9 @@ import {
   templateUrl: './dashboard-projects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardProjectsComponent implements OnDestroy {
+export class DashboardProjectsComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsObjectProject>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   private _state: CrispOrderState = 'OPEN';
 
   public readonly defaultColumnFilters = [
@@ -65,9 +64,13 @@ export class DashboardProjectsComponent implements OnDestroy {
     private _identity: McsAuthenticationIdentity,
     private _navigationService: McsNavigationService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2<McsObjectProject>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
+  }
+
+  public get featureName(): string {
+    return 'dashboardProjects';
   }
 
   public get routeKeyEnum(): any {

@@ -1,5 +1,6 @@
-<mcs-page [header]="'networkDb.vnis.header' | translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'networkDb.vnis.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
@@ -32,9 +33,8 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'networkDb.vnis.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="network-db-vnis"
-        [defaultFilters]="defaultColumnFilters"
-        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
+        [storageKey]="featureName"
+        [defaultFilters]="defaultColumnFilters">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

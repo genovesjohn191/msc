@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -42,7 +42,7 @@ import {
   templateUrl: './application-recovery.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ApplicationRecoveryComponent {
+export class ApplicationRecoveryComponent extends McsPageBase {
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
@@ -50,7 +50,6 @@ export class ApplicationRecoveryComponent {
 
   public readonly dataSource: McsTableDataSource2<McsApplicationRecovery>;
   public readonly dataEvents: McsTableEvents<McsApplicationRecovery>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
@@ -67,11 +66,12 @@ export class ApplicationRecoveryComponent {
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getApplicationRecovery.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeApplicationRecovery
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
+
   }
 
   @ViewChild('search')
@@ -100,6 +100,10 @@ export class ApplicationRecoveryComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'application-recovery';
   }
 
   private _getApplicationRecovery(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsApplicationRecovery>> {

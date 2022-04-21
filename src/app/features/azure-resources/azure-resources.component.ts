@@ -16,10 +16,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -49,11 +49,10 @@ import {
   templateUrl: './azure-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AzureResourcesComponent {
+export class AzureResourcesComponent extends McsPageBase {
 
   public readonly dataSource: McsTableDataSource2<McsAzureResource>;
   public readonly dataEvents: McsTableEvents<McsAzureResource>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
@@ -74,11 +73,11 @@ export class AzureResourcesComponent {
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getAzureResources.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAzureResources
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -107,6 +106,10 @@ export class AzureResourcesComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'azureResources';
   }
 
   public get cogIconKey(): string {

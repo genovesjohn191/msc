@@ -26,10 +26,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import {
   CoreRoutes,
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents,
   McsTableSelection2
@@ -81,12 +81,11 @@ class AzureDeleteData {
   templateUrl: './azure-deployments.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AzureDeploymentsComponent implements OnDestroy {
+export class AzureDeploymentsComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsTerraformDeployment>;
   public readonly dataSelection: McsTableSelection2<McsTerraformDeployment>;
   public readonly dataEvents: McsTableEvents<McsTerraformDeployment>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
 
   @ViewChild('deleteDeploymentTemplate', { read: TemplateRef })
   public deleteDeploymentTemplate: TemplateRef<any>;
@@ -122,13 +121,13 @@ export class AzureDeploymentsComponent implements OnDestroy {
     private _apiService: McsApiService,
     private _activatedRoute: ActivatedRoute
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getDeployments.bind(this));
     this.dataSelection = new McsTableSelection2(this.dataSource, true);
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeTerraformDeployments,
       dataClearEvent: McsEvent.dataClearTerraformDeployments
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
 
     this._subscribeToQueryParams();
   }
@@ -137,6 +136,10 @@ export class AzureDeploymentsComponent implements OnDestroy {
     this.dataSource.disconnect(null);
     this.dataEvents.dispose();
     unsubscribeSafely(this._routerHandler);
+  }
+
+  public get featureName(): string {
+    return 'azure-deployments';
   }
 
   public get routeKeyEnum(): any {

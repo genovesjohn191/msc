@@ -5,10 +5,8 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import { McsFilterService } from '@app/core';
@@ -16,7 +14,6 @@ import { McsFilterInfo } from '@app/models';
 import {
   addOrUpdateArrayRecord,
   isNullOrEmpty,
-  isNullOrUndefined,
   unsubscribeSafely
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,7 +29,7 @@ import { ColumnFilter } from './column-filter.interface';
     'class': 'column-selector-wrapper'
   }
 })
-export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnChanges, OnDestroy {
+export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnDestroy {
   @Input()
   public storageKey: string;
 
@@ -44,9 +41,6 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnChanges,
 
   @Input()
   public triggerable: boolean;
-
-  @Input()
-  public filterPanelExpanded: boolean;
 
   public filters = new Array<McsFilterInfo>();
   public filtersChange = new BehaviorSubject<McsFilterInfo[]>([]);
@@ -60,13 +54,6 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnChanges,
   public ngOnInit(): void {
     this._validateDefaultFilters();
     this._initializeFilterSettings();
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    let leftPanelChange = changes['filterPanelExpanded'];
-    if (!isNullOrUndefined(leftPanelChange?.previousValue)) {
-      // this.notifyDataChange();
-    }
   }
 
   public ngOnDestroy(): void {

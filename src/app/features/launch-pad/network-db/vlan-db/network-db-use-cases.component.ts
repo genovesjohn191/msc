@@ -16,10 +16,10 @@ import {
 } from 'rxjs/operators';
 
 import {
-  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsPageBase,
   McsTableDataSource2
 } from '@app/core';
 import {
@@ -44,10 +44,9 @@ import {
   templateUrl: './network-db-use-cases.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbUseCasesComponent implements OnDestroy {
+export class NetworkDbUseCasesComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbUseCase>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _sortDirection: string;
@@ -66,9 +65,9 @@ export class NetworkDbUseCasesComponent implements OnDestroy {
     _injector: Injector,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2<McsNetworkDbUseCase>(this._getTableData.bind(this))
      .registerConfiguration(new McsMatTableConfig(true));
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnDestroy(): void {
@@ -94,6 +93,10 @@ export class NetworkDbUseCasesComponent implements OnDestroy {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'network-db-use-cases';
   }
 
   public retryDatasource(): void {

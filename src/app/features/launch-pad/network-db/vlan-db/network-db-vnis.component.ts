@@ -17,10 +17,10 @@ import {
 } from 'rxjs/operators';
 
 import {
-  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsPageBase,
   McsTableDataSource2
 } from '@app/core';
 import {
@@ -47,10 +47,9 @@ import {
   templateUrl: './network-db-vnis.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkDbVnisComponent implements OnDestroy {
+export class NetworkDbVnisComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbVni>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public isSorting: boolean;
 
   private _sortDirection: string;
@@ -70,9 +69,9 @@ export class NetworkDbVnisComponent implements OnDestroy {
     _injector: Injector,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2<McsNetworkDbVni>(this._getTableData.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnDestroy(): void {
@@ -98,6 +97,10 @@ export class NetworkDbVnisComponent implements OnDestroy {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'network-db-vnis';
   }
 
   public retryDatasource(): void {

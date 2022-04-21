@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -44,11 +44,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AggregationTargetsComponent {
+export class AggregationTargetsComponent extends McsPageBase {
 
   public readonly dataSource: McsTableDataSource2<McsBackUpAggregationTarget>;
   public readonly dataEvents: McsTableEvents<McsBackUpAggregationTarget>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'aggregationTarget' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'retentionPeriod' }),
@@ -63,11 +62,11 @@ export class AggregationTargetsComponent {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getBackupAggregationTargets.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAggregationTargets
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -96,6 +95,10 @@ export class AggregationTargetsComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'aggregationTargets';
   }
 
   public inviewLevelLabel(inview: InviewLevel): string {

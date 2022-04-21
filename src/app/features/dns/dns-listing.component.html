@@ -1,5 +1,6 @@
-<mcs-page [header]="'dnsListing.header'| translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'dnsListing.header'| translate">
 
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
@@ -32,10 +33,9 @@
    <!-- Column Filter -->
    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'dnsListing.columnFilter' | translate" offset="medium">
     <mcs-column-selector #columnFilter
-      storageKey="dnsListing"
+      [storageKey]="featureName"
       [defaultFilters]="defaultColumnFilters"
-      [filterPredicate]="filterPredicate"
-      [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
+      [filterPredicate]="filterPredicate">
     </mcs-column-selector>
     </mcs-left-panel-item>
  </mcs-left-panel>

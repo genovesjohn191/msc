@@ -10,11 +10,11 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2
 } from '@app/core';
 import {
@@ -42,9 +42,8 @@ import {
   styleUrls: ['./planned-work.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlannedWorkListingComponent {
+export class PlannedWorkListingComponent extends McsPageBase {
   public readonly dataSource: McsTableDataSource2<McsPlannedWork>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   private _search: Search;
   public selectedTabIndex: number = 0;
   public isTabChanged: boolean = false;
@@ -68,9 +67,9 @@ export class PlannedWorkListingComponent {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2<McsPlannedWork>(this._getPlannedWorkList.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -100,6 +99,10 @@ export class PlannedWorkListingComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'plannedWorkListing';
   }
 
   public navigateToPlannedWorkDetails(plannedWork: McsPlannedWork) {

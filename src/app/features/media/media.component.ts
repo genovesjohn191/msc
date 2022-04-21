@@ -11,10 +11,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -44,11 +44,16 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class MediaComponent implements OnInit {
+export class MediaComponent extends McsPageBase implements OnInit {
   public readonly dataSource: McsTableDataSource2<McsResourceMedia>;
   public readonly dataEvents: McsTableEvents<McsResourceMedia>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
-  public readonly defaultColumnFilters: McsFilterInfo[];
+  public readonly defaultColumnFilters: McsFilterInfo[] = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'media' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'mediaSize' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'uploadedDate' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'vdc' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'attachedTo' })
+  ];
 
   public hasResources$: Observable<boolean>;
 
@@ -58,19 +63,12 @@ export class MediaComponent implements OnInit {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getResourceMedia.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeMedia,
       dataClearEvent: McsEvent.dataClearMedia
     });
-    this.defaultColumnFilters = [
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'media' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'mediaSize' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'uploadedDate' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'vdc' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'attachedTo' })
-    ];
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   public ngOnInit() {
@@ -103,6 +101,10 @@ export class MediaComponent implements OnInit {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'media';
   }
 
   public get addIconKey(): string {

@@ -1,5 +1,6 @@
-<mcs-page [header]="'firewalls.header' | translate"
-  [filterPanelCollapsed]="filterPanelEvents?.filterPanelCollapsed$ | async">
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'firewalls.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
@@ -30,10 +31,9 @@
     <!-- Column Selector -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'firewalls.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
-        storageKey="firewalls"
+        [storageKey]="featureName"
         [defaultFilters]="defaultColumnFilters"
-        [filterPredicate]="filterPredicate"
-        [filterPanelExpanded]="filterPanelEvents?.filterPanelExpanded">
+        [filterPredicate]="filterPredicate">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

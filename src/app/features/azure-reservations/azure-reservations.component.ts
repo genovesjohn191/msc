@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  McsFilterPanelEvents,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
+  McsPageBase,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -45,7 +45,7 @@ import {
   templateUrl: './azure-reservations.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AzureReservationsComponent {
+export class AzureReservationsComponent extends McsPageBase {
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
@@ -53,7 +53,6 @@ export class AzureReservationsComponent {
 
   public readonly dataSource: McsTableDataSource2<McsAzureReservation>;
   public readonly dataEvents: McsTableEvents<McsAzureReservation>;
-  public readonly filterPanelEvents: McsFilterPanelEvents;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'productName' }),
@@ -77,11 +76,11 @@ export class AzureReservationsComponent {
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService
   ) {
+    super(_injector);
     this.dataSource = new McsTableDataSource2(this._getAzureReservations.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAzureReservations
     });
-    this.filterPanelEvents = new McsFilterPanelEvents(_injector);
   }
 
   @ViewChild('search')
@@ -110,6 +109,10 @@ export class AzureReservationsComponent {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
     }
+  }
+
+  public get featureName(): string {
+    return 'azureReservations';
   }
 
   public retryDatasource(): void {
