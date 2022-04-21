@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import {
   FILTER_LEFT_PANEL_ID,
-  McsAccessControlService,
   McsFilterService
 } from '@app/core';
 import { McsFilterInfo } from '@app/models';
@@ -126,8 +125,7 @@ export class PageComponent implements AfterViewInit {
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef,
     private _pageService: PageService,
-    private _filterService: McsFilterService,
-    private _accessControlService: McsAccessControlService
+    private _filterService: McsFilterService
   ) {
     this.hasLeftPanel = true;
   }
@@ -189,7 +187,10 @@ export class PageComponent implements AfterViewInit {
    * Initializes panel by settings
    */
   private _initializePanelBySettings(): void {
-    if (isNullOrEmpty(this.storageKey)) { return; }
+    if (isNullOrEmpty(this.storageKey)) { 
+      this._pageService.leftPanelIsVisible = this.leftPanelExpandedByDefault;
+      return;
+    }
 
     let savedSettings = this._filterService.getFilterSettings(this.storageKey);
     let leftPanelFound = savedSettings?.find(savedItem => savedItem.id === FILTER_LEFT_PANEL_ID);
