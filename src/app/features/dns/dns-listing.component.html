@@ -50,7 +50,7 @@
       <!-- Description Column -->
       <ng-container matColumnDef="billingDescription">
         <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="billingDescription" disableClear>
-          {{ 'columnHeader.billingDescription' | translate }}
+          {{ 'columnHeader.description' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" hidden-small>
           <span [innerHTML]="row.billingDescription | mcsDataLabel: 'Unknown'">

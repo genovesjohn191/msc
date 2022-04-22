@@ -2474,7 +2474,7 @@
     "details": {
       "header": "Planned Work ",
       "action": {
-        "downloadIcs": "Download ICS"
+        "downloadIcs": "Download Calendar Entry"
       },
       "overview": {
         "tabName": "Overview",
@@ -3466,7 +3466,7 @@
     "assignee": "Assignee",
     "assignmentTarget": "Assignment Target",
     "attachedTo": "Attached To",
-    "billingDescription": "Description",
+    "billingDescription": "Billing Description",
     "billingFrequency": "Billing Frequency",
     "billingTerm": "Billing Term",
     "children": "Children",

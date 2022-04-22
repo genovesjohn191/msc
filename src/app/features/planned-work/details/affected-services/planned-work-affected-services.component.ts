@@ -43,7 +43,8 @@ import {
 export class PlannedWorkAffectedServicesComponent extends McsPageBase implements OnInit, OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsPlannedWorkAffectedService>;
   public readonly defaultColumnFilters = [
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' })
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'billingDescription' })
   ];
 
   private _plannedWorkIdChange = new BehaviorSubject<string>(null);
