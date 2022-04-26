@@ -25,7 +25,7 @@ import {
 import {
   McsFilterInfo,
   McsPermission,
-  McsReportAscAlerts,
+  McsReportDefenderCloudAlerts,
   RouteKey
 } from '@app/models';
 import {
@@ -43,22 +43,22 @@ import {
 import { ReportPeriod } from '../report-period.interface';
 import { TranslateService } from '@ngx-translate/core';
 
-export interface AscAlertsWidgetConfig {
+export interface DefenderCloudAlertsWidgetConfig {
   period: Date
 }
 
 @Component({
-  selector: 'mcs-asc-alerts-widget',
-  templateUrl: './asc-alerts-widget.component.html',
+  selector: 'mcs-defender-cloud-alerts-widget',
+  templateUrl: './defender-cloud-alerts-widget.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'widget-box'
   }
 })
-export class AscAlertsWidgetComponent implements OnInit {
+export class DefenderCloudAlertsWidgetComponent implements OnInit {
   @Input()
-  public set config(value: AscAlertsWidgetConfig) {
+  public set config(value: DefenderCloudAlertsWidgetConfig) {
     let validValue = !isNullOrEmpty(value)
       && JSON.stringify(this._config) !== JSON.stringify(value);
     if (!validValue) { return; }
@@ -71,9 +71,9 @@ export class AscAlertsWidgetComponent implements OnInit {
   }
 
   @Output()
-  public dataChange= new EventEmitter<McsReportAscAlerts[]>(null);
+  public dataChange= new EventEmitter<McsReportDefenderCloudAlerts[]>(null);
 
-  public readonly dataSource: McsTableDataSource2<McsReportAscAlerts>;
+  public readonly dataSource: McsTableDataSource2<McsReportDefenderCloudAlerts>;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'severity' }),
@@ -82,7 +82,7 @@ export class AscAlertsWidgetComponent implements OnInit {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'startTime' })
   ];
 
-  private _config: AscAlertsWidgetConfig;
+  private _config: DefenderCloudAlertsWidgetConfig;
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
@@ -94,10 +94,10 @@ export class AscAlertsWidgetComponent implements OnInit {
     private _navigationService: McsNavigationService,
     private _translateService: TranslateService
   ) {
-    this.dataSource = new McsTableDataSource2(this._getAscAlerts.bind(this));
+    this.dataSource = new McsTableDataSource2(this._getDefenderCloudAlerts.bind(this));
   }
 
-  public get ascAlertsAzurePortalUrl(): string  {
+  public get defenderCloudAlertsAzurePortalUrl(): string  {
     return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Security/SecurityMenuBlade/7`;
   }
 
@@ -116,12 +116,12 @@ export class AscAlertsWidgetComponent implements OnInit {
   public onClickTicketLink(): void {
     this._navigationService.navigateTo(RouteKey.Tickets, [], {
       queryParams: {
-        filter: this._translateService.instant('reports.insights.techReview.ascAlerts.ticketSearchKeyword')
+        filter: this._translateService.instant('reports.insights.techReview.defenderCloudAlerts.ticketSearchKeyword')
       }
     });
   }
 
-  public onRowClick(alert: McsReportAscAlerts): void {
+  public onRowClick(alert: McsReportDefenderCloudAlerts): void {
     this._dialogService.openMessage({
       type: DialogActionType.Info,
       title: alert.title || this._translateService.instant('message.noAlertTitleDialog'),
@@ -134,9 +134,9 @@ export class AscAlertsWidgetComponent implements OnInit {
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
-  private _getAscAlerts(): Observable<McsMatTableContext<McsReportAscAlerts>> {
+  private _getDefenderCloudAlerts(): Observable<McsMatTableContext<McsReportDefenderCloudAlerts>> {
     this.dataChange.emit(undefined);
-    return this._reportingService.getAscAlerts(this._startPeriod, this._endPeriod).pipe(
+    return this._reportingService.getDefenderCloudAlerts(this._startPeriod, this._endPeriod).pipe(
       map((response) => {
         let dataSourceContext = new McsMatTableContext(response, response?.length);
         this.dataChange.emit(dataSourceContext?.dataRecords);

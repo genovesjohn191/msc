@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
   McsQueryParam,
-  McsReportAscAlerts,
+  McsReportDefenderCloudAlerts,
   McsReportAuditAlerts,
   McsReportRecentServiceRequestSlt,
   McsReportComputeResourceTotals,
@@ -176,10 +176,10 @@ export class McsReportingService {
     return this._apiService.getUpdateManagement(query);
   }
 
-  public getAscAlerts(
+  public getDefenderCloudAlerts(
     periodStart?: string,
-    periodEnd?: string): Observable<McsReportAscAlerts[]> {
-    return this._apiService.getAscAlerts(periodStart, periodEnd);
+    periodEnd?: string): Observable<McsReportDefenderCloudAlerts[]> {
+    return this._apiService.getDefenderCloudAlerts(periodStart, periodEnd);
   }
 
   public getAuditAlerts(query?: McsReportParams): Observable<McsReportAuditAlerts[]> {

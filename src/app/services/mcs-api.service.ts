@@ -195,7 +195,7 @@ import {
   McsPlatform,
   McsPortal,
   McsQueryParam,
-  McsReportAscAlerts,
+  McsReportDefenderCloudAlerts,
   McsReportAuditAlerts,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
@@ -2208,12 +2208,12 @@ export class McsApiService {
     );
   }
 
-  public getAscAlerts(
+  public getDefenderCloudAlerts(
     periodStart?: string,
-    periodEnd?: string): Observable<McsReportAscAlerts[]> {
-    return this._reportsApi.getAscAlerts(periodStart, periodEnd).pipe(
+    periodEnd?: string): Observable<McsReportDefenderCloudAlerts[]> {
+    return this._reportsApi.getDefenderCloudAlerts(periodStart, periodEnd).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAscAlerts'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getDefenderCloudAlerts'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

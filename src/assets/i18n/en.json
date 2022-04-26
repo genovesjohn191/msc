@@ -323,14 +323,14 @@
           "subTitle": "by severity, for the specified period.",
           "totalAlerts": "Total Alerts"
         },
-        "ascAlerts": {
-          "title": "ASC Alerts",
-          "subTitle": "General Azure Security Center alerts, including intelligent threat classifications.",
-          "secondSubtitle": "High severity ASC alerts will automatically generate a ",
+        "defenderCloudAlerts": {
+          "title": "Defender for Cloud Alerts",
+          "subTitle": "General Microsoft Defender for Cloud alerts, including intelligent threat classifications.",
+          "secondSubtitle": "High severity alerts will automatically generate a ",
           "secondSubtitleContinuation": " that our engineers will review for you.",
           "ticketLabel": "ticket",
           "viewInAzurePortal": "View last 3 months in Azure Portal",
-          "noDataFound": "No ASC alerts to display",
+          "noDataFound": "No Defender for Cloud alerts to display",
           "ticketSearchKeyword": "Security Center Alert:"
         },
         "auditAlerts": {
@@ -3361,7 +3361,7 @@
     "getResourceCompliance": "Something went wrong while retrieving your resource compliance information. Please try again.",
     "getMonitoringAndAlerting": "Something went wrong while retrieving your monitoring and alerting information. Please try again.",
     "getUpdateManagement": "Something went wrong while retrieving your update management information. Please try again.",
-    "getAscAlerts": "Something went wrong while retrieving your ASC alerts. Please try again.",
+    "getDefenderCloudAlerts": "Something went wrong while retrieving your Defender Cloud Alerts. Please try again.",
     "getAuditAlerts": "Something went wrong while retrieving your audit alerts. Please try again.",
     "getInefficientVms": "Something went wrong while retrieving your inefficient VM information. Please try again.",
     "getTopVmsByCost": "Something went wrong while retrieving your top VM costs. Please try again.",
@@ -3936,8 +3936,7 @@
     "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>",
     "emptySubscriptionId": "Unable to find the subscription ID for this item. Please ensure that it has a 'CSP Consumption Service' populated in CRISP and that service is properly installed.",
     "scaleRestartServer": "CPU Hot Plug is disabled for this server, meaning scaling it will cause it to restart.",
-    "scaleRestartCheckbox": "Restart this server as part of the scaling process.",
-    "scaleServerWarning": "Scaling this server will cause it to restart."
+    "scaleRestartCheckbox": "Restart this server as part of the scaling process."
   },
   "tooltip": {
     "exportWord": "Export Word Document",

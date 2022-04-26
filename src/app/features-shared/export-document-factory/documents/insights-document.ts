@@ -7,8 +7,8 @@ import {
 } from '@app/core';
 import {
   McsFeatureFlag,
-  McsReportAscAlerts,
   McsReportAuditAlerts,
+  McsReportDefenderCloudAlerts,
   McsReportInefficientVms,
   McsReportOperationalSavings,
   McsReportSecurityScore,
@@ -34,18 +34,12 @@ export class InsightsDocument implements IDashboardExportDocument {
   private _dateTimeService: McsDateTimeService;
   private _authenticationIdentity: McsAuthenticationIdentity;
   private _eventDispatcher: EventBusDispatcherService;
-  private _accessControlService: McsAccessControlService;
-
-  public get hasAccessToAscAlertsListing(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AscAlert]);
-  }
 
   public setInjector(injector: Injector): void {
     this._translateService = injector.get(TranslateService);
     this._dateTimeService = injector.get(McsDateTimeService);
     this._authenticationIdentity = injector.get(McsAuthenticationIdentity);
     this._eventDispatcher = injector.get(EventBusDispatcherService);
-    this._accessControlService = injector.get(McsAccessControlService);
   }
 
   public exportDocument(itemDetails: InsightsDocumentDetails, docType: number, injector: Injector): void {
@@ -95,7 +89,7 @@ export class InsightsDocument implements IDashboardExportDocument {
               ${this._createResourceHealthHtml(insightDetails)}
               ${this._createPerformanceScalabilityHtml(insightDetails)}
               ${this._createMonitoringAlertingHtml(insightDetails)}
-              ${this._createAscAlertsHtml(insightDetails.ascAlerts)}
+              ${this._createDefenderCloudAlertsHtml(insightDetails.defenderCloudAlerts)}
               ${this._createAuditAlertsHtml(insightDetails.auditAlerts)}
               ${this._createUpdateManagementHtml(insightDetails.updateManagement)}
             </div>`;
@@ -347,16 +341,15 @@ export class InsightsDocument implements IDashboardExportDocument {
     return actualResponse;
   }
 
-  private _createAscAlertsHtml(data: McsReportAscAlerts[]):string {
-    if (!this.hasAccessToAscAlertsListing) { return ''; }
-    let title = this._translate('reports.insights.techReview.ascAlerts.title');
+  private _createDefenderCloudAlertsHtml(data: McsReportDefenderCloudAlerts[]):string {
+    let title = this._translate('reports.insights.techReview.defenderCloudAlerts.title');
     let subTitle = `
-      ${this._translate('reports.insights.techReview.ascAlerts.subTitle')}
-      <p>${this._translate('reports.insights.techReview.ascAlerts.secondSubtitle')}
-        ${this._translate('reports.insights.techReview.ascAlerts.ticketLabel')} ${this._translate('reports.insights.techReview.ascAlerts.secondSubtitleContinuation')}
+      ${this._translate('reports.insights.techReview.defenderCloudAlerts.subTitle')}
+      <p>${this._translate('reports.insights.techReview.defenderCloudAlerts.secondSubtitle')}
+        ${this._translate('reports.insights.techReview.defenderCloudAlerts.ticketLabel')} ${this._translate('reports.insights.techReview.defenderCloudAlerts.secondSubtitleContinuation')}
       </p>`;
-    let ascAlertsTable = '';
-    ascAlertsTable += `
+    let defenderCloudAlertsTable = '';
+    defenderCloudAlertsTable += `
       <table style="width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">
           <th style="text-align: left">Severity</th>
@@ -367,7 +360,7 @@ export class InsightsDocument implements IDashboardExportDocument {
         if (data?.length > 0) {
           data.forEach(item => {
             let description = item.description ? item.description : this._translate('message.noAlertDescriptionDialog');
-            ascAlertsTable += `
+            defenderCloudAlertsTable += `
               <tr style="text-align: left;">
                 <td>${item.severity ? item.severity : 'Unavailable'}</td>
                 <td>${item.title ? item.title : 'Unavailable'}</td>
@@ -379,11 +372,11 @@ export class InsightsDocument implements IDashboardExportDocument {
               </tr>`;
           });
         }
-        ascAlertsTable += `</table>`;
+        defenderCloudAlertsTable += `</table>`;
         if (data?.length === 0) {
-          ascAlertsTable += `<p>${this._translate('reports.insights.techReview.ascAlerts.noDataFound')}</p>`;
+          defenderCloudAlertsTable += `<p>${this._translate('reports.insights.techReview.defenderCloudAlerts.noDataFound')}</p>`;
         }
-    let actualResponse = this._widgetHtml(ascAlertsTable, true, title, subTitle);
+    let actualResponse = this._widgetHtml(defenderCloudAlertsTable, true, title, subTitle);
     return actualResponse;
   }
 
@@ -415,8 +408,7 @@ export class InsightsDocument implements IDashboardExportDocument {
         if (data?.length === 0) {
           auditAlertsTable += `<p>No data found</p>`;
         }
-    let pageBreak = !this.hasAccessToAscAlertsListing ? true : false;
-    let actualResponse = this._widgetHtml(auditAlertsTable, pageBreak, title, subTitle);
+    let actualResponse = this._widgetHtml(auditAlertsTable, false, title, subTitle);
     return actualResponse;
   }
 

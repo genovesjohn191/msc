@@ -1,27 +1,27 @@
-<div class="asc-alerts-widget reporting-table-widget">
+<div class="defender-cloud-alerts-widget reporting-table-widget">
   <div class="widget-label label-with-dropdown" margin-bottom-medium>
-    {{ 'reports.insights.techReview.ascAlerts.subTitle' | translate }}
-    <a href="{{ ascAlertsAzurePortalUrl }}"
+    {{ 'reports.insights.techReview.defenderCloudAlerts.subTitle' | translate }}
+    <a href="{{ defenderCloudAlertsAzurePortalUrl }}"
       target="_blank"
       mcsId="azure-portal"
       mcsEventTracker="navigate-to-azure-portal"
       mcsEventCategory="dashboard-navigation"
-      mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.ascAlerts.viewInAzurePortal' | translate }}</a>.
+      mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.defenderCloudAlerts.viewInAzurePortal' | translate }}</a>.
   </div>
   <div class="label-below-chart" margin-bottom-medium>
-    {{ 'reports.insights.techReview.ascAlerts.secondSubtitle' | translate }}
+    {{ 'reports.insights.techReview.defenderCloudAlerts.secondSubtitle' | translate }}
     <ng-container *ngIf="hasTicketPermission; else noTicketTemplate">
       <a 
         (click)="onClickTicketLink()"
-        mcsId="create-ticket-asc-alerts"
+        mcsId="create-ticket-defender-cloud-alerts"
         mcsEventTracker="navigate-to-create-ticket"
         mcsEventCategory="dashboard-navigation"
-        mcsEventLabel="creat-ticket-link">{{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}</a>
+        mcsEventLabel="creat-ticket-link">{{ 'reports.insights.techReview.defenderCloudAlerts.ticketLabel' | translate }}</a>
     </ng-container>
     <ng-template #noTicketTemplate>
-      {{ 'reports.insights.techReview.ascAlerts.ticketLabel' | translate }}
+      {{ 'reports.insights.techReview.defenderCloudAlerts.ticketLabel' | translate }}
     </ng-template>
-    {{ 'reports.insights.techReview.ascAlerts.secondSubtitleContinuation' | translate }}
+    {{ 'reports.insights.techReview.defenderCloudAlerts.secondSubtitleContinuation' | translate }}
   </div>
 
   <div class="listing-table-wrapper table-widget-wrapper">
@@ -88,15 +88,15 @@
         <mcs-loader size="medium"></mcs-loader>
       </div>
       <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-        {{ 'reports.insights.techReview.ascAlerts.noDataFound' | translate }}
+        {{ 'reports.insights.techReview.defenderCloudAlerts.noDataFound' | translate }}
       </div>
       <div *ngIf="dataSource?.hasError$ | async" text-center>
         <div class="listing-status-wrapper">
           <span>{{ 'reports.errorMessage' | translate }}</span>
           <a (click)="retryDatasource()"
             mcsId
-            mcsEventTracker="retry-loading-asc-alerts-list"
-            mcsEventCategory="asc-alerts"
+            mcsEventTracker="retry-loading-defender-cloud-alerts-list"
+            mcsEventCategory="defender-cloud-alerts"
             mcsEventLabel="dashboard-insight-page">{{ 'message.tryAgain' | translate }}</a>.
         </div>
       </div>

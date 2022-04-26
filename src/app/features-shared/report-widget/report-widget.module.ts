@@ -6,7 +6,6 @@ import { SharedModule } from '@app/shared';
 
 import { FeaturesSharedModule } from '../features-shared.module';
 import { FormFieldsModule } from '../form-fields/form-fields.module';
-import { AscAlertsWidgetComponent } from './asc-alerts/asc-alerts-widget.component';
 import { AuditAlertsWidgetComponent } from './audit-alerts/audit-alerts-widget.component';
 import { AzureResourcesWidgetComponent } from './azure-resources/azure-resources-widget.component';
 import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widget.component';
@@ -20,6 +19,7 @@ import { ChangeRequestWidgetComponent } from './change-requests/change-requests-
 import { ComplianceWidgetComponent } from './compliance/compliance-widget.component';
 import { ContactUsWidgetComponent } from './contact-us/contact-us-widget.component';
 import { CostRecommendationsWidgetComponent } from './cost-recommendations/cost-recommendations-widget.component';
+import { DefenderCloudAlertsWidgetComponent } from './defender-cloud-alerts/defender-cloud-alerts-widget.component';
 import { InefficientVmsWidgetComponent } from './inefficient-vms/inefficient-vms-widget.component';
 import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import { OperationalMonthlySavingsWidgetComponent } from './operational-monthly-savings/operational-monthly-savings-widget.component';
@@ -42,7 +42,6 @@ import { VirtualMachineUsageBreakdownWidgetComponent } from './virtual-machine-u
 import { VmRightsizingWidgetComponent } from './vm-rightsizing/vm-rightsizing-widget.component';
 
 const exports: any[] | Type<any> = [
-  AscAlertsWidgetComponent,
   AuditAlertsWidgetComponent,
   AzureResourcesWidgetComponent,
   AzureTicketsWidgetComponent,
@@ -53,6 +52,7 @@ const exports: any[] | Type<any> = [
   ComplianceWidgetComponent,
   ContactUsWidgetComponent,
   CostRecommendationsWidgetComponent,
+  DefenderCloudAlertsWidgetComponent,
   InefficientVmsWidgetComponent,
   MonitoringAndAlertingWidgetComponent,
   OperationalMonthlySavingsWidgetComponent,

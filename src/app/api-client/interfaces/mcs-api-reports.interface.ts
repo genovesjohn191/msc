@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsQueryParam,
-  McsReportAscAlerts,
+  McsReportDefenderCloudAlerts,
   McsReportAuditAlerts,
   McsReportRecentServiceRequestSlt,
   McsReportBillingServiceGroup,
@@ -85,9 +85,9 @@ export interface IMcsApiReportsService {
 
   getUpdateManagement(query?: McsReportUpdateManagementParams): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>>;
 
-  getAscAlerts(
+  getDefenderCloudAlerts(
     periodStart?: string,
-    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportAscAlerts[]>>;
+    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportDefenderCloudAlerts[]>>;
 
   getAuditAlerts(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>>;
 

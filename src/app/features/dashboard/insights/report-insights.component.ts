@@ -28,8 +28,8 @@ import {
 import { MonitoringAlertingWidgetConfig } from '@app/features-shared/report-widget/monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import {
   McsFeatureFlag,
-  McsReportAscAlerts,
   McsReportAuditAlerts,
+  McsReportDefenderCloudAlerts,
   McsReportInefficientVms,
   McsReportManagementService,
   McsReportOperationalSavings,
@@ -123,16 +123,12 @@ export class ReportInsightsComponent implements OnDestroy {
     return this._isPdfDownloadInProgress;
   }
 
-  public get hasAccessToAscAlert(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AscAlert]);
-  }
-
   public get routeKeyEnum(): any {
     return RouteKey;
   }
 
   public fcResourceCostMonthPeriod: FormControl;
-  public fcAscAlertMonthPeriod: FormControl;
+  public fcDefenderCloudAlertMonthPeriod: FormControl;
   public fcAuditAlertMonthPeriod: FormControl;
   public fcMonitoringPeriod: FormControl;
 
@@ -142,12 +138,12 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public resourceMonthlyCostConfig: ReportMonthConfig;
   public auditAlertsConfig: ReportMonthConfig;
-  public ascAlertsConfig: ReportMonthConfig;
+  public defenderCloudAlertsConfig: ReportMonthConfig;
   public monitoringAlertingConfig: MonitoringAlertingWidgetConfig
 
   public selectedResourceCostMonth: PeriodOption;
   public selectedAuditAlertsMonth: PeriodOption;
-  public selectedAscAlertsMonth: PeriodOption;
+  public selectedDefenderCloudAlertsMonth: PeriodOption;
   public selectedMonitoringAlertingPeriod: PeriodOption;
 
   public subscriptions: McsReportSubscription[];
@@ -175,7 +171,7 @@ export class ReportInsightsComponent implements OnDestroy {
     this._getSubscriptions();
     this._identifyNonEssentialManagementServiceExistence();
     this._subscribeToResourceMonthPeriodControlChanges();
-    this._subscribeToAscMonthPeriodControlChanges();
+    this._subscribeToDefenderCloudAlertMonthPeriodControlChanges();
     this._subscribeToAuditMonthPeriodControlChanges();
     this._subscribeToMonitoringPeriodControlChanges();
     this._listenToSubscriptionFilterChange();
@@ -263,8 +259,8 @@ export class ReportInsightsComponent implements OnDestroy {
     this._exportDocumentDetails.auditAlerts = data;
   }
 
-  public ascAlertsDataChange(data: McsReportAscAlerts[]): void {
-    this._exportDocumentDetails.ascAlerts = data;
+  public defenderCLoudAlertsDataChange(data: McsReportDefenderCloudAlerts[]): void {
+    this._exportDocumentDetails.defenderCloudAlerts = data;
   }
 
   public updateManagementDataChange(data: McsReportUpdateManagement[]): void {
@@ -305,7 +301,6 @@ export class ReportInsightsComponent implements OnDestroy {
   }
 
   private _isTechReviewWidgetsLoading(): boolean {
-    let ascAlert = this.hasAccessToAscAlert ? this._exportDocumentDetails.ascAlerts : [];
     return this._exportDocumentDetails.securityScore === undefined ||
       this._exportDocumentDetails.complianceUri === undefined ||
       this._exportDocumentDetails.resourceHealth === undefined ||
@@ -313,12 +308,12 @@ export class ReportInsightsComponent implements OnDestroy {
       this._exportDocumentDetails.monitoringAlerting === undefined ||
       this._exportDocumentDetails.auditAlerts === undefined ||
       this._exportDocumentDetails.updateManagement  === undefined ||
-      ascAlert === undefined;
+      this._exportDocumentDetails.defenderCloudAlerts === undefined;
   }
 
   private _registerFormControl(): void {
     this.fcResourceCostMonthPeriod = new FormControl('', []);
-    this.fcAscAlertMonthPeriod = new FormControl('', []);
+    this.fcDefenderCloudAlertMonthPeriod = new FormControl('', []);
     this.fcAuditAlertMonthPeriod = new FormControl('', []);
     this.fcMonitoringPeriod = new FormControl('', []);
   }
@@ -335,13 +330,13 @@ export class ReportInsightsComponent implements OnDestroy {
     });
   }
 
-  private _subscribeToAscMonthPeriodControlChanges(): void {
-    this.fcAscAlertMonthPeriod.valueChanges.pipe(
+  private _subscribeToDefenderCloudAlertMonthPeriodControlChanges(): void {
+    this.fcDefenderCloudAlertMonthPeriod.valueChanges.pipe(
       takeUntil(this._destroyPeriodSubject),
     ).subscribe(change => {
-      this.selectedAscAlertsMonth = change;
-      this.ascAlertsConfig = {
-        period: this.selectedAscAlertsMonth.period.from
+      this.selectedDefenderCloudAlertsMonth = change;
+      this.defenderCloudAlertsConfig = {
+        period: this.selectedDefenderCloudAlertsMonth.period.from
       };
       this._changeDetector.markForCheck();
     });

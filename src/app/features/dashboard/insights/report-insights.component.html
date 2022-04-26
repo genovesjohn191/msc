@@ -262,19 +262,17 @@
                   (chartChange)="monitoringAlertingUri($event)" (alertChange)="monitoringAlertingTotalAlertsDataChange($event)"></mcs-monitoring-and-alerting-widget>
                 <mat-divider></mat-divider>
 
-                <!-- Asc Alerts -->
-                <ng-container *mcsAccessControl="[]; feature: ['EnableAscAlertListing']">
-                  <div class="options-container">
-                    <div>
-                      <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.ascAlerts.title' | translate }}</h2>
-                    </div>
-                    <div class="hide-on-print">
-                      <mcs-field-select-month-period [formControl]="fcAscAlertMonthPeriod"></mcs-field-select-month-period>
-                    </div>
+                <!-- Defender Cloud Alerts -->
+                <div class="options-container">
+                  <div>
+                    <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.defenderCloudAlerts.title' | translate }}</h2>
                   </div>
-                  <mcs-asc-alerts-widget [config]="ascAlertsConfig" (dataChange)="ascAlertsDataChange($event)"></mcs-asc-alerts-widget>
-                  <mat-divider></mat-divider>
-                </ng-container>
+                  <div class="hide-on-print">
+                    <mcs-field-select-month-period [formControl]="fcDefenderCloudAlertMonthPeriod"></mcs-field-select-month-period>
+                  </div>
+                </div>
+                <mcs-defender-cloud-alerts-widget [config]="defenderCloudAlertsConfig" (dataChange)="defenderCLoudAlertsDataChange($event)"></mcs-defender-cloud-alerts-widget>
+                <mat-divider></mat-divider>
 
                 <!-- Audit Alerts -->
                 <div class="options-container">

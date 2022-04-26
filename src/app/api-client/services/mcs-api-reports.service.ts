@@ -6,7 +6,7 @@ import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
   McsQueryParam,
-  McsReportAscAlerts,
+  McsReportDefenderCloudAlerts,
   McsReportAuditAlerts,
   McsReportRecentServiceRequestSlt,
   McsReportBillingServiceGroup,
@@ -358,15 +358,15 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getAscAlerts(
+  public getDefenderCloudAlerts(
     periodStart?: string,
-    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportAscAlerts[]>> {
+    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportDefenderCloudAlerts[]>> {
     let searchParams = new Map<string, any>();
     searchParams.set('period_start', periodStart);
     searchParams.set('period_end', periodEnd);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/public-cloud/reports/asc-alerts';
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/defender-cloud-alerts';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -374,7 +374,7 @@ export class McsApiReportsService implements IMcsApiReportsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsReportAscAlerts[]>(McsReportAscAlerts, response);
+            .deserializeResponse<McsReportDefenderCloudAlerts[]>(McsReportDefenderCloudAlerts, response);
           return apiResponse;
         })
       );

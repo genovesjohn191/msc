@@ -358,13 +358,9 @@
           </ng-container>
         </mcs-server-manage-scale>
 
-        <mcs-data-status-warning *ngIf="server.isPoweredOn">
-          <span>{{ 'message.scaleServerWarning' | translate }}</span>
-        </mcs-data-status-warning>
-        <!-- Comment out for now.  Blocked on Orch - FUSION 3445 and 3449-->
-        <!-- <mcs-data-status-warning *ngIf="!server.cpuHotPlugEnabled">
+        <mcs-data-status-warning *ngIf="!server.cpuHotPlugEnabled">
           <span>{{ 'message.scaleRestartServer' | translate }}</span>
-        </mcs-data-status-warning> -->
+        </mcs-data-status-warning>
 
         <div class="action-items">
           <a (click)="onCancelScale()"

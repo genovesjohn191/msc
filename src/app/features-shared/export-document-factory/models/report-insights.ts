@@ -1,6 +1,6 @@
 import {
-  McsReportAscAlerts,
   McsReportAuditAlerts,
+  McsReportDefenderCloudAlerts,
   McsReportInefficientVms,
   McsReportOperationalSavings,
   McsReportResourceCompliance,
@@ -25,7 +25,7 @@ export class InsightsDocumentDetails {
   public compliance: McsReportResourceCompliance;
   public complianceUri: string;
   public auditAlerts: McsReportAuditAlerts[];
-  public ascAlerts: McsReportAscAlerts[];
+  public defenderCloudAlerts: McsReportDefenderCloudAlerts[];
   public totalAlerts: number;
   public updateManagement: McsReportUpdateManagement[];
   public hasManagementService: boolean;

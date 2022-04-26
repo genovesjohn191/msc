@@ -1,7 +1,7 @@
 import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
-export class McsReportAscAlerts extends McsEntityBase {
+export class McsReportDefenderCloudAlerts extends McsEntityBase {
   @JsonProperty()
   public severity: string = undefined;
 
