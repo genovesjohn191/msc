@@ -2,7 +2,8 @@ import {
   zip,
   Subject,
   Subscription,
-  throwError
+  throwError,
+  forkJoin
 } from 'rxjs';
 import {
   catchError,
@@ -137,6 +138,19 @@ export class BackupRestoreRequestComponent extends McsOrderWizardBase implements
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
   }
+
+  public get billingDescFallback(): string {
+    return this._translateService.instant('orderBackupRestoreRequest.detailsStep.service.optionBillingDescFallback');
+  }
+
+  public get serviceIdFallback(): string {
+    return this._translateService.instant('orderBackupRestoreRequest.detailsStep.service.optionServiceIdFallback');
+  }
+
+  public get serverNameFallback(): string {
+    return this._translateService.instant('orderBackupRestoreRequest.detailsStep.service.optionServerNameFallback');
+  }
+
   public get loadingText(): string {
     return LOADING_TEXT;
   }
@@ -263,46 +277,54 @@ export class BackupRestoreRequestComponent extends McsOrderWizardBase implements
 
   private _subscribeToServices(): void {
     this._backupServicesCount = 0;
-    this._apiService.getServerBackupServers()
-      .pipe(
-        catchError((error) => {
-          this.loadingInProgress = false;
-          this._errorStatus = error?.details?.status;
-          return throwError(error);
-        }),
-        tap((backupServersCollection) => {
-          let backupServers = getSafeProperty(backupServersCollection, (obj) => obj.collection) || [];
-          let serverBackups: McsOption[] = [];
-          backupServers.forEach((backupServer) => {
-            let optionText = backupServer.serviceId + ' - Linked to ' + backupServer.serverServiceId;
-            serverBackups.push(createObject(McsOption, { text: optionText, value: backupServer.serviceId }));
-          });
-          this.groupedBackupServices.push(createObject(McsOptionGroup, { groupName: 'Server Backup', options: serverBackups }));
-          this.loadingInProgress = false;
-          this._backupServicesCount += serverBackups?.length;
-        })
-      )
-      .subscribe();
+    let combinedCalls = forkJoin([
+      this._apiService.getServerBackupServers(),
+      this._apiService.getServerBackupVms()
+    ]);
 
-    this._apiService.getServerBackupVms()
-      .pipe(
-        catchError((error) => {
-          this.loadingInProgress = false;
-          this._errorStatus = error?.details?.status;
-          return throwError(error);
-        }),
-        tap((backupVMsCollection) => {
-          let backupVMs = getSafeProperty(backupVMsCollection, (obj) => obj.collection) || [];
-          let vmBackups: McsOption[] = [];
-          backupVMs.forEach((backupServer) => {
-            let optionText = backupServer.serviceId + ' - Linked to ' + backupServer.serverServiceId;
-            vmBackups.push(createObject(McsOption, { text: optionText, value: backupServer.serviceId }));
-          });
-          this.groupedBackupServices.push(createObject(McsOptionGroup, { groupName: 'VM Backup', options: vmBackups }));
-          this.loadingInProgress = false;
-          this._backupServicesCount += vmBackups?.length;
-        })
-      )
-      .subscribe();
+    combinedCalls.pipe(
+      catchError((error) => {
+        this.loadingInProgress = false;
+        this._errorStatus = error?.details?.status;
+        return throwError(error);
+      }),
+      tap((results) => {
+        let backupServers = getSafeProperty(results[0], (obj) => obj.collection) || [];
+        let backupVMs = getSafeProperty(results[1], (obj) => obj.collection) || [];
+        let backupServerOptions: McsOption[] = [];
+        let backupVmOptions: McsOption[] = [];
+
+        // Set back up server options
+        backupServers.forEach((backupServer) => {
+          let billingDescText = backupServer.billingDescription ? backupServer.billingDescription : this.billingDescFallback;
+          let serviceIdText = backupServer.serviceId ? backupServer.serviceId : this.serviceIdFallback;
+          backupServerOptions.push(createObject(McsOption, {
+            text: `${billingDescText} (${serviceIdText})`,
+            value: backupServer.serviceId,
+            helpText: backupServer.serverName,
+            disabled: !backupServer.serviceChangeAvailable
+          }));
+        });
+
+        // Set back up VM options
+        backupVMs.forEach((backupVM) => {
+          let billingDescText = backupVM.billingDescription ? backupVM.billingDescription : this.billingDescFallback;
+          let serviceIdText = backupVM.serviceId ? backupVM.serviceId : this.serviceIdFallback;
+          backupVmOptions.push(createObject(McsOption, {
+            text: `${billingDescText} (${serviceIdText})`,
+            value: backupVM.serviceId,
+            helpText: backupVM.serverName,
+            disabled: !backupVM.serviceChangeAvailable
+          }));
+        });
+
+        // Set group options
+        this.groupedBackupServices.push(createObject(McsOptionGroup, { groupName: 'Server Backup', options: backupServerOptions }));
+        this.groupedBackupServices.push(createObject(McsOptionGroup, { groupName: 'VM Backup', options: backupVmOptions }));
+        this.loadingInProgress = false;
+        this._backupServicesCount = backupServerOptions?.length + backupVmOptions?.length;
+      })
+    )
+    .subscribe();
   }
 }

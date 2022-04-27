@@ -34,4 +34,10 @@ export class McsServerBackupVm extends McsEntityBase {
 
   @JsonProperty()
   public aggregationTargetServiceId: string = undefined;
+
+  @JsonProperty()
+  public billingDescription: string = undefined;
+
+  @JsonProperty()
+  public serverName: string = undefined;
 }

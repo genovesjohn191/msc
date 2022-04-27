@@ -48,13 +48,20 @@
                   <mcs-select mcsId="select-box-location" mcsEventTracker="select-box-location" mcsEventCategory="order"
                     mcsEventLabel="server-request-patch" [formControl]="fcService"
                     [disabled]="noServicesToDisplay"
-                    [placeholder]="'orderBackupRestoreRequest.detailsStep.servicePlaceholder' | translate"
-                    [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.serviceHelpText' | translate" required
+                    [placeholder]="'orderBackupRestoreRequest.detailsStep.service.placeholder' | translate"
+                    [mcsContextualHelp]="'orderBackupRestoreRequest.detailsStep.service.helpText' | translate" required
                     [autoSelect]="false">
                     <mcs-option-group *ngFor="let group of groupedBackupServices" [label]="group.groupName">
-                      <mcs-option *ngFor="let backup of group.options" [value]="backup.value">
-                        {{ backup.text }}
-                      </mcs-option>
+                      <div *ngFor="let backup of group.options"
+                        [matTooltip]="'orderBackupRestoreRequest.detailsStep.service.optionHelpText' | translate"
+                        [matTooltipDisabled]="!backup.disabled">
+                        <mcs-option [value]="backup.value" [disabled]="backup.disabled">
+                          <div>
+                            {{ backup.text }}
+                          </div>
+                          <span [mcsGreyedOut]="!backup.disabled" [innerHTML]="backup.helpText | mcsDataLabel: serverNameFallback"></span>
+                        </mcs-option>
+                      </div>
                     </mcs-option-group>
                   </mcs-select>
                   <mcs-error mcsError errorState="required">

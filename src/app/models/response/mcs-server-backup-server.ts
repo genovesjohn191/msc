@@ -37,5 +37,8 @@ export class McsServerBackupServer extends McsEntityBase {
 
   @JsonProperty()
   public billingDescription: string = undefined;
+
+  @JsonProperty()
+  public serverName: string = undefined;
 }
 

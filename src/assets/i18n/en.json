@@ -1283,10 +1283,16 @@
       "stepTitle": "Request Details",
       "previous": "Back",
       "description": "You can use this wizard to request a custom restore from a backup service you have provisioned. Please provide the details of your request below.",
-      "serviceHelpText": "Select a backup service to restore from.",
+      "service": {
+        "helpText": "Select a backup service to restore from.",
+        "placeholder": "Select a Backup service",
+        "optionHelpText": "This service cannot be selected because it is currently being provisioned.",
+        "optionBillingDescFallback": "Unknown",
+        "optionServiceIdFallback": "Unknown",
+        "optionServerNameFallback": "No server linked"
+      },
       "dataRequiredHelpText": "Enter the name of the VMs, drives or files you would like restored.",
       "restoreDestinationHelpText": "Enter the name of the VMs, drives or directories you would like your data restored to.",
-      "servicePlaceholder": "Select a Backup service",
       "restoreDatePlaceholder": "What date would you like to restore from? *",
       "dataRequiredPlaceholder": "What would you like restored?",
       "restoreDestinationPlaceholder": "Where would you like this data restored to?",
