@@ -11,6 +11,7 @@ export class DedicatedStorageCreateAndAttachVolumeWorkflowGroup implements Workf
     id: WorkflowType.DedicatedStorageCreateAttachVolume,
     crispProductType: ProductType.PrimaryDedicatedStorage,
     title: 'Create And Attach Dedicated Storage Volume',
-    form: dedicatedStorageCreateAndAttachVolumeForm
+    form: dedicatedStorageCreateAndAttachVolumeForm,
+    label: 'Please ensure that your boot image is available to the specified blade and that any outstanding blade changes have been acknowledged via the UCS UI before running this workflow.'
   };
 }

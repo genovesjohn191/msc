@@ -36,6 +36,9 @@ export class LaunchPadWorkflowComponent {
   public title: string;
 
   @Input()
+  public label: string;
+
+  @Input()
   public type: WorkflowType;
 
   @Input()
@@ -140,6 +143,6 @@ export class LaunchPadWorkflowComponent {
     this.parentReferenceId = workflow.parentReferenceId;
     this.serviceId = workflow.serviceId;
     this.productId = workflow.productId;
-    this.fieldData = workflow.properties;
-  }
+    this.label = workflow.label;
+    this.fieldData = workflow.properties;  }
 }

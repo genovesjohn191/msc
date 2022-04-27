@@ -44,6 +44,7 @@ export class WorkflowFactory {
       serviceId: options.config.parent.serviceId || '',
       productId: options.config.parent.productId || '',
       title: options.workflowGroup.parent.title,
+      label: options.workflowGroup.parent.label || '',
       required: true,
       // Clone the form to ensure data is not persisted
       properties: cloneDeep(options.workflowGroup.parent.form.config),
