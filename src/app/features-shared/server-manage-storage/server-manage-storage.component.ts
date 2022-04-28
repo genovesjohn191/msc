@@ -292,7 +292,10 @@ export class ServerManageStorageComponent
     if (noStorages) { return; }
 
       let storage = this.storages;
-      let storageProfileFound = storage.find(storage => storage.isDefault);
+      let storageProfileFound = this._isTargetDiskUnvailable() ?
+        storage.find(storage => storage.isDefault) :
+        storage.find(storage => (storage.name === this.targetDisk.storageProfile));
+
       let fcStorageProfileValue = storageProfileFound ? storageProfileFound : null;
 
       if (!isNullOrEmpty(this.fcSelectStorages)) {
