@@ -111,26 +111,7 @@ export class ToolsComponent implements OnDestroy {
 
     return this._apiService.getPortals(queryParam).pipe(
       map((response) => {
-        let macquarieTools: McsPortal[] = [];
-
-        // Add Macquarie View
-        let macquarieView = new McsPortal();
-        macquarieView.name = 'MacquarieView';
-        macquarieView.resourceSpecific = true;
-
-        let macquarieViewPortalAccess = new McsPortalAccess();
-        macquarieViewPortalAccess.name = macquarieView.name;
-        macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
-        macquarieView.portalAccess = Array(macquarieViewPortalAccess);
-        macquarieTools.push(macquarieView, ...cloneObject(response.collection));
-
-        // Temporary: will remove the sorting once the MacquarieView data is added in the API
-        if (queryParam.sortDirection === SortDirection.Asc) {
-          macquarieTools.sort((a, b) => compareStrings(a.name, b.name));
-        } else if (queryParam.sortDirection === SortDirection.Desc) {
-          macquarieTools.sort((a, b) => compareStrings(b.name, a.name));
-        }
-
+        let macquarieTools: McsPortal[] = response.collection;
         let dataItems = this._filterValidDataItem(macquarieTools);
         let dataSourceContext = new McsMatTableContext(dataItems, dataItems.length);
         return dataSourceContext;
