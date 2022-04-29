@@ -29,6 +29,7 @@ import { AddSimpleFirewallChangeComponent } from './simple-firewall-changes/add-
 import { FirewallChangesSharedRuleComponent } from './simple-firewall-changes/firewall-changes-shared/rule/firewall-changes-shared-rule.component';
 import { ModifySimpleFirewallChangeComponent } from './simple-firewall-changes/modify-firewall-changes/modify-simple-firewall-change.component';
 import { RemoveSimpleFirewallChangeComponent } from './simple-firewall-changes/remove-firewall-changes/remove-simple-firewall-change.component';
+import { ComplexFirewallChangeComponent } from './complex-firewall-change/complex-firewall-change.component';
 import { OrdersGuard } from './orders.guard';
 import { McsPrivateCloudOnlyGuard } from '@app/core/guards/mcs-private-cloud-only.guard';
 import { McsPublicCloudOnlyGuard } from '@app/core/guards/mcs-public-cloud-only.guard';
@@ -81,6 +82,7 @@ export const ordersComponents: any[] = [
   ModifySimpleFirewallChangeComponent,
   RemoveSimpleFirewallChangeComponent,
   FirewallChangesSharedRuleComponent,
+  ComplexFirewallChangeComponent,  
   ChangeInternetPortPlanComponent,
   CloudHealthServicesComponent,
   ProvisionComponent,
@@ -249,6 +251,12 @@ export const ordersRoutes: Routes = [
     path: 'change/remove-simple-firewall',
     component: RemoveSimpleFirewallChangeComponent,
     data: { routeId: RouteKey.OrderRemoveSimpleFirewallChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+  {
+    path: 'change/complex-firewall-change',
+    component: ComplexFirewallChangeComponent,
+    data: { routeId: RouteKey.OrderComplexFirewallChange },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {

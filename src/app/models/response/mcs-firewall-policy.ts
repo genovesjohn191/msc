@@ -46,13 +46,34 @@ export class McsFirewallPolicy extends McsEntityBase {
     serializer: PolicyActionSerialization,
     deserializer: PolicyActionSerialization
   })
-  public action: PolicyAction = undefined;
+  public action?: PolicyAction = undefined;
 
   @JsonProperty({
     serializer: PolicyNatSerialization,
     deserializer: PolicyNatSerialization
   })
   public nat: PolicyNat = undefined;
+
+  @JsonProperty()
+  public protocol?: string = undefined;
+
+  @JsonProperty()
+  public sourcePorts?: string[] = undefined;
+
+  @JsonProperty()
+  public destinationPorts?: string[] = undefined;
+
+  @JsonProperty()
+  public natSourceIpAddress?: string = undefined;
+
+  @JsonProperty()
+  public natSourcePort?: string = undefined;
+
+  @JsonProperty()
+  public natDestinationIpAddress?: string = undefined;
+
+  @JsonProperty()
+  public natDestinationPort?: string = undefined;
 
   /**
    * Returns firewall action icon key
@@ -62,11 +83,11 @@ export class McsFirewallPolicy extends McsEntityBase {
 
     let iconKey = '';
     switch (this.action) {
-      case PolicyAction.Disabled:
+      case PolicyAction.Deny:
         iconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
-      case PolicyAction.Enabled:
+      case PolicyAction.Accept:
       default:
         iconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;

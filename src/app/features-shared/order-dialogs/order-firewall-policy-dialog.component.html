@@ -1,0 +1,155 @@
+<mcs-grid mat-dialog-title>
+  <span class="title">{{ data.title }}</span>
+  <mat-icon (click)="reset()">refresh</mat-icon>
+  <mat-icon (click)="delete()" [mat-dialog-close]="this.data">delete</mat-icon>
+</mcs-grid>
+
+<div mat-dialog-content class="mat-typography">
+  <mcs-grid class="policy-grid">
+    <mcs-grid-row>
+      <mcs-grid-column>
+        <mcs-grid-row>
+          <mcs-grid-column>
+            <!-- Label -->
+            <mat-form-field appearance="outline">
+              <mat-label>Label</mat-label>
+              <input matInput
+                #control
+                cdkFocusInitial
+                type="text"
+                [formControl]="fcLabel">
+            </mat-form-field>
+          </mcs-grid-column>
+          <mcs-grid-column>
+            <!-- Protocol -->
+            <mat-form-field appearance="outline">
+              <mat-label>Protocol</mat-label>
+              <mat-select [formControl]="fcProtocol">
+                <mat-option value="TCP">TCP</mat-option>
+                <mat-option value="UDP">UDP</mat-option>
+                <mat-option value="ICMP">ICMP</mat-option>
+                <mat-option value="IP">IP</mat-option>
+                <mat-option value="TCP/UDP">TCP/UDP</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mcs-grid-column>
+          <mcs-grid-column></mcs-grid-column>
+        </mcs-grid-row>
+
+        <mcs-grid-row>
+          <mcs-grid-column>
+            <!-- Source -->
+            <mcs-grid-row class="source-rows">
+              <!-- Source Interfaces -->
+              <mcs-grid-column>
+                <mcs-form-field class="dynamic-list">
+                  <mcs-dynamic-list
+                    placeholder="Source Interfaces"
+                    [formControl]="fcSourceInterface"
+                    [enableOrdering]="false">
+                  </mcs-dynamic-list>
+                </mcs-form-field>
+              </mcs-grid-column>
+        
+              <!-- Source IPs -->
+              <mcs-grid-column>
+                <mcs-form-field class="dynamic-list">
+                  <mcs-dynamic-list
+                    placeholder="Source IPs"
+                    [formControl]="fcSourceAddress"
+                    [enableOrdering]="false">
+                  </mcs-dynamic-list>
+                </mcs-form-field>
+              </mcs-grid-column>
+        
+              <!-- Source Ports -->
+              <mcs-grid-column>
+                <mcs-form-field class="dynamic-list">
+                  <mcs-dynamic-list
+                    placeholder="Source Ports"
+                    [formControl]="fcSourcePort"
+                    [enableOrdering]="false">
+                  </mcs-dynamic-list>
+                </mcs-form-field>
+              </mcs-grid-column>
+            </mcs-grid-row>
+
+            <mcs-grid-row>
+              <!-- Destination Interfaces -->
+              <mcs-grid-column>
+                <mcs-form-field class="dynamic-list">
+                  <mcs-dynamic-list
+                    placeholder="Destination Interfaces"
+                    [formControl]="fcDestinationInterface"
+                    [enableOrdering]="false">
+                  </mcs-dynamic-list>
+                </mcs-form-field>
+              </mcs-grid-column>
+
+              <!-- Destination IPs -->
+              <mcs-grid-column>
+                <mcs-form-field class="dynamic-list">
+                  <mcs-dynamic-list
+                    placeholder="Destination IPs"
+                    [formControl]="fcDestinationAddress"
+                    [enableOrdering]="false">
+                  </mcs-dynamic-list>
+                </mcs-form-field>
+              </mcs-grid-column>
+
+              <!-- Destination Ports -->
+              <mcs-grid-column>
+                <mcs-form-field class="dynamic-list">
+                  <mcs-dynamic-list
+                    placeholder="Destination Ports"
+                    [formControl]="fcDestinationPort"
+                    [enableOrdering]="false">
+                  </mcs-dynamic-list>
+                </mcs-form-field>
+              </mcs-grid-column>
+            </mcs-grid-row>
+          </mcs-grid-column>
+          
+        </mcs-grid-row>
+      </mcs-grid-column>
+
+      <mcs-grid-column sizeSm="12" sizeLg="3" sizeWd="3" class="col-nat-details">
+        <h3>NAT Details</h3>
+        <!-- Source IP -->
+        <mat-form-field appearance="outline">
+          <mat-label>Source IP</mat-label>
+          <input [formControl]="fcNatSourceIP" matInput cdkFocusInitial type="text">
+        </mat-form-field>
+
+        <!-- Source Port -->
+        <mat-form-field appearance="outline">
+          <mat-label>Source Port</mat-label>
+          <input [formControl]="fcNatSourcePort" matInput cdkFocusInitial type="text">
+        </mat-form-field>
+        
+        <!-- Destination IP -->
+        <mat-form-field appearance="outline">
+          <mat-label>Destination IP</mat-label>
+          <input [formControl]="fcNatDestinationIP" matInput cdkFocusInitial type="text">
+        </mat-form-field>
+
+        <!-- Destination Port -->
+        <mat-form-field appearance="outline">
+          <mat-label>Destination Port</mat-label>
+          <input [formControl]="fcNatDestinationPort" matInput cdkFocusInitial type="text">
+        </mat-form-field>
+
+      </mcs-grid-column>
+    </mcs-grid-row>
+  </mcs-grid>
+</div>
+
+<mat-dialog-actions align="end" class="space-between">
+  <button mat-button [mat-dialog-close]="false">{{ 'action.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [mat-dialog-close]="this.data">{{ 'action.save' | translate }}</button>
+</mat-dialog-actions>
+
+
+
+
+

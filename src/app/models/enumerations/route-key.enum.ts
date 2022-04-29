@@ -133,6 +133,7 @@ export enum RouteKey {
   OrderAddSimpleFirewallChange,
   OrderModifySimpleFirewallChange,
   OrderRemoveSimpleFirewallChange,
+  OrderComplexFirewallChange,
   OrderChangeInternetPortPlan,
   OrderAzureProfessionalServiceRequest,
 

@@ -25,6 +25,7 @@ export enum OrderIdType {
   SimpleFirewallChangeAdd = 'firewall.simpleChange.add',
   SimpleFirewallChangeRemove = 'firewall.simpleChange.remove',
   SimpleFirewallChangeModify = 'firewall.simpleChange.modify',
+  ComplexFirewallChange = 'firewall.complexChange',
   ChangeInternetPortPlan = 'internetPort.change',
   AzureProfessionalServiceRequest = 'publicCloud.professionalServices'
 }

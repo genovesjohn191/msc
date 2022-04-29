@@ -151,6 +151,13 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
   }
   private _maximum: number = DEFAULT_MAXIMUM_ITEM;
 
+  @Input()
+  public get enableOrdering(): boolean {
+    return this._enableOrdering;
+  }
+  public set enableOrdering(value: boolean) { this._enableOrdering = coerceBoolean(value); }
+  private _enableOrdering: boolean = true;
+
   @ViewChild('inputItemFc')
   public inputItemFc: ElementRef;
 

@@ -36,6 +36,7 @@ import { TerraformTagChangeDialogComponent } from './terraform-tag-change-dialog
 import { VdcManageScaleComponent } from './vdc-manage-scale/vdc-manage-scale.component';
 import { VdcManageStorageComponent } from './vdc-manage-storage/vdc-manage-storage.component';
 import { DnsZoneTtlEditDialogComponent } from './dns-zone-dialogs/dns-zone-ttl-edit-dialog.component';
+import { OrderFirewallPolicyEditDialogComponent } from './order-dialogs/order-firewall-policy-dialog.component';
 
 const exportedComponents = [
   ServerManageBackupVmComponent,
@@ -67,6 +68,7 @@ const exportedComponents = [
   ContextMenuLinkComponent,
   DnsZoneManageComponent,
   DnsZoneTtlEditDialogComponent,
+  OrderFirewallPolicyEditDialogComponent,
 
   EnquiryFormComponent
 ];
@@ -87,7 +89,8 @@ const exportedComponents = [
     RenameServerDialogComponent,
     TerraformTagChangeDialogComponent,
     TerraformDeploymentRenameDialogComponent,
-    DnsZoneTtlEditDialogComponent
+    DnsZoneTtlEditDialogComponent,
+    OrderFirewallPolicyEditDialogComponent
   ],
   providers: [
   ]

@@ -22,7 +22,7 @@
         <div text-wrap class="content" text-break-word>{{ listItem?.value }}</div>
 
         <div class="action-icons">
-          <button mcsButton="icon" theme="light" padding="none">
+          <button *ngIf="enableOrdering" mcsButton="icon" theme="light" padding="none">
             <mcs-icon #upcion
               [key]="moveUpKey"
               size="small"
@@ -31,7 +31,7 @@
               (click)="moveUpListItem(i, list)"></mcs-icon>
           </button>
 
-          <button mcsButton="icon" theme="light" padding="none">
+          <button *ngIf="enableOrdering" mcsButton="icon" theme="light" padding="none">
             <mcs-icon
               [key]="moveDownKey"
               size="small"

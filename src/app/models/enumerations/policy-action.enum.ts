@@ -1,13 +1,19 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum PolicyAction {
-  Disabled = 0,
-  Enabled = 1
+  Accept,
+  Deny,
+  Add,
+  Modify,
+  Remove
 }
 
 export const policyText = {
-  [PolicyAction.Disabled]: 'Disabled',
-  [PolicyAction.Enabled]: 'Enabled'
+  [PolicyAction.Accept]: 'Accept',
+  [PolicyAction.Deny]: 'Deny',
+  [PolicyAction.Add]: 'Add',
+  [PolicyAction.Modify]: 'Modify',
+  [PolicyAction.Remove]: 'Remove'
 };
 
 /**

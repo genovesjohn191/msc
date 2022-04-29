@@ -1059,7 +1059,7 @@
     "title": "Request a Device Restart",
     "detailsStep": {
       "stepTitle": "Request Details",
-      "description": "You can use this wizard to request a restart for a physical device you have hosted with us. Please provide the details of the device below.",
+      "description": "You can use this wizard to request a complex change to your firewall service.",
       "colocationServiceHelpText": "Select the linked service you would like to request a device restart for.",
       "floorLevelHelpText": "Specify which floor level your device is located on.",
       "rowNumberHelpText": "Specify the row number and rack identifier of your device (e.g. 1D).",
@@ -1156,6 +1156,34 @@
       "serviceChangeAvailable": "This service cannot be modified because it is currently being provisioned.",
       "plan": "95th Percentile plans are currently unsupported for this operation. Please contact your account team for more information.",
       "primaryPort": "Redundant Internet Port services are currently unsupported for this operation. Please contact your account team for more information."
+    }
+  },
+  "orderComplexFirewallChanges": {
+    "title": "Complex Firewall Change",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "description": "You can use this wizard to request a complex change to your firewall service.",
+      "previous": "Back",
+      "cancel": "Cancel",
+      "objectiveLabel": "What is your objective for this request?",
+      "objectivePlaceHolder": "Please describe why you are submitting this request and what you would like to achieve.",
+      "fileUploadLabel": "If you would like to include a file with this request, please attach it below",
+      "policyLabel": "What changes would you like made?",
+      "policyHelpText":"Click on a policy to change or remove it, or click 'Add a policy' below.",
+      "addPolicyLabel": "Add a Policy",
+      "searchPolicyLabel": "Search Policies...",
+      "fileUploadHelpText": "Max size 3MB. Supported types: .doc, .docx, .xls, .xlsx, .csv, .json, .xml, .txt, .log, .png, .jpg",
+      "notesLabel": "Are there any further details you would like us to know?",
+      "firewallService": {
+        "placeholder": "Select a firewall service",
+        "helptext": "Select a firewall service to request this change for",
+        "raiseTicketPrefix": " or ",
+        "raiseTicketLink": "raise a ticket",
+        "raiseTicketSuffix": "if this is unexpected"
+      }
+    },
+    "errors": {
+      "objectiveRequired": "Objective is required."
     }
   },
   "orderSimpleFirewallChanges": {
@@ -2223,7 +2251,7 @@
       },
       "contact": {
         "label": "Would you like us to contact you before and after the change?",
-        "description": "You will be contacted on the telephone number you have provided in your user profile ({{phone_number}}). \nIf you select yes and we are unable to contact you, the change will not be applied",
+        "description": "You will be contacted on the telephone number you have provided in your user profile ({{phone_number}}). \r\nIf you select yes and we are unable to contact you, the change will not be applied.",
         "options": {
           "yes": "Yes",
           "no": "No"
@@ -3580,6 +3608,7 @@
     "serialNumber": "Serial Number",
     "server": "Server",
     "service": "Service",
+    "services": "Services/Ports",
     "serviceEnd": "Service End",
     "serviceId": "Service ID",
     "severity": "Severity",

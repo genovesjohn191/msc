@@ -983,6 +983,13 @@
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Simple Firewall Change - Remove - Macquarie Cloud Services"
   },
+  "orderComplexFirewallChange": {
+    "enumKey": "OrderComplexFirewallChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/complex-firewall-change",
+    "requiredPermissions": ["OrderEdit"],
+    "documentTitle": "Complex Firewall Change - Macquarie Cloud Services"
+  },
   "orderAzureProfessionalServiceRequest": {
     "enumKey": "OrderAzureProfessionalServiceRequest",
     "enumCategory": "MakeAChange",

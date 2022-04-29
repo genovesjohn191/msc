@@ -1,0 +1,46 @@
+@import "shared/index";
+
+mat-form-field {
+  width: 200px;
+
+  @include breakpoint(large) {
+    width: 130px;
+  }
+
+  @include breakpoint(medium) {
+    display: none;
+  }
+}
+
+mcs-list-item{
+  margin-top: 0px !important;
+
+  span.span-input-list {
+    width: 183px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+mat-icon:hover {
+  cursor: pointer;
+}
+
+.title {
+  margin-right: 80%;
+}
+
+.policy-grid {
+  min-width: 1000px !important;
+}
+
+.col-nat-details {
+  padding: 15px;
+  border: solid 1px;
+  margin-right: 10px;
+}
+
+.source-rows {
+  margin-bottom: 20px;
+}

@@ -521,7 +521,8 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
       type: DialogActionType.Warning,
       message: dialogMessage,
       confirmText: dialogConfirmText,
-      cancelText: this._translateService.instant('action.cancel')
+      cancelText: this._translateService.instant('action.cancel'),
+      width: '500px'
     }
   }
 }

@@ -8,6 +8,7 @@ export * from './step-order-details/order-details';
 export * from './step-order-details/step-order-details.component';
 export * from './step-provisioning/step-provisioning.component';
 export * from './step-manual-order-completed/step-manual-order-completed.component';
+export * from './order-dialogs/order-firewall-policy-dialog.component'
 
 /** Server */
 export * from './server-command/server-command.component';

@@ -63,8 +63,8 @@
       </ng-container>
       <ng-container *ngIf="isPhoneNumberLoaded; else loading">
         <!-- TODO: add a new shared directive / global color classes for coloring font elements-->
-        <span [mcsGreyedOut]="true" *ngIf="config?.contactConfig?.phoneNumber">
-          {{ 'smacShared.form.contact.description' | translate: { phone_number: config?.contactConfig?.phoneNumber } }}
+        <span [mcsGreyedOut]="true" *ngIf="config?.contactConfig?.phoneNumber" 
+          [innerText]="'smacShared.form.contact.description' | translate: { phone_number: config?.contactConfig?.phoneNumber }">
         </span>
       </ng-container>
       <ng-template #loading>
