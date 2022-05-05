@@ -14,7 +14,7 @@ export const firewallProvisionAdomForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['vdc', 'networkId', 'gatewayIp']
+      dependents: ['vdc', 'networkId', 'gatewayIp', 'fortiManager', 'fortiAnalyzer']
     }),
     new DynamicInputHiddenField({
       key: 'serviceId',

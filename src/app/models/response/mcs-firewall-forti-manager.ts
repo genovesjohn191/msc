@@ -6,4 +6,7 @@ export class McsFirewallFortiManager {
 
   @JsonProperty()
   public ipAddress: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
 }

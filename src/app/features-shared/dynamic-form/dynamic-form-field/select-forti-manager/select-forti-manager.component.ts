@@ -17,6 +17,7 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectFortiManagerField } from './select-forti-manager';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-select-forti-manager',
@@ -35,6 +36,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
 })
 export class DynamicSelectFortiManagerComponent extends DynamicSelectFieldComponentBase<McsFirewallFortiManager> {
   public config: DynamicSelectFortiManagerField;
+  private _companyId: string = '';
 
   constructor(
     private _apiService: McsApiService,
@@ -44,11 +46,20 @@ export class DynamicSelectFortiManagerComponent extends DynamicSelectFieldCompon
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
-    throw new Error('Method not implemented.');
+    switch (params.eventName) {
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+    }
   }
 
   protected callService(): Observable<McsFirewallFortiManager[]> {
-    return this._apiService.getFirewallFortiManagers().pipe(
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
+    return this._apiService.getFirewallFortiManagers(null, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => {
         return response && response.collection;
@@ -59,7 +70,7 @@ export class DynamicSelectFortiManagerComponent extends DynamicSelectFieldCompon
   protected filter(collection: McsFirewallFortiManager[]): FlatOption[] {
     let options: FlatOption[] = [];
     collection.forEach((item) => {
-      let option = { key: item.ipAddress, value: item.name } as FlatOption;
+      let option = { key: item.ipAddress, value: item.name, hint: item.description } as FlatOption;
       options.push(option);
     });
     return options;

@@ -27,7 +27,7 @@ export const firewallProvisionForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['secondaryServiceId']
+      dependents: ['secondaryServiceId', 'fortiManager', 'fortiAnalyzer']
     }),
     new DynamicInputHiddenField({
       key: 'serviceId',

@@ -296,7 +296,8 @@ import {
   McsValidation,
   McsVmSize,
   McsWorkflowCreate,
-  McsPlannedWorkAffectedService
+  McsPlannedWorkAffectedService,
+  McsFwFortiAnalyzerQueryParams
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -1645,8 +1646,8 @@ export class McsApiService {
     );
   }
 
-  public getFirewallFortiManagers(query?: McsQueryParam): Observable<McsApiCollection<McsFirewallFortiManager>> {
-    return this._firewallsApi.getFirewallFortiManagers(query).pipe(
+  public getFirewallFortiManagers(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsFirewallFortiManager>> {
+    return this._firewallsApi.getFirewallFortiManagers(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewallFortiManagers'))
       ),
@@ -1654,8 +1655,8 @@ export class McsApiService {
     );
   }
 
-  public getFirewallFortiAnalyzers(query?: McsQueryParam): Observable<McsApiCollection<McsFirewallFortiAnalyzer>> {
-    return this._firewallsApi.getFirewallFortiAnalyzers(query).pipe(
+  public getFirewallFortiAnalyzers(query?: McsFwFortiAnalyzerQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsFirewallFortiAnalyzer>> {
+    return this._firewallsApi.getFirewallFortiAnalyzers(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewallFortiAnalyzers'))
       ),

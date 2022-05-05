@@ -27,7 +27,7 @@ export const vfwProvisionForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['vdc']
+      dependents: ['vdc', 'fortiManager', 'fortiAnalyzer']
     }),
     new DynamicInputHiddenField({
       key: 'serviceId',

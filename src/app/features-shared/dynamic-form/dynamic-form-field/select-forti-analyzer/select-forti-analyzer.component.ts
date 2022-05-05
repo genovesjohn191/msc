@@ -9,7 +9,7 @@ import {
   takeUntil,
   map
 } from 'rxjs/operators';
-import {McsFirewallFortiAnalyzer } from '@app/models';
+import {McsFirewallFortiAnalyzer, McsFwFortiAnalyzerQueryParams } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   DynamicFormFieldDataChangeEventParam,
@@ -17,6 +17,7 @@ import {
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectFortiAnalyzerField } from './select-forti-analyzer';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-select-forti-analyzer',
@@ -35,6 +36,8 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
 })
 export class DynamicSelectFortiAnalyzerComponent extends DynamicSelectFieldComponentBase<McsFirewallFortiAnalyzer> {
   public config: DynamicSelectFortiAnalyzerField;
+  private _companyId: string = '';
+
   constructor(
     private _apiService: McsApiService,
     _changeDetectorRef: ChangeDetectorRef
@@ -43,11 +46,23 @@ export class DynamicSelectFortiAnalyzerComponent extends DynamicSelectFieldCompo
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
-    throw new Error('Method not implemented.');
+    switch (params.eventName) {
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+    }
   }
 
-  protected callService(): Observable<McsFirewallFortiAnalyzer[]> {
-    return this._apiService.getFirewallFortiAnalyzers().pipe(
+  protected callService(): Observable<McsFirewallFortiAnalyzer[]> {    
+    let query = new McsFwFortiAnalyzerQueryParams();
+    query.mode = 'Analyzer';
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
+    return this._apiService.getFirewallFortiAnalyzers(query, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => {
         let returnValue = response && response.collection;
@@ -60,7 +75,7 @@ export class DynamicSelectFortiAnalyzerComponent extends DynamicSelectFieldCompo
     let options: FlatOption[] = [];
 
     collection.forEach((item) => {
-      let option = { key: item.ipAddress, value: item.name } as FlatOption;
+      let option = { key: item.ipAddress, value: item.name, hint: item.description } as FlatOption;
       options.push(option);
     });
 
