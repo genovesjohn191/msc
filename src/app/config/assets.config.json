@@ -56,6 +56,7 @@
     "warning-blue-svg": "warning-blue.svg",
     "warning-svg": "warning.svg",
     "error-svg": "error.svg",
+    "error-nonfatal-svg": "error-nonfatal.svg",
     "success-svg": "success.svg",
     "download": "download.svg",
     "dos-prompt-blue": "dos-prompt-blue.svg",

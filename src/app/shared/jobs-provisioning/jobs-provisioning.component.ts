@@ -82,6 +82,10 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     return CommonDefinition.ASSETS_SVG_ERROR;
   }
 
+  public get errorNonfatalIcon(): string {
+    return CommonDefinition.ASSETS_SVG_ERROR_NONFATAL;
+  }
+
   private _jobs: McsJob[];
   private _jobsDiffer: IterableDiffer<McsJob>;
 
