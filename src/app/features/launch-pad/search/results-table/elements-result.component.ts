@@ -1,28 +1,21 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
-  Component,
   ChangeDetectionStrategy,
-  OnDestroy,
-  Input,
-  EventEmitter,
   ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
+import { MatSort } from '@angular/material/sort';
 import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
-
-import {
-  McsTableDataSource2,
-  McsMatTableQueryParam,
+  McsMatTableConfig,
   McsMatTableContext,
-  McsMatTableConfig
+  McsMatTableQueryParam,
+  McsTableDataSource2
 } from '@app/core';
 import {
   McsObjectCrispElement,
@@ -33,12 +26,14 @@ import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
   Paginator,
-  Search } from '@app/shared';
+  Search
+} from '@app/shared';
 import {
-  unsubscribeSafely,
+  getSafeProperty,
   isNullOrEmpty,
-  getSafeProperty
+  unsubscribeSafely
 } from '@app/utilities';
+
 import { WorkflowSelectorConfig } from '../../workflows/workflow';
 
 @Component({
@@ -51,6 +46,13 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
   public set paginator(value: Paginator) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
     }
   }
 
@@ -77,11 +79,6 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
   }
 
   public searching: boolean;
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
-
   public searchChangedStream: EventEmitter<any> =  new EventEmitter<any>();
 
   public readonly dataSource: McsTableDataSource2<McsObjectCrispElement>;
@@ -98,13 +95,6 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
 
   public clear(): void { }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   public ngOnDestroy(): void {
     unsubscribeSafely(this.searchChangedStream);
     this.dataSource.disconnect(null);
@@ -115,16 +105,11 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getCrispElements(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
       }));
   }

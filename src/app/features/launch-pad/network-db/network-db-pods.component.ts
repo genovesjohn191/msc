@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,16 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
-
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableConfig,
   McsMatTableContext,
@@ -23,11 +17,11 @@ import {
   McsTableDataSource2
 } from '@app/core';
 import {
+  networkDbPodTypeText,
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
   McsNetworkDbPod,
-  NetworkDbPodType,
-  networkDbPodTypeText
+  NetworkDbPodType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -49,10 +43,6 @@ import {
 export class NetworkDbPodsComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbPod>;
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
@@ -101,6 +91,13 @@ export class NetworkDbPodsComponent extends McsPageBase implements OnDestroy {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public get featureName(): string {
     return 'network-db-pod';
   }
@@ -113,28 +110,16 @@ export class NetworkDbPodsComponent extends McsPageBase implements OnDestroy {
     return networkDbPodTypeText[status];
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbPod>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getNetworkDbPods(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
       }));
   }

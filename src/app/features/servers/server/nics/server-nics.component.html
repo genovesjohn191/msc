@@ -6,7 +6,7 @@
   <ng-container [ngSwitch]="nicMethodType">
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
       <!-- NICs Table -->
-      <table mat-table [dataSource]="nicsDataSource" matSort (matSortChange)="onSortChange($event, server)">
+      <table mat-table [dataSource]="nicsDataSource" matSort #sort="matSort">
         <!-- NIC Column -->
         <ng-container matColumnDef="nic">
           <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="index" disableClear>
@@ -134,13 +134,13 @@
 
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="nicsDataSource?.dataColumns$ | async"
-          [disabled]="(nicsDataSource?.isInProgress$ | async) || isSorting"></tr>
+          [disabled]="(nicsDataSource?.isInProgress$ | async) || (nicsDataSource?.isSorting$ | async)"></tr>
         <tr mat-row *matRowDef="let row; columns: nicsDataSource?.dataColumns$ | async;"></tr>
       </table>
 
       <!-- Table Statuses -->
       <mcs-item orientation="block">
-        <div *ngIf="(nicsDataSource?.isInProgress$ | async) || isSorting" align="center">
+        <div *ngIf="(nicsDataSource?.isInProgress$ | async) || (nicsDataSource?.isSorting$ | async)" align="center">
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="nicsDataSource?.hasNoRecords$ | async" text-center>

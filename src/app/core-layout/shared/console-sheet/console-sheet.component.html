@@ -6,27 +6,22 @@
     <mcs-field-select size="auto"
       mcsId="select-server"
       [label]="'label.server' | translate"
+      [disabled]="hasNoVCloud$ | async"
       [dataSource]="'ServerConsole' | mcsFieldSelect"
+      (optionsChange)="onDataChange($event)"
       [formControl]="viewModel.fcServer">
     </mcs-field-select>
   </form>
 
   <!-- Action buttons -->
   <div class="action-items">
-    <button mcsButton="basic" mcsId="cancel-console"
-      mcsEventTracker="cancel-console"
+    <button mcsButton arrow="right" mcsId="open-console"
+      mcsEventTracker="open-console"
       mcsEventCategory="console"
       mcsEventLabel="header"
-      (click)="onCancelConsole()">
-      {{ 'label.cancel' | translate }}
-    </button>
-
-    <button mcsButton arrow="right" mcsId="view-console"
-      mcsEventTracker="view-console"
-      mcsEventCategory="console"
-      mcsEventLabel="header"
-      (click)="onViewConsole()">
-      {{ 'label.view-console' | translate }}
+      (click)="onViewConsole()"
+      [disabled]="!hasSelectedVm">
+      {{ 'label.open-console' | translate }}
     </button>
   </div>
 </section>

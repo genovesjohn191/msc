@@ -1,18 +1,27 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Output,
-  ViewEncapsulation
-} from '@angular/core';
-import {
-  Observable,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   catchError,
   map
 } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import {
+  McsMatTableContext,
+  McsNavigationService,
+  McsReportingService,
+  McsTableDataSource2
+} from '@app/core';
 import {
   McsFilterInfo,
   McsQueryParam,
@@ -20,16 +29,9 @@ import {
   RouteKey
 } from '@app/models';
 import {
-  McsMatTableContext,
-  McsNavigationService,
-  McsTableDataSource2,
-  McsReportingService
-} from '@app/core';
-import {
   createObject,
   isNullOrEmpty
 } from '@app/utilities';
-import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'mcs-update-management-widget',
@@ -44,11 +46,10 @@ export class UpdateManagementWidgetComponent {
   public readonly dataSource: McsTableDataSource2<McsReportUpdateManagement>;
   public readonly defaultColumnFilters: McsFilterInfo[];
 
-  private _sortDirection: string;
-  private _sortField: string;
-
   @Output()
   public dataChange= new EventEmitter<McsReportUpdateManagement[]>(null);
+
+  private _sortDef: MatSort;
 
   constructor(
     private _reportingService: McsReportingService,
@@ -65,6 +66,14 @@ export class UpdateManagementWidgetComponent {
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'lastStatus' })
     ];
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+      this._sortDef = value;
+    }
   }
 
   public retryDatasource(): void {
@@ -85,18 +94,12 @@ export class UpdateManagementWidgetComponent {
         RouteKey.OrderMsRequestChange, [], { queryParams: { serviceId: resource.subscriptionServiceId, resourceId: resource.azureId}});
   }
 
-  public onSortChange(sortState: Sort) {
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   private _getUpdateManagement(): Observable<McsMatTableContext<McsReportUpdateManagement>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     return this._reportingService.getUpdateManagement(queryParam).pipe(
       map((response) => {

@@ -1,39 +1,41 @@
-import {
-  Component,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  Injector,
-  ViewChild
-} from '@angular/core';
-import { Sort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import {
   map,
-  switchMap,
+  switchMap
 } from 'rxjs/operators';
+
 import {
-  McsNavigationService,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import {
   McsAccessControlService,
+  McsMatTableContext,
+  McsNavigationService,
   McsTableDataSource2,
-  McsTableEvents,
-  McsMatTableContext
+  McsTableEvents
 } from '@app/core';
 import {
-  isNullOrEmpty,
-  CommonDefinition,
-  createObject,
-  animateFactory,
-} from '@app/utilities';
-import {
-  McsResourceStorage,
-  RouteKey,
-  McsResource,
   McsFeatureFlag,
   McsFilterInfo,
-  McsQueryParam
+  McsQueryParam,
+  McsResource,
+  McsResourceStorage,
+  RouteKey
 } from '@app/models';
 import { ColumnFilter } from '@app/shared';
+import {
+  animateFactory,
+  createObject,
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+
 import { VdcDetailsBase } from '../vdc-details.base';
 
 @Component({
@@ -55,10 +57,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
 
   public expandedElement: McsResourceStorage;
   public selectedVdcStorageId: string;
-  public isSorting: boolean;
 
-  private _sortDirection: string;
-  private _sortField: string;
+  private _sortDef: MatSort;
 
   constructor(
     _injector: Injector,
@@ -87,6 +87,14 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
   public set columnFilter(value: ColumnFilter) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
+    }
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+      this._sortDef = value;
     }
   }
 
@@ -156,13 +164,6 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
     );
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   /**
    * An abstract method that get notified when the vdc selection has been changed
    */
@@ -172,8 +173,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
 
   private _getVdcStorage(): Observable<McsMatTableContext<McsResourceStorage>> {
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
     let optionalHeaders = new Map<string, any>();
 
     return this.resource$.pipe(

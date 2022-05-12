@@ -1,26 +1,27 @@
 import {
+  throwError,
+  Observable
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
-  McsTableDataSource2,
-  McsReportingService
+  McsReportingService,
+  McsTableDataSource2
 } from '@app/core';
 import {
   McsFilterInfo,
@@ -85,25 +86,26 @@ export class AuditAlertsWidgetComponent implements OnInit {
   private _subscriptionIds: string[] = [];
   private _startPeriod: string = '';
   private _endPeriod: string = '';
-  private _sortDirection: string;
-  private _sortField: string;
+  private _sortDef: MatSort;
 
   constructor(private _reportingService: McsReportingService) {
     this.dataSource = new McsTableDataSource2(this._getAuditAlerts.bind(this));
   }
 
-  ngOnInit(): void {
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+      this._sortDef = value;
+    }
+  }
+
+  public ngOnInit(): void {
     this._initializeDataColumns();
   }
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
-  }
-
-  public onSortChange(sortState: Sort) {
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
   }
 
   private _initializeDataColumns(): void {
@@ -117,8 +119,8 @@ export class AuditAlertsWidgetComponent implements OnInit {
     queryParam.periodStart = this._startPeriod;
     queryParam.periodEnd = this._endPeriod
     queryParam.subscriptionIds = !isNullOrEmpty(this.subscriptionIds) ? this.subscriptionIds.join(): '';
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     return this._reportingService.getAuditAlerts(queryParam).pipe(
       map((response) => {

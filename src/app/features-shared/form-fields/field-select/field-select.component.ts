@@ -8,11 +8,13 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   HostBinding,
   Injector,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import { McsOption } from '@app/models';
@@ -40,6 +42,9 @@ export class FieldSelectComponent<TValue>
 
   @Input()
   public dataSource: FieldSelectDatasource;
+
+  @Output()
+  public optionsChange = new EventEmitter<McsOption[]>();
 
   public dataProcess: DataProcess<any>;
   public optionItems$: Observable<McsOption[]>;
@@ -71,7 +76,10 @@ export class FieldSelectComponent<TValue>
 
     this.optionItems$ = this.dataSource?.connect().pipe(
       takeUntil(this.destroySubject),
-      tap(() => this.dataProcess.setCompleted()),
+      tap(options => {
+        this.dataProcess.setCompleted();
+        this.optionsChange.next(options);
+      }),
       shareReplay(1)
     );
   }

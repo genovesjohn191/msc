@@ -4,7 +4,7 @@
   <mat-button-toggle value="closed" [checked]="state === 'CLOSED'" (click)="reloadElements('CLOSED')">Closed</mat-button-toggle>
 </mat-button-toggle-group>
 
-<table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+<table mat-table [dataSource]="dataSource" matSort #sort="matSort">
   <!-- Service ID Column -->
   <ng-container matColumnDef="serviceId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="serviceId" disableClear>

@@ -1,10 +1,10 @@
 import {
   of,
+  throwError,
   BehaviorSubject,
   Observable,
   Subject,
-  Subscription,
-  throwError
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -25,7 +25,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -93,19 +93,17 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public manageStorage: ServerManageStorage;
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
-  public isSorting: boolean;
 
   public readonly disksDataSource: McsTableDataSource2<McsServerStorageDevice>;
   public readonly disksColumns: McsFilterInfo[];
 
-  private _sortDirection: string;
-  private _sortField: string;
   private _inProgressDisk: string;
   private _newDisk: McsServerStorageDevice;
   private _serverDisksCache: Observable<McsServerStorageDevice[]>;
   private _destroySubject = new Subject<void>();
   private _serverDisksChange = new BehaviorSubject<McsServerStorageDevice[]>(null);
   private _snapshotCount: number;
+  private _sortDef: MatSort;
 
   private _createDiskHandler: Subscription;
   private _updateDiskHandler: Subscription;
@@ -158,6 +156,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
     ];
     this.disksDataSource.registerColumnsFilterInfo(this.disksColumns);
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.disksDataSource.registerSort(value);
+      this._sortDef = value;
+    }
   }
 
   public ngOnInit() {
@@ -233,14 +239,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     if (isNullOrEmpty(disk)) { return; }
     this.selectedDisk = disk;
     this.diskMethodType = ServerDiskMethodType.ExpandDisk;
-  }
-
-
-  public onSortChange(sortState: Sort, server: McsServer) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this._updateTableDataSource(server);
   }
 
   /**
@@ -343,8 +341,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   private _updateTableDataSource(server?: McsServer): void {
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     let serverDiskDataSource: Observable<McsServerStorageDevice[]>;
     if (!isNullOrEmpty(server)) {
@@ -353,7 +351,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         tap((records) => this._serverDisksCache = of(records)));
     }
 
-    let tableDataSource = (isNullOrEmpty(this._serverDisksCache) || !isNullOrEmpty(this._sortDirection)) ?
+    let tableDataSource = (isNullOrEmpty(this._serverDisksCache) || !isNullOrEmpty(this._sortDef?.direction)) ?
       serverDiskDataSource : this._serverDisksCache;
 
     let hasNewRecord = !isNullOrEmpty(this._newDisk) && !isNullOrEmpty(tableDataSource);
@@ -473,14 +471,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
    private _getServerDisks(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerStorageDevice>> {
     return this._serverDisksChange.pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       takeUntil(this._destroySubject),
       filter(response => !isNullOrUndefined(response)),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response, response?.length)
       })
     );

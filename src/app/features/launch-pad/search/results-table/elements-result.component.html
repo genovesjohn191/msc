@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+<table mat-table [dataSource]="dataSource" matSort #sort="matSort">
   <!-- Order ID Column -->
   <ng-container matColumnDef="orderId">
     <th mat-header-cell *matHeaderCellDef>

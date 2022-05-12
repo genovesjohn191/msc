@@ -16,6 +16,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   FieldSelectConfig,
@@ -28,7 +29,8 @@ export class SelectServerConsoleDatasource extends FieldSelectDatasource {
 
   constructor(
     private _accessControl: McsAccessControlService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _translate: TranslateService
   ) {
     super(new FieldSelectConfig('server-console'));
   }
@@ -37,6 +39,7 @@ export class SelectServerConsoleDatasource extends FieldSelectDatasource {
     this._apiService.getServers().pipe(
       map(result => {
         if (isNullOrEmpty(result?.collection)) { return; }
+
         let filteredServers = result.collection.filter(vm => {
           let dedicatedFlag = this._accessControl
             .hasAccessToFeature('EnableDedicatedVmConsole');
@@ -44,7 +47,13 @@ export class SelectServerConsoleDatasource extends FieldSelectDatasource {
         });
 
         return filteredServers
-          ?.map(resultItem => new McsOption(resultItem.id, resultItem.name));
+          ?.map(resultItem => new McsOption(
+            resultItem.id,
+            resultItem.name,
+            this._translate.instant('message.consoleUnavailable', { state: resultItem.statusLabel }),
+            !resultItem.isPoweredOn,
+            resultItem
+          ));
       }),
       tap(options => this._dataRecordsChange.next(options))
     ).subscribe();

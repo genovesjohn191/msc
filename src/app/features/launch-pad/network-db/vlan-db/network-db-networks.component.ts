@@ -1,13 +1,6 @@
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { Sort } from '@angular/material/sort';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,6 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -23,6 +17,7 @@ import {
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
   McsAzureDeploymentsQueryParams,
   McsFilterInfo,
@@ -40,7 +35,6 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-network-db-networks',
@@ -51,11 +45,6 @@ export class NetworkDbNetworksComponent extends McsPageBase implements OnDestroy
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbNetwork>;
   public readonly dataEvents: McsTableEvents<McsNetworkDbNetwork>;
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
-
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
@@ -108,6 +97,13 @@ export class NetworkDbNetworksComponent extends McsPageBase implements OnDestroy
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public get featureName(): string {
     return 'network-db-networks';
   }
@@ -116,28 +112,16 @@ export class NetworkDbNetworksComponent extends McsPageBase implements OnDestroy
     this.dataSource.refreshDataRecords();
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbNetwork>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getNetworkDbNetworks(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
       }));
   }

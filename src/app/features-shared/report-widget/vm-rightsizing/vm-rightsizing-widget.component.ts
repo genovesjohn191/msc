@@ -1,34 +1,30 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Output,
-  EventEmitter
-} from '@angular/core';
+  throwError,
+  Observable,
+  Subject
+} from 'rxjs';
 import {
   catchError,
   map,
   takeUntil
 } from 'rxjs/operators';
+
 import {
-  Observable,
-  Subject,
-  throwError
-} from 'rxjs';
-import {
-  cloneObject,
-  CommonDefinition,
-  createObject,
-  currencyFormat,
-  unsubscribeSafely
-} from '@app/utilities';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import {
   CoreRoutes,
   McsMatTableContext,
-  McsTableDataSource2,
-  McsReportingService
+  McsReportingService,
+  McsTableDataSource2
 } from '@app/core';
 import {
   McsFilterInfo,
@@ -36,7 +32,14 @@ import {
   McsReportVMRightsizing,
   RouteKey
 } from '@app/models';
-import { Sort } from '@angular/material/sort';
+import {
+  cloneObject,
+  createObject,
+  currencyFormat,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-vm-rightsizing-widget',
@@ -61,10 +64,8 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
   public potentialRightsizingSavings: string;
   public vmRightSizing: McsReportVMRightsizing[];
 
-  private _sortDirection: string;
-  private _sortField: string;
-
   private _destroySubject = new Subject<void>();
+  private _sortDef: MatSort;
 
   public get savingsIcon(): string {
     return CommonDefinition.ASSETS_SVG_SMALL_CALCULATOR_CHECK_BLACK;
@@ -102,6 +103,14 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
     unsubscribeSafely(this._destroySubject);
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+      this._sortDef = value;
+    }
+  }
+
   public moneyFormat(value: number): string {
     return currencyFormat(value);
   }
@@ -114,18 +123,12 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
     return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
   }
 
-  public onSortChange(sortState: Sort) {
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   private getVMRightsizing(): Observable<McsMatTableContext<McsReportVMRightsizing>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     return this._reportingService.getVMRightsizing(queryParam).pipe(
       map((response) => {

@@ -1,3 +1,5 @@
+import { BehaviorSubject } from 'rxjs';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,13 +11,21 @@ import {
   CoreRoutes,
   McsPageBase
 } from '@app/core';
-import { RouteKey } from '@app/models';
+import {
+  McsOption,
+  McsServer,
+  PlatformType,
+  RouteKey
+} from '@app/models';
 import {
   SideSheetAction,
   SideSheetRef,
   SideSheetResult
 } from '@app/shared/side-sheet';
-import { getSafeFormValue } from '@app/utilities';
+import {
+  getSafeFormValue,
+  isNullOrEmpty
+} from '@app/utilities';
 
 import { ConsoleSheetViewModel } from './console-sheet.viewmodel';
 
@@ -26,6 +36,7 @@ import { ConsoleSheetViewModel } from './console-sheet.viewmodel';
 })
 export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDestroy {
   public readonly viewModel: ConsoleSheetViewModel;
+  public readonly hasNoVCloud$: BehaviorSubject<boolean>;
 
   constructor(
     injector: Injector,
@@ -33,10 +44,15 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
   ) {
     super(injector);
     this.viewModel = new ConsoleSheetViewModel(injector);
+    this.hasNoVCloud$ = new BehaviorSubject(false);
   }
 
   public get featureName(): string {
     return 'console-sheet';
+  }
+
+  public get hasSelectedVm(): boolean {
+    return this.viewModel?.fgGroup?.valid;
   }
 
   public ngOnInit(): void {
@@ -48,6 +64,14 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
 
   public onCancelConsole(): void {
     this._sidesheetRef?.close();
+  }
+
+  public onDataChange(options: McsOption[]): void {
+    if (isNullOrEmpty(options)) { return; }
+
+    let hasVCloud = options.some(option => (option.data as McsServer)?.platform?.type === PlatformType.VCloud);
+    this.hasNoVCloud$.next(!hasVCloud);
+    this.changeDetector.markForCheck();
   }
 
   public onViewConsole(): void {

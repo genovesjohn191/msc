@@ -7,7 +7,7 @@
     <!-- Meta Data -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <ng-container *ngIf="isSorting; else totalCountTemplate">
+        <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
           <div class="sorting-label">
             <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
           </div>
@@ -46,7 +46,7 @@
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="network-db-multicast-ips-mobile-search"></mcs-search>
 
-      <table mat-table [dataSource]="dataSource" margin-top-none matSort (matSortChange)="onSortChange($event)">
+      <table mat-table [dataSource]="dataSource" margin-top-none matSort #sort="matSort">
 
         <!-- IP Address Column -->
         <ng-container matColumnDef="ipAddress">

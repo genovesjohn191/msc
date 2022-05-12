@@ -1,19 +1,21 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Output,
-  ViewEncapsulation
-} from '@angular/core';
-import { Sort } from '@angular/material/sort';
-import {
-  Observable,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   catchError,
   map
 } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
   McsMatTableContext,
@@ -28,7 +30,10 @@ import {
   McsReportRecentServiceRequestSlt,
   RouteKey
 } from '@app/models';
-import { createObject } from '@app/utilities';
+import {
+  createObject,
+  isNullOrEmpty
+} from '@app/utilities';
 
 const maxTextLength = 9;
 
@@ -46,16 +51,14 @@ export class RecentServiceRequestSltWidgetComponent {
   public dataChange= new EventEmitter<McsReportRecentServiceRequestSlt[]>(null);
 
   public readonly dataSource: McsTableDataSource2<McsReportRecentServiceRequestSlt>;
-
-  private _sortDirection: string;
-  private _sortField: string;
-
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'orderId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'assignmentTarget' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'submitted' })
   ];
+
+  private _sortDef: MatSort;
 
   constructor(
     private _accessControlService: McsAccessControlService,
@@ -64,6 +67,14 @@ export class RecentServiceRequestSltWidgetComponent {
     ) {
     this.dataSource = new McsTableDataSource2(this._getRecentServiceRequestSlt.bind(this));
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+      this._sortDef = value;
+    }
   }
 
   public descriptionTooltip(text: string): string {
@@ -83,18 +94,12 @@ export class RecentServiceRequestSltWidgetComponent {
     this.dataSource.refreshDataRecords();
   }
 
-  public onSortChange(sortState: Sort) {
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   private _getRecentServiceRequestSlt(): Observable<McsMatTableContext<McsReportRecentServiceRequestSlt>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsReportParams();
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     return this._reportingService.getRecentServiceRequestSlt(queryParam).pipe(
       map((response) => {

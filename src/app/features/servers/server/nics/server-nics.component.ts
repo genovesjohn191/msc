@@ -26,7 +26,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -107,10 +107,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public dialogRef: DialogRef<any>;
   public isVMWareToolsInstalled: boolean;
   public isVMWareToolsRunning: boolean;
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
 
   @ViewChild('submitDialogTemplate')
   private _submitDialogTemplate: TemplateRef<any>;
@@ -120,6 +116,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _serverNicsCache: Observable<McsServerNic[]>;
   private _destroySubject = new Subject<void>();
   private _nicsDataChange = new BehaviorSubject<McsServerNic[]>(null);
+  private _sortDef: MatSort;
 
   private _createNicHandler: Subscription;
   private _updateNicHandler: Subscription;
@@ -183,6 +180,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
     ];
     this.nicsDataSource.registerColumnsFilterInfo(this.nicsColumns);
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.nicsDataSource.registerSort(value);
+      this._sortDef = value;
+    }
   }
 
   public ngOnInit() {
@@ -338,13 +343,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     return new McsServerPermission(server);
   }
 
-  public onSortChange(sortState: Sort, server?: McsServer) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this._updateTableDataSource(server);
-  }
-
   /**
    * Event that emits when the selected server has been changed
    * @param server Server details of the selected record
@@ -438,8 +436,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _updateTableDataSource(server?: McsServer): void {
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     let serverNicsDataSource: Observable<McsServerNic[]>;
     if (!isNullOrEmpty(server)) {
@@ -449,7 +447,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       );
     }
 
-    let tableDataSource = (isNullOrEmpty(this._serverNicsCache) || !isNullOrEmpty(this._sortDirection)) ?
+    let tableDataSource = (isNullOrEmpty(this._serverNicsCache) || !isNullOrEmpty(this._sortDef?.direction)) ?
       serverNicsDataSource : this._serverNicsCache;
 
     let hasNewRecord = !isNullOrEmpty(this._newNic) && !isNullOrEmpty(tableDataSource);
@@ -543,14 +541,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _getServerNics(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerNic>> {
     return this._nicsDataChange.pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       takeUntil(this._destroySubject),
       filter(response => !isNullOrUndefined(response)),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response, response?.length)
       })
     );

@@ -3691,7 +3691,7 @@
     "basicInformation": "Basic Information",
     "backToNetworkVlans": "Back To Network VLANS",
     "server": "Server",
-    "view-console": "View Console",
+    "open-console": "Open Console",
     "vm-console": "VM Console",
     "tellUsExperience": "Tell us your experience",
     "cancel": "Cancel",
@@ -3894,6 +3894,7 @@
     "rollback": "Rollback"
   },
   "message": {
+    "consoleUnavailable": "Console unavailable while server is {{state}}",
     "noEventsToDisplay": "No events to display.",
     "noAffectedServicesToDisplay": "No affected services to display.",
     "navigateAwaySheet": "Your changes may not be saved. Are you sure you want to close the sheet?",

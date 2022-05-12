@@ -10,7 +10,7 @@
   <p *ngIf="isInviewPremium">{{ 'serverServicesVmBackupDetails.inviewLabel' | translate }}</p>
 
   <!-- Table -->
-  <table mat-table [dataSource]="vmBackupLogsDatasource" matSort (matSortChange)="onSortChange($event)">
+  <table mat-table [dataSource]="vmBackupLogsDatasource" matSort #sort="matSort">
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="logs.status" disableClear>
@@ -80,13 +80,13 @@
 
     <!-- Header and Data row -->
     <tr mat-header-row *matHeaderRowDef="vmBackupLogsDatasource?.dataColumns$ | async"
-      [disabled]="(vmBackupLogsDatasource?.isInProgress$ | async) || isSorting"></tr>
+      [disabled]="(vmBackupLogsDatasource?.isInProgress$ | async) || (vmBackupLogsDatasource?.isSorting$ | async)"></tr>
     <tr mat-row *matRowDef="let row; columns: vmBackupLogsDatasource?.dataColumns$ | async;"></tr>
   </table>
 
   <!-- Table Statuses -->
   <mcs-item orientation="block">
-    <div *ngIf="(vmBackupLogsDatasource?.isInProgress$ | async) || isSorting" align="center">
+    <div *ngIf="(vmBackupLogsDatasource?.isInProgress$ | async) || (vmBackupLogsDatasource?.isSorting$ | async)" align="center">
       <mcs-loader size="medium"></mcs-loader>
     </div>
     <div *ngIf="vmBackupLogsDatasource?.hasNoRecords$ | async" text-center>

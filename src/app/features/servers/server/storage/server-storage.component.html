@@ -18,7 +18,7 @@
     <mcs-section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk">
 
       <!-- DISKs Table -->
-      <table mat-table [dataSource]="disksDataSource" matSort (matSortChange)="onSortChange($event, server)">
+      <table mat-table [dataSource]="disksDataSource" matSort #sort="matSort">
         <!-- Storage Device Column -->
         <ng-container matColumnDef="storageDevice">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="name" disableClear>
@@ -92,13 +92,13 @@
 
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="disksDataSource?.dataColumns$ | async"
-          [disabled]="(disksDataSource?.isInProgress$ | async) || isSorting"></tr>
+          [disabled]="(disksDataSource?.isInProgress$ | async) || (disksDataSource?.isSorting$ | async)"></tr>
         <tr mat-row *matRowDef="let row; columns: disksDataSource?.dataColumns$ | async;"></tr>
       </table>
 
       <!-- Table Statuses -->
       <mcs-item orientation="block">
-        <div *ngIf="(disksDataSource?.isInProgress$ | async) || isSorting" align="center">
+        <div *ngIf="(disksDataSource?.isInProgress$ | async) || (disksDataSource?.isSorting$ | async)" align="center">
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="disksDataSource?.hasNoRecords$ | async" text-center>

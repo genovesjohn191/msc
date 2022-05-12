@@ -4,7 +4,7 @@
       <mcs-status-message type="info">
         {{ 'message.noDataFound' | translate }}
       </mcs-status-message>
-    </div> 
+    </div>
     <ng-template #vmRightsizing>
       <mcs-cta-list-panel [icon]="savingsIcon">
         <mcs-cta-list-body>
@@ -35,7 +35,7 @@
 
   <div class="listing-table-wrapper table-widget-wrapper limited-view">
     <!-- Table -->
-    <table mat-table #table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+    <table mat-table #table [dataSource]="dataSource" matSort #sort="matSort">
       <!-- VM Name Column -->
       <ng-container matColumnDef="vmName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="vmName" disableClear>
@@ -125,7 +125,7 @@
           {{ row.diskScore }}
         </td>
       </ng-container>
-      
+
       <!-- Efficiency -->
       <ng-container matColumnDef="efficiency">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="efficiency" disableClear>
@@ -156,7 +156,7 @@
         [disabled]="dataSource?.isInProgress$ | async"></tr>
       <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
     </table>
-    
+
     <mcs-item orientation="block">
       <div *ngIf="dataSource?.isInProgress$ | async" align="center">
         <mcs-loader size="medium"></mcs-loader>

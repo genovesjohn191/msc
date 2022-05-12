@@ -1,21 +1,22 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewEncapsulation
-} from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
-import {
-  Observable,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   catchError,
   map
 } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
   McsReportingService,
@@ -23,8 +24,8 @@ import {
 } from '@app/core';
 import {
   McsFilterInfo,
-  McsReportInefficientVmParams,
-  McsReportInefficientVms
+  McsReportInefficientVms,
+  McsReportInefficientVmParams
 } from '@app/models';
 import {
   compareArrays,
@@ -51,9 +52,6 @@ export class InefficientVmsWidgetComponent {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'utilizationThisMonth' }),
   ];
 
-  private _sortDirection: string;
-  private _sortField: string;
-
   @Input()
   public set subscriptionIds(value: string[]) {
     let subscriptionId = !isNullOrEmpty(value) ? value : [];
@@ -69,6 +67,7 @@ export class InefficientVmsWidgetComponent {
 
   private _subscriptionIds: string[] = undefined;
   private _period: string = '';
+  private _sortDef: MatSort;
 
   constructor(private _reportingService: McsReportingService) {
     this._initializePeriod();
@@ -76,14 +75,16 @@ export class InefficientVmsWidgetComponent {
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
-  public retryDatasource(): void {
-    this.dataSource.refreshDataRecords();
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+      this._sortDef = value;
+    }
   }
 
-  public onSortChange(sortState: Sort) {
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
   private _getInefficientVms(): Observable<McsMatTableContext<McsReportInefficientVms>> {
@@ -92,8 +93,8 @@ export class InefficientVmsWidgetComponent {
     let queryParam = new McsReportInefficientVmParams();
     queryParam.period = this._period;
     queryParam.subscriptionIds = !isNullOrEmpty(this.subscriptionIds) ? this.subscriptionIds.join(): '';
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     return this._reportingService.getInefficientVms(queryParam).pipe(
       map((response) => {

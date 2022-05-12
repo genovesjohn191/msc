@@ -2,11 +2,9 @@ import {
   of,
   BehaviorSubject,
   Observable,
-  Subject,
-  throwError
+  Subject
 } from 'rxjs';
 import {
-  catchError,
   filter,
   map,
   takeUntil,
@@ -19,14 +17,15 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2
 } from '@app/core';
-import { Sort } from '@angular/material/sort';
 import {
   backupStatusLabel,
   backupStatusTypeMap,
@@ -35,9 +34,9 @@ import {
   BackupStatusType,
   InviewLevel,
   McsFilterInfo,
+  McsQueryParam,
   McsServerBackupVmDetails,
-  McsServerBackupVmLog,
-  McsQueryParam
+  McsServerBackupVmLog
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -63,15 +62,12 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
 
   public readonly vmBackupLogsDatasource: McsTableDataSource2<McsServerBackupVmLog>;
   public readonly vmBackupLogsColumns: McsFilterInfo[];
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
 
   private _vmBackupLogsCache: Observable<McsServerBackupVmLog[]>;
   private _vmBackupDetails: McsServerBackupVmDetails;
   private _vmBackupChange = new BehaviorSubject<McsServerBackupVmLog[]>(null);
   private _destroySubject = new Subject<void>();
+  private _sortDef: MatSort;
 
   constructor(
     private _apiService: McsApiService,
@@ -87,6 +83,14 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'dataProtectionVolume' })
     ];
     this.vmBackupLogsDatasource.registerColumnsFilterInfo(this.vmBackupLogsColumns);
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.vmBackupLogsDatasource.registerSort(value);
+      this._sortDef = value;
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -146,20 +150,13 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
     return statusIconKey;
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this._updateTableDataSource(this.serverId);
-  }
-
   /**
    * Initializes the data source of the vm backup logs table
    */
   private _updateTableDataSource(serverid: string): void {
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = this._sortDef?.direction;
+    queryParam.sortField = this._sortDef?.active;
 
     let vmBackupApiSource: Observable<McsServerBackupVmLog[]>;
     if (!isNullOrEmpty(serverid)) {
@@ -174,7 +171,7 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
       );
     }
 
-    let tableDataSource = (isNullOrEmpty(this._vmBackupLogsCache) || !isNullOrEmpty(this._sortDirection)) ?
+    let tableDataSource = (isNullOrEmpty(this._vmBackupLogsCache) || !isNullOrEmpty(this._sortDef?.direction)) ?
       vmBackupApiSource : this._vmBackupLogsCache;
     tableDataSource.subscribe(records => this._vmBackupChange.next(records || []));
     this._changeDetector.markForCheck();
@@ -182,14 +179,9 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
 
   private _getVmBackups(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerBackupVmLog>> {
     return this._vmBackupChange.pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       takeUntil(this._destroySubject),
       filter(response => !isNullOrUndefined(response)),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response, response?.length)
       })
     );

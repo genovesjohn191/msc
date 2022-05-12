@@ -3,7 +3,9 @@
 
   <mat-select [formControl]="ngControl?.control" [multiple]="multiple">
     <ng-container *ngIf="optionItems$ | async as optionItems">
-      <mat-option *ngFor="let optionItem of optionItems"
+      <mat-option *ngFor="let optionItem of optionItems" [ngStyle]="{'pointer-events': 'auto'}"
+        [disabled]="optionItem.disabled"
+        [mcsTooltip]="optionItem.helpText" [mcsTooltipShow]="optionItem.disabled"
         [value]="optionItem.value">
         {{ optionItem.text }}
       </mat-option>

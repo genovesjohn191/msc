@@ -1,11 +1,5 @@
-import {
-  throwError,
-  Observable
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -14,7 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableConfig,
   McsMatTableContext,
@@ -49,11 +43,6 @@ import {
 export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsNetworkDbVlan>;
-  public isSorting: boolean;
-
-  private _sortDirection: string;
-  private _sortField: string;
-
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'number' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
@@ -104,6 +93,13 @@ export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
     }
   }
 
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
+  }
+
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
   }
@@ -116,13 +112,6 @@ export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
     return RouteKey;
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   public navigateToVlan(vlan: McsNetworkDbVlan): void {
     this.navigation.navigateTo(RouteKey.LaunchPadNetworkDbVlanDetails, [vlan.id?.toString()]);
   }
@@ -132,16 +121,11 @@ export class NetworkDbVlansComponent extends McsPageBase implements OnDestroy {
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this.apiService.getNetworkDbVlans(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
       }));
   }

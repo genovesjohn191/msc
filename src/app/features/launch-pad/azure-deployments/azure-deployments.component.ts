@@ -2,18 +2,15 @@ import {
   of,
   Observable,
   Subject,
-  Subscription,
-  throwError
+  Subscription
 } from 'rxjs';
 import {
-  catchError,
   map,
   switchMap,
   takeUntil,
   tap
 } from 'rxjs/operators';
 
-import { Sort } from '@angular/material/sort';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,8 +19,8 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
-
 import {
   CoreRoutes,
   McsMatTableContext,
@@ -93,11 +90,8 @@ export class AzureDeploymentsComponent extends McsPageBase implements OnDestroy 
   private _routerHandler: Subscription;
   private _destroySubject = new Subject<void>();
   private _companyId: string;
-  private _sortDirection: string;
-  private _sortField: string;
 
   public formConfig$: Observable<DynamicFormFieldConfigBase[]>;
-  public isSorting: boolean;
 
   public readonly defaultColumnFilters = [
     // createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
@@ -164,6 +158,13 @@ export class AzureDeploymentsComponent extends McsPageBase implements OnDestroy 
   public set columnFilter(value: ColumnFilter) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
+    }
+  }
+
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
     }
   }
 
@@ -264,13 +265,6 @@ export class AzureDeploymentsComponent extends McsPageBase implements OnDestroy 
     }
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
-  }
-
   private _subscribeToQueryParams(): void {
     this._activatedRoute.queryParams.pipe(
       takeUntil(this._destroySubject),
@@ -302,16 +296,11 @@ export class AzureDeploymentsComponent extends McsPageBase implements OnDestroy 
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.companyId = this._companyId;
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getTerraformDeployments(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
       }));
   }

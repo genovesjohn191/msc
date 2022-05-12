@@ -1,7 +1,7 @@
 <div class="update-management-widget reporting-table-widget">
   <div class="listing-table-wrapper table-widget-wrapper">
     <!-- Table -->
-    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+    <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
       <!-- Target Computer Column -->
       <ng-container matColumnDef="targetComputer">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="targetComputer" disableClear>

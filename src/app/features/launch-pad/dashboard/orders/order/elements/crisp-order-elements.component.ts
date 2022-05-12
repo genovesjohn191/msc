@@ -1,18 +1,8 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Injector,
-  OnDestroy
-} from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
-import {
   Observable,
-  Subject,
-  throwError
+  Subject
 } from 'rxjs';
 import {
-  catchError,
   map,
   shareReplay,
   takeUntil,
@@ -20,11 +10,21 @@ import {
 } from 'rxjs/operators';
 
 import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import {
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2
 } from '@app/core';
+import { WorkflowSelectorConfig } from '@app/features/launch-pad/workflows/workflow';
 import {
   CrispOrderState,
   McsFilterInfo,
@@ -34,10 +34,13 @@ import {
   ProductType
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { createObject } from '@app/utilities';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
+
 import { CrispOrderService } from '../crisp-order.service';
-import { WorkflowSelectorConfig } from '@app/features/launch-pad/workflows/workflow';
 
 @Component({
   selector: 'mcs-crisp-order-elements',
@@ -48,12 +51,8 @@ export class CrispOrderElementsComponent implements OnDestroy {
   public crispOrder$:  Observable<McsObjectCrispOrder>;;
   public readonly dataSource: McsTableDataSource2<McsObjectCrispElement>;
 
-  public isSorting: boolean;
-
   public state: CrispOrderState = 'OPEN';
   private _orderId: string;
-  private _sortDirection: string;
-  private _sortField: string;
   private _destroySubject = new Subject<void>();
   private _crispOrderDetails : McsObjectCrispOrder;
 
@@ -86,11 +85,11 @@ export class CrispOrderElementsComponent implements OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
   }
 
   public selectedTabChange(tab: MatTabChangeEvent): void {
@@ -135,16 +134,11 @@ export class CrispOrderElementsComponent implements OnDestroy {
     queryParam.pageIndex = 1;
     queryParam.pageSize = 100;
     queryParam.state = this.state;
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getCrispOrderElements(this._crispOrderService.getCrispOrderId().toString(), queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount)
       }));
   }

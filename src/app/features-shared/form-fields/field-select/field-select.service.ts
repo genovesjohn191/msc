@@ -52,7 +52,7 @@ export class FieldSelectService implements IFieldSelectService {
       new SelectServerDatasource(_apiService));
 
     this._selectDatasourceMap.set(SelectDatasourceType.ServerConsole,
-      new SelectServerConsoleDatasource(_accessControl,_apiService));
+      new SelectServerConsoleDatasource(_accessControl,_apiService, _translate));
   }
 
   public get(type: string, data?: any): FieldSelectDatasource {

@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,17 +8,8 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  map
-} from 'rxjs/operators';
-
+import { MatSort } from '@angular/material/sort';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
   McsAuthenticationIdentity,
   McsMatTableConfig,
@@ -43,7 +37,6 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'mcs-crisp-orders',
@@ -51,13 +44,9 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CrispOrdersComponent extends McsPageBase implements OnDestroy {
-
   public readonly dataSource: McsTableDataSource2<McsObjectCrispOrder>;
-  public isSorting: boolean;
 
   private _state: CrispOrderState = 'OPEN';
-  private _sortDirection: string;
-  private _sortField: string;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'orderId' }),
@@ -106,11 +95,11 @@ export class CrispOrdersComponent extends McsPageBase implements OnDestroy {
     }
   }
 
-  public onSortChange(sortState: Sort) {
-    this.isSorting = true;
-    this._sortDirection = sortState.direction;
-    this._sortField = sortState.active;
-    this.retryDatasource();
+  @ViewChild('sort')
+  public set sort(value: MatSort) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSort(value);
+    }
   }
 
   public get featureName(): string {
@@ -140,16 +129,11 @@ export class CrispOrdersComponent extends McsPageBase implements OnDestroy {
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.state = this._state;
     queryParam.assignee = this._identity.user.userId;
-    queryParam.sortDirection = this._sortDirection;
-    queryParam.sortField = this._sortField;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._apiService.getCrispOrders(queryParam).pipe(
-      catchError((error) => {
-        this.isSorting = false;
-        return throwError(error);
-      }),
       map(response => {
-        this.isSorting = false;
         return new McsMatTableContext(response?.collection, response?.totalCollectionCount)
       })
     );
