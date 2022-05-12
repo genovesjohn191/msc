@@ -463,6 +463,7 @@
       "description": "This server currently has {{ram}} RAM and {{cpu}} vCPU",
       "contextualHelp": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
       "serverChangeAvailableFalse": "This server cannot be modified because it is currently being provisioned.",
+      "isOnDisabledStorageProfile": "The selected server cannot be scaled because it resides on a disabled storage profile.",
       "busy": "This server cannot be scaled because it is currently busy. Scaling can be performed once its current operation has completed."
     },
     "confirm": {
@@ -1544,7 +1545,8 @@
       "description": "Scaling a server allows for adjustment of RAM and vCPU power.",
       "scale": "Scale",
       "cancel": "Cancel",
-      "scaling": "Scaling in progress."
+      "scaling": "Scaling in progress.",
+      "isOnDisabledStorageProfile":"This server cannot be scaled because it resides on a disabled storage profile."
     },
     "serviceInformation": {
       "title": "Service Information",
@@ -1806,7 +1808,8 @@
     "expandStorageLimit": "This disk cannot be expanded due to insufficient storage space (0 GB remaining).",
     "noDisks": "All disks have been removed from this server, rendering it inoperable. New disks cannot be added at this time.",
     "errorGettingDisks": "Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
-    "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
+    "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining).",
+    "diskStorageProfileDisabled": "This disk cannot be modified because it resides on a disabled storage profile."
   },
   "serverCreate": {
     "header": "Create a New Server",
@@ -1872,7 +1875,7 @@
     "cloneServer": {
       "title": "Clone a server",
       "description": "Cloning a server gives you an exact copy of an existing server in the same Virtual Data Centre.",
-      "loadingServerDetails": "Retrieving network information.",
+      "loadingServerDetails": "Retrieving server information.",
       "loadingServers": "Loading servers.",
       "noServers": "No servers to clone. Create a new server first.",
       "errorMessageServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
@@ -1886,7 +1889,8 @@
         "serverNameRequired": "Enter a server name.",
         "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
         "selectServerRequired": "You must select a server.",
-        "manuallyAssignedIpWarning": "{{server_name}} has a manually-assigned IP address.\r\n Your new server may not be usable until {{server_name}} is stopped or its IP address is dissociated."
+        "manuallyAssignedIpWarning": "{{server_name}} has a manually-assigned IP address.\r\n Your new server may not be usable until {{server_name}} is stopped or its IP address is dissociated.",
+        "disabledStorageProfileWarning": "The selected server cannot be cloned as its primary disk resides on a storage profile which is disabled."
       }
     }
   },
@@ -3626,6 +3630,7 @@
     "subscriptionId": "Subscription ID",
     "summary": "Summary",
     "startTime": "Start Time",
+    "state": "State",
     "status": "Status",
     "storageProfile": "Storage Profile",
     "tag": "Tag",

@@ -5,7 +5,8 @@
       {{ 'columnHeader.server' | translate }}
     </th>
     <td mat-cell *matCellDef="let row">
-      <span text-wrap>{{ row.name }}</span>
+      <span text-wrap [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
+      </span>
     </td>
   </ng-container>
 
@@ -15,7 +16,8 @@
       {{ 'columnHeader.diskSize' | translate }}
     </th>
     <td mat-cell *matCellDef="let row" hidden-small>
-      {{ convertSizeToGb(row.diskSizeMB) || 'No size' }}
+      <span text-wrap [innerHTML]="convertSizeToGb(row.diskSizeMB) | mcsDataLabel: 'No disks'">
+      </span>
     </td>
   </ng-container>
 
@@ -25,7 +27,8 @@
       {{ 'columnHeader.snapshotSize' | translate }}
     </th>
     <td mat-cell *matCellDef="let row" hidden-small>
-      {{ convertSizeToGb(row.snapshotSizeMB) || 'No snapshots' }}
+      <span text-wrap [innerHTML]="convertSizeToGb(row.snapshotSizeMB) | mcsDataLabel: 'No snapshots'">
+      </span>
     </td>
   </ng-container>
 
@@ -35,7 +38,8 @@
       {{ 'columnHeader.totalSize' | translate }}
     </th>
     <td mat-cell *matCellDef="let row" hidden-small>
-      {{ getTotalSize(row.diskSizeMB, row.snapshotSizeMB) || 'No disks or snapshots' }}
+      <span text-wrap [innerHTML]="getTotalSize(row.diskSizeMB, row.snapshotSizeMB) | mcsDataLabel: 'No disks or snapshots'">
+      </span>
     </td>
   </ng-container>
 

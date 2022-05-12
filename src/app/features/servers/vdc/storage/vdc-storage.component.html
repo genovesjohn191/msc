@@ -21,8 +21,19 @@
       </th>
       <td mat-cell *matCellDef="let row">
         <mcs-item>
-          <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
           <span text-wrap>{{ row.name }}</span>
+        </mcs-item>
+        <mcs-item>
+          <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
+            <span><small read-only>{{ row.serviceId }}</small></span>
+          </ng-container>
+          <ng-template #noServiceIdTemplate>
+            <mcs-data-status-empty
+              [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+              [mcsTooltipShow]="!row.serviceId">
+              {{ 'label.unknown' | translate }}
+            </mcs-data-status-empty>
+          </ng-template>
         </mcs-item>
       </td>
     </ng-container>
@@ -52,18 +63,27 @@
       </td>
     </ng-container>
 
+    <!-- State Column -->
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.state' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
+        <span [innerHTML]="row.toggleLabel"></span>
+    </ng-container>
+
     <!-- Action column -->
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row" text-center>
-        <ng-container *ngIf="hasActionsEnabled(resource.scaleable, row)">
+        <ng-container *ngIf="hasActionsEnabled(resource, row)">
           <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
             mcsPopover placement="bottom" orientation="left" theme="light"
             padding="none" [content]="actionContent" mcsCursor="pointer">
           </mcs-icon>
           <ng-template #actionContent>
             <div class="cog-actions-wrapper">
-              <ng-container *ngIf="canExpandVdcStorage(resource.scaleable)">
+              <ng-container *ngIf="canExpandVdcStorage(row)">
                 <a mcsButton="basic" color="white" labelPlacement="left"
                   (click)="navigateToExpandVdcStorage(resource, row)"
                   mcsId="navigate-to-expand-vdc-storage"

@@ -235,7 +235,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this.diskMethodType = ServerDiskMethodType.ExpandDisk;
   }
 
-  
+
   public onSortChange(sortState: Sort, server: McsServer) {
     this.isSorting = true;
     this._sortDirection = sortState.direction;
@@ -372,6 +372,12 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       tap(dataRecords => this._serverDisksChange.next(dataRecords || []))
     ).subscribe();
   }
+
+  public storageProfileIsDisabled(disk: McsServerStorageDevice): Observable<boolean> {
+  return this.resourceStorages$.pipe(
+    map(storageProfiles => !storageProfiles?.find(storageProfile => storageProfile.name === disk.storageProfile)?.enabled)
+  );
+}
 
   /**
    * Reset storage form values to initial

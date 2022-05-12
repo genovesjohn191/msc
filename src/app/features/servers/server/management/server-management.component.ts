@@ -1,7 +1,8 @@
 import {
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  forkJoin
 } from 'rxjs';
 import {
   map,
@@ -100,6 +101,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   private _attachMediaHandler: Subscription;
   private _detachMediaHandler: Subscription;
   private _updateComputeHandler: Subscription;
+
+  private _serverPrimaryStorageProfileDisabled: boolean;
 
   constructor(
     _injector: Injector,
@@ -331,6 +334,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this._getResourceCatalogs(resourceId);
 
     this._checkScaleParamMode();
+
+    this._validateDisabledStorageProfile(resourceId, server);
   }
 
   /**
@@ -400,6 +405,31 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
           this.setViewMode(ServerManagementView.ManageScale);
         }
       });
+  }
+
+  /**
+   * Check whether server's primary disk resides on a disabled storage profile
+   */
+  private _validateDisabledStorageProfile(resourceId: string, server: McsServer): void {
+    forkJoin(
+      this.apiService.getResourceStorages(resourceId).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj))
+      ),
+      this.apiService.getServerStorage(server?.id).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj))
+      ),
+    ).subscribe(([_resourceStorage, _serverStorage]) => {
+      let _primaryDiskStorageProfileName = _serverStorage.collection.find((disk) => disk.isPrimary).storageProfile;
+      this._serverPrimaryStorageProfileDisabled = !_resourceStorage.collection.find
+      ((storageProfile) => storageProfile.name === _primaryDiskStorageProfileName)?.enabled;
+    });
+  }
+
+  /**
+   * Returns true when server's primary disk resides on a disabled storage profile
+   */
+  public get isOnDisabledStorageProfile(): boolean {
+    return this._serverPrimaryStorageProfileDisabled;
   }
 
   /**

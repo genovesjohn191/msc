@@ -344,23 +344,24 @@
       <ng-container mcsPresentationPanelHeader>
         <h2>{{ 'serverManagement.manageScale.header' | translate }}</h2>
       </ng-container>
-      <p>{{ 'serverManagement.manageScale.description' | translate }}</p>
-
+      <p *ngIf="!isOnDisabledStorageProfile">{{ 'serverManagement.manageScale.description' | translate }}</p>
+      <p *ngIf="isOnDisabledStorageProfile">{{ 'serverManagement.manageScale.isOnDisabledStorageProfile' | translate }}</p>
       <div class="action-box" [disabled]="!server.executable">
-        <mcs-server-manage-scale
-          [osType]="server?.operatingSystem?.type"
-          [resource]="resource$ | async"
-          [serverCompute]="server.compute"
-          [cpuHotPlugEnabled]="server.cpuHotPlugEnabled"
-          (dataChange)="onScaleChanged($event)">
-          <ng-container mcsManageScaleHeader>
-            <h2>Scaling {{ server.name }}</h2>
-          </ng-container>
-        </mcs-server-manage-scale>
+          <mcs-server-manage-scale
+            [disabled]="!server.executable || isOnDisabledStorageProfile"
+            [osType]="server?.operatingSystem?.type"
+            [resource]="resource$ | async"
+            [server]="server"
+            [cpuHotPlugEnabled]="server.cpuHotPlugEnabled"
+            (dataChange)="onScaleChanged($event)">
+            <ng-container mcsManageScaleHeader>
+              <h2>Scaling {{ server.name }}</h2>
+            </ng-container>
+          </mcs-server-manage-scale>
 
-        <mcs-data-status-warning *ngIf="!server.cpuHotPlugEnabled">
-          <span>{{ 'message.scaleRestartServer' | translate }}</span>
-        </mcs-data-status-warning>
+          <mcs-data-status-warning *ngIf="!server.cpuHotPlugEnabled && !isOnDisabledStorageProfile">
+            <span>{{ 'message.scaleRestartServer' | translate }}</span>
+          </mcs-data-status-warning>
 
         <div class="action-items">
           <a (click)="onCancelScale()"

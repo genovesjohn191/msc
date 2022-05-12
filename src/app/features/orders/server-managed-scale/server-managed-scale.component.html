@@ -73,23 +73,25 @@
           <span read-only>{{ noServicesFallbackText | translate }}</span>
 
           <div *ngIf="fcManageServer?.value">
+            <p *ngIf="isOnDisabledStorageProfile">{{ 'orderServerManagedScale.vmDetails.isOnDisabledStorageProfile' | translate }}</p>
             <div class="action-box" *mcsComponentHandler>
               <mcs-server-manage-scale #fgManageScale
+                [disabled]="isOnDisabledStorageProfile"
                 [osType]="fcManageServer?.value?.operatingSystem?.type"
                 [resource]="resource$ | async"
-                [serverCompute]="fcManageServer?.value?.compute"
+                [server]="fcManageServer?.value"
                 [minimumCpu]="minimumCpu"
                 [minimumMemoryGB]="minimumMemoryGB"
                 [cpuHotPlugEnabled]="fcManageServer?.value?.cpuHotPlugEnabled"
                 [mcsContextualHelp]="'orderServerManagedScale.vmDetails.contextualHelp' | translate"
                 (dataChange)="onScaleChanged($event, fcManageServer?.value)">
-  
+
                 <ng-container mcsManageScaleHeader>
                   <h2>{{ 'orderServerManagedScale.vmDetails.label' | translate }}</h2>
                 </ng-container>
               </mcs-server-manage-scale>
 
-              <mcs-data-status-warning *ngIf="!fcManageServer?.value?.cpuHotPlugEnabled">
+              <mcs-data-status-warning *ngIf="!fcManageServer?.value?.cpuHotPlugEnabled && !isOnDisabledStorageProfile">
                 <span>{{ 'message.scaleRestartServer' | translate }}</span>
               </mcs-data-status-warning>
             </div>

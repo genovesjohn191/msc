@@ -24,8 +24,10 @@
               {{ 'orderVdcStorageExpand.vdcStorage.defaultProfile' | translate }}
             </ng-container>
             <ng-container *ngFor="let storage of storages">
-              <mcs-option *ngIf="storage?.isDefault" [value]="storage">
-                {{ storage.name }}
+              <mcs-option *ngIf="storage?.isDefault"
+              [value]="storage"
+              [disabled]="!storage?.enabled">
+                {{ storage.name }}<span *ngIf="!storage?.enabled"> - Disabled</span>
               </mcs-option>
             </ng-container>
           </mcs-option-group>
@@ -34,8 +36,10 @@
               {{ 'orderVdcStorageExpand.vdcStorage.otherProfiles' | translate }}
             </ng-container>
             <ng-container *ngFor="let storage of storages">
-              <mcs-option *ngIf="!storage?.isDefault" [value]="storage">
-                {{ storage.name }}
+              <mcs-option *ngIf="!storage?.isDefault"
+              [value]="storage"
+              [disabled]="!storage?.enabled">
+                {{ storage.name }}<span *ngIf="!storage?.enabled"> - Disabled</span>
               </mcs-option>
             </ng-container>
           </mcs-option-group>
@@ -95,7 +99,7 @@
   </div>
 
   <!-- Insufficient Storage Capacity Warning Message -->
-  <div *ngIf="!hasAvailableMemory" [@fadeIn]>
+  <div *ngIf="!hasAvailableMemory && fcSelectStorages.value" [@fadeIn]>
     <mcs-data-status-warning>
       <ng-content select="[mcsManageStorageWarning]"></ng-content>
     </mcs-data-status-warning>

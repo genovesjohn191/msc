@@ -95,7 +95,6 @@ export class ServerCreateBuilder<T> {
    * Sets the server storage size
    */
   public setServerStorageSize(storageSize: number): ServerCreateBuilder<T> {
-    if (isNullOrEmpty(storageSize)) { return; }
     let storageSizeTenPercentBuffer = storageSize * STORAGE_SIZE_PERCENT_BUFFER;
     let storageSizeConvertedToGb = convertMbToGb(storageSize + storageSizeTenPercentBuffer);
     this._storageSize = Math.round(storageSizeConvertedToGb);

@@ -15,11 +15,13 @@ import {
 import {
   Subscription,
   throwError,
-  Subject
+  Subject,
+  forkJoin
 } from 'rxjs';
 import {
   catchError,
-  takeUntil
+  takeUntil,
+  map
 } from 'rxjs/operators';
 import {
   CoreValidators,
@@ -35,6 +37,8 @@ import {
   ServiceType,
   IpAllocationMode,
   McsServer,
+  McsApiCollection,
+  McsResourceStorage,
   McsServerClone,
   Os
 } from '@app/models';
@@ -64,7 +68,9 @@ export class ServerCloneComponent
   public servers: McsServer[];
   public serversSubscription: Subscription;
   public dataStatusFactory: McsDataStatusFactory<McsServer[]>;
-  public ipAddressStatusFactory: McsDataStatusFactory<McsServer>;
+  public networkStorageStatusFactory: McsDataStatusFactory<any>;
+
+  private _serverPrimaryStorageProfileDisabled: boolean;
 
   // Form variables
   public fgCloneServer: FormGroup;
@@ -94,7 +100,7 @@ export class ServerCloneComponent
   ) {
     super();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-    this.ipAddressStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this.networkStorageStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -147,7 +153,7 @@ export class ServerCloneComponent
   }
 
   /**
-   * Gets all the servers from repository
+   * Gets all the servers for the selected VDC
    */
   private _getAllServers(): void {
     unsubscribeSafely(this.serversSubscription);
@@ -175,23 +181,45 @@ export class ServerCloneComponent
    * Gets the corresponding server details
    * @param serverId Sever ID to get the server details
    */
-  private _getServerById(serverId: string): void {
-    if (isNullOrEmpty(serverId)) { return; }
-
+  private _getServerInformation(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServerName.setValue(null);
     this.serverIsManuallyAssignedIp = false;
-    this.ipAddressStatusFactory.setInProgress();
-    this._apiService.getServer(serverId).pipe(
-      catchError((error) => {
-        this.ipAddressStatusFactory.setSuccessful();
-        return throwError(error);
-      })
-    ).subscribe((response) => {
-      this.ipAddressStatusFactory.setSuccessful(response);
-      let hasNics = !isNullOrEmpty(response) && !isNullOrEmpty(response.nics);
+    this.networkStorageStatusFactory.setInProgress();
+    forkJoin(
+      this._apiService.getServer(server.id).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj)),
+        catchError((error) => {
+          this.networkStorageStatusFactory.setSuccessful();
+          return throwError(error);
+        })
+      ),
+      this._apiService.getResourceStorages(server.platform.resourceId).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj)),
+        catchError((error) => {
+          this.networkStorageStatusFactory.setSuccessful();
+          return throwError(error);
+        })
+      ),
+    ).subscribe(([_server, _resourceStorage]) => {
+      this.networkStorageStatusFactory.setSuccessful();
+
+      let hasNics = !isNullOrEmpty(_server) && !isNullOrEmpty(_server.nics);
       if (!hasNics) { return; }
-      this.serverIsManuallyAssignedIp = !!response.nics
+      this.serverIsManuallyAssignedIp = !!_server.nics
         .find((nic) => nic.ipAllocationMode === IpAllocationMode.Manual);
+
+      let _primaryDiskStorageProfileName = _server.storageDevices.find((disk) => disk.isPrimary).storageProfile;
+      this._serverPrimaryStorageProfileDisabled = !_resourceStorage.collection.find
+      ((storageProfile) => storageProfile.name === _primaryDiskStorageProfileName)?.enabled;
     });
+  }
+
+  /**
+   * Returns true when server's primary disk resides on a disabled storage profile
+   */
+  public get isOnDisabledStorageProfile(): boolean {
+    return this._serverPrimaryStorageProfileDisabled;
   }
 
   /**
@@ -222,7 +250,9 @@ export class ServerCloneComponent
     ]);
     this.fcTargetServer.valueChanges.pipe(
       takeUntil(this._destroySubject)
-    ).subscribe((server) => this._getServerById(server && server.id));
+    ).subscribe(
+      (server) => this._getServerInformation(server),
+    );
 
     // Register Form Groups using binding
     this.fgCloneServer = new FormGroup({

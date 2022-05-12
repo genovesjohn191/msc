@@ -72,6 +72,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'storageProfile' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'usage' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'tier' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'state' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
     ];
     if (this.hasAccessToStorageProfileBreakdown) {
@@ -128,16 +129,19 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
       ]);
   }
 
-  public canExpandVdcStorage(scaleable: boolean): boolean {
-    return scaleable && this._accessControlService.hasPermission(['OrderEdit']);
+  public canExpandVdcStorage(storageProfile: McsResourceStorage): boolean {
+    return this._accessControlService.hasPermission(['OrderEdit']) &&
+      storageProfile.enabled &&
+      storageProfile.serviceChangeAvailable &&
+      !isNullOrEmpty(storageProfile.serviceId);
   }
 
-  public hasActionsEnabled(scaleable: boolean, resourceStorage: McsResourceStorage): boolean {
+  public hasActionsEnabled(resourceDetails: McsResource, resourceStorage: McsResourceStorage): boolean {
     let hasRequestChangeAccess = this.canRequestCustomChange(resourceStorage.serviceId);
     let hasTicketCreatePermission = this.canCreateTicket(resourceStorage.serviceId);
-    let resourceIsScaleable = this.canExpandVdcStorage(scaleable);
+    let resourceStorageIsExpandable = this.canExpandVdcStorage(resourceStorage);
 
-    return resourceIsScaleable || hasTicketCreatePermission || hasRequestChangeAccess;
+    return resourceStorageIsExpandable || hasTicketCreatePermission || hasRequestChangeAccess;
   }
 
   /**

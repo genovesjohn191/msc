@@ -1,6 +1,27 @@
 <form [formGroup]="fgCloneServer" mcsFormGroup>
-  <!-- Server Name Input -->
+  <!-- Servers -->
   <mcs-form-field>
+    <mcs-select mcsId="select-server" required
+      [formControl]="fcTargetServer"
+      [placeholder]="'serverCreateDetailsStep.cloneServer.placeholder.server' | translate">
+
+      <mcs-option-group>
+        <ng-container *mcsOptionGroupHeader>Servers</ng-container>
+        <mcs-option *ngFor="let server of servers" [value]="server">
+          {{ server.name }}
+        </mcs-option>
+      </mcs-option-group>
+    </mcs-select>
+    <span mcsError errorState="required">
+      {{ 'serverCreateDetailsStep.cloneServer.errors.selectServerRequired' | translate }}
+    </span>
+  </mcs-form-field>
+  <div>
+    <span text-wrap *ngIf="isOnDisabledStorageProfile"
+    [innerHTML]="('serverCreateDetailsStep.cloneServer.errors.disabledStorageProfileWarning') | translate"></span>
+  </div>
+  <!-- Server Name Input -->
+  <mcs-form-field *ngIf="!isOnDisabledStorageProfile">
     <input mcsInput #serverNameInput required mcsSetFocus
       placeholder="Enter a server name" maxlength="15"
       mcsId="input-server-name"
@@ -13,6 +34,20 @@
     <mcs-hint mcsHint align="end">
       {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
     </mcs-hint>
+  </mcs-form-field>
+
+  <!-- Manual IP Address checking -->
+  <mcs-data-status [dataStatusFactory]="networkStorageStatusFactory">
+    <mcs-data-status-in-progress mcsDataInProgress>
+      <span>{{ 'serverCreateDetailsStep.cloneServer.loadingServerDetails' | translate }}</span>
+    </mcs-data-status-in-progress>
+    <mcs-data-status-success mcsDataSuccess>
+      <mcs-data-status-warning *ngIf="serverIsManuallyAssignedIp">
+        <span [innerHTML]="('serverCreateDetailsStep.cloneServer.errors.manuallyAssignedIpWarning'
+        | translate:{'server_name': fcTargetServer?.value?.name}) | mcsNewLines"></span>
+      </mcs-data-status-warning>
+    </mcs-data-status-success>
+  </mcs-data-status>
 
     <mcs-error mcsError errorState="required">
       {{ 'serverCreateDetailsStep.cloneServer.errors.serverNameRequired' | translate }}
@@ -20,56 +55,18 @@
     <mcs-error mcsError errorState="invalidServerName">
       {{ 'serverCreateDetailsStep.cloneServer.errors.invalidServerName' | translate }}
     </mcs-error>
-  </mcs-form-field>
 
-  <!-- Servers -->
-  <mcs-section>
     <mcs-data-status [dataStatusFactory]="dataStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <mcs-form-field>
-          <mcs-select mcsId="select-server" required
-            [formControl]="fcTargetServer"
-            [placeholder]="'serverCreateDetailsStep.cloneServer.placeholder.server' | translate">
-
-            <mcs-option-group>
-              <ng-container *mcsOptionGroupHeader>Servers</ng-container>
-              <mcs-option *ngFor="let server of servers" [value]="server">
-                {{ server.name }}
-              </mcs-option>
-            </mcs-option-group>
-          </mcs-select>
-
-          <mcs-error mcsError errorState="required">
-            {{ 'serverCreateDetailsStep.cloneServer.errors.selectServerRequired' | translate }}
-          </mcs-error>
-        </mcs-form-field>
       </mcs-data-status-success>
-
-      <mcs-data-status-in-progress mcsDataInProgress>
+      <div mcsDataInProgress>
         <span>{{ 'serverCreateDetailsStep.cloneServer.loadingServers' | translate }}</span>
-      </mcs-data-status-in-progress>
-
-      <mcs-data-status-empty mcsDataEmpty>
+      </div>
+      <div mcsDataEmpty>
         <span>{{ 'serverCreateDetailsStep.cloneServer.noServers' | translate }}</span>
-      </mcs-data-status-empty>
-
-      <mcs-data-status-error mcsDataError>
+      </div>
+      <div mcsDataError>
         <span>{{ 'serverCreateDetailsStep.cloneServer.errorMessageServers' | translate }}</span>
-      </mcs-data-status-error>
+      </div>
     </mcs-data-status>
-
-    <!-- Manual Ip-Address checking -->
-    <mcs-data-status [dataStatusFactory]="ipAddressStatusFactory">
-      <mcs-data-status-success mcsDataSuccess>
-        <mcs-data-status-warning *ngIf="serverIsManuallyAssignedIp">
-          <span [innerHTML]="('serverCreateDetailsStep.cloneServer.errors.manuallyAssignedIpWarning'
-          | translate:{'server_name': fcTargetServer?.value?.name}) | mcsNewLines"></span>
-        </mcs-data-status-warning>
-      </mcs-data-status-success>
-
-      <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ 'serverCreateDetailsStep.cloneServer.loadingServerDetails' | translate }}</span>
-      </mcs-data-status-in-progress>
-    </mcs-data-status>
-  </mcs-section>
 </form>
