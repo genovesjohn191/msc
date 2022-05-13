@@ -466,6 +466,8 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
     this.fcFirewallService.valueChanges.subscribe(() => {
       if(isNullOrEmpty(this.fcFirewallService.value)) { return }
 
+      this._policyList = [];
+      this._updatePolicyTable();
       this._isLoadingPolicyList = true;
       let queryParam = new McsQueryParam();
       queryParam.pageSize = 10000;
@@ -473,17 +475,13 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
       queryParam.sortField = 'policyId';
       this._apiService.getFirewallPolicies(this.fcFirewallService.value.id)
         .pipe(
-          catchError((error) => {
-            this._policyList = [];
-            return throwError(error);
-          }),
           map(response => {
             this._policyList = response?.collection;
             this._policyList.forEach(p => p.action = null);
+            this._updatePolicyTable();
             }
           ),
           finalize(() => {
-            this._updatePolicyTable();
             this._isLoadingPolicyList = false;
           })
         ).subscribe();

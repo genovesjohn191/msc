@@ -59,7 +59,7 @@
               <container *ngIf="noServicesToDisplay">
                 <span *ngIf="showPermissionErrorFallbackText" read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
                 <span *ngIf="!showPermissionErrorFallbackText" read-only>
-                  <span> {{ 'orderComplexFirewallChanges.errors.serviceFallbackLabel' | translate }}</span>
+                  <span> {{ 'orderComplexFirewallChanges.errors.firewallServiceFallbackLabel' | translate }}</span>
                   <span *mcsAccessControl="['TicketCreate']">
                     <span> {{'orderComplexFirewallChanges.detailsStep.firewallService.raiseTicketPrefix' | translate }} </span>
                     <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"

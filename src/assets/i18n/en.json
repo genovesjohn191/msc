@@ -1184,6 +1184,8 @@
       }
     },
     "errors": {
+      "firewallServiceFallbackLabel": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+      "policiesFallbackLabel": "There are no policies to display.",
       "objectiveRequired": "Objective is required."
     }
   },
@@ -3523,7 +3525,7 @@
     "customerReference": "Customer Reference",
     "deployment": "Deployment",
     "description": "Description",
-    "destination": "Destination",
+    "destination": "Destinations",
     "destinationInterfaces": "Destination Interfaces",
     "diskScore": "Disk Score",
     "diskSize": "Disk Size (incl. swap)",
@@ -3621,7 +3623,7 @@
     "siteName": "Site Name",
     "size": "Size",
     "snapshotSize": "Snapshot Size",
-    "source": "Source",
+    "source": "Sources",
     "sourceInterfaces": "Source Interfaces",
     "speed": "Speed",
     "started": "Started",
