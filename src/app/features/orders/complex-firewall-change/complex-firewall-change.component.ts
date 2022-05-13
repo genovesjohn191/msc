@@ -192,6 +192,10 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
     return action === PolicyAction.Remove;
   }
 
+  public isPolicyModified(action: number): boolean{
+    return action === PolicyAction.Modify;
+  }
+
   @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
@@ -318,7 +322,6 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
 
   public addPolicyClicked(): void {
     this.searchPolicyTerm = null;
-    // this._updatePolicyTable
     let maxSequenceNumber = Math.max(...this._policyList?.map(policy => policy.objectSequence), 0);
     let newPolicy: McsFirewallPolicy = {
       label: '',
@@ -470,13 +473,17 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
       queryParam.sortField = 'policyId';
       this._apiService.getFirewallPolicies(this.fcFirewallService.value.id)
         .pipe(
+          catchError((error) => {
+            this._policyList = [];
+            return throwError(error);
+          }),
           map(response => {
             this._policyList = response?.collection;
             this._policyList.forEach(p => p.action = null);
-            this._updatePolicyTable();
             }
           ),
           finalize(() => {
+            this._updatePolicyTable();
             this._isLoadingPolicyList = false;
           })
         ).subscribe();

@@ -11,7 +11,11 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { McsFirewallPolicy, PolicyAction } from '@app/models';
+import { CoreValidators } from '@app/core';
+import {
+  McsFirewallPolicy,
+  PolicyAction
+} from '@app/models';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface OrderFirewallPolicyEditDialogData {
@@ -53,10 +57,14 @@ export class OrderFirewallPolicyEditDialogComponent implements OnInit {
   public ngOnInit() {
     this._setPolicyValues();
   }
-  
+
+  public get formIsValid(): boolean {
+    return this.fgPolicy.valid;
+  }
+
   private _registerFormGroup(){
     this.fcLabel = new FormControl('');
-    this.fcProtocol = new FormControl('');
+    this.fcProtocol = new FormControl('', [CoreValidators.required]);
     this.fcSourceInterface = new FormControl('');
     this.fcSourceAddress = new FormControl('');
     this.fcSourcePort = new FormControl('');
@@ -116,7 +124,7 @@ export class OrderFirewallPolicyEditDialogComponent implements OnInit {
     this.data.policy.natSourcePort = this.fcNatSourcePort.value;
     this.data.policy.natDestinationIpAddress = this.fcNatDestinationIP.value;
     this.data.policy.natDestinationPort = this.fcNatDestinationPort.value;
-    if(this.data.state === 'edit') {
+    if(this.data.state === 'edit' && this.data.policy.action !== PolicyAction.Remove) {
       this.data.policy.action = PolicyAction.Modify;
     }
   }
