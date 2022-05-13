@@ -67,7 +67,8 @@ import {
   pluck,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  formatStringToText
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -341,14 +342,14 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
             deliveryType: DeliveryType.Standard, // set to Standard as default
             schedule: getCurrentDate().toISOString(),
             properties: {
-              floorLevel: this.fcFloorLevel.value,
+              floorLevel: formatStringToText(this.fcFloorLevel.value),
               locationWithinCabinet: orderCabinetLocationText[this.fcCabinetLocation.value],
-              rackIdentifier: this.fcRackNumber.value,
-              remoteHandsInstructions: this.fcInstruction.value,
+              rackIdentifier: formatStringToText(this.fcRackNumber.value),
+              remoteHandsInstructions: formatStringToText(this.fcInstruction.value),
               testCases: this._smacSharedDetails.testCases,
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-              customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-              notes: this._smacSharedDetails.notes
+              customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
+              notes: formatStringToText(this._smacSharedDetails.notes)
             } as RemoteHandRequestProperties
           })
         ]

@@ -39,6 +39,7 @@ import { McsFormGroupDirective } from '@app/shared';
 import {
   CommonDefinition,
   createObject,
+  formatStringToText,
   getCurrentDate,
   getSafeProperty,
   Guid,
@@ -285,16 +286,16 @@ export class ColocationDeviceRestartComponent extends McsOrderWizardBase impleme
             deliveryType: DeliveryType.Standard, // set to Standard as default
             schedule: getCurrentDate().toISOString(),
             properties: {
-              floorLevel: this.fcFloorLevel.value,
-              rackIdentifier: this.fcRackNumber.value,
+              floorLevel: formatStringToText(this.fcFloorLevel.value),
+              rackIdentifier: formatStringToText(this.fcRackNumber.value),
               locationWithinCabinet: orderCabinetLocationText[this.fcLocationCabinet.value],
-              deviceMakeModel: this.fcDeviceMakeModel.value,
-              label: this.fcDeviceNameLabel.value,
-              restartInstructions: this.fcRestartInstruction.value,
+              deviceMakeModel: formatStringToText(this.fcDeviceMakeModel.value),
+              label: formatStringToText(this.fcDeviceNameLabel.value),
+              restartInstructions: formatStringToText(this.fcRestartInstruction.value),
               testCases: this._smacSharedDetails.testCases,
-              customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+              customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-              notes: this._smacSharedDetails.notes
+              notes: formatStringToText(this._smacSharedDetails.notes)
             } as DeviceRestartProperties
           })
         ]

@@ -70,7 +70,8 @@ import {
   unsubscribeSafely,
   CommonDefinition,
   Guid,
-  addYearsToDate
+  addYearsToDate,
+  formatStringToText
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -421,12 +422,12 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
             serviceId: this.fcFirewallService.value.serviceId,
             deliveryType: DeliveryType.Standard,
             properties: {
-              changeObjective: this.fcChangeObjective.value,
+              changeObjective: formatStringToText(this.fcChangeObjective.value),
               ruleChanges: this._policyList,
               attachment: this._fileAttachment,
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
               customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-              notes: this._smacSharedDetails.notes
+              notes: formatStringToText(this._smacSharedDetails.notes)
             } as ComplexFirewallChangeRequestProperties
           })
         ]

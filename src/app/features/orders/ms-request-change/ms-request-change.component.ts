@@ -83,7 +83,8 @@ import {
   unsubscribeSafely,
   CommonDefinition,
   Guid,
-  convertUrlParamsKeyToLowerCase
+  convertUrlParamsKeyToLowerCase,
+  formatStringToText
 } from '@app/utilities';
 import { MsRequestChangeService } from './ms-request-change.service';
 import { CloudHealthAlertType } from './cloudhealth/cloudhealth-services';
@@ -507,8 +508,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           category: azureProductsText[this.fcAzureProduct.value],
           resourceIdentifiers: selectedResources,
           phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-          customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-          requestDescription: this._smacSharedDetails.notes
+          customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
+          requestDescription: formatStringToText(this._smacSharedDetails.notes)
         }
       case AzureServiceRequestType.CloudHealth:
         let cloudHealthChanges = this._setOrderCloudhealthResources(this.cloudHealthService);
@@ -517,7 +518,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           complexity: complexityText[Complexity.Simple],
           resources: cloudHealthChanges,
           phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-          customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+          customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
         }
       case AzureServiceRequestType.Provision:
         return {
@@ -529,8 +530,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           resourceGroup: this._provisionDetails?.resourceGroup,
           category: addNewResourcesText[AzureResources.AddNewResources],
           phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-          customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-          requestDescription: this._smacSharedDetails.notes
+          customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
+          requestDescription: formatStringToText(this._smacSharedDetails.notes)
         }
     }
   }

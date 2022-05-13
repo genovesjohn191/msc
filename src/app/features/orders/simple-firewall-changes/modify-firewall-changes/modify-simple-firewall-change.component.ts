@@ -37,6 +37,7 @@ import {
   unsubscribeSafely,
   formatStringToPhoneNumber,
   getCurrentDate,
+  formatStringToText,
 } from '@app/utilities';
 import {
   McsOrderWizardBase,
@@ -256,9 +257,9 @@ McsOrderWizardBase implements OnInit, OnDestroy {
               schedule: getCurrentDate().toISOString(),
               properties: createObject(McsOrderModifySimpleFirewallChange, {
                 rules: this._getSharedRuleValues(),
-                customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+                customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
                 phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-                notes: this._smacSharedDetails.notes
+                notes: formatStringToText(this._smacSharedDetails.notes)
               })
           })
         ]
@@ -280,8 +281,8 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     let sharedRules:McsOrderSimpleFirewallModifyRule[] = [];
     this.faSharedRuleForm.controls.forEach((formGroup: FormGroup) => {
         let rules: McsOrderSimpleFirewallModifyRule = {
-            new: formGroup.controls['fcNewRule'].value,
-            existing: formGroup.controls['fcExistingRule'].value
+            new: formatStringToText(formGroup.controls['fcNewRule'].value),
+            existing: formatStringToText(formGroup.controls['fcExistingRule'].value)
         };
         sharedRules.push(rules);
     });

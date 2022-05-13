@@ -36,7 +36,8 @@ import {
   createObject,
   unsubscribeSafely,
   isNullOrUndefined,
-  getCurrentDate
+  getCurrentDate,
+  formatStringToText
 } from '@app/utilities';
 import {
   McsOrderWizardBase,
@@ -319,9 +320,9 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
             properties: createObject(McsOrderHostedDnsChange, {
               zone: this.fcZone.value,
               records: this._getChangeDetailsByAction(),
-              customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+              customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-              notes: this._smacSharedDetails.notes
+              notes: formatStringToText(this._smacSharedDetails.notes)
             })
           })
         ]
@@ -355,8 +356,8 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
         let changeDetail: ChangeToApply = {
           action: formGroup.controls['fcActionType'].value,
           type: formGroup.controls['fcRecordType'].value,
-          hostName: formGroup.controls['fcHostName'].value,
-          value: formGroup.controls['fcTarget'].value,
+          hostName: formatStringToText(formGroup.controls['fcHostName'].value),
+          value: formatStringToText(formGroup.controls['fcTarget'].value),
           ttlSeconds: (isNullOrEmpty(ttlSecondsValue)) ? 0 : ttlSecondsValue,
           priority: (recordType === DnsRecordType.MX) ? priorityValue : 0
         };

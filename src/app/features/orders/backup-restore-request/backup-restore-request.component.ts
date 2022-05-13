@@ -54,7 +54,8 @@ import {
   unsubscribeSafely,
   CommonDefinition,
   Guid,
-  addYearsToDate
+  addYearsToDate,
+  formatStringToText
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -237,9 +238,9 @@ export class BackupRestoreRequestComponent extends McsOrderWizardBase implements
             deliveryType: DeliveryType.Standard,
             properties: {
               restoreFromDate: this.fcRestoreFromDate.value,
-              dataRequired: this.fcDataRequired.value,
-              restoreDestination: this.fcRestoreDestination.value,
-              customerReferenceNumber: this.fcReferenceNumber.value,
+              dataRequired: formatStringToText(this.fcDataRequired.value),
+              restoreDestination: formatStringToText(this.fcRestoreDestination.value),
+              customerReferenceNumber: formatStringToText(this.fcReferenceNumber.value),
             } as BackupRestoreRequestProperties
           })
         ]

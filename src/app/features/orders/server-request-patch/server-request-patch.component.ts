@@ -57,7 +57,8 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  formatStringToText
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -268,11 +269,11 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
             deliveryType: DeliveryType.Standard, // set to Standard as default
             schedule: addDaysToDate(getCurrentDate(), 2).toISOString(),
             properties: {
-              exclusions: this.fcExclusions.value,
+              exclusions: formatStringToText(this.fcExclusions.value),
               testCases: this._smacSharedDetails.testCases,
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-              customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-              notes: this._smacSharedDetails.notes
+              customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
+              notes: formatStringToText(this._smacSharedDetails.notes)
             } as PatchRequestProperties
           })
         ]

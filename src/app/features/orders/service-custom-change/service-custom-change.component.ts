@@ -34,7 +34,8 @@ import {
   createObject,
   unsubscribeSafely,
   formatStringToPhoneNumber,
-  getCurrentDate
+  getCurrentDate,
+  formatStringToText
 } from '@app/utilities';
 import {
   McsOrderWizardBase,
@@ -300,12 +301,12 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             deliveryType: DeliveryType.Standard, // set to Standard as default
             schedule: getCurrentDate().toISOString(),
             properties: createObject(McsOrderServiceCustomChange, {
-              change: this.fcChangeDescription.value,
-              changeObjective: this.fcChangeObjective.value,
+              change: formatStringToText(this.fcChangeDescription.value),
+              changeObjective: formatStringToText(this.fcChangeObjective.value),
               testCases: this._smacSharedDetails.testCases,
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-              customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-              notes: this._smacSharedDetails.notes
+              customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
+              notes: formatStringToText(this._smacSharedDetails.notes)
             })
           })
         ]

@@ -71,7 +71,8 @@ import {
   CommonDefinition,
   Guid,
   addHoursToDate,
-  compareDates
+  compareDates,
+  formatStringToText
 } from '@app/utilities';
 
 import { ColocationStaffEscortService } from './colocation-staff-escort.service';
@@ -482,6 +483,8 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
    */
   private _onColocationStaffEscortFormChange(): void {
     let isEscorteeSomeoneElse = this.isEscorteeSomeoneElse(this.fcEscortee.value) || this.isImpersonating;
+    let attendeeFullName = (isEscorteeSomeoneElse) ? colocationEscorteeText[this.fcEscortee.value] :
+      `${this._userAccount.firstName} ${this._userAccount.lastName}`;
     this._colocationStaffEscortService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
@@ -492,20 +495,19 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
             deliveryType: DeliveryType.Standard,
             schedule: this.fcAttendanceDate.value,
             properties: createObject(McsOrderColocationStaffEscort, {
-              attendeeName: (isEscorteeSomeoneElse) ? colocationEscorteeText[this.fcEscortee.value] :
-                            `${this._userAccount.firstName} ${this._userAccount.lastName}`,
-              attendeeOrganization: (isEscorteeSomeoneElse) ? this.fcOrganization.value : this._company.name,
-              attendeeJobTitle: (isEscorteeSomeoneElse) ? this.fcJobTitle.value : this._userAccount.jobTitle,
+              attendeeName: formatStringToText(attendeeFullName),
+              attendeeOrganization: (isEscorteeSomeoneElse) ? formatStringToText(this.fcOrganization.value) : formatStringToText(this._company.name),
+              attendeeJobTitle: (isEscorteeSomeoneElse) ? formatStringToText(this.fcJobTitle.value) : formatStringToText(this._userAccount.jobTitle),
               attendeeMobileNumber: this._getMobileNumber(),
               attendeeEmailAddress: (isEscorteeSomeoneElse) ? this.fcEmail.value : this._userAccount.emailAddress,
               arrivalDate: new Date(this.fcAttendanceDate.value),
               arrivalTime: this._formatTime(this.fcArrivalTime.value),
               exitTime: this._formatTime(this.fcExitTime.value),
-              rackIdentifier: this.fcRackIdentifier.value,
-              workRequired: this.fcWorkToPerform.value,
-              toolsRequired: this.fcToolsRequired.value,
-              remoteHandsExceptionReason: this.fcReason.value,
-              customerReferenceNumber: this.fcReferenceNumber.value
+              rackIdentifier: formatStringToText(this.fcRackIdentifier.value),
+              workRequired: formatStringToText(this.fcWorkToPerform.value),
+              toolsRequired: formatStringToText(this.fcToolsRequired.value),
+              remoteHandsExceptionReason: formatStringToText(this.fcReason.value),
+              customerReferenceNumber: formatStringToText(this.fcReferenceNumber.value)
             })
           })
         ]

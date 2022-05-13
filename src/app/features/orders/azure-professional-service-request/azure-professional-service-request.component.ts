@@ -47,6 +47,7 @@ import { McsFormGroupDirective } from '@app/shared';
 import {
   CommonDefinition,
   createObject,
+  formatStringToText,
   getSafeProperty,
   Guid,
   isNullOrEmpty,
@@ -222,7 +223,7 @@ export class AzureProfessionalServiceRequestComponent extends McsOrderWizardBase
             description: this._translate.instant('orderAzureProfessionalServiceRequest.payload.description'),
             properties: {
               azureModule: azureModuleText[this.fcAzureModule.value],
-              requestDescription: this.fcRequestDetails.value
+              requestDescription: formatStringToText(this.fcRequestDetails.value)
             } as AzureProfessionalServicesProperties
           })
         ]

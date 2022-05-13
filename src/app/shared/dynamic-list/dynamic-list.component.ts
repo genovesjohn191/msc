@@ -43,7 +43,8 @@ import {
   moveRecordByIndex,
   CommonDefinition,
   ErrorStateMatcher,
-  Guid
+  Guid,
+  formatStringToText
 } from '@app/utilities';
 
 const DEFAULT_MINIMUM_ITEM = 0;
@@ -371,7 +372,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
   }
 
   private _createDynamicListItem(value: string): DynamicListItem {
-    return { value, id: Guid.newGuid().toString() };
+    return { value: formatStringToText(value), id: Guid.newGuid().toString() };
   }
 
   private _propagateChange = (_value: string[]) => { };

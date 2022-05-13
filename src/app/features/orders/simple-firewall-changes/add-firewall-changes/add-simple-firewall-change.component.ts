@@ -40,6 +40,7 @@ import {
   unsubscribeSafely,
   formatStringToPhoneNumber,
   getCurrentDate,
+  formatStringToText,
 } from '@app/utilities';
 import {
   McsOrderWizardBase,
@@ -286,9 +287,9 @@ McsOrderWizardBase implements OnInit, OnDestroy {
               schedule: getCurrentDate().toISOString(),
               properties: createObject(McsOrderAddSimpleFirewallChange, {
                 rules: this._getSharedRuleValues(),
-                customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+                customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
                 phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-                notes: this._smacSharedDetails.notes
+                notes: formatStringToText(this._smacSharedDetails.notes)
               })
           })
         ]
@@ -311,11 +312,11 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     this.faSharedRuleForm.controls.forEach((formGroup: FormGroup) => {
         let rules: McsOrderSimpleFirewallAddRule = {
           action: formGroup.controls['fcActionType'].value,
-          sourceZone: formGroup.controls['fcSourceZoneInterface'].value,
+          sourceZone: formatStringToText(formGroup.controls['fcSourceZoneInterface'].value),
           sourceIpAddress: formGroup.controls['fcSourceIpSubnet'].value,
-          destinationZone: formGroup.controls['fcDestinationZoneInterface'].value,
+          destinationZone: formatStringToText(formGroup.controls['fcDestinationZoneInterface'].value),
           destinationIpAddress: formGroup.controls['fcDestinationIpSubnet'].value,
-          destinationPort: formGroup.controls['fcDestinationPort'].value,
+          destinationPort: formatStringToText(formGroup.controls['fcDestinationPort'].value),
           protocol: formGroup.controls['fcProtocol'].value
         };
         sharedRules.push(rules);
