@@ -464,7 +464,8 @@
       "contextualHelp": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
       "serverChangeAvailableFalse": "This server cannot be modified because it is currently being provisioned.",
       "isOnDisabledStorageProfile": "The selected server cannot be scaled because it resides on a disabled storage profile.",
-      "busy": "This server cannot be scaled because it is currently busy. Scaling can be performed once its current operation has completed."
+      "busy": "This server cannot be scaled because it is currently busy. Scaling can be performed once its current operation has completed.",
+      "loading": "Loading server information..."
     },
     "confirm": {
       "stepTitle": "Confirm"

@@ -2,6 +2,7 @@ import {
   EMPTY,
   Observable,
   Subject,
+  BehaviorSubject,
   Subscription,
   throwError,
   forkJoin
@@ -126,6 +127,8 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
 
   private _serverPrimaryStorageProfileDisabled: boolean;
 
+  public readonly inProgress$: BehaviorSubject<boolean>;
+
   constructor(
     _injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -148,6 +151,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
         }
       });
     this._manageScale = new ServerManageScale();
+    this.inProgress$ = new BehaviorSubject<boolean>(false);
   }
 
   public ngOnInit() {
@@ -162,6 +166,10 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._selectedServerHandler);
     unsubscribeSafely(this._resourcesDataChangeHandler);
+  }
+
+  public setProgressState(inProgress: boolean): void {
+    this.inProgress$.next(inProgress);
   }
 
   /**
@@ -229,17 +237,29 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    * Check whether server's primary disk resides on a disabled storage profile
    */
   private _validateDisabledStorageProfile(resourceId: string, server: McsServer): void {
+    this.setProgressState(true);
     forkJoin(
       this._apiService.getResourceStorages(resourceId).pipe(
-        map((response) => getSafeProperty(response, (obj) => obj))
+        map((response) => getSafeProperty(response, (obj) => obj)),
+        catchError((error) => {
+          this.setProgressState(false);
+          return throwError(error);
+        })
       ),
       this._apiService.getServerStorage(server?.id).pipe(
-        map((response) => getSafeProperty(response, (obj) => obj))
+        map((response) => getSafeProperty(response, (obj) => obj)),
+        catchError((error) => {
+          this.setProgressState(false);
+          return throwError(error);
+        })
       ),
     ).subscribe(([_resourceStorage, _serverStorage]) => {
-      let _primaryDiskStorageProfileName = _serverStorage.collection.find((disk) => disk.isPrimary).storageProfile;
-      this._serverPrimaryStorageProfileDisabled = !_resourceStorage.collection.find
-      ((storageProfile) => storageProfile.name === _primaryDiskStorageProfileName)?.enabled;
+      let _primaryDiskStorageProfileName = _serverStorage.collection.find((disk) => disk.isPrimary)?.storageProfile;
+      let _matchingStorageProfile = _resourceStorage.collection.find((storageProfile) => storageProfile?.name === _primaryDiskStorageProfileName);
+
+      this._serverPrimaryStorageProfileDisabled = isNullOrEmpty(_matchingStorageProfile)?
+      false : !_matchingStorageProfile?.enabled;
+      this.setProgressState(false);
     });
   }
 

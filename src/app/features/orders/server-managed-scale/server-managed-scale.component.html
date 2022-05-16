@@ -72,7 +72,7 @@
           </mcs-form-field>
           <span read-only>{{ noServicesFallbackText | translate }}</span>
 
-          <div *ngIf="fcManageServer?.value">
+          <div *ngIf="fcManageServer?.value && !(inProgress$ | async)">
             <p *ngIf="isOnDisabledStorageProfile">{{ 'orderServerManagedScale.vmDetails.isOnDisabledStorageProfile' | translate }}</p>
             <div class="action-box" *mcsComponentHandler>
               <mcs-server-manage-scale #fgManageScale
@@ -95,6 +95,11 @@
                 <span>{{ 'message.scaleRestartServer' | translate }}</span>
               </mcs-data-status-warning>
             </div>
+          </div>
+          <div *ngIf="(inProgress$ | async)">
+            <mcs-data-status-in-progress mcsDataInProgress>
+              <span>{{ 'orderServerManagedScale.vmDetails.loading' | translate }}</span>
+            </mcs-data-status-in-progress>
           </div>
 
           <div class="action-items">

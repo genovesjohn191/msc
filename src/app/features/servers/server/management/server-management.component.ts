@@ -411,17 +411,17 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Check whether server's primary disk resides on a disabled storage profile
    */
   private _validateDisabledStorageProfile(resourceId: string, server: McsServer): void {
-    forkJoin(
       this.apiService.getResourceStorages(resourceId).pipe(
         map((response) => getSafeProperty(response, (obj) => obj))
-      ),
-      this.apiService.getServerStorage(server?.id).pipe(
-        map((response) => getSafeProperty(response, (obj) => obj))
-      ),
-    ).subscribe(([_resourceStorage, _serverStorage]) => {
-      let _primaryDiskStorageProfileName = _serverStorage.collection.find((disk) => disk.isPrimary).storageProfile;
-      this._serverPrimaryStorageProfileDisabled = !_resourceStorage.collection.find
-      ((storageProfile) => storageProfile.name === _primaryDiskStorageProfileName)?.enabled;
+      ).subscribe((_resourceStorage) => {
+
+      let _serverStorage = server?.storageDevices;
+      let _primaryDiskStorageProfileName = _serverStorage.find((disk) => disk.isPrimary)?.storageProfile;
+      let _matchingStorageProfile = _resourceStorage.collection.find((storageProfile) => storageProfile?.name === _primaryDiskStorageProfileName);
+
+      this._serverPrimaryStorageProfileDisabled = isNullOrEmpty(_matchingStorageProfile)?
+      false : !_matchingStorageProfile?.enabled;
+
     });
   }
 
