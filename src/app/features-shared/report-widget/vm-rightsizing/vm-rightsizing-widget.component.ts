@@ -23,6 +23,7 @@ import { MatSort } from '@angular/material/sort';
 import {
   CoreRoutes,
   McsMatTableContext,
+  McsMatTableQueryParam,
   McsReportingService,
   McsTableDataSource2
 } from '@app/core';
@@ -36,6 +37,7 @@ import {
   cloneObject,
   createObject,
   currencyFormat,
+  getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition
@@ -107,7 +109,6 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
   public set sort(value: MatSort) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
-      this._sortDef = value;
     }
   }
 
@@ -123,12 +124,12 @@ export class VmRightsizingWidgetComponent implements OnDestroy {
     return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
   }
 
-  private getVMRightsizing(): Observable<McsMatTableContext<McsReportVMRightsizing>> {
+  private getVMRightsizing(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsReportVMRightsizing>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDef?.direction;
-    queryParam.sortField = this._sortDef?.active;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._reportingService.getVMRightsizing(queryParam).pipe(
       map((response) => {

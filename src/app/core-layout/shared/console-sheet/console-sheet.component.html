@@ -1,12 +1,12 @@
 <section>
-  <p>Select the VM to open the console.</p>
+  <p>{{ consoleDescription }}</p>
 
   <form [formGroup]="viewModel.fgGroup">
     <!-- Server Select -->
     <mcs-field-select size="auto"
       mcsId="select-server"
       [label]="'label.server' | translate"
-      [disabled]="hasNoVCloud$ | async"
+      [disabled]="hideSelection$ | async"
       [dataSource]="'ServerConsole' | mcsFieldSelect"
       (optionsChange)="onDataChange($event)"
       [formControl]="viewModel.fcServer">

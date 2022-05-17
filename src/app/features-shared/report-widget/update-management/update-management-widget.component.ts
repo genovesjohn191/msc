@@ -18,6 +18,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
   McsReportingService,
   McsTableDataSource2
@@ -30,6 +31,7 @@ import {
 } from '@app/models';
 import {
   createObject,
+  getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
 
@@ -72,7 +74,6 @@ export class UpdateManagementWidgetComponent {
   public set sort(value: MatSort) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
-      this._sortDef = value;
     }
   }
 
@@ -94,12 +95,12 @@ export class UpdateManagementWidgetComponent {
         RouteKey.OrderMsRequestChange, [], { queryParams: { serviceId: resource.subscriptionServiceId, resourceId: resource.azureId}});
   }
 
-  private _getUpdateManagement(): Observable<McsMatTableContext<McsReportUpdateManagement>> {
+  private _getUpdateManagement(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsReportUpdateManagement>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDef?.direction;
-    queryParam.sortField = this._sortDef?.active;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._reportingService.getUpdateManagement(queryParam).pipe(
       map((response) => {

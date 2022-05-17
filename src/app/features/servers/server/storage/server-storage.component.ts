@@ -1,16 +1,15 @@
 import {
   of,
-  throwError,
   BehaviorSubject,
   Observable,
   Subject,
   Subscription
 } from 'rxjs';
 import {
-  catchError,
   filter,
   map,
   shareReplay,
+  switchMap,
   take,
   takeUntil,
   tap
@@ -104,6 +103,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _serverDisksChange = new BehaviorSubject<McsServerStorageDevice[]>(null);
   private _snapshotCount: number;
   private _sortDef: MatSort;
+  private _sortSubject = new Subject<void>();
 
   private _createDiskHandler: Subscription;
   private _updateDiskHandler: Subscription;
@@ -160,10 +160,22 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
   @ViewChild('sort')
   public set sort(value: MatSort) {
-    if (!isNullOrEmpty(value)) {
-      this.disksDataSource.registerSort(value);
-      this._sortDef = value;
-    }
+    if (isNullOrEmpty(value)) { return; }
+    this._sortSubject.next();
+
+    value.sortChange.pipe(
+      takeUntil(this._sortSubject),
+      switchMap(response => {
+        if (!response) { return of(null); }
+
+        return this.server$.pipe(
+          take(1),
+          tap(server => this._updateTableDataSource(server))
+        );
+      })
+    ).subscribe();
+
+    this._sortDef = value;
   }
 
   public ngOnInit() {
@@ -175,6 +187,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     unsubscribeSafely(this._createDiskHandler);
     unsubscribeSafely(this._updateDiskHandler);
     unsubscribeSafely(this._deleteDiskHandler);
+    unsubscribeSafely(this._sortSubject);
   }
 
   public getPowerStatePermission(server: McsServer): McsServerPermission {
@@ -469,7 +482,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Gets the server disks based on observable
    */
-   private _getServerDisks(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerStorageDevice>> {
+  private _getServerDisks(_param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServerStorageDevice>> {
     return this._serverDisksChange.pipe(
       takeUntil(this._destroySubject),
       filter(response => !isNullOrUndefined(response)),
@@ -480,11 +493,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   private _getServerSnapshots(server: McsServer): void {
-    this.apiService.getServerSnapshots(server.id).pipe(
-      catchError((error) => {
-        return throwError(error);
-      })
-    ).subscribe((snapshots) => {
+    this.apiService.getServerSnapshots(server.id).subscribe((snapshots) => {
       this._snapshotCount = getSafeProperty(snapshots, (obj) => obj.totalCollectionCount);
     });
   }

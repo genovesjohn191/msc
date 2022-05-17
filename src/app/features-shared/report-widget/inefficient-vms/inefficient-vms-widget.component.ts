@@ -19,6 +19,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
+  McsMatTableQueryParam,
   McsReportingService,
   McsTableDataSource2
 } from '@app/core';
@@ -30,6 +31,7 @@ import {
 import {
   compareArrays,
   createObject,
+  getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
 
@@ -79,7 +81,6 @@ export class InefficientVmsWidgetComponent {
   public set sort(value: MatSort) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
-      this._sortDef = value;
     }
   }
 
@@ -87,14 +88,14 @@ export class InefficientVmsWidgetComponent {
     this.dataSource.refreshDataRecords();
   }
 
-  private _getInefficientVms(): Observable<McsMatTableContext<McsReportInefficientVms>> {
+  private _getInefficientVms(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsReportInefficientVms>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsReportInefficientVmParams();
     queryParam.period = this._period;
     queryParam.subscriptionIds = !isNullOrEmpty(this.subscriptionIds) ? this.subscriptionIds.join(): '';
-    queryParam.sortDirection = this._sortDef?.direction;
-    queryParam.sortField = this._sortDef?.active;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._reportingService.getInefficientVms(queryParam).pipe(
       map((response) => {

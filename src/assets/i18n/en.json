@@ -3897,6 +3897,8 @@
     "rollback": "Rollback"
   },
   "message": {
+    "openForConsole": "Select a server to open the console for.",
+    "noServersToDisplay": "There are no applicable servers to display.",
     "consoleUnavailable": "Console unavailable while server is {{state}}",
     "noEventsToDisplay": "No events to display.",
     "noAffectedServicesToDisplay": "No affected services to display.",

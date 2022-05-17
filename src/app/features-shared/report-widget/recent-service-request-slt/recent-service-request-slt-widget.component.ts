@@ -19,6 +19,7 @@ import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
   McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
   McsReportingService,
   McsTableDataSource2
@@ -32,6 +33,7 @@ import {
 } from '@app/models';
 import {
   createObject,
+  getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
 
@@ -73,7 +75,6 @@ export class RecentServiceRequestSltWidgetComponent {
   public set sort(value: MatSort) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
-      this._sortDef = value;
     }
   }
 
@@ -94,12 +95,12 @@ export class RecentServiceRequestSltWidgetComponent {
     this.dataSource.refreshDataRecords();
   }
 
-  private _getRecentServiceRequestSlt(): Observable<McsMatTableContext<McsReportRecentServiceRequestSlt>> {
+  private _getRecentServiceRequestSlt(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsReportRecentServiceRequestSlt>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsReportParams();
-    queryParam.sortDirection = this._sortDef?.direction;
-    queryParam.sortField = this._sortDef?.active;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._reportingService.getRecentServiceRequestSlt(queryParam).pipe(
       map((response) => {

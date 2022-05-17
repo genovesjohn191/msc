@@ -11,6 +11,7 @@ import {
   filter,
   map,
   shareReplay,
+  switchMap,
   take,
   takeUntil,
   tap
@@ -117,6 +118,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _destroySubject = new Subject<void>();
   private _nicsDataChange = new BehaviorSubject<McsServerNic[]>(null);
   private _sortDef: MatSort;
+  private _sortSubject = new Subject<void>();
 
   private _createNicHandler: Subscription;
   private _updateNicHandler: Subscription;
@@ -184,10 +186,22 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   @ViewChild('sort')
   public set sort(value: MatSort) {
-    if (!isNullOrEmpty(value)) {
-      this.nicsDataSource.registerSort(value);
-      this._sortDef = value;
-    }
+    if (isNullOrEmpty(value)) { return; }
+    this._sortSubject.next();
+
+    value.sortChange.pipe(
+      takeUntil(this._sortSubject),
+      switchMap(response => {
+        if (!response) { return of(null); }
+
+        return this.server$.pipe(
+          take(1),
+          tap(server => this._updateTableDataSource(server))
+        );
+      })
+    ).subscribe();
+
+    this._sortDef = value;
   }
 
   public ngOnInit() {

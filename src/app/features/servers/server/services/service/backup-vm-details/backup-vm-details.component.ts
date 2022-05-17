@@ -68,6 +68,7 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
   private _vmBackupChange = new BehaviorSubject<McsServerBackupVmLog[]>(null);
   private _destroySubject = new Subject<void>();
   private _sortDef: MatSort;
+  private _sortSubject = new Subject<void>();
 
   constructor(
     private _apiService: McsApiService,
@@ -87,10 +88,18 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
 
   @ViewChild('sort')
   public set sort(value: MatSort) {
-    if (!isNullOrEmpty(value)) {
-      this.vmBackupLogsDatasource.registerSort(value);
-      this._sortDef = value;
-    }
+    if (isNullOrEmpty(value)) { return; }
+    this._sortSubject.next();
+
+    value.sortChange.pipe(
+      takeUntil(this._sortSubject),
+      tap(response => {
+        if (!response) { return of(null); }
+        this._updateTableDataSource(this.serverId);
+      })
+    ).subscribe();
+
+    this._sortDef = value;
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

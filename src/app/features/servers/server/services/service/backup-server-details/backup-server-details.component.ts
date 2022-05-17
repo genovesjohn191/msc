@@ -63,6 +63,7 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
   private _serverBackupLogsCache: Observable<McsServerBackupServerLog[]>;
   private _serverBackupDetails: McsServerBackupServerDetails;
   private _sortDef: MatSort;
+  private _sortSubject = new Subject<void>();
 
   public readonly serverBackupLogsDatasource: McsTableDataSource2<McsServerBackupServerLog>;
   public readonly serverBackupLogsColumns: McsFilterInfo[];
@@ -90,10 +91,18 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
 
   @ViewChild('sort')
   public set sort(value: MatSort) {
-    if (!isNullOrEmpty(value)) {
-      this.serverBackupLogsDatasource.registerSort(value);
-      this._sortDef = value;
-    }
+    if (isNullOrEmpty(value)) { return; }
+    this._sortSubject.next();
+
+    value.sortChange.pipe(
+      takeUntil(this._sortSubject),
+      tap(response => {
+        if (!response) { return of(null); }
+        this._updateTableDataSource(this.serverId);
+      })
+    ).subscribe();
+
+    this._sortDef = value;
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

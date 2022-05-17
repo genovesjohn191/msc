@@ -36,7 +36,7 @@ import { ConsoleSheetViewModel } from './console-sheet.viewmodel';
 })
 export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDestroy {
   public readonly viewModel: ConsoleSheetViewModel;
-  public readonly hasNoVCloud$: BehaviorSubject<boolean>;
+  public readonly hideSelection$: BehaviorSubject<boolean>;
 
   constructor(
     injector: Injector,
@@ -44,7 +44,7 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
   ) {
     super(injector);
     this.viewModel = new ConsoleSheetViewModel(injector);
-    this.hasNoVCloud$ = new BehaviorSubject(false);
+    this.hideSelection$ = new BehaviorSubject(false);
   }
 
   public get featureName(): string {
@@ -53,6 +53,12 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
 
   public get hasSelectedVm(): boolean {
     return this.viewModel?.fgGroup?.valid;
+  }
+
+  public get consoleDescription(): string {
+    return !this.hideSelection$.getValue() ?
+      this.translate.instant('message.openForConsole') :
+      this.translate.instant('message.noServersToDisplay');
   }
 
   public ngOnInit(): void {
@@ -67,10 +73,13 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
   }
 
   public onDataChange(options: McsOption[]): void {
-    if (isNullOrEmpty(options)) { return; }
+    if (isNullOrEmpty(options)) {
+      this.hideSelection$.next(true);
+      return;
+    }
 
     let hasVCloud = options.some(option => (option.data as McsServer)?.platform?.type === PlatformType.VCloud);
-    this.hasNoVCloud$.next(!hasVCloud);
+    this.hideSelection$.next(!hasVCloud);
     this.changeDetector.markForCheck();
   }
 

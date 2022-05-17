@@ -20,6 +20,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsMatTableContext,
+  McsMatTableQueryParam,
   McsReportingService,
   McsTableDataSource2
 } from '@app/core';
@@ -31,6 +32,7 @@ import {
 import {
   compareArrays,
   createObject,
+  getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
 
@@ -86,7 +88,6 @@ export class AuditAlertsWidgetComponent implements OnInit {
   private _subscriptionIds: string[] = [];
   private _startPeriod: string = '';
   private _endPeriod: string = '';
-  private _sortDef: MatSort;
 
   constructor(private _reportingService: McsReportingService) {
     this.dataSource = new McsTableDataSource2(this._getAuditAlerts.bind(this));
@@ -96,7 +97,6 @@ export class AuditAlertsWidgetComponent implements OnInit {
   public set sort(value: MatSort) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
-      this._sortDef = value;
     }
   }
 
@@ -112,15 +112,15 @@ export class AuditAlertsWidgetComponent implements OnInit {
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
-  private _getAuditAlerts(): Observable<McsMatTableContext<McsReportAuditAlerts>> {
+  private _getAuditAlerts(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsReportAuditAlerts>> {
     this.dataChange.emit(undefined);
 
     let queryParam = new McsReportParams();
     queryParam.periodStart = this._startPeriod;
     queryParam.periodEnd = this._endPeriod
     queryParam.subscriptionIds = !isNullOrEmpty(this.subscriptionIds) ? this.subscriptionIds.join(): '';
-    queryParam.sortDirection = this._sortDef?.direction;
-    queryParam.sortField = this._sortDef?.active;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
     return this._reportingService.getAuditAlerts(queryParam).pipe(
       map((response) => {

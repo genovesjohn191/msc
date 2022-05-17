@@ -16,6 +16,7 @@ import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
   McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
   McsTableDataSource2,
   McsTableEvents
@@ -32,6 +33,7 @@ import { ColumnFilter } from '@app/shared';
 import {
   animateFactory,
   createObject,
+  getSafeProperty,
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
@@ -57,8 +59,6 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
 
   public expandedElement: McsResourceStorage;
   public selectedVdcStorageId: string;
-
-  private _sortDef: MatSort;
 
   constructor(
     _injector: Injector,
@@ -94,7 +94,6 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
   public set sort(value: MatSort) {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerSort(value);
-      this._sortDef = value;
     }
   }
 
@@ -171,10 +170,10 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
     this._getVdcStorage();
   }
 
-  private _getVdcStorage(): Observable<McsMatTableContext<McsResourceStorage>> {
+  private _getVdcStorage(param?: McsMatTableQueryParam): Observable<McsMatTableContext<McsResourceStorage>> {
     let queryParam = new McsQueryParam();
-    queryParam.sortDirection = this._sortDef?.direction;
-    queryParam.sortField = this._sortDef?.active;
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
     let optionalHeaders = new Map<string, any>();
 
     return this.resource$.pipe(
