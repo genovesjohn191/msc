@@ -40,7 +40,7 @@ import {
   isNullOrEmpty,
   createObject,
   unsubscribeSafely,
-  formatStringToPhoneNumber,
+formatStringToText,
   getCurrentDate,
 } from '@app/utilities';
 import {
@@ -262,9 +262,9 @@ McsOrderWizardBase implements OnInit, OnDestroy {
               schedule: getCurrentDate().toISOString(),
               properties: createObject(McsOrderRemoveSimpleFirewallChange, {
                 rules: this._getRulesToDelete(),
-                customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+                customerReferenceNumber: formatStringToText(this._smacSharedDetails.referenceNumber),
                 phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
-                notes: this._smacSharedDetails.notes
+                notes: formatStringToText(this._smacSharedDetails.notes)
               })
           })
         ]
@@ -285,7 +285,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   private _getRulesToDelete(): Array<string> {
     let rulesToDelete: Array<string> = [];
     this.faSharedRuleForm.controls.forEach((formGroup: FormGroup) => {
-        let rule = formGroup.controls['fcRulesToDelete'].value;
+        let rule = formatStringToText(formGroup.controls['fcRulesToDelete'].value);
         rulesToDelete.push(rule);
     });
     return rulesToDelete;
