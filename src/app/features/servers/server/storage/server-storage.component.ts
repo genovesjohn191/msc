@@ -7,6 +7,7 @@ import {
 } from 'rxjs';
 import {
   filter,
+  finalize,
   map,
   shareReplay,
   switchMap,
@@ -89,6 +90,7 @@ const SERVER_DISK_NEW_ID = Guid.newGuid().toString();
 
 export class ServerStorageComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public resourceStorages$: Observable<McsResourceStorage[]>;
+  public dataSourceInProgress$: BehaviorSubject<boolean>;
   public manageStorage: ServerManageStorage;
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
@@ -146,6 +148,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     private _dialogService: DialogService
   ) {
     super(_injector, _changeDetectorRef);
+    this.dataSourceInProgress$ = new BehaviorSubject(false);
     this.manageStorage = new ServerManageStorage();
     this.diskMethodType = ServerDiskMethodType.AddDisk;
     this.disksDataSource = new McsTableDataSource2(this._getServerDisks.bind(this));
@@ -357,7 +360,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     queryParam.sortDirection = this._sortDef?.direction;
     queryParam.sortField = this._sortDef?.active;
 
+    this.dataSourceInProgress$.next(true);
     let serverDiskDataSource: Observable<McsServerStorageDevice[]>;
+
     if (!isNullOrEmpty(server)) {
       serverDiskDataSource = this.apiService.getServerStorage(server.id, queryParam).pipe(
         map((response) => getSafeProperty(response, (obj) => obj.collection)),
@@ -380,7 +385,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
     tableDataSource.pipe(
       take(1),
-      tap(dataRecords => this._serverDisksChange.next(dataRecords || []))
+      tap(dataRecords => this._serverDisksChange.next(dataRecords || [])),
+      finalize(() => this.dataSourceInProgress$.next(false))
     ).subscribe();
   }
 

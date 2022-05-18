@@ -92,13 +92,13 @@
 
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="disksDataSource?.dataColumns$ | async"
-          [disabled]="(disksDataSource?.isInProgress$ | async) || (disksDataSource?.isSorting$ | async)"></tr>
+          [disabled]="dataSourceInProgress$ | async"></tr>
         <tr mat-row *matRowDef="let row; columns: disksDataSource?.dataColumns$ | async;"></tr>
       </table>
 
       <!-- Table Statuses -->
       <mcs-item orientation="block">
-        <div *ngIf="(disksDataSource?.isInProgress$ | async) || (disksDataSource?.isSorting$ | async)" align="center">
+        <div *ngIf="dataSourceInProgress$ | async" align="center">
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="disksDataSource?.hasNoRecords$ | async" text-center>
