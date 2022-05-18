@@ -134,13 +134,13 @@
 
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="nicsDataSource?.dataColumns$ | async"
-          [disabled]="(nicsDataSource?.isInProgress$ | async) || (nicsDataSource?.isSorting$ | async)"></tr>
+          [disabled]="dataSourceInProgress$ | async"></tr>
         <tr mat-row *matRowDef="let row; columns: nicsDataSource?.dataColumns$ | async;"></tr>
       </table>
 
       <!-- Table Statuses -->
       <mcs-item orientation="block">
-        <div *ngIf="(nicsDataSource?.isInProgress$ | async) || (nicsDataSource?.isSorting$ | async)" align="center">
+        <div *ngIf="dataSourceInProgress$ | async" align="center">
           <mcs-loader size="medium"></mcs-loader>
         </div>
         <div *ngIf="nicsDataSource?.hasNoRecords$ | async" text-center>

@@ -6,6 +6,7 @@ import {
 } from 'rxjs';
 import {
   filter,
+  finalize,
   map,
   takeUntil,
   tap
@@ -65,6 +66,7 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
   private _sortDef: MatSort;
   private _sortSubject = new Subject<void>();
 
+  public dataSourceInProgress$: BehaviorSubject<boolean>;
   public readonly serverBackupLogsDatasource: McsTableDataSource2<McsServerBackupServerLog>;
   public readonly serverBackupLogsColumns: McsFilterInfo[];
 
@@ -75,6 +77,7 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
     private _apiService: McsApiService,
     private _changeDetector: ChangeDetectorRef
   ) {
+    this.dataSourceInProgress$ = new BehaviorSubject(false);
     this.serverBackupLogsDatasource = new McsTableDataSource2(this._getServerBackups.bind(this));
     this.serverBackupLogsColumns = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
@@ -170,7 +173,9 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
     queryParam.sortDirection = this._sortDef?.direction;
     queryParam.sortField = this._sortDef?.active;
 
+    this.dataSourceInProgress$.next(true);
     let serverBackupApiSource: Observable<McsServerBackupServerLog[]>;
+
     if (!isNullOrEmpty(serverid)) {
       serverBackupApiSource = this._apiService.getServerBackupServerDetails(serverid, queryParam).pipe(
         map((response) => {
@@ -185,7 +190,9 @@ export class ServiceBackupServerDetailsComponent implements OnChanges, OnDestroy
 
     let tableDataSource = (isNullOrEmpty(this._serverBackupLogsCache) || !isNullOrEmpty(this._sortDef?.direction)) ?
       serverBackupApiSource : this._serverBackupLogsCache;
-    tableDataSource.subscribe(records => this._serverBackupsChange.next(records || []));
+    tableDataSource.pipe(
+      finalize(() => this.dataSourceInProgress$.next(false))
+    ).subscribe(records => this._serverBackupsChange.next(records || []));
     this._changeDetector.markForCheck();
   }
 

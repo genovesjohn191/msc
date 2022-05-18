@@ -10,7 +10,10 @@ import {
 } from 'rxjs/operators';
 
 import { McsAccessControlService } from '@app/core';
-import { McsOption } from '@app/models';
+import {
+  McsOption,
+  PlatformType
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
@@ -41,6 +44,8 @@ export class SelectServerConsoleDatasource extends FieldSelectDatasource {
         if (isNullOrEmpty(result?.collection)) { return; }
 
         let filteredServers = result.collection.filter(vm => {
+          if (vm.platform?.type !== PlatformType.VCloud) { return false; }
+
           let dedicatedFlag = this._accessControl
             .hasAccessToFeature('EnableDedicatedVmConsole');
           return vm.isDedicated ? dedicatedFlag : true;

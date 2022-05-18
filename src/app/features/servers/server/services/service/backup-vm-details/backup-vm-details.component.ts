@@ -6,6 +6,7 @@ import {
 } from 'rxjs';
 import {
   filter,
+  finalize,
   map,
   takeUntil,
   tap
@@ -60,6 +61,7 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
   @Input()
   public serverId: string;
 
+  public dataSourceInProgress$: BehaviorSubject<boolean>;
   public readonly vmBackupLogsDatasource: McsTableDataSource2<McsServerBackupVmLog>;
   public readonly vmBackupLogsColumns: McsFilterInfo[];
 
@@ -74,6 +76,7 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
     private _apiService: McsApiService,
     private _changeDetector: ChangeDetectorRef
   ) {
+    this.dataSourceInProgress$ = new BehaviorSubject(false);
     this.vmBackupLogsDatasource = new McsTableDataSource2(this._getVmBackups.bind(this));
     this.vmBackupLogsColumns = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
@@ -167,7 +170,9 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
     queryParam.sortDirection = this._sortDef?.direction;
     queryParam.sortField = this._sortDef?.active;
 
+    this.dataSourceInProgress$.next(true);
     let vmBackupApiSource: Observable<McsServerBackupVmLog[]>;
+
     if (!isNullOrEmpty(serverid)) {
       vmBackupApiSource = this._apiService.getServerBackupVmDetails(serverid, queryParam).pipe(
         map((response) => {
@@ -182,7 +187,9 @@ export class ServiceBackupVmDetailsComponent implements OnChanges, OnDestroy {
 
     let tableDataSource = (isNullOrEmpty(this._vmBackupLogsCache) || !isNullOrEmpty(this._sortDef?.direction)) ?
       vmBackupApiSource : this._vmBackupLogsCache;
-    tableDataSource.subscribe(records => this._vmBackupChange.next(records || []));
+    tableDataSource.pipe(
+      finalize(() => this.dataSourceInProgress$.next(false))
+    ).subscribe(records => this._vmBackupChange.next(records || []));
     this._changeDetector.markForCheck();
   }
 

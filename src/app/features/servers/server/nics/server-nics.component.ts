@@ -9,6 +9,7 @@ import {
 import {
   catchError,
   filter,
+  finalize,
   map,
   shareReplay,
   switchMap,
@@ -95,6 +96,7 @@ const SERVER_NIC_NEW_ID = Guid.newGuid().toString();
 
 export class ServerNicsComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public resourceNetworks$: Observable<McsResourceNetwork[]>;
+  public dataSourceInProgress$: BehaviorSubject<boolean>;
 
   public currentIpAddress: string;
   public manageNetwork: ServerManageNetwork;
@@ -169,6 +171,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     private _dialogService: DialogService
   ) {
     super(_injector, _changeDetectorRef);
+    this.dataSourceInProgress$ = new BehaviorSubject(false);
     this.manageNetwork = new ServerManageNetwork();
     this.nicMethodType = ServerNicMethodType.AddNic;
     this.nicsDataSource = new McsTableDataSource2(this._getServerNics.bind(this));
@@ -453,7 +456,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     queryParam.sortDirection = this._sortDef?.direction;
     queryParam.sortField = this._sortDef?.active;
 
+    this.dataSourceInProgress$.next(true);
     let serverNicsDataSource: Observable<McsServerNic[]>;
+
     if (!isNullOrEmpty(server)) {
       serverNicsDataSource = this.apiService.getServerNics(server.id, queryParam).pipe(
         map((response) => getSafeProperty(response, (obj) => obj.collection)),
@@ -477,7 +482,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
     tableDataSource.pipe(
       take(1),
-      tap(dataRecords => this._nicsDataChange.next(dataRecords || []))
+      tap(dataRecords => this._nicsDataChange.next(dataRecords || [])),
+      finalize(() => this.dataSourceInProgress$.next(false))
     ).subscribe();
   }
 
