@@ -15,7 +15,7 @@ export const plannedWorkStatusText = {
   [PlannedWorkStatus.Implement]: 'Implement',
   [PlannedWorkStatus.Review]: 'Review',
   [PlannedWorkStatus.Closed]: 'Closed',
-  [PlannedWorkStatus.Closed]: 'Cancelled'
+  [PlannedWorkStatus.Cancelled]: 'Cancelled'
 };
 
 /**
