@@ -247,11 +247,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       createObject(McsServerUpdate, {
         memoryMB: convertGbToMb(this.manageScale.memoryGB),
         cpuCount: this.manageScale.cpuCount,
+        restartServer: !server.cpuHotPlugEnabled ? true: this.manageScale.restartServer,
         clientReferenceObject: {
           serverId: server.id,
           memoryMB: convertGbToMb(this.manageScale.memoryGB),
-          cpuCount: this.manageScale.cpuCount,
-          restartServer: !server.cpuHotPlugEnabled ? true: this.manageScale.restartServer
+          cpuCount: this.manageScale.cpuCount
         }
       })
     ).subscribe();
