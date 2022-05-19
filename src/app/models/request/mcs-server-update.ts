@@ -8,5 +8,8 @@ export class McsServerUpdate {
   public cpuCount: number = undefined;
 
   @JsonProperty()
+  public restartServer: boolean = undefined;
+
+  @JsonProperty()
   public clientReferenceObject: any = undefined;
 }
