@@ -59,7 +59,8 @@ import {
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  convertMbToGb
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -147,6 +148,14 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
   public get ipAllocationModeEnum(): any {
     return IpAllocationMode;
+  }
+
+  public getMinimumMemoryGB(server: McsServer): number {
+    return convertMbToGb(getSafeProperty(server as McsServer, (obj) => obj.compute.memoryMB, 2));
+  }
+
+  public getMinimumCpu(server: McsServer): number {
+    return getSafeProperty(server as McsServer, (obj) => obj.compute.cpuCount, 2);
   }
 
   public hassPermissionToViewMediaPanel(isServerDedicated: boolean): boolean {

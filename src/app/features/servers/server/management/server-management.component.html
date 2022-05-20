@@ -352,6 +352,8 @@
             [osType]="server?.operatingSystem?.type"
             [resource]="resource$ | async"
             [server]="server"
+            [minimumCpu]="getMinimumCpu(server)"
+            [minimumMemoryGB]="getMinimumMemoryGB(server)"
             [cpuHotPlugEnabled]="server.cpuHotPlugEnabled"
             (dataChange)="onScaleChanged($event)">
             <ng-container mcsManageScaleHeader>
