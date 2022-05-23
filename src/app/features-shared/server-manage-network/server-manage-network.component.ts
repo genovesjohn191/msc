@@ -110,6 +110,11 @@ export class ServerManageNetworkComponent
   }
   private _disableDynamicIp: boolean;
 
+  @Input()
+  public get enableAutomationValidator(): boolean { return this._enableAutomationValidator; }
+  public set enableAutomationValidator(value: boolean) { this._enableAutomationValidator = coerceBoolean(value); }
+  private _enableAutomationValidator: boolean = false;
+
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
@@ -169,7 +174,7 @@ export class ServerManageNetworkComponent
    */
   public get ipRangeErrorText(): string {
     let ranges: Array<string> = new Array<string>();
-    this.netMasks.forEach((netMask)=> ranges.push(`${netMask.first} - ${netMask.last}`));
+    this.netMasks.forEach((netMask) => ranges.push(`${netMask.first} - ${netMask.last}`));
     let ipRange: string = ranges.join(`\r\n`);
     return this._translateService.instant(
       'serverShared.manageNetwork.errors.ipAddressRangeError',
@@ -263,11 +268,11 @@ export class ServerManageNetworkComponent
     netWorkSubnets.forEach((subnet)=>{
       this.netMasks.push(new Netmask(`${subnet.gateway}/${subnet.netmask}`));
     });
-    this.netMasks.forEach((netMask)=> {
+    this.netMasks.forEach((netMask) => {
       if (!isNullOrEmpty(netMask.last) &&
-      netMask.last === netMask.gateway) {
-      netMask.last = netMask.last.replace(/.$/, DEFAULT_IP_RANGE_LAST);
-    }
+        netMask.last === netMask.gateway) {
+        netMask.last = netMask.last.replace(/.$/, DEFAULT_IP_RANGE_LAST);
+      }
     });
   }
 
@@ -284,8 +289,26 @@ export class ServerManageNetworkComponent
     ).subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }
       this.ipAddressesInUsed = response.ipAddresses;
+      this._addAutomationAvailableToNetMask(response.subnets);
       this._changeDetectorRef.markForCheck();
     });
+  }
+
+  /**
+   * Sets the automationAvailable value for each subnet mask
+   * @param subnets subnet of the currently selected network
+   */
+  private _addAutomationAvailableToNetMask(subnets): void {
+    subnets.forEach((subnet: McsResourceNetworkSubnet) => {
+      let mask = new Netmask(`${subnet.gateway}/${subnet.netmask}`);
+      let match = this.netMasks.find(netMask => {
+        return (netMask.first === mask.first &&
+                netMask.last === mask.last);
+      });
+      if(!isNullOrUndefined(match)) {
+        match.automationAvailable = subnet?.automationAvailable;
+      }
+    })
   }
 
   /**
@@ -294,15 +317,32 @@ export class ServerManageNetworkComponent
    */
   private _ipRangeValidator(inputValue: any): boolean {
     try {
-      let selectedNedworkGateway =  this.selectedNetwork.subnets.find((subnet)=> subnet.gateway === inputValue);
-
       // Catch and return false in case the input is not ip address format
       // to prevent exception thrown in the Netmask
-      return this.netMasks.find((netMask)=> {
+      return this.netMasks.find((netMask) => {
         return (netMask.contains(inputValue) &&
-        netMask.broadcast !== inputValue &&
-        netMask.base !== inputValue);
+          netMask.broadcast !== inputValue &&
+          netMask.base !== inputValue);
       });
+    }
+    catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Return true when the automation is available for this subnet
+   * @param inputValue Input value to be checked
+   */
+  private _subnetAutomationValidator(inputValue: any): boolean {
+    try {
+      let mask = this.netMasks.find((netMask) => {
+        return (netMask.contains(inputValue) &&
+          netMask.broadcast !== inputValue &&
+          netMask.base !== inputValue);
+      });
+      debugger;
+      return mask?.automationAvailable;
     }
     catch (error) {
       return false;
@@ -315,8 +355,8 @@ export class ServerManageNetworkComponent
    */
   private _ipGatewayValidator(inputValue: any): boolean {
     try {
-      let selectedNedworkGateway =  this.selectedNetwork.subnets.find((subnet)=> subnet.gateway === inputValue);
-      return  (isNullOrUndefined(selectedNedworkGateway));
+      let selectedNedworkGateway = this.selectedNetwork.subnets.find((subnet) => subnet.gateway === inputValue);
+      return (isNullOrUndefined(selectedNedworkGateway));
     }
     catch (error) {
       return false;
@@ -333,8 +373,7 @@ export class ServerManageNetworkComponent
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
 
-    // Register form control for custom ip address
-    this.fcCustomIpAddress = new FormControl('', [
+    let validators = [
       CoreValidators.required,
       CoreValidators.ipAddress,
       CoreValidators.custom(
@@ -345,7 +384,17 @@ export class ServerManageNetworkComponent
         this._ipGatewayValidator.bind(this),
         'ipIsGateway'
       )
-    ]);
+    ];
+
+    if (this._enableAutomationValidator) {
+      validators.push(CoreValidators.custom(
+        this._subnetAutomationValidator.bind(this),
+        'subnetAutomationUnavailable'
+      ));
+    }
+
+    // Register form control for custom ip address
+    this.fcCustomIpAddress = new FormControl('', validators);
     this.fcCustomIpAddress.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());

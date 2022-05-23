@@ -18,6 +18,7 @@ export class DynamicInputIpField extends DynamicInputTextField {
   public useNetworkRange?: boolean = false;
   public ipRangeValidator?: (inputValue: any) => boolean = () => true;
   public ipGatewayValidator?: (inputValue: any) => boolean = () => true;
+  public subnetAutomationValidator?: (inputValue: any) => boolean = () => true;
 
   public constructor(options: {
     key: string;
@@ -49,6 +50,10 @@ export class DynamicInputIpField extends DynamicInputTextField {
       validators.push(CoreValidators.custom(
         this.ipGatewayValidator.bind(this),
         'ipIsGateway'
+      ));
+      validators.push(CoreValidators.custom(
+        this.subnetAutomationValidator.bind(this),
+        'subnetAutomationUnavailable'
       ));
     }
   }

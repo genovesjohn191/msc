@@ -130,7 +130,8 @@
       [networks]="resource?.networks"
       [resourceId]="resource?.id"
       (dataChange)="onNetworkChanged($event)"
-      [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.networkField' | translate">
+      [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.networkField' | translate"
+      [enableAutomationValidator]="!resource?.isSelfManaged">
 
       <ng-container mcsManageNetworkHeader>
         <h2>{{ 'serverCreateDetailsStep.newServer.networkLabel' | translate }}</h2>

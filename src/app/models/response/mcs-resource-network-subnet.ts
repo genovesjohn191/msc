@@ -12,4 +12,7 @@ export class McsResourceNetworkSubnet {
   @JsonProperty()
   public gateway: string = undefined;
 
+  @JsonProperty()
+  public automationAvailable: boolean = undefined;
+
 }

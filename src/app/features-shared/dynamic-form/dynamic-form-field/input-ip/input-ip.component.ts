@@ -41,6 +41,7 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
 
   public netMasks: any[];
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
+  public isValidationLoading: boolean = false;
 
   public constructor(
     private _ipValidationService: McsIpValidatorService,
@@ -48,6 +49,7 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
   ) {
     super();
     this.resetNetworkIpInformation();
+    this._subscribeToValidationLoading();
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
@@ -71,6 +73,8 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
 
       case 'network-change':
         this._network = params.value as McsResourceNetwork;
+        this.config.value = null;
+        this._changeDetectorRef.markForCheck();
         this.initNetworkIpInformation();
         break;
     }
@@ -95,6 +99,7 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
     this.netMasks = this._ipValidationService.initNetworkIpInformation(this._resource, this._network, this._companyId);
     this.config.ipRangeValidator = this._ipValidationService.ipRangeValidator.bind(this);
     this.config.ipGatewayValidator = this._ipValidationService.ipGatewayValidator.bind(this);
+    this.config.subnetAutomationValidator = this._ipValidationService.subnetAutomationValidator.bind(this);
   }
 
   private _updateBehavior(required: boolean, mandatoryValueConstraintOnly?: boolean): void {
@@ -104,5 +109,14 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
       this.updateVisiblityBasedOnRequirement(required);
     }
     this._changeDetectorRef.markForCheck();
+  }
+  
+  private _subscribeToValidationLoading(): void {
+    this._ipValidationService.onLoadingValueChanged()
+      .pipe()
+      .subscribe((isLoading) => {
+        this.isValidationLoading = isLoading;
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

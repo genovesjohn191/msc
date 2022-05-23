@@ -16,7 +16,7 @@
   <input #control matInput type="text"
     [mcsId]="id"
     [required]="required"
-    [disabled]="disabled"
+    [disabled]="disabled || isValidationLoading"
     [placeholder]="config.placeholder"
     [maxlength]="config.validators?.maxlength"
     [minlength]="config.validators?.minlength"
