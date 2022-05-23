@@ -13,6 +13,10 @@ import {
   isNullOrEmpty,
   isNullOrUndefined
 } from '@app/utilities';
+import {
+  Observable,
+  Subject
+} from 'rxjs';
 
 // Require subnetting javscript class
 const Netmask = require('netmask').Netmask;
@@ -24,6 +28,7 @@ const DEFAULT_IP_RANGE_LAST = '3';
 export class McsIpValidatorService {
   public netMasks: any[];
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
+  private _isLoading = new Subject<boolean>();
 
   private _companyId: string = '';
   private _resource: McsResource;
@@ -65,6 +70,10 @@ export class McsIpValidatorService {
     });
   }
 
+  public onLoadingValueChanged(): Observable<boolean> {
+    return this._isLoading;
+  }
+
   public isIpAddressInUsed(ipAddress: string): boolean {
     if (isNullOrEmpty(ipAddress)) { return false; }
     return !!this.ipAddressesInUsed.find((inUsed) => ipAddress === inUsed.ipAddress);
@@ -93,6 +102,20 @@ export class McsIpValidatorService {
     }
   }
 
+  public subnetAutomationValidator(inputValue: any): boolean {
+    try {
+      let mask = this.netMasks.find((netMask)=> {
+          return (netMask.contains(inputValue) &&
+          netMask.broadcast !== inputValue &&
+          netMask.base !== inputValue);
+        });
+      return mask?.automationAvailable;
+    }
+    catch (error) {
+      return false;
+    }
+  }
+
   private _setInUsedIpAddresses(network: McsResourceNetwork): void {
     if (isNullOrEmpty(this._resource)) {
       return;
@@ -100,17 +123,32 @@ export class McsIpValidatorService {
 
     let hasResourceNetwork = !isNullOrEmpty(this._resource.id) && !isNullOrEmpty(network);
     if (!hasResourceNetwork) { return; }
-
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
 
+    this._isLoading.next(true);
     this._apiService.getResourceNetwork(this._resource.id, network.id, optionalHeaders).pipe(
       shareReplay(1)
     ).subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }
 
       this.ipAddressesInUsed = response.ipAddresses;
+      this._addAutomationAvailableToNetMask(response.subnets);
+      this._isLoading.next(false);
     });
+  }
+
+  private _addAutomationAvailableToNetMask(subnets): void {
+    subnets.forEach((subnet: McsResourceNetworkSubnet) => {
+      let mask = new Netmask(`${subnet.gateway}/${subnet.netmask}`);
+      let match = this.netMasks.find(netMask => {
+        return (netMask.first === mask.first &&
+                netMask.last === mask.last);
+      });
+      if(!isNullOrUndefined(match)) {
+        match.automationAvailable = subnet?.automationAvailable;
+      }
+    })
   }
 }

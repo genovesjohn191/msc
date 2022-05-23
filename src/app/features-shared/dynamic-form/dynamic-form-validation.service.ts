@@ -40,6 +40,9 @@ export class DynamicFormValidationService {
     if (control.hasError('ipIsGateway')) {
       return 'This IP address is reserved and cannot be used.';
     }
+    if (control.hasError('subnetAutomationUnavailable')) {
+      return 'This subnet is not available for provisioning at this time.';
+    }
     if (control.hasError('unique')) {
       return 'Value must be unique.';
     }

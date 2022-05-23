@@ -2147,7 +2147,8 @@
         "ipAddressRequired": "Enter an IP address.",
         "ipAddressInvalid": "Please enter a valid IP address.",
         "ipAddressRangeError": "IP address must be in one of the following ranges: {{ip_range}}.",
-        "ipAddressIsUsedAsGateway": "This IP address is reserved and cannot be used."
+        "ipAddressIsUsedAsGateway": "This IP address is reserved and cannot be used.",
+        "subnetAutomationUnavailable": "This subnet is not available for provisioning at this time."
       }
     },
     "manageScale": {
