@@ -57,7 +57,7 @@
           </span>
         </ng-container>
         <mcs-form-field class="form-field-size-medium">
-          <input mcsInput placeholder="Enter IP Address" #customInput
+          <input mcsInput placeholder="Enter IP Address" #customInput [disabled]="isIpValidationLoading"
             mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
 
           <mcs-error mcsError errorState="required">
