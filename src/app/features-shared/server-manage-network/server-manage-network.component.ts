@@ -122,6 +122,11 @@ export class ServerManageNetworkComponent
   private _destroySubject = new Subject<void>();
   private _formControlsMap = new Map<InputManageType, () => void>();
 
+  private _isIpValidationLoading: boolean = false;
+  public get isIpValidationLoading(): boolean {
+    return this._isIpValidationLoading;
+  }
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _formBuilder: FormBuilder,
@@ -283,13 +288,14 @@ export class ServerManageNetworkComponent
   private _setInUsedIpAddresses(network: McsResourceNetwork): void {
     let hasResourceNetwork = !isNullOrEmpty(this.resourceId) && !isNullOrEmpty(network);
     if (!hasResourceNetwork) { return; }
-
+    this._isIpValidationLoading = true;
     this._apiService.getResourceNetwork(this.resourceId, network.id).pipe(
       shareReplay(1)
     ).subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }
       this.ipAddressesInUsed = response.ipAddresses;
       this._addAutomationAvailableToNetMask(response.subnets);
+      this._isIpValidationLoading = false;
       this._changeDetectorRef.markForCheck();
     });
   }
