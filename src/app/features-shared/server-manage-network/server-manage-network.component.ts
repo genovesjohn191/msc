@@ -111,6 +111,16 @@ export class ServerManageNetworkComponent
   private _disableDynamicIp: boolean;
 
   @Input()
+  public get disableCustomEntry(): boolean { return this._disableCustomEntry; }
+  public set disableCustomEntry(value: boolean) {
+    value = coerceBoolean(value);
+    if (this._disableCustomEntry !== value) {
+      this._disableCustomEntry = value;
+    }
+  }
+  private _disableCustomEntry: boolean = false;
+
+  @Input()
   public get enableAutomationValidator(): boolean { return this._enableAutomationValidator; }
   public set enableAutomationValidator(value: boolean) { this._enableAutomationValidator = coerceBoolean(value); }
   private _enableAutomationValidator: boolean = false;

@@ -127,6 +127,7 @@
   <div class="action-box">
     <mcs-server-manage-network #fgManageNetwork
       [disableDynamicIp]="resourceIsManaged"
+      [disableCustomEntry]="!resourceIsManaged"
       [networks]="resource?.networks"
       [resourceId]="resource?.id"
       (dataChange)="onNetworkChanged($event)"
