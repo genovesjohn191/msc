@@ -27,7 +27,7 @@
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
         {{ 'serverShared.manageNetwork.buttonSwitch' | translate }}</a>
-      <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
+      <a *ngIf="inputManageType === inputManageTypeEnum.Auto && !disableCustomEntry" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ 'serverShared.manageNetwork.customSwitch' | translate }}</a>
     </div>
