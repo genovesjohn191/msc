@@ -12,7 +12,10 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { CoreConfig } from '@app/core';
+import {
+  CoreConfig,
+  McsAccessControlService
+} from '@app/core';
 import { EventBusPropertyListenOn } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
@@ -49,7 +52,8 @@ export class AccountPanelComponent implements OnInit {
   constructor(
     private _coreConfig: CoreConfig,
     private _switchAccountService: SwitchAccountService,
-    private _changeDetectorRef: ChangeDetectorRef) {
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService) {
       this.selectionChanged = new EventEmitter();
   }
 
@@ -88,5 +92,10 @@ export class AccountPanelComponent implements OnInit {
     this._switchAccountService.activeAccountStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  public get hasCompanyUserManagementAccess(): boolean {
+    return this._accessControlService
+      .hasAccess(['CompanyUserManagementAccess'], []);
   }
 }

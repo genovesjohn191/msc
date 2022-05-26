@@ -31,14 +31,26 @@
     </mcs-list-item>
 
     <mcs-list-item>
-      <a mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
+      <a *ngIf="hasCompanyUserManagementAccess else changePasswordLink" 
+        mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
         (click)="notifySelectionChange('change-password')"
-        mcsId="change-password-link"
-        mcsEventTracker="navigate-to-change-password"
+        mcsId="manage-users-link"
+        mcsEventTracker="navigate-to-manage-users"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
-        {{ 'accountPanel.changePassword' | translate }}
+        {{ 'accountPanel.manageUsers' | translate }}
       </a>
+      <ng-template #changePasswordLink>
+        <a
+          mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
+          (click)="notifySelectionChange('change-password')"
+          mcsId="change-password-link"
+          mcsEventTracker="navigate-to-change-password"
+          mcsEventCategory="navigation"
+          mcsEventLabel="user-panel">
+          {{ 'accountPanel.changePassword' | translate }}
+        </a>
+      </ng-template>
     </mcs-list-item>
 
     <mcs-list-item *mcsAccessControl="[]; feature: ['EnableKnowledgeBaseLink']">
