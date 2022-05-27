@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="dataSource" matSort #sort="matSort">
+<table mat-table [dataSource]="dataSource" matSort #sort="matSort" matSortActive="productId" matSortDirection="desc">
   <!-- Product ID Column -->
   <ng-container matColumnDef="productId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="productId" disableClear>

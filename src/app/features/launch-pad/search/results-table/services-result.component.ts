@@ -123,8 +123,10 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
-    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
+    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction)
+      ? getSafeProperty(param, obj => obj.sort.direction) : 'desc';
+    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active)
+      ? getSafeProperty(param, obj => obj.sort.active) : 'productId';
 
     return this._apiService.getInstalledServices(queryParam).pipe(
       map(response => {
