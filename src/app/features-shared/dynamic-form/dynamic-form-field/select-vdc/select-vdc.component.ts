@@ -17,7 +17,8 @@ import {
 import {
   McsResource,
   ServiceType,
-  serviceTypeText
+  serviceTypeText,
+  PlatformType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -92,8 +93,14 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     return this._apiService.getResources(null, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => {
+        //filter out non-VDC resources - e.g. clusters
         let returnValue = response && response.collection.filter((resource) =>
-          !isNullOrEmpty(resource.availabilityZone));
+          resource.platform === PlatformType.VCloud);
+
+        //filter out resources with an empty availabilityZone
+        if (!isNullOrEmpty(returnValue)) {
+          returnValue = returnValue.filter((resource) => !isNullOrEmpty(resource.availabilityZone));
+        }
 
         // Hide managed VDCs if enabled in config
         if (!isNullOrEmpty(returnValue) && this.config.hideManaged) {
