@@ -672,7 +672,7 @@ export class McsApiService {
   public getVdcStorage(resourceId: string, storageId: string): Observable<McsResourceStorage> {
     return this._resourcesApi.getVdcStorage(resourceId, storageId).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getStorage'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceStorages'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
