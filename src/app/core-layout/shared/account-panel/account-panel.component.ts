@@ -76,7 +76,7 @@ export class AccountPanelComponent implements OnInit {
   }
 
   /**
-   * Returns the macview change password url
+   * Returns the macview manage users url
    */
   public get macviewManageUsersUrl(): string {
     return this._coreConfig.macviewManageUsersUrl;
