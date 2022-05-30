@@ -86,6 +86,15 @@ export class CoreConfig {
     this._macviewChangePasswordUrl = value;
   }
 
+  /** Manage Users URL */
+  private _macviewManageUsersUrl: string;
+  public get macviewManageUsersUrl(): string {
+    return this._macviewManageUsersUrl;
+  }
+  public set macviewManageUsersUrl(value: string) {
+    this._macviewManageUsersUrl = value;
+  }
+
   /** Terms and Conditions URL */
   private _termsAndConditionsUrl: string;
   public get termsAndConditionsUrl(): string {

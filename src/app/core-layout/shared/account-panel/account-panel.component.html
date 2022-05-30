@@ -31,9 +31,9 @@
     </mcs-list-item>
 
     <mcs-list-item>
-      <a *ngIf="hasCompanyUserManagementAccess else changePasswordLink" 
-        mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
-        (click)="notifySelectionChange('change-password')"
+      <a *ngIf="hasCompanyUserManagementAccess else changePasswordLink"
+        mcsCursor="pointer" [href]="macviewManageUsersUrl" target="_blank"
+        (click)="notifySelectionChange('manage-users')"
         mcsId="manage-users-link"
         mcsEventTracker="navigate-to-manage-users"
         mcsEventCategory="navigation"
