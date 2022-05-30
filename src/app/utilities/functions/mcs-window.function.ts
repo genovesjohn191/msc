@@ -6,6 +6,7 @@ export enum McsEnvironmentVariables {
   LogoutUrl,
   MacviewOrdersUrl,
   MacviewChangePasswordUrl,
+  MacviewManageUsersUrl,
   McsTermsAndConditionsUrl,
   McsInviewUrl,
   McsTrendDsmUrl,
@@ -50,6 +51,9 @@ export function resolveEnvVar(envName: McsEnvironmentVariables, defaultValue: st
       break;
     case McsEnvironmentVariables.MacviewChangePasswordUrl:
       overrideValue = windowEnvironmentConfig.macviewChangePasswordUrl;
+      break;
+    case McsEnvironmentVariables.MacviewManageUsersUrl:
+      overrideValue = windowEnvironmentConfig.macviewManageUsersUrl;
       break;
     case McsEnvironmentVariables.McsTermsAndConditionsUrl:
       overrideValue = windowEnvironmentConfig.termsAndConditionsUrl;

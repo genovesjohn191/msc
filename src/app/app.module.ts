@@ -50,6 +50,7 @@ export function coreConfig(): CoreConfig {
     logoutUrl: resolveEnvVar(McsEnvironmentVariables.LogoutUrl),
     macviewOrdersUrl: resolveEnvVar(McsEnvironmentVariables.MacviewOrdersUrl),
     macviewChangePasswordUrl: resolveEnvVar(McsEnvironmentVariables.MacviewChangePasswordUrl),
+    macviewManageUsersUrl: resolveEnvVar(McsEnvironmentVariables.MacviewManageUsersUrl),
     termsAndConditionsUrl: resolveEnvVar(McsEnvironmentVariables.McsTermsAndConditionsUrl),
     inviewUrl: resolveEnvVar(McsEnvironmentVariables.McsInviewUrl),
     trendDsmUrl: resolveEnvVar(McsEnvironmentVariables.McsTrendDsmUrl),
