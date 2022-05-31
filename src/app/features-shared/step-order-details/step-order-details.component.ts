@@ -668,7 +668,7 @@ export class StepOrderDetailsComponent
     this.fcBillingEntity = new FormControl('', [CoreValidators.required]);
     this.fcBillingSite = new FormControl('', [CoreValidators.required]);
     this.fcBillingCostCenter = new FormControl('', [CoreValidators.required]);
-    this.fcDescription = new FormControl('', [CoreValidators.required]);
+    this.fcDescription = new FormControl('', {validators: [CoreValidators.required], updateOn: 'blur'});
     this.fcDeliveryType = new FormControl(DeliveryType.Standard, [CoreValidators.required]);
     this.fcWorkflowAction = new FormControl(OrderWorkflowAction.Submitted, [CoreValidators.required]);
     this.fcDateSchedule = new FormControl(this.minDate.toDateString(), [CoreValidators.required]);
