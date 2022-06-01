@@ -97,6 +97,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
   public readonly disksDataSource: McsTableDataSource2<McsServerStorageDevice>;
   public readonly disksColumns: McsFilterInfo[];
+  public readonly filterPredicate: (filter) => boolean;
 
   private _inProgressDisk: string;
   private _newDisk: McsServerStorageDevice;
@@ -106,6 +107,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _snapshotCount: number;
   private _sortDef: MatSort;
   private _sortSubject = new Subject<void>();
+  private _serverIsDedicated: boolean;
 
   private _createDiskHandler: Subscription;
   private _updateDiskHandler: Subscription;
@@ -116,6 +118,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
   public get storageIconKey(): string {
     return CommonDefinition.ASSETS_SVG_STORAGE;
+  }
+
+  public get diskStorageProfileOrDatastoreDisabledLabel(): string {
+    return this._serverIsDedicated?
+      this._translateService.instant('serverStorage.diskDatastoreDisabled') : this._translateService.instant('serverStorage.diskStorageProfileDisabled');
   }
 
   /**
@@ -152,13 +159,15 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this.manageStorage = new ServerManageStorage();
     this.diskMethodType = ServerDiskMethodType.AddDisk;
     this.disksDataSource = new McsTableDataSource2(this._getServerDisks.bind(this));
+    this.filterPredicate = this._isColumnIncluded.bind(this);
     this.disksColumns = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'storageDevice' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'storageProfile' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'datastore' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'capacity' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
     ];
-    this.disksDataSource.registerColumnsFilterInfo(this.disksColumns);
+    this.disksDataSource.registerColumnsFilterInfo(this.disksColumns, this.filterPredicate);
   }
 
   @ViewChild('sort')
@@ -182,6 +191,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   public ngOnInit() {
+    this.server$.subscribe(server => this._serverIsDedicated = server.isDedicated);
     this._registerEvents();
   }
 
@@ -191,6 +201,18 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     unsubscribeSafely(this._updateDiskHandler);
     unsubscribeSafely(this._deleteDiskHandler);
     unsubscribeSafely(this._sortSubject);
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+      if (filter.id === 'storageProfile') {
+        if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
+        return !this._serverIsDedicated;
+      }
+      if (filter.id === 'datastore') {
+        if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
+        return this._serverIsDedicated;
+      }
+    return true;
   }
 
   public getPowerStatePermission(server: McsServer): McsServerPermission {
@@ -290,8 +312,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     let dialogData = {
       data: disk,
       type: 'warning',
-      title: this._translateService.instant('dialog.mediaDetach.title'),
-      message: this._translateService.instant('dialog.mediaDetach.message', { media_name: disk.name })
+      title: this._translateService.instant('dialog.storageDelete.title'),
+      message: this._translateService.instant('dialog.storageDelete.message', { storage_name: disk.name })
     } as DialogConfirmation<McsServerStorageDevice>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
@@ -304,7 +326,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       diskValues.clientReferenceObject = {
         serverId: server.id,
         diskId: this.selectedDisk.id,
-        storageProfile: this.selectedDisk.storageProfile,
+        storageProfile: server.isDedicated? this.selectedDisk.datastoreName : this.selectedDisk.storageProfile,
         sizeMB: this.selectedDisk.sizeMB
       };
       this.apiService.deleteServerStorage(server.id, this.selectedDisk.id, diskValues).subscribe();
@@ -390,9 +412,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     ).subscribe();
   }
 
-  public storageProfileIsDisabled(disk: McsServerStorageDevice): Observable<boolean> {
+  public storageProfileOrDatastoreIsDisabled(disk: McsServerStorageDevice): Observable<boolean> {
   return this.resourceStorages$.pipe(
-    map(storageProfiles => !storageProfiles?.find(storageProfile => storageProfile.name === disk.storageProfile)?.enabled)
+    this._serverIsDedicated?
+      map(datastores => !datastores?.find(datastore => datastore.name === disk.datastoreName)?.enabled):
+      map(storageProfiles => !storageProfiles?.find(storageProfile => storageProfile.name === disk.storageProfile)?.enabled)
   );
 }
 

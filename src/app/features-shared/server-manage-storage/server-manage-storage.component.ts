@@ -36,6 +36,7 @@ import {
   getSafeProperty,
   isNullOrUndefined
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 import {
   InputManageType,
   McsResourceStorage,
@@ -81,6 +82,9 @@ export class ServerManageStorageComponent
   public targetDisk: McsServerStorageDevice;
 
   @Input()
+  public serverIsDedicated: boolean = false;
+
+  @Input()
   public get minValueGB(): number {
     return this._computeMinValue();
   }
@@ -100,16 +104,32 @@ export class ServerManageStorageComponent
   private _formControlsMap = new Map<InputManageType, () => void>();
 
   /**
-   * Returns the available memory of the storage based on actual memory available
+   * Returns the available capacity of the storage based on actual capacity available
    * and the deduction value provided by implementation
    */
-  public get availableMemory(): number {
-    let storageProfileAvailableMemoryMB = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
+  public get availableCapacity(): number {
+    let storageProfileAvailableCapacityMB = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
     let diskSizeMB = getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0);
-    let totalAvailableMemory = Math.max((storageProfileAvailableMemoryMB + diskSizeMB) - convertGbToMb(this.deductValueGB), 0);
-    let stepExcessMemory = totalAvailableMemory % DEFAULT_STORAGE_STEPS_MB;
+    let totalAvailableCapacity = Math.max((storageProfileAvailableCapacityMB + diskSizeMB) - convertGbToMb(this.deductValueGB), 0);
+    let stepExcessCapacity = totalAvailableCapacity % DEFAULT_STORAGE_STEPS_MB;
 
-    return convertMbToGb(totalAvailableMemory - stepExcessMemory);
+    return convertMbToGb(totalAvailableCapacity - stepExcessCapacity);
+  }
+
+  /**
+   * Returns the storage profile or datastore 'default' label
+   */
+  public get diskStorageProfileOrDatastoreDefaultLabel(): string {
+    return this.serverIsDedicated?
+      this._translateService.instant('label.defaultDatastore') : this._translateService.instant('label.defaultStorageProfile');
+  }
+
+  /**
+   * Returns the storage profile or datastore 'others' label
+   */
+  public get diskStorageProfileOrDatastoreOthersLabel(): string {
+    return this.serverIsDedicated?
+      this._translateService.instant('label.otherDatastores') : this._translateService.instant('label.otherStorageProfiles');
   }
 
   /**
@@ -120,15 +140,16 @@ export class ServerManageStorageComponent
   }
 
   /**
-   * Returns true when storage has available memory based on minimum value required
+   * Returns true when storage has available capacity based on minimum value required
    */
-  public get hasAvailableMemory(): boolean {
-    return (this.availableMemory - this.minValueGB) > 0;
+  public get hasAvailableCapacity(): boolean {
+    return (this.availableCapacity - this.minValueGB) > 0;
   }
 
   public constructor(
     private _formBuilder: FormBuilder,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _translateService: TranslateService
   ) {
     this._createFormControlsMap();
   }
@@ -225,7 +246,7 @@ export class ServerManageStorageComponent
       default:
         this._storageOutput.storage = this.selectedStorage;
         this._storageOutput.sizeMB = convertGbToMb(this.storageValue);
-        this._storageOutput.valid = this.hasAvailableMemory;
+        this._storageOutput.valid = this.hasAvailableCapacity;
         break;
     }
     this._setStorageHasChangedFlag();
@@ -294,15 +315,15 @@ export class ServerManageStorageComponent
       let storage = this.storages;
       let storageProfileFound = this._isTargetDiskUnvailable() ?
         storage.find(storage => storage.isDefault) :
-        storage.find(storage => (storage.name === this.targetDisk.storageProfile));
+        storage.find(storage => (storage.name === (this.targetDisk.storageProfile || this.targetDisk.datastoreName)));
 
       let fcStorageProfileValue = storageProfileFound ? storageProfileFound : null;
 
       if (!isNullOrEmpty(this.fcSelectStorages)) {
         this.fcSelectStorages.setValue(fcStorageProfileValue);
 
-        let availableMemoryExceeded = !this.hasAvailableMemory;
-        if (availableMemoryExceeded) { this.fcSelectStorages.markAsTouched(); }
+        let availableCapacityExceeded = !this.hasAvailableCapacity;
+        if (availableCapacityExceeded) { this.fcSelectStorages.markAsTouched(); }
       }
   }
 
@@ -426,7 +447,7 @@ export class ServerManageStorageComponent
    * @param inputValue Input value to be checked
    */
   private _customStorageValidator(inputValue: any) {
-    return inputValue <= this.availableMemory;
+    return inputValue <= this.availableCapacity;
   }
 
   /**
@@ -434,7 +455,7 @@ export class ServerManageStorageComponent
    * @param _storage Storage to be checked
    */
   private _maxStorageChecking(_storage: McsResourceStorage) {
-    return this.hasAvailableMemory;
+    return this.hasAvailableCapacity;
   }
 
   /**

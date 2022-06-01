@@ -1812,7 +1812,8 @@
     "noDisks": "All disks have been removed from this server, rendering it inoperable. New disks cannot be added at this time.",
     "errorGettingDisks": "Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
     "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining).",
-    "diskStorageProfileDisabled": "This disk cannot be modified because it resides on a disabled storage profile."
+    "diskStorageProfileDisabled": "This disk cannot be modified because it resides on a disabled or unknown storage profile.",
+    "diskDatastoreDisabled": "This disk cannot be modified because it resides on a disabled or unknown datastore."
   },
   "serverCreate": {
     "header": "Create a New Server",
@@ -3525,6 +3526,7 @@
     "customerId": "Customer ID",
     "customerName": "Customer Name",
     "customerReference": "Customer Reference",
+    "datastore": "Datastore",
     "deployment": "Deployment",
     "description": "Description",
     "destination": "Destinations",
@@ -3792,6 +3794,9 @@
     "createdDate": "Created Date",
     "createdBy":"Created By",
     "customerReference": "Customer Reference",
+    "datastoreUsableCapacity": "This datastore has {{value}} GB of usable capacity.",
+    "defaultDatastore": "Default Datastore",
+    "defaultStorageProfile": "Default Storage Profile",
     "description": "Description",
     "deviceDetails": "Device Details",
     "email": "Email",
@@ -3811,6 +3816,8 @@
     "newActivity": "New Comment/Attachment",
     "none": "None",
     "notes": "Notes",
+    "otherDatastores": "Other Datastores",
+    "otherStorageProfiles": "Other Storage Profiles",
     "overview": "Overview",
     "openAzureTickets": "Open Azure Tickets",
     "openPrivateCloudTickets": "Open Private Cloud Tickets",
@@ -3822,6 +3829,8 @@
     "resolution": "Resolution",
     "resourceGroup": "Resource Group",
     "rootCause": "Root Cause",
+    "selectDatastore": "Select a datastore",
+    "selectStorageProfile": "Select a storage profile",
     "selectContact": "Select Contact",
     "selectStorage": "Select Storage",
     "services": "Services",
@@ -3831,6 +3840,7 @@
     "sorting": "Sorting",
     "status": "Status",
     "storageProfileUtilisation": "Storage Profile Utilisation",
+    "storageProfileUsableCapacity": "This storage profile has {{value}} GB of usable capacity.",
     "subscription": "Subscription",
     "tag": "Tag",
     "tasks": "Tasks",
@@ -4137,7 +4147,7 @@
       "message": "Restoring a snapshot replaces data on the server and cannot be undone. The server will be unavailable until this process is complete.\r\n\nAre you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?"
     },
     "storageDelete": {
-      "title": "Delete Storage",
+      "title": "Delete Disk",
       "message": "The data on <strong>{{storage_name}}</strong> will be permanently lost.\r\n\nAre you sure you want to continue?"
     },
     "systemMessageSave": {
