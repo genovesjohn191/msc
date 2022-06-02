@@ -5,6 +5,8 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  map,
+  shareReplay,
   startWith,
   takeUntil,
   tap
@@ -30,6 +32,7 @@ import {
   MatTreeFlattener,
   MatTreeFlatDataSource
 } from '@angular/material/tree';
+import { DataStatus } from '@app/models';
 import {
   animateFactory,
   isArray,
@@ -106,7 +109,7 @@ export class FieldSelectTreeViewComponent<TEntity>
   public panelOpen: boolean;
   public viewportHeight: string;
   public fcTreeSearch: FormControl;
-  public processOnGoing$ = new BehaviorSubject<boolean>(false);
+  public processOnGoing$: Observable<boolean>;
 
   public readonly treeDatasource: MatTreeFlatDataSource<TreeItem<TEntity>, MatTreeViewModel<TEntity>>;
   public readonly treeControl: FlatTreeControl<MatTreeViewModel<TEntity>>;
@@ -151,6 +154,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       .startSubscription();
     this.dataSource.registerSearch(this.treeSearch);
 
+    this._subscribeToDataStatusChange();
     this._subscribeToDataSourceChange();
 
     this.updateValidators();
@@ -227,7 +231,9 @@ export class FieldSelectTreeViewComponent<TEntity>
     event?.stopPropagation();
 
     if (!node.selectable || (node.disableWhen && node.disableWhen(node.data))) { return; }
+
     this._toggleItem(node);
+    if (!this.multiple) { this._closePanel(); }
   }
 
   public itemIsExpanded(node: MatTreeViewModel<TEntity>): boolean {
@@ -301,6 +307,11 @@ export class FieldSelectTreeViewComponent<TEntity>
 
   private _toggleItem(node: MatTreeViewModel<TEntity>): void {
     requestAnimationFrame(() => {
+      // In case of single selection, we need to clear all selected first
+      if (!this.multiple) {
+        this._clearDataNodesSelection();
+      }
+
       // Change the current selection state of the formcontrols
       const currentValue = node.checkbox?.value;
       const nextValue = !currentValue;
@@ -308,12 +319,14 @@ export class FieldSelectTreeViewComponent<TEntity>
       node.checkbox.markAsTouched();
 
       // Select children elements of the tree
-      const descendants = this.treeControl.getDescendants(node) || [];
-      if (!isNullOrEmpty(descendants) && node.expandable) {
-        descendants?.forEach(descendant => {
-          descendant.checkbox.setValue(nextValue);
-          descendant.checkbox.markAsTouched();
-        });
+      if (this.multiple) {
+        const descendants = this.treeControl.getDescendants(node) || [];
+        if (!isNullOrEmpty(descendants) && node.expandable) {
+          descendants?.forEach(descendant => {
+            descendant.checkbox.setValue(nextValue);
+            descendant.checkbox.markAsTouched();
+          });
+        }
       }
 
       // Update associated form control
@@ -399,33 +412,40 @@ export class FieldSelectTreeViewComponent<TEntity>
   }
 
   private _subscribeToDataSourceChange(): void {
-    this.processOnGoing$.next(true);
-
     this.dataSource.connect(null).pipe(
       takeUntil(this.destroySubject),
       tap(dataRecords => {
         this.treeDatasource.data = dataRecords;
         this._initializeRecordsDisplay(dataRecords);
 
-        this.processOnGoing$.next(false);
         this.changeDetectorRef.markForCheck();
         this._updateViewPortHeight(dataRecords);
       }),
       catchError(error => {
-        this.processOnGoing$.next(false);
         return throwError(() => new Error(error));
       })
     ).subscribe();
   }
 
+  private _subscribeToDataStatusChange(): void {
+    this.processOnGoing$ = this.dataSource.dataStatusChange().pipe(
+      takeUntil(this.destroySubject),
+      map(status => status === DataStatus.PreActive || status === DataStatus.Active),
+      shareReplay(1)
+    );
+  }
+
   private _clearSelection(): void {
     refreshView(() => {
-      this.treeControl?.dataNodes?.forEach(dataNode => {
-        if (!dataNode?.checkbox?.value) { return; }
-        dataNode?.checkbox.setValue(false);
-      });
+      this._clearDataNodesSelection();
+      this._selectedNodesChange.next([]);
     });
+  }
 
-    this._selectedNodesChange.next([]);
+  private _clearDataNodesSelection(): void {
+    this.treeControl?.dataNodes?.forEach(dataNode => {
+      if (!dataNode?.checkbox?.value) { return; }
+      dataNode?.checkbox.setValue(false);
+    });
   }
 }

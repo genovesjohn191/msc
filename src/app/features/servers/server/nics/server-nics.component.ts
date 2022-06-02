@@ -30,6 +30,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsServerPermission,
@@ -184,7 +185,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'ipAddresses' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
     ];
-    this.nicsDataSource.registerColumnsFilterInfo(this.nicsColumns);
+    this.nicsDataSource
+      .registerConfiguration(new McsMatTableConfig(false, true))
+      .registerColumnsFilterInfo(this.nicsColumns);
   }
 
   @ViewChild('sort')
@@ -296,28 +299,28 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public deleteNic(server: McsServer, nic: McsServerNic): void {
     this.isSnapshotProcessing = true;
     this.apiService.getServerSnapshots(server.id)
-    .pipe(
-      takeUntil(this._destroySubject),
-      catchError((error) => {
+      .pipe(
+        takeUntil(this._destroySubject),
+        catchError((error) => {
+          this.isSnapshotProcessing = false;
+          this._changeDetectorRef.markForCheck();
+          return throwError(error);
+        })
+      )
+      .subscribe((snapshot: McsApiCollection<McsServerSnapshot>) => {
         this.isSnapshotProcessing = false;
-        this._changeDetectorRef.markForCheck();
-        return throwError(error);
-      })
-    )
-    .subscribe((snapshot: McsApiCollection<McsServerSnapshot>) => {
-      this.isSnapshotProcessing = false;
-      let snapshots = getSafeProperty(snapshot, (obj) => obj.collection);
-      let serverHasSnapshots = snapshots.length > 0;
-      if (serverHasSnapshots) {
-        let snapshotIncludesMemory = snapshots.find((data) => data.includesMemory);
-        snapshotIncludesMemory ?
-          this.serverDialogBoxIncludesMemory() :
+        let snapshots = getSafeProperty(snapshot, (obj) => obj.collection);
+        let serverHasSnapshots = snapshots.length > 0;
+        if (serverHasSnapshots) {
+          let snapshotIncludesMemory = snapshots.find((data) => data.includesMemory);
+          snapshotIncludesMemory ?
+            this.serverDialogBoxIncludesMemory() :
+            this.serverDialogBoxNoMemory(server, nic);
+        } else {
           this.serverDialogBoxNoMemory(server, nic);
-      } else {
-        this.serverDialogBoxNoMemory(server, nic);
-      }
-      this._changeDetectorRef.markForCheck();
-  });
+        }
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /**
