@@ -2,7 +2,7 @@
   <!-- Storage header and switcher -->
   <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageStorageHeader]"></ng-content></div>
-    <div *ngIf="hasAvailableMemory">
+    <div *ngIf="hasAvailableCapacity">
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
         {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
@@ -12,16 +12,16 @@
     </div>
   </mcs-item>
 
-  <!-- Storage profiles selection and details template -->
+  <!-- Storage profiles / datastores selection and details template -->
   <ng-container *ngIf="!detailsTemplate;else detailsTemplate">
     <mcs-form-field>
       <mcs-select [formControl]="fcSelectStorages" required
         mcsId="select-storage"
-        placeholder="Select storage profile">
+        placeholder="{{ storageProfileOrDatastorePlaceholderLabel }}">
 
           <mcs-option-group>
             <ng-container *mcsOptionGroupHeader>
-              {{ 'orderVdcStorageExpand.vdcStorage.defaultProfile' | translate }}
+              {{ diskStorageProfileOrDatastoreDefaultLabel }}
             </ng-container>
             <ng-container *ngFor="let storage of storages">
               <mcs-option *ngIf="storage?.isDefault"
@@ -33,7 +33,7 @@
           </mcs-option-group>
           <mcs-option-group>
             <ng-container *mcsOptionGroupHeader>
-              {{ 'orderVdcStorageExpand.vdcStorage.otherProfiles' | translate }}
+              {{ diskStorageProfileOrDatastoreOthersLabel }}
             </ng-container>
             <ng-container *ngFor="let storage of storages">
               <mcs-option *ngIf="!storage?.isDefault"
@@ -47,19 +47,22 @@
     </mcs-form-field>
   </ng-container>
 
-  <div *ngIf="hasAvailableMemory" [ngSwitch]="inputManageType">
+  <div *ngIf="hasAvailableCapacity" [ngSwitch]="inputManageType">
     <!-- Slider selection mode -->
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
       <div>
         <span>{{ 'serverShared.manageStorage.sliderMessage' | translate }} </span>
-        <span>
-          This storage profile has {{ availableMemory | mcsDataSize: 'GB' }} of usable capacity.
+        <span *ngIf="serverIsDedicated">
+          This datastore has {{ availableCapacity | mcsDataSize: 'GB' }} of usable capacity.
+        </span>
+        <span *ngIf="!serverIsDedicated">
+          This storage profile has {{ availableCapacity | mcsDataSize: 'GB' }} of usable capacity.
         </span>
       </div>
 
       <div>
-        <mcs-slider [min]="minValueGB" [max]="availableMemory" [step]="10"
-          mcsId="slider-memory"
+        <mcs-slider [min]="minValueGB" [max]="availableCapacity" [step]="10"
+          mcsId="slider-capacity"
           [ngModel]="storageValue" [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onSliderChanged($event)">
         </mcs-slider>
@@ -78,7 +81,7 @@
 
         <mcs-hint mcsHint align="start">
             {{ 'serverShared.manageStorage.maximumStorage' | translate }}:
-            {{ availableMemory | mcsDataSize: 'GB' }}
+            {{ availableCapacity | mcsDataSize: 'GB' }}
         </mcs-hint>
         <mcs-error mcsError errorState="required">
             {{ 'serverShared.manageStorage.errors.storageRequired' | translate }}
@@ -92,14 +95,14 @@
         </mcs-error>
         <mcs-error mcsError errorState="storageAvailable">
           {{ 'serverShared.manageStorage.errors.storageAvailable' |
-            translate: { available_storage: (availableMemory | mcsDataSize: 'GB') } }}
+            translate: { available_storage: (availableCapacity | mcsDataSize: 'GB') } }}
         </mcs-error>
       </mcs-form-field>
     </mcs-section>
   </div>
 
   <!-- Insufficient Storage Capacity Warning Message -->
-  <div *ngIf="!hasAvailableMemory && fcSelectStorages.value" [@fadeIn]>
+  <div *ngIf="!hasAvailableCapacity && fcSelectStorages.value" [@fadeIn]>
     <mcs-data-status-warning>
       <ng-content select="[mcsManageStorageWarning]"></ng-content>
     </mcs-data-status-warning>

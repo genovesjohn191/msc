@@ -37,4 +37,7 @@ export class McsServerStorageDevice extends McsEntityBase {
 
   @JsonProperty()
   public isPrimary: boolean = undefined;
+
+  @JsonProperty()
+  public datastoreName: string = undefined;
 }
