@@ -105,7 +105,7 @@
     <ng-container *ngIf="!node.expandable; else expandableTemplate">
       <div class="mcs-node-expand-trigger" disabled></div>
 
-      <ng-container *ngIf="node.selectable; else nonSelectableView">
+      <ng-container *ngIf="node.selectable && multiple; else nonSelectableView">
         <mcs-checkbox
           [disabled]="node.disableWhen && node.disableWhen(node.data)"
           [checked]="itemIsChecked(node)">
@@ -130,7 +130,7 @@
         </div>
       </div>
 
-      <ng-container *ngIf="node.selectable; else nonSelectableView">
+      <ng-container *ngIf="node.selectable && multiple; else nonSelectableView">
         <mcs-checkbox
           [disabled]="node.disableWhen && node.disableWhen(node.data)"
           [indeterminate]="itemIsInDeterminate(node)"

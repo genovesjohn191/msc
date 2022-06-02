@@ -1,10 +1,10 @@
 import {
   of,
   BehaviorSubject,
+  EMPTY,
   Observable,
   Subject
 } from 'rxjs';
-import { throwError } from 'rxjs/internal/observable/throwError';
 import {
   catchError,
   exhaustMap,
@@ -17,6 +17,7 @@ import {
 
 import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/table';
+import { DataStatus } from '@app/models';
 
 import {
   cloneObject,
@@ -41,6 +42,7 @@ export class TreeDatasource<TValue> extends DataSource<TreeItem<TValue>> {
   private _dataRecordsChange = new BehaviorSubject<TreeItem<TValue>[]>(null);
   private _requestUpdate = new Subject<void>();
   private _destroySubject = new Subject<void>();
+  private _dataStatusChange = new BehaviorSubject<DataStatus>(null);
 
   constructor(dataSource?: DatasourceTreeType<TValue>) {
     super();
@@ -57,6 +59,11 @@ export class TreeDatasource<TValue> extends DataSource<TreeItem<TValue>> {
   public disconnect(_collectionViewer: CollectionViewer): void {
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._searchSubject);
+    unsubscribeSafely(this._dataStatusChange);
+  }
+
+  public dataStatusChange(): Observable<DataStatus> {
+    return this._dataStatusChange.asObservable();
   }
 
   public updateDatasource(dataSource: DatasourceTreeType<TValue>): void {
@@ -123,27 +130,37 @@ export class TreeDatasource<TValue> extends DataSource<TreeItem<TValue>> {
   }
 
   private _subscribeToRequestChange(): void {
+    let initialRequest = true;
+
     this._requestUpdate.pipe(
       startWith([null]),
       takeUntil(this._destroySubject),
       switchMap(() => {
+        if (isNullOrUndefined(this._datasourceFuncPointer)) { return of(null); }
+        this._dataStatusChange.next(DataStatus.Active);
+
         return this._datasourceFuncPointer().pipe(
           exhaustMap((response) => {
             let clonedRecords = cloneObject<TreeItem<TValue>[]>(response);
             let filteredData = this._filterData(clonedRecords);
             return of(filteredData);
           }),
-          catchError((error) => {
-            return throwError(error);
+          catchError(() => {
+            this._dataStatusChange.next(DataStatus.Error);
+            return EMPTY;
           })
         );
+      }),
+      tap((response) => {
+        this._dataRecordsChange.next(response);
+
+        if (!initialRequest) {
+          this._dataStatusChange.next(response?.length > 0 ? DataStatus.Success : DataStatus.Empty);
+          this._search?.showLoading(false);
+        }
+        initialRequest = false;
       })
-    ).subscribe((response) => {
-      this._dataRecordsChange.next(response);
-      if (!isNullOrEmpty(this._search)) {
-        this._search.showLoading(false);
-      }
-    });
+    ).subscribe();
   }
 
   private _subscribeToSearching(): void {

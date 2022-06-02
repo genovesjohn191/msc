@@ -3,14 +3,16 @@
 
   <form [formGroup]="viewModel.fgGroup">
     <!-- Server Select -->
-    <mcs-field-select size="auto"
-      mcsId="select-server"
+    <mcs-field-select-tree-view size="auto"
       [label]="'label.server' | translate"
       [disabled]="hideSelection$ | async"
-      [dataSource]="'ServerConsole' | mcsFieldSelect"
-      (optionsChange)="onDataChange($event)"
-      [formControl]="viewModel.fcServer">
-    </mcs-field-select>
+      [hideChips]="true"
+      [multiple]="false"
+      [expandFirst]="true"
+      [selectAllByDefault]="false"
+      [formControl]="viewModel.fcServer"
+      [dataSource]="serverGroupDatasource">
+    </mcs-field-select-tree-view>
   </form>
 
   <!-- Action buttons -->

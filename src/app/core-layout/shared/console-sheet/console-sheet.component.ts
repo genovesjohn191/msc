@@ -1,4 +1,9 @@
-import { BehaviorSubject } from 'rxjs';
+import {
+  map,
+  tap,
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
 
 import {
   ChangeDetectionStrategy,
@@ -9,14 +14,17 @@ import {
 } from '@angular/core';
 import {
   CoreRoutes,
+  McsAccessControlService,
   McsPageBase
 } from '@app/core';
 import {
   McsOption,
+  McsOptionGroup,
   McsServer,
   PlatformType,
   RouteKey
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import {
   SideSheetAction,
   SideSheetRef,
@@ -24,10 +32,19 @@ import {
 } from '@app/shared/side-sheet';
 import {
   getSafeFormValue,
-  isNullOrEmpty
+  isNullOrEmpty,
+  TreeDatasource,
+  TreeGroup,
+  TreeItem,
+  TreeUtility
 } from '@app/utilities';
 
 import { ConsoleSheetViewModel } from './console-sheet.viewmodel';
+
+interface IServerGroup {
+  resource: string;
+  servers: McsServer[];
+}
 
 @Component({
   selector: 'mcs-console-sheet',
@@ -38,13 +55,19 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
   public readonly viewModel: ConsoleSheetViewModel;
   public readonly hideSelection$: BehaviorSubject<boolean>;
 
+  public serverGroupDatasource: TreeDatasource<McsOptionGroup>;
+  private _serverGroupsChange = new BehaviorSubject<McsOptionGroup[]>(null);
+
   constructor(
     injector: Injector,
+    private _apiService: McsApiService,
+    private _accessControl: McsAccessControlService,
     private _sidesheetRef: SideSheetRef<ConsoleSheetComponent>
   ) {
     super(injector);
     this.viewModel = new ConsoleSheetViewModel(injector);
     this.hideSelection$ = new BehaviorSubject(false);
+    this.serverGroupDatasource = new TreeDatasource(this._convertServerGroupToTreeItems.bind(this));
   }
 
   public get featureName(): string {
@@ -62,6 +85,7 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
   }
 
   public ngOnInit(): void {
+    this._subscribeToServers();
   }
 
   public ngOnDestroy(): void {
@@ -106,5 +130,63 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
     sidesheetResult.action = SideSheetAction.Confirm;
     sidesheetResult.data = serverId;
     this._sidesheetRef.close(sidesheetResult);
+  }
+
+  private _subscribeToServers(): void {
+    this._apiService.getServers().pipe(
+      tap(result => {
+        if (isNullOrEmpty(result?.collection)) { return; }
+
+        let filteredServers = result.collection.filter(vm => {
+          if (vm.platform?.type !== PlatformType.VCloud) { return false; }
+
+          let dedicatedFlag = this._accessControl
+            .hasAccessToFeature('EnableDedicatedVmConsole');
+          return vm.isDedicated ? dedicatedFlag : true;
+        });
+
+        let serverGroups = new Array<McsOptionGroup>();
+        filteredServers.forEach(server => {
+          let resourceName = server.resourceName || 'Others';
+          let serverOption = new McsOption(
+            server.id,
+            server.name,
+            this.translate.instant('message.consoleUnavailable', { state: server.statusLabel }),
+            !server.isPoweredOn,
+            server
+          );
+
+          let foundGroup = serverGroups.find(group => group.groupName === resourceName);
+          if (foundGroup) {
+            foundGroup.options.push(serverOption);
+            return;
+          }
+
+          let newOptions = new Array<McsOption>();
+          newOptions.push(serverOption);
+          serverGroups.push(new McsOptionGroup(resourceName, ...newOptions));
+        });
+
+        this._serverGroupsChange.next(serverGroups);
+      })
+    ).subscribe();
+  }
+
+  private _convertServerGroupToTreeItems(): Observable<TreeItem<string>[]> {
+    return this._serverGroupsChange.pipe(
+      map(groups =>
+        TreeUtility.convertEntityToTreemItems(groups,
+          group => new TreeGroup(group.groupName, group.groupName, group.options, {
+            selectable: false,
+            excludeFromSelection: true
+          }),
+          option => new TreeGroup(option.text, option.value, null, {
+            selectable: !option.disabled,
+            tooltipFunc: () => option.helpText,
+            disableWhen: () => option.disabled
+          })
+        )
+      )
+    );
   }
 }

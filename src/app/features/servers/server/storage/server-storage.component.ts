@@ -27,6 +27,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsServerPermission,
@@ -121,7 +122,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   public get diskStorageProfileOrDatastoreDisabledLabel(): string {
-    return this._serverIsDedicated?
+    return this._serverIsDedicated ?
       this._translateService.instant('serverStorage.diskDatastoreDisabled') : this._translateService.instant('serverStorage.diskStorageProfileDisabled');
   }
 
@@ -167,7 +168,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'capacity' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
     ];
-    this.disksDataSource.registerColumnsFilterInfo(this.disksColumns, this.filterPredicate);
+    this.disksDataSource
+      .registerConfiguration(new McsMatTableConfig(false, true))
+      .registerColumnsFilterInfo(this.disksColumns, this.filterPredicate);
   }
 
   @ViewChild('sort')
@@ -204,14 +207,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   private _isColumnIncluded(filter: McsFilterInfo): boolean {
-      if (filter.id === 'storageProfile') {
-        if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
-        return !this._serverIsDedicated;
-      }
-      if (filter.id === 'datastore') {
-        if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
-        return this._serverIsDedicated;
-      }
+    if (filter.id === 'storageProfile') {
+      if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
+      return !this._serverIsDedicated;
+    }
+    if (filter.id === 'datastore') {
+      if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
+      return this._serverIsDedicated;
+    }
     return true;
   }
 
@@ -326,7 +329,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       diskValues.clientReferenceObject = {
         serverId: server.id,
         diskId: this.selectedDisk.id,
-        storageProfile: server.isDedicated? this.selectedDisk.datastoreName : this.selectedDisk.storageProfile,
+        storageProfile: server.isDedicated ? this.selectedDisk.datastoreName : this.selectedDisk.storageProfile,
         sizeMB: this.selectedDisk.sizeMB
       };
       this.apiService.deleteServerStorage(server.id, this.selectedDisk.id, diskValues).subscribe();
@@ -413,12 +416,12 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   public storageProfileOrDatastoreIsDisabled(disk: McsServerStorageDevice): Observable<boolean> {
-  return this.resourceStorages$.pipe(
-    this._serverIsDedicated?
-      map(datastores => !datastores?.find(datastore => datastore.name === disk.datastoreName)?.enabled):
-      map(storageProfiles => !storageProfiles?.find(storageProfile => storageProfile.name === disk.storageProfile)?.enabled)
-  );
-}
+    return this.resourceStorages$.pipe(
+      this._serverIsDedicated ?
+        map(datastores => !datastores?.find(datastore => datastore.name === disk.datastoreName)?.enabled) :
+        map(storageProfiles => !storageProfiles?.find(storageProfile => storageProfile.name === disk.storageProfile)?.enabled)
+    );
+  }
 
   /**
    * Reset storage form values to initial
