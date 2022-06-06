@@ -101,6 +101,7 @@ import { SystemMessageShowEvent } from './items/system-message-show.event';
 import { UserChangeEvent } from './items/user-change.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
+import { DataChangeCreateNetworkPanelsEvent } from './items/data-change-create-network-panels.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -160,6 +161,7 @@ export class McsEvent {
   public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
   public static dataChangeTerraformDeployments = new DataChangeTerraformDeploymentsEvent();
   public static dataChangeNetworkDbNetworksEvent = new DataChangeNetworkDbNetworksEvent();
+  public static dataChangeCreateNetworkPanelsEvent = new DataChangeCreateNetworkPanelsEvent();
   public static dataChangePlannedWorkDetailsEvent = new DataChangePlannedWorkDetailsEvent();
 
   public static dataClearServers = new DataClearServersEvent();

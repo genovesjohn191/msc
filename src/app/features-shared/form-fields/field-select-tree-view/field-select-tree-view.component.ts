@@ -107,6 +107,7 @@ export class FieldSelectTreeViewComponent<TEntity>
 
   @Input()
   public noRecordsFoundText: string;
+  public autoClearSelection: boolean = true;
 
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
@@ -281,7 +282,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       takeUntil(this.destroySubject),
       tap(formValues => {
         // Notify when no value provided (in case of reset)
-        if (isNullOrEmpty(formValues)) {
+        if (isNullOrEmpty(formValues) && this.autoClearSelection) {
           this._clearSelection();
           return;
         }
@@ -294,6 +295,10 @@ export class FieldSelectTreeViewComponent<TEntity>
           let nodeFound = this.treeControl.dataNodes
             .find(dataNode => dataNode.data === formValue);
           if (isNullOrEmpty(nodeFound)) { return; }
+          if (nodeFound.checkbox?.value === false) {
+            nodeFound.checkbox.setValue(true);
+            this.changeDetectorRef.markForCheck();
+          }
           selectedNodes.push(nodeFound);
         });
 

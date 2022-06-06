@@ -12,6 +12,7 @@ export class DynamicSlideToggleField extends DynamicFormFieldConfigBase {
   public type: DynamicFormFieldType = 'slide-toggle';
   public template: DynamicFormFieldTemplate = 'slide-toggle';
   public value: boolean = false;
+  public header?: string = '';
 
   public constructor(options: {
     key: string;
@@ -22,9 +23,11 @@ export class DynamicSlideToggleField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     settings?: DynamicFormControlSettings;
     contextualHelp?: string;
+    header?: string;
   }) {
     super(options);
 
+    this.header = options.header;
     this.value = coerceBoolean(options.value);
   }
 }

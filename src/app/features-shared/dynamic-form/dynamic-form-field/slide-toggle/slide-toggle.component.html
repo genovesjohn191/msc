@@ -1,10 +1,10 @@
+<span *ngIf="config.header">{{ config.header }}</span>
 <mat-form-field
   *ngIf="visible"
   appearance="none"
   floatLabel="always">
 
   <mat-slide-toggle
-    [id]="id"
     color="primary"
     [(ngModel)]="config.value"
     (change)="valueChange($event)">

@@ -183,6 +183,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-terraform-module-type-field>
 
+        <mcs-dff-select-pods-field *ngSwitchCase="'select-pods'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-pods-field>
+
         <mcs-dff-select-vdc-field *ngSwitchCase="'select-vdc'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-vdc-field>

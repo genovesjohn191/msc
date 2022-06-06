@@ -1,0 +1,94 @@
+<mcs-page [header]="settings.header">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <mat-vertical-stepper [linear]="true" #stepper>
+      <!-- Form Details -->
+      <mat-step [editable]="!creationSuccessful && (!processing && !hasError)" [completed]="false">
+        <ng-template matStepLabel>{{ settings.title }}</ng-template>
+        <div *ngIf="!processing && !hasError" style="max-width: 700px;min-width: 650px;">
+
+          <mat-accordion multi>
+            <mat-expansion-panel #panel
+              *ngFor="let item of multiFormItems; index as i"
+              [expanded]="openPanelByDefault(i)"
+              (opened)="panelOpened()"
+              (closed)="panelClosed()"
+              hideToggle="false"
+              [class.child]="parentReferenceId">
+                <mat-expansion-panel-header style="position: relative;">
+                  <mat-panel-title [mcsTextTruncate]="item.formTitle" mcsTextTruncateSize="550px">
+                    <h1>{{ item.formTitle }}</h1>
+                  </mat-panel-title>                
+                  <mat-panel-description style="position: absolute; right: 0;">
+                    <div>
+                      <mat-icon [ngStyle]="{color: 'black'}" (click)="deleteItem(i, $event)" [disabled]="!hasMultipleItems">delete</mat-icon>
+                      <mat-icon [ngStyle]="{color: 'black'}" margin-right-xlarge (click)="addItem(item, $event)">library_add</mat-icon>
+                    </div>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div *ngIf="label" class="workflow-label">{{ label }}</div>
+                <mcs-dynamic-form #form [config]="item.dynamicFormConfig" (beforeDataChange)="onDataChange(item, $event)"></mcs-dynamic-form>
+            </mat-expansion-panel>
+          </mat-accordion>
+          <br />
+          <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!isValidPayload"
+          (click)="submit()">
+            <mat-icon>chevron_right</mat-icon>
+            {{ settings.submitButtonText }}
+          </button>
+        </div>
+
+        <div *ngIf="processing">
+          <mcs-status-message type="info">
+            {{ settings.inProgressMessage }}
+          </mcs-status-message>
+          <br />
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+
+        <div *ngIf="hasError">
+          <mcs-status-message type="error">
+            {{ watchedJob?.errorMessage || settings.failedSendingRequestMessage }}
+            <a *ngIf="watchedJob" style="margin-left: 5px; margin-right: 5px;" mcsId [mcsRouterLink]="getNotificationRoute()" target="_blank">View Logs</a>
+            <a style="margin-left: 5px;" mcsId (click)="retry()">Go back</a>
+          </mcs-status-message>
+        </div>
+      </mat-step>
+
+      <!-- Go -->
+      <mat-step [editable]="creationSuccessful" [completed]="false">
+        <ng-template matStepLabel>Go</ng-template>
+
+        <h2>{{  settings.successful.title }}</h2>
+
+        <mcs-list *ngFor="let task of taskList">
+          <mcs-item orientation="block">
+            <mcs-item>
+              <mcs-icon [key]="successIconKey" size="medium"></mcs-icon>
+              <span [innerHtml]="task.successMessage"></span>
+            </mcs-item>
+          </mcs-item>
+          <mcs-item orientation="block">
+            <mcs-item>
+              <a
+                mcsCursor="pointer"
+                [mcsRouterLink]="task.routerLinkSettings"
+                [mcsId]="settings.successful.newObjectLink.id"
+                [mcsEventTracker]="settings.successful.newObjectLink.eventTracker"
+                [mcsEventCategory]="settings.successful.newObjectLink.eventCategory"
+                [mcsEventLabel]="settings.successful.newObjectLink.eventLabel">
+                {{ settings.successful.newObjectLink.text }}
+              </a>
+            </mcs-item>
+          </mcs-item>
+        </mcs-list>
+
+      </mat-step>
+
+    </mat-vertical-stepper>
+
+  </mcs-content-panel>
+</mcs-page>
