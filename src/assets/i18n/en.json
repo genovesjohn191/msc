@@ -1480,7 +1480,7 @@
     "header": "Server Snapshot",
     "description": "Snapshots are point-in-time VM-level restore points.\r\n Restoring a snapshot is not reversible, so restore carefully.",
     "listLabel": "Snapshots",
-    "noSnapshots": "There are no Snapshots to display for this server.",
+    "noSnapshots": "There are no snapshots to display for this server.",
     "errorGettingSnapshots": "Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
     "createSnapshot": "Snapshot now",
     "creatingSnapshot": "Capturing Snapshot",
@@ -3794,6 +3794,7 @@
     "createdDate": "Created Date",
     "createdBy":"Created By",
     "customerReference": "Customer Reference",
+    "dataStore": "datastore",
     "datastoreUsableCapacity": "This datastore has {{value}} GB of usable capacity.",
     "defaultDatastore": "Default Datastore",
     "defaultStorageProfile": "Default Storage Profile",
@@ -3839,6 +3840,7 @@
     "softwareSubscriptions": "Software Subscriptions",
     "sorting": "Sorting",
     "status": "Status",
+    "storageProfile": "storage profile",
     "storageProfileUtilisation": "Storage Profile Utilisation",
     "storageProfileUsableCapacity": "This storage profile has {{value}} GB of usable capacity.",
     "subscription": "Subscription",
@@ -4130,17 +4132,21 @@
       "title": "Delete Snapshot",
       "message": "Deleting <strong>{{snapshot_name}}</strong> cannot be undone.\r\n\nAre you sure you wish to continue?"
     },
-    "snapshotDiskConflict": {
-      "title": "Disk Conflict",
-      "message": "A snapshot cannot be captured for this server as it uses a custom, split-profile disk configuration. Servers with disks that reside on multiple storage profiles do not support snapshotting."
+    "snapshotInsufficientStorageSpace": {
+      "title": "Insufficient Storage Space",
+      "message": "The target {{storage_label}} does not have enough storage space available in order to capture a snapshot.\r\n\nPlease remove any unneeded servers or snapshots and then try again."
     },
-    "snapshotDiskInvalid": {
-      "title": " Invalid Disk Configuration",
-      "message": "A snapshot cannot be raised as this server currently has one or more disks which are not linked to a storage profile.\r\n\nPlease raise a ticket if this is unexpected. In the meantime, this operation may be possible directly within <a href='{{vCloudUrl}}' target='_blank'>vCloud</a>."
+    "snapshotLowStorageSpace": {
+      "title": "Low Storage Space",
+      "message": "The target {{storage_label}}  is running low on storage space.\nIf you continue, the {{storage_label}} will have less than 10% of its available space remaining.\r\n\nAre you sure you wish to continue?"
     },
-    "snapshotInsufficientStorage": {
-      "title": "Insufficient Storage",
-      "message": "The target storage profile does not have enough space available in order to capture a snapshot.\r\n\nPlease remove any unneeded servers or snapshots and then try again. To continue, you must have at least this server's total current size available on the target storage profile."
+    "primaryDiskWarning": {
+      "title": "No Primary Disk",
+      "message": "A snapshot cannot be captured at this time because this server does not have a primary disk, or its primary disk resides on an unknown {{storage_label}}. Please add a new primary disk to this server and try again."
+    },
+    "storageProfileDataStoreDisabledWarning": {
+      "title": "{{storage_label}} Disabled",
+      "message": "A snapshot cannot be captured at this time because this server's primary disk resides on a disabled {{storage_label}}."
     },
     "snapshotRestore": {
       "title": "Restore Server Snapshot",

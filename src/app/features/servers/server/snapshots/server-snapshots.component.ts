@@ -53,7 +53,9 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  convertGbToMb,
+  formatFirstLetterOfEachWordToUpperCase
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -65,8 +67,9 @@ enum SnapshotDialogType {
   Restore,
   Delete,
   InsufficientStorage,
-  DiskConflict,
-  InvalidDisk
+  LowStorage,
+  NoPrimaryDisk,
+  StorageProfileOrDataStoreDisabled
 }
 
 @Component({
@@ -77,7 +80,7 @@ enum SnapshotDialogType {
 export class ServerSnapshotsComponent extends ServerDetailsBase
   implements OnInit, OnDestroy {
 
-  public snapshot$: Observable<McsServerSnapshot>;
+  public snapshot$: Observable<McsServerSnapshot[]>;
   public updatingSnapshot: boolean;
   public capturingSnapshot: boolean;
   public dataStatusFactory: McsDataStatusFactory<McsServerSnapshot[]>;
@@ -128,22 +131,26 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
    */
   public createSnapshot(server: McsServer, resource: McsResource): void {
     let dialogType = this._getDialogTypeByVmStorage(server, resource);
-
+    let serverIsDedicated = server.isDedicated;
     switch (dialogType) {
       case SnapshotDialogType.Create:
         this._showCreateSnapshotDialog(server);
         break;
 
-      case SnapshotDialogType.DiskConflict:
-        this._showDiskConflictDialog();
-        break;
-
       case SnapshotDialogType.InsufficientStorage:
-        this._showInsufficientDiskDialog(resource);
+        this._showInsufficientDiskDialog(resource, serverIsDedicated);
         break;
 
-      case SnapshotDialogType.InvalidDisk:
-        this._showInvalidDiskDialog(server, resource);
+      case SnapshotDialogType.LowStorage:
+        this._showLowStorageDiskDialog(server, serverIsDedicated);
+        break;
+
+      case SnapshotDialogType.NoPrimaryDisk:
+        this._showNoPrimaryDiskDialog(resource, serverIsDedicated);
+        break;
+
+      case SnapshotDialogType.StorageProfileOrDataStoreDisabled:
+        this._showStorageProfileOrDataStoreDisabledDialog(resource, serverIsDedicated);
         break;
     }
   }
@@ -175,35 +182,91 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     this._getServerSnapshots(server);
   }
 
+  private _setStorageLabelMessage(isServerDedicated: boolean): string {
+    return isServerDedicated ?
+      this._translateService.instant('label.dataStore') : this._translateService.instant('label.storageProfile');
+  }
+
   /**
    * Shows insufficient disk dialog
    * @param resource Resource to be checked
    */
-  private _showInsufficientDiskDialog(resource: McsResource): void {
+  private _showInsufficientDiskDialog(resource: McsResource, isDedicated: boolean): void {
+    let storageLabel =  this._setStorageLabelMessage(isDedicated);
     let dialogData = {
       data: resource,
-      type: 'info',
-      title: this._translateService.instant('dialog.snapshotInsufficientStorage.title'),
-      message: this._translateService.instant('dialog.snapshotInsufficientStorage.message', { vdc_name: resource.name })
+      type: 'warning',
+      title: this._translateService.instant('dialog.snapshotInsufficientStorageSpace.title'),
+      message: this._translateService.instant('dialog.snapshotInsufficientStorageSpace.message', { storage_label: storageLabel })
     } as DialogMessageConfig;
 
     this._dialogService.openMessage(dialogData);
   }
 
   /**
-   * Shows the invalid disk dialog
-   * @param server The selected server to which to view the vcloud
-   * @param resource The resource group of the server
+   * Shows low storage disk dialog
+   * @param resource Resource to be checked
    */
-  private _showInvalidDiskDialog(server: McsServer, resource: McsResource): void {
+  private _showLowStorageDiskDialog(server: McsServer, isDedicated: boolean): void {
+    let storageLabel =  this._setStorageLabelMessage(isDedicated);
+    let dialogRef = this._dialogService2.openConfirmation({
+      data: server,
+      title: this._translateService.instant('dialog.snapshotLowStorageSpace.title'),
+      type: DialogActionType.Warning,
+      message: this._translateService.instant('dialog.snapshotLowStorageSpace.message', { storage_label: storageLabel }),
+      confirmText: this._translateService.instant('action.confirm'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
+
+    dialogRef.afterClosed().pipe(
+      tap((result: DialogResult<boolean>) => {
+
+        if (result?.action !== DialogResultAction.Confirm) { return; }
+        let snapshotDetails = new McsServerSnapshotCreate();
+        snapshotDetails.preserveMemory = true;
+        snapshotDetails.preserveState = true;
+        snapshotDetails.clientReferenceObject = {
+          serverId: server.id
+        };
+
+        return this.apiService.createServerSnapshot(server.id, snapshotDetails).pipe(
+          catchError((httpError) => {
+            this._showErrorMessageByResponse(httpError);
+            return throwError(httpError);
+          })
+        ).subscribe();
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Shows server has no primary disk dialog
+   * @param resource Resource to be checked
+   */
+  private _showNoPrimaryDiskDialog(resource: McsResource, isDedicated: boolean): void {
+    let storageLabel =  this._setStorageLabelMessage(isDedicated);
     let dialogData = {
       data: resource,
-      type: 'info',
-      title: this._translateService.instant('dialog.snapshotDiskInvalid.title'),
-      message: this._translateService.instant('dialog.snapshotDiskInvalid.message', {
-        vdc_name: resource.name,
-        vCloudUrl: server.portalUrl
-      })
+      type: 'warning',
+      title: this._translateService.instant('dialog.primaryDiskWarning.title'),
+      message: this._translateService.instant('dialog.primaryDiskWarning.message', { storage_label: storageLabel })
+    } as DialogMessageConfig;
+
+    this._dialogService.openMessage(dialogData);
+  }
+
+  /**
+   * Shows server's primary disk has disabled storage profile/datastore
+   * @param resource Resource to be checked
+   */
+  private _showStorageProfileOrDataStoreDisabledDialog(resource: McsResource, isDedicated: boolean): void {
+    let storageLabel =  this._setStorageLabelMessage(isDedicated);
+    let storageTitle = formatFirstLetterOfEachWordToUpperCase(storageLabel);
+    let dialogData = {
+      data: resource,
+      type: 'warning',
+      title: this._translateService.instant('dialog.storageProfileDataStoreDisabledWarning.title', { storage_label: storageTitle }),
+      message: this._translateService.instant('dialog.storageProfileDataStoreDisabledWarning.message', { storage_label: storageLabel })
     } as DialogMessageConfig;
 
     this._dialogService.openMessage(dialogData);
@@ -244,19 +307,6 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
         ).subscribe();
       })
     ).subscribe();
-  }
-
-  /**
-   * Shows the disk conflict dialog box
-   */
-  private _showDiskConflictDialog(): void {
-    let dialogData = {
-      type: 'info',
-      title: this._translateService.instant('dialog.snapshotDiskConflict.title'),
-      message: this._translateService.instant('dialog.snapshotDiskConflict.message')
-    } as DialogMessageConfig;
-
-    this._dialogService.openMessage(dialogData);
   }
 
   /**
@@ -391,20 +441,34 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
         this.dataStatusFactory.setError();
         return throwError(error);
       }),
-      map((snapshots) => getSafeProperty(snapshots, (obj) => obj.collection[0])),
-      tap((snapshot) => this.dataStatusFactory.setSuccessful([snapshot]))
+      map((snapshots) => getSafeProperty(snapshots, (obj) => obj.collection)),
+      tap((snapshot) => this.dataStatusFactory.setSuccessful([snapshot[0]]))
     );
   }
 
-  /**
-   * Returns true when the disks has multiple storage profiles
-   * @param disks Server disks to be checked for storage profiles
-   */
-  private _hasMultipleStorageProfiles(disks: McsServerStorageDevice[]): boolean {
-    if (isNullOrEmpty(disks)) { return false; }
+  private _getPrimaryDisk(disks: McsServerStorageDevice[]): McsServerStorageDevice {
+    if (isNullOrEmpty(disks)) { return; }
+    let primaryDiskFound = disks.find((disk) => disk.isPrimary);    
+    return primaryDiskFound;
+  }
 
-    let uniqueDisks = getUniqueRecords(disks.slice(), (item) => item.storageProfile);
-    return uniqueDisks.length > 1;
+  private _diskLinkedStorage(
+    primaryDisk: McsServerStorageDevice,
+    storages: McsResourceStorage[],
+    serverDedicated: boolean): McsResourceStorage {
+      if (isNullOrEmpty(primaryDisk) || isNullOrEmpty(storages)) { return; }
+      let diskBelongsToExistingStorage: McsResourceStorage;
+      if (serverDedicated) {
+        diskBelongsToExistingStorage = storages.find((storage) => storage.name === primaryDisk.datastoreName);
+      } else {
+        diskBelongsToExistingStorage = storages.find((storage) => storage.name === primaryDisk.storageProfile);
+      }
+      return diskBelongsToExistingStorage;
+  }
+
+  private _primaryDiskStorageIsEnabled(diskBelongsToExistingStorage: McsResourceStorage): boolean {
+    if(isNullOrEmpty(diskBelongsToExistingStorage)) { return false; }
+    return diskBelongsToExistingStorage.enabled;
   }
 
   /**
@@ -427,33 +491,36 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
    */
   private _getDialogTypeByVmStorage(server: McsServer, resource: McsResource): SnapshotDialogType {
     if (isNullOrEmpty(server.storageDevices)) { return SnapshotDialogType.None; }
-
-    let dialogType: SnapshotDialogType;
-    // Business rule: Customer can't create snapshot if
-    // server has disks with multiple storage profiles
-    let hasMultipleStorageProfiles = this._hasMultipleStorageProfiles(server.storageDevices);
-
-    if (hasMultipleStorageProfiles) {
-      dialogType = SnapshotDialogType.DiskConflict;
-    } else {
-      let storageProfile = server.storageDevices[0].storageProfile;
-      let resourceSizeMb = this._getStorageProfileAvailableMB(resource.storage, storageProfile);
-      if (isNullOrUndefined(resourceSizeMb)) {
-        dialogType = SnapshotDialogType.InvalidDisk;
-        return dialogType;
-      }
-
-      let disksSizeMb = server.storageDevices && server.storageDevices
-        .map((disk) => disk.sizeMB)
-        .reduce((totalSize, currentSize) => totalSize + currentSize);
-      let inSufficientStorage = disksSizeMb > resourceSizeMb;
-
-      dialogType = inSufficientStorage ?
-        SnapshotDialogType.InsufficientStorage :
-        SnapshotDialogType.Create;
+    let serverDedicated = server.isDedicated;
+    let primaryDisk = this._getPrimaryDisk(server.storageDevices);
+    let primaryDiskLinkedStorage = this._diskLinkedStorage(primaryDisk, resource.storage, serverDedicated);
+    if (isNullOrEmpty(primaryDisk) || isNullOrEmpty(primaryDiskLinkedStorage)) {
+      return SnapshotDialogType.NoPrimaryDisk;
     }
 
-    return dialogType;
+    let primaryDiskStorageIsEnabled = this._primaryDiskStorageIsEnabled(primaryDiskLinkedStorage);
+    if (!primaryDiskStorageIsEnabled) {
+      return SnapshotDialogType.StorageProfileOrDataStoreDisabled;
+    }
+
+    let storageProfile = serverDedicated ? primaryDisk.datastoreName : primaryDisk.storageProfile;
+    let disksSizeMb = server.storageDevices && server.storageDevices
+      .map((disk) => disk.sizeMB)
+      .reduce((totalSize, currentSize) => totalSize + currentSize);
+    let serverDisksSizes = disksSizeMb + (server.compute.memoryMB || 0) + convertGbToMb(1);
+    let resourceSizeMb = this._getStorageProfileAvailableMB(resource.storage, storageProfile);
+    let inSufficientStorage = serverDisksSizes > resourceSizeMb;
+    if (inSufficientStorage) {
+      return SnapshotDialogType.InsufficientStorage;
+    }
+
+    let tenPercentOfResourceSizeMb = (resourceSizeMb*10)/100;
+    let lowStorage = (resourceSizeMb - serverDisksSizes) < tenPercentOfResourceSizeMb;
+    if (lowStorage) {
+      return SnapshotDialogType.LowStorage
+    } else {
+      return SnapshotDialogType.Create;
+    }
   }
 
   /**

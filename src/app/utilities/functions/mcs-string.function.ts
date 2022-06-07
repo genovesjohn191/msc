@@ -1,5 +1,6 @@
 const regex = /\w\S*/g;
 const DEFAULT_PHONENUMBER_FORMAT_REGEX: RegExp = /^(\d{4})(\d{3})(\d{3})$/;
+const FIRST_LETTER_OF_EACH_WORD_TO_UPPERCASE_REGEX: RegExp = /(^\w{1})|(\s+\w{1})/g;
 
 /**
  * This will return the inputted string to proper casing
@@ -184,4 +185,8 @@ export function formatStringToPhoneNumber(
     }
   }
   return result;
+}
+
+export function formatFirstLetterOfEachWordToUpperCase(source: string): string {
+  return source.replace(FIRST_LETTER_OF_EACH_WORD_TO_UPPERCASE_REGEX, letter => letter.toUpperCase());
 }
