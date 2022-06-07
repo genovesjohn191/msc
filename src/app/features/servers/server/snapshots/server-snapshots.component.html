@@ -41,7 +41,7 @@
 
       <mcs-data-status [dataStatusFactory]="dataStatusFactory" *ngIf="!capturingSnapshot">
         <mcs-data-status-success mcsDataSuccess>
-          <mcs-grid *ngIf="snapshot$ | async as snapshot">
+          <mcs-grid *ngFor="let snapshot of snapshot$ | async">
             <mcs-grid-row>
               <mcs-grid-column>
                 <mcs-item>

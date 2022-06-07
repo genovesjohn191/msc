@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import {
   map,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -27,6 +28,7 @@ import {
   McsQueryParam,
   McsResource,
   McsResourceStorage,
+  PlatformType,
   RouteKey
 } from '@app/models';
 import { ColumnFilter } from '@app/shared';
@@ -59,6 +61,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
 
   public expandedElement: McsResourceStorage;
   public selectedVdcStorageId: string;
+  
+  private _resourcePlatformIsVcloud: boolean;
 
   constructor(
     _injector: Injector,
@@ -140,7 +144,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
     return this._accessControlService.hasPermission(['OrderEdit']) &&
       storageProfile.enabled &&
       storageProfile.serviceChangeAvailable &&
-      !isNullOrEmpty(storageProfile.serviceId);
+      !isNullOrEmpty(storageProfile.serviceId) &&
+      this._resourcePlatformIsVcloud;
   }
 
   public hasActionsEnabled(resourceDetails: McsResource, resourceStorage: McsResourceStorage): boolean {
@@ -177,7 +182,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
     let optionalHeaders = new Map<string, any>();
 
     return this.resource$.pipe(
-      switchMap((selectedResource) => {
+      switchMap((selectedResource: McsResource) => {
+        this._resourcePlatformIsVcloud = selectedResource.platform === PlatformType.VCloud;
         return this.apiService.getResourceStorages(selectedResource.id, optionalHeaders, queryParam).pipe(
         map(response => new McsMatTableContext(response?.collection,
           response?.totalCollectionCount)
