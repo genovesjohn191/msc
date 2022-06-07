@@ -19,7 +19,9 @@ export interface IMcsApiResourcesService {
   /**
    * Get Resources (MCS API Response)
    */
-  getResources(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResource[]>>;
+  getResources(
+    optionalHeaders?: Map<string, any>,
+    query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResource[]>>;
 
   /**
    * Get resource by ID (MCS API Response)

@@ -26,10 +26,13 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getResources(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResource[]>> {
+  public getResources(optionalHeaders?: Map<string, any>, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResource[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/resources';
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
