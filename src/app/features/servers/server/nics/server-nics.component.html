@@ -8,9 +8,9 @@
       <!-- NICs Table -->
       <table mat-table [dataSource]="nicsDataSource" matSort #sort="matSort">
         <!-- NIC Column -->
-        <ng-container matColumnDef="nic">
-          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="index" disableClear>
-            {{ 'columnHeader.nic' | translate }}
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="name" disableClear>
+            {{ 'columnHeader.name' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
             <ng-container *ngIf="nicIsInProgress(row); else nicIndexTemplate">
@@ -19,7 +19,7 @@
                 mcsTooltipPosition="right"></mcs-loader>
             </ng-container>
             <ng-template #nicIndexTemplate>
-              <span>{{ row.index }}</span>
+              <span>{{ row.name }}</span>
             </ng-template>
           </td>
         </ng-container>
@@ -208,7 +208,7 @@
             [selectedNetwork]="selectedNetwork">
 
             <ng-container mcsManageNetworkHeader>
-              <h2>{{ 'serverNics.editHeading' | translate }} {{ selectedNic.index }}</h2>
+              <h2>{{ 'serverNics.editHeading' | translate }} {{ selectedNic.name }}</h2>
             </ng-container>
 
             <ng-container mcsManageNetworkWarning>

@@ -4009,7 +4009,7 @@
       "message": "Are you sure you want to detach <strong>{{media_name}}</strong> from this server?"
     },
     "nicDelete": {
-      "title": "Delete Nic",
+      "title": "Delete NIC",
       "noMemory": {
         "message": "This server will be restarted.\r\n\nAre you sure you want to delete <strong>{{nic_name}}</strong>?"
       },

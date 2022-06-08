@@ -106,6 +106,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public readonly nicsDataSource: McsTableDataSource2<McsServerNic>;
   public readonly nicsColumns: McsFilterInfo[];
+  public readonly filterPredicate: (filter) => boolean;
 
   public isSnapshotProcessing: boolean;
   public dialogRef: DialogRef<any>;
@@ -122,6 +123,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _nicsDataChange = new BehaviorSubject<McsServerNic[]>(null);
   private _sortDef: MatSort;
   private _sortSubject = new Subject<void>();
+  private _serverIsDedicated: boolean;
 
   private _createNicHandler: Subscription;
   private _updateNicHandler: Subscription;
@@ -176,8 +178,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.manageNetwork = new ServerManageNetwork();
     this.nicMethodType = ServerNicMethodType.AddNic;
     this.nicsDataSource = new McsTableDataSource2(this._getServerNics.bind(this));
+    this.filterPredicate = this._isColumnIncluded.bind(this);
     this.nicsColumns = [
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'nic' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'name' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'network' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'primary' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
@@ -187,7 +190,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     ];
     this.nicsDataSource
       .registerConfiguration(new McsMatTableConfig(false, true))
-      .registerColumnsFilterInfo(this.nicsColumns);
+      .registerColumnsFilterInfo(this.nicsColumns, this.filterPredicate);
   }
 
   @ViewChild('sort')
@@ -211,6 +214,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   public ngOnInit() {
+    this.server$.subscribe(server => this._serverIsDedicated = server.isDedicated);
     this._registerEvents();
   }
 
@@ -219,6 +223,18 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     unsubscribeSafely(this._createNicHandler);
     unsubscribeSafely(this._updateNicHandler);
     unsubscribeSafely(this._deleteNicHandler);
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id === 'primary') {
+      if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
+      return !this._serverIsDedicated;
+    }
+    if (filter.id === 'ipMode') {
+      if (isNullOrUndefined(this._serverIsDedicated)) { return false; }
+      return !this._serverIsDedicated;
+    }
+    return true;
   }
 
   /**
@@ -243,7 +259,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   public canAddNic(server: McsServer, resourceNetworks: McsResourceNetwork[]): boolean {
     return !this.hasReachedNicsLimit(server)
-      && !isNullOrEmpty(resourceNetworks);
+      && !isNullOrEmpty(resourceNetworks)
+      && !this._serverIsDedicated;
   }
 
   /**
@@ -356,7 +373,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   public isEditNicEnabled(server: McsServer, nic: McsServerNic): boolean {
     if (isNullOrEmpty(nic)) { return false; }
-    return server.isSelfManaged || !nic.isPrimary;
+    return !this._serverIsDedicated && (server.isSelfManaged || !nic.isPrimary);
   }
 
   public getPowerStatePermission(server: McsServer): McsServerPermission {
