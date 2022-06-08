@@ -127,10 +127,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
   }
 
   public canRequestCustomChange(serviceId: string): boolean {
-    const serviceCustomChangeFeatureFlag = this._accessControlService.hasAccessToFeature([McsFeatureFlag.OrderingServiceCustomChange]);
-
-    return !isNullOrEmpty(serviceId) && serviceCustomChangeFeatureFlag &&
-            this._accessControlService.hasPermission(['OrderEdit']);
+    return !isNullOrEmpty(serviceId) && this._accessControlService.hasPermission(['OrderEdit']);
   }
 
   public canCreateTicket(serviceId: string): boolean {

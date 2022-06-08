@@ -357,7 +357,6 @@ export class ServerManageNetworkComponent
           netMask.broadcast !== inputValue &&
           netMask.base !== inputValue);
       });
-      debugger;
       return mask?.automationAvailable;
     }
     catch (error) {

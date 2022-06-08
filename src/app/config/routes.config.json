@@ -396,7 +396,6 @@
   "system-message": {
     "enumKey": "SystemMessagePage",
     "navigationPath": "system-message",
-    "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "System Message - Macquarie Cloud Services"
   },
   "servers": {
@@ -689,7 +688,6 @@
     "enumKey": "SystemMessages",
     "navigationPath": "system/messages",
     "requiredPermissions": ["SystemMessageView"],
-    "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "System Messages - Macquarie Cloud Services"
   },
   "systemMessageCreate": {
@@ -697,7 +695,6 @@
     "enumKey": "SystemMessageCreate",
     "navigationPath": "system/messages/create",
     "requiredPermissions": ["SystemMessageEdit"],
-    "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "Create System Message - Macquarie Cloud Services"
   },
   "systemMessageEdit": {
@@ -705,7 +702,6 @@
     "enumKey": "SystemMessageEdit",
     "navigationPath": "system/messages",
     "requiredPermissions": ["SystemMessageEdit"],
-    "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "Edit System Message - Macquarie Cloud Services"
   },
   "tickets": {
@@ -783,14 +779,12 @@
   "catalogSolution": {
     "enumKey": "CatalogSolution",
     "navigationPath": "catalog/solutions",
-    "requiredFeatureFlag": ["EnableCatalogSolutionListing"],
     "requireAllFeatures": true,
     "documentTitle": "Solution Catalog - Macquarie Cloud Services"
   },
   "catalogSolutions": {
     "enumKey": "CatalogSolutions",
     "navigationPath": "catalog/solutions",
-    "requiredFeatureFlag": ["EnableCatalogSolutionListing"],
     "requireAllFeatures": true,
     "documentTitle": "Solution Catalog - Macquarie Cloud Services"
   },
@@ -858,7 +852,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/services/custom",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrderingServiceCustomRequest"],
     "requireAllFeatures": true,
     "documentTitle": "Custom Change - Macquarie Cloud Services"
   },
@@ -867,7 +860,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/hosted-dns",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrderingDnsCustomRequest"],
     "requireAllFeatures": true,
     "documentTitle": "Hosted DNS Change - Macquarie Cloud Services"
   },

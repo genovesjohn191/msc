@@ -200,13 +200,11 @@ export class CatalogComponent implements OnInit, OnDestroy {
         });
         catalogOptions.push(new McsOption(products, catalogTypeText[CatalogType.Products]));
 
-        if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.CatalogSolutionListing)) {
-          let solutions = createObject(CatalogItem, {
-            type: CatalogType.Solutions,
-            content: catalog.solutionCatalog
-          });
-          catalogOptions.push(new McsOption(solutions, catalogTypeText[CatalogType.Solutions]));
-        }
+        let solutions = createObject(CatalogItem, {
+          type: CatalogType.Solutions,
+          content: catalog.solutionCatalog
+        });
+        catalogOptions.push(new McsOption(solutions, catalogTypeText[CatalogType.Solutions]));
 
         return catalogOptions;
       }),

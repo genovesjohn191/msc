@@ -63,11 +63,7 @@ export class ContextMenuLinkComponent {
   }
 
   public canRequestCustomChange() {
-    const serviceCustomChangeFeatureFlag = this._accessControlService.hasAccessToFeature([McsFeatureFlag.OrderingServiceCustomChange]);
-
-    return this._serviceChangeAvailable &&
-          serviceCustomChangeFeatureFlag &&
-          this._accessControlService.hasPermission(['OrderEdit']);
+    return this._serviceChangeAvailable && this._accessControlService.hasPermission(['OrderEdit']);
   }
 
   public hasActionsEnabled() {

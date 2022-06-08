@@ -2,7 +2,6 @@ export enum McsFeatureFlag {
   OAuthV2 = 'EnableOAuthV2',
   MaintenanceMode = 'EnableMaintenanceMode',
   BypassSessionInactivityTimeout = 'EnableBypassSessionInactivityTimeout',
-  SystemMessages = 'EnableSystemMessages',
   LaunchPad = 'EnableLaunchPad',
   Crisp = 'EnableCrisp',
   DashboardProjects = 'EnableLaunchPadDashboardProjects',
@@ -29,8 +28,6 @@ export enum McsFeatureFlag {
 
   PublicCloudResourceListing = 'EnablePublicCloudResourceListing',
 
-  CatalogSolutionListing = 'EnableCatalogSolutionListing',
-
   MediaCatalog = 'EnableMediaCatalog',
   ResourceMediaUpload = 'EnableResourceMediaUpload',
 
@@ -42,7 +39,6 @@ export enum McsFeatureFlag {
   DedicatedVmNicView = 'EnableDedicatedVmNicView',
   DedicatedVmStorageView = 'EnableDedicatedVmStorageView',
 
-  OrderingServiceCustomChange = 'EnableOrderingServiceCustomRequest',
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingStretchedVdcStorageExpand = 'EnableOrderingStretchedVdcStorageExpand',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',

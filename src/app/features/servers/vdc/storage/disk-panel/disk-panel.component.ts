@@ -95,8 +95,7 @@ export class DiskPanelComponent implements OnDestroy {
   }
 
   public canRequestCustomChange(serviceId: string): boolean {
-    const hasAccessToCustomChange = this._accessControlService.hasAccessToFeature([McsFeatureFlag.OrderingServiceCustomChange]);
-    return !isNullOrEmpty(serviceId) && hasAccessToCustomChange && this._accessControlService.hasPermission(['OrderEdit']);
+    return !isNullOrEmpty(serviceId) && this._accessControlService.hasPermission(['OrderEdit']);
   }
 
   public canCreateTicket(serviceId: string): boolean {
