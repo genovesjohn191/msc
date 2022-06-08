@@ -59,7 +59,7 @@
           </cdk-virtual-scroll-viewport>
 
           <div padding-small *ngIf="treeControl?.dataNodes?.length === 0">
-            {{ 'message.noRecordsFound' | translate }}
+            {{ noItemsText }}
           </div>
 
           <div padding-small *ngIf="processOnGoing$ | async">
@@ -82,7 +82,7 @@
     </ng-container>
 
     <div padding-small *ngIf="treeControl?.dataNodes?.length === 0">
-      {{ 'message.noRecordsFound' | translate }}
+      {{ noItemsText }}
     </div>
 
     <div padding-small *ngIf="processOnGoing$ | async">

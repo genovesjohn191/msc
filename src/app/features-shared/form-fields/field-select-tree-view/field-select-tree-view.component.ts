@@ -105,6 +105,9 @@ export class FieldSelectTreeViewComponent<TEntity>
   @Input()
   public selectAllByDefault: boolean = false;
 
+  @Input()
+  public noRecordsFoundText: string;
+
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
   public viewportHeight: string;
@@ -146,6 +149,10 @@ export class FieldSelectTreeViewComponent<TEntity>
     this.fcTreeSearch = new FormControl();
 
     this.registerCustomControls(this.fcTreeSearch);
+  }
+
+  public get noItemsText(): string {
+    return this.noRecordsFoundText || this.translate.instant('message.noRecordsFound');
   }
 
   public ngOnInit(): void {

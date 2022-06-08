@@ -135,9 +135,7 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
   private _subscribeToServers(): void {
     this._apiService.getServers().pipe(
       tap(result => {
-        if (isNullOrEmpty(result?.collection)) { return; }
-
-        let filteredServers = result.collection.filter(vm => {
+        let filteredServers = result.collection?.filter(vm => {
           if (vm.platform?.type !== PlatformType.VCloud) { return false; }
 
           let dedicatedFlag = this._accessControl
@@ -146,7 +144,7 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
         });
 
         let serverGroups = new Array<McsOptionGroup>();
-        filteredServers.forEach(server => {
+        filteredServers?.forEach(server => {
           let resourceName = server.resourceName || 'Others';
           let serverOption = new McsOption(
             server.id,
