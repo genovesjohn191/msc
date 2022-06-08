@@ -618,15 +618,13 @@ export class McsApiService {
     );
   }
 
-  public getResources(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResource>> {
-    if (!isNullOrEmpty(optionalHeaders)) {
-      return this._resourcesApi.getResources(optionalHeaders).pipe(
-        catchError((error) =>
-          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcesWithCustomHeaders'))
-        ),
-        map((response) => this._mapToCollection(response.content, response.totalCount))
-      );
-    }
+  public getResources(optionalHeaders?: Map<string, any>, query?: McsQueryParam): Observable<McsApiCollection<McsResource>> {
+    return this._resourcesApi.getResources(optionalHeaders, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcesWithCustomHeaders'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
 
     let dataCollection = isNullOrEmpty(query) ?
       this._resourcesRepository.getAll() :

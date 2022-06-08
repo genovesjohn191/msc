@@ -18,7 +18,8 @@ import {
   McsResource,
   ServiceType,
   serviceTypeText,
-  PlatformType
+  PlatformType,
+  McsQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -90,7 +91,10 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
 
-    return this._apiService.getResources(null, optionalHeaders).pipe(
+    let param = new McsQueryParam();
+    param.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+
+    return this._apiService.getResources(optionalHeaders, param).pipe(
       takeUntil(this.destroySubject),
       map((response) => {
         //filter out non-VDC resources - e.g. clusters
