@@ -65,7 +65,7 @@
         {{ 'accountPanel.knowledgeBase' | translate }}
       </a>
     </mcs-list-item>
-    <mcs-list-item *mcsAccessControl="['SystemMessageView']; feature: 'EnableSystemMessages'">
+    <mcs-list-item *mcsAccessControl="['SystemMessageView']">
       <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.SystemMessages"
         (click)="notifySelectionChange('messages')"
         mcsId="system-message-link"

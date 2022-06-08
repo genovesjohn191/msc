@@ -110,9 +110,6 @@ export class McsSystemMessageService implements McsDisposable {
    */
   @LogIgnore()
   private _onRouteChange(): void {
-    let hasSystemMessageFeatureFlag = this._accessControlService.hasAccessToFeature(McsFeatureFlag.SystemMessages);
-    if (!hasSystemMessageFeatureFlag) { return; }
-
     this._activeMessageServiceReference.subscribe((message) => {
       if (isNullOrEmpty(message)) {
         this._eventDispatcher.dispatch(McsEvent.systemMessageHide);

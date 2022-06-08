@@ -228,12 +228,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   public get catalogLinkText(): string {
-    let hasSolutionCatalogAccess = this._accessControlService.hasAccessToFeature([McsFeatureFlag.CatalogSolutionListing]);
-    if (hasSolutionCatalogAccess) {
-      return this._translateService.instant(`navigation.productsAndSolutions`);
-    }
-
-    return this._translateService.instant(`navigation.catalog`);
+    return this._translateService.instant(`navigation.productsAndSolutions`);
   }
 
   public getCategoryLabel(routeCategory: RouteCategory): string {
