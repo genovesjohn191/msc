@@ -107,6 +107,8 @@ export class FieldSelectTreeViewComponent<TEntity>
 
   @Input()
   public noRecordsFoundText: string;
+
+  @Input()
   public autoClearSelection: boolean = true;
 
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
