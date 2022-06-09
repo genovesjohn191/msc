@@ -46,6 +46,9 @@ export class DynamicFormValidationService {
     if (control.hasError('unique')) {
       return 'Value must be unique.';
     }
+    if (control.hasError('duplicateNameOnNetworkPanels')) {
+      return 'Network name cannot match another network you are attempting to create for this customer.';
+    }
     if (control.hasError('domain')) {
       return 'Incorrect domain format';
     }

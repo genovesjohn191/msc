@@ -39,6 +39,7 @@ import { DynamicSelectServiceComponent} from './select-service/select-service.co
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 import { DynamicSelectTenantComponent } from './select-tenant/select-tenant.component';
 import { DynamicSelectTerraformModuleTypeComponent } from './select-terraform-module-type/select-terraform-module-type.component';
+import { DynamicSelectPodsComponent } from './select-pods/select-pods.component';
 import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
 import { DynamicSelectVmComponent } from './select-vm/select-vm.component';
 import { DynamicSelectComponent } from './select/select.component';
@@ -55,6 +56,7 @@ import { DynamicSelectResourceGroupComponent } from './select-resource-group/sel
 import { DynamicSelectAzureResourceComponent } from './select-azure-resource/select-azure-resource.component';
 import { DynamicSelectFortiManagerComponent } from './select-forti-manager/select-forti-manager.component';
 import { DynamicSelectFortiAnalyzerComponent } from './select-forti-analyzer/select-forti-analyzer.component';
+import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -102,6 +104,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectStorageProfileComponent,
   DynamicSelectTenantComponent,
   DynamicSelectTerraformModuleTypeComponent,
+  DynamicSelectPodsComponent,
   DynamicSelectVdcComponent,
   DynamicSelectVmComponent,
   DynamicSelectVmSizeComponent,
@@ -110,7 +113,8 @@ const exports: any[] | Type<any> = [
 
 @NgModule({
   imports: [
-    SharedModule
+    SharedModule,
+    FormFieldsModule,
   ],
   declarations: [...exports],
   exports: [...exports]

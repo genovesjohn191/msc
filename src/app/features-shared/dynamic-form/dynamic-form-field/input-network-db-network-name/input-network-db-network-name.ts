@@ -1,5 +1,6 @@
 import { ValidatorFn } from '@angular/forms';
 import { CoreValidators } from '@app/core';
+import { McsMultiJobFormConfig } from '@app/models';
 import { CommonDefinition } from '@app/utilities';
 import {
   DynamicFormControlSettings,
@@ -17,6 +18,8 @@ export class DynamicInputNetworkDbNetworkNameField extends DynamicInputTextField
 
   public whitelist: Array<string> = [];
   public nameUniquenessValidator?: (inputValue: any) => boolean = () => true;
+  public duplicateNameOnPanelsValidator?: (inputValue: any) => boolean = () => true;
+  public networkItems?: McsMultiJobFormConfig[];
 
   public constructor(options: {
     key: string;
@@ -31,10 +34,12 @@ export class DynamicInputNetworkDbNetworkNameField extends DynamicInputTextField
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
     settings?: DynamicFormControlSettings;
     whitelist?: Array<string>;
+    networkItems?: McsMultiJobFormConfig[];
   }) {
     super(options);
 
     this.whitelist = options.whitelist || [];
+    this.networkItems = options.networkItems;
   }
 
   public configureValidators(validators: ValidatorFn[]) {
@@ -42,6 +47,10 @@ export class DynamicInputNetworkDbNetworkNameField extends DynamicInputTextField
     validators.push(CoreValidators.custom(
       this.nameUniquenessValidator.bind(this),
       'unique'
+    ));
+    validators.push(CoreValidators.custom(
+      this.duplicateNameOnPanelsValidator.bind(this),
+      'duplicateNameOnNetworkPanels'
     ));
   }
 }

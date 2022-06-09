@@ -1,0 +1,15 @@
+mat-expansion-panel {
+  &.invalid-form {
+    border: 1px solid $color-red-00;
+  }
+
+  &:not(.invalid-form) {
+    border: none;
+  }
+
+  mat-expansion-panel-header.mat-expansion-panel-header:not(.mat-expanded) {
+    .mat-expansion-indicator {
+      margin-bottom: 12px;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<div [disabled]="reservationLoading">
+  <mcs-field-select-tree-view #treeViewSelect size="large"
+    [formControl]="inputCtrl"
+    [label]="config.label"
+    [hideChips]="false"
+    [multiple]="true"
+    [dataSource]="datasource"
+    [expandFirst]="true"
+    [selectAllByDefault]="false"
+    [autoClearSelection]="false"
+    [alwaysShowPanel]="true">
+  </mcs-field-select-tree-view>
+</div>

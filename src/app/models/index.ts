@@ -170,6 +170,7 @@ export * from './request/mcs-resource-catalog-item-create';
 export * from './request/mcs-workflow-create';
 export * from './request/mcs-catalog-enquiry-request';
 export * from './request/mcs-network-db-network-create';
+export * from './request/mcs-network-db-network-create-item';
 export * from './request/mcs-network-dns-record-request';
 export * from './request/mcs-network-db-network-delete';
 export * from './request/mcs-network-db-network-update'
@@ -425,6 +426,7 @@ export * from './common/mcs-report-params';
 export * from './common/mcs-object-project-params';
 export * from './common/mcs-report-inefficient-vm-params';
 export * from './common/mcs-report-update-management-params';
+export * from './common/mcs-multi-job-form-config';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

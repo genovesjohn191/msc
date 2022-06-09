@@ -7,7 +7,6 @@ import {
   Component
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { McsIpValidatorService } from '@app/core';
 import {
   McsNetworkDbNetwork,
   McsNetworkDbNetworkQueryParams
@@ -31,8 +30,7 @@ import { DynamicInputNetworkDbNetworkNameField } from './input-network-db-networ
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DynamicInputNetworkDbNetworkNameComponent),
       multi: true
-    },
-    McsIpValidatorService
+    }
   ],
   host: {
     '(blur)': 'onTouched()'
@@ -44,6 +42,7 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
   // Filter variables
   private _companyId: string = null;
   private _unique: boolean = true;
+  private _hasDuplicateNameWithinPanels: boolean = true;
 
   public constructor(
     private _apiService: McsApiService,
@@ -65,6 +64,9 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
   public uniquenessValidator(inputValue: any): boolean {
     return this._unique;
   }
+  public duplicateNameInPanelsValidator(inputValue: any): boolean {
+    return this._hasDuplicateNameWithinPanels;
+  }
 
   public focusOut(inputValue: string): void {
     // Check if name is whitelisted
@@ -75,7 +77,6 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
       this.valueChange(inputValue);
       return;
     }
-
     this.isLoading = true;
 
     let queryParam = new McsNetworkDbNetworkQueryParams();
@@ -98,6 +99,7 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
         match = result.collection.find(item => item.companyId=== this._companyId
           && item.name.trim() === inputValue.trim());
       }
+      this._hasDuplicateNameWithinPanels = this._hasDuplicateNameWithinNetworkPanels();
       this._unique = isNullOrUndefined(match);
       this.valueChange(inputValue);
     })
@@ -105,5 +107,16 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
 
   private _configureValidators() {
     this.config.nameUniquenessValidator = this.uniquenessValidator.bind(this);
+    this.config.duplicateNameOnPanelsValidator = this.duplicateNameInPanelsValidator.bind(this);
+  }
+
+  private _hasDuplicateNameWithinNetworkPanels(): boolean {
+    let panelWithNameValue = this.config.networkItems?.filter((item) => {
+      let itemCompanyValue = isNullOrEmpty(item.dynamicFormConfig[0]?.value) ? null : item.dynamicFormConfig[0]?.value[0]?.value;
+      let sameCompany = itemCompanyValue === this._companyId;
+      let sameNetworkName =  item.dynamicFormConfig[2].value === this.config.value;
+      return sameCompany && sameNetworkName;
+    });
+    return panelWithNameValue?.length <= 1;
   }
 }

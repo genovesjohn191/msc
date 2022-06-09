@@ -1,18 +1,7 @@
 import { JsonProperty } from '@app/utilities';
+import { McsNetworkDbNetworkCreateItem } from './mcs-network-db-network-create-item';
 
 export class McsNetworkDbNetworkCreate {
   @JsonProperty()
-  public companyId: string = undefined;
-
-  @JsonProperty()
-  public name: string = undefined;
-
-  @JsonProperty()
-  public serviceId: string = undefined;
-
-  @JsonProperty()
-  public description: string = undefined;
-
-  @JsonProperty()
-  public useCaseId: number = undefined;
+  public networks: McsNetworkDbNetworkCreateItem[] = undefined;
 }
