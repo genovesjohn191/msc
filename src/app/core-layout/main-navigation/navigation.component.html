@@ -332,7 +332,7 @@
         </a>
         <ul *ngIf="showPublicCloudMenu">
           <!-- Dashboard -->
-          <li *mcsAccessControl="[]; feature: 'EnablePublicCloudDashboard'">
+          <li>
             <a (click)="toggleThis('showDashboardSubmenu')"
               [class.active]="selectedCategory === routerCategoryEnum.Dashboard"
               mcsId="dashboard-link">

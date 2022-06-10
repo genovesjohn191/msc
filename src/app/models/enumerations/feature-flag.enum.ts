@@ -14,7 +14,6 @@ export enum McsFeatureFlag {
   AzureReservations = 'EnableAzureReservations',
   AzureSoftwareSubscriptions = 'EnablePublicCloudSoftwareSubscriptionListing',
 
-  PublicCloudDashboard = 'EnablePublicCloudDashboard',
   AscAlert = 'EnableAscAlertListing',
   PlatformSecurityAdvisory = 'EnablePlatformSecurityAdvisoryListing',
   AzureServiceRequestSltReport = 'EnableAzureServiceRequestSltReport',

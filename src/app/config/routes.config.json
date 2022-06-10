@@ -283,16 +283,14 @@
     "enumCategory": "Dashboard",
     "navigationPath": "dashboard/overview",
     "enumPlatform": "Public",
-    "documentTitle": "Public Cloud Overview - Macquarie Cloud Services",
-    "requiredFeatureFlag": "EnablePublicCloudDashboard"
+    "documentTitle": "Public Cloud Overview - Macquarie Cloud Services"
   },
   "reportInsights": {
     "enumKey": "ReportInsights",
     "enumCategory": "Dashboard",
     "navigationPath": "dashboard/insights",
     "enumPlatform": "Public",
-    "documentTitle": "Public Cloud Insights - Macquarie Cloud Services",
-    "requiredFeatureFlag": "EnablePublicCloudDashboard"
+    "documentTitle": "Public Cloud Insights - Macquarie Cloud Services"
   },
   "azure": {
     "enumKey": "Azure",
