@@ -40,6 +40,10 @@ export class McsFilterService {
     let defaultSettings = defaultFilters;
     if (isNullOrEmpty(savedSettings)) { return defaultSettings; }
 
+    savedSettings.splice(savedSettings.findIndex((setting) =>{
+      return setting.id === "leftPanelFilter";
+    }), 1);
+
     let comparisonResult = compareArrays(
       Array.from(savedSettings),
       Array.from(defaultSettings),

@@ -6,6 +6,10 @@
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'plannedWorkListing.details.overview.basicInformation.label' | translate }}</h2>
         </ng-container>
+          <mcs-item *mcsAccessControl="['PlannedWorkInternalView']; feature: []">
+            <span>{{ 'plannedWorkListing.details.overview.basicInformation.parentReferenceId' | translate }}</span>
+            <span [innerHTML]="selectedPlannedWork.parentReferenceId | mcsDataLabel: 'Unknown'"></span>
+          </mcs-item>
           <mcs-item>
             <span>{{ 'plannedWorkListing.details.overview.basicInformation.referenceId' | translate }}</span>
             <span [innerHTML]="selectedPlannedWork.referenceId | mcsDataLabel: 'Unknown'"></span>

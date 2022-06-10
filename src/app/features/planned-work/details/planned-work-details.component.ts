@@ -17,6 +17,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
+  isDevMode,
   OnDestroy,
   OnInit,
   ViewChild
@@ -133,6 +134,16 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
   public get routeKeyEnum(): any {
     return RouteKey;
   }
+
+  public get tracksPlannedWorkUrl(): string {
+    let tracksUrl = "";
+    if (isDevMode()) {
+      tracksUrl = CommonDefinition.TRACKS_DEV_URL;
+    } else {
+      tracksUrl = CommonDefinition.TRACKS_PROD_URL;
+    }
+    return `${tracksUrl}/change_task.do?sys_id=`;
+  }
   
   public get selectedPlannedWorkId(): string {
     return this._plannedWorkDetailsService.getPlannedWorkId();
@@ -150,6 +161,11 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
         .subscribe(blobResponse => {
           saveAs(blobResponse, this._plannedWorkDetailsService.getPlannedWorkIcsFileName());
         });
+  }
+
+  public openTracks(uuid: string): string {
+    let plannedWorkId = uuid.replace(/-/g, "");
+    return `${this.tracksPlannedWorkUrl}${plannedWorkId}`
   }
 
   private _getPlannedWorkList(

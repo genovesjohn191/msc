@@ -50,7 +50,10 @@ export class McsPlannedWork extends McsEntityBase {
 
   @JsonProperty()
   public outageDurationMinutes: number = undefined;
-  
+
+  @JsonProperty()
+  public parentReferenceId: string = undefined;
+
   /**
    * Returns the status label equivalent
    */

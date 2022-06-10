@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsAccessControlService,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -51,6 +52,7 @@ export class PlannedWorkListingComponent extends McsPageBase {
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'id' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'parentReferenceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'referenceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
@@ -64,6 +66,7 @@ export class PlannedWorkListingComponent extends McsPageBase {
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
@@ -125,6 +128,12 @@ export class PlannedWorkListingComponent extends McsPageBase {
   private _isColumnIncluded(filter: McsFilterInfo): boolean {
     if (filter.id === 'id') {
       return false;
+    }
+
+    if (filter.id === 'parentReferenceId') {
+      return this._accessControlService.hasPermission([
+        'PlannedWorkInternalView'
+      ]);
     }
     return true;
   }

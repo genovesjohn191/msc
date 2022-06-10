@@ -67,6 +67,17 @@
         </td>
       </ng-container>
 
+      <!-- Parent Reference Id Column -->
+      <ng-container matColumnDef="parentReferenceId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="parentReferenceId" disableClear>
+          {{ 'columnHeader.parentReferenceId' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <span [innerHTML]="row.parentReferenceId | mcsDataLabel: 'Unknown'">
+          </span>
+        </td>
+      </ng-container>
+
       <!-- Reference Id Column -->
       <ng-container matColumnDef="referenceId">
         <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="referenceId" disableClear>
