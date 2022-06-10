@@ -17,7 +17,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
-  isDevMode,
   OnDestroy,
   OnInit,
   ViewChild
@@ -48,6 +47,7 @@ import {
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 import { PlannedWorkDetailsService } from './planned-work-details.service';
+import { McsApiClientConfig } from '@app/api-client';
 
 type tabGroupType = 'overview' | 'affected-services';
 
@@ -73,6 +73,7 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
   public constructor(
     _injector: Injector,
     _translate: TranslateService,
+    private _config: McsApiClientConfig,
     private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
@@ -137,7 +138,8 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
 
   public get tracksPlannedWorkUrl(): string {
     let tracksUrl = "";
-    if (isDevMode()) {
+    let isRunningInlab = this._config.apiHost.match('lab');
+    if (isRunningInlab) {
       tracksUrl = CommonDefinition.TRACKS_DEV_URL;
     } else {
       tracksUrl = CommonDefinition.TRACKS_PROD_URL;
