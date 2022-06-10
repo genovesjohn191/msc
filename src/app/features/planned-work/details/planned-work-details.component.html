@@ -53,6 +53,15 @@
                 [disabled]="isDownloadingIcs">
                 {{ 'plannedWorkListing.details.action.downloadIcs' | translate }}
               </button>
+              <a mat-menu-item
+                [href]="openTracks((selectedPlannedWork$ | async)?.id)"
+                target="_blank"
+                mcsId="open-tracks"
+                mcsEventTracker="open-tracks"
+                mcsEventCategory="planned-work"
+                mcsEventLabel="planned-work-details-page">
+                {{ 'plannedWorkListing.details.action.openTracks' | translate }}
+              </a>
             </mat-menu>
             <button mat-icon-button [matMenuTriggerFor]="actionMenu">
               <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>

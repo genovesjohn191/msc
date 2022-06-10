@@ -2517,12 +2517,14 @@
     "details": {
       "header": "Planned Work ",
       "action": {
-        "downloadIcs": "Download Calendar Entry"
+        "downloadIcs": "Download Calendar Entry",
+        "openTracks": "Open Tracks"
       },
       "overview": {
         "tabName": "Overview",
         "basicInformation": {
             "label": "Basic Information",
+            "parentReferenceId":"Parent Reference ID: ",
             "referenceId": "Reference ID: ",
             "status": "Status: ",
             "type": "Type: ",
@@ -3588,6 +3590,7 @@
     "osType": "OS Type",
     "outageDurationMinutes": "Outage Duration",
     "parent": "Parent",
+    "parentReferenceId": "Parent Reference ID",
     "plan": "Plan",
     "plannedStart": "Planned Start",
     "plannedEnd": "Planned End",

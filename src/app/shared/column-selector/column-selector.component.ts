@@ -97,9 +97,9 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnDestroy 
     let savedFilters = this._filterService.getFilterSettings(this.storageKey);
     let updatedFilters = this.filters;
 
-    updatedFilters?.forEach(updatedFilter => {
-      addOrUpdateArrayRecord(savedFilters, updatedFilter, true,
-        savedFilter => savedFilter.id === updatedFilter.id);
+    updatedFilters?.forEach((updatedFilter, i) => {
+      addOrUpdateArrayRecord(savedFilters, updatedFilter, false,
+        savedFilter => savedFilter.id === updatedFilter.id, i);
     });
 
     this._filterService.saveFilterSettings(this.storageKey, savedFilters);
