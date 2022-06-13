@@ -68,7 +68,7 @@ export class FieldSelectMonthPeriodComponent
     let currentYear = currentDate.getFullYear();
 
     for (let ctr = 0; ctr < 12; ctr++) {
-      let from = new Date(new Date().setMonth(currentDate.getMonth() - ctr));
+      let from = new Date(new Date().setMonth(currentDate.getMonth() - ctr, 1));
       let label = months[from.getMonth()];
       if (currentYear !== from.getFullYear()) {
         label += ` ${from.getFullYear()}`;
