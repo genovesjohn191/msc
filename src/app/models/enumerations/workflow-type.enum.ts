@@ -39,6 +39,8 @@ export enum WorkflowType {
   FirewallProvisionAdom = 'launchpad.firewall.provisionAdom',
   FirewallAllocate = 'launchpad.firewall.allocatePhysical',
   FirewallDeprovision = 'launchpad.firewall.deprovisionPhysical',
+  FirewallUpgrade = 'launchpad.firewall.upgrade',
+  FirewallAssessUpgradeReadiness = 'launchpad.firewall.assessUpgradeReadiness',
 }
 
 /**

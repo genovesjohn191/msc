@@ -158,7 +158,9 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.FirewallProvisionAdom,
         WorkflowGroupId.FirewallAllocate,
         WorkflowGroupId.FirewallProvision,
-        WorkflowGroupId.FirewallDeprovision
+        WorkflowGroupId.FirewallDeprovision,
+        WorkflowGroupId.FirewallAssessUpgradeReadiness,
+        WorkflowGroupId.FirewallUpgrade
       ]
     ],
 
@@ -171,7 +173,9 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.FirewallProvisionAdom,
         WorkflowGroupId.VfwAllocate,
         WorkflowGroupId.VfwProvision,
-        WorkflowGroupId.VfwDeprovision
+        WorkflowGroupId.VfwDeprovision,
+        WorkflowGroupId.FirewallAssessUpgradeReadiness,
+        WorkflowGroupId.FirewallUpgrade
       ]
     ],
 
@@ -465,7 +469,9 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
         WorkflowGroupId.FirewallProvisionAdom,
         WorkflowGroupId.VfwAllocate,
         WorkflowGroupId.VfwProvision,
-        WorkflowGroupId.VfwDeprovision
+        WorkflowGroupId.VfwDeprovision,
+        WorkflowGroupId.FirewallAssessUpgradeReadiness,
+        WorkflowGroupId.FirewallUpgrade
       ]
     ],
 

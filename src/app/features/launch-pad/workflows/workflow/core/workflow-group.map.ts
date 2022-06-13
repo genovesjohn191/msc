@@ -33,6 +33,8 @@ import {
   FirewallAllocateWorkflowGroup,
   VfwProvisionWorkflowGroup,
   FirewallProvisionWorkflowGroup,
+  FirewallUpgradeWorkflowGroup,
+  FirewallAssessUpgradeReadinessWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 
@@ -75,7 +77,8 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.FirewallProvisionAdom, FirewallProvisionAdomWorkflowGroup],
   [ WorkflowGroupId.FirewallProvision, FirewallProvisionWorkflowGroup],
   [ WorkflowGroupId.VfwDeprovision, VfwDeprovisionWorkflowGroup ],
-  [ WorkflowGroupId.FirewallProvisionAdom, FirewallProvisionAdomWorkflowGroup],
   [ WorkflowGroupId.FirewallAllocate, FirewallAllocateWorkflowGroup ],
   [ WorkflowGroupId.FirewallDeprovision, FirewallDeprovisionWorkflowGroup ],
+  [ WorkflowGroupId.FirewallUpgrade, FirewallUpgradeWorkflowGroup],
+  [ WorkflowGroupId.FirewallAssessUpgradeReadiness, FirewallAssessUpgradeReadinessWorkflowGroup]
 ]);
