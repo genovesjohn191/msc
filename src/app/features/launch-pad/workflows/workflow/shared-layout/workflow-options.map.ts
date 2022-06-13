@@ -41,4 +41,6 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.FirewallProvisionAdom, 'Provision Firewall ADOM'],
   [WorkflowGroupId.FirewallAllocate, 'Allocate Physical Firewall'],
   [WorkflowGroupId.FirewallDeprovision, 'Deprovision Physical Firewall'],
+  [WorkflowGroupId.FirewallUpgrade, 'Upgrade Firewall'],
+  [WorkflowGroupId.FirewallAssessUpgradeReadiness, 'Assess Firewall Upgrade Readiness'],
 ]);

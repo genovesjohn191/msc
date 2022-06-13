@@ -46,6 +46,8 @@ export enum WorkflowGroupId {
   FirewallDeprovision = 900004,
   FirewallProvision = 900005,
   FirewallProvisionAdom = 900006,
+  FirewallUpgrade = 900007,
+  FirewallAssessUpgradeReadiness = 900008,
 }
 
 export const workflowGroupIdText = {
@@ -88,5 +90,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.VfwDeprovision]: 'Deprovision Virtual Firewall',
   [WorkflowGroupId.FirewallAllocate]: 'Allocate Physical Firewall',
   [WorkflowGroupId.FirewallDeprovision]: 'Deprovision Physical Firewall',
+  [WorkflowGroupId.FirewallUpgrade]: 'Upgrade Firewall',
+  [WorkflowGroupId.FirewallAssessUpgradeReadiness]: 'Assess Firewall Upgrade Readiness',
 }
 
