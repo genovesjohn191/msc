@@ -1,5 +1,6 @@
 /** Services */
-import { SwitchAccountService } from './shared';
+
+import { SwitchAccountService } from '@app/core';
 import { UserPanelService } from './header';
 
 /**

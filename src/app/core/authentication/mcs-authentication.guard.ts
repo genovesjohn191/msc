@@ -11,24 +11,35 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import {
+  McsCompany,
   McsFeatureFlag,
   RouteKey
 } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  compareStrings,
+  isNullOrEmpty
+} from '@app/utilities';
 
 import { McsNavigationService } from '../services/mcs-navigation.service';
 import { McsAccessControlService } from './mcs-access-control.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { McsAuthenticationService } from './mcs-authentication.service';
+import { McsApiService } from '@app/services';
+import { McsCookieService } from '../services/mcs-cookie.service';
+import { SwitchAccountService } from '../services/switch-account.service';
 
 @Injectable()
 export class McsAuthenticationGuard implements CanActivate {
-
+  private _activeCompany: McsCompany;
   constructor(
+    private _apiService: McsApiService,
     private _authenticationService: McsAuthenticationService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _accesscontrolService: McsAccessControlService,
-    private _navigationService: McsNavigationService
+    private _cookieService: McsCookieService,
+    private _navigationService: McsNavigationService,
+    private _switchAccountService: SwitchAccountService
   ) { }
 
   public canActivate(
@@ -37,6 +48,10 @@ export class McsAuthenticationGuard implements CanActivate {
   ): Observable<boolean> {
     if (this._authenticationIdentity.isAuthenticated) { return of(true); }
 
+    if (!isNullOrEmpty(_activatedRoute.queryParams?._companyId)) {
+      this._getCurrentActiveCompany(_activatedRoute.queryParams._companyId);
+    }
+
     // We need to update the return url here in order to cater the scenario
     // where the user manually entered the url while no user logged-in
     // and also we need to consider internal users that has catalog permissions.
@@ -44,6 +59,10 @@ export class McsAuthenticationGuard implements CanActivate {
 
     return this._authenticationService.authenticateUser().pipe(
       exhaustMap(identity => {
+        if (!isNullOrEmpty(_activatedRoute.queryParams?._companyId)) {
+          this._updateActiveAccount(_activatedRoute.queryParams._companyId);
+        }
+
         if (this._accesscontrolService.hasAccessToFeature(McsFeatureFlag.MaintenanceMode)) {
           this._navigationService.navigateTo(RouteKey.Maintenance);
           return of(false);
@@ -60,5 +79,24 @@ export class McsAuthenticationGuard implements CanActivate {
         return of(!isNullOrEmpty(identity));
       })
     );
+  }
+
+  private _getCurrentActiveCompany(companyId: string) {
+    this._apiService.getCompany(companyId).subscribe(
+      (response) => {
+        this._activeCompany = response;
+      });
+  }
+
+  private _updateActiveAccount(companyIdQueryParam: string): void {
+    let sameCompany = compareStrings(this._cookieService
+      .getEncryptedItem<string>(CommonDefinition.COOKIE_ACTIVE_ACCOUNT), this._activeCompany?.id) === 0;
+    if (this._accesscontrolService.hasPermission(['CompanyView']) && this._activeCompany && !sameCompany) {
+      this._switchAccountService.switchAccount(this._activeCompany);
+    }
+    let companyIdIsNum = /^\d+$/g.test(companyIdQueryParam);
+    if (!companyIdIsNum || sameCompany) {
+      this._navigationService.navigateRoot(location.pathname);
+    }
   }
 }

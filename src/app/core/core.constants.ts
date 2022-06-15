@@ -40,6 +40,7 @@ import { McsStorageService } from './services/mcs-storage.service';
 import { McsSystemMessageService } from './services/mcs-system-message.service';
 import { McsViewportService } from './services/mcs-viewport.service';
 import { McsSessionService } from './session/session.service';
+import { SwitchAccountService } from './services/switch-account.service';
 
 /**
  * Array coverage for the core modules
@@ -79,5 +80,6 @@ export const coreProviders: any[] = [
   McsSystemMessageService,
   McsReportingService,
   McsIpValidatorService,
-  McsSessionService
+  McsSessionService,
+  SwitchAccountService,
 ];
