@@ -33,9 +33,9 @@ import {
   McsAuthenticationIdentity,
   McsDateTimeService,
   McsOrderWizardBase,
-  OrderRequester
+  OrderRequester,
+  SwitchAccountService
 } from '@app/core';
-import { SwitchAccountService } from '@app/core-layout/shared';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { OrderDetails } from '@app/features-shared';

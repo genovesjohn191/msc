@@ -19,7 +19,8 @@ import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2,
-  McsTableEvents
+  McsTableEvents,
+  SwitchAccountService
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
@@ -39,8 +40,6 @@ import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-
-import { SwitchAccountService } from './switch-account.service';
 
 @Component({
   selector: 'mcs-switch-account',

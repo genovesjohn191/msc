@@ -14,7 +14,8 @@ import {
 } from '@angular/core';
 import {
   CoreConfig,
-  McsAccessControlService
+  McsAccessControlService,
+  SwitchAccountService
 } from '@app/core';
 import { EventBusPropertyListenOn } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -25,7 +26,6 @@ import {
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 
-import { SwitchAccountService } from '../switch-account/switch-account.service';
 
 @Component({
   selector: 'mcs-account-panel',

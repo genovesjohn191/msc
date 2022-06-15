@@ -99,9 +99,13 @@ export class SwitchAccountService {
     if (isNullOrEmpty(company)) { return; }
     this._activeAccount = company;
     this._saveAccountIdToCookie();
-
+    let hasCompanyIdQueryParam = location.href.match("_companyId");
     // Navigate to home page and refresh.
-    location.href = '';
+    if (hasCompanyIdQueryParam) {
+      location.href = location.pathname;
+    } else {
+      location.href = '';
+    }
   }
 
   /**

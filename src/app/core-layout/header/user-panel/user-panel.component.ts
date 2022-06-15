@@ -20,7 +20,8 @@ import {
 import {
   McsAuthenticationService,
   McsBrowserService,
-  McsNavigationService
+  McsNavigationService,
+  SwitchAccountService
 } from '@app/core';
 import { EventBusPropertyListenOn } from '@app/event-bus';
 import { McsEvent } from '@app/events';
@@ -43,8 +44,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   ConsoleSheetComponent,
   FeedbackSheetComponent,
-  FeedbackSheetConfig,
-  SwitchAccountService
+  FeedbackSheetConfig
 } from '../../shared';
 import { UserPanelService } from './user-panel.service';
 
