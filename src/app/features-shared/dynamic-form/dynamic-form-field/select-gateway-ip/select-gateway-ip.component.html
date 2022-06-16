@@ -1,57 +1,41 @@
 <div *ngIf="isInputVisible || isLoading" class="div-container">
   <mat-form-field
-    *ngIf="visible && !isResourceSelfManaged"
     appearance="outline"
-    [matBadge]="hasError ? '!' : ''"
-    matBadgePosition="before"
-    matBadgeColor="warn"
-    matBadgeSize="small"
-    [matTooltip]="hasError ? 'Failed to load options' : ''"
-    matTooltipPosition="above"
+    (focusout)="focusOut(valueInput.value)"
     [hintLabel]="config.hint"
     class="gateway-ip-field">
     <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : label }}</mat-label>
 
-    <mat-select
-      [mcsId]="id"
-      [required]="required"
-      [disabled]="disabled"
-      [(value)]="config.value"
-      (selectionChange)="valueChange($event); onSelectionChange($event);">
-      <mat-option [value]="reserveNewSubnetValue" class="mat-option-reserve-new">{{ 'action.reserveNewSubnet' | translate }}</mat-option>
-      <mat-option *ngFor="let opt of config.options" [value]="opt.key">
-        {{ opt.value }}
-      </mat-option>
-    </mat-select>
-
-    <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
-
-    <button mat-icon-button matSuffix
-      (click)="retrieveOptions()"
-      *ngIf="hasError"
-      matTooltip="Retry"
-      matTooltipPosition="above">
-      <mat-icon color="primary">refresh</mat-icon>
-    </button>
-  </mat-form-field>
-
-  <mat-error *ngIf="hasError && isResourceSelfManaged">{{ inputError }}</mat-error>
-  <mat-form-field
-    *ngIf="visible && isResourceSelfManaged"
-    appearance="outline"
-    class="gateway-ip-field">
-    <mat-label [attr.for]="id" >{{ label }}</mat-label>
-
-    <input
+    <input *ngIf="isResourceSelfManaged"
       #control matInput type="text"
       [mcsId]="id"
-      [required]="required"
+      [required]="required"z
       [disabled]="disabled"
       [placeholder]="config.placeholder"
       [(ngModel)]="control.value"
-      (focusout)="focusOut(control.value)"
+      (focusout)="setValue(control.value)"
       (input)="valueChange($event)"/>
 
+    <input *ngIf="!isResourceSelfManaged"
+      #valueInput matInput
+      [mcsId]="id"
+      [required]="required"
+      [placeholder]="config.placeholder"
+      [(value)]="config.value"
+      (change)="setValue(valueInput.value)"
+      [matAutocomplete]="auto"
+      [ngClass]="{'mat-option-reserve-new': valueInput.value === reserveNewSubnetOptionText}">
+
+      <mat-autocomplete #auto="matAutocomplete"  
+        [displayWith]="getOptionValue.bind(this)"
+        (optionSelected)="selected($event)">
+        <mat-option [value]="reserveNewSubnetValue" class="mat-option-reserve-new mat-option">
+          {{ 'action.reserveNewSubnet' | translate }}
+        </mat-option>
+        <mat-option *ngFor="let opt of config.options" [value]="opt.key" class="mat-option">
+          {{ opt.value }}
+        </mat-option>
+      </mat-autocomplete>
   </mat-form-field>
 </div>
 
@@ -62,7 +46,6 @@
 <span class="divider"> / </span>
 
 <div style="max-width: 100px; display: inline-block;">
-  <mat-error *ngIf="prefixError">{{ prefixHint }}</mat-error>
   <mat-form-field
     *ngIf="visible"
     appearance="outline"
@@ -78,5 +61,6 @@
       (input)="valueChange($event)"
       [(ngModel)]="prefixLength"
       (change)="prefixChange()"/>
+    <mat-error *ngIf="prefixError">{{ prefixHint }}</mat-error>
   </mat-form-field>
 </div>

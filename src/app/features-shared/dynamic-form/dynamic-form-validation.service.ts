@@ -34,6 +34,9 @@ export class DynamicFormValidationService {
     if (control.hasError('ipAddress')) {
       return 'Please enter a valid IP address.';
     }
+    if (control.hasError('privateIpAddress')) {
+      return 'Please enter a valid private IP address.';
+    }
     if (control.hasError('ipRange')) {
       return 'IP address must be in range';
     }
