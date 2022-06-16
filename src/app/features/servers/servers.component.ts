@@ -87,6 +87,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'hardwareType' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'osEdition' }),
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'vCPU' }),
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'ram' }),

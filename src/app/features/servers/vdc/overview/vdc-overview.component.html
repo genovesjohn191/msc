@@ -83,24 +83,28 @@
             *ngFor="let network of resource.networks; let i = index"
             [expanded]="i === 0">
 
-            <mcs-accordion-panel-header mcsPanelHeaderDef>{{ network.name }}</mcs-accordion-panel-header>
-            <p>{{ resourceDetailLabels.networkDescription }}</p>
-            <mcs-item>
-              <span>{{ 'serversVdcOverview.shared.network.gateway' | translate }}:</span>
-              <span [innerHTML]="(networkGatewayLabel | async) | mcsDataLabel"></span>
-            </mcs-item>
+            <mcs-accordion-panel-header mcsPanelHeaderDef>{{ network.networkName }}</mcs-accordion-panel-header>
+            <ng-container *ngIf="network.subnets.length; else noSubnetsTemplate">
+              <mcs-item *ngFor="let subnet of network.subnets; let i = index">
+                <span>{{ 'serversVdcOverview.shared.network.gateway' | translate }} {{ i+1 }}:</span>
+                <span>{{ subnet.gateway }}</span>
+              </mcs-item>
+            </ng-container>
+            <ng-template #noSubnetsTemplate>
+              <span read-only>{{ 'serversVdcOverview.shared.network.noSubnets' | translate }}</span>
+            </ng-template>
           </mcs-accordion-panel>
         </mcs-accordion>
       </mcs-presentation-panel>
     </mcs-grid-column>
 
-    <!-- Storage Profiles -->
+    <!-- Storage Profiles / Datastores -->
     <mcs-grid-column sizeSm="12">
       <mcs-presentation-panel mcsId="vdc-storage-profiles">
         <ng-container mcsPresentationPanelHeader>
           <mcs-item>
             <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
-            <h2>{{ 'serversVdcOverview.shared.storageProfiles.title' | translate }}</h2>
+            <h2>{{ resourceDetailLabels.storageTitle }}</h2>
             <a (click)="navigateVdcDetailTo(resource, routeKeyEnum.VdcDetailsStorage)"
             *ngIf="resource.scaleable"
               mcsId="navigate-to-storage"
@@ -111,7 +115,7 @@
             </a>
           </mcs-item>
         </ng-container>
-        <p>{{ 'serversVdc.storageRefreshMessage' | translate }}</p>
+        <p>{{ resourceDetailLabels.storageRefreshMessage }}</p>
 
         <section>
           <mcs-item *ngIf="hasLowStorage">
@@ -155,7 +159,7 @@
 
               <mcs-item *ngIf="isStorageProfileLow(storage)">
                 <mcs-icon [key]="warningIconKey"></mcs-icon>
-                <span>{{ 'serversVdcOverview.shared.storageProfiles.lowStorageProfile' | translate }}</span>
+                <span>{{ resourceDetailLabels.lowStorageMessage }}</span>
               </mcs-item>
             </mcs-accordion-panel>
           </mcs-accordion>

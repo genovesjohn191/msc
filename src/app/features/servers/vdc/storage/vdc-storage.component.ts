@@ -113,6 +113,20 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
+  public get storageRefreshMessage(): string {
+    if (this._resourcePlatformIsVcloud) {
+      return this.translateService.instant('serversVdcOverview.shared.storageProfiles.storageRefreshMessage');
+    }
+    return this.translateService.instant('serversVdcOverview.shared.datastores.storageRefreshMessage')
+  }
+
+  public get storageColumnHeader(): string {
+    if (this._resourcePlatformIsVcloud) {
+      return this.translateService.instant('columnHeader.storageProfile');
+    }
+    return this.translateService.instant('columnHeader.datastore')
+  }
+
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
   }

@@ -98,7 +98,7 @@ export const serversRoutes: Routes = [
     ]
   },
   {
-    path: 'vdc/:id',
+    path: 'resources/:id',
     component: VdcComponent,
     data: { routeId: RouteKey.VdcDetails },
     resolve: {

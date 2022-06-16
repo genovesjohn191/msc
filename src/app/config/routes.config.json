@@ -400,15 +400,15 @@
     "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "Servers",
-    "navigationPath": "compute/virtual",
+    "navigationPath": "compute/servers",
     "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
-    "documentTitle": "Virtual Servers - Macquarie Cloud Services"
+    "documentTitle": "Servers - Macquarie Cloud Services"
   },
   "serverDetails": {
     "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerDetails",
-    "navigationPath": "compute/virtual",
+    "navigationPath": "compute/servers",
     "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Details - Macquarie Cloud Services"
   },
@@ -455,7 +455,7 @@
     "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerCreate",
-    "navigationPath": "compute/virtual/create",
+    "navigationPath": "compute/servers/create",
     "requiredPermissions": ["ManagedCloudVmEdit", "SelfManagedCloudVmEdit", "DedicatedVmEdit"],
     "documentTitle": "Create Server - Macquarie Cloud Services"
   },
@@ -463,9 +463,9 @@
     "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "VdcDetails",
-    "navigationPath": "compute/virtual/vdc",
+    "navigationPath": "compute/servers/resources",
     "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
-    "documentTitle": "VDC Details - Macquarie Cloud Services"
+    "documentTitle": "Resource Details - Macquarie Cloud Services"
   },
   "vdcDetailsOverview": {
     "enumPlatform": "Private",
@@ -473,7 +473,7 @@
     "enumKey": "VdcDetailsOverview",
     "navigationPath": "overview",
     "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
-    "documentTitle": "VDC Management - Macquarie Cloud Services"
+    "documentTitle": "Resource Details - Macquarie Cloud Services"
   },
   "vdcDetailsStorage": {
     "enumPlatform": "Private",
@@ -481,7 +481,7 @@
     "enumKey": "VdcDetailsStorage",
     "navigationPath": "storage",
     "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
-    "documentTitle": "VDC Storage - Macquarie Cloud Services"
+    "documentTitle": "Resource Storage - Macquarie Cloud Services"
   },
   "media": {
     "enumPlatform": "Private",

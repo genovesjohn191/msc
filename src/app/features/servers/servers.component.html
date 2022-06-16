@@ -189,6 +189,17 @@
           </td>
         </ng-container>
 
+        <!-- HW Type Column -->
+        <ng-container matColumnDef="hardwareType">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.hardwareType' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            <span [innerHTML]="row.hardware.typeLabel | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
         <!-- OS Edition Column -->
         <ng-container matColumnDef="osEdition">
           <th mat-header-cell *matHeaderCellDef hidden-xsmall mat-sort-header="operatingSystem.edition" disableClear>

@@ -9,11 +9,11 @@ export enum HardwareType {
 }
 
 export const hardwareTypeText = {
-  [HardwareType.UN]: 'UN',
-  [HardwareType.BO]: 'BO',
-  [HardwareType.LO]: 'LO',
-  [HardwareType.VM]: 'VM',
-  [HardwareType.BL]: 'BL',
+  [HardwareType.UN]: null,
+  [HardwareType.BO]: 'Physical',
+  [HardwareType.LO]: 'Logical',
+  [HardwareType.VM]: 'Virtual Machine',
+  [HardwareType.BL]: 'Blade',
 };
 
 /**
