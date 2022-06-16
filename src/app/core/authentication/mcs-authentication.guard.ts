@@ -48,7 +48,8 @@ export class McsAuthenticationGuard implements CanActivate {
   ): Observable<boolean> {
     if (this._authenticationIdentity.isAuthenticated) { return of(true); }
 
-    if (!isNullOrEmpty(_activatedRoute.queryParams?._companyId)) {
+    if (!isNullOrEmpty(_activatedRoute.queryParams?._companyId) &&
+      !this._isSameCompany(_activatedRoute.queryParams?._companyId)) {
       this._getCurrentActiveCompany(_activatedRoute.queryParams._companyId);
     }
 
@@ -89,14 +90,16 @@ export class McsAuthenticationGuard implements CanActivate {
   }
 
   private _updateActiveAccount(companyIdQueryParam: string): void {
-    let sameCompany = compareStrings(this._cookieService
-      .getEncryptedItem<string>(CommonDefinition.COOKIE_ACTIVE_ACCOUNT), this._activeCompany?.id) === 0;
-    if (this._accesscontrolService.hasPermission(['CompanyView']) && this._activeCompany && !sameCompany) {
+    if (this._accesscontrolService.hasPermission(['CompanyView']) && !isNullOrEmpty(this._activeCompany)) {
       this._switchAccountService.switchAccount(this._activeCompany);
     }
     let companyIdIsNum = /^\d+$/g.test(companyIdQueryParam);
-    if (!companyIdIsNum || sameCompany) {
+    if (!companyIdIsNum || this._isSameCompany(companyIdQueryParam)) {
       this._navigationService.navigateRoot(location.pathname);
     }
+  }
+
+  private _isSameCompany(activeCompany: string): boolean {
+    return compareStrings(this._cookieService.getEncryptedItem<string>(CommonDefinition.COOKIE_ACTIVE_ACCOUNT), activeCompany) === 0;
   }
 }
