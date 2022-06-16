@@ -90,14 +90,14 @@ export const firewallProvisionForm: LaunchPadForm = {
     new DynamicInputHostNameField({
       key: 'primaryHostname',
       label: 'Primary Hostname',
-      placeholder: 'Primary Management VRF',
+      placeholder: 'Primary Hostname',
       validators: { required: true },
       contextualHelp: 'The primary hostname to configure on the firewall.'
     }),
     new DynamicInputHostNameField({
       key: 'secondaryHostname',
       label: 'Secondary Hostname',
-      placeholder: 'Secondary Management VRF',
+      placeholder: 'Secondary Hostname',
       contextualHelp: 'The secondary hostname to configure on the firewall.'
     }),
     new DynamicInputHostNameField({

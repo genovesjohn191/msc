@@ -8,7 +8,7 @@ import { WorkflowConfig } from '../workflow.interface';
 
 export class FirewallProvisionWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
-    id: WorkflowType.FirewallProvisionAdom,
+    id: WorkflowType.FirewallProvision,
     title: 'Provision Physical Firewall',
     form: firewallProvisionForm,
     featureFlag: McsFeatureFlag.WorkflowsFirewall
