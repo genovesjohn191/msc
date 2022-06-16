@@ -11,7 +11,11 @@
 }
 
 .mat-option-reserve-new {
-  color: $color-grey-02;
+  color: $color-grey-02 !important;
+}
+
+.mat-option {
+  font-size: 14px !important;
 }
 
 .span-text {

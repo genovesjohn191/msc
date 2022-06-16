@@ -28,8 +28,9 @@ import {
   FlatOption
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectGatewayIpField } from './select-gateway-ip';
-import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { TranslateService } from '@ngx-translate/core';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { DynamicInputAutocompleteFieldComponentBase } from '../dynamic-input-autocomplete-component.base';
 
 const defaultPrefixLength = 27;
 const prefixMinSelfManaged = 16;
@@ -54,8 +55,7 @@ const reserveNewSubnetValue = 'Reserve a new subnet';
   }
 })
 
-export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponentBase<McsNetworkVdcSubnet> {
-
+export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFieldComponentBase<McsNetworkVdcSubnet> {
   public config: DynamicSelectGatewayIpField;
 
   public prefixLength: number = defaultPrefixLength;
@@ -118,15 +118,71 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
     }
   }
 
+  public prefixChange() {
+    if (this.prefixLength < this.config.prefixValidators.min) {
+      this.prefixError = true;
+      this.prefixHint = this._translateService.instant('message.validationMin') + this.config.prefixValidators.min;
+    }
+    else if (this.prefixLength > this.config.prefixValidators.max) {
+      this.prefixError = true;
+      this.prefixHint = this._translateService.instant('message.validationMax') + this.config.prefixValidators.max;
+    }
+    else {
+      this.prefixError = false;
+      this.prefixHint = '';
+      this.valueChange(this.config.value);
+    }
+  }
+
+  private _reset(): void {
+    this.config.validators.required = true;
+    this.prefixError = false;
+    this.prefixHint = '';
+    this.prefixLength = defaultPrefixLength;
+    this.config.value = "";
+    this.valueChange(this.config.value);
+  }
+
+  private _updateValidators() {
+    if (!this.isInputVisible) {
+      this.config.validators.required = false;
+      this.hasError = false;
+      this.prefixDisabled = false;
+
+      this.config.value = null;
+      this.valueChange(this.config.value);
+    }
+    this._updatePrefixValidators();
+    this._configureValidators();
+  }
+
   private _updatePrefixValidators() {
-    this.prefixDisabled = !this._resource.isSelfManaged && this.isInputVisible;
+    this.prefixDisabled = !this._resource?.isSelfManaged && this.isInputVisible;
     this.config.prefixValidators.min = this._resource.isSelfManaged ? prefixMinSelfManaged : prefixMinManaged;
     this.prefixLength = defaultPrefixLength;
   }
 
+  private _configureValidators() {
+    this.config.gatewayValidator = this._gatewayValidator.bind(this);
+  }
+
+  public get reserveNewSubnetOptionText(): string{
+    return this._translateService.instant('action.reserveNewSubnet')
+  }
+
+  private _gatewayValidator(inputValue: any): boolean {
+    switch(inputValue){
+      case this.reserveNewSubnetOptionText:
+        return !this.isResourceSelfManaged;
+      default:
+        if(!this.isInputVisible) { return true; }
+        return CommonDefinition.REGEX_IP_PATTERN.test(inputValue)
+          && CommonDefinition.REGEX_PRIVATE_IP_PATTERN.test(inputValue);
+    }
+  }
   public get isInputVisible(): boolean {
     if (isNullOrUndefined(this._resource) || this._resource.isSelfManaged) { return true }
-    return this.isNetworkExisting && this.collection.length > 0;
+    return this.isNetworkExisting; //&& this.collection.length > 0;
   }
 
   public get isResourceSelfManaged(): boolean {
@@ -134,17 +190,31 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
     return this._resource.isSelfManaged;
   }
 
-  public onSelectionChange(event: any) {
-    if (event.value === this.reserveNewSubnetValue){
-      this.prefixDisabled = false;
-      return;
+  public setValue(value: string) {
+    this.config.value = value;
+    this.valueChange(this.config.value);
+  }
+
+  public search(selectedOption: string): Observable<FlatOption[]> {
+    if (typeof selectedOption === 'object') {
+      return of(this.config.options.filter(option => option.key.indexOf(option.key) === 0));
     }
 
-    let selectedSubnet = this.collection.find(item => item.gatewayIp === event.value);
-    if (!isNullOrUndefined(selectedSubnet)) {
-      this.prefixLength = selectedSubnet.prefixLength;
-      this.prefixDisabled = true;
-    }
+    const filterValue = selectedOption.toLowerCase();
+
+    return of(this.config.options.filter(option =>
+      option.value.toLowerCase().indexOf(filterValue) >= 0
+      || option.key.toLowerCase().indexOf(filterValue) >= 0));
+  }
+
+  public selected(event: MatAutocompleteSelectedEvent): void {
+    let option = event.option;
+    this.setValue(option.value);
+  }
+
+  public getOptionValue(opt: FlatOption) {
+    if (isNullOrEmpty(opt)) { return }
+    return opt.value;
   }
 
   protected callService(): Observable<McsNetworkVdcSubnet[]> {
@@ -162,20 +232,6 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
       }));
   }
 
-  public focusOut(value: string) {
-
-    if (CommonDefinition.REGEX_IP_PATTERN.test(value) && CommonDefinition.REGEX_PRIVATE_IP_PATTERN.test(value)) {
-      this.hasError = false;
-    }
-    else {
-      this.hasError = true;
-      this.inputError = this._translateService.instant('message.invalidIpAddress');
-    }
-
-    this.config.value = value;
-    this.valueChange(this.config.value);
-  }
-
   protected filter(collection: McsNetworkVdcSubnet[]): FlatOption[] {
     let options: FlatOption[] = [];
 
@@ -188,43 +244,6 @@ export class DynamicSelectGatewayIpComponent extends DynamicSelectFieldComponent
     });
 
     return options;
-  }
-
-  private _updateValidators() {
-    if (!this.isInputVisible) {
-      this.config.validators.required = false;
-      this.hasError = false;
-      this.prefixDisabled = false;
-
-      this.config.value = null;
-      this.valueChange(this.config.value);
-    }
-    this._updatePrefixValidators();
-  }
-
-  private _reset(): void {
-    this.config.validators.required = true;
-    this.prefixError = false;
-    this.prefixHint = '';
-    this.prefixLength = defaultPrefixLength;
-    this.config.value = undefined;
-    this.valueChange(this.config.value);
-  }
-
-  public prefixChange() {
-    if (this.prefixLength < this.config.prefixValidators.min) {
-      this.prefixError = true;
-      this.prefixHint = this._translateService.instant('message.validationMin') + this.config.prefixValidators.min;
-    }
-    else if (this.prefixLength > this.config.prefixValidators.max) {
-      this.prefixError = true;
-      this.prefixHint = this._translateService.instant('message.validationMax') + this.config.prefixValidators.max;
-    }
-    else {
-      this.prefixError = false;
-      this.prefixHint = '';
-      this.valueChange(this.config.value);
-    }
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {

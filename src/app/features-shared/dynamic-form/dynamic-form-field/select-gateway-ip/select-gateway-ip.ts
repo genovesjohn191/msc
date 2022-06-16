@@ -6,7 +6,8 @@ import {
   DynamicFormFieldType,
   DynamicFormFieldTemplate,
   DynamicFormControlSettings,
-  DynamicFormControlValidator
+  DynamicFormControlValidator,
+  FlatOption
 } from '../../dynamic-form-field-config.interface';
 
 export class DynamicSelectGatewayIpField extends DynamicFormFieldConfigBase {
@@ -14,6 +15,8 @@ export class DynamicSelectGatewayIpField extends DynamicFormFieldConfigBase {
   public type: DynamicFormFieldType = 'select-gateway-ip';
   public template: DynamicFormFieldTemplate = 'select-gateway-ip';
   public prefixValidators?: DynamicFormControlValidator;
+  public options: FlatOption[] = [];
+  public gatewayValidator?: (inputValue: any) => boolean = () => true;
 
   public constructor(options: {
     key: string;
@@ -31,5 +34,12 @@ export class DynamicSelectGatewayIpField extends DynamicFormFieldConfigBase {
     super(options);
 
     this.prefixValidators = options.prefixValidators;
+  }
+
+  public configureValidators(validators: ValidatorFn[]) {
+    validators.push(CoreValidators.custom(
+      this.gatewayValidator.bind(this),
+      'privateIpAddress'
+    ));
   }
 }
