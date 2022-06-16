@@ -39,7 +39,10 @@ type ResourceDetailLabels = {
   platformTitle: string;
   newServerButtonShown: boolean;
   platformLink: string;
-  networkDescription: string;
+  storageTitle: string;
+  storageRefreshMessage: string;
+  lowStorageSummary: string;
+  lowStorageMessage: string;
 };
 
 @Component({
@@ -90,24 +93,13 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
   public get storageSummary(): string {
     if (!this.hasLowStorage) { return ''; }
 
-    let status = this.translateService.instant('serversVdcOverview.shared.storageProfiles.lowStorageSummary');
+    let status = this.resourceDetailLabels.lowStorageSummary;
     let storageCount = this._lowestStorageCount;
     status = replacePlaceholder(status, 'storage_profile_number', `${storageCount}`);
 
     let verb = (storageCount === 1) ? 'is' : 'are';
     status = replacePlaceholder(status, 'verb', verb);
     return status;
-  }
-
-  public get networkGatewayLabel(): string {
-    let result: Array<string> = new Array<string>();
-    this.resource$.pipe(map((resource) => {
-      let networks = getSafeProperty(resource, object => object.networks, []);
-      let netWorkSubnets = pluck(networks, 'subnets') as McsResourceNetworkSubnet[];
-      let gateways = pluck(netWorkSubnets, 'gateWay') as Array<string>;
-      result.concat(gateways);
-    }));
-    return result.join(`\r\n`);
   }
 
   public ghzTooltip(ghzValue: number): string {
@@ -213,7 +205,10 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
       platformTitle: this.translateService.instant('serversVdcOverview.vcloud.platform.title'),
       newServerButtonShown: true,
       platformLink: this.translateService.instant('serversVdcOverview.vcloud.platform.linkLabel'),
-      networkDescription: this.translateService.instant('serversVdcOverview.vcloud.network.itemDescription'),
+      storageTitle: this.translateService.instant('serversVdcOverview.shared.storageProfiles.title'),
+      storageRefreshMessage: this.translateService.instant('serversVdcOverview.shared.storageProfiles.storageRefreshMessage'),
+      lowStorageSummary: this.translateService.instant('serversVdcOverview.shared.storageProfiles.lowStorageSummary'),
+      lowStorageMessage: this.translateService.instant('serversVdcOverview.shared.storageProfiles.lowStorage')
     };
 
     let vcenterLabels: ResourceDetailLabels = {
@@ -221,7 +216,10 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
       platformTitle: this.translateService.instant('serversVdcOverview.vcenter.platform.title'),
       newServerButtonShown: false,
       platformLink: this.translateService.instant('serversVdcOverview.vcenter.platform.linkLabel'),
-      networkDescription: this.translateService.instant('serversVdcOverview.vcenter.network.itemDescription'),
+      storageTitle: this.translateService.instant('serversVdcOverview.shared.datastores.title'),
+      storageRefreshMessage: this.translateService.instant('serversVdcOverview.shared.datastores.storageRefreshMessage'),
+      lowStorageSummary: this.translateService.instant('serversVdcOverview.shared.datastores.lowStorageSummary'),
+      lowStorageMessage: this.translateService.instant('serversVdcOverview.shared.datastores.lowStorage')
     };
 
     this._resourceDetailLabelMap = new Map();

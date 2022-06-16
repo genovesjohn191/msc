@@ -23,7 +23,8 @@
       "label": "Private Cloud",
       "compute": {
         "label": "Compute",
-        "virtual": "Virtual",
+        "resources": "Resources",
+        "servers": "Servers",
         "media": "Media"
       },
       "network": {
@@ -73,7 +74,6 @@
     "signIn": "Sign In",
     "productsAndSolutions": "Products and Solutions",
     "dashboard": "Dashboard",
-    "virtual": "Virtual",
     "medias": "Media",
     "servers": "Servers",
     "others": "Others",
@@ -1358,9 +1358,8 @@
     "backToNotifications": "Back to Notifications"
   },
   "servers": {
-    "header": "Virtual",
-    "description": "View and manage any Managed or Self-Managed virtual servers.",
-    "leftPanelHeader": "Virtual Server Filter",
+    "header": "Servers",
+    "leftPanelHeader": "Server Filter",
     "newServer": "New Server",
     "loading": "Loading servers.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
@@ -1395,9 +1394,8 @@
     }
   },
   "serversVdc": {
-    "leftPanelHeader": "Virtual Server Filter",
-    "iopsLabel": "Performance {{iops}}",
-    "storageRefreshMessage": "Please note that storage utilization may take a few minutes to update after creating, deleting or expanding objects on a storage profile."
+    "leftPanelHeader": "Server Filter",
+    "iopsLabel": "Performance {{iops}}"
   },
   "serversVdcOverview": {
     "label": "Overview",
@@ -1409,9 +1407,6 @@
         "title": "Actions",
         "linkLabel": "View in vCloud",
         "buttonLabel": "New Server"
-      },
-      "network": {
-        "itemDescription": "Standard network."
       }
     },
     "vcenter": {
@@ -1421,9 +1416,6 @@
       "platform": {
         "title": "Actions",
         "linkLabel": "View in vCenter"
-      },
-      "network": {
-        "itemDescription": "Standard network."
       }
     },
     "shared": {
@@ -1437,7 +1429,8 @@
       "network": {
         "title": "Network Information",
         "description": "Networks associated with this resource",
-        "gateway": "Gateway"
+        "gateway": "Gateway",
+        "noSubnets": "This network has no subnets to display."
       },
       "storageProfiles": {
         "title": "Storage Profiles",
@@ -1447,8 +1440,21 @@
         "tier": "Tier",
         "iops": "Performance {{iops}}",
         "utilisation": "Utilisation",
-        "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on capacity.",
-        "lowStorageProfile": "You're running low on capacity in this profile."
+        "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on space.",
+        "lowStorage": "You're running low on space in this storage profile.",
+        "storageRefreshMessage": "Please note that storage utilisation may take a few minutes to update after creating, deleting or expanding objects on a storage profile."
+      },
+      "datastores": {
+        "title": "Datastores",
+        "manageLink": "Manage",
+        "expandLink": "Expand",
+        "status": "Status",
+        "tier": "Tier",
+        "iops": "Performance {{iops}}",
+        "utilisation": "Utilisation",
+        "lowStorageSummary": "{{storage_profile_number}} of your datastores {{verb}} running low on space.",
+        "lowStorage": "You're running low on space in this datastore.",
+        "storageRefreshMessage": "Please note that storage utilisation may take a few minutes to update after creating, deleting or expanding objects on a datastore."
       }
     }
   },
@@ -1469,7 +1475,7 @@
   },
   "server": {
     "header": "Servers",
-    "leftPanelHeader": "Virtual Server Filter",
+    "leftPanelHeader": "Server Filter",
     "serverBusyLabel": "This server is currently busy and some actions may be temporarily unavailable."
   },
   "serverSnapshots": {
@@ -3546,6 +3552,7 @@
     "firmwareVersion": "Firmware Version",
     "hostingEngineer": "Hosting Engineer",
     "haMode": "HA Mode",
+    "hardwareType": "Hardware Type",
     "hourlyCharge": "Hourly Charge",
     "id": "ID",
     "isInfrastructure": "Is Infrastructure",

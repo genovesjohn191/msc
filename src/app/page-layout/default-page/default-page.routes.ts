@@ -26,10 +26,20 @@ export const defaultPageRoutes: Routes = [
         data: { routeId: RouteKey.LaunchPad },
         loadChildren: () => import('../../features/launch-pad/launch-pad.module').then(m => m.LaunchPadModule)
       },
+      // Deprecated - FUSION-8369: redirect the old path of servers
       {
         path: 'compute/virtual',
+        redirectTo: 'compute/servers'
+      },
+      {
+        path: 'compute/servers',
         data: { routeId: RouteKey.Servers },
         loadChildren: () => import('../../features/servers/servers.module').then(m => m.ServersModule)
+      },
+      // Deprecated - FUSION-8369: redirect the old path of resources
+      {
+        path: 'compute/virtual/vdc',
+        redirectTo: 'compute/servers/resources'
       },
       {
         path: 'system/messages',

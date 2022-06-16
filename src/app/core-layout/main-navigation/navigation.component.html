@@ -223,16 +223,16 @@
               <mcs-icon [key]="showComputeSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
             </a>
             <ul [class.hidden]="!showComputeSubmenu">
-              <!-- Virtual -->
+              <!-- Servers -->
               <li>
                 <a [mcsRouterLink]="routeKeyEnum.Servers"
                   mcsRouterLinkActive="active"
                   class="sub-navigation-item unstyled-link"
-                  mcsId="virtual-link"
+                  mcsId="servers-link"
                   mcsEventTracker="navigate-to-servers"
                   mcsEventCategory="navigation"
                   mcsEventLabel="main-nav">
-                  {{ 'navigation.privateCloud.compute.virtual' | translate }}
+                  {{ 'navigation.privateCloud.compute.servers' | translate }}
                 </a>
               </li>
               <!-- Media -->
