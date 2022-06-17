@@ -1,47 +1,49 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild,
-  Injector
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
-  Observable,
-  Subject
-} from 'rxjs';
-import {
-  shareReplay,
-  tap,
-  takeUntil
-} from 'rxjs/operators';
-import {
-  McsOrderWizardBase,
-  IMcsNavigateAwayGuard
+  IMcsNavigateAwayGuard,
+  McsOrderWizardBase
 } from '@app/core';
+import { OrderDetails } from '@app/features-shared';
 import {
-  ServiceType,
-  McsResource,
   McsOrderWorkflow,
-  Os
+  McsResource,
+  Os,
+  ServiceType
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import {
-  isNullOrEmpty,
   getSafeProperty,
+  isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import { McsApiService } from '@app/services';
-import { OrderDetails } from '@app/features-shared';
-import { ServerCreateDetailsComponent } from './details/server-create-details.component';
-import { ServerCreateService } from './server-create.service';
-import { ServerCreateDetailsBase } from './details/server-create-details.base';
+
 import { AddOnDetails } from './addons/addons-model';
+import { ServerCreateDetailsBase } from './details/server-create-details.base';
+import { ServerCreateDetailsComponent } from './details/server-create-details.component';
 import { ServerCreateBuilder } from './server-create.builder';
+import { ServerCreateService } from './server-create.service';
 
 @Component({
   selector: 'mcs-server-create',
@@ -182,15 +184,18 @@ export class ServerCreateComponent extends McsOrderWizardBase
   /**
    * Event that emits when the order have been submitted
    * @param submitDetails Submit details of the order
+   * @param resourceServiceId The service id of the server
    */
-  public onSubmitOrder(submitDetails: OrderDetails): void {
+  public onSubmitOrder(submitDetails: OrderDetails, resourceServiceId: string): void {
     // get orderId and save in session storage for automation
     sessionStorage.setItem('order-id', this.orderId);
     if (isNullOrEmpty(submitDetails)) { return; }
+
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourceDescription: this.progressDescription
+      resourceDescription: this.progressDescription,
+      serviceId: resourceServiceId
     };
     this.submitOrderWorkflow(workflow);
   }

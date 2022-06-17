@@ -1,18 +1,21 @@
-import { JsonProperty } from '@app/utilities';
-import { CommonDefinition } from '@app/utilities';
+import {
+  CommonDefinition,
+  JsonProperty
+} from '@app/utilities';
+
+import { McsEntityBase } from '../common/mcs-entity.base';
+import { DataStatus } from '../enumerations/data-status.enum';
 import {
   JobStatus,
   JobStatusSerialization
 } from '../enumerations/job-status.enum';
 import {
-  JobType,
-  JobTypeSerialization,
   jobTypeText,
+  JobType,
+  JobTypeSerialization
 } from '../enumerations/job-type.enum';
-import { DataStatus } from '../enumerations/data-status.enum';
-import { McsEntityBase } from '../common/mcs-entity.base';
-import { McsTask } from './mcs-task';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
+import { McsTask } from './mcs-task';
 
 export class McsJob extends McsEntityBase {
   @JsonProperty()
@@ -89,6 +92,9 @@ export class McsJob extends McsEntityBase {
     deserializer: McsDateSerialization
   })
   public endedOn: Date = undefined;
+
+  @JsonProperty()
+  public orchestrationId: string = undefined;
 
   /**
    * Returns the job data status if in progress,

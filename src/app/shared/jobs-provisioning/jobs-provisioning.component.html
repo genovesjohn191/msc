@@ -7,7 +7,7 @@
       {{ job.clientReferenceObject.resourceDescription }}
     </h2>
     <ng-template #resourceDescriptionTemplate>
-      <h2>{{ job.description }} <span class="sub-label">{{ getServiceId(job) }}</span></h2>
+      <h2>{{ job.description }} <span class="sub-label" *ngIf="getServiceId(job) as serviceId">({{ serviceId }})</span></h2>
     </ng-template>
 
     <!-- In Progress Text -->
@@ -60,11 +60,22 @@
         <!-- Job Success -->
         <ng-container *ngSwitchCase="dataStatusEnum.Success">
           <mcs-alert type="success" [header]="job.summaryInformation"></mcs-alert>
-          <mcs-item *ngIf="resourceLink(job) && !isActionHidden(job)">
-            <a mcsButton arrow="right" size="small" mcsId="view-job" margin-top-small
-              [mcsRouterLink]="resourceLink(job)">
-              {{ 'shared.jobsProvisioning.viewDetails' | translate }}
-            </a>
+
+          <mcs-item *ngIf="!isActionHidden(job)">
+            <ng-container *ngIf="resourceLink(job) as dataLink">
+              <a mcsButton arrow="right" size="small" mcsId="view-job" margin-top-small
+                [mcsRouterLink]="dataLink">
+                {{ 'label.viewDetails' | translate }}
+              </a>
+            </ng-container>
+
+            <ng-container *ngIf="getServiceId(job) as resourceServiceId">
+              <a mcsButton arrow="right" size="small" mcsId="raise-ticket" margin-top-small
+                [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
+                [mcsQueryParams]="{ serviceId: resourceServiceId }">
+                {{ 'label.raiseTicket' | translate }}
+              </a>
+            </ng-container>
           </mcs-item>
         </ng-container>
 
@@ -73,6 +84,14 @@
           <mcs-alert type="error" [header]="job.summaryInformation">
             <span>{{ job.errorMessage }}</span>
           </mcs-alert>
+
+          <mcs-item *ngIf="getServiceId(job) as resourceServiceId">
+            <a mcsButton arrow="right" size="small" mcsId="raise-ticket" margin-top-small
+              [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
+              [mcsQueryParams]="{ serviceId: resourceServiceId }">
+              {{ 'label.raiseTicket' | translate }}
+            </a>
+          </mcs-item>
         </ng-container>
       </ng-container>
 

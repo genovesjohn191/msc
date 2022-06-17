@@ -3699,6 +3699,8 @@
     "enabled": "Enabled"
   },
   "label": {
+    "viewDetails": "View Details",
+    "raiseTicket": "Raise a Ticket",
     "isInfrastructure": "Is Infrastructure",
     "pod": "POD",
     "network": "Network",

@@ -8,6 +8,7 @@ import {
 
 export interface IMcsResourceCatalogItemCreateRefObj {
   hideDetailsButton: boolean;
+  serviceId: string;
 }
 
 export class McsResourceCatalogItemCreate extends McsApiJobRequestBase<IMcsResourceCatalogItemCreateRefObj> {

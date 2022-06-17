@@ -32,11 +32,11 @@ import {
 import {
   addOrUpdateArrayRecord,
   animateFactory,
+  cloneDeep,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition,
-  cloneDeep
+  CommonDefinition
 } from '@app/utilities';
 
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
@@ -190,6 +190,10 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     return this.hasInProgressJob && !isNullOrEmpty(this.jobsProvisioningLoadingText);
   }
 
+  public get routeKeyEnum(): typeof RouteKey {
+    return RouteKey;
+  }
+
   /**
    * Gets the status icon key by status
    * @param status Status of the job/task, which to get the icon key
@@ -206,9 +210,12 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Gets the service id
+   */
   public getServiceId(job: McsJob): string {
     let serviceId: string = getSafeProperty(job, (obj) => obj.clientReferenceObject.serviceId);
-    return serviceId ? ` (${serviceId})` : '';
+    return serviceId || null;
   }
 
   /**
@@ -239,7 +246,11 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    */
   public isActionHidden(job: McsJob): boolean {
     if (isNullOrEmpty(job)) { return false; }
-    return getSafeProperty(job, (obj) => obj.clientReferenceObject.hideDetailsButton) || false;
+
+    let hideDetailsButton = getSafeProperty(job, (obj) => obj.clientReferenceObject.hideDetailsButton);
+    if (hideDetailsButton) { return true; }
+
+    return !this.resourceLink(job) && !this.getServiceId(job);
   }
 
   public clone(referenceObject: any): any {

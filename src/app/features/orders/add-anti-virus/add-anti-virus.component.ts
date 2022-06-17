@@ -1,8 +1,8 @@
 import {
+  throwError,
   Observable,
   Subject,
-  Subscription,
-  throwError
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -178,7 +178,8 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription,
-      serverId: server.id
+      serverId: server.id,
+      serviceId: server.serviceId
     };
 
     this.submitOrderWorkflow(workflow);

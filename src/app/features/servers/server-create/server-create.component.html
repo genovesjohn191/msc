@@ -83,7 +83,7 @@
             [requestState]="dataStatus$ | async"
             [eventTrack]="orderEventTrack.billingDetailsStep"
             (dataChange)="onServerConfirmOrderChange($event)"
-            (submitOrder)="onSubmitOrder($event)">
+            (submitOrder)="onSubmitOrder($event, resource?.serviceId)">
           </mcs-step-order-details>
         </mcs-wizard-step>
       </ng-container>

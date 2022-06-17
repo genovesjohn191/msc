@@ -174,7 +174,8 @@ export class MediaUploadDetailsComponent
     uploadMediaModel.description = this.fcMediaDescription.value;
     uploadMediaModel.type = CatalogItemType.Media;
     uploadMediaModel.clientReferenceObject = {
-      hideDetailsButton: uploadMediaModel.name.includes(CommonDefinition.FILE_EXTENSION_OVA)
+      hideDetailsButton: uploadMediaModel.name.includes(CommonDefinition.FILE_EXTENSION_OVA),
+      serviceId: selectedResource.serviceId
     };
 
     this._mediaUploadService.uploadMedia(
