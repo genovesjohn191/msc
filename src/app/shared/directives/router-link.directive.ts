@@ -113,6 +113,7 @@ export class RouterLinkDirective implements AfterViewChecked {
         hasDefinedNavigationPath ? CoreRoutes.getNavigationPath(routeKey) : link
       );
     });
+
     return this._router.createUrlTree(stringUrls, {
       queryParams: this.queryParams
     }).toString();

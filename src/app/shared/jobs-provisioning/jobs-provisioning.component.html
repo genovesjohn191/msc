@@ -72,7 +72,7 @@
             <ng-container *ngIf="getServiceId(job) as resourceServiceId">
               <a mcsButton arrow="right" size="small" mcsId="raise-ticket" margin-top-small
                 [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
-                [mcsQueryParams]="{ serviceId: resourceServiceId }">
+                [mcsQueryParams]="{ serviceId: resourceServiceId, jobId: job.id }">
                 {{ 'label.raiseTicket' | translate }}
               </a>
             </ng-container>
@@ -88,7 +88,7 @@
           <mcs-item *ngIf="getServiceId(job) as resourceServiceId">
             <a mcsButton arrow="right" size="small" mcsId="raise-ticket" margin-top-small
               [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
-              [mcsQueryParams]="{ serviceId: resourceServiceId }">
+              [mcsQueryParams]="{ serviceId: resourceServiceId, jobId: job.id }">
               {{ 'label.raiseTicket' | translate }}
             </a>
           </mcs-item>

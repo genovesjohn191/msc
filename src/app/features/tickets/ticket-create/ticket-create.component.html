@@ -17,6 +17,11 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <p [innerHTML]="('ticketCreate.description' | translate) | mcsNewLines "></p>
+
+    <ng-container *ngIf="jobDetails$ | async as job">
+      <p [innerHTML]="'message.jobOnTicket' | translate: { operationName: job?.description }"></p>
+    </ng-container>
+
     <div class="contextual-help-page-wrapper limited-view">
       <form [formGroup]="fgCreateTicket" mcsFormGroup>
         <!-- Ticket Type -->

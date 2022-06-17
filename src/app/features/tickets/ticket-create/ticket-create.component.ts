@@ -1,4 +1,5 @@
 import {
+  of,
   throwError,
   BehaviorSubject,
   Observable,
@@ -42,7 +43,9 @@ import {
   HttpStatusCode,
   McsApiCollection,
   McsAzureResource,
+  McsFeatureFlag,
   McsFileInfo,
+  McsJob,
   McsOption,
   McsOptionGroup,
   McsPermission,
@@ -51,8 +54,7 @@ import {
   McsTicketCreate,
   McsTicketCreateAttachment,
   RouteKey,
-  TicketType,
-  McsFeatureFlag
+  TicketType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -84,6 +86,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
 
   public ticketTypeList: McsOption[] = [];
   public selectedServiceId$: Observable<string>;
+  public jobDetails$: Observable<McsJob>;
   public servicesSubscription: Subscription;
 
   public vdcServices$: Observable<TicketService[]>;
@@ -151,7 +154,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public ngOnInit() {
     this._subscribesToServersList();
     this._subscribesToVdcList();
-    this._subscribesToSelectedService();
+    this._subscribedToQueryParams();
     this._subscribesToVdcServices();
     this._subscribesToServerServices();
     this._subscribesToFirewallServices();
@@ -391,10 +394,18 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  private _subscribesToSelectedService(): void {
+  private _subscribedToQueryParams(): void {
     this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
       map((params) => getSafeProperty(params, (obj) => obj.serviceId)),
       shareReplay(1)
+    );
+
+    this.jobDetails$ = this._activatedRoute.queryParams.pipe(
+      switchMap(params => {
+        let jobId = params?.jobId;
+        if (isNullOrEmpty(jobId)) { return of(null); }
+        return this._apiService.getJob(jobId);
+      })
     );
   }
 

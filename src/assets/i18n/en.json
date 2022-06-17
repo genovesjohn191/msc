@@ -3923,6 +3923,7 @@
     "rollback": "Rollback"
   },
   "message": {
+    "jobOnTicket": "This ticket will include the details of your <b>{{operationName}}</b> operation, for our team to investigate.",
     "openForConsole": "Select a server to open the console for.",
     "noServersToDisplay": "There are no applicable servers to display.",
     "consoleUnavailable": "Console unavailable while server is {{state}}",
