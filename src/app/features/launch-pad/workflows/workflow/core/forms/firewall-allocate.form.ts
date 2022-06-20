@@ -43,7 +43,7 @@ export const firewallAllocateForm: LaunchPadForm = {
       productType: ProductType.FirewallDedicated
     }),
     new DynamicSelectField({
-      key: 'level',
+      key: 'firewallLevel',
       label: 'Firewall Level',
       options: [
         {key: 10, value: '10 (100E, 100F)'},
@@ -97,7 +97,7 @@ export const firewallAllocateForm: LaunchPadForm = {
           levelValue = null;
       }
       mappedProperties.push({
-        key: 'level',
+        key: 'firewallLevel',
         value: levelValue
       });
     }
