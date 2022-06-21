@@ -61,7 +61,7 @@ export class McsAuthenticationGuard implements CanActivate {
     return this._authenticationService.authenticateUser().pipe(
       exhaustMap(identity => {
         if (!isNullOrEmpty(_activatedRoute.queryParams?._companyId)) {
-          this._updateActiveAccount(_activatedRoute.queryParams._companyId);
+          this._updateActiveAccount();
         }
 
         if (this._accesscontrolService.hasAccessToFeature(McsFeatureFlag.MaintenanceMode)) {
@@ -89,14 +89,12 @@ export class McsAuthenticationGuard implements CanActivate {
       });
   }
 
-  private _updateActiveAccount(companyIdQueryParam: string): void {
+  private _updateActiveAccount(): void {
     if (this._accesscontrolService.hasPermission(['CompanyView']) && !isNullOrEmpty(this._activeCompany)) {
       this._switchAccountService.switchAccount(this._activeCompany);
     }
-    let companyIdIsNum = /^\d+$/g.test(companyIdQueryParam);
-    if (!companyIdIsNum || this._isSameCompany(companyIdQueryParam)) {
-      this._navigationService.navigateRoot(location.pathname);
-    }
+  
+    this._navigationService.navigateRoot(location.pathname);
   }
 
   private _isSameCompany(activeCompany: string): boolean {
