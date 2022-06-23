@@ -335,7 +335,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     this._sort.sortChange.pipe(
       takeUntil(this._sortSubject),
       tap(() => {
-        this.refreshDataRecords();
+        this._requestUpdate.next();
         this._sortingChange.next(true);
       })
     ).subscribe();
@@ -359,6 +359,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
           }),
           catchError(_error => {
             this._dataStatusChange.next(DataStatus.Error);
+            this._sortingChange.next(false);
             return EMPTY;
           })
         );
@@ -440,7 +441,8 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
   private _subscribeToHasErrorFlag(): void {
     this.hasError$ = this._dataStatusChange.pipe(
       takeUntil(this._destroySubject),
-      map(status => status === DataStatus.Error),
+      map(status => status === DataStatus.Error &&
+        isNullOrEmpty(this._dataRecordsChange.getValue())),
       distinctUntilChanged(),
       shareReplay(1)
     );

@@ -1,4 +1,10 @@
-import { Subscription } from 'rxjs';
+import {
+  filter,
+  takeUntil,
+  tap,
+  Subject,
+  Subscription
+} from 'rxjs';
 
 import {
   ChangeDetectorRef,
@@ -8,6 +14,8 @@ import {
   EventBusDispatcherService,
   EventBusState
 } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -25,6 +33,7 @@ export class McsTableEvents<TEntity> implements McsDisposable {
   private _dataChangeHandler: Subscription;
   private _dataClearHandler: Subscription;
   private _entityDeleteHandler: Subscription;
+  private _destroySubject = new Subject<void>();
 
   private readonly _changeDetectorRef: ChangeDetectorRef;
   private readonly _eventDispatcher: EventBusDispatcherService;
@@ -32,22 +41,24 @@ export class McsTableEvents<TEntity> implements McsDisposable {
   constructor(
     _injector: Injector,
     private _dataSource: McsDataSource<TEntity>,
-    private _dataConfig: McsDataEventsConfig<TEntity>
+    private _dataConfig?: McsDataEventsConfig<TEntity>
   ) {
     this._changeDetectorRef = _injector.get(ChangeDetectorRef);
     this._eventDispatcher = _injector.get(EventBusDispatcherService);
 
     this._validateDatasource();
-    this._registerDataEvents();
+    this._registerDataEventsByConfig();
+    this._registerErrorNotification();
   }
 
   public dispose(): void {
     unsubscribeSafely(this._dataChangeHandler);
     unsubscribeSafely(this._dataClearHandler);
     unsubscribeSafely(this._entityDeleteHandler);
+    unsubscribeSafely(this._destroySubject);
   }
 
-  private _registerDataEvents(): void {
+  private _registerDataEventsByConfig(): void {
     if (!isNullOrEmpty(this._dataConfig.dataChangeEvent)) {
       this._dataChangeHandler = this._eventDispatcher.addEventListener(
         this._dataConfig.dataChangeEvent, this._onDataChange.bind(this)
@@ -81,6 +92,16 @@ export class McsTableEvents<TEntity> implements McsDisposable {
     if (isNullOrEmpty(this._dataSource)) { return; }
     this._dataSource.refreshDataRecords();
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _registerErrorNotification(): void {
+    this._dataSource.dataStatusChange().pipe(
+      takeUntil(this._destroySubject),
+      filter(status => status === DataStatus.Error),
+      tap(() => {
+        this._eventDispatcher.dispatch(McsEvent.errorShow, 'message.tableError');
+      })
+    ).subscribe();
   }
 
   private _validateDatasource(): void {

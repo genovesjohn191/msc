@@ -1,17 +1,16 @@
 import {
+  forkJoin,
+  throwError,
+  BehaviorSubject,
   EMPTY,
   Observable,
   Subject,
-  BehaviorSubject,
-  Subscription,
-  throwError,
-  forkJoin
+  Subscription
 } from 'rxjs';
 import {
   catchError,
   map,
   shareReplay,
-  switchMap,
   takeUntil,
   tap
 } from 'rxjs/operators';
@@ -68,16 +67,16 @@ import {
   McsFormGroupDirective
 } from '@app/shared';
 import {
+  compareStrings,
   convertGbToMb,
   convertMbToGb,
+  convertUrlParamsKeyToLowerCase,
   createObject,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  Guid,
-  compareStrings,
-  convertUrlParamsKeyToLowerCase
+  Guid
 } from '@app/utilities';
 
 import { ServerManagedScaleService } from './server-managed-scale.service';
@@ -124,6 +123,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   private _errorStatus: number;
   private _serverGroupCount: number;
   private _selectedServer: string;
+  private _resourceId: string;
 
   private _serverPrimaryStorageProfileDisabled: boolean;
 
@@ -231,6 +231,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     this._resetScaleManagedServerState();
     this._subscribeToResourceById(server.platform.resourceId);
     this._validateDisabledStorageProfile(server.platform.resourceId, server);
+    this._resourceId = server.platform.resourceId;
   }
 
   /**
@@ -321,7 +322,8 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription,
-      serverId: managedServerId
+      serverId: managedServerId,
+      serviceId: this._resourceId
     };
 
     this.submitOrderWorkflow(workflow);

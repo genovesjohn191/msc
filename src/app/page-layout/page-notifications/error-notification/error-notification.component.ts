@@ -16,6 +16,7 @@ import {
   CommonDefinition,
   Guid
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 const HIDE_ERROR_NOTIFICATION_DURATION = 10000;
 
@@ -42,7 +43,8 @@ export class ErrorNotificationComponent implements OnDestroy {
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _eventBusDispatcher: EventBusDispatcherService
+    private _eventBusDispatcher: EventBusDispatcherService,
+    private _translate: TranslateService
   ) {
     this.errorList = new Array();
     this._registerEvents();
@@ -83,7 +85,7 @@ export class ErrorNotificationComponent implements OnDestroy {
   private _onErrorShow(message: string): void {
     this.errorList.push({
       id: Guid.newGuid().toString(),
-      errorMessage: message
+      errorMessage: this._translate.instant(message)
     });
     setTimeout(() => this.errorList.shift(), HIDE_ERROR_NOTIFICATION_DURATION);
     this._changeDetectorRef.markForCheck();

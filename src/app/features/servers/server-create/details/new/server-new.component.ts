@@ -277,11 +277,6 @@ export class ServerNewComponent
     serverCreate.network.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     serverCreate.network.ipAddress = this.manageNetwork.customIpAddress;
 
-    // Job Reference Object
-    serverCreate.clientReferenceObject = {
-      serviceId: this.resource.serviceId
-    };
-
     return serverCreate;
   }
 

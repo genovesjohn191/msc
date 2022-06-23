@@ -94,6 +94,7 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
   private _handleApiErrorContext(error: McsApiErrorContext): void {
     let forbiddenAccessError = error?.details?.status === HttpStatusCode.Forbidden;
     if (error.requester === ApiErrorRequester.None || forbiddenAccessError) { return; }
+
     if (error.requester === ApiErrorRequester.Primary) {
       let errorHandlerService = this._injector.get(McsErrorHandlerService);
       errorHandlerService.redirectToErrorPage(error.details.status);

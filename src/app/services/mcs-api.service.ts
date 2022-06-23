@@ -143,6 +143,7 @@ import {
   McsFirewallFortiAnalyzer,
   McsFirewallFortiManager,
   McsFirewallPolicy,
+  McsFwFortiAnalyzerQueryParams,
   McsIdentity,
   McsInternetPort,
   McsJob,
@@ -191,16 +192,17 @@ import {
   McsOrderItemType,
   McsOrderWorkflow,
   McsPlannedWork,
+  McsPlannedWorkAffectedService,
   McsPlannedWorkQueryParams,
   McsPlatform,
   McsPortal,
   McsQueryParam,
-  McsReportDefenderCloudAlerts,
   McsReportAuditAlerts,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
   McsReportComputeResourceTotals,
   McsReportCostRecommendations,
+  McsReportDefenderCloudAlerts,
   McsReportGenericItem,
   McsReportInefficientVms,
   McsReportInefficientVmParams,
@@ -295,9 +297,7 @@ import {
   McsTicketQueryParams,
   McsValidation,
   McsVmSize,
-  McsWorkflowCreate,
-  McsPlannedWorkAffectedService,
-  McsFwFortiAnalyzerQueryParams
+  McsWorkflowCreate
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -2853,13 +2853,13 @@ export class McsApiService {
   ): Observable<never> {
     if (errorDetails instanceof McsApiErrorContext) {
       errorDetails.message = errorDetails.message || defaultMessage;
-      return throwError(errorDetails);
+      return throwError(() => errorDetails);
     } else {
       let errorContext = new McsApiErrorContext();
       errorContext.requester = ApiErrorRequester.Partial;
       errorContext.message = defaultMessage || getSafeProperty(errorDetails, (obj) => obj.message, '');
       errorContext.details = errorDetails;
-      return throwError(errorContext);
+      return throwError(() => errorContext);
     }
   }
 
