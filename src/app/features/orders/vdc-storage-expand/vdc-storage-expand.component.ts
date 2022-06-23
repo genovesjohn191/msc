@@ -393,7 +393,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
       map((response) => {
         let storage = getSafeProperty(response, (obj) => obj.storage);
         this.storageCount = storage?.length;
-        return resource;
+        return response;
       }),
       shareReplay(1)
     )
