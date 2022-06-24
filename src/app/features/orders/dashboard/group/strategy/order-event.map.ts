@@ -24,6 +24,7 @@ import { ChangeInternetPortPlanEvent } from './events/change-internet-port-plan.
 import { AzureProfessionalServiceRequestEvent } from './events/azure-professional-service-request.event';
 import { BackupRestoreRequestEvent } from './events/backup-restore-request.event';
 import { ComplexFirewallChangeEvent } from './events/complex-firewall-change.event';
+import { PrivateCloudChangeLaunchExtenderSpeedEvent } from './events/private-cloud-change-launch-extender-speed.event';
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
 export const orderEventMap: OrderEventRecord = {
@@ -52,4 +53,5 @@ export const orderEventMap: OrderEventRecord = {
   'internetPort.change': new ChangeInternetPortPlanEvent(),
   'publicCloud.professionalServices': new AzureProfessionalServiceRequestEvent(),
   'backup.requestRestore': new BackupRestoreRequestEvent(),
+  'privateCloud.launchExtender.changeSpeed': new PrivateCloudChangeLaunchExtenderSpeedEvent(),
 };

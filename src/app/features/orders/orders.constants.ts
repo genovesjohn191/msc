@@ -41,6 +41,7 @@ import { BackupRestoreRequestComponent } from './backup-restore-request/backup-r
 import {
   AzureProfessionalServiceRequestComponent
 } from './azure-professional-service-request/azure-professional-service-request.component';
+import { PrivateChangeExtenderSpeedComponent } from './private-change-extender-speed/private-change-extender-speed.component';
 
 /**
  * List of services for the main module
@@ -87,7 +88,8 @@ export const ordersComponents: any[] = [
   CloudHealthServicesComponent,
   ProvisionComponent,
   AzureProfessionalServiceRequestComponent,
-  BackupRestoreRequestComponent
+  BackupRestoreRequestComponent,
+  PrivateChangeExtenderSpeedComponent
 ];
 
 /**
@@ -228,11 +230,16 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderServerRequestPatch },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-
   {
     path: 'change/internet-port-plan',
     component: ChangeInternetPortPlanComponent,
     data: { routeId: RouteKey.OrderChangeInternetPortPlan },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+  {
+    path: 'change/private-cloud-launch-extender-speed',
+    component: PrivateChangeExtenderSpeedComponent,
+    data: { routeId: RouteKey.OrderPrivateCloudChangeLaunchExtenderSpeed },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {

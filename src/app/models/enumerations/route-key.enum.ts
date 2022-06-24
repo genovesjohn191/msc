@@ -136,6 +136,7 @@ export enum RouteKey {
   OrderComplexFirewallChange,
   OrderChangeInternetPortPlan,
   OrderAzureProfessionalServiceRequest,
+  OrderPrivateCloudChangeLaunchExtenderSpeed,
 
   Internet,
   InternetDetails,

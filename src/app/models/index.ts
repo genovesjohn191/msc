@@ -427,6 +427,7 @@ export * from './common/mcs-object-project-params';
 export * from './common/mcs-report-inefficient-vm-params';
 export * from './common/mcs-report-update-management-params';
 export * from './common/mcs-multi-job-form-config';
+export * from './common/mcs-extenders-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

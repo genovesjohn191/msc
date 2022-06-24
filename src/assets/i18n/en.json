@@ -1160,6 +1160,32 @@
       "primaryPort": "Redundant Internet Port services are currently unsupported for this operation. Please contact your account team for more information."
     }
   },
+  "privateExtenderSpeed": {
+    "title": "Change Private Cloud LAUNCH™ Extender Speed",
+    "sliderSwitch": "Desired Speed",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "previous": "Back",
+      "cancel": "Cancel"
+    },
+    "extenderService": {
+      "label": "Please select the Private Cloud LAUNCH™ Extender service you wish to change the speed for.",
+      "placeholder": "Select a service to change",
+      "contextualHelp": "Please select your A-End service."
+    },
+    "desiredSpeed": {
+      "title": "Desired Speed",
+      "sliderSelectedDesiredSpeed": "{{desiredSpeed_value}}ps",
+      "sliderCurrentDesiredSpeed": "(Current: {{desiredSpeed_value}}ps)",
+      "contextualHelp": "Select your desired speed. Please note that this is a max limit; overall speed and performance observed may differ due to factors outside the control of Macquarie Cloud Services."
+    },
+    "provisioning": {
+      "description": "Your launch extender speed is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+      "dataInProgress": "Preparing to change your launch extender speed. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    },
+    "serviceIsInvalid": "This service cannot be modified because it is currently being provisioned."
+  },
   "orderComplexFirewallChanges": {
     "title": "Complex Firewall Change",
     "detailsStep": {
@@ -3887,6 +3913,7 @@
     "apply": "Apply",
     "back": "Back",
     "cancel": "Cancel",
+    "changeSpeed": "Change Speed",
     "changeTag": "Change Tag",
     "close": "Close",
     "closed": "Closed",

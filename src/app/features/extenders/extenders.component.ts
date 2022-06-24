@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsAccessControlService,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -19,6 +20,8 @@ import {
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
+  ExtenderType,
+  extenderTypeText,
   McsExtenderService,
   McsFilterInfo,
   McsQueryParam,
@@ -65,6 +68,7 @@ export class ExtendersComponent extends McsPageBase {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
+    private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService
   ) {
     super(_injector);
@@ -104,6 +108,23 @@ export class ExtendersComponent extends McsPageBase {
 
   public get featureName(): string {
     return 'extenders';
+  }
+
+  public hasAccessToChangeSpeed(service: McsExtenderService): boolean {
+    return !isNullOrEmpty(service.serviceId) &&
+      service.serviceChangeAvailable &&
+      service.serviceEnd === 'A' &&
+      service.ExtenderTypeText === extenderTypeText[ExtenderType.ExtenderMtAz] &&
+      this._accessControlService.hasPermission(['OrderEdit']) &&
+      this._accessControlService.hasAccessToFeature('EnableChangePrivateCloudLaunchExtenderSpeed');
+  }
+
+  public onChangeSpeed(service: McsExtenderService): void {
+    this._navigationService.navigateTo(RouteKey.OrderPrivateCloudChangeLaunchExtenderSpeed, [], {
+      queryParams: {
+        serviceId: service.serviceId
+      }
+    });
   }
 
   private _getExtenders(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsExtenderService>> {

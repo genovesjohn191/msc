@@ -297,7 +297,8 @@ import {
   McsTicketQueryParams,
   McsValidation,
   McsVmSize,
-  McsWorkflowCreate
+  McsWorkflowCreate,
+  McsExtendersQueryParams
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -1931,7 +1932,7 @@ export class McsApiService {
     );
   }
 
-  public getExtenders(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+  public getExtenders(query?: McsExtendersQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiCollection<McsExtenderService>> {
     if (!isNullOrEmpty(optionalHeaders)) {
       return this._extendersApi.getExtenders(query, optionalHeaders).pipe(

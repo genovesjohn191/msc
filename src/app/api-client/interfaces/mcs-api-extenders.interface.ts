@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsExtenderService,
-  McsQueryParam
+  McsExtendersQueryParams
 } from '@app/models';
 
 export interface IMcsApiExtendersService {
@@ -10,7 +10,7 @@ export interface IMcsApiExtendersService {
   /**
    * Gets all Extender services
    */
-  getExtenders(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+  getExtenders(query?: McsExtendersQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsExtenderService[]>>;
 
   /**

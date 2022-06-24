@@ -6,7 +6,7 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsExtenderService,
-  McsQueryParam
+  McsExtendersQueryParams
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiExtendersService } from '../interfaces/mcs-api-extenders.interface';
@@ -16,13 +16,13 @@ export class McsApiExtendersService implements IMcsApiExtendersService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  public getExtenders(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+  public getExtenders(query?: McsExtendersQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsExtenderService[]>> {
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    if (isNullOrEmpty(query)) { query = new McsExtendersQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/hybrid-cloud/extenders';
-    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.searchParameters = McsExtendersQueryParams.convertCustomQueryToParamMap(query);
     mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiHttpService.get(mcsApiRequestParameter)
