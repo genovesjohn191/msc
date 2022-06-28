@@ -18,6 +18,7 @@ import {
   Injector,
   OnDestroy,
   OnInit,
+  TemplateRef,
   ViewChild
 } from '@angular/core';
 import { McsDataStatusFactory } from '@app/core';
@@ -72,6 +73,15 @@ enum SnapshotDialogType {
   StorageProfileOrDataStoreDisabled
 }
 
+class IncludeMemoryData {
+  constructor(
+    public message: string,
+    public disableCheckbox: boolean,
+    public includeMemory: boolean,
+    public lowStorage: boolean,
+    public lowStorageMessage?: string) { }
+}
+
 @Component({
   selector: 'mcs-server-snapshots',
   templateUrl: './server-snapshots.component.html',
@@ -89,8 +99,17 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
   private _applySnapshotHandler: Subscription;
   private _deleteSnapshotHandler: Subscription;
 
+  // Dialogbox variables
+  private _primaryDisk: McsServerStorageDevice;
+  private _storageProfile: string;
+  private _diskSizeMb: number;
+  private _resourceSizeMb: number;
+
   @ViewChild('formMessage')
   private _formMessage: FormMessage;
+
+  @ViewChild('createSnapshotTemplate', { read: TemplateRef })
+  public createSnapshotTemplate: TemplateRef<any>;
 
   public get warningIconKey(): string {
     return CommonDefinition.ASSETS_SVG_WARNING;
@@ -209,11 +228,19 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
    */
   private _showLowStorageDiskDialog(server: McsServer, isDedicated: boolean): void {
     let storageLabel =  this._setStorageLabelMessage(isDedicated);
+    let serverHasInsufficientStorageWithMemory = this._serverHasInSufficientStorage(server, true);
+    let serverData = new IncludeMemoryData(
+      this._translateService.instant('dialog.snapshotLowStorageSpace.message', { storage_label: storageLabel }),
+      serverHasInsufficientStorageWithMemory,
+      false,
+      false
+    );
+
     let dialogRef = this._dialogService2.openConfirmation({
-      data: server,
+      data: serverData,
       title: this._translateService.instant('dialog.snapshotLowStorageSpace.title'),
       type: DialogActionType.Warning,
-      message: this._translateService.instant('dialog.snapshotLowStorageSpace.message', { storage_label: storageLabel }),
+      message: this.createSnapshotTemplate,
       confirmText: this._translateService.instant('action.confirm'),
       cancelText: this._translateService.instant('action.cancel')
     });
@@ -223,7 +250,7 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
 
         if (result?.action !== DialogResultAction.Confirm) { return; }
         let snapshotDetails = new McsServerSnapshotCreate();
-        snapshotDetails.preserveMemory = true;
+        snapshotDetails.preserveMemory = serverData.includeMemory;
         snapshotDetails.preserveState = true;
         snapshotDetails.clientReferenceObject = {
           serverId: server.id
@@ -277,13 +304,24 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
    * @param server Server on where to create the snapshot
    */
   private _showCreateSnapshotDialog(server: McsServer): void {
-    let dialogRef = this._dialogService2.openConfirmation({
-      data: server,
-      title: this._translateService.instant('dialog.snapshotCreate.title'),
-      type: DialogActionType.Info,
-      message: server.platform?.type === PlatformType.VCenter ?
+    let storageLabel =  this._setStorageLabelMessage(server.isDedicated);
+    let serverHasInsufficientStorageWithMemory = this._serverHasInSufficientStorage(server, true);
+    let serverHasLowStorageWithMemory = this._serverHasLowStorage(server, true);
+    let serverData = new IncludeMemoryData(
+      server.platform?.type === PlatformType.VCenter ?
         this._translateService.instant('dialog.snapshotCreate.vCenterMessage', { server_name: server.name }) :
         this._translateService.instant('dialog.snapshotCreate.message', { server_name: server.name }),
+      serverHasInsufficientStorageWithMemory,
+      false,
+      serverHasLowStorageWithMemory,
+      this._translateService.instant('dialog.snapshotLowStorageSpace.message', { storage_label: storageLabel }),
+    );
+
+    let dialogRef = this._dialogService2.openConfirmation({
+      title: this._translateService.instant('dialog.snapshotCreate.title'),
+      type: DialogActionType.Info,
+      data: serverData,
+      message: this.createSnapshotTemplate,
       confirmText: this._translateService.instant('action.confirm'),
       cancelText: this._translateService.instant('action.cancel')
     });
@@ -293,7 +331,7 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
 
         if (result?.action !== DialogResultAction.Confirm) { return; }
         let snapshotDetails = new McsServerSnapshotCreate();
-        snapshotDetails.preserveMemory = true;
+        snapshotDetails.preserveMemory = serverData.includeMemory;
         snapshotDetails.preserveState = true;
         snapshotDetails.clientReferenceObject = {
           serverId: server.id
@@ -491,10 +529,10 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
    */
   private _getDialogTypeByVmStorage(server: McsServer, resource: McsResource): SnapshotDialogType {
     if (isNullOrEmpty(server.storageDevices)) { return SnapshotDialogType.None; }
-    let serverDedicated = server.isDedicated;
-    let primaryDisk = this._getPrimaryDisk(server.storageDevices);
-    let primaryDiskLinkedStorage = this._diskLinkedStorage(primaryDisk, resource.storage, serverDedicated);
-    if (isNullOrEmpty(primaryDisk) || isNullOrEmpty(primaryDiskLinkedStorage)) {
+
+    this._primaryDisk = this._getPrimaryDisk(server.storageDevices);
+    let primaryDiskLinkedStorage = this._diskLinkedStorage(this._primaryDisk, resource.storage, server.isDedicated);
+    if (isNullOrEmpty(this._primaryDisk) || isNullOrEmpty(primaryDiskLinkedStorage)) {
       return SnapshotDialogType.NoPrimaryDisk;
     }
 
@@ -503,24 +541,38 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
       return SnapshotDialogType.StorageProfileOrDataStoreDisabled;
     }
 
-    let storageProfile = serverDedicated ? primaryDisk.datastoreName : primaryDisk.storageProfile;
-    let disksSizeMb = server.storageDevices && server.storageDevices
+    this._storageProfile = server.isDedicated ? this._primaryDisk.datastoreName : this._primaryDisk.storageProfile;
+    this._diskSizeMb = server.storageDevices && server.storageDevices
       .map((disk) => disk.sizeMB)
       .reduce((totalSize, currentSize) => totalSize + currentSize);
-    let serverDisksSizes = disksSizeMb + (server.compute.memoryMB || 0) + convertGbToMb(1);
-    let resourceSizeMb = this._getStorageProfileAvailableMB(resource.storage, storageProfile);
-    let inSufficientStorage = serverDisksSizes > resourceSizeMb;
+    this._resourceSizeMb = this._getStorageProfileAvailableMB(resource.storage, this._storageProfile);
+
+    let inSufficientStorage = this._serverHasInSufficientStorage(server, false);
     if (inSufficientStorage) {
       return SnapshotDialogType.InsufficientStorage;
     }
 
-    let tenPercentOfResourceSizeMb = (resourceSizeMb*10)/100;
-    let lowStorage = (resourceSizeMb - serverDisksSizes) < tenPercentOfResourceSizeMb;
+    let lowStorage = this._serverHasLowStorage(server, false);
     if (lowStorage) {
       return SnapshotDialogType.LowStorage
     } else {
       return SnapshotDialogType.Create;
     }
+  }
+
+  private _serverHasInSufficientStorage(server: McsServer, hasMemory: boolean): boolean {
+    let includeMemory = hasMemory ? server.compute.memoryMB : 0;
+    let serverDisksSizes = this._diskSizeMb + includeMemory + convertGbToMb(1);
+    let inSufficientStorage = serverDisksSizes > this._resourceSizeMb;
+    return inSufficientStorage;
+  }
+
+  private _serverHasLowStorage(server: McsServer, hasMemory: boolean): boolean {
+    let tenPercentOfResourceSizeMb = (this._resourceSizeMb * 10) / 100;
+    let includeMemory = hasMemory ? server.compute.memoryMB : 0;
+    let serverDisksSizes = this._diskSizeMb + includeMemory + convertGbToMb(1);
+    let lowStorage = (this._resourceSizeMb - serverDisksSizes) < tenPercentOfResourceSizeMb;
+    return lowStorage;
   }
 
   /**

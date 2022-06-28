@@ -89,3 +89,25 @@
     </mcs-item>
   </mcs-section>
 </mcs-presentation-panel>
+
+<ng-template #createSnapshotTemplate let-data>
+  <section>
+    <ng-container *ngIf="data.includeMemory && data.lowStorage; else defaultMessage">
+      <span [innerHTML]="data?.lowStorageMessage"></span>
+    </ng-container>
+
+    <ng-template #defaultMessage>
+      <span [innerHTML]="data?.message"></span>
+    </ng-template>
+    <div [mcsTooltip]="'tooltip.insufficientStorageSpace' | translate"
+      [mcsTooltipShow]="data.disableCheckbox"
+      mcsTooltipPosition="bottom">
+      <mcs-checkbox [(ngModel)]="data.includeMemory" [disabled]="data.disableCheckbox">
+        {{ 'dialog.snapshotCreate.includeMemory' | translate }}
+      </mcs-checkbox>
+    </div>
+    <div *ngIf="data?.includeMemory" read-only>
+      {{ 'dialog.snapshotCreate.includeMemoryNote' | translate }}
+    </div>
+  </section>
+</ng-template>

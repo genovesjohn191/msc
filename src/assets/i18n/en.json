@@ -4043,7 +4043,8 @@
     "exportWord": "Export Word Document",
     "exportPdf": "Export PDF Document",
     "exportCsv": "Export CSV Document",
-    "tooltipText": "Downloading..."
+    "tooltipText": "Downloading...",
+    "insufficientStorageSpace": "Insufficient storage space"
   },
   "dialog": {
     "mediaDetach": {
@@ -4168,7 +4169,9 @@
     "snapshotCreate": {
       "title": "New Server Snapshot",
       "message": "Capturing a new snapshot will replace any existing snapshots for this server.\r\n\nAre you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?",
-      "vCenterMessage": "Are you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?"
+      "vCenterMessage": "Are you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?",
+      "includeMemory": "Include memory in snapshot",
+      "includeMemoryNote": "Please note, this operation may take longer than normal."
     },
     "snapshotDelete": {
       "title": "Delete Snapshot",
