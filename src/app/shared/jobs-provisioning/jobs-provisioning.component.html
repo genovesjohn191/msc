@@ -69,7 +69,7 @@
               </a>
             </ng-container>
 
-            <ng-container *ngIf="getServiceId(job) as resourceServiceId">
+            <ng-container *ngIf="getTicketServiceId(job) as resourceServiceId">
               <a mcsButton arrow="right" size="small" mcsId="raise-ticket" margin-top-small
                 [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
                 [mcsQueryParams]="{ serviceId: resourceServiceId, jobId: job.id }">
@@ -85,7 +85,7 @@
             <span>{{ job.errorMessage }}</span>
           </mcs-alert>
 
-          <mcs-item *ngIf="getServiceId(job) as resourceServiceId">
+          <mcs-item *ngIf="getTicketServiceId(job) as resourceServiceId">
             <a mcsButton arrow="right" size="small" mcsId="raise-ticket" margin-top-small
               [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
               [mcsQueryParams]="{ serviceId: resourceServiceId, jobId: job.id }">

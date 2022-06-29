@@ -239,7 +239,8 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription,
-      serviceId: selectedServiceId
+      serviceId: selectedServiceId,
+      ticketServiceId: selectedServiceId
     };
 
     this.submitOrderWorkflow(workflow);

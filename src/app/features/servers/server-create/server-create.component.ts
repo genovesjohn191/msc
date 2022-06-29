@@ -195,7 +195,8 @@ export class ServerCreateComponent extends McsOrderWizardBase
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription,
-      serviceId: resourceServiceId
+      serviceId: resourceServiceId,
+      ticketServiceId: resourceServiceId
     };
     this.submitOrderWorkflow(workflow);
   }

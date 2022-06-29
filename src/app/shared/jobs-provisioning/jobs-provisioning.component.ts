@@ -210,11 +210,13 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
-  /**
-   * Gets the service id
-   */
   public getServiceId(job: McsJob): string {
     let serviceId: string = getSafeProperty(job, (obj) => obj.clientReferenceObject.serviceId);
+    return serviceId || null;
+  }
+
+  public getTicketServiceId(job:  McsJob): string {
+    let serviceId: string = getSafeProperty(job, (obj) => obj.clientReferenceObject.ticketServiceId);
     return serviceId || null;
   }
 

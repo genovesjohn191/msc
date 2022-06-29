@@ -1,4 +1,5 @@
 import { JsonProperty } from '@app/utilities';
+
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 import {
   OrderWorkflowAction,
@@ -8,6 +9,7 @@ import {
 export interface IMcsOrderWorkflowRefObj {
   resourceDescription: string;
   serviceId?: string;
+  ticketServiceId?: string;
   serverId?: string;
 }
 

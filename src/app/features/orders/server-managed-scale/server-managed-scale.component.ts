@@ -323,7 +323,8 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription,
       serverId: managedServerId,
-      serviceId: this._resourceId
+      serviceId: this._resourceId,
+      ticketServiceId: this._resourceId
     };
 
     this.submitOrderWorkflow(workflow);
