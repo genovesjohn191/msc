@@ -29,6 +29,7 @@ export enum OrderIdType {
   ChangeInternetPortPlan = 'internetPort.change',
   AzureProfessionalServiceRequest = 'publicCloud.professionalServices',
   PrivateChangeLaunchExtenderSpeed = 'privateCloud.launchExtender.changeSpeed',
+  ChangeAzureExtendSpeed = 'publicCloud.launchExtender.changeSpeed',
 }
 
 /**

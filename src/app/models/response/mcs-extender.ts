@@ -73,7 +73,7 @@ export class McsExtenderService extends McsEntityBase {
     } else  {
       friendlySpeedValue =  String(this.speedMbps / 1000) + ' Gbps';
     }
-    return (this.productType === ExtenderType.AzureExtend) ?
+    return (this.serviceEnd !== 'A') ?
     null : friendlySpeedValue;
   }
 }

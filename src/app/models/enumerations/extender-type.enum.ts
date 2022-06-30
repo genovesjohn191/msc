@@ -1,17 +1,17 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum ExtenderType {
-  Unknown,
-  AzureExtend,
-  LaunchExtender,
+  PublicCloudExtenderMtAz,
+  PublicCloudExtenderCustomerSource,
+  ExtenderCustomerSource,
   ExtenderMtAz
 }
 
 export const extenderTypeText = {
-  [ExtenderType.Unknown]: 'Unknown',
-  [ExtenderType.AzureExtend]: 'Azure Extend',
-  [ExtenderType.LaunchExtender]: 'LAUNCH™ Extender',
-  [ExtenderType.ExtenderMtAz]: 'ExtenderMtAz'
+  [ExtenderType.PublicCloudExtenderMtAz]: 'Public Cloud Extender MT AZ',
+  [ExtenderType.PublicCloudExtenderCustomerSource]: 'Public Cloud Extender Customer Source',
+  [ExtenderType.ExtenderCustomerSource]: 'Extender Customer Source',
+  [ExtenderType.ExtenderMtAz]: 'Extender MT AZ'
 };
 
 /**

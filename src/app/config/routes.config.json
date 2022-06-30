@@ -958,6 +958,14 @@
     "requiredFeatureFlag": "EnableChangePrivateCloudLaunchExtenderSpeed",
     "documentTitle": "Change Private Cloud LAUNCH™ Extender Speed - Macquarie Cloud Services"
   },
+  "orderChangeAzureExtendSpeed": {
+    "enumKey": "OrderChangeAzureExtendSpeed",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/azure-extend-speed",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableChangePrivateCloudLaunchExtenderSpeed",
+    "documentTitle": "Change Azure Extend Speed - Macquarie Cloud Services"
+  },
   "orderAddSimpleFirewallChange": {
     "enumKey": "OrderAddSimpleFirewallChange",
     "enumCategory": "MakeAChange",

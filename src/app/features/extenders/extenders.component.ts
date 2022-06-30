@@ -111,16 +111,22 @@ export class ExtendersComponent extends McsPageBase {
   }
 
   public hasAccessToChangeSpeed(service: McsExtenderService): boolean {
+    let isProductTypeValid = service.ExtenderTypeText === extenderTypeText[ExtenderType.ExtenderMtAz] ||
+      service.ExtenderTypeText === extenderTypeText[ExtenderType.PublicCloudExtenderMtAz];
+
     return !isNullOrEmpty(service.serviceId) &&
       service.serviceChangeAvailable &&
       service.serviceEnd === 'A' &&
-      service.ExtenderTypeText === extenderTypeText[ExtenderType.ExtenderMtAz] &&
+      isProductTypeValid &&
       this._accessControlService.hasPermission(['OrderEdit']) &&
       this._accessControlService.hasAccessToFeature('EnableChangePrivateCloudLaunchExtenderSpeed');
   }
 
   public onChangeSpeed(service: McsExtenderService): void {
-    this._navigationService.navigateTo(RouteKey.OrderPrivateCloudChangeLaunchExtenderSpeed, [], {
+    let routeKey = service.ExtenderTypeText === extenderTypeText[ExtenderType.ExtenderMtAz] ?
+      RouteKey.OrderPrivateCloudChangeLaunchExtenderSpeed : RouteKey.OrderChangeAzureExtendSpeed;
+
+    this._navigationService.navigateTo(routeKey, [], {
       queryParams: {
         serviceId: service.serviceId
       }

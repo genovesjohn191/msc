@@ -1,0 +1,57 @@
+<form [formGroup]="fgChangeExtenderSpeedDetails" mcsFormGroup>
+  <p>{{ config.extenderServiceLabel }}</p>
+  <mcs-form-field *ngIf="(cloudExtenders$ | async) | mcsIsNotNullOrEmpty">
+    <mcs-select [placeholder]="'changeExtenderSpeed.extenderService.placeholder' | translate" required
+      autoSelect="false"
+      [mcsId]="config.extenderServiceId"
+      [formControl]="fcExtenderService"
+      [mcsContextualHelp]="'changeExtenderSpeed.extenderService.contextualHelp' | translate"
+      (selectionChange)="onChangeExtenderService()">
+
+      <mcs-option *ngFor="let service of cloudExtenders$ | async"
+        [selected]="selectedService === service.serviceId"
+        [value]="service"
+        [disabled]="!service.serviceChangeAvailable">
+        <span
+            [ngStyle]="{'pointer-events': 'auto'}"
+            [mcsTooltip]="'changeExtenderSpeed.serviceIsInvalid' | translate"
+            [mcsTooltipShow]="!service.serviceChangeAvailable"
+            [mcsTooltipPosition]="'right'">
+            <span [innerHTML]="service.billingDescription | mcsDataLabel: 'Unknown'"></span> - 
+            <span [innerHTML]="service.serviceId | mcsDataLabel: 'Unknown'"></span>
+        </span>
+      </mcs-option>
+    </mcs-select>
+  </mcs-form-field>
+
+  <span read-only>{{ noServicesFallbackText | translate }}</span>
+
+  <ng-container *ngIf="(fcExtenderService?.value) | mcsIsNotNullOrEmpty">
+    <div>
+      <div>
+        <span>{{ 'changeExtenderSpeed.desiredSpeed.title' | translate }} </span>
+      </div>
+      <mcs-slider [min]="desiredSpeedMin" [max]="desiredSpeedMax"
+        [mcsId]="config.desiredSpeedId"
+        [mcsContextualHelp]="'changeExtenderSpeed.desiredSpeed.contextualHelp' | translate"
+        [step]="desiredSpeedSliderStep"
+        [ngModel]="desiredSpeedSliderValueIndex" [ngModelOptions]="{standalone: true}"
+        (ngModelChange)="onDesiredSpeedSliderChanged($event)">
+      </mcs-slider>
+      <strong display-block text-center>
+        {{ 'changeExtenderSpeed.desiredSpeed.sliderSelectedDesiredSpeed' | translate:
+          {
+            desiredSpeed_value: (desiredSpeedSliderValue | mcsBitDataSize: 'Mb')
+          }
+        }}
+      </strong>
+      <span display-block text-center>
+        {{ 'changeExtenderSpeed.desiredSpeed.sliderCurrentDesiredSpeed' | translate:
+          {
+            desiredSpeed_value: (currentDesiredSpeed | mcsBitDataSize: 'Mb')
+          }
+        }}
+      </span>
+    </div>
+  </ng-container>
+</form>
