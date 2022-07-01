@@ -48,8 +48,6 @@ export class CommonDefinition {
     + `&mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
   public static CLOUD_HEALTH_URL = 'https://apps.cloudhealthtech.com';
   public static AZURE_PORTAL_URL = 'https://portal.azure.com/#blade';
-  public static TRACKS_DEV_URL = 'https://macquarietelecomdev.service-now.com';
-  public static TRACKS_PROD_URL = 'https://macquarietelecom.service-now.com';
 
   // Common Timezone
   public static TIMEZONE_SYDNEY = `Australia/Sydney`;

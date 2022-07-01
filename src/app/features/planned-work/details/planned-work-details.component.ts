@@ -23,6 +23,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  McsAuthenticationIdentity,
   McsListviewContext,
   McsListviewDataSource2,
   McsListviewQueryParam,
@@ -73,7 +74,7 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
   public constructor(
     _injector: Injector,
     _translate: TranslateService,
-    private _config: McsApiClientConfig,
+    private _authenticationIdentity: McsAuthenticationIdentity,
     private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
@@ -137,13 +138,8 @@ export class PlannedWorkDetailsComponent implements OnInit, OnDestroy {
   }
 
   public get tracksPlannedWorkUrl(): string {
-    let tracksUrl = "";
-    let isRunningInlab = this._config.apiHost.match('lab');
-    if (isRunningInlab) {
-      tracksUrl = CommonDefinition.TRACKS_DEV_URL;
-    } else {
-      tracksUrl = CommonDefinition.TRACKS_PROD_URL;
-    }
+    let tracksUrl = this._authenticationIdentity?.metadataLinks?.find((link) =>
+      link.key === 'tracks_host')?.value;
     return `${tracksUrl}/change_task.do?sys_id=`;
   }
   

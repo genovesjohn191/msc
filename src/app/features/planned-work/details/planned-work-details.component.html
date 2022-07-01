@@ -53,7 +53,7 @@
                 [disabled]="isDownloadingIcs">
                 {{ 'plannedWorkListing.details.action.downloadIcs' | translate }}
               </button>
-              <a mat-menu-item
+              <a mat-menu-item *mcsAccessControl="['PlannedWorkInternalView']; feature: []"
                 [href]="openTracks((selectedPlannedWork$ | async)?.id)"
                 target="_blank"
                 mcsId="open-tracks"
