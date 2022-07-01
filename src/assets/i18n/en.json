@@ -2524,7 +2524,7 @@
       "header": "Planned Work ",
       "action": {
         "downloadIcs": "Download Calendar Entry",
-        "openTracks": "Open Tracks"
+        "openTracks": "Open in TRACKS"
       },
       "overview": {
         "tabName": "Overview",
