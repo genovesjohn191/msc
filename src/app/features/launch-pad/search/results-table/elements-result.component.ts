@@ -129,7 +129,8 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
       source: 'crisp-elements',
       serviceId: record.serviceId,
       productId: record.productId,
-      type: productType
+      type: productType,
+      status: record.status
     };
   }
 }

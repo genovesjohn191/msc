@@ -95,7 +95,7 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
   private _identifyValidProductTypes(): void {
     this._validProductTypes = [];
     productWorkflowGroupMap.forEach((val, key) => {
-      if (val.findIndex((workflowGroup) => workflowGroup === this._context.workflowGroupId) >= 0) {
+      if (val.findIndex((workflowGroup) => workflowGroup.workflowId === this._context.workflowGroupId) >= 0) {
         this._validProductTypes.push(ProductType[key]);
       }
     });
@@ -114,13 +114,14 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
             orderId: '',
             assignedTo: '',
             hostingEngineer: '',
-            status: '',
+            status: undefined,
             createdOn: '',
             serviceAttributes: [],
             associatedServices: [],
             productId: '',
             description: '',
-            productType: ProductType.Unknown
+            productType: ProductType.Unknown,
+            crispStatusLabel: null
           };
         }
         else {

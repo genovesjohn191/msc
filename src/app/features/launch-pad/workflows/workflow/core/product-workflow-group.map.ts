@@ -1,274 +1,610 @@
 import { ProductType } from '@app/models';
 import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 
+export interface WorkflowGroupIdInfo {
+  workflowId: number;
+  allowedElementStatuses?: string [];
+}
 // Workflow: Assign workflow groups to product types
-export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
+export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = new Map(
   [
     [ ProductType.AzureProductConsumption,
       [
-        WorkflowGroupId.MicrosoftCreateSubscription,
+        {
+          workflowId: WorkflowGroupId.MicrosoftCreateSubscription,
+          allowedElementStatuses: [
+            "TRANSPROV"
+          ]
+        }
       ]
     ],
 
     [ ProductType.AzureReservation,
       [
-        WorkflowGroupId.MicrosoftProvisionReservation
+        {
+          workflowId: WorkflowGroupId.MicrosoftProvisionReservation,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.AzureSoftwareSubscription,
       [
-        WorkflowGroupId.MicrosoftSoftwareSubscriptionProvision
+        {
+          workflowId: WorkflowGroupId.MicrosoftSoftwareSubscriptionProvision,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.AzureVirtualDesktop,
       [
-        WorkflowGroupId.AvdProvisionHostPool,
-        WorkflowGroupId.VmsAvdHostPoolAdd
+        {
+          workflowId: WorkflowGroupId.AvdProvisionHostPool,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.VmsAvdHostPoolAdd,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.BrickFirewall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.CloudFirewall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
       ]
     ],
 
     [ ProductType.CloudLoadBalancer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.CloudPerformanceServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.CloudServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.CloudServerPrimary,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
-
     [ ProductType.CustomerDedicatedFirewall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.DedicatedLoadBalancing,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.DedicatedManagedFirewall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.DedicatedManagedFirewallSingle,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
       ]
     ],
 
-
     [ ProductType.DedicatedServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
       ]
     ],
 
     [ ProductType.DedicatedServerVmInstance,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
       ]
     ],
 
-
     [ ProductType.DedicatedVcenterServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
       ]
     ],
 
     [ ProductType.FirewallDedicated,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate,
-        WorkflowGroupId.FirewallProvisionAdom,
-        WorkflowGroupId.FirewallAllocate,
-        WorkflowGroupId.FirewallProvision,
-        WorkflowGroupId.FirewallDeprovision,
-        WorkflowGroupId.FirewallAssessUpgradeReadiness,
-        WorkflowGroupId.FirewallUpgrade
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallProvisionAdom,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallAllocate,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallProvision,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallDeprovision,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallAssessUpgradeReadiness,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallUpgrade,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.FirewallVa,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate,
-        WorkflowGroupId.FirewallProvisionAdom,
-        WorkflowGroupId.VfwAllocate,
-        WorkflowGroupId.VfwProvision,
-        WorkflowGroupId.VfwDeprovision,
-        WorkflowGroupId.FirewallAssessUpgradeReadiness,
-        WorkflowGroupId.FirewallUpgrade
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallProvisionAdom,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.VfwAllocate,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.VfwProvision,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.VfwDeprovision,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallAssessUpgradeReadiness,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallUpgrade,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.FirewallVlan,
       [
-        WorkflowGroupId.VirtualDataCentreNetworkCreate
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreNetworkCreate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
-
     [ ProductType.FourtyEightPortSwitch,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
       ]
     ],
 
     [ ProductType.GigabitFourtyEightPortSwitch,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
       ]
     ],
 
     [ ProductType.HostingInternetPort,
       [
-        WorkflowGroupId.VirtualDataCentreNetworkCreate
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreNetworkCreate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.HpServerLarge,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.HpServerMedium,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.HpServerSmall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.HpServerVerySmall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
-
     [ ProductType.Internet,
       [
-        WorkflowGroupId.VirtualDataCentreNetworkCreate
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreNetworkCreate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.LoadBalancerVa,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
-
     [ ProductType.ManagedRouter,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
@@ -282,19 +618,43 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
 
     [ ProductType.ManagedSwitch,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.ManagementFirewallVa,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
@@ -302,119 +662,245 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       [ ]
     ],
 
-
     [ ProductType.NasRaidSDisk,
       [ ]
     ],
 
     [ ProductType.NonStandardDedicatedLoadBalancing,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.NonStandardFirewall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.NonStandardGatewayRouter,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.NonStandardServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.NonStandardVirtualManagedServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
-
     [ ProductType.PortSwitch,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.PrimaryDedicatedStorage,
       [
-        WorkflowGroupId.DedicatedStorageCreateAttachVolume,
-        WorkflowGroupId.DedicatedStorageAttachVolume,
-        WorkflowGroupId.DedicatedStorageIncreaseVolumeSize,
+        {
+          workflowId: WorkflowGroupId.DedicatedStorageCreateAttachVolume,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.DedicatedStorageAttachVolume,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.DedicatedStorageIncreaseVolumeSize,
+          allowedElementStatuses: [ ]
+        },
         // WorkflowGroupId.DedicatedStorageUnmaskVolume,
-        WorkflowGroupId.DedicatedStorageRemoveZoning
+        {
+          workflowId: WorkflowGroupId.DedicatedStorageRemoveZoning,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
-
     [ ProductType.ServerBackup,
       [
-        WorkflowGroupId.ServerBackupProvision
+        {
+          workflowId: WorkflowGroupId.ServerBackupProvision,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.ServerHostIntrusionPreventionSystem,
       [
-        WorkflowGroupId.HostSecurityProvisionHids
+        {
+          workflowId: WorkflowGroupId.HostSecurityProvisionHids,
+          allowedElementStatuses: [ ]
+        } 
       ]
     ],
 
     [ ProductType.ServerAntiVirus,
       [
-        WorkflowGroupId.HostSecurityProvisionAntiVirus
+        {
+          workflowId: WorkflowGroupId.HostSecurityProvisionAntiVirus,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.SolarisServerLarge,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.SolarisServerMedium,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.SolarisServerSmall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
@@ -424,90 +910,204 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
 
     [ ProductType.TwentyFourPortSwitch,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VirtualDataCentreVmInstance,
       [
-        WorkflowGroupId.VirtualDataCentreVmInstanceProvision,
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreVmInstanceProvision,
+          allowedElementStatuses: [ ]
+        },
         // WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VirtualDrVirtualFirewallSwitch,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VirtualDrVirtualServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VirtualFirewall,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate,
-        WorkflowGroupId.FirewallProvisionAdom,
-        WorkflowGroupId.VfwAllocate,
-        WorkflowGroupId.VfwProvision,
-        WorkflowGroupId.VfwDeprovision,
-        WorkflowGroupId.FirewallAssessUpgradeReadiness,
-        WorkflowGroupId.FirewallUpgrade
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallProvisionAdom,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.VfwAllocate,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.VfwProvision,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.VfwDeprovision,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallAssessUpgradeReadiness,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallUpgrade,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VirtualManagedServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VirtualPrivateServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus,
-        WorkflowGroupId.ManagementToolsAdd,
-        WorkflowGroupId.ManagementToolsRemove,
-        WorkflowGroupId.ManagementToolsUpdate
+        {
+          workflowId: WorkflowGroupId.ManagementToolsQueryStatus,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsAdd,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsRemove,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VmBackup,
       [
-        WorkflowGroupId.VmBackupProvision
+        {
+          workflowId: WorkflowGroupId.VmBackupProvision,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.VirtualCrossConnect,
       [
-        WorkflowGroupId.VirtualDataCentreNetworkCreate
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreNetworkCreate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
 
     [ ProductType.DataCentresCrossConnect,
       [
-        WorkflowGroupId.VirtualDataCentreNetworkCreate
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreNetworkCreate,
+          allowedElementStatuses: [ ]
+        }
       ]
     ],
   ]

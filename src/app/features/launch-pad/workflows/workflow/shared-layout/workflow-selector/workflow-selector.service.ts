@@ -3,6 +3,8 @@ import { isNullOrEmpty } from '@app/utilities';
 import { workflowOptions } from '../workflow-options.map';
 import { WorkflowGroupId, workflowGroupIdText } from '../../core/workflow-groups/workflow-group-type.enum';
 import { WorkflowService } from '../../core/workflow.service';
+import { WorkflowGroupIdInfo } from '../../core/product-workflow-group.map';
+import { WorkflowSelectorConfig } from './workflow-selector.component';
 
 export interface WorkflowSelectorItem {
   id: WorkflowGroupId;
@@ -36,5 +38,24 @@ export class LaunchPadWorkflowSelectorService {
     });
 
     return items;
+  }
+
+  public getWorkflowGroupIdsBasedOnAllowedStatus(
+    data: WorkflowSelectorConfig,
+    workflowGroups: WorkflowGroupIdInfo[]): WorkflowGroupId[] {
+
+    let allowedWorkflowGroupIdsBasedOnStatus: WorkflowGroupId[] = [];
+
+    workflowGroups.forEach((group) => {
+      if (isNullOrEmpty(group?.allowedElementStatuses) || data.source === 'installed-services') { 
+        return allowedWorkflowGroupIdsBasedOnStatus.push(group.workflowId);
+      }
+      let statusFound = group.allowedElementStatuses.find((status) => status === data.status);
+      if (statusFound) {
+        return allowedWorkflowGroupIdsBasedOnStatus.push(group.workflowId);
+      }
+    });
+
+    return allowedWorkflowGroupIdsBasedOnStatus;
   }
 }

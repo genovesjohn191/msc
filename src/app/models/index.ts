@@ -116,6 +116,7 @@ export * from './enumerations/application-recovery-type.enum';
 export * from './enumerations/journal-history.enum';
 export * from './enumerations/extender-type.enum';
 export * from './enumerations/sort-direction.enum';
+export * from './enumerations/crisp-object-status.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
