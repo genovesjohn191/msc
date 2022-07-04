@@ -1,4 +1,5 @@
 import { JsonProperty } from '@app/utilities';
+import { CrispObjectStatus, crispObjectStatusText } from '../enumerations/crisp-object-status.enum';
 import { ProductType } from '../enumerations/product-type.enum';
 
 export class McsObjectCrispElementServiceAttribute {
@@ -43,7 +44,7 @@ export class McsObjectCrispElement extends McsObjectCrispElementService {
   public hostingEngineer: string = undefined;
 
   @JsonProperty()
-  public status: string = undefined;
+  public status: CrispObjectStatus = undefined;
 
   @JsonProperty()
   public createdOn: string = undefined;
@@ -53,4 +54,11 @@ export class McsObjectCrispElement extends McsObjectCrispElementService {
 
   @JsonProperty({ target: McsObjectCrispElementService })
   public associatedServices: McsObjectCrispElementService[] = undefined;
+
+  /**
+   * Returns the status label
+   */
+  public get crispStatusLabel(): string {
+    return crispObjectStatusText[this.status] || null;
+  }
 }

@@ -4,6 +4,7 @@ import {
   isNullOrEmpty,
   isNullOrUndefined
 } from '@app/utilities';
+import { McsAccessControlService } from '@app/core';
 
 import {
   WorkflowGroup,
@@ -13,8 +14,10 @@ import { WorkflowFactory } from './workflow.factory';
 import { LaunchPadWorkflow } from './workflow';
 import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 import { workflowGroupMap } from './workflow-group.map';
-import { productWorkflowGroupMap } from './product-workflow-group.map';
-import { McsAccessControlService } from '@app/core';
+import {
+  productWorkflowGroupMap,
+  WorkflowGroupIdInfo
+} from './product-workflow-group.map';
 
 @Injectable()
 export class WorkflowService {
@@ -34,7 +37,7 @@ export class WorkflowService {
     });
   }
 
-  public getWorkflowGroupIdsByProductType(type: ProductType): WorkflowGroupId[] {
+  public getWorkflowGroupIdsByProductType(type: ProductType): WorkflowGroupIdInfo[] {
     return productWorkflowGroupMap.get(type);
   }
 

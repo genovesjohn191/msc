@@ -13,6 +13,7 @@ import {
   RouteKey
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
+import { WorkflowGroupIdInfo } from '../../core/product-workflow-group.map';
 
 import { LaunchPadContextSource } from '../../core/workflow-group.interface';
 import { workflowGroupMap } from '../../core/workflow-group.map';
@@ -30,6 +31,7 @@ export interface WorkflowSelectorConfig {
   source: LaunchPadContextSource;
   serviceId?: string;
   productId?: string;
+  status?: string;
 }
 
 @Component({
@@ -73,10 +75,13 @@ export class LaunchPadWorkflowSelectorComponent {
   }
 
   private _setOptions(data: WorkflowSelectorConfig): void {
-    let workflowGroupIds: WorkflowGroupId[] = this._workflowService.getWorkflowGroupIdsByProductType(data.type);
-    if (isNullOrEmpty(workflowGroupIds)) {
+    let workflowGroups: WorkflowGroupIdInfo[] = this._workflowService.getWorkflowGroupIdsByProductType(data.type);
+    if (isNullOrEmpty(workflowGroups)) {
       return;
     }
-    this.options = this._workflowSelectorService.getOptionsById(workflowGroupIds);
+    let allowedWorkflowGroupIdsBasedOnStatus: WorkflowGroupId[] = 
+      this._workflowSelectorService.getWorkflowGroupIdsBasedOnAllowedStatus(data, workflowGroups);
+
+    this.options = this._workflowSelectorService.getOptionsById(allowedWorkflowGroupIdsBasedOnStatus);
   }
 }
