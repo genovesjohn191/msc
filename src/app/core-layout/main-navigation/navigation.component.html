@@ -250,7 +250,7 @@
             </ul>
           </li>
           <!-- Network -->
-          <li *mcsAccessControl="['FirewallConfigurationView', 'InternetView']">
+          <li>
             <a (click)="toggleThis('showNetworkSubmenu')"
               [class.active]="selectedCategory === routerCategoryEnum.Network"
               mcsId="network-link">
