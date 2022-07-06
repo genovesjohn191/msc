@@ -117,6 +117,6 @@ export class DynamicInputNetworkDbNetworkNameComponent extends DynamicInputTextC
       let sameNetworkName =  item.dynamicFormConfig[2].value === this.config.value;
       return sameCompany && sameNetworkName;
     });
-    return panelWithNameValue?.length <= 1;
+    return isNullOrUndefined(panelWithNameValue) ? true : panelWithNameValue?.length <= 1;
   }
 }
