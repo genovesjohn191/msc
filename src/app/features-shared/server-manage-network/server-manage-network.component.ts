@@ -520,7 +520,7 @@ export class ServerManageNetworkComponent
     if (isNullOrEmpty(this.targetNic)) { return; }
     this._networkOutput.hasChanged = this._networkOutput.valid
       && (this._networkOutput.ipAllocationMode !== this.targetNic.ipAllocationMode
-        || this._networkOutput.network.name !== this.targetNic.logicalNetworkName);
+        || this._networkOutput.network.networkName !== this.targetNic.networkName);
 
     let isCustomIpAddress = !this._networkOutput.hasChanged
       && this._networkOutput.ipAllocationMode === IpAllocationMode.Manual

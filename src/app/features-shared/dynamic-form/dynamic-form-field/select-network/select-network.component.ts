@@ -87,7 +87,7 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
     let options: FlatOption[] = [];
 
     collection.forEach((item) => {
-      options.push({ type: 'flat', key: item.name, value: item.name });
+      options.push({ type: 'flat', key: item.name, value: item.networkName });
     });
 
     return options;
@@ -95,7 +95,7 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
     this.dataChange.emit({
-      value: this.collection.find((item) => item.name === value),
+      value: this.collection.find((item) => item.networkName === value),
       eventName,
       dependents
     });

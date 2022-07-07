@@ -274,7 +274,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     if (!isNullOrEmpty(nic.ipAddresses)) {
       this.currentIpAddress = nic.ipAddresses[0];
     }
-    this._selectNetworkByName(nic.logicalNetworkName);
+    this._selectNetworkByName(nic.networkName);
   }
 
   /**
@@ -423,7 +423,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       if (isNullOrEmpty(result)) { return; }
 
       let nicValues = new McsServerCreateNic();
-      nicValues.name = this.selectedNic.logicalNetworkName;
+      nicValues.name = this.selectedNic.networkName;
       nicValues.clientReferenceObject = {
         serverId: server.id,
         nicId: this.selectedNic.id
@@ -514,7 +514,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _selectNetworkByName(networkName: string): void {
     if (isNullOrEmpty(networkName)) { return; }
     this.resourceNetworks$.subscribe((resourceNetworks) => {
-      let foundNetwork = resourceNetworks.find((network) => network.name === networkName);
+      let foundNetwork = resourceNetworks.find((network) => network.networkName === networkName);
       if (!isNullOrEmpty(foundNetwork)) {
         this.selectedNetwork = foundNetwork;
       }
@@ -539,7 +539,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     // Add in progress jobs
     this._newNic = new McsServerNic();
     this._newNic.id = SERVER_NIC_NEW_ID;
-    this._newNic.logicalNetworkName = job.clientReferenceObject.nicName;
+    this._newNic.networkName = job.clientReferenceObject.nicName;
     this._newNic.ipAllocationMode = job.clientReferenceObject.nicIpAllocationMode;
     this._newNic.ipAddresses = [job.clientReferenceObject.nicIpAddress];
     this._updateTableDataSource();
