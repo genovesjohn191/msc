@@ -61,6 +61,9 @@ export class McsServerNic extends McsEntityBase {
   @JsonProperty()
   public logicalNetworkName: string = undefined;
 
+  @JsonProperty()
+  public networkName: string = undefined;
+
   @JsonProperty({
     serializer: DeviceTypeSerialization,
     deserializer: DeviceTypeSerialization

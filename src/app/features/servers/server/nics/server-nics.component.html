@@ -26,11 +26,11 @@
 
         <!-- Network Column -->
         <ng-container matColumnDef="network">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="logicalNetworkName" disableClear>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="networkName" disableClear>
             {{ 'columnHeader.network' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" text-wrap>
-            <span [innerHTML]="row.logicalNetworkName | mcsDataLabel"></span>
+            <span [innerHTML]="row.networkName | mcsDataLabel"></span>
           </td>
         </ng-container>
 
