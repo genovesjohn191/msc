@@ -69,10 +69,10 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
   public retentionOptions$: Observable<McsOption[]>;
   public inviewLevelOptions$: Observable<McsOption[]>;
 
-  public fgBat: FormGroup;
-  public fcRetention: FormControl;
-  public fcInview: FormControl;
-  public fcDailyQuota: FormControl;
+  public fgBat: FormGroup<any>;
+  public fcRetention: FormControl<number>;
+  public fcInview: FormControl<any>;
+  public fcDailyQuota: FormControl<number>;
 
   @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
@@ -155,9 +155,9 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
   }
 
   private _registerFormGroup(): void {
-    this.fcRetention = new FormControl(30, [CoreValidators.required]); // Default value is 30 days, refer for the values below
-    this.fcInview = new FormControl(InviewLevel.Premium, [CoreValidators.required]); // Default value Premium
-    this.fcDailyQuota = new FormControl('', [
+    this.fcRetention = new FormControl<number>(30, [CoreValidators.required]); // Default value is 30 days, refer for the values below
+    this.fcInview = new FormControl<any>(InviewLevel.Premium, [CoreValidators.required]); // Default value Premium
+    this.fcDailyQuota = new FormControl<number>(null, [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.dailyQuotaMin)(control),

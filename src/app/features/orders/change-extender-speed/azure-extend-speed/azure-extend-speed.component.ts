@@ -60,7 +60,7 @@ export class AzureExtendSpeedComponent extends McsOrderWizardBase {
     desiredSpeedId: 'azure-extend-slider-desired-speed'
   };
 
-  public fgChangeAzureExtend: FormGroup;
+  public fgChangeAzureExtend: FormGroup<any>;
 
   private _extenderInfo: ChangeExtenderSpeedInfo;
 
@@ -85,7 +85,7 @@ export class AzureExtendSpeedComponent extends McsOrderWizardBase {
 
   constructor(
     _injector: Injector,
-    private _formBuilder: FormBuilder,
+    private _formBuilder:FormBuilder,
     private _changeAzureExtendSpeedService: AzureExtendSpeedService,
     private _translate: TranslateService
   ) {

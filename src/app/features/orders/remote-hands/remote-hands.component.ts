@@ -98,12 +98,12 @@ type RemoteHandRequestProperties = {
 })
 export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit, OnDestroy {
 
-  public fgRemoteHands: FormGroup;
-  public fcFloorLevel: FormControl;
-  public fcRackNumber: FormControl;
-  public fcRackService: FormControl;
-  public fcCabinetLocation: FormControl;
-  public fcInstruction: FormControl;
+  public fgRemoteHands: FormGroup<any>;
+  public fcFloorLevel: FormControl<string>;
+  public fcRackNumber: FormControl<string>;
+  public fcRackService: FormControl<any>;
+  public fcCabinetLocation: FormControl<string>;
+  public fcInstruction: FormControl<string>;
 
   public colocationGroups: McsOptionGroup[] = [];
   public cabinetLocationOption$: Observable<McsOption[]>;
@@ -384,11 +384,11 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
    * Register all form groups
    */
   private _registerFormGroup(): void {
-    this.fcFloorLevel = new FormControl('', [CoreValidators.required]);
-    this.fcRackNumber = new FormControl('', [CoreValidators.required]);
-    this.fcRackService = new FormControl('', [CoreValidators.required]);
-    this.fcCabinetLocation = new FormControl('', [CoreValidators.required]);
-    this.fcInstruction = new FormControl('', [CoreValidators.required]);
+    this.fcFloorLevel = new FormControl<string>('', [CoreValidators.required]);
+    this.fcRackNumber = new FormControl<string>('', [CoreValidators.required]);
+    this.fcRackService = new FormControl<any>('', [CoreValidators.required]);
+    this.fcCabinetLocation = new FormControl<string>('', [CoreValidators.required]);
+    this.fcInstruction = new FormControl<string>('', [CoreValidators.required]);
 
     this.fgRemoteHands = this._formBuilder.group({
       fcRackService: this.fcRackService,

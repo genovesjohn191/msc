@@ -73,9 +73,9 @@ export class ServerCloneComponent
   private _serverPrimaryStorageProfileDisabled: boolean;
 
   // Form variables
-  public fgCloneServer: FormGroup;
-  public fcServerName: FormControl;
-  public fcTargetServer: FormControl;
+  public fgCloneServer: FormGroup<any>;
+  public fcServerName: FormControl<string>;
+  public fcTargetServer: FormControl<McsServer>;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -237,7 +237,7 @@ export class ServerCloneComponent
    */
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.fcServerName = new FormControl('', [
+    this.fcServerName = new FormControl<string>('', [
       CoreValidators.required,
       CoreValidators.custom(
         this._customServerNameValidator.bind(this),
@@ -245,7 +245,7 @@ export class ServerCloneComponent
       )
     ]);
 
-    this.fcTargetServer = new FormControl('', [
+    this.fcTargetServer = new FormControl<McsServer>(null, [
       CoreValidators.required
     ]);
     this.fcTargetServer.valueChanges.pipe(
@@ -255,7 +255,7 @@ export class ServerCloneComponent
     );
 
     // Register Form Groups using binding
-    this.fgCloneServer = new FormGroup({
+    this.fgCloneServer = new FormGroup<any>({
       fcServerName: this.fcServerName,
       fcTargetServer: this.fcTargetServer
     });

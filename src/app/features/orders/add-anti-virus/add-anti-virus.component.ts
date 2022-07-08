@@ -77,8 +77,8 @@ const SERVER_ADD_ANTI_VIRUS_REF_ID = Guid.newGuid().toString();
 export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
   public serverGroups$: Observable<McsOptionGroup[]>;
 
-  public fgAddAntiVirusDetails: FormGroup;
-  public fcServer: FormControl;
+  public fgAddAntiVirusDetails: FormGroup<any>;
+  public fcServer: FormControl<McsServer>;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -283,9 +283,9 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
 
   private _registerFormGroups() {
     this.fgAddAntiVirusDetails = this._formBuilder.group([]);
-    this.fcServer = new FormControl('', [CoreValidators.required]);
+    this.fcServer = new FormControl<McsServer>(null, [CoreValidators.required]);
 
-    this.fgAddAntiVirusDetails = new FormGroup({
+    this.fgAddAntiVirusDetails = new FormGroup<any>({
       fcServer: this.fcServer
     });
 

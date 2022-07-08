@@ -47,8 +47,8 @@ export class CommentBoxComponent implements OnInit {
   public fileUploader: FileUploader;
   public hasDropZone: boolean;
   public errorDialogRef: DialogRef<any>;
-  public fgComment: FormGroup;
-  public fcComment: FormControl;
+  public fgComment: FormGroup<any>;
+  public fcComment: FormControl<any>;
 
   @Input()
   public attachedLimit: 'single' | 'multiple';
@@ -236,11 +236,11 @@ export class CommentBoxComponent implements OnInit {
    */
   private _registerFormControl(): void {
     // Register Form Controls
-    this.fcComment = new FormControl('', [
+    this.fcComment = new FormControl<any>('', [
     ]);
 
     // Register Form Groups using binding
-    this.fgComment = new FormGroup({
+    this.fgComment = new FormGroup<any>({
       fcComment: this.fcComment
     });
   }

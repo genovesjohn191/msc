@@ -98,9 +98,9 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   public selectedServiceId$: Observable<McsVdcStorageQueryParams>;
   public selectedStorage$: Observable<McsResourceStorage>;
 
-  public fgVdcStorageExpandDetails: FormGroup;
-  public fcResource: FormControl;
-  public fcStorage: FormControl;
+  public fgVdcStorageExpandDetails: FormGroup<any>;
+  public fcResource: FormControl<McsResource>;
+  public fcStorage: FormControl<McsResourceStorage>;
 
   public storageGB: number;
   public selectedVdcStorage: McsResourceStorage;
@@ -414,11 +414,11 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   private _registerFormGroup() {
 
-    this.fcResource = new FormControl('', [CoreValidators.required]);
-    this.fcStorage = new FormControl('', [CoreValidators.required]);
+    this.fcResource = new FormControl<McsResource>(null, [CoreValidators.required]);
+    this.fcStorage = new FormControl<McsResourceStorage>(null, [CoreValidators.required]);
 
     // Register Form Groups using binding
-    this.fgVdcStorageExpandDetails = new FormGroup({
+    this.fgVdcStorageExpandDetails = new FormGroup<any>({
       fcResource: this.fcResource,
       fcStorage: this.fcStorage,
     });

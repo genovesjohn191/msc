@@ -11,9 +11,6 @@ import { SnackBarContainerComponent } from './snack-bar-container/snack-bar-cont
 import { SnackBarRefDirective } from './snack-bar-ref/snack-bar-ref.directive';
 
 @NgModule({
-  entryComponents: [
-    SnackBarContainerComponent
-  ],
   providers: [
     SnackBarService
   ],

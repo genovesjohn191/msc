@@ -13,7 +13,6 @@ import { DnsZoneTtlEditDialogComponent } from './dns-zone-ttl-edit-dialog.compon
   ],
   exports: [
     DnsZoneTtlEditDialogComponent
-  ],
-  entryComponents: [ DnsZoneTtlEditDialogComponent ],
+  ]
 })
 export class DnsZoneDialogModule { }

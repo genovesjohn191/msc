@@ -10,7 +10,7 @@ import { DynamicFormValidationService } from './dynamic-form-validation.service'
 import { DynamicFormComponent } from './dynamic-form.component';
 
 @NgModule({
-  declarations: [
+declarations: [
     DynamicFormComponent
   ],
   imports: [
@@ -21,7 +21,6 @@ import { DynamicFormComponent } from './dynamic-form.component';
   exports: [
     DynamicFormComponent
   ],
-  entryComponents: [ DynamicFormComponent ],
   providers: [
     DynamicFormFieldModule,
     DynamicFormValidationService,

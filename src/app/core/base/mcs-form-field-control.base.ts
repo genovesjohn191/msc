@@ -76,7 +76,7 @@ export abstract class McsFormFieldControlBase<T> {
     let oldState = this.errorState;
     let ngControl = this.ngControl;
     let parent = this.parentForm;
-    let newState = ngControl && this.errorStateMatcher(ngControl.control as FormControl, parent);
+    let newState = ngControl && this.errorStateMatcher(ngControl.control as FormControl<any>, parent);
 
     if (newState !== oldState) {
       this.errorState = newState;

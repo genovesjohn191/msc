@@ -90,8 +90,8 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
   public resources$: Observable<McsResource[]>;
   public resourceCompute$: Observable<McsResourceCompute>;
 
-  public fgVdcScaleDetails: FormGroup;
-  public fcVdc: FormControl;
+  public fgVdcScaleDetails: FormGroup<any>;
+  public fcVdc: FormControl<McsResource>;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -361,9 +361,9 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
    * Register form group elements
    */
   private _registerFormGroup() {
-    this.fcVdc = new FormControl('', [CoreValidators.required]);
+    this.fcVdc = new FormControl<McsResource>(null, [CoreValidators.required]);
 
-    this.fgVdcScaleDetails = new FormGroup({
+    this.fgVdcScaleDetails = new FormGroup<any>({
       fcVdc: this.fcVdc
     });
 

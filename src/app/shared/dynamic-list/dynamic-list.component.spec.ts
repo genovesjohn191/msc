@@ -35,16 +35,16 @@ export class TestDynamicListComponent implements OnInit {
   @ViewChild('testDynamicListValidation')
   public dynamicListValidation: DynamicListComponent;
 
-  public testFG: FormGroup;
-  public testDynamicListHappyPathFc: FormControl;
-  public testDynamicListValidationFc: FormControl;
+  public testFG: FormGroup<any>;
+  public testDynamicListHappyPathFc: FormControl<any>;
+  public testDynamicListValidationFc: FormControl<any>;
 
 
   public ngOnInit(): void {
-    this.testDynamicListHappyPathFc = new FormControl([], []);
-    this.testDynamicListValidationFc = new FormControl([], [CoreValidators.requiredArray, CoreValidators.rangeArray(1, 2)]);
+    this.testDynamicListHappyPathFc = new FormControl<any>([], []);
+    this.testDynamicListValidationFc = new FormControl<any>([], [CoreValidators.requiredArray, CoreValidators.rangeArray(1, 2)]);
 
-    this.testFG = new FormGroup({
+    this.testFG = new FormGroup<any>({
       testDynamicListHappyPathFc: this.testDynamicListHappyPathFc,
       testDynamicListValidationFc: this.testDynamicListValidationFc
     });

@@ -127,10 +127,10 @@ export class ReportInsightsComponent implements OnDestroy {
     return RouteKey;
   }
 
-  public fcResourceCostMonthPeriod: FormControl;
-  public fcDefenderCloudAlertMonthPeriod: FormControl;
-  public fcAuditAlertMonthPeriod: FormControl;
-  public fcMonitoringPeriod: FormControl;
+  public fcResourceCostMonthPeriod: FormControl<PeriodOption>;
+  public fcDefenderCloudAlertMonthPeriod: FormControl<PeriodOption>;
+  public fcAuditAlertMonthPeriod: FormControl<PeriodOption>;
+  public fcMonitoringPeriod: FormControl<PeriodOption>;
 
   public monthOptions: PeriodOption[];
   public _subscriptionIdsFilter: string[] = undefined;
@@ -312,10 +312,10 @@ export class ReportInsightsComponent implements OnDestroy {
   }
 
   private _registerFormControl(): void {
-    this.fcResourceCostMonthPeriod = new FormControl('', []);
-    this.fcDefenderCloudAlertMonthPeriod = new FormControl('', []);
-    this.fcAuditAlertMonthPeriod = new FormControl('', []);
-    this.fcMonitoringPeriod = new FormControl('', []);
+    this.fcResourceCostMonthPeriod = new FormControl<PeriodOption>(null, []);
+    this.fcDefenderCloudAlertMonthPeriod = new FormControl<PeriodOption>(null, []);
+    this.fcAuditAlertMonthPeriod = new FormControl<PeriodOption>(null, []);
+    this.fcMonitoringPeriod = new FormControl<PeriodOption>(null, []);
   }
 
   private _subscribeToResourceMonthPeriodControlChanges(): void {

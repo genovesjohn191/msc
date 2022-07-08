@@ -88,9 +88,9 @@ const LOADING_TEXT = 'loading';
 
 export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public fgDnsChangeDetails: FormGroup;
-  public fcDnsService: FormControl;
-  public fcZone: FormControl;
+  public fgDnsChangeDetails: FormGroup<any>;
+  public fcDnsService: FormControl<any>;
+  public fcZone: FormControl<any>;
   public faChangeToApply: FormArray;
   public loadingDNSServices: boolean;
   public loadingDNSZones: boolean;
@@ -198,8 +198,8 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Returns a specific control from a form group based on the control name
    */
-  public getFormControl(formGroup: FormGroup, formControlName: string): FormControl {
-    return formGroup.controls[formControlName] as FormControl;
+  public getFormControl(formGroup: FormGroup<any>, formControlName: string): FormControl<any> {
+    return formGroup.controls[formControlName] as FormControl<any>;
   }
 
   /**
@@ -279,9 +279,9 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
    * Register all form groups
    */
   private _registerFormGroups() {
-    this.fcDnsService = new FormControl('', [CoreValidators.required]);
-    this.faChangeToApply = new FormArray([this._createChangeToApplyForm()]);
-    this.fcZone = new FormControl('', [CoreValidators.required]);
+    this.fcDnsService = new FormControl<any>('', [CoreValidators.required]);
+    this.faChangeToApply = new FormArray<any>([this._createChangeToApplyForm()]);
+    this.fcZone = new FormControl<any>('', [CoreValidators.required]);
     this.fgDnsChangeDetails = this._formBuilder.group({
       fcDnsService: this.fcDnsService,
       faChangeToApply: this.faChangeToApply,
@@ -334,9 +334,9 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Create and Returns a new Change To Apply Form Group
    */
-  private _createChangeToApplyForm(): FormGroup {
+  private _createChangeToApplyForm(): FormGroup<any> {
     let formControls = ChangeToApplyFactory.createChangeFormControls(ActionType.Add);
-    let form = this._formBuilder.group({ fcActionType: [ActionType.Add, [CoreValidators.required]] });
+    let form = this._formBuilder.group<any>({ fcActionType: [ActionType.Add, [CoreValidators.required]] });
     formControls.forEach((item) => {
       form.setControl(item.controlName, item.control);
     });
@@ -348,7 +348,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _getChangeDetailsByAction(): ChangeToApply[] {
     let changesToApply: ChangeToApply[] = [];
-    this.faChangeToApply.controls.forEach((formGroup: FormGroup) => {
+    this.faChangeToApply.controls.forEach((formGroup: FormGroup<any>) => {
         let ttlSecondsValue: number = formGroup.controls['fcTtl'].value;
         let recordType: string =  formGroup.controls['fcRecordType'].value;
         let priorityValue: number = (formGroup.controls['fcPriority'].value) ?

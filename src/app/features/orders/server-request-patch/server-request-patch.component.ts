@@ -84,9 +84,9 @@ type PatchRequestProperties = {
 })
 export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements OnInit, OnDestroy {
 
-  public fgRequestPatch: FormGroup;
-  public fcServers: FormControl;
-  public fcExclusions: FormControl;
+  public fgRequestPatch: FormGroup<any>;
+  public fcServers: FormControl<any>;
+  public fcExclusions: FormControl<any>;
 
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public managedServers: McsOption[] = [];
@@ -299,8 +299,8 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   }
 
   private _registerFormGroup(): void {
-    this.fcServers = new FormControl('', [CoreValidators.required]);
-    this.fcExclusions = new FormControl('');
+    this.fcServers = new FormControl<any>('', [CoreValidators.required]);
+    this.fcExclusions = new FormControl<any>('');
 
     this.fgRequestPatch = this._formBuilder.group({
       fcExclusions: this.fcExclusions,

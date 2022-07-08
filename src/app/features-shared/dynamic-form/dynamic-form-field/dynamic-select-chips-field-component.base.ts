@@ -65,7 +65,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
   public selectable = true;
   public removable = true;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public inputCtrl = new FormControl();
+  public inputCtrl = new FormControl<any>(null);
   public filteredOptions: Observable<FlatOption[] | GroupedOption[]>;
 
   protected collection: T[] = [];

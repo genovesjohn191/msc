@@ -45,11 +45,6 @@ import { FeaturesSharedModule } from '@app/features-shared';
     SharedModule,
     FeaturesSharedModule
   ],
-  entryComponents: [
-    LaunchPadWorkflowComponent,
-    LaunchPadWorkflowSelectorComponent,
-    LaunchPadServiceIdSwitchDialogComponent
-  ],
   providers: [
     McsStorageService,
     WorkflowService,

@@ -74,10 +74,10 @@ type AzureProfessionalServicesProperties = {
 
 export class AzureProfessionalServiceRequestComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public fgProfessionalService: FormGroup;
-  public fcManagementService: FormControl;
-  public fcAzureModule: FormControl;
-  public fcRequestDetails: FormControl;
+  public fgProfessionalService: FormGroup<any>;
+  public fcManagementService: FormControl<any>;
+  public fcAzureModule: FormControl<any>;
+  public fcRequestDetails: FormControl<string>;
 
   public managementService$: Observable<McsOption[]>;
   public azureModuleOptions$: Observable<McsOption[]>;
@@ -189,9 +189,9 @@ export class AzureProfessionalServiceRequestComponent extends McsOrderWizardBase
   }
 
   private _registerFormGroup(): void {
-    this.fcManagementService = new FormControl('', []);
-    this.fcAzureModule = new FormControl('', [CoreValidators.required]);
-    this.fcRequestDetails = new FormControl('', [CoreValidators.required]);
+    this.fcManagementService = new FormControl<any>('', []);
+    this.fcAzureModule = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRequestDetails = new FormControl<string>('', [CoreValidators.required]);
 
     this.fgProfessionalService = this._formBuilder.group({
       fcManagementService: this.fcManagementService,

@@ -228,7 +228,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
    * validate method implementation of Validator
    * @param _control form control to validate
    */
-  public validate(_control: FormControl): ValidationErrors | null {
+  public validate(_control: FormControl<any>): ValidationErrors | null {
     let errors = {};
     Array.from(this._validators.values()).forEach((validationFn) => {
       let errorInValidator = validationFn(_control);

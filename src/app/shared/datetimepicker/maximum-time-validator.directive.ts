@@ -43,7 +43,7 @@ export class MaximumTimeValidatorDirective implements Validator, OnChanges {
      * validate method implementation of Validator
      * @param _control form control to validate
      */
-    public validate(_control: FormControl): ValidationErrors | null {
+    public validate(_control: FormControl<any>): ValidationErrors | null {
       return isNullOrUndefined(this._validator) ? null : this._validator(_control);
     }
 }

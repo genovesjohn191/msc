@@ -78,7 +78,7 @@ export class DynamicSelectPodsComponent extends DynamicSelectFieldComponentBase<
 
   public config: DynamicSelectPodsField;
 
-  public inputCtrl = new FormControl();
+  public inputCtrl = new FormControl<any>(null);
   public datasource: TreeDatasource<GroupedOption>;
 
   public panelOpen: boolean;

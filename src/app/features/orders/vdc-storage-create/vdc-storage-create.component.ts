@@ -68,9 +68,9 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
 
   public resources$: Observable<McsResource[]>;
   public resourceStorages$: Observable<McsResourceStorage[]>;
-  public fgVdcStorageCreateDetails: FormGroup;
-  public fcResource: FormControl;
-  public fcPerfomanceTier: FormControl;
+  public fgVdcStorageCreateDetails: FormGroup<any>;
+  public fcResource: FormControl<McsResource>;
+  public fcPerfomanceTier: FormControl<any>;
   public storage: number;
 
   /**
@@ -245,11 +245,11 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
    */
   private _registerFormGroup() {
 
-    this.fcResource = new FormControl('', [CoreValidators.required]);
-    this.fcPerfomanceTier = new FormControl('', [CoreValidators.required]);
+    this.fcResource = new FormControl<McsResource>(null, [CoreValidators.required]);
+    this.fcPerfomanceTier = new FormControl<any>('', [CoreValidators.required]);
 
     // Register Form Groups using binding
-    this.fgVdcStorageCreateDetails = new FormGroup({
+    this.fgVdcStorageCreateDetails = new FormGroup<any>({
       fcResource: this.fcResource,
       fcPerfomanceTier: this.fcPerfomanceTier,
     });

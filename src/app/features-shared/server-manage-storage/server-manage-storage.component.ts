@@ -65,9 +65,9 @@ export class ServerManageStorageComponent
   public storageValue: number;
 
   // Forms
-  public fgScale: FormGroup;
-  public fcSelectStorages: FormControl;
-  public fcCustomStorage: FormControl;
+  public fgScale: FormGroup<any>;
+  public fcSelectStorages: FormControl<any>;
+  public fcCustomStorage: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<ServerManageStorage>();
@@ -367,13 +367,13 @@ export class ServerManageStorageComponent
    */
   private _registerFormGroup(): void {
     // Register form control for custom storage
-    this.fcCustomStorage = new FormControl('', this._setValidatorFunctionsForCustomInput());
+    this.fcCustomStorage = new FormControl<any>('', this._setValidatorFunctionsForCustomInput());
     this.fcCustomStorage.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
 
     // Register form control for selection of storage
-    this.fcSelectStorages = new FormControl('', this._setValidatorFunctionsForAutoScaler());
+    this.fcSelectStorages = new FormControl<any>('', this._setValidatorFunctionsForAutoScaler());
     this.fcSelectStorages.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());

@@ -13,7 +13,6 @@ import { TerraformDeploymentRenameDialogComponent } from './terraform-deployment
   ],
   exports: [
     TerraformDeploymentRenameDialogComponent
-  ],
-  entryComponents: [ TerraformDeploymentRenameDialogComponent ],
+  ]
 })
 export class TerraformDeploymentRenameDialogModule { }

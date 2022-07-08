@@ -111,7 +111,7 @@ export abstract class FormFieldBaseComponent2<TValue>
   private _size: McsSizeType;
   private _disabledElement: boolean;
   private _readonlyElement: boolean;
-  private _customControls: Array<FormControl>;
+  private _customControls: Array<FormControl<any>>;
   private _customValidators: Array<ValidatorFn>;
 
   constructor(protected injector: Injector) {
@@ -199,7 +199,7 @@ export abstract class FormFieldBaseComponent2<TValue>
     this._disabledElement = isDisabled;
   }
 
-  public registerCustomControls(...controls: FormControl[]): void {
+  public registerCustomControls(...controls: FormControl<any>[]): void {
     this._customControls = controls;
   }
 

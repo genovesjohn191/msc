@@ -98,9 +98,6 @@ import { LaunchPadWorkflowCoreModule } from './workflows/workflow/workflow-core.
     CrispOrderElementsComponent,
     ConfirmationDialogComponent
   ],
-  entryComponents: [
-    ConfirmationDialogComponent
-  ],
   imports: [
     SharedModule,
     FeaturesSharedModule,

@@ -78,8 +78,8 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
   private _formGroup: McsFormGroupDirective;
 
   // Forms control
-  public fg: FormGroup;
-  public fcResource: FormControl;
+  public fg: FormGroup<any>;
+  public fcResource: FormControl<McsResource>;
 
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
@@ -174,7 +174,7 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
   }
 
   private _intializeFormGroup(): void {
-    this.fcResource = new FormControl('', []);
+    this.fcResource = new FormControl<McsResource>(null, []);
 
     this.fg = this._formBuilder.group([
       this.fcResource

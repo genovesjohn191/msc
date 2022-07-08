@@ -41,8 +41,8 @@ import { ServerManageMedia } from './server-manage-media';
 })
 
 export class ServerManageMediaComponent implements OnInit, OnDestroy, IMcsDataChange<ServerManageMedia> {
-  public fgCatalog: FormGroup;
-  public fcCatalogItem: FormControl;
+  public fgCatalog: FormGroup<any>;
+  public fcCatalogItem: FormControl<any>;
 
   @Input()
   public catalogs: McsResourceCatalog[];
@@ -95,7 +95,7 @@ export class ServerManageMediaComponent implements OnInit, OnDestroy, IMcsDataCh
    */
   private _registerFormGroup(): void {
     // Register form control for catalog item
-    this.fcCatalogItem = new FormControl('', [
+    this.fcCatalogItem = new FormControl<any>(null, [
       CoreValidators.required
     ]);
     this.fcCatalogItem.valueChanges

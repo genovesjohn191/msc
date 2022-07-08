@@ -101,22 +101,23 @@ interface IRackService {
 
 export class ColocationStaffEscortComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public fgColocationStaffEscortDetails: FormGroup;
-  public fcColocationService: FormControl;
-  public fcEscortee: FormControl;
-  public fcName: FormControl;
-  public fcOrganization: FormControl;
-  public fcJobTitle: FormControl;
-  public fcMobile: FormControl;
-  public fcEmail: FormControl;
-  public fcAttendanceDate: FormControl;
-  public fcArrivalTime: FormControl;
-  public fcExitTime: FormControl;
-  public fcRackIdentifier: FormControl;
-  public fcWorkToPerform: FormControl;
-  public fcToolsRequired: FormControl;
-  public fcReason: FormControl;
-  public fcReferenceNumber: FormControl;
+  public fgColocationStaffEscortDetails: FormGroup<any>;
+  public fcColocationService: FormControl<any>;
+  public fcEscortee: FormControl<any>;
+  public fcName: FormControl<any>;
+  public fcOrganization: FormControl<any>;
+  public fcJobTitle: FormControl<any>;
+  public fcMobile: FormControl<any>;
+  public fcEmail: FormControl<any>;
+  public fcAttendanceDate: FormControl<any>;
+  public fcArrivalTime: FormControl<any>;
+  public fcExitTime: FormControl<any>;
+  public fcRackIdentifier: FormControl<any>;
+  public fcWorkToPerform: FormControl<any>;
+  public fcToolsRequired: FormControl<any>;
+  public fcReason: FormControl<any>;
+  public fcReferenceNumber: FormControl<any>;
+
   public colocationRacks$: Observable<McsServiceBase[]>;
   public colocationAntennas$: Observable<McsServiceBase[]>;
   public colocationCustomDevices$: Observable<McsServiceBase[]>;
@@ -392,22 +393,22 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
    */
   private _registerFormGroups() {
 
-    this.fcColocationService = new FormControl('', [CoreValidators.required]);
-    this.fcEscortee = new FormControl('', [CoreValidators.required]);
-    this.fcName = new FormControl('', [CoreValidators.required]);
-    this.fcOrganization = new FormControl('', [CoreValidators.required]);
-    this.fcJobTitle = new FormControl('', [CoreValidators.required]);
-    this.fcMobile = new FormControl('', [CoreValidators.required,
+    this.fcColocationService = new FormControl<any>('', [CoreValidators.required]);
+    this.fcEscortee = new FormControl<any>('', [CoreValidators.required]);
+    this.fcName = new FormControl<any>('', [CoreValidators.required]);
+    this.fcOrganization = new FormControl<any>('', [CoreValidators.required]);
+    this.fcJobTitle = new FormControl<any>('', [CoreValidators.required]);
+    this.fcMobile = new FormControl<any>('', [CoreValidators.required,
                                         CoreValidators.pattern(CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN)]);
-    this.fcEmail = new FormControl('', [CoreValidators.required, CoreValidators.pattern(CommonDefinition.REGEX_EMAIL_PATTERN)]);
-    this.fcAttendanceDate = new FormControl('', [CoreValidators.required]);
-    this.fcArrivalTime = new FormControl('', [CoreValidators.required]);
-    this.fcExitTime = new FormControl('', [CoreValidators.required]);
-    this.fcRackIdentifier = new FormControl('', [CoreValidators.required]);
-    this.fcWorkToPerform = new FormControl('', [CoreValidators.required]);
-    this.fcToolsRequired = new FormControl('', []);
-    this.fcReason = new FormControl('', [CoreValidators.required]);
-    this.fcReferenceNumber = new FormControl('', []);
+    this.fcEmail = new FormControl<any>('', [CoreValidators.required, CoreValidators.pattern(CommonDefinition.REGEX_EMAIL_PATTERN)]);
+    this.fcAttendanceDate = new FormControl<any>('', [CoreValidators.required]);
+    this.fcArrivalTime = new FormControl<any>('', [CoreValidators.required]);
+    this.fcExitTime = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRackIdentifier = new FormControl<any>('', [CoreValidators.required]);
+    this.fcWorkToPerform = new FormControl<any>('', [CoreValidators.required]);
+    this.fcToolsRequired = new FormControl<any>('', []);
+    this.fcReason = new FormControl<any>('', [CoreValidators.required]);
+    this.fcReferenceNumber = new FormControl<any>('', []);
 
     this.fgColocationStaffEscortDetails = this._formBuilder.group({
       fcColocationService: this.fcColocationService,

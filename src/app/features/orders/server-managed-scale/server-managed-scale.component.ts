@@ -103,7 +103,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   public resource$: Observable<McsResource>;
 
   public fgServerManagedScaleDetails: FormGroup;
-  public fcManageServer: FormControl;
+  public fcManageServer: FormControl<McsServer>;
 
   @ViewChild('fgManageScale')
   private _fgManageScale: IMcsFormGroup;
@@ -478,9 +478,9 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    */
   private _registerFormGroups() {
     this.fgServerManagedScaleDetails = this._formBuilder.group([]);
-    this.fcManageServer = new FormControl('', [CoreValidators.required]);
+    this.fcManageServer = new FormControl<McsServer>(null, [CoreValidators.required]);
 
-    this.fgServerManagedScaleDetails = new FormGroup({
+    this.fgServerManagedScaleDetails = new FormGroup<any>({
       fcManageServer: this.fcManageServer
     });
 

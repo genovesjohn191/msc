@@ -70,9 +70,9 @@ export class VdcManageScaleComponent
   public sliderTable: VdcManageScale[];
 
   // Forms control
-  public fgVdcScale: FormGroup;
-  public fcCustomMemory: FormControl;
-  public fcCustomCpu: FormControl;
+  public fgVdcScale: FormGroup<any>;
+  public fcCustomMemory: FormControl<any>;
+  public fcCustomCpu: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<VdcManageScale>();
@@ -377,7 +377,7 @@ export class VdcManageScaleComponent
    */
   private _registerFormGroup(): void {
     // Register custom memory
-    this.fcCustomMemory = new FormControl('', [
+    this.fcCustomMemory = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.ramMin)(control),
@@ -387,7 +387,7 @@ export class VdcManageScaleComponent
     ]);
 
     // Register custom CPU
-    this.fcCustomCpu = new FormControl('', [
+    this.fcCustomCpu = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.cpuMin)(control),

@@ -55,7 +55,7 @@ export class FirewallChangesSharedRuleComponent implements IMcsFormGroup, OnInit
   @Input()
   public ruleActionType: RuleAction;
   @Input()
-  public formGroup: FormGroup;
+  public formGroup: FormGroup<any>;
 
   @ViewChild(McsFormGroupDirective)
   public set formGroupRef(value: McsFormGroupDirective) {
@@ -153,7 +153,7 @@ export class FirewallChangesSharedRuleComponent implements IMcsFormGroup, OnInit
   /**
    * Assign the passed form controls to the form group
    */
-  private _assignFormControlsToGroup(controlDetails: { controlName: string, control: FormControl }[]): void {
+  private _assignFormControlsToGroup(controlDetails: { controlName: string, control: FormControl<any> }[]): void {
     controlDetails.forEach((item) => {
       let formControl = this.formGroup.controls[item.controlName];
       if (!isNullOrEmpty(formControl)) {

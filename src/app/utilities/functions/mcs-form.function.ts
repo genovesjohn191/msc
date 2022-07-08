@@ -25,7 +25,7 @@ export function isFormControlValid(control: AbstractControl): boolean {
  * @param control Corresponding control to be check
  * @param form Parent form of the form control field
  */
-export function defaultErrorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm) {
+export function defaultErrorStateMatcher(control: FormControl<any>, form: FormGroupDirective | NgForm) {
   return !!(control && control.invalid && (control.touched || (form && form.submitted)));
 }
 
@@ -36,8 +36,8 @@ export function defaultErrorStateMatcher(control: FormControl, form: FormGroupDi
  * @param valueIfFail Value to return in case if there is no such property
  */
 export function getSafeFormValue<T>(
-  formControl: FormControl,
-  predicateOperator?: (x: FormControl) => T,
+  formControl: FormControl<any>,
+  predicateOperator?: (x: FormControl<any>) => T,
   valueIfFail: any = null
 ): T {
   let isFormControlEnabled = formControl && formControl.enabled;
@@ -54,4 +54,4 @@ export function getSafeFormValue<T>(
  * Delegate type for the error state matcher
  */
 export type ErrorStateMatcher =
-  (control: FormControl, form: FormGroupDirective | NgForm) => boolean;
+  (control: FormControl<any>, form: FormGroupDirective | NgForm) => boolean;

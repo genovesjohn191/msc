@@ -71,10 +71,10 @@ interface CloudHealthPeriodRange {
 
 export class CloudHealthServicesComponent implements OnInit, OnDestroy {
   // Forms control
-  public fgCloudhealth: FormGroup;
-  public fcCloudhealth: FormControl;
-  public fcDropdown: FormControl;
-  public fcCheckbox: FormControl;
+  public fgCloudhealth: FormGroup<any>;
+  public fcCloudhealth: FormControl<any>;
+  public fcDropdown: FormControl<any>;
+  public fcCheckbox: FormControl<any>;
 
   public cloudHealthPeriodRange$: Observable<McsOption[]>;
   public cloudHealthAlerts$: Observable<McsOption[]>;
@@ -187,9 +187,9 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
    * Register form group elements for custom type
    */
    private _registerFormGroup(): void {
-    this.fcDropdown = new FormControl([], [CoreValidators.required]);
-    this.fcCheckbox = new FormControl([], [CoreValidators.required]);
-    this.fcCloudhealth = new FormControl('', []);
+    this.fcDropdown = new FormControl<any>([], [CoreValidators.required]);
+    this.fcCheckbox = new FormControl<any>([], [CoreValidators.required]);
+    this.fcCloudhealth = new FormControl<any>('', []);
 
     this.fgCloudhealth = this._formBuilder.group({
       fcDropdown: this.fcDropdown,

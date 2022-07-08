@@ -53,7 +53,7 @@ export class PlatformSecurityAdvisoriesWidgetComponent implements OnInit {
 
   public readonly dataSource: McsTableDataSource2<McsReportPlatformSecurityAdvisories>;
 
-  public fcMonthPeriod: FormControl;
+  public fcMonthPeriod: FormControl<PeriodOption>;
 
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
@@ -105,7 +105,7 @@ export class PlatformSecurityAdvisoriesWidgetComponent implements OnInit {
   }
 
   private _registerFormControl(): void {
-    this.fcMonthPeriod = new FormControl('', []);
+    this.fcMonthPeriod = new FormControl<PeriodOption>(null, []);
   }
 
   private _subscribeToMonthPeriodControlChanges(): void {

@@ -72,8 +72,8 @@ export class ChangeExtenderSpeedComponent implements OnInit, OnDestroy {
 
   public cloudExtenders$: Observable<McsExtenderService[]>;
 
-  public fgChangeExtenderSpeedDetails: FormGroup;
-  public fcExtenderService: FormControl;
+  public fgChangeExtenderSpeedDetails: FormGroup<any>;
+  public fcExtenderService: FormControl<any>;
 
   public selectedService: string;
 
@@ -213,7 +213,7 @@ export class ChangeExtenderSpeedComponent implements OnInit, OnDestroy {
   }
 
   private _registerFormGroup() {
-    this.fcExtenderService = new FormControl('', [CoreValidators.required]);
+    this.fcExtenderService = new FormControl<any>('', [CoreValidators.required]);
 
     this.fgChangeExtenderSpeedDetails = this._formBuilder.group({
       fcExtenderService: this.fcExtenderService

@@ -42,8 +42,8 @@ export class AddOnHidsComponent implements
   OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnHids> {
 
   public protectionLevelOptions$: Observable<string[]>;
-  public fgHids: FormGroup;
-  public fcHids: FormControl;
+  public fgHids: FormGroup<any>;
+  public fcHids: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<McsServerCreateAddOnHids>();
@@ -83,9 +83,9 @@ export class AddOnHidsComponent implements
    */
   private _registerFormGroup(): void {
     // Register Form Groups using binding
-    this.fcHids = new FormControl('', [CoreValidators.required]);
+    this.fcHids = new FormControl<any>('', [CoreValidators.required]);
 
-    this.fgHids = new FormGroup({
+    this.fgHids = new FormGroup<any>({
       fcHids: this.fcHids
     });
     this.fgHids.valueChanges.pipe(

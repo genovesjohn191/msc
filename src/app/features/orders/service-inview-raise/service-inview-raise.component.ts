@@ -88,7 +88,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
 
   public managedServers$: Observable<ServiceGroup[]>;
   public fgServiceInviewDetails: FormGroup;
-  public fcService: FormControl;
+  public fcService: FormControl<McsServer>;
 
   public selectedServiceId$: Observable<string>;
 
@@ -326,7 +326,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    */
   private _registerFormGroups() {
     this.fgServiceInviewDetails = this._formBuilder.group([]);
-    this.fcService = new FormControl('', [CoreValidators.required]);
+    this.fcService = new FormControl<McsServer>(null, [CoreValidators.required]);
 
     this.fgServiceInviewDetails = new FormGroup({
       fcService: this.fcService

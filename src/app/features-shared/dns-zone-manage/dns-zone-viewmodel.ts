@@ -59,22 +59,22 @@ export class DnsZoneViewModel {
   public recordInfo: DnsZoneModel | null;
 
   public readonly inProgress$: BehaviorSubject<boolean>;
-  public readonly fgDnsZone: FormGroup;
-  public readonly fcZoneType: FormControl;
-  public readonly fcHostName: FormControl;
-  public readonly fcTarget: FormControl;
-  public readonly fcTtlSeconds: FormControl;
-  public readonly fcService: FormControl;
-  public readonly fcProtocol: FormControl;
-  public readonly fcPriority: FormControl;
-  public readonly fcWeight: FormControl;
-  public readonly fcPort: FormControl;
-  public readonly fcData: FormControl;
-  public readonly fcOrder: FormControl;
-  public readonly fcPreference: FormControl;
-  public readonly fcFlags: FormControl;
-  public readonly fcRegex: FormControl;
-  public readonly fcReplacement: FormControl;
+  public readonly fgDnsZone: FormGroup<any>;
+  public readonly fcZoneType: FormControl<any>;
+  public readonly fcHostName: FormControl<any>;
+  public readonly fcTarget: FormControl<any>;
+  public readonly fcTtlSeconds: FormControl<any>;
+  public readonly fcService: FormControl<any>;
+  public readonly fcProtocol: FormControl<any>;
+  public readonly fcPriority: FormControl<any>;
+  public readonly fcWeight: FormControl<any>;
+  public readonly fcPort: FormControl<any>;
+  public readonly fcData: FormControl<any>;
+  public readonly fcOrder: FormControl<any>;
+  public readonly fcPreference: FormControl<any>;
+  public readonly fcFlags: FormControl<any>;
+  public readonly fcRegex: FormControl<any>;
+  public readonly fcReplacement: FormControl<any>;
 
   private readonly _destroySubject = new Subject<void>();
 
@@ -88,21 +88,21 @@ export class DnsZoneViewModel {
   ) {
     this.inProgress$ = new BehaviorSubject<boolean>(false);
 
-    this.fcZoneType = new FormControl('', [
+    this.fcZoneType = new FormControl<any>('', [
       CoreValidators.required
     ]);
 
-    this.fcHostName = new FormControl('', [
+    this.fcHostName = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.custom(this._onValidateHostName.bind(this), 'invalidDnsHostName')
     ]);
 
-    this.fcTarget = new FormControl('', [
+    this.fcTarget = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.custom(this._onValidateTarget.bind(this), 'invalidDnsTarget')
     ]);
 
-    this.fcTtlSeconds = new FormControl('', [
+    this.fcTtlSeconds = new FormControl<any>('', [
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.ttlMinValue)(control),
       (control) => CoreValidators.max(this.ttlMaxValue)(control)
@@ -110,78 +110,78 @@ export class DnsZoneViewModel {
 
     // TODO(apascual): Set the maximum based on zonetype
     // For A: 15, for AAAA: 39, Others: 255
-    this.fcData = new FormControl('', [
+    this.fcData = new FormControl<any>('', [
       CoreValidators.required,
       (control) => CoreValidators.maxLength(this.stringMaxLength)(control),
       CoreValidators.custom(this._onValidateData.bind(this), 'invalidDnsData')
     ]);
 
-    this.fcService = new FormControl('', [
+    this.fcService = new FormControl<any>('', [
       CoreValidators.required,
       (control) => CoreValidators.maxLength(this.serviceMaxLength)(control),
       CoreValidators.custom(this._onValidateService.bind(this), 'invalidDnsService')
     ]);
 
-    this.fcProtocol = new FormControl('', [
+    this.fcProtocol = new FormControl<any>('', [
       CoreValidators.required,
       (control) => CoreValidators.maxLength(this.stringMaxLength)(control),
       CoreValidators.custom(this._onValidateProtocol.bind(this), 'invalidDnsProtocol')
     ]);
 
-    this.fcPriority = new FormControl('', [
+    this.fcPriority = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.intMinValue)(control),
       (control) => CoreValidators.max(this.intMaxValue)(control)
     ]);
 
-    this.fcWeight = new FormControl('', [
+    this.fcWeight = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.intMinValue)(control),
       (control) => CoreValidators.max(this.intMaxValue)(control)
     ]);
 
-    this.fcPort = new FormControl('', [
+    this.fcPort = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.intMinValue)(control),
       (control) => CoreValidators.max(this.intMaxValue)(control)
     ]);
 
-    this.fcOrder = new FormControl('', [
+    this.fcOrder = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.intMinValue)(control),
       (control) => CoreValidators.max(this.intMaxValue)(control)
     ]);
 
-    this.fcPreference = new FormControl('', [
+    this.fcPreference = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.intMinValue)(control),
       (control) => CoreValidators.max(this.intMaxValue)(control)
     ]);
 
-    this.fcFlags = new FormControl('', [
+    this.fcFlags = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.maxLength(1),
       CoreValidators.custom(this._onValidateFlags.bind(this), 'invalidDnsFlags')
     ]);
 
-    this.fcRegex = new FormControl('', [
+    this.fcRegex = new FormControl<any>('', [
       CoreValidators.required,
       (control) => CoreValidators.maxLength(this.stringMaxLength)(control),
       CoreValidators.custom(this._onValidateRegex.bind(this), 'invalidDnsRegex')
     ]);
 
-    this.fcReplacement = new FormControl('', [
+    this.fcReplacement = new FormControl<any>('', [
       CoreValidators.required,
       (control) => CoreValidators.maxLength(this.stringMaxLength)(control),
       CoreValidators.custom(this._onValidateReplacement.bind(this), 'invalidDnsReplacement')
     ]);
 
-    this.fgDnsZone = new FormGroup({
+    this.fgDnsZone = new FormGroup<any>({
       fcZoneType: this.fcZoneType,
       fcHostName: this.fcHostName,
       fcTarget: this.fcTarget,

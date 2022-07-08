@@ -5,15 +5,15 @@ import {
 import { CoreValidators } from '@app/core';
 
 export class EnquiryformViewModel {
-  public readonly fgEnquiry: FormGroup;
-  public readonly fcNote: FormControl;
-  public readonly fcContact: FormControl;
+  public readonly fgEnquiry: FormGroup<any>;
+  public readonly fcNote: FormControl<any>;
+  public readonly fcContact: FormControl<any>;
 
   constructor() {
-    this.fcNote = new FormControl('');
-    this.fcContact = new FormControl('', [CoreValidators.required]);
+    this.fcNote = new FormControl<any>('');
+    this.fcContact = new FormControl<any>('', [CoreValidators.required]);
 
-    this.fgEnquiry = new FormGroup({
+    this.fgEnquiry = new FormGroup<any>({
       note: this.fcNote,
       contact: this.fcContact
     });

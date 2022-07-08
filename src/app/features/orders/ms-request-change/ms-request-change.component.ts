@@ -110,12 +110,12 @@ const LOADING_TEXT = 'loading';
 })
 
 export class MsRequestChangeComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
-  public fgMsServiceChange: FormGroup;
-  public fcMsService: FormControl;
-  public fcMsServiceRequestType: FormControl;
-  public fcAzureProduct: FormControl;
-  public fcComplexity: FormControl;
-  public fcAzureResource: FormControl;
+  public fgMsServiceChange: FormGroup<any>;
+  public fcMsService: FormControl<any>;
+  public fcMsServiceRequestType: FormControl<any>;
+  public fcAzureProduct: FormControl<any>;
+  public fcComplexity: FormControl<any>;
+  public fcAzureResource: FormControl<any>;
 
   public azureProductOptions$: Observable<McsOption[]>;
   public azureResourcesOptions$: Observable<McsOption[]>;
@@ -444,12 +444,12 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _registerFormGroup(): void {
-    this.fcMsService = new FormControl('', [CoreValidators.required]);
+    this.fcMsService = new FormControl<any>('', [CoreValidators.required]);
     let noAccessToOtherRequestType = !this.hasCloudHealthRequestAccess() && !this.hasProvisionRequestAccess();
     let setRequestTypeInitialValue = noAccessToOtherRequestType ? AzureServiceRequestType.Custom : '';
-    this.fcMsServiceRequestType = new FormControl(setRequestTypeInitialValue, [CoreValidators.required]);
-    this.fcAzureProduct = new FormControl('', [CoreValidators.required]);
-    this.fcAzureResource = new FormControl('', [CoreValidators.required]);
+    this.fcMsServiceRequestType = new FormControl<any>(setRequestTypeInitialValue, [CoreValidators.required]);
+    this.fcAzureProduct = new FormControl<any>('', [CoreValidators.required]);
+    this.fcAzureResource = new FormControl<any>('', [CoreValidators.required]);
 
     this.fgMsServiceChange = this._formBuilder.group({
       fcMsService: this.fcMsService,

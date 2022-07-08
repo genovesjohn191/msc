@@ -57,7 +57,8 @@ import {
   RouteKey,
   OrderIdType,
   DeliveryType,
-  HttpStatusCode
+  HttpStatusCode,
+  McsFirewall
 } from '@app/models';
 import {
   OrderDetails,
@@ -87,8 +88,8 @@ const LOADING_TEXT = 'loading';
 export class AddSimpleFirewallChangeComponent extends
 McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public fgAddFirewallRules: FormGroup;
-  public fcFirewallServices: FormControl;
+  public fgAddFirewallRules: FormGroup<any>;
+  public fcFirewallServices: FormControl<McsFirewall>;
   public faSharedRuleForm: FormArray;
   public isLoading: boolean;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
@@ -200,8 +201,8 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     return formArrayLength > 1;
   }
 
-  public getFormControl(formGroup: FormGroup, formControlName: string): FormControl {
-    return formGroup.controls[formControlName] as FormControl;
+  public getFormControl(formGroup: FormGroup<any>, formControlName: string): FormControl<any> {
+    return formGroup.controls[formControlName] as FormControl<any>;
   }
 
   public removeChangeItem(index: number): void {
@@ -255,7 +256,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
 
   private _registerFormGroups() {
-    this.fcFirewallServices = new FormControl('', [CoreValidators.required]);
+    this.fcFirewallServices = new FormControl<McsFirewall>(null, [CoreValidators.required]);
     this.faSharedRuleForm = new FormArray([this._createSharedRuleForm()]);
     this.fgAddFirewallRules = this._formBuilder.group({
       fcFirewallServices: this.fcFirewallServices,
@@ -309,7 +310,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
 
   private _getSharedRuleValues(): McsOrderSimpleFirewallAddRule[] {
     let sharedRules: McsOrderSimpleFirewallAddRule[] = [];
-    this.faSharedRuleForm.controls.forEach((formGroup: FormGroup) => {
+    this.faSharedRuleForm.controls.forEach((formGroup: FormGroup<any>) => {
         let rules: McsOrderSimpleFirewallAddRule = {
           action: formGroup.controls['fcActionType'].value,
           sourceZone: formatStringToText(formGroup.controls['fcSourceZoneInterface'].value),
@@ -348,9 +349,9 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     );
   }
 
-  private _createSharedRuleForm(): FormGroup {
+  private _createSharedRuleForm(): FormGroup<any> {
     let formControls = FirewallChangesRuleHelper.createFormControls(RuleAction.Add);
-    let form = this._formBuilder.group({ fcActionType: [ActionType.Allow, [CoreValidators.required]] });
+    let form = this._formBuilder.group<any>({ fcActionType: [ActionType.Allow, [CoreValidators.required]] });
     formControls.forEach((item) => {
       form.setControl(item.controlName, item.control);
     });

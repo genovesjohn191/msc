@@ -78,8 +78,8 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   public serverGroups$: Observable<McsOptionGroup[]>;
   public aggregationTargets$: Observable<McsBackUpAggregationTarget[]>;
 
-  public fgVmBackup: FormGroup;
-  public fcServer: FormControl;
+  public fgVmBackup: FormGroup<any>;
+  public fcServer: FormControl<McsServer>;
 
   private _vmBackup: McsOrderVmBackupAdd;
   private _valueChangesSubject = new Subject<void>();
@@ -305,7 +305,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   }
 
   private _registerFormGroup(): void {
-    this.fcServer = new FormControl('', [CoreValidators.required]);
+    this.fcServer = new FormControl<McsServer>(null, [CoreValidators.required]);
     this.fgVmBackup = this._formBuilder.group({
       fcServer: this.fcServer,
     });

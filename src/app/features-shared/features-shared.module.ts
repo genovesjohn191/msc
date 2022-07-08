@@ -85,13 +85,6 @@ const exportedComponents = [
     FormFieldsModule,
     DynamicFormModule
   ],
-  entryComponents: [
-    RenameServerDialogComponent,
-    TerraformTagChangeDialogComponent,
-    TerraformDeploymentRenameDialogComponent,
-    DnsZoneTtlEditDialogComponent,
-    OrderFirewallPolicyEditDialogComponent
-  ],
   providers: [
   ]
 })

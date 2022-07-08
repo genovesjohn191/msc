@@ -58,11 +58,11 @@ const NOTES_MAXLENGTH = 850;
 
 export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy {
 
-  public fgSmacSharedForm: FormGroup;
-  public fcTestCases: FormControl;
-  public fcContact: FormControl;
-  public fcCustomerReference: FormControl;
-  public fcNotes: FormControl;
+  public fgSmacSharedForm: FormGroup<any>;
+  public fcTestCases: FormControl<string[]>;
+  public fcContact: FormControl<any>;
+  public fcCustomerReference: FormControl<string>;
+  public fcNotes: FormControl<string>;
   public isPhoneNumberLoaded: boolean;
 
   public contactOptions$: Observable<McsOption[]>;
@@ -161,10 +161,10 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
    * Registers form group
    */
   private _registerFormGroup(): void {
-    this.fcTestCases = new FormControl([], [CoreValidators.rangeArray(0, 20)]);
-    this.fcNotes = new FormControl('', []);
-    this.fcContact = new FormControl(this._translate.instant('smacShared.form.contact.options.yes'), [CoreValidators.required]);
-    this.fcCustomerReference = new FormControl('', []);
+    this.fcTestCases = new FormControl<string[]>([], [CoreValidators.rangeArray(0, 20)]);
+    this.fcNotes = new FormControl<string>('', []);
+    this.fcContact = new FormControl<any>(this._translate.instant('smacShared.form.contact.options.yes'), [CoreValidators.required]);
+    this.fcCustomerReference = new FormControl<string>('', []);
 
     this.fgSmacSharedForm = this._formBuilder.group({
       fcTestCases: this.fcTestCases,

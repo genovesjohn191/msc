@@ -35,7 +35,7 @@ export interface TerraformTagChangeDialogData {
 })
 export class TerraformTagChangeDialogComponent implements OnInit {
   public filteredOptions: Observable<FlatOption[]>;
-  public filterControl = new FormControl();
+  public filterControl = new FormControl<any>(null);
 
   public get valid(): boolean {
     return !isNullOrEmpty(this.data.newTag) && this.data.newTag.id !== this.data.deployment.tag;

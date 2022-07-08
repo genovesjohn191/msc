@@ -75,9 +75,9 @@ export class ServerManageNetworkComponent
   public inputManageType: InputManageType;
 
   // Form variables
-  public fgNetwork: FormGroup;
-  public fcIpAllocationMode: FormControl;
-  public fcCustomIpAddress: FormControl;
+  public fgNetwork: FormGroup<any>;
+  public fcIpAllocationMode: FormControl<any>;
+  public fcCustomIpAddress: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<ServerManageNetwork>();
@@ -383,7 +383,7 @@ export class ServerManageNetworkComponent
    */
   private _registerFormGroup(): void {
     // Register form control for Ip allocation mode
-    this.fcIpAllocationMode = new FormControl(IpAllocationMode.Manual, [CoreValidators.required]);
+    this.fcIpAllocationMode = new FormControl<any>(IpAllocationMode.Manual, [CoreValidators.required]);
     this.fcIpAllocationMode.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
@@ -409,7 +409,7 @@ export class ServerManageNetworkComponent
     }
 
     // Register form control for custom ip address
-    this.fcCustomIpAddress = new FormControl('', validators);
+    this.fcCustomIpAddress = new FormControl<any>('', validators);
     this.fcCustomIpAddress.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());

@@ -44,8 +44,8 @@ export class AddOnSqlServerComponent implements
   OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnSqlServer> {
 
   public sqlServerOptions$: Observable<SqlServerOption[]>;
-  public fgSqlServer: FormGroup;
-  public fcSqlServer: FormControl;
+  public fgSqlServer: FormGroup<any>;
+  public fcSqlServer: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<McsServerCreateAddOnSqlServer>();
@@ -112,9 +112,9 @@ export class AddOnSqlServerComponent implements
    */
   private _registerFormGroup(): void {
     // Register Form Groups using binding
-    this.fcSqlServer = new FormControl('');
+    this.fcSqlServer = new FormControl<any>('');
 
-    this.fgSqlServer = new FormGroup({
+    this.fgSqlServer = new FormGroup<any>({
       fcSqlServer: this.fcSqlServer
     });
     this.fgSqlServer.valueChanges.pipe(
