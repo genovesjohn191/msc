@@ -120,6 +120,11 @@
             "styles": [
               "src/styles/base.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            },
             "scripts": []
           }
         },
@@ -150,5 +155,8 @@
         }
       }
     }},
-  "defaultProject": "fusion"
+  "defaultProject": "fusion",
+  "cli": {
+    "analytics": false
+  }
 }
