@@ -32,19 +32,19 @@ export interface OrderFirewallPolicyEditDialogData {
 export class OrderFirewallPolicyEditDialogComponent implements OnInit {
   public sourceInterfaceInput : string = '';
   public sourceAddressInput : string = '';
-  public fgPolicy : FormGroup;
-  public fcLabel : FormControl;
-  public fcProtocol : FormControl;
-  public fcSourceInterface : FormControl;
-  public fcSourceAddress : FormControl;
-  public fcSourcePort : FormControl;
-  public fcDestinationInterface : FormControl;
-  public fcDestinationAddress : FormControl;
-  public fcDestinationPort : FormControl;
-  public fcNatSourceIP : FormControl;
-  public fcNatSourcePort : FormControl;
-  public fcNatDestinationIP : FormControl;
-  public fcNatDestinationPort : FormControl;
+  public fgPolicy : FormGroup<any>;
+  public fcLabel : FormControl<string>;
+  public fcProtocol : FormControl<string>;
+  public fcSourceInterface : FormControl<string[]>;
+  public fcSourceAddress : FormControl<string[]>;
+  public fcSourcePort : FormControl<string[]>;
+  public fcDestinationInterface : FormControl<string[]>;
+  public fcDestinationAddress : FormControl<string[]>;
+  public fcDestinationPort : FormControl<string[]>;
+  public fcNatSourceIP : FormControl<string>;
+  public fcNatSourcePort : FormControl<string>;
+  public fcNatDestinationIP : FormControl<string>;
+  public fcNatDestinationPort : FormControl<string>;
 
   public constructor(
     public dialogRef: MatDialogRef<OrderFirewallPolicyEditDialogComponent>,
@@ -63,20 +63,20 @@ export class OrderFirewallPolicyEditDialogComponent implements OnInit {
   }
 
   private _registerFormGroup(){
-    this.fcLabel = new FormControl('');
-    this.fcProtocol = new FormControl('', [CoreValidators.required]);
-    this.fcSourceInterface = new FormControl('');
-    this.fcSourceAddress = new FormControl('');
-    this.fcSourcePort = new FormControl('');
-    this.fcDestinationInterface = new FormControl('');
-    this.fcDestinationAddress = new FormControl('');
-    this.fcDestinationPort = new FormControl('');
-    this.fcNatSourceIP = new FormControl('');
-    this.fcNatSourcePort = new FormControl('');
-    this.fcNatDestinationIP = new FormControl('');
-    this.fcNatDestinationPort = new FormControl('');
+    this.fcLabel = new FormControl<string>('');
+    this.fcProtocol = new FormControl<string>('', [CoreValidators.required]);
+    this.fcSourceInterface = new FormControl<string[]>([]);
+    this.fcSourceAddress = new FormControl<string[]>([]);
+    this.fcSourcePort = new FormControl<string[]>([]);
+    this.fcDestinationInterface = new FormControl<string[]>([]);
+    this.fcDestinationAddress = new FormControl<string[]>([]);
+    this.fcDestinationPort = new FormControl<string[]>([]);
+    this.fcNatSourceIP = new FormControl<string>('');
+    this.fcNatSourcePort = new FormControl<string>('');
+    this.fcNatDestinationIP = new FormControl<string>('');
+    this.fcNatDestinationPort = new FormControl<string>('');
 
-    this.fgPolicy = new FormGroup({
+    this.fgPolicy = new FormGroup<any>({
       fcLabel: this.fcLabel,
       fcProtocol: this.fcProtocol,
       fcSourceInterface: this.fcSourceInterface,

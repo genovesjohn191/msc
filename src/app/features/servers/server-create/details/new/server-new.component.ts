@@ -92,17 +92,17 @@ export class ServerNewComponent
   public manageNetwork: ServerManageNetwork;
 
   // Form variables
-  public fgNewServer: FormGroup;
-  public fgScale: FormGroup;
-  public fgStorage: FormGroup;
-  public fgNetwork: FormGroup;
+  public fgNewServer: FormGroup<any>;
+  public fgScale: FormGroup<any>;
+  public fgStorage: FormGroup<any>;
+  public fgNetwork: FormGroup<any>;
 
-  public fcServerName: FormControl;
-  public fcVApp: FormControl;
-  public fcImage: FormControl;
-  public fcNetwork: FormControl;
-  public fcScale: FormControl;
-  public fcStorage: FormControl;
+  public fcServerName: FormControl<any>;
+  public fcVApp: FormControl<any>;
+  public fcImage: FormControl<any>;
+  public fcNetwork: FormControl<any>;
+  public fcScale: FormControl<any>;
+  public fcStorage: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<ServerCreateDetailsBase<McsServerCreate>>();
@@ -359,7 +359,7 @@ export class ServerNewComponent
    */
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.fcServerName = new FormControl('', [
+    this.fcServerName = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.custom(
         this._customServerNameValidator.bind(this),
@@ -367,16 +367,16 @@ export class ServerNewComponent
       )
     ]);
 
-    this.fcVApp = new FormControl('', [
+    this.fcVApp = new FormControl<any>('', [
       // Optional selection
     ]);
 
-    this.fcImage = new FormControl('', [
+    this.fcImage = new FormControl<any>('', [
       CoreValidators.required
     ]);
 
     // Register Form Groups using binding
-    this.fgNewServer = new FormGroup({
+    this.fgNewServer = new FormGroup<any>({
       fcServerName: this.fcServerName,
       fcVApp: this.fcVApp,
       fcImage: this.fcImage,

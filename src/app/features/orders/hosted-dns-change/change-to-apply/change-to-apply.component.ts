@@ -58,7 +58,7 @@ export class ChangeToApplyComponent implements IMcsFormGroup, OnInit, OnDestroy 
   public dataChange = new EventEmitter<ChangeToApply>();
 
   @Input()
-  public formGroup: FormGroup;
+  public formGroup: FormGroup<any>;
 
   @ViewChild(McsFormGroupDirective)
   public set formGroupRef(value: McsFormGroupDirective) {
@@ -175,7 +175,7 @@ export class ChangeToApplyComponent implements IMcsFormGroup, OnInit, OnDestroy 
   /**
    * Assign the passed form controls to the form group
    */
-  private _assignFormControlsToGroup(controlDetails: { controlName: string, control: FormControl }[]): void {
+  private _assignFormControlsToGroup(controlDetails: { controlName: string, control: FormControl<any> }[]): void {
     controlDetails.forEach((item) => {
       let formControl = this.formGroup.controls[item.controlName];
       if (!isNullOrEmpty(formControl)) {

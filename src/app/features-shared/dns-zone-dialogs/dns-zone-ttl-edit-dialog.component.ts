@@ -31,8 +31,8 @@ export interface DnsZoneTtlEditDialogData {
 export class DnsZoneTtlEditDialogComponent implements OnInit {
   public minValue: number = 600;
   public maxValue: number = 2147483647;
-  public form: FormGroup;
-  public fcTtlSecondsInput: FormControl;
+  public form: FormGroup<any>;
+  public fcTtlSecondsInput: FormControl<any>;
 
   public get valid(): boolean {
     return this.form.valid && this.data.ttlSeconds !== this.data.zone.ttlSeconds;
@@ -50,9 +50,9 @@ export class DnsZoneTtlEditDialogComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.fcTtlSecondsInput = new FormControl(Validators.required,
+    this.fcTtlSecondsInput = new FormControl<any>(Validators.required,
       [ Validators.min(this.minValue), Validators.max(this.maxValue), Validators.pattern(CommonDefinition.REGEX_INTEGER_PATTERN) ]);
-    this.form = new FormGroup({
+    this.form = new FormGroup<any>({
       fcTtlSecondsInput: this.fcTtlSecondsInput
     });
   }

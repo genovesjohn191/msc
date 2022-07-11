@@ -98,7 +98,7 @@ export class McsFormGroupDirective implements OnInit, OnDestroy {
   /**
    * Returns the formgroup object
    */
-  public get formGroup(): FormGroup {
+  public get formGroup(): FormGroup<any> {
     return this._formGroup.control;
   }
 

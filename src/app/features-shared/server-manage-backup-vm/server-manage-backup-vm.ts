@@ -84,12 +84,12 @@ export class ServerManageBackupVmComponent implements
   public inviewLevelOptions$: Observable<McsOption[]>;
   public scheduleBackupOptions$: Observable<McsOption[]>;
 
-  public fgBackUp: FormGroup;
-  public fcAggregation: FormControl;
-  public fcRetention: FormControl;
-  public fcInview: FormControl;
-  public fcBackupSchedule: FormControl;
-  public fcDailyQuota: FormControl;
+  public fgBackUp: FormGroup<any>;
+  public fcAggregation: FormControl<any>;
+  public fcRetention: FormControl<any>;
+  public fcInview: FormControl<InviewLevel>;
+  public fcBackupSchedule: FormControl<any>;
+  public fcDailyQuota: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<McsOrderVmBackupAdd>();
@@ -231,11 +231,11 @@ export class ServerManageBackupVmComponent implements
    */
   private _registerFormGroup(): void {
     // Register Form Groups using binding
-    this.fcAggregation = new FormControl(null, []);
-    this.fcRetention = new FormControl(DEFAULT_RETENTION, [CoreValidators.required]);
-    this.fcInview = new FormControl(InviewLevel.Premium, [CoreValidators.required]);
-    this.fcBackupSchedule = new FormControl('', [CoreValidators.required]);
-    this.fcDailyQuota = new FormControl('', [
+    this.fcAggregation = new FormControl<any>(null, []);
+    this.fcRetention = new FormControl<any>(DEFAULT_RETENTION, [CoreValidators.required]);
+    this.fcInview = new FormControl<InviewLevel>(InviewLevel.Premium, [CoreValidators.required]);
+    this.fcBackupSchedule = new FormControl<any>('', [CoreValidators.required]);
+    this.fcDailyQuota = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.dailyQuotaMin)(control),

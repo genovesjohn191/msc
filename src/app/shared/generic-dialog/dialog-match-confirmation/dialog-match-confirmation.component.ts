@@ -27,13 +27,13 @@ import { DialogMatchConfirmationConfig } from './dialog-match-confirmation-confi
   templateUrl: './dialog-match-confirmation.component.html',
 })
 export class DialogMatchConfirmationComponent {
-  public fcInput: FormControl;
+  public fcInput: FormControl<any>;
 
   public constructor(
     public dialogRef: MatDialogRef<DialogMatchConfirmationComponent>,
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogMatchConfirmationConfig
   ) {
-    this.fcInput = new FormControl('', [
+    this.fcInput = new FormControl<any>('', [
       Validators.required,
       this._customValidator(this._matchValueValidator.bind(this), 'mismatched')
     ]);

@@ -86,13 +86,13 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   public dayPeriodOptions: string[] = [];
 
   // Form variables
-  public fgSchedule: FormGroup;
-  public fcRecurringScheduleDay: FormControl;
-  public fcRecurringScheduleTime: FormControl;
-  public fcRecurringScheduleTimePeriod: FormControl;
-  public fcRunOnceScheduleDay: FormControl;
-  public fcRunOnceScheduleTime: FormControl;
-  public fcRunOnceScheduleTimePeriod: FormControl;
+  public fgSchedule: FormGroup<any>;
+  public fcRecurringScheduleDay: FormControl<any>;
+  public fcRecurringScheduleTime: FormControl<any>;
+  public fcRecurringScheduleTimePeriod: FormControl<any>;
+  public fcRunOnceScheduleDay: FormControl<any>;
+  public fcRunOnceScheduleTime: FormControl<any>;
+  public fcRunOnceScheduleTimePeriod: FormControl<any>;
 
   @Input()
   public selectedServer: McsServer;
@@ -348,12 +348,12 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
    */
   private _initializeFormData(): void {
     // Register Form Controls
-    this.fcRecurringScheduleDay = new FormControl('', [CoreValidators.required]);
-    this.fcRecurringScheduleTime = new FormControl('', [CoreValidators.required]);
-    this.fcRecurringScheduleTimePeriod = new FormControl('', [CoreValidators.required]);
-    this.fcRunOnceScheduleDay = new FormControl('', [CoreValidators.required]);
-    this.fcRunOnceScheduleTime = new FormControl('', [CoreValidators.required]);
-    this.fcRunOnceScheduleTimePeriod = new FormControl('', [CoreValidators.required]);
+    this.fcRecurringScheduleDay = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRecurringScheduleTime = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRecurringScheduleTimePeriod = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRunOnceScheduleDay = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRunOnceScheduleTime = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRunOnceScheduleTimePeriod = new FormControl<any>('', [CoreValidators.required]);
 
     // Register Form Groups using binding
     this.fgSchedule = this._formBuilder.group([]);

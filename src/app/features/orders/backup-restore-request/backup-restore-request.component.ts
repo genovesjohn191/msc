@@ -81,12 +81,12 @@ type BackupRestoreRequestProperties = {
 })
 export class BackupRestoreRequestComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public fgBackupRestoreRequest: FormGroup;
-  public fcService: FormControl;
-  public fcRestoreFromDate: FormControl;
-  public fcDataRequired: FormControl;
-  public fcRestoreDestination: FormControl;
-  public fcReferenceNumber: FormControl;
+  public fgBackupRestoreRequest: FormGroup<any>;
+  public fcService: FormControl<any>;
+  public fcRestoreFromDate: FormControl<any>;
+  public fcDataRequired: FormControl<string>;
+  public fcRestoreDestination: FormControl<string>;
+  public fcReferenceNumber: FormControl<string>;
 
   public groupedBackupServices: McsOptionGroup[] = [];
 
@@ -261,11 +261,11 @@ export class BackupRestoreRequestComponent extends McsOrderWizardBase implements
   }
 
   private _registerFormGroup(): void {
-    this.fcService = new FormControl('', [CoreValidators.required]);
-    this.fcRestoreFromDate = new FormControl('', [CoreValidators.required]);
-    this.fcDataRequired = new FormControl('', [CoreValidators.required]);
-    this.fcRestoreDestination = new FormControl('', [CoreValidators.required]);
-    this.fcReferenceNumber = new FormControl('');
+    this.fcService = new FormControl<any>('', [CoreValidators.required]);
+    this.fcRestoreFromDate = new FormControl<any>('', [CoreValidators.required]);
+    this.fcDataRequired = new FormControl<string>('', [CoreValidators.required]);
+    this.fcRestoreDestination = new FormControl<string>('', [CoreValidators.required]);
+    this.fcReferenceNumber = new FormControl<string>('');
 
     this.fgBackupRestoreRequest = this._formBuilder.group({
       fcService: this.fcService,

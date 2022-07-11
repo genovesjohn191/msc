@@ -84,10 +84,10 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
   public internetPorts$: Observable<McsInternetPort[]>;
   public internetPort$: Observable<McsInternetPort>;
 
-  public fgInternetPlanDetails: FormGroup;
-  public fcInternetPort: FormControl;
-  public fcMonthlyCap: FormControl;
-  public fcPortSpeed: FormControl;
+  public fgInternetPlanDetails: FormGroup<any>;
+  public fcInternetPort: FormControl<McsInternetPort>;
+  public fcMonthlyCap: FormControl<any>;
+  public fcPortSpeed: FormControl<any>;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -334,9 +334,9 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
    * Register form group elements
    */
   private _registerFormGroup() {
-    this.fcInternetPort = new FormControl('', [CoreValidators.required]);
+    this.fcInternetPort = new FormControl<McsInternetPort>(null, [CoreValidators.required]);
 
-    this.fgInternetPlanDetails = new FormGroup({
+    this.fgInternetPlanDetails = new FormGroup<any>({
       fcInternetPort: this.fcInternetPort
     });
 

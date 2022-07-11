@@ -21,9 +21,6 @@ import { PopoverService } from './popover.service';
   ],
   providers: [
     PopoverService
-  ],
-  entryComponents: [
-    PopoverComponent
   ]
 })
 

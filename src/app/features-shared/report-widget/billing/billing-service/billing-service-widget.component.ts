@@ -72,7 +72,7 @@ export class BillingServiceWidgetComponent extends ReportWidgetBase implements O
 
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
-  public fcBillingService = new FormControl('', []);
+  public fcBillingService = new FormControl<BillingServiceItem[]>([], []);
 
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();

@@ -13,7 +13,6 @@ import { TerraformTagChangeDialogComponent } from './terraform-tag-change-dialog
   ],
   exports: [
     TerraformTagChangeDialogComponent
-  ],
-  entryComponents: [ TerraformTagChangeDialogComponent ],
+  ]
 })
 export class TerraformTagChangeDialogModule { }

@@ -14,6 +14,5 @@ import { OrderFirewallPolicyEditDialogComponent } from './order-firewall-policy-
   exports: [
     OrderFirewallPolicyEditDialogComponent
   ],
-  entryComponents: [ OrderFirewallPolicyEditDialogComponent ],
 })
 export class OrderDialogModule { }

@@ -63,7 +63,7 @@ interface MatTreeViewModel<TEntity> {
   tooltipFunc: (entity: TEntity) => string;
 
   data: TEntity;
-  checkbox: FormControl
+  checkbox: FormControl<boolean>
 }
 
 const TREE_ITEM_HEIGHT = 32;
@@ -114,7 +114,7 @@ export class FieldSelectTreeViewComponent<TEntity>
   public selectedNodes$: Observable<MatTreeViewModel<TEntity>[]>;
   public panelOpen: boolean;
   public viewportHeight: string;
-  public fcTreeSearch: FormControl;
+  public fcTreeSearch: FormControl<string>;
   public processOnGoing$: Observable<boolean>;
 
   public readonly treeDatasource: MatTreeFlatDataSource<TreeItem<TEntity>, MatTreeViewModel<TEntity>>;
@@ -149,7 +149,7 @@ export class FieldSelectTreeViewComponent<TEntity>
     );
     this.treeDatasource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
     this.treeSearch = new FieldSelectTreeSearch();
-    this.fcTreeSearch = new FormControl();
+    this.fcTreeSearch = new FormControl<string>(null);
 
     this.registerCustomControls(this.fcTreeSearch);
   }
@@ -417,7 +417,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       level: treeLevel,
       name: treeItem.text,
       data: treeItem.value,
-      checkbox: new FormControl(false),
+      checkbox: new FormControl<boolean>(false),
       selectable: treeItem.option?.selectable,
       excludeFromSelection: treeItem.option?.excludeFromSelection,
       disableWhen: treeItem.option?.disableWhen,

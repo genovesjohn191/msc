@@ -6,8 +6,8 @@ import {
 } from '@app/core';
 
 export class FeedbackSheetViewModel extends McsViewModelBase {
-  public fcExperience: FormControl;
-  public fcCanEmail: FormControl;
+  public fcExperience: FormControl<string>;
+  public fcCanEmail: FormControl<boolean>;
 
   constructor(injector: Injector) {
     super(injector);
@@ -15,7 +15,7 @@ export class FeedbackSheetViewModel extends McsViewModelBase {
     this.fcExperience = new FormControl('', [
       CoreValidators.required
     ]);
-    this.fcCanEmail = new FormControl('');
+    this.fcCanEmail = new FormControl(null);
 
     this.registerControls({
       fcExperience: this.fcExperience,

@@ -23,12 +23,12 @@ export class McsFormGroupService {
    * Touch all form fields based on the main content type
    * @param formMainContent Main form content per type
    */
-  public touchAllFormFields(formGroup: FormGroup): void;
-  public touchAllFormFields(formArray: FormArray): void;
-  public touchAllFormFields(formMainContent: FormGroup | FormArray): void {
+  public touchAllFormFields(formGroup: FormGroup<any>): void;
+  public touchAllFormFields(formArray: FormArray<any>): void;
+  public touchAllFormFields(formMainContent: FormGroup<any> | FormArray<any>): void {
     if (isNullOrEmpty(formMainContent)) { return; }
 
-    formMainContent instanceof FormGroup ?
+    formMainContent instanceof FormGroup<any> ?
       this._touchAllFormFieldsByFormGroup(formMainContent) :
       formMainContent.controls.forEach(this._touchAllFormFieldsByFormGroup.bind(this));
   }
@@ -36,7 +36,7 @@ export class McsFormGroupService {
   /**
    * Returns true when all form fields are valid by Form Group
    */
-  public allFormFieldsValid(formGroup: FormGroup): boolean {
+  public allFormFieldsValid(formGroup: FormGroup<any>): boolean {
     let formControls = this.getFormControls(formGroup);
     let formsAreMissing = isNullOrEmpty(formGroup) || isNullOrEmpty(formControls);
     if (formsAreMissing) { return false; }
@@ -53,7 +53,7 @@ export class McsFormGroupService {
   /**
    * Gets all associated form controls from group
    */
-  public getFormControls(formGroup: FormGroup): AbstractControl[] {
+  public getFormControls(formGroup: FormGroup<any>): AbstractControl[] {
     let controls = getSafeProperty(formGroup, (obj) => obj.controls);
     if (isNullOrEmpty(controls)) { return undefined; }
 
@@ -76,7 +76,7 @@ export class McsFormGroupService {
   /**
    * Resets all controls
    */
-  public resetAllControls(formGroup: FormGroup): void {
+  public resetAllControls(formGroup: FormGroup<any>): void {
     let formControls = this.getFormControls(formGroup);
     let formsAreMissing = isNullOrEmpty(formGroup) || isNullOrEmpty(formControls);
     if (formsAreMissing) { return; }
@@ -90,7 +90,7 @@ export class McsFormGroupService {
    * This will mark the form control as invalid
    * @param formControl Form control to be marked
    */
-  private _markInvalidFormControl(formControl: FormControl): void {
+  private _markInvalidFormControl(formControl: FormControl<any>): void {
     if (isNullOrEmpty(formControl)) { return; }
     formControl.markAsTouched();
   }
@@ -99,14 +99,14 @@ export class McsFormGroupService {
    * Touches all form fields by form group
    * @param formGroup Form group for the form fields
    */
-  private _touchAllFormFieldsByFormGroup(formGroup: FormGroup): void {
+  private _touchAllFormFieldsByFormGroup(formGroup: FormGroup<any>): void {
     let formGroupIsValid = getSafeProperty(formGroup, (obj) => obj.valid);
     if (formGroupIsValid) { return; }
 
     Object.keys(formGroup.controls).forEach((key) => {
-      formGroup.controls[key] instanceof FormGroup ?
-        this._touchAllFormFieldsByFormGroup(formGroup.controls[key] as FormGroup) :
-        this._markInvalidFormControl(formGroup.controls[key] as FormControl);
+      formGroup.controls[key] instanceof FormGroup<any> ?
+        this._touchAllFormFieldsByFormGroup(formGroup.controls[key] as FormGroup<any>) :
+        this._markInvalidFormControl(formGroup.controls[key] as FormControl<any>);
     });
   }
 }

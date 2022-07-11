@@ -89,14 +89,14 @@ export type ColocationServiceConfig = {
 })
 export class ColocationDeviceRestartComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public fgDeviceRestart: FormGroup;
-  public fcColocationService: FormControl;
-  public fcFloorLevel: FormControl;
-  public fcRackNumber: FormControl;
-  public fcLocationCabinet: FormControl;
-  public fcDeviceMakeModel: FormControl;
-  public fcDeviceNameLabel: FormControl;
-  public fcRestartInstruction: FormControl;
+  public fgDeviceRestart: FormGroup<any>;
+  public fcColocationService: FormControl<any>;
+  public fcFloorLevel: FormControl<string>;
+  public fcRackNumber: FormControl<string>;
+  public fcLocationCabinet: FormControl<any>;
+  public fcDeviceMakeModel: FormControl<string>;
+  public fcDeviceNameLabel: FormControl<string>;
+  public fcRestartInstruction: FormControl<string>;
 
   public colocationConfig: ColocationServiceConfig;
   public locationCabinetOptions$: Observable<McsOption[]>;
@@ -245,13 +245,13 @@ export class ColocationDeviceRestartComponent extends McsOrderWizardBase impleme
   }
 
   private _registerFormGroup(): void {
-    this.fcColocationService = new FormControl('', [CoreValidators.required]);
-    this.fcFloorLevel = new FormControl('', [CoreValidators.required]);
-    this.fcRackNumber = new FormControl('', [CoreValidators.required]);
-    this.fcLocationCabinet = new FormControl('', [CoreValidators.required]);
-    this.fcDeviceMakeModel = new FormControl('', [CoreValidators.required]);
-    this.fcDeviceNameLabel = new FormControl('', [CoreValidators.required]);
-    this.fcRestartInstruction = new FormControl('', [CoreValidators.required]);
+    this.fcColocationService = new FormControl<any>('', [CoreValidators.required]);
+    this.fcFloorLevel = new FormControl<string>('', [CoreValidators.required]);
+    this.fcRackNumber = new FormControl<string>('', [CoreValidators.required]);
+    this.fcLocationCabinet = new FormControl<any>('', [CoreValidators.required]);
+    this.fcDeviceMakeModel = new FormControl<string>('', [CoreValidators.required]);
+    this.fcDeviceNameLabel = new FormControl<string>('', [CoreValidators.required]);
+    this.fcRestartInstruction = new FormControl<string>('', [CoreValidators.required]);
 
     this.fgDeviceRestart = this._formBuilder.group({
       fcColocationService: this.fcColocationService,

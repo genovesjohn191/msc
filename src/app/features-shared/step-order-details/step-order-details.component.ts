@@ -123,16 +123,16 @@ export class StepOrderDetailsComponent
   public eventTrack: McsEventTrack;
 
   // Form variables
-  public fgOrderBilling: FormGroup;
-  public fcContractTerm: FormControl;
-  public fcBillingEntity: FormControl;
-  public fcBillingSite: FormControl;
-  public fcBillingCostCenter: FormControl;
-  public fcDescription: FormControl;
-  public fcDeliveryType: FormControl;
-  public fcWorkflowAction: FormControl;
-  public fcDateSchedule: FormControl;
-  public fcTimeSchedule: FormControl;
+  public fgOrderBilling: FormGroup<any>;
+  public fcContractTerm: FormControl<any>;
+  public fcBillingEntity: FormControl<any>;
+  public fcBillingSite: FormControl<any>;
+  public fcBillingCostCenter: FormControl<any>;
+  public fcDescription: FormControl<any>;
+  public fcDeliveryType: FormControl<any>;
+  public fcWorkflowAction: FormControl<any>;
+  public fcDateSchedule: FormControl<any>;
+  public fcTimeSchedule: FormControl<any>;
 
   // Others
   public contractTerms$: Observable<McsOption[]>;
@@ -664,15 +664,15 @@ export class StepOrderDetailsComponent
    * Form groups and Form controls registration area
    */
   private _registerFormGroup(): void {
-    this.fcContractTerm = new FormControl('', [CoreValidators.required]);
-    this.fcBillingEntity = new FormControl('', [CoreValidators.required]);
-    this.fcBillingSite = new FormControl('', [CoreValidators.required]);
-    this.fcBillingCostCenter = new FormControl('', [CoreValidators.required]);
-    this.fcDescription = new FormControl('', {validators: [CoreValidators.required], updateOn: 'blur'});
-    this.fcDeliveryType = new FormControl(DeliveryType.Standard, [CoreValidators.required]);
-    this.fcWorkflowAction = new FormControl(OrderWorkflowAction.Submitted, [CoreValidators.required]);
-    this.fcDateSchedule = new FormControl(this.minDate.toDateString(), [CoreValidators.required]);
-    this.fcTimeSchedule = new FormControl(this.minDate.toLocaleTimeString(), [CoreValidators.required]);
+    this.fcContractTerm = new FormControl<any>('', [CoreValidators.required]);
+    this.fcBillingEntity = new FormControl<any>('', [CoreValidators.required]);
+    this.fcBillingSite = new FormControl<any>('', [CoreValidators.required]);
+    this.fcBillingCostCenter = new FormControl<any>('', [CoreValidators.required]);
+    this.fcDescription = new FormControl<any>('', {validators: [CoreValidators.required], updateOn: 'blur'});
+    this.fcDeliveryType = new FormControl<any>(DeliveryType.Standard, [CoreValidators.required]);
+    this.fcWorkflowAction = new FormControl<any>(OrderWorkflowAction.Submitted, [CoreValidators.required]);
+    this.fcDateSchedule = new FormControl<any>(this.minDate.toDateString(), [CoreValidators.required]);
+    this.fcTimeSchedule = new FormControl<any>(this.minDate.toLocaleTimeString(), [CoreValidators.required]);
 
     this.fgOrderBilling = this._formBuilder.group([]);
   }

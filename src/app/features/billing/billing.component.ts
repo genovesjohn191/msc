@@ -59,7 +59,7 @@ type tabGroupType = 'summary' | 'service' | 'tabular';
 })
 export class BillingComponent implements OnInit, OnDestroy {
   public selectedTabId$: Observable<string>;
-  public fcBillingAccount = new FormControl('');;
+  public fcBillingAccount = new FormControl<string[]>(null);;
 
   private _isCsvDownloadInProgress: boolean = true;
 

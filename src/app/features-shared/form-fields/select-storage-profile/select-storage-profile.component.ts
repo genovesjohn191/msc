@@ -49,7 +49,7 @@ export class SelectStorageProfileComponent
   extends FormFieldBaseComponent<McsResourceStorage>
   implements OnInit, OnDestroy {
 
-  public fcModel = new FormControl('', []);
+  public fcModel = new FormControl<any>('', []);
   public storages$: Observable<McsResourceStorage[]>;
 
   @Input()

@@ -10,9 +10,9 @@ import {
   ViewChild
 } from '@angular/core';
 import {
- FormBuilder,
- FormControl,
- FormGroup
+  FormBuilder,
+  FormControl,
+  FormGroup
 } from '@angular/forms';
 import {
   Observable,
@@ -66,11 +66,11 @@ export enum StaticResourceGroupOption {
 })
 export class ProvisionComponent implements OnInit, OnDestroy {
   // Forms control
-  public fgProvision: FormGroup;
-  public fcModuleType: FormControl;
-  public fcTerraformModule: FormControl;
-  public fcResourceGroup: FormControl;
-  public fcNewResourceGroupName: FormControl;
+  public fgProvision: FormGroup<any>;
+  public fcModuleType: FormControl<any>;
+  public fcTerraformModule: FormControl<any>;
+  public fcResourceGroup: FormControl<any>;
+  public fcNewResourceGroupName: FormControl<any>;
 
   public terraformCategories: McsOption[] = [];
   public terraformModules: McsTerraformModule[] = [];
@@ -286,10 +286,10 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   }
 
   private _registerFormGroup(): void {
-    this.fcModuleType = new FormControl('', [CoreValidators.required]);
-    this.fcTerraformModule = new FormControl('', []);
-    this.fcResourceGroup = new FormControl('', [CoreValidators.required]);
-    this.fcNewResourceGroupName = new FormControl('', [CoreValidators.required]);
+    this.fcModuleType = new FormControl<any>(null, [CoreValidators.required]);
+    this.fcTerraformModule = new FormControl<any>('', []);
+    this.fcResourceGroup = new FormControl<any>('', [CoreValidators.required]);
+    this.fcNewResourceGroupName = new FormControl<any>('', [CoreValidators.required]);
 
     this.fgProvision = this._formBuilder.group({
       fcModuleType: this.fcModuleType,

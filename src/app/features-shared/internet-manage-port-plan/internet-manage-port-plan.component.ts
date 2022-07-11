@@ -73,9 +73,9 @@ export class InternetManagePortPlanComponent
   public sliderTableSize: number;
 
   // Forms control
-  public fgInternetPortPlan: FormGroup;
-  public fcCustomMonthlyCap: FormControl;
-  public fcCustomPortSpeed: FormControl;
+  public fgInternetPortPlan: FormGroup<any>;
+  public fcCustomMonthlyCap: FormControl<any>;
+  public fcCustomPortSpeed: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<InternetManagePortPlan>();
@@ -333,7 +333,7 @@ export class InternetManagePortPlanComponent
    */
   private _registerFormGroup(): void {
     // Register custom monthly cap
-    this.fcCustomMonthlyCap = new FormControl('', [
+    this.fcCustomMonthlyCap = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.monthlyCapMin)(control),

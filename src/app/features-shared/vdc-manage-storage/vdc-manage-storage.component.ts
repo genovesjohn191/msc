@@ -48,8 +48,8 @@ export class VdcManageStorageComponent
   implements IMcsDataChange<VdcManageStorage>, AfterViewInit, OnDestroy {
 
   // Forms Group
-  public fgInputSlider: FormGroup;
-  public fcInput: FormControl;
+  public fgInputSlider: FormGroup<any>;
+  public fcInput: FormControl<any>;
   public sliderModel: number;
 
   @Output()
@@ -157,7 +157,7 @@ export class VdcManageStorageComponent
    * Register form group elements
    */
   private _registerFormGroup(): void {
-    this.fcInput = new FormControl(this.roundedOffInitialValue, [
+    this.fcInput = new FormControl<any>(this.roundedOffInitialValue, [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.min(this.minimumUsable)(control),

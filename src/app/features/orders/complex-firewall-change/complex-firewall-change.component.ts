@@ -48,6 +48,7 @@ import {
   HttpStatusCode,
   McsFileInfo,
   McsFilterInfo,
+  McsFirewall,
   McsFirewallPolicy,
   McsOption,
   McsOrderCreate,
@@ -115,11 +116,11 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'schedule' }),
   ];
 
-  public fgComplexFirewallChangeRequest: FormGroup;
+  public fgComplexFirewallChangeRequest: FormGroup<any>;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
-  public fcFirewallService: FormControl;
-  public fcChangeObjective: FormControl;
-  public fcSearchPolicy: FormControl;
+  public fcFirewallService: FormControl<McsFirewall>;
+  public fcChangeObjective: FormControl<string>;
+  public fcSearchPolicy: FormControl<string>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public searchPolicyTerm: string = null;
   
@@ -456,8 +457,8 @@ export class ComplexFirewallChangeComponent extends McsOrderWizardBase implement
   }
 
   private _registerFormGroup(): void {
-    this.fcFirewallService = new FormControl('', [CoreValidators.required]);
-    this.fcChangeObjective = new FormControl('', [CoreValidators.required]);
+    this.fcFirewallService = new FormControl<McsFirewall>(null, [CoreValidators.required]);
+    this.fcChangeObjective = new FormControl<string>('', [CoreValidators.required]);
 
     this.fgComplexFirewallChangeRequest = this._formBuilder.group({
       fcFirewallService: this.fcFirewallService,

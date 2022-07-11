@@ -26,10 +26,7 @@ import { WebStompComponent } from './web-stomp/web-stomp.component';
   ],
   exports: [
     PageNotificationsComponent
-  ],
-  entryComponents: [
-    SessionIdleDialogComponent
-  ],
+  ]
 })
 
 export class PageNotificationsModule { }

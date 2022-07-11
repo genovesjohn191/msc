@@ -82,9 +82,9 @@ const SERVER_ADD_HIDS_REF_ID = Guid.newGuid().toString();
 export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
   public serverGroups$: Observable<McsOptionGroup[]>;
 
-  public fgAddHidsDetails: FormGroup;
-  public fcServer: FormControl;
-  public fcProtectionLevel: FormControl;
+  public fgAddHidsDetails: FormGroup<any>;
+  public fcServer: FormControl<McsServer>;
+  public fcProtectionLevel: FormControl<HidsProtectionLevel>;
   public protectionLevelOptions: McsOption[] = [];
 
   @ViewChild(McsFormGroupDirective)
@@ -295,8 +295,8 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   }
 
   private _registerFormGroups() {
-    this.fcServer = new FormControl('', [CoreValidators.required]);
-    this.fcProtectionLevel = new FormControl(HidsProtectionLevel.Detect, [CoreValidators.required]);
+    this.fcServer = new FormControl<McsServer>(null, [CoreValidators.required]);
+    this.fcProtectionLevel = new FormControl<HidsProtectionLevel>(HidsProtectionLevel.Detect, [CoreValidators.required]);
 
     this.fgAddHidsDetails = this._formBuilder.group({
       fcServer: this.fcServer,

@@ -13,12 +13,12 @@ export class ChangeToApplyFactory {
   /**
    * Create change form controls depending on the Action Type
    */
-  public static createChangeFormControls(action: ActionType): { controlName: string, control: FormControl }[] {
-    let commonformControls: { controlName: string, control: FormControl }[] = [
-      { controlName: 'fcHostName', control: new FormControl('', [CoreValidators.required]) },
-      { controlName: 'fcTarget', control: new FormControl('', [CoreValidators.required]) },
+  public static createChangeFormControls(action: ActionType): { controlName: string, control: FormControl<any> }[] {
+    let commonformControls: { controlName: string, control: FormControl<any> }[] = [
+      { controlName: 'fcHostName', control: new FormControl<any>('', [CoreValidators.required]) },
+      { controlName: 'fcTarget', control: new FormControl<any>('', [CoreValidators.required]) },
       {
-        controlName: 'fcTtl', control: new FormControl('', [
+        controlName: 'fcTtl', control: new FormControl<any>('', [
           CoreValidators.numeric,
           CoreValidators.min(MIN_TTL_VALUE),
           CoreValidators.max(MAX_TTL_VALUE)
@@ -33,11 +33,11 @@ export class ChangeToApplyFactory {
     return [...commonformControls, ...specificControls];
   }
 
-  private static _createAddSpeficFormControls(): { controlName: string, control: FormControl }[] {
-    let formControls: { controlName: string, control: FormControl }[] = [
-      { controlName: 'fcRecordType', control: new FormControl(DnsRecordType.A, [CoreValidators.required]) },
+  private static _createAddSpeficFormControls(): { controlName: string, control: FormControl<any> }[] {
+    let formControls: { controlName: string, control: FormControl<any> }[] = [
+      { controlName: 'fcRecordType', control: new FormControl<any>(DnsRecordType.A, [CoreValidators.required]) },
       {
-        controlName: 'fcPriority', control: new FormControl({value: '', disabled: true}, [
+        controlName: 'fcPriority', control: new FormControl<any>({value: '', disabled: true}, [
           CoreValidators.required,
           CoreValidators.numeric,
           CoreValidators.min(MIN_PRIORITY_VALUE),
@@ -49,17 +49,17 @@ export class ChangeToApplyFactory {
     return formControls;
   }
 
-  private static _createRemoveSpeficFormControls(): { controlName: string, control: FormControl }[] {
-    let formControls: { controlName: string, control: FormControl }[] = [
-      { controlName: 'fcRecordType', control: new FormControl(DnsRecordType.A, []) },
-      { controlName: 'fcTarget', control: new FormControl('') },
-      { controlName: 'fcTtl', control: new FormControl('', [
+  private static _createRemoveSpeficFormControls(): { controlName: string, control: FormControl<any> }[] {
+    let formControls: { controlName: string, control: FormControl<any> }[] = [
+      { controlName: 'fcRecordType', control: new FormControl<any>(DnsRecordType.A, []) },
+      { controlName: 'fcTarget', control: new FormControl<any>('') },
+      { controlName: 'fcTtl', control: new FormControl<any>('', [
         CoreValidators.numeric,
         CoreValidators.min(MIN_TTL_VALUE),
         CoreValidators.max(MAX_TTL_VALUE)
       ])},
       {
-        controlName: 'fcPriority', control: new FormControl({value: '', disabled: true}, [
+        controlName: 'fcPriority', control: new FormControl<any>({value: '', disabled: true}, [
           CoreValidators.numeric,
           CoreValidators.min(MIN_PRIORITY_VALUE),
           CoreValidators.max(MAX_PRIORITY_VALUE)

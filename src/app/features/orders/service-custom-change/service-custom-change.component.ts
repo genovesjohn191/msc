@@ -87,10 +87,10 @@ interface CustomChangeService {
 
 export class ServiceCustomChangeComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public fgCustomChangeDetails: FormGroup;
-  public fcService: FormControl;
-  public fcChangeDescription: FormControl;
-  public fcChangeObjective: FormControl;
+  public fgCustomChangeDetails: FormGroup<any>;
+  public fcService: FormControl<any>;
+  public fcChangeDescription: FormControl<string>;
+  public fcChangeObjective: FormControl<string>;
 
   public vdcServices$: Observable<CustomChangeService[]>;
   public serverServices$: Observable<CustomChangeService[]>;
@@ -251,9 +251,9 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
    * Register all form groups
    */
   private _registerFormGroups() {
-    this.fcService = new FormControl('', [CoreValidators.required]);
-    this.fcChangeDescription = new FormControl('', [CoreValidators.required]);
-    this.fcChangeObjective = new FormControl('', [CoreValidators.required]);
+    this.fcService = new FormControl<any>('', [CoreValidators.required]);
+    this.fcChangeDescription = new FormControl<string>('', [CoreValidators.required]);
+    this.fcChangeObjective = new FormControl<string>('', [CoreValidators.required]);
 
     this.fgCustomChangeDetails = this._formBuilder.group({
       fcService: this.fcService,

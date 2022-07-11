@@ -77,7 +77,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   }
 
   public hasMoreFields: boolean = false;
-  public form: FormGroup;
+  public form: FormGroup<any>;
 
   private dataChangeEventQueue: DynamicFormFieldDataChangeEventParam[] = [];
 
@@ -228,21 +228,21 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     this._changeDetectorRef.markForCheck();
   }
 
-  private _buildForm(): FormGroup {
+  private _buildForm(): FormGroup<any> {
     const formGroup = {};
     this.config.forEach(formControl => {
       let validators: ValidatorFn[] = this._getValidators(formControl);
-      formGroup[formControl.key] = new FormControl(formControl.value || '', validators);
+      formGroup[formControl.key] = new FormControl<any>(formControl.value || '', validators);
 
       if (!this.hasMoreFields && formControl.settings && formControl.settings.hidden) {
         this.hasMoreFields = true;
       }
     });
 
-    return new FormGroup(formGroup);
+    return new FormGroup<any>(formGroup);
   }
 
-  private _markThisAsTouched(formGroup: FormGroup): void {
+  private _markThisAsTouched(formGroup: FormGroup<any>): void {
     (Object as any).values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
 

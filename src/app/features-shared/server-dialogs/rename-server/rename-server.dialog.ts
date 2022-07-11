@@ -27,7 +27,7 @@ import {
 
 export class RenameServerDialogComponent {
   public server: McsServer;
-  public fcServerName: FormControl;
+  public fcServerName: FormControl<string>;
 
   /**
    * Returns true when the servername inputted is invalid
@@ -78,7 +78,7 @@ export class RenameServerDialogComponent {
    */
   private _registerFormControl(): void {
     // Register Form Controls
-    this.fcServerName = new FormControl(this.server.name, [
+    this.fcServerName = new FormControl<string>(this.server.name, [
       CoreValidators.required,
       CoreValidators.custom(
         this._serverNameValidator.bind(this),

@@ -51,7 +51,7 @@ export abstract class DynamicInputAutocompleteFieldComponentBase<T>
   public hasError: boolean = false;
   public selectable = true;
   public removable = true;
-  public inputCtrl = new FormControl();
+  public inputCtrl = new FormControl<any>(null);
   public filteredOptions: Observable<FlatOption[] | GroupedOption[]>;
 
   protected collection: T[] = [];

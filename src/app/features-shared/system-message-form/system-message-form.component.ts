@@ -64,14 +64,14 @@ export class SystemMessageFormComponent
   public hasEditedMessage: boolean;
 
   // Form Variables
-  public fgCreateMessage: FormGroup;
-  public fcStart: FormControl;
-  public fcExpiry: FormControl;
-  public fcType: FormControl;
-  public fcSeverity: FormControl;
-  public fcMessage: FormControl;
-  public fcEnabled: FormControl;
-  public fcMacquarieView: FormControl;
+  public fgCreateMessage: FormGroup<any>;
+  public fcStart: FormControl<any>;
+  public fcExpiry: FormControl<any>;
+  public fcType: FormControl<any>;
+  public fcSeverity: FormControl<any>;
+  public fcMessage: FormControl<any>;
+  public fcEnabled: FormControl<any>;
+  public fcMacquarieView: FormControl<any>;
 
   // System Message Dropdowns
   public messageTypeList: McsOption[];
@@ -190,7 +190,7 @@ export class SystemMessageFormComponent
    */
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.fcStart = new FormControl('', [
+    this.fcStart = new FormControl<any>('', [
       CoreValidators.custom(
         this._formControlDateValidation.bind(this),
         'invalidDate'
@@ -201,7 +201,7 @@ export class SystemMessageFormComponent
       )
     ]);
 
-    this.fcExpiry = new FormControl('', [
+    this.fcExpiry = new FormControl<any>('', [
       CoreValidators.custom(
         this._formControlDateValidation.bind(this),
         'invalidDate'
@@ -216,20 +216,20 @@ export class SystemMessageFormComponent
       )
     ]);
 
-    this.fcType = new FormControl('', [
+    this.fcType = new FormControl<any>('', [
     ]);
 
-    this.fcSeverity = new FormControl(null, [
+    this.fcSeverity = new FormControl<any>(null, [
     ]);
 
-    this.fcMessage = new FormControl('', [
+    this.fcMessage = new FormControl<any>('', [
       CoreValidators.required
     ]);
 
-    this.fcEnabled = new FormControl(true, [
+    this.fcEnabled = new FormControl<any>(true, [
     ]);
 
-    this.fcMacquarieView = new FormControl(true, [
+    this.fcMacquarieView = new FormControl<any>(true, [
     ]);
 
     // Register Form Groups using binding

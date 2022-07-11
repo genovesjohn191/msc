@@ -49,8 +49,8 @@ export class AddOnInviewComponent implements
   OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnInview> {
 
   public inviewLevelOptions$: Observable<McsOption[]>;
-  public fgInview: FormGroup;
-  public fcInview: FormControl;
+  public fgInview: FormGroup<any>;
+  public fcInview: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<McsServerCreateAddOnInview>();
@@ -92,9 +92,9 @@ export class AddOnInviewComponent implements
    */
   private _registerFormGroup(): void {
     // Register Form Groups using binding
-    this.fcInview = new FormControl(InviewLevel.Premium, [CoreValidators.required]);
+    this.fcInview = new FormControl<any>(InviewLevel.Premium, [CoreValidators.required]);
 
-    this.fgInview = new FormGroup({
+    this.fgInview = new FormGroup<any>({
       fcInview: this.fcInview
     });
     this.fgInview.valueChanges.pipe(

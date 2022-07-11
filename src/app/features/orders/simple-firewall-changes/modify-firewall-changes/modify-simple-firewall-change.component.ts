@@ -54,7 +54,8 @@ import {
   RouteKey,
   OrderIdType,
   DeliveryType,
-  HttpStatusCode
+  HttpStatusCode,
+  McsFirewall
 } from '@app/models';
 import {
   OrderDetails,
@@ -79,8 +80,8 @@ const LOADING_TEXT = 'loading';
 
 export class ModifySimpleFirewallChangeComponent extends
 McsOrderWizardBase implements OnInit, OnDestroy {
-  public fgModifyFirewallRules: FormGroup;
-  public fcFirewallServices: FormControl;
+  public fgModifyFirewallRules: FormGroup<any>;
+  public fcFirewallServices: FormControl<McsFirewall>;
   public faSharedRuleForm: FormArray;
   public isLoading: boolean;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
@@ -114,7 +115,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   constructor(
     _injector: Injector,
     private _simpleFirewallChangeService:ModifySimpleFirewallChangeService,
-    private _formBuilder: FormBuilder,
+    private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
     private _changeDetectionRef: ChangeDetectorRef,
     private _translateService: TranslateService
@@ -177,8 +178,8 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   public isChangeItemRemovable(formArrayLength: number): boolean {
     return formArrayLength > 1;
   }
-  public getFormControl(formGroup: FormGroup, formControlName: string): FormControl {
-    return formGroup.controls[formControlName] as FormControl;
+  public getFormControl(formGroup: FormGroup<any>, formControlName: string): FormControl<any> {
+    return formGroup.controls[formControlName] as FormControl<any>;
   }
   public removeChangeItem(index: number): void {
     if (!this.isChangeItemRemovable(this.faSharedRuleForm.controls.length)) { return; }
@@ -226,7 +227,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     this.submitOrderWorkflow(workflow);
   }
   private _registerFormGroups() {
-    this.fcFirewallServices = new FormControl('', [CoreValidators.required]);
+    this.fcFirewallServices = new FormControl<McsFirewall>(null, [CoreValidators.required]);
     this.faSharedRuleForm = new FormArray([this._createSharedRuleForm()]);
     this.fgModifyFirewallRules = this._formBuilder.group({
       fcFirewallServices: this.fcFirewallServices,
@@ -279,7 +280,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
 
   private _getSharedRuleValues(): McsOrderSimpleFirewallModifyRule[] {
     let sharedRules:McsOrderSimpleFirewallModifyRule[] = [];
-    this.faSharedRuleForm.controls.forEach((formGroup: FormGroup) => {
+    this.faSharedRuleForm.controls.forEach((formGroup: FormGroup<any>) => {
         let rules: McsOrderSimpleFirewallModifyRule = {
             new: formatStringToText(formGroup.controls['fcNewRule'].value),
             existing: formatStringToText(formGroup.controls['fcExistingRule'].value)
@@ -312,9 +313,9 @@ McsOrderWizardBase implements OnInit, OnDestroy {
       }
     );
   }
-  private _createSharedRuleForm(): FormGroup {
+  private _createSharedRuleForm(): FormGroup<any> {
     let formControls = FirewallChangesRuleHelper.createFormControls(RuleAction.Modify);
-    let form = this._formBuilder.group({ fcExistingRule: ['', [CoreValidators.required]] });
+    let form = this._formBuilder.group<any>({ fcExistingRule: ['', [CoreValidators.required]] });
     formControls.forEach((item) => {
       form.setControl(item.controlName, item.control);
     });

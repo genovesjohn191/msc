@@ -78,8 +78,8 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   public serverGroups$: Observable<McsOptionGroup[]>;
   public aggregationTargets$: Observable<McsBackUpAggregationTarget[]>;
 
-  public fgServerBackup: FormGroup;
-  public fcServer: FormControl;
+  public fgServerBackup: FormGroup<any>;
+  public fcServer: FormControl<McsServer>;
 
   private _serverBackup: McsOrderServerBackupAdd;
   private _valueChangesSubject = new Subject<void>();
@@ -299,7 +299,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _registerFormGroup(): void {
-    this.fcServer = new FormControl('', [CoreValidators.required]);
+    this.fcServer = new FormControl<McsServer>(null, [CoreValidators.required]);
 
     this.fgServerBackup = this._formBuilder.group({
       fcServer: this.fcServer

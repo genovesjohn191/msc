@@ -20,11 +20,6 @@ import { DialogMessageComponent } from './dialog-message/dialog-message.componen
 import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 
 @NgModule({
-  entryComponents: [
-    DialogMessageComponent,
-    DialogConfirmationComponent,
-    DialogContainerComponent
-  ],
   providers: [
     DialogService
   ],

@@ -58,7 +58,8 @@ import {
   RouteKey,
   OrderIdType,
   DeliveryType,
-  HttpStatusCode
+  HttpStatusCode,
+  McsFirewall
 } from '@app/models';
 import {
   OrderDetails,
@@ -81,8 +82,8 @@ const LOADING_TEXT = 'loading';
 
 export class RemoveSimpleFirewallChangeComponent extends
 McsOrderWizardBase implements OnInit, OnDestroy {
-  public fgRemoveFirewallRules: FormGroup;
-  public fcFirewallServices: FormControl;
+  public fgRemoveFirewallRules: FormGroup<any>;
+  public fcFirewallServices: FormControl<McsFirewall>;
   public faSharedRuleForm: FormArray;
   public isLoading: boolean;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
@@ -180,8 +181,8 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   public isChangeItemRemovable(formArrayLength: number): boolean {
     return formArrayLength > 1;
   }
-  public getFormControl(formGroup: FormGroup, formControlName: string): FormControl {
-    return formGroup.controls[formControlName] as FormControl;
+  public getFormControl(formGroup: FormGroup<any>, formControlName: string): FormControl<any>{
+    return formGroup.controls[formControlName] as FormControl<any>;
   }
   public removeChangeItem(index: number): void {
     if (!this.isChangeItemRemovable(this.faSharedRuleForm.controls.length)) { return; }
@@ -230,7 +231,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
 
   private _registerFormGroups() {
-    this.fcFirewallServices = new FormControl('', [CoreValidators.required]);
+    this.fcFirewallServices = new FormControl<McsFirewall>(null, [CoreValidators.required]);
     this.faSharedRuleForm = new FormArray([this._createSharedRuleForm()]);
     this.fgRemoveFirewallRules = this._formBuilder.group({
       fcFirewallServices: this.fcFirewallServices,
@@ -284,7 +285,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
 
   private _getRulesToDelete(): Array<string> {
     let rulesToDelete: Array<string> = [];
-    this.faSharedRuleForm.controls.forEach((formGroup: FormGroup) => {
+    this.faSharedRuleForm.controls.forEach((formGroup: FormGroup<any>) => {
         let rule = formatStringToText(formGroup.controls['fcRulesToDelete'].value);
         rulesToDelete.push(rule);
     });
@@ -315,9 +316,9 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     );
   }
 
-  private _createSharedRuleForm(): FormGroup {
+  private _createSharedRuleForm(): FormGroup<any> {
     let formControls = FirewallChangesRuleHelper.createFormControls(RuleAction.Remove);
-    let form = this._formBuilder.group({ fcRulesToDelete: ['', [CoreValidators.required]] });
+    let form = this._formBuilder.group<any>({ fcRulesToDelete: ['', [CoreValidators.required]] });
     formControls.forEach((item) => {
       form.setControl(item.controlName, item.control);
     });

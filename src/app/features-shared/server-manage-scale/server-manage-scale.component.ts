@@ -74,10 +74,10 @@ export class ServerManageScaleComponent
   public sliderTable: ServerManageScale[];
 
   // Forms control
-  public fgServerScale: FormGroup;
-  public fcCustomMemory: FormControl;
-  public fcCustomCpu: FormControl;
-  public fcRestartServer: FormControl;
+  public fgServerScale: FormGroup<any>;
+  public fcCustomMemory: FormControl<any>;
+  public fcCustomCpu: FormControl<any>;
+  public fcRestartServer: FormControl<any>;
 
   @Output()
   public dataChange = new EventEmitter<ServerManageScale>();
@@ -359,7 +359,7 @@ export class ServerManageScaleComponent
    */
   private _registerFormGroup(): void {
     // Register custom memory
-    this.fcCustomMemory = new FormControl('', [
+    this.fcCustomMemory = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       CoreValidators.custom(this._memoryCanScaleDown.bind(this), 'scaleDown'),
@@ -369,7 +369,7 @@ export class ServerManageScaleComponent
     ]);
 
     // Register custom CPU
-    this.fcCustomCpu = new FormControl('', [
+    this.fcCustomCpu = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.numeric,
       CoreValidators.custom(this._cpuCanScaleDown.bind(this), 'scaleDown'),
@@ -378,7 +378,7 @@ export class ServerManageScaleComponent
       CoreValidators.custom(this._cpuStepIsValid.bind(this), 'cpuStep')
     ]);
 
-    this.fcRestartServer = new FormControl();
+    this.fcRestartServer = new FormControl<any>(null);
 
     // Create form group and bind the form controls
     this.fgServerScale = this._formBuilder.group([]);

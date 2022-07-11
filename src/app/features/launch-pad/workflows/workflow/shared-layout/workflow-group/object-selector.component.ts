@@ -63,7 +63,7 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
   public filteredOptions: Observable<McsObjectCrispElement[]>;
   public isSwitching: boolean = false;
   public searchKeyword: string = '';
-  public serviceFilterControl = new FormControl();
+  public serviceFilterControl = new FormControl<any>(null);
 
   public processing: boolean = false;
   public hasError: boolean = false;

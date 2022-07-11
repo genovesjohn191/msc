@@ -61,7 +61,7 @@ export class PrivateChangeExtenderSpeedComponent extends McsOrderWizardBase {
     desiredSpeedId: 'private-slider-desired-speed'
   };
 
-  public fgPrivateCloudChangeExtender: FormGroup;
+  public fgPrivateCloudChangeExtender: FormGroup<any>;
 
   private _extenderInfo: ChangeExtenderSpeedInfo;
 

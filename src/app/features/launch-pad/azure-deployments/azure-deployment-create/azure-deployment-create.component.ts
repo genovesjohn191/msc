@@ -5,8 +5,12 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatVerticalStepper } from '@angular/material/stepper';
+import {
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -60,7 +64,7 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
   public form: DynamicFormComponent;
 
   @ViewChild('stepper')
-  protected stepper: MatVerticalStepper;
+  protected stepper: MatStepper;
 
   public formConfig: DynamicFormFieldConfigBase[] = [
     new DynamicSelectChipsCompanyField({
@@ -173,8 +177,8 @@ export class AzureDeploymentCreateComponent implements IMcsNavigateAwayGuard, On
   public constructor(private _apiService: McsApiService, private _changeDetector: ChangeDetectorRef) { }
 
   public ngOnInit(): void {
-    this.tfvarsEditorForm = new FormGroup({
-      tfvars: new FormControl(Validators.required)
+    this.tfvarsEditorForm = new FormGroup<any>({
+      tfvars: new FormControl<any>(Validators.required)
     });
   }
 

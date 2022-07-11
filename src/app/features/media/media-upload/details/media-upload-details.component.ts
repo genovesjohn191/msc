@@ -69,13 +69,13 @@ export class MediaUploadDetailsComponent
   public mediaExtensions$: Observable<string[]>;
 
   // Form variables
-  public fgMediaUpload: FormGroup;
-  public fcResources: FormControl;
-  public fcCatalogs: FormControl;
-  public fcMediaName: FormControl;
-  public fcMediaUrl: FormControl;
-  public fcMediaExtension: FormControl;
-  public fcMediaDescription: FormControl;
+  public fgMediaUpload: FormGroup<any>;
+  public fcResources: FormControl<McsResource>;
+  public fcCatalogs: FormControl<McsResourceCatalog>;
+  public fcMediaName: FormControl<string>;
+  public fcMediaUrl: FormControl<string>;
+  public fcMediaExtension: FormControl<any>;
+  public fcMediaDescription: FormControl<string>;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -228,15 +228,15 @@ export class MediaUploadDetailsComponent
    */
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.fcResources = new FormControl('', [
+    this.fcResources = new FormControl<McsResource>(null, [
       CoreValidators.required
     ]);
 
-    this.fcCatalogs = new FormControl('', [
+    this.fcCatalogs = new FormControl<McsResourceCatalog>(null, [
       CoreValidators.required
     ]);
 
-    this.fcMediaName = new FormControl('', [
+    this.fcMediaName = new FormControl<string>('', [
       CoreValidators.required,
       CoreValidators.custom(
         this._validateMediaName.bind(this),
@@ -244,10 +244,10 @@ export class MediaUploadDetailsComponent
       )
     ]);
 
-    this.fcMediaExtension = new FormControl('', [
+    this.fcMediaExtension = new FormControl<any>('', [
       CoreValidators.required
     ]);
-    this.fcMediaUrl = new FormControl('', [
+    this.fcMediaUrl = new FormControl<string>('', [
       CoreValidators.required
     ]);
     this.fcMediaUrl.valueChanges.pipe(
@@ -262,10 +262,10 @@ export class MediaUploadDetailsComponent
         this._changeDetectorRef.markForCheck();
       })
     ).subscribe();
-    this.fcMediaDescription = new FormControl('', []);
+    this.fcMediaDescription = new FormControl<string>('', []);
 
     // Register Form Groups using binding
-    this.fgMediaUpload = new FormGroup({
+    this.fgMediaUpload = new FormGroup<any>({
       fcResources: this.fcResources,
       fcCatalogs: this.fcCatalogs,
       fcMediaName: this.fcMediaName,

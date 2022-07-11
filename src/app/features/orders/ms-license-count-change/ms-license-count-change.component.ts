@@ -99,9 +99,9 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   public activeJob$: Observable<McsJob[]>;
   public isLoading: boolean = false;
 
-  public fgMsLicenseCount: FormGroup;
-  public fcLicenses: FormControl;
-  public fcLicenseCount: FormControl;
+  public fgMsLicenseCount: FormGroup<any>;
+  public fcLicenses: FormControl<McsLicense>;
+  public fcLicenseCount: FormControl<number>;
 
   private _destroySubject = new Subject<void>();
   private _selectedLicenseHandler: Subscription;
@@ -343,8 +343,8 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   }
 
   private _registerFormGroup(): void {
-    this.fcLicenses = new FormControl('', [CoreValidators.required]);
-    this.fcLicenseCount = new FormControl('', [
+    this.fcLicenses = new FormControl<McsLicense>(null, [CoreValidators.required]);
+    this.fcLicenseCount = new FormControl<number>(null, [
       CoreValidators.required,
       CoreValidators.numeric,
       (control) => CoreValidators.step(this.licenseCountStep)(control)
@@ -453,7 +453,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     let childLicensesFcConfig = [];
 
     licenses.forEach((license, index) => {
-      let childFormControl = new FormControl(license.quantity, [
+      let childFormControl = new FormControl<any>(license.quantity, [
         CoreValidators.required,
         CoreValidators.numeric,
         (control) => CoreValidators.min(this.getMinLicenseCount(license))(control),

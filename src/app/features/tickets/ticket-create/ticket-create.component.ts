@@ -119,13 +119,13 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public azureResources: McsOptionGroup[];
 
   // Form variables
-  public fgCreateTicket: FormGroup;
-  public fcType: FormControl;
-  public fcReference: FormControl;
-  public fcSummary: FormControl;
-  public fcDetails: FormControl;
-  public fcService: FormControl;
-  public fcAzureResource: FormControl;
+  public fgCreateTicket: FormGroup<any>;
+  public fcType: FormControl<TicketType>;
+  public fcReference: FormControl<string>;
+  public fcSummary: FormControl<string>;
+  public fcDetails: FormControl<string>;
+  public fcService: FormControl<any>;
+  public fcAzureResource: FormControl<any>;
 
   private _fileAttachments: McsFileInfo[];
   private _creatingTicket$ = new BehaviorSubject<boolean>(false);
@@ -322,27 +322,27 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    */
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.fcType = new FormControl('', [
+    this.fcType = new FormControl<TicketType>(null, [
       CoreValidators.required
     ]);
 
-    this.fcReference = new FormControl('', [
+    this.fcReference = new FormControl<string>('', [
       CoreValidators.maxLength(15)
     ]);
 
-    this.fcSummary = new FormControl('', [
+    this.fcSummary = new FormControl<string>('', [
       CoreValidators.required
     ]);
 
-    this.fcDetails = new FormControl('', [
+    this.fcDetails = new FormControl<string>('', [
       CoreValidators.required
     ]);
 
-    this.fcService = new FormControl([], []);
-    this.fcAzureResource = new FormControl([], []);
+    this.fcService = new FormControl<any>([], []);
+    this.fcAzureResource = new FormControl<any>([], []);
 
     // Register Form Groups using binding
-    this.fgCreateTicket = new FormGroup({
+    this.fgCreateTicket = new FormGroup<any>({
       fcType: this.fcType,
       fcReference: this.fcReference,
       fcSummary: this.fcSummary,
