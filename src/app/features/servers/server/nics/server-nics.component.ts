@@ -258,9 +258,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Returns true when user can add nic
    */
   public canAddNic(server: McsServer, resourceNetworks: McsResourceNetwork[]): boolean {
-    return !this.hasReachedNicsLimit(server)
-      && !isNullOrEmpty(resourceNetworks)
-      && !this._serverIsDedicated;
+    return !this.hasReachedNicsLimit(server) && !isNullOrEmpty(resourceNetworks);
   }
 
   /**
@@ -373,7 +371,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   public isEditNicEnabled(server: McsServer, nic: McsServerNic): boolean {
     if (isNullOrEmpty(nic)) { return false; }
-    return !this._serverIsDedicated && (server.isSelfManaged || !nic.isPrimary);
+    return server.isSelfManaged || !nic.isPrimary;
   }
 
   public getPowerStatePermission(server: McsServer): McsServerPermission {
