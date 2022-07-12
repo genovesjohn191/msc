@@ -10,7 +10,10 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CoreTestingModule } from '@app/core/testing';
-import { triggerEvent } from '@app/utilities';
+import {
+  triggerEvent,
+  IMcsClientRect
+} from '@app/utilities';
 
 import { OverlayService } from '../overlay';
 import { PopoverDirective } from './popover.directive';
@@ -122,7 +125,7 @@ describe('PopoverDirective', () => {
   });
 
   describe('orientation() of the mcs-popover element', () => {
-    let elementPosition: ClientRect;
+    let elementPosition: IMcsClientRect;
     beforeEach(waitForAsync(() => {
       component.popover.trigger = 'manual';
       elementPosition = {

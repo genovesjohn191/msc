@@ -27,7 +27,8 @@ import {
   isNullOrEmpty,
   registerEvent,
   unregisterEvent,
-  unsubscribeSafely
+  unsubscribeSafely,
+  IMcsClientRect
 } from '@app/utilities';
 
 import { OverlayConfig } from '../overlay/overlay-config';
@@ -254,25 +255,25 @@ export class PopoverDirective implements OnInit, OnDestroy {
     }
   }
 
-  public setTopOrientation(elementPosition: DOMRect) {
+  public setTopOrientation(elementPosition: IMcsClientRect) {
     let topPosition = elementPosition.height * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.top = `${-topPosition}px`;
   }
 
-  public setBottomOrientation(elementPosition: DOMRect) {
+  public setBottomOrientation(elementPosition: IMcsClientRect) {
     let bottomPosition = elementPosition.height * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.bottom = `${-bottomPosition}px`;
   }
 
-  public setLeftOrientation(elementPosition: DOMRect) {
+  public setLeftOrientation(elementPosition: IMcsClientRect) {
     let leftPosition = elementPosition.width * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.left = `${-leftPosition}px`;
   }
 
-  public setRightOrientation(elementPosition: DOMRect) {
+  public setRightOrientation(elementPosition: IMcsClientRect) {
     let rightPosition = elementPosition.width * 0.5 - POPOVER_ARROW_OFFSET;
     this.componentRef.instance.contentElement
       .nativeElement.style.right = `${-rightPosition}px`;
