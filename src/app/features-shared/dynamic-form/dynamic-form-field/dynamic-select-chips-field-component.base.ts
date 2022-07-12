@@ -1,32 +1,10 @@
 import {
-  Component,
-  OnDestroy,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
-  CdkDragDrop,
-  moveItemInArray
-} from '@angular/cdk/drag-drop';
-import {
-  COMMA,
-  ENTER
-} from '@angular/cdk/keycodes';
-import {
-  MatAutocompleteSelectedEvent
-} from '@angular/material/autocomplete';
-import {
-  ControlValueAccessor,
-  FormControl
-} from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
-import {
   from,
-  Observable,
   of,
+  throwError,
+  Observable,
   Subject,
-  Subscription,
-  throwError
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -39,16 +17,37 @@ import {
 } from 'rxjs/operators';
 
 import {
+  moveItemInArray,
+  CdkDragDrop
+} from '@angular/cdk/drag-drop';
+import {
+  COMMA,
+  ENTER
+} from '@angular/cdk/keycodes';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl
+} from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { DynamicFieldComponentBase } from './dynamic-field-component.base';
+
+import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
 import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption,
   GroupedOption
 } from '../dynamic-form-field-config.interface';
-import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
+import { DynamicFieldComponentBase } from './dynamic-field-component.base';
 
 export interface DynamicSelectChipsValue {
   value: string;
@@ -158,7 +157,8 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
 
         this.add({
           input: inputControl,
-          value: inputControl.value
+          value: inputControl.value,
+          chipInput: null
         })
     });
   }

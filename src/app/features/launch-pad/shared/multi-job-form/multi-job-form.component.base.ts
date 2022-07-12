@@ -1,37 +1,37 @@
 import {
+  throwError,
   Observable,
-  Subscription,
-  throwError
+  Subscription
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import {
-  Component,
-  OnDestroy,
-  ViewChild,
-  ViewChildren,
   ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
   QueryList,
-  ElementRef
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
-import { MatVerticalStepper } from '@angular/material/stepper';
-
+import { MatStepper } from '@angular/material/stepper';
 import { IMcsNavigateAwayGuard } from '@app/core';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
 import { DynamicFormComponent } from '@app/features-shared/dynamic-form';
-import {
-  CommonDefinition,
-  createObject,
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
 import {
   DataStatus,
   McsJob,
   McsMultiJobFormConfig,
   RouteKey
 } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/events';
+import {
+  createObject,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+
 import { MultiJobFormTask } from './multi-job-form-task';
 
 export interface MultiFormConfig {
@@ -59,7 +59,7 @@ export abstract class MultiJobFormComponentBase<TPayload> implements IMcsNavigat
   public form: QueryList<DynamicFormComponent>;
 
   @ViewChild('stepper')
-  protected stepper: MatVerticalStepper;
+  protected stepper: MatStepper;
 
   public abstract settings: MultiFormConfig;
 
@@ -85,7 +85,7 @@ export abstract class MultiJobFormComponentBase<TPayload> implements IMcsNavigat
   public ngOnDestroy() {
     unsubscribeSafely(this._jobEventHandler);
   }
-  
+
   public get isValidPayload(): boolean {
     let hasInvalidForm = this.form?.find((forms) => !forms.valid);
     this._checkFormValidity();

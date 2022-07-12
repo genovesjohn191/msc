@@ -1,6 +1,6 @@
 import {
-  Subject,
-  throwError
+  throwError,
+  Subject
 } from 'rxjs';
 import {
   catchError,
@@ -17,26 +17,26 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatVerticalStepper } from '@angular/material/stepper';
+import { MatStepper } from '@angular/material/stepper';
 import { IMcsNavigateAwayGuard } from '@app/core';
-import {
-  cloneDeep,
-  CommonDefinition,
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
-
-import { LaunchPadWorkflowGroupComponent } from './shared-layout/workflow-group/workflow-group.component';
-import { WorkflowGroupSaveState } from './core/workflow-group.interface';
-import { Workflow } from './core/workflow.interface';
-import { McsApiService } from '@app/services';
 import {
   McsApiCollection,
   McsJob,
   McsWorkflowCreate
 } from '@app/models';
-import { WorkflowProvisionCompletionState } from './shared-layout/workflow-provision-state/workflow-provision-state.component';
+import { McsApiService } from '@app/services';
+import {
+  cloneDeep,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
+
+import { WorkflowGroupSaveState } from './core/workflow-group.interface';
+import { Workflow } from './core/workflow.interface';
+import { LaunchPadWorkflowGroupComponent } from './shared-layout/workflow-group/workflow-group.component';
+import { WorkflowProvisionCompletionState } from './shared-layout/workflow-provision-state/workflow-provision-state.component';
 
 enum WizardStep  {
   EditWorkflowGroup = 0,
@@ -52,7 +52,7 @@ enum WizardStep  {
 })
 export class LaunchPadWorkflowCoreComponent implements OnDestroy, IMcsNavigateAwayGuard {
   @ViewChild('stepper')
-  protected stepper: MatVerticalStepper;
+  protected stepper: MatStepper;
 
   @ViewChild('workflowGroup')
   protected workflowGroup: LaunchPadWorkflowGroupComponent;
