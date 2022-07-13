@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsAccessControlService,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -61,6 +62,7 @@ export class AzureManagementServicesComponent extends McsPageBase {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
+    private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService
   ) {
     super(_injector);
@@ -109,6 +111,18 @@ export class AzureManagementServicesComponent extends McsPageBase {
   public navigateToAzureManagementService(azureManagementService: McsAzureManagementService): void {
     if (isNullOrEmpty(azureManagementService)) { return; }
     this._navigationService.navigateTo(RouteKey.AzureManagementServicesDetails, [azureManagementService.id]);
+  }
+
+  public hasAccessToServiceRequest(service: McsAzureManagementService): boolean {
+    let propertyIsAvd = service.productType === 'AzureVirtualDesktop';
+    let hasOrderEditPermission = this._accessControlService.hasPermission(['OrderEdit']);
+    return propertyIsAvd && hasOrderEditPermission && !isNullOrEmpty(service.serviceId);
+  }
+
+  public navigateToServiceRequest(service: McsAzureManagementService): void {
+    return isNullOrEmpty(service.serviceId) ?
+      this._navigationService.navigateTo(RouteKey.OrderMsRequestChange) :
+      this._navigationService.navigateTo(RouteKey.OrderMsRequestChange, [], { queryParams: { serviceId: service.serviceId}});
   }
 
   private _getAzureManagementServices(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureManagementService>> {

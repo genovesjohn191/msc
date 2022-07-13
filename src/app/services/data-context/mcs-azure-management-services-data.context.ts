@@ -5,7 +5,8 @@ import { IMcsApiAzureManagementServicesService } from '@app/api-client';
 import {
   McsQueryParam,
   McsApiSuccessResponse,
-  McsAzureManagementService
+  McsAzureManagementService,
+  McsManagementServiceQueryParams
 } from '@app/models';
 import { McsDataContext } from '../core/mcs-data-context.interface';
 
@@ -37,7 +38,7 @@ export class McsAzureManagementServicesDataContext implements McsDataContext<Mcs
    * Filters the records based on the query provided
    * @param query Query to be sent to API to query the data
    */
-  public filterRecords(_query: McsQueryParam): Observable<McsAzureManagementService[]> {
+  public filterRecords(_query: McsManagementServiceQueryParams): Observable<McsAzureManagementService[]> {
     return this._AzureManagementServicesService.getAzureManagementServices(_query).pipe(
       map((response) => this._getApiContentResponse(response))
     );

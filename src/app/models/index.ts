@@ -423,6 +423,7 @@ export * from './common/mcs-network-db-maz-aa-query-params';
 export * from './common/mcs-field-error-message';
 export * from './common/mcs-reservation-product-type-params';
 export * from './common/mcs-report-billing-summary-params';
+export * from './common/mcs-management-services-query-params';
 export * from './common/mcs-report-params';
 export * from './common/mcs-object-project-params';
 export * from './common/mcs-report-inefficient-vm-params';

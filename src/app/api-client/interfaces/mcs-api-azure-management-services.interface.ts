@@ -3,7 +3,7 @@ import {
   McsApiSuccessResponse,
   McsAzureManagementService,
   McsAzureManagementServiceChild,
-  McsQueryParam
+  McsManagementServiceQueryParams
 } from '@app/models';
 
 export interface IMcsApiAzureManagementServicesService {
@@ -11,7 +11,7 @@ export interface IMcsApiAzureManagementServicesService {
   /**
    * Gets all Azure Management services
    */
-  getAzureManagementServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+  getAzureManagementServices(query?: McsManagementServiceQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsAzureManagementService[]>>;
 
   /**

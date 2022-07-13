@@ -298,7 +298,8 @@ import {
   McsValidation,
   McsVmSize,
   McsWorkflowCreate,
-  McsExtendersQueryParams
+  McsExtendersQueryParams,
+  McsManagementServiceQueryParams
 } from '@app/models';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 import {
@@ -1893,7 +1894,7 @@ export class McsApiService {
     );
   }
 
-  public getAzureManagementServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+  public getAzureManagementServices(query?: McsManagementServiceQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiCollection<McsAzureManagementService>> {
     if (!isNullOrEmpty(optionalHeaders)) {
       return this._azureManagementServicesApi.getAzureManagementServices(query, optionalHeaders).pipe(

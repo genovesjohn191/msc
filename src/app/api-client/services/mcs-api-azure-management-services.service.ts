@@ -7,7 +7,8 @@ import {
   McsApiRequestParameter,
   McsAzureManagementService,
   McsAzureManagementServiceChild,
-  McsQueryParam
+  McsQueryParam,
+  McsManagementServiceQueryParams
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiAzureManagementServicesService } from '../interfaces/mcs-api-azure-management-services.interface';
@@ -17,9 +18,9 @@ export class McsApiAzureManagementServicesService implements IMcsApiAzureManagem
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
-  public getAzureManagementServices(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+  public getAzureManagementServices(query?: McsManagementServiceQueryParams, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsAzureManagementService[]>> {
-    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    if (isNullOrEmpty(query)) { query = new McsManagementServiceQueryParams(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/management-services';
