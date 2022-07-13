@@ -30,6 +30,13 @@ import { DynamicSelectNetworkVlanField } from './select-network-vlan';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DynamicInputAutocompleteFieldComponentBase } from '../dynamic-input-autocomplete-component.base';
 
+export interface networkVlanData {
+  network?: McsNetworkDbNetwork;
+  networkName?: string;
+  isNetworkNameOverridden: boolean;
+  isNetworkExisting: boolean;
+}
+
 @Component({
   selector: 'mcs-dff-select-network-vlan-field',
   templateUrl: './select-network-vlan.component.html',
@@ -47,6 +54,7 @@ import { DynamicInputAutocompleteFieldComponentBase } from '../dynamic-input-aut
     '(blur)': 'onTouched()'
   }
 })
+
 export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteFieldComponentBase<McsNetworkDbNetwork> {
   public config: DynamicSelectNetworkVlanField;
   public vlanText: string = 'default text';
@@ -57,6 +65,10 @@ export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteF
   private _companyId: string = '';
   private _serviceId: string = '';
   private _network: McsNetworkDbNetwork;
+
+  public isOverrideChecked: boolean = false;
+  public overrideNetworkNameText: string = '';
+  public isNetworkExisting: boolean = false;
 
   public constructor(
     private _apiService: McsApiService,
@@ -75,11 +87,11 @@ export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteF
 
       case 'company-change':
         this._companyId = params.value;
-
         this.config.value = '';
         this.inputCtrl.setValue('');
         this.valueChange(this.config.value);
         this.retrieveOptions();
+        this._configureValidators();
         break;
 
       case 'resource-change':
@@ -96,17 +108,22 @@ export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteF
     }
   }
 
-  private _trySetValue(value: string): void {
+  private _trySetValue(value: string, isOverride: boolean = false): void {
     let existingNetwork = this.collection.find(item => item.name.toLowerCase() === value.toLowerCase());
 
     if (isNullOrUndefined(existingNetwork)) {
-      this.config.value = value;
-      this._updateVlanText(true);
-      this.valueChange(this.config.value);
+      if(!isOverride) {
+        this.config.value = null;
+        this.isNetworkExisting = false;
+        this._updateVlanText(true);
+      }
+      this.overrideNetworkNameText = value;
+      this.valueChange(value);
       return;
     }
 
     this.config.value = existingNetwork.id;
+    this.isNetworkExisting = true;
     this.valueChange(this.config.value);
     this._updateNetworkDetails(existingNetwork.id);
   }
@@ -124,6 +141,8 @@ export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteF
   }
 
   public selected(event: MatAutocompleteSelectedEvent): void {
+    this.isOverrideChecked = false;
+    this.overrideNetworkNameText = '';
     let option = event.option.value as FlatOption;
     this._trySetValue(option.value);
   }
@@ -194,15 +213,51 @@ export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteF
       })).subscribe();
   }
 
-  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
-    if (!isNullOrEmpty(value) && !isNullOrUndefined(this.config.value)) {
-      let dataValue = this.collection.find(item => item.id === value);
-      this.dataChange.emit({
-        value: isNullOrUndefined(dataValue) ? this.config.value : dataValue,
-        eventName,
-        dependents
-      });
+  public get isOverrideCheckboxVisible(): boolean {
+    if (isNullOrEmpty(this.config.value)) { return false; }
+    let dataValue = this.collection.find(item => item.id === this.config.value);
+    if (isNullOrUndefined(dataValue)) {
+      return false;
     }
+    return true;
   }
 
+  public get networkName(): string {
+    return this.inputCtrl.value.value;
+  }
+
+  public onOverrideNetworkNameChanged(event: any): void {
+    this._trySetValue(event.value, true);
+  }
+
+  public onOverrideCheckboxChanged(): void {
+    this.overrideNetworkNameText = '';
+    this.valueChange(this.config.value);
+  }
+
+  private _configureValidators() {
+    this.config.contentValidator = this._contentValidator.bind(this);
+  }
+
+  private _contentValidator(inputValue: any): boolean {
+    if(this.isOverrideChecked) {
+      return !isNullOrEmpty(this.overrideNetworkNameText);
+    }
+    return !isNullOrEmpty(this.inputCtrl.value);
+  }
+
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    let selectedNetwork = this.collection.find(item => item.id === value);
+    let dataValue: networkVlanData = {
+      network: selectedNetwork,
+      networkName: this.overrideNetworkNameText,
+      isNetworkNameOverridden: this.isOverrideChecked,
+      isNetworkExisting: this.isNetworkExisting
+    } 
+    this.dataChange.emit({
+      value: dataValue,
+      eventName,
+      dependents
+    });
+  }
 }

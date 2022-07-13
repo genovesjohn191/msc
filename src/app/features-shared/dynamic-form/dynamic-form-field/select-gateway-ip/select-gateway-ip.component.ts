@@ -64,7 +64,6 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
   public prefixError: boolean = false;
   public inputError: string = '';
 
-  public networkName: string = '';
   public isNetworkExisting: boolean = true;
   public reserveNewSubnetValue = reserveNewSubnetValue;
 
@@ -103,17 +102,17 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
         break;
 
       case 'network-vlan-change':
-        this._reset();
-        if (typeof params.value === 'string') {
-          this.networkName = params.value;
-          this.isNetworkExisting = false;
+        if(this._hasNetworkValueUpdates(params.value)) {
+          this._reset();
+          if (!params.value.isNetworkExisting) {
+            this.isNetworkExisting = false;
+          }
+          else {
+            this._network = params.value.network as McsNetworkDbNetwork;
+            this.isNetworkExisting = true;
+          }
+          this._updateValidators();
         }
-        else {
-          this._network = params.value as McsNetworkDbNetwork;
-          this.networkName = this._network.name;
-          this.isNetworkExisting = true;
-        }
-        this._updateValidators();
         break;
     }
   }
@@ -158,7 +157,7 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
 
   private _updatePrefixValidators() {
     this.prefixDisabled = !this._resource?.isSelfManaged && this.isInputVisible;
-    this.config.prefixValidators.min = this._resource.isSelfManaged ? prefixMinSelfManaged : prefixMinManaged;
+    this.config.prefixValidators.min = this._resource?.isSelfManaged ? prefixMinSelfManaged : prefixMinManaged;
     this.prefixLength = defaultPrefixLength;
   }
 
@@ -180,9 +179,16 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
           && CommonDefinition.REGEX_PRIVATE_IP_PATTERN.test(inputValue);
     }
   }
+
+  private _hasNetworkValueUpdates(paramsValue: any): boolean{
+    return !(this.isNetworkExisting === paramsValue?.isNetworkExisting &&
+      this._network?.id === paramsValue?.network?.id);
+  }
+
   public get isInputVisible(): boolean {
-    if (isNullOrUndefined(this._resource) || this._resource.isSelfManaged) { return true }
-    return this.isNetworkExisting; //&& this.collection.length > 0;
+    if (isNullOrUndefined(this._resource) || isNullOrUndefined(this._network)
+        || this._resource.isSelfManaged) { return true }
+    return this.isNetworkExisting;
   }
 
   public get isResourceSelfManaged(): boolean {
