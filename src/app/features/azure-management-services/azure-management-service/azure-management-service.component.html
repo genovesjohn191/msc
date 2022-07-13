@@ -41,15 +41,37 @@
             [label]="'azureManagementService.children.label' | translate" id="children">
           </mcs-tab>
 
+          <!-- Action tab -->
           <ng-container mcsTabHeaderCustom>
-            <mcs-context-menu-link *ngIf="selectedAzureManagementService$ | async as selectedAzureManagementService"
-              mcsAlign="end"
-              [serviceId]="selectedAzureManagementService.serviceId"
-              [serviceChangeAvailable]="selectedAzureManagementService.serviceChangeAvailable"
-              [hasMenuButton]="true"
-              [eventCategory]="'azure-management-service'"
-              [eventLabel]="'azure-management-service-details-page'">
-            </mcs-context-menu-link>
+            <button mcsButton="icon" mcsId="management-service-action" mcsAlign="end"
+              mcsPopover placement="bottom" orientation="left"
+              theme="light" padding="none" [content]="actionContent">
+              <mcs-icon [key]="cogIconKey" size="large"></mcs-icon>
+            </button>
+
+            <ng-template #actionContent>
+              <div class="cog-actions-wrapper">
+                <ng-container *ngIf="hasAccessToServiceReuqest(selectedAzureManagementService)">
+                  <a mcsButton="basic" color="white" labelPlacement="left"
+                    (click)="navigateToServiceRequest(selectedAzureManagementService)"
+                    mcsId="azure-management-service-service-request-link"
+                    mcsEventTracker="azure-management-service-service-request"
+                    mcsEventCategory="azure-management-service"
+                    mcsEventLabel="azure-management-service-details-page">
+                    {{ 'azureSubscriptions.serviceRequest' | translate }}
+                  </a>
+                </ng-container>
+
+                <mcs-context-menu-link
+                  mcsAlign="end"
+                  [serviceId]="selectedAzureManagementService.serviceId"
+                  [serviceChangeAvailable]="selectedAzureManagementService.serviceChangeAvailable"
+                  [hasMenuButton]="false"
+                  [eventCategory]="'azure-management-service'"
+                  [eventLabel]="'azure-management-service-details-page'">
+              </mcs-context-menu-link>
+              </div>
+            </ng-template>
           </ng-container>
         </mcs-tab-group>
 

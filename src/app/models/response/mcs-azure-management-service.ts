@@ -29,6 +29,9 @@ export class McsAzureManagementService extends McsEntityBase {
   @JsonProperty()
   public serviceId: string = undefined;
 
+  @JsonProperty()
+  public productType: string = undefined;
+
   /**
    * Returns the Azure Management Service type
    */

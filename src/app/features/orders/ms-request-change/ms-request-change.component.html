@@ -48,27 +48,39 @@
             <!-- Services Selection -->
             <mcs-item orientation="block">
               <mcs-form-field *ngIf="(azureServices$ | async) | mcsIsNotNullOrEmpty">
-                <mcs-select mcsId="select-service"
+                <mcs-select
+                  autoSelect="false"
+                  mcsId="select-service"
+                  mcsEventTracker="select-service"
+                  mcsEventCategory="order"
+                  mcsEventLabel="ms-service-change-request"
                   [formControl]="fcMsService"
                   (selectionChange)="onServiceChange()"
                   [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
-                  <mcs-option *ngFor="let azureService of azureServices$ | async"
-                    [selected]="(selectedServiceId$ | async)?.serviceId === azureService.value.serviceId"
-                    [value]="azureService.value"
-                    [disabled]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)">
-                      <span [ngStyle]="{'pointer-events': 'auto'}"
-                        [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
-                        [mcsTooltipShow]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)"
-                        [mcsTooltipPosition]="'right'">
-                        {{ azureService.text }}
-                      </span>
-                  </mcs-option>
+                  <mcs-option-group *ngFor="let azureService of azureServices$ | async">
+                    <ng-container *mcsOptionGroupLabel>
+                      <span>{{ azureService?.groupName }}</span>
+                    </ng-container>
+                    <mcs-option *ngFor="let service of azureService.options"  [value]="service.value"
+                      [selected]="(selectedServiceId$ | async)?.serviceId === service.value.serviceId"
+                      [value]="service.value"
+                      [disabled]="!(service.value.serviceId | mcsIsNotNullOrEmpty)">
+                        <span [ngStyle]="{'pointer-events': 'auto'}"
+                          [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
+                          [mcsTooltipShow]="!(service.value.serviceId | mcsIsNotNullOrEmpty)"
+                          [mcsTooltipPosition]="'right'">
+                          {{ service.text }}
+                        </span>
+                    </mcs-option>
+                  </mcs-option-group>
                 </mcs-select>
               </mcs-form-field>
-              <span *ngIf="(fcMsService?.value | mcsIsNotNullOrEmpty)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
-                translate: { subscriptionId: (fcMsService?.value.subscriptionId | mcsIsNotNullOrEmpty) ?
-                  fcMsService?.value.subscriptionId : unknownText } }}</span>
-              <span read-only>{{ noServicesFallbackText | translate }}</span>
+              <ng-container *ngIf="isSelectedServiceSubscription(fcMsService?.value)">
+                <span>{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
+                  translate: { subscriptionId: (fcMsService?.value?.subscriptionId | mcsIsNotNullOrEmpty) ?
+                    fcMsService?.value.subscriptionId : unknownText } }}</span>
+                <span read-only>{{ noServicesFallbackText | translate }}</span>
+              </ng-container>
             </mcs-item>
 
             <!-- Service Request Type Selection -->

@@ -24,6 +24,7 @@ import {
   ParamMap
 } from '@angular/router';
 import {
+  McsAccessControlService,
   McsListviewContext,
   McsListviewDataSource2,
   McsListviewQueryParam,
@@ -72,6 +73,7 @@ export class AzureManagementServiceComponent implements OnInit, OnDestroy {
   constructor(
     _injector: Injector,
     _translate: TranslateService,
+    private _accessControlService: McsAccessControlService,
     private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
@@ -124,6 +126,18 @@ export class AzureManagementServiceComponent implements OnInit, OnDestroy {
 
   public navigateToDetails(azureManagementService: McsAzureManagementService): void {
     this._navigationService.navigateTo(RouteKey.AzureManagementServicesDetails, [azureManagementService.id]);
+  }
+
+  public hasAccessToServiceReuqest(service: McsAzureManagementService): boolean {
+    let propertyIsAvd = service.productType === 'AzureVirtualDesktop';
+    let hasOrderEditPermission = this._accessControlService.hasPermission(['OrderEdit']);
+    return propertyIsAvd && hasOrderEditPermission && !isNullOrEmpty(service.serviceId);
+  }
+
+  public navigateToServiceRequest(service: McsAzureManagementService): void {
+    return isNullOrEmpty(service.serviceId) ?
+      this._navigationService.navigateTo(RouteKey.OrderMsRequestChange) :
+      this._navigationService.navigateTo(RouteKey.OrderMsRequestChange, [], { queryParams: { serviceId: service.serviceId}});
   }
 
   /**

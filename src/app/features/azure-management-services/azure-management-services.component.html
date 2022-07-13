@@ -94,17 +94,30 @@
               *ngIf="row.serviceId">
             </mcs-icon>
             <ng-template #actionContent>
-              <div *mcsAccessControl="['TicketCreate']"
-                class="cog-actions-wrapper">
-                <a mcsButton="basic" color="white" labelPlacement="left"
-                  (click)="onRaiseTicket(row)"
-                  mcsId="azure-management-raise-ticket"
-                  mcsEventTracker="azure-management-raise-ticket"
-                  mcsEventCategory="azure management"
-                  mcsEventLabel="azure-management-listing-page">
-                  {{ 'azureManagementServices.raiseTicket' | translate }}
-                </a>
-              </div>
+              <ng-container *mcsAccessControl="['TicketCreate']">
+                <div class="cog-actions-wrapper">
+                  <a mcsButton="basic" color="white" labelPlacement="left"
+                    (click)="onRaiseTicket(row)"
+                    mcsId="azure-management-raise-ticket"
+                    mcsEventTracker="azure-management-raise-ticket"
+                    mcsEventCategory="azure management"
+                    mcsEventLabel="azure-management-listing-page">
+                    {{ 'azureManagementServices.raiseTicket' | translate }}
+                  </a>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="hasAccessToServiceRequest(row)">
+                <div class="cog-actions-wrapper">
+                  <a mcsButton="basic" color="white" labelPlacement="left"
+                    (click)="navigateToServiceRequest(row)"
+                    mcsId="azure-management-service-service-request-link"
+                    mcsEventTracker="azure-management-service-service-request"
+                    mcsEventCategory="azure-management-services"
+                    mcsEventLabel="azure-management-services-listing-page">
+                    {{ 'azureSubscriptions.serviceRequest' | translate }}
+                  </a>
+                </div>
+              </ng-container>
             </ng-template>
           </td>
         </ng-container>

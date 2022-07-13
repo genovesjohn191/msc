@@ -23,7 +23,8 @@ import {
   Observable,
   Subject,
   Subscription,
-  throwError
+  throwError,
+  forkJoin
 } from 'rxjs';
 import {
   catchError,
@@ -69,7 +70,10 @@ import {
   McsFeatureFlag,
   McsPermission,
   HttpStatusCode,
-  McsAzureResourceQueryParams
+  McsAzureResourceQueryParams,
+  McsManagementServiceQueryParams,
+  McsOptionGroup,
+  McsAzureManagementService
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -101,7 +105,6 @@ import { ProvisionDetails } from './provision/provision.details';
 const MS_REQUEST_SERVICE_CHANGE = Guid.newGuid().toString();
 const MULTI_SELECT_LIMIT = 5;
 const LOADING_TEXT = 'loading';
-
 @Component({
   selector: 'mcs-ms-request-change',
   templateUrl: 'ms-request-change.component.html',
@@ -120,11 +123,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public azureProductOptions$: Observable<McsOption[]>;
   public azureResourcesOptions$: Observable<McsOption[]>;
   public contactOptions$: Observable<McsOption[]>;
-  public azureServices$: Observable<McsOption[]>;
   public serviceRequestType$: Observable<McsOption[]>;
   public selectedServiceId$: Observable<McsAzureServiceQueryParams>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public cloudHealthService: McsCloudHealthOption[];
+  public azureServices$: Observable<McsOptionGroup[]>;
 
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
@@ -134,9 +137,9 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   private _resourceErrorStatus: number;
   private _serviceErrorStatus: number;
-  private _loadingInProgress: boolean;
   private _resourceCount: number;
-  private _serviceCount: number;
+  private _loadingInProgress: boolean;
+  private _noServices: boolean;
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -205,7 +208,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   public get noServicesToDisplay(): boolean {
-    return !isNullOrEmpty(this._serviceErrorStatus) || this._serviceCount === 0;
+    return !isNullOrEmpty(this._serviceErrorStatus) || this._noServices;
   }
 
   public get noServicesFallbackText(): string {
@@ -293,7 +296,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._subscribeToRequestTypeOptions();
     this._subscribeToAzureProductOptions();
     this._subscribeToContactOptions();
-    this._subscribeToSubscriptions();
+    this._subscribeToServicesOptions();
     this._subscribeToSmacSharedFormConfig();
     this._registerEvents();
   }
@@ -343,6 +346,13 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   public onChangeProvisionDetails(provisionDetails: ProvisionDetails): void {
     this._provisionDetails = provisionDetails;
+  }
+
+
+  public isSelectedServiceSubscription(selectedValue: McsAzureManagementService | McsAzureService): boolean {
+    if (isNullOrEmpty(selectedValue)) { return false; }
+    if (selectedValue instanceof McsAzureService) { return true; }
+    return false;
   }
 
   /**
@@ -588,22 +598,22 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
 
-  private _subscribeToSubscriptions(): void {
-    this.azureServices$ = this._apiService.getAzureServices().pipe(
-      map((subscriptionCollection) => {
-        let subscriptions = getSafeProperty(subscriptionCollection, (obj) => obj.collection) || [];
-        let subscriptionOptions: McsOption[] = [];
-        subscriptions.forEach((subscription) => {
-          let textValue = (!isNullOrEmpty(subscription.serviceId)) ? `${subscription.friendlyName} - ${subscription.serviceId}`
-            : `${subscription.friendlyName}`;
-          let serviceLevelText = subscription.serviceLevel || this.unknownFallbackText;
-          subscriptionOptions.push(createObject(McsOption, {
-            text: `${textValue} (${serviceLevelText})`,
-            value: subscription
-          }));
-        });
-        this._serviceCount = subscriptionOptions?.length;
-        return subscriptionOptions;
+  private _subscribeToServicesOptions(): void {
+    let managementServicesQuery = new McsManagementServiceQueryParams();
+    managementServicesQuery.productType = 'AzureVirtualDesktop';
+
+    this.azureServices$ = forkJoin([
+      this._apiService.getAzureServices(),
+      this._apiService.getAzureManagementServices(managementServicesQuery)
+    ]).pipe(
+      map((response) => {
+        let azureServices = !isNullOrEmpty(response[0]) ? this._createAzureServicesOptions(response[0].collection) : [];
+        let managementServices = !isNullOrEmpty(response[1]) ? this._createManagementServicesOptions(response[1].collection) : [];
+        this._noServices = azureServices.length === 0 && managementServices.length === 0;
+        let servicesGroup: McsOptionGroup[] = [];
+        servicesGroup.push(createObject(McsOptionGroup, { groupName: 'Subscriptions', options: azureServices}));
+        servicesGroup.push(createObject(McsOptionGroup, { groupName: 'Azure Virtual Desktop', options: managementServices}));
+        return servicesGroup;
       }),
       shareReplay(1),
       catchError((error) => {
@@ -612,13 +622,49 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
         return throwError(error);
       }),
       tap(() => this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent))
-    );
+    )
+  }
+
+  private _createAzureServicesOptions(azureServices: McsAzureService[]): McsOption[] {
+    let subscriptionOptions: McsOption[] = [];
+    azureServices?.forEach((subscription) => {
+      let textValue = (!isNullOrEmpty(subscription.serviceId)) ? `${subscription.friendlyName} - ${subscription.serviceId}`
+        : `${subscription.friendlyName}`;
+      let serviceLevelText = subscription.serviceLevel || this.unknownFallbackText;
+      subscriptionOptions.push(createObject(McsOption, {
+        text: `${textValue} (${serviceLevelText})`,
+        value: subscription
+      }));
+    });
+    return subscriptionOptions;
+  }
+
+  private _createManagementServicesOptions(managementServices: McsAzureManagementService[]): McsOption[] {
+    let servicesOptions: McsOption[] = [];
+    managementServices?.forEach((service) => {
+      let description = service.description || this.unknownFallbackText;
+      let serviceId = service.serviceId || `(${this.unknownFallbackText})`;
+      servicesOptions.push(createObject(McsOption, {
+        text: `${description} - ${serviceId}`,
+        value: service
+      }));
+    });
+    return servicesOptions;
   }
 
   private _getAzureResources(): void {
     this._loadingInProgress = true;
     let queryParam = new McsAzureResourceQueryParams();
-    queryParam.subscriptionId = this.fcMsService.value?.id;
+    let isSelectedServiceSubscription = this.isSelectedServiceSubscription(this.fcMsService.value);
+    if (isSelectedServiceSubscription) {
+      queryParam.subscriptionId = this.fcMsService.value?.id;
+      queryParam.tagName = undefined;
+      queryParam.tagValue = undefined;
+    } else {
+      queryParam.subscriptionId = undefined;
+      queryParam.tagName = 'mcsServiceId';
+      queryParam.tagValue = 'AZAVD';
+    }
 
     this.azureResourcesOptions$ = this._apiService.getAzureResources(queryParam).pipe(
       map((resourcesCollection) => {
@@ -659,13 +705,19 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
       map((params: Params) => {
         let lowerParams: Params = convertUrlParamsKeyToLowerCase(params);
-        return new McsAzureServiceQueryParams( lowerParams?.serviceid, lowerParams?.resourceid);
+        return new McsAzureServiceQueryParams(lowerParams?.serviceid, lowerParams?.resourceid);
       }),
       tap((params: McsAzureServiceQueryParams) => {
         this.azureServices$.subscribe(services => {
-          let serviceFound = services.find(service =>
-            compareStrings(service.value.serviceId, params.serviceId) === 0);
-          let fcMsServiceValue = params?.serviceId ? serviceFound.value : null;
+          let selectedOptionServiceId: McsAzureService | McsAzureManagementService;
+          services?.map(service => {
+            service.options?.map((option) => {
+              let serviceFound = compareStrings(option.value?.serviceId, params?.serviceId) === 0;
+              if (!serviceFound) { return }
+              selectedOptionServiceId = option.value;
+            });
+          });
+          let fcMsServiceValue = params?.serviceId ? selectedOptionServiceId : null;
           this.fcMsService.setValue(fcMsServiceValue);
         });
         if (!isNullOrEmpty(params.serviceId)) {
