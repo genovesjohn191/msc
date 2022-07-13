@@ -31,6 +31,16 @@ export class DynamicInputHiddenComponent extends DynamicFieldComponentBase {
         this.config.value = subnet.prefixLength;
         this.valueChange(this.config.value);
         break;
+      case 'network-vlan-change':
+        let value = params.value;
+        if(value.isNetworkNameOverridden || !value.isNetworkExisting){
+          this.config.value = value.networkName;
+        }
+        else {
+          this.config.value = null;
+        }
+        this.valueChange(this.config.value);
+        break;
     }
   }
 }

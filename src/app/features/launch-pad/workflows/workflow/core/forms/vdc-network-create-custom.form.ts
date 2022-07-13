@@ -57,10 +57,14 @@ export const vdcNetworkCreateCustomForm: LaunchPadForm = {
       label: 'Network',
       contextualHelp: 'Select an existing network to use or enter the name of a new network to be created.',
       eventName: 'network-vlan-change',
-      dependents: ['gatewayIp'],
+      dependents: ['gatewayIp', 'networkName'],
       validators: { required: true },
       vlanVisibility: true,
       allowCustomInput: true
+    }),
+    new DynamicInputHiddenField({
+      key: 'networkName',
+      value: '',
     }),
     new DynamicSelectGatewayIpField({
       key: 'gatewayIp',
