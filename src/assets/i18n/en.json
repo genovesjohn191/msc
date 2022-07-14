@@ -964,7 +964,7 @@
     },
     "provisioningStep": {
       "description": "License Count is being changed and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing to change your License Count. This may take a moment."
+      "dataInProgress": "Preparing to change your License count. This may take a moment."
     }
   },
   "orderMsRequestChange": {
@@ -1151,7 +1151,7 @@
     },
     "provisioning": {
       "description": "Your internet port plan is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
-      "dataInProgress": "Preparing to change your internet port plan. This may take a moment.",
+      "dataInProgress": "Preparing to change your Internet Port plan. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     },
     "internetIsInvalid": {
@@ -1179,11 +1179,11 @@
     },
     "serviceIsInvalid": "This service cannot be modified because it is currently being provisioned.",
     "privateCloud": {
-      "title": "Change Private Cloud LAUNCH™ Extender Speed",
-      "extenderServiceLabel": "Please select the Private Cloud LAUNCH™ Extender service you wish to change the speed for.",
+      "title": "Change LAUNCH™ Extender Speed",
+      "extenderServiceLabel": "Please select the LAUNCH™ Extender service you wish to change the speed for.",
       "provisioning": {
-        "description": "Your launch extender speed is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
-        "dataInProgress": "Preparing to change your launch extender speed. This may take a moment.",
+        "description": "Your LAUNCH™ Extender speed is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+        "dataInProgress": "Preparing to change your LAUNCH™ Extender speed. This may take a moment.",
         "dataError": "Something went wrong while processing your request. Please try again later."
       }
     },
@@ -1191,8 +1191,8 @@
       "title": "Change Azure Extend Speed",
       "extenderServiceLabel": "Please select the Azure Extend service you wish to change the speed for.",
       "provisioning": {
-        "description": "Your azure extend speed is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
-        "dataInProgress": "Preparing to change your azure extend speed. This may take a moment.",
+        "description": "Your Azure Extend speed is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+        "dataInProgress": "Preparing to change your Azure Extend speed. This may take a moment.",
         "dataError": "Something went wrong while processing your request. Please try again later."
       }
     }
