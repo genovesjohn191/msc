@@ -8,10 +8,10 @@ export enum ExtenderType {
 }
 
 export const extenderTypeText = {
-  [ExtenderType.PublicCloudExtenderMtAz]: 'Public Cloud Extender MT AZ',
-  [ExtenderType.PublicCloudExtenderCustomerSource]: 'Public Cloud Extender Customer Source',
-  [ExtenderType.ExtenderCustomerSource]: 'Extender Customer Source',
-  [ExtenderType.ExtenderMtAz]: 'Extender MT AZ'
+  [ExtenderType.PublicCloudExtenderMtAz]: 'Azure Extend',
+  [ExtenderType.PublicCloudExtenderCustomerSource]: 'Azure Extend',
+  [ExtenderType.ExtenderCustomerSource]: 'LAUNCH™ Extender',
+  [ExtenderType.ExtenderMtAz]: 'LAUNCH™ Extender'
 };
 
 /**

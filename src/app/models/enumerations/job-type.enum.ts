@@ -174,7 +174,7 @@ export const jobTypeText = {
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
   [JobType.InternetPortPlanChange]: 'Change Internet Port Plan',
 
-  [JobType.PrivateCloudExtenderSpeedChange]: 'Change Private Cloud Extender Speed',
+  [JobType.PrivateCloudExtenderSpeedChange]: 'Change LAUNCH™ Extender Speed',
   [JobType.AzureExtendSpeedChange]: 'Change Azure Extend Speed',
 };
 
