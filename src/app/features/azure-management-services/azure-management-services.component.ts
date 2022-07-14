@@ -104,6 +104,10 @@ export class AzureManagementServicesComponent extends McsPageBase {
     return 'azureManagementServices';
   }
 
+  public get hasPermissionToCreateTicket(): boolean {
+    return this._accessControlService.hasPermission(['TicketCreate']);
+  }
+
   /**
    * Navigate to Azure Management Service details page
    * @param azureManagementService Azure Management Service to view the details
@@ -111,6 +115,10 @@ export class AzureManagementServicesComponent extends McsPageBase {
   public navigateToAzureManagementService(azureManagementService: McsAzureManagementService): void {
     if (isNullOrEmpty(azureManagementService)) { return; }
     this._navigationService.navigateTo(RouteKey.AzureManagementServicesDetails, [azureManagementService.id]);
+  }
+
+  public hasContextMenuItems(azureManagementService: McsAzureManagementService): boolean {
+    return this.hasPermissionToCreateTicket || this.hasAccessToServiceRequest(azureManagementService);
   }
 
   public hasAccessToServiceRequest(service: McsAzureManagementService): boolean {

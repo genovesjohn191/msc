@@ -88,37 +88,39 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef hidden-small></th>
           <td mat-cell *matCellDef="let row" text-center hidden-small>
-            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
-              mcsPopover placement="bottom" orientation="left" theme="light"
-              padding="none" [content]="actionContent" mcsCursor="pointer"
-              *ngIf="row.serviceId">
-            </mcs-icon>
-            <ng-template #actionContent>
-              <ng-container *mcsAccessControl="['TicketCreate']">
-                <div class="cog-actions-wrapper">
-                  <a mcsButton="basic" color="white" labelPlacement="left"
-                    (click)="onRaiseTicket(row)"
-                    mcsId="azure-management-raise-ticket"
-                    mcsEventTracker="azure-management-raise-ticket"
-                    mcsEventCategory="azure management"
-                    mcsEventLabel="azure-management-listing-page">
-                    {{ 'azureManagementServices.raiseTicket' | translate }}
-                  </a>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="hasAccessToServiceRequest(row)">
-                <div class="cog-actions-wrapper">
-                  <a mcsButton="basic" color="white" labelPlacement="left"
-                    (click)="navigateToServiceRequest(row)"
-                    mcsId="azure-management-service-service-request-link"
-                    mcsEventTracker="azure-management-service-service-request"
-                    mcsEventCategory="azure-management-services"
-                    mcsEventLabel="azure-management-services-listing-page">
-                    {{ 'azureSubscriptions.serviceRequest' | translate }}
-                  </a>
-                </div>
-              </ng-container>
-            </ng-template>
+            <ng-container *ngIf="hasContextMenuItems(row)">
+              <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
+                mcsPopover placement="bottom" orientation="left" theme="light"
+                padding="none" [content]="actionContent" mcsCursor="pointer"
+                *ngIf="row.serviceId">
+              </mcs-icon>
+              <ng-template #actionContent>
+                <ng-container *mcsAccessControl="['TicketCreate']">
+                  <div class="cog-actions-wrapper">
+                    <a mcsButton="basic" color="white" labelPlacement="left"
+                      (click)="onRaiseTicket(row)"
+                      mcsId="azure-management-raise-ticket"
+                      mcsEventTracker="azure-management-raise-ticket"
+                      mcsEventCategory="azure management"
+                      mcsEventLabel="azure-management-listing-page">
+                      {{ 'azureManagementServices.raiseTicket' | translate }}
+                    </a>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="hasAccessToServiceRequest(row)">
+                  <div class="cog-actions-wrapper">
+                    <a mcsButton="basic" color="white" labelPlacement="left"
+                      (click)="navigateToServiceRequest(row)"
+                      mcsId="azure-management-service-service-request-link"
+                      mcsEventTracker="azure-management-service-service-request"
+                      mcsEventCategory="azure-management-services"
+                      mcsEventLabel="azure-management-services-listing-page">
+                      {{ 'azureSubscriptions.serviceRequest' | translate }}
+                    </a>
+                  </div>
+                </ng-container>
+              </ng-template>
+            </ng-container>
           </td>
         </ng-container>
 

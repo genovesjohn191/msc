@@ -150,6 +150,10 @@ export class LicensesComponent extends McsPageBase implements OnInit, OnDestroy 
     return CommonDefinition.ASSETS_SVG_UNFOLD_MORE_BLACK;
   }
 
+  public get hasPermissionToCreateOrder(): boolean {
+    return this._accessControlService.hasPermission(['Orderedit']);
+  }
+
   public ngOnInit(): void {
     this._subscribeToLicenseChange();
     this._subscribeToLicensesResolver();
