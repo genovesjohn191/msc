@@ -151,6 +151,8 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.TerraformDeleteDeployment, McsEvent.jobTerraformCreateDeleteEvent);
     this._jobTypeEventMap.set(JobType.NetworkDbCreateNetwork, McsEvent.jobNetworkDbNetworkCreateEvent);
     this._jobTypeEventMap.set(JobType.NetworkDbDeleteNetwork, McsEvent.jobNetworkDbNetworkDeleteEvent);
+    this._jobTypeEventMap.set(JobType.PrivateCloudExtenderSpeedChange, McsEvent.jobPrivateCloudExtenderSpeedChangeEvent);
+    this._jobTypeEventMap.set(JobType.AzureExtendSpeedChange, McsEvent.jobAzureExtendSpeedChangeEvent);
   }
 
   /**

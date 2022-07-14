@@ -44,6 +44,7 @@ import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobTerraformDeploymentManager } from './entities/mcs-job-terraform-deployment.manager';
 import { McsJobNetworkDbNetworkManager } from './entities/mcs-job-network-db-network.manager';
+import { McsJobExtenderManager } from './entities/mcs-job-extender.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -321,6 +322,14 @@ export class McsJobManagerClient implements McsDisposable {
     // Internet
     this._jobEntitiesFactory.set(JobType.InternetPortPlanChange,
       new McsJobInternetManager(ActionStatus.Update, this._injector)
+    );
+
+    // Extenders
+    this._jobEntitiesFactory.set(JobType.PrivateCloudExtenderSpeedChange,
+      new McsJobExtenderManager(ActionStatus.Update, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.AzureExtendSpeedChange,
+      new McsJobExtenderManager(ActionStatus.Update, this._injector)
     );
 
     // Terraform Deployments
