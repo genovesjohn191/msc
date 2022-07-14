@@ -45,7 +45,7 @@
               <mcs-item>
                 <span>{{ 'label.requestor' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.requestor | mcsDataLabel"></span>
-                <span read-only *ngIf="ticketCreatedByDifferentCompanyId(selectedTicket.createdByCompanyId, selectedTicket.requestor)">
+                <span read-only *ngIf="ticketCreatedByDifferentCompanyId(selectedTicket.requestorCompanyId , selectedTicket.requestor)">
                   {{ 'notifications.account' | translate }}
                 </span>
               </mcs-item>

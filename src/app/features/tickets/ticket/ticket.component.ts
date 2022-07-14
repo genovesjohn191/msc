@@ -112,8 +112,8 @@ export class TicketComponent implements OnInit, OnDestroy {
   /**
    * Whether to show attribution text or not in requestor
    */
-  public ticketCreatedByDifferentCompanyId(createdByCompanyId: string, requestor: string): boolean {
-    let ticketCreatedBySameCompanyId = this.activeCompanyId === createdByCompanyId;
+  public ticketCreatedByDifferentCompanyId(requestorCompanyId: string, requestor: string): boolean {
+    let ticketCreatedBySameCompanyId = this.activeCompanyId === requestorCompanyId;
     let invalidToShowAttributionText = ticketCreatedBySameCompanyId || isNullOrEmpty(requestor);
     if (invalidToShowAttributionText) { return false; }
     return true;

@@ -325,10 +325,10 @@ export class McsJobManagerClient implements McsDisposable {
     );
 
     // Extenders
-    this._jobEntitiesFactory.set(JobType.PrivateCloudExtenderSpeedChange,
+    this._jobEntitiesFactory.set(JobType.PrivateCloudLaunchExtenderChangeSpeed,
       new McsJobExtenderManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.AzureExtendSpeedChange,
+    this._jobEntitiesFactory.set(JobType.AzureExtendChangeSpeed,
       new McsJobExtenderManager(ActionStatus.Update, this._injector)
     );
 

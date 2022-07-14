@@ -103,8 +103,8 @@ export enum JobType {
   InternetPortPlanChange = 3000001,
 
   // Extenders
-  PrivateCloudExtenderSpeedChange = 4000001,
-  AzureExtendSpeedChange = 4000002,
+  PrivateCloudLaunchExtenderChangeSpeed = 4000001,
+  AzureExtendChangeSpeed = 4000002,
 }
 
 export const jobTypeText = {
@@ -174,8 +174,8 @@ export const jobTypeText = {
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
   [JobType.InternetPortPlanChange]: 'Change Internet Port Plan',
 
-  [JobType.PrivateCloudExtenderSpeedChange]: 'Change LAUNCH™ Extender Speed',
-  [JobType.AzureExtendSpeedChange]: 'Change Azure Extend Speed',
+  [JobType.PrivateCloudLaunchExtenderChangeSpeed]: 'Change LAUNCH™ Extender Speed',
+  [JobType.AzureExtendChangeSpeed]: 'Change Azure Extend Speed',
 };
 
 /**
