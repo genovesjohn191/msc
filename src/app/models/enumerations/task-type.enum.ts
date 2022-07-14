@@ -46,6 +46,8 @@ export enum TaskType {
   ManagedServerProvisionVmBackup = 5010,
 
   PublicCloudLicenseChangeCount = 6000,
+  PrivateCloudLaunchExtenderChangeSpeed = 6001,
+  AzureExtendChangeSpeed = 6002,
 
   // LaunchPad 7000-8999
   LaunchpadManagedServerCreate = 7000,
