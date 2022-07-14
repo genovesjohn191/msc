@@ -44,6 +44,7 @@ import { JobInternetChangePortPlanEvent } from './items/job-internet-change-port
 import { JobMsLicenseCountChangeEvent } from './items/job-ms-license-count-change.event';
 import { JobNetworkDbNetworkCreateEvent } from './items/job-network-db-network-create.event';
 import { JobNetworkDbNetworkDeleteEvent } from './items/job-network-db-network-delete.event';
+import { JobPrivateCloudExtenderSpeedChangeEvent } from './items/job-private-cloud-extender-speed-change.event';
 import { JobReceiveEvent } from './items/job-receive.event';
 import { JobResourceCatalogItemCreateEvent } from './items/job-resource-catalog-item-create.event';
 import { JobServerAvAddEvent } from './items/job-server-av-add.event';
@@ -102,6 +103,7 @@ import { UserChangeEvent } from './items/user-change.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
 import { DataChangeCreateNetworkPanelsEvent } from './items/data-change-create-network-panels.event';
+import { JobAzureExtendSpeedChangeEvent } from './items/job-azure-extend-speed-change.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -215,5 +217,7 @@ export class McsEvent {
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
   public static jobMsLicenseCountChangeEvent = new JobMsLicenseCountChangeEvent();
   public static jobInternetChangePortPlanEvent = new JobInternetChangePortPlanEvent();
+  public static jobPrivateCloudExtenderSpeedChangeEvent = new JobPrivateCloudExtenderSpeedChangeEvent();
+  public static jobAzureExtendSpeedChangeEvent = new JobAzureExtendSpeedChangeEvent();
   public static launchPadWorkflowInitEvent = new LaunchPadWorkflowInitEvent();
 }
