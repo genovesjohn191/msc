@@ -124,11 +124,19 @@ export class AzureManagementServiceComponent implements OnInit, OnDestroy {
     return RouteKey;
   }
 
+  public get hasPermissionToCreateTicket(): boolean {
+    return this._accessControlService.hasPermission(['TicketCreate']);
+  }
+
   public navigateToDetails(azureManagementService: McsAzureManagementService): void {
     this._navigationService.navigateTo(RouteKey.AzureManagementServicesDetails, [azureManagementService.id]);
   }
 
-  public hasAccessToServiceReuqest(service: McsAzureManagementService): boolean {
+  public hasContextMenuItems(azureManagementService: McsAzureManagementService): boolean {
+    return this.hasPermissionToCreateTicket || this.hasAccessToServiceRequest(azureManagementService);
+  }
+
+  public hasAccessToServiceRequest(service: McsAzureManagementService): boolean {
     let propertyIsAvd = service.productType === 'AzureVirtualDesktop';
     let hasOrderEditPermission = this._accessControlService.hasPermission(['OrderEdit']);
     return propertyIsAvd && hasOrderEditPermission && !isNullOrEmpty(service.serviceId);
