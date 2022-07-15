@@ -1,10 +1,10 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum ExtenderType {
-  PublicCloudExtenderMtAz,
-  PublicCloudExtenderCustomerSource,
-  ExtenderCustomerSource,
-  ExtenderMtAz
+  PublicCloudExtenderMtAz = 'PublicCloudExtenderMtAz',
+  PublicCloudExtenderCustomerSource = 'PublicCloudExtenderCustomerSource',
+  ExtenderCustomerSource = 'ExtenderCustomerSource',
+  ExtenderMtAz = 'ExtenderMtAz'
 }
 
 export const extenderTypeText = {

@@ -45,7 +45,7 @@ export class McsExtenderService extends McsEntityBase {
     serializer: ExtenderTypeSerialization,
     deserializer: ExtenderTypeSerialization
   })
-  private productType: ExtenderType = undefined;
+  public productType: ExtenderType = undefined;
 
   /**
    * Returns the HA Mode label

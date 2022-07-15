@@ -57,7 +57,7 @@ export class PrivateChangeExtenderSpeedComponent extends McsOrderWizardBase {
   public config: ExtenderSpeedConfig = {
     extenderServiceLabel: this._translate.instant('changeExtenderSpeed.privateCloud.extenderServiceLabel'),
     extenderServiceId: 'private-select-extender-service',
-    extenderServiceProductType: extenderTypeText[ExtenderType.ExtenderMtAz],
+    extenderServiceProductType: ExtenderType.ExtenderMtAz,
     desiredSpeedId: 'private-slider-desired-speed'
   };
 
