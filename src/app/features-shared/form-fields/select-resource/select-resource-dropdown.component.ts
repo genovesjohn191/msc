@@ -127,6 +127,16 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
     return getSafeProperty(this.fg, (obj) => obj.valid);
   }
 
+  /**
+   * Returns true when server is disabled
+   * @param resource Resource to be checked
+   */
+  public isServerDisabled(resource: McsResource): boolean {
+    let isSelfManaged = getSafeProperty(resource, (obj) => obj.isSelfManaged);
+    let isServiceChangeAvailable = getSafeProperty(resource, (obj) => obj.serviceChangeAvailable);
+    return !isSelfManaged && !isServiceChangeAvailable;
+  }
+
   private _subscribeToAllResources(): void {
     this.resources$ = this.getResourcesByAccess().pipe(
       map((resources) => resources.filter((resource) => !resource.isDedicated))

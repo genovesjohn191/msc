@@ -107,6 +107,16 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
   }
 
   /**
+   * Returns true when vdc create new server is disabled
+   * @param resource Resource to be checked
+   */
+  public isCreateNewServerButtonDisabled(resource: McsResource): boolean {
+    let isSelfManaged = getSafeProperty(resource, (obj) => obj.isSelfManaged);
+    let isServiceChangeAvailable = getSafeProperty(resource, (obj) => obj.serviceChangeAvailable);
+    return !isSelfManaged && !isServiceChangeAvailable;
+  }
+
+  /**
    * Returns true when vdc can create new server
    * @param resource Resource to be checked
    */
