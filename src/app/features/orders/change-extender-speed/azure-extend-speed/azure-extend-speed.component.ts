@@ -56,7 +56,7 @@ export class AzureExtendSpeedComponent extends McsOrderWizardBase {
   public config: ExtenderSpeedConfig = {
     extenderServiceLabel: this._translate.instant('changeExtenderSpeed.azure.extenderServiceLabel'),
     extenderServiceId: 'azure-extend-select-extender-service',
-    extenderServiceProductType: extenderTypeText[ExtenderType.PublicCloudExtenderMtAz],
+    extenderServiceProductType: ExtenderType.PublicCloudExtenderMtAz,
     desiredSpeedId: 'azure-extend-slider-desired-speed'
   };
 

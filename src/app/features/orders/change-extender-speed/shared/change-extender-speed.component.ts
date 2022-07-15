@@ -227,7 +227,7 @@ export class ChangeExtenderSpeedComponent implements OnInit, OnDestroy {
     this.cloudExtenders$ = this._apiService.getExtenders(queryParam).pipe(
       map((response) => {
         let cloudExtenders = getSafeProperty(response, (obj) =>
-          obj.collection).filter((service) => service.ExtenderTypeText === this.config.extenderServiceProductType);
+          obj.collection).filter((service) => service.productType === this.config.extenderServiceProductType);
         this._cloudExtendersCount = cloudExtenders?.length;
         this._setExtenderServiceDefaultValue(cloudExtenders);
         return cloudExtenders;

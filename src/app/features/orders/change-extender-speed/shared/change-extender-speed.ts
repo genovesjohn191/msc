@@ -1,3 +1,5 @@
+import { ExtenderType } from "@app/models";
+
 export class ChangeExtenderSpeed {
   public desiredSpeed: number;
 }
@@ -16,6 +18,6 @@ export class ChangeExtenderSpeedInfo {
 export interface ExtenderSpeedConfig {
   extenderServiceLabel: string;
   extenderServiceId: string;
-  extenderServiceProductType: string;
+  extenderServiceProductType: ExtenderType;
   desiredSpeedId: string;
 }
