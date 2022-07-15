@@ -151,7 +151,7 @@ export class LicensesComponent extends McsPageBase implements OnInit, OnDestroy 
   }
 
   public get hasPermissionToCreateOrder(): boolean {
-    return this._accessControlService.hasPermission(['Orderedit']);
+    return this._accessControlService.hasPermission(['OrderEdit']);
   }
 
   public ngOnInit(): void {
