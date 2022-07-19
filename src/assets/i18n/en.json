@@ -4039,6 +4039,8 @@
     "changeOrderNote": "The billing details for this service will remain as-is.",
     "unavailable": "Unavailable",
     "invalidIpAddress": "Please enter a valid private IP address.",
+    "validationIpAdress": "Invalid IP address.",
+    "validationPort": "Invalid port.",
     "validationMin": "Must not be less than ",
     "validationMax": "Must not exceed ",
     "validationIntOnly": "Must be an integer",

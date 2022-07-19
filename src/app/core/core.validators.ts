@@ -36,6 +36,32 @@ export class CoreValidators {
   }
 
   /**
+   * Validator that performs network address validation
+   *
+   * `@Note` This will produce the following value when false
+   * { 'networkAddress': true }
+   */
+  
+  public static networkAddress(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_NETWORK_ADDRESS_PATTERN.test(control.value)
+      || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
+      null : { networkAddress: true };
+  }
+
+  /**
+   * Validator that performs network port validation
+   *
+   * `@Note` This will produce the following value when false
+   * { 'networkPort': true }
+   */
+  
+  public static networkPort(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_NETWORK_PORT_PATTERN.test(control.value)
+      || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
+      null : { networkPort: true };
+  }
+
+  /**
    * Validator that performs ip address with shorthand mask validation
    *
    * `@Note` This will produce the following value when false
