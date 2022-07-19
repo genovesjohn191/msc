@@ -6,6 +6,7 @@ import {
 import {
   McsApiSuccessResponse,
   McsJob,
+  McsQueryParam,
   McsServer,
   McsServerAttachMedia,
   McsServerClone,
@@ -62,11 +63,11 @@ describe('ServersApiService', () => {
   /** Test Implementation */
   describe('getServers()', () => {
     it('should get all servers from API calls', () => {
-      serversApiService.getServers({
-        pageIndex: requestOptions.page,
-        pageSize: requestOptions.perPage,
-        keyword: undefined
-      }).subscribe((response) => {
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      serversApiService.getServers(query).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);
@@ -271,7 +272,11 @@ describe('ServersApiService', () => {
 
   describe('getServerStorage()', () => {
     it('should get the server storage based on ID from API calls', () => {
-      serversApiService.getServerStorage(requestOptions.id)
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      serversApiService.getServerStorage(requestOptions.id, query)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(200);
@@ -279,7 +284,7 @@ describe('ServersApiService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/disks`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/disks?page=1&per_page=10`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -386,7 +391,11 @@ describe('ServersApiService', () => {
 
   describe('getServerNetworks()', () => {
     it('should get the server networks based on ID from API calls', () => {
-      serversApiService.getServerNics(requestOptions.id)
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      serversApiService.getServerNics(requestOptions.id, query)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(200);
@@ -394,7 +403,7 @@ describe('ServersApiService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/nics`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/nics?page=1&per_page=10`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback

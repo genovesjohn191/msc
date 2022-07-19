@@ -5,7 +5,8 @@ import {
 } from '@angular/core/testing';
 import {
   McsApiSuccessResponse,
-  McsJob
+  McsJob,
+  McsQueryParam
 } from '@app/models';
 
 import { McsApiClientTestingModule } from '../testing';
@@ -45,11 +46,11 @@ describe('McsApiJobsService', () => {
   /** Test Implementation */
   describe('getJobs()', () => {
     it('should get all jobs from API calls', () => {
-      jobsApiService.getJobs({
-        pageIndex: requestOptions.page,
-        pageSize: requestOptions.perPage,
-        keyword: undefined
-      }).subscribe((response) => {
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      jobsApiService.getJobs(query).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);

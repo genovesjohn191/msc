@@ -1,5 +1,8 @@
 import { fakeAsync } from '@angular/core/testing';
-import { createRandomString } from './mcs-crypto.function';
+import {
+  createRandomString,
+  hashString
+} from './mcs-crypto.function';
 
 // Dummy class
 export class TestStructure {
@@ -102,6 +105,33 @@ describe('Cryptography utility functions', () => {
       expect(letterCount).toBeGreaterThanOrEqual(expectedLetterCount);
       expect(numberCount).toBeGreaterThanOrEqual(expectedNumberCount);
       expect(specialCount).toBeGreaterThanOrEqual(expectedSpecialCount);
+    }));
+  });
+
+  describe('hashString()', () => {
+    it(`should create hash string of two same string with equal value`, fakeAsync(() => {
+      let string1 = "test hash string";
+      let string2 = "test hash string";
+
+      let randomString1 = hashString(string1);
+      let randomString2 = hashString(string2);
+      expect(randomString1).toEqual(randomString2);
+    }));
+
+    it(`should create hash string of different string with different value`, fakeAsync(() => {
+      let string1 = "test hash";
+      let string2 = "random string";
+
+      let randomString1 = hashString(string1);
+      let randomString2 = hashString(string2);
+      expect(randomString1).not.toEqual(randomString2);
+    }));
+
+    it(`should return an empty string if source is null or empty`, fakeAsync(() => {
+      let string = '';
+
+      let randomString = hashString(string);
+      expect(randomString).toEqual('');
     }));
   });
 });

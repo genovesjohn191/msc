@@ -7,6 +7,7 @@ import {
   convertMapToJsonObject,
   deserializeJsonToObject,
   isJson,
+  removeEmptyFields,
   reviverParser,
   serializeObjectToJson
 } from './mcs-json.function';
@@ -119,6 +120,22 @@ describe('JSON Functions', () => {
       let testObject = 'sample';
       let jsonObject = isJson(testObject);
       expect(jsonObject).toBeFalsy();
+    });
+  });
+
+  describe('removeEmptyFields()', () => {
+    it(`should remove empty fields in the object`, () => {
+      let testObject = {
+        name: 'name',
+        age: '28',
+        email: null
+      };
+      let jsonObject = removeEmptyFields(testObject);
+      let expectedValue =  {
+        name: 'name',
+        age: '28'
+      }
+      expect(jsonObject).toEqual(expectedValue);
     });
   });
 

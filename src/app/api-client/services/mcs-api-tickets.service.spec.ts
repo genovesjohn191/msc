@@ -6,6 +6,7 @@ import {
 /** Services and Models */
 import {
   McsApiSuccessResponse,
+  McsQueryParam,
   McsTicket
 } from '@app/models';
 
@@ -45,11 +46,11 @@ describe('McsApiTicketsService', () => {
   /** Test Implementation */
   describe('getTickets()', () => {
     it('should get all tickets from API calls', () => {
-      ticketsService.getTickets({
-        pageIndex: requestOptions.page,
-        pageSize: requestOptions.perPage,
-        keyword: undefined
-      }).subscribe((response) => {
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      ticketsService.getTickets(query).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);

@@ -1,3 +1,5 @@
+import { isNullOrEmpty } from "./mcs-object.function";
+
 /**
  *
  * @param letters required minimum number of letter characters
@@ -34,7 +36,9 @@ export function createRandomString(
 /**
  * Returns the hash of a string (NOT to be used for security purposes)
  */
-export function hashString(source: string): string  {
+export function hashString(source: string): string {
+  if (isNullOrEmpty(source)) {return ''};
+
   let seed = 0;
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
   for (let i = 0, ch; i < source.length; i++) {
