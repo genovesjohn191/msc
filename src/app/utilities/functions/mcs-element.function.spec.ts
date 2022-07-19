@@ -1,6 +1,7 @@
 import { waitForAsync } from '@angular/core/testing';
 
 import {
+  copyToClipboard,
   createSvgElement,
   getElementOffset,
   getElementPosition,
@@ -303,6 +304,19 @@ describe('McsElementFunction', () => {
       hiddenElement.style.display = 'none';
       document.body.appendChild(hiddenElement);
       expect(isElementVisible(hiddenElement)).toBeFalsy();
+    });
+  });
+
+  describe('copyToClipboard()', () => {
+    it('should return right value that was copied to clipboard', () => {
+      let parentElement: HTMLElement = document.createElement('INPUT');
+      parentElement.setAttribute("type", "text");
+      parentElement.setAttribute("value", "Chrome");
+
+      spyOn(document, 'execCommand').and.callThrough();
+      copyToClipboard(parentElement);
+
+      expect(document.execCommand).toHaveBeenCalledWith('copy');
     });
   });
 });

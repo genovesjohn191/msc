@@ -5,7 +5,8 @@ import {
 } from '@angular/core/testing';
 import {
   McsApiSuccessResponse,
-  McsFirewall
+  McsFirewall,
+  McsQueryParam
 } from '@app/models';
 
 import { McsApiClientTestingModule } from '../testing';
@@ -44,11 +45,11 @@ describe('McsApiFirewallsService', () => {
   /** Test Implementation */
   describe('getFirewalls()', () => {
     it('should get all firewalls from API calls', () => {
-      firewallsService.getFirewalls({
-        pageIndex: requestOptions.page,
-        pageSize: requestOptions.perPage,
-        keyword: undefined
-      }).subscribe((response) => {
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      firewallsService.getFirewalls(query).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);
@@ -91,17 +92,15 @@ describe('McsApiFirewallsService', () => {
 
   describe('getFirewallPolicies()', () => {
     it('should get all firewall policies from API calls', () => {
-      firewallsService.getFirewallPolicies(
-        requestOptions.id,
-        {
-          pageIndex: requestOptions.page,
-          pageSize: requestOptions.perPage,
-          keyword: requestOptions.searchKeyword
-        }).subscribe((response) => {
-          expect(response).toBeDefined();
-          expect(response.status).toBe(200);
-          expect(response.totalCount).toBe(2);
-        });
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      firewallsService.getFirewallPolicies(requestOptions.id, query).subscribe((response) => {
+        expect(response).toBeDefined();
+        expect(response.status).toBe(200);
+        expect(response.totalCount).toBe(2);
+      });
 
       // Create request to the backend and expect that the request happened
       let endpoint = `/private-cloud/firewalls/${requestOptions.id}/policies`

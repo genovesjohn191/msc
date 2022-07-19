@@ -12,19 +12,22 @@ import {
   getTimeDifference,
   getYear,
   isDateFormatValid,
-  getFriendlyTimespan
+  getFriendlyTimespan,
+  formatDateTimeZone,
+  formatTime,
+  getCurrentDate,
+  getFirstDateOfTheWeek,
+  getFirstDateOfTheMonth,
+  getFirstDateOfTheYear,
+  getDateOnly,
+  getTimestamp,
+  setDateToFirstDayOftheMonth,
+  setDateToLastDayOftheMonth,
+  addYearsToDate,
+  getLastDateOfThePreviousYear
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
-  describe('formatDate()', () => {
-    it(`should format the date based on the given string format`, () => {
-      let unformattedDate = new Date('2017-04-26T01:55:12Z');
-
-      let formattedDate = formatDate(unformattedDate, 'DD MMM, YYYY');
-      expect(formattedDate).toEqual('26 Apr, 2017');
-    });
-  });
-
   describe('convertDateTimezoneToUTC()', () => {
     it(`should convert date timezone`, () => {
       let localDateTime = '2019-09-10T10:00:00';
@@ -166,11 +169,42 @@ describe('DATE Functions', () => {
     });
   });
 
+  describe('formatTime()', () => {
+    it(`should format the time based on the given string format`, () => {
+
+      let formattedDate = formatTime('03:30', 'HH:mm', 'h:mm A');
+      expect(formattedDate).toEqual('3:30 AM');
+    });
+    it(`should format to default time if the outputFormat is empty`, () => {
+
+      let formattedDate = formatTime('03:30', 'HH:mm');
+      expect(formattedDate).toEqual('03:30');
+    });
+    it(`should return an empty string if the given time is empty`, () => {
+
+      let formattedDate = formatTime('', 'HH:mm', 'h:mm A');
+      expect(formattedDate).toEqual('');
+    });
+  });
+
+  describe('getCurrentDate()', () => {
+    it(`should return the current date`, () => {
+
+      let formattedDate = getCurrentDate();
+      expect(formattedDate).toEqual(new Date());
+    });
+  });
+
   describe('getDayinMonth()', () => {
     it(`should return correct date`, () => {
       let expectedDate = new Date().getDate();
       let actualDate = getDayinMonth();
       expect(actualDate).toBe(expectedDate);
+    });
+    it(`given no parameter should return current day of the month`, () => {
+      let expectedMonth: number = new Date().getDate();
+      let actualMonth: number = getDayinMonth();
+      expect(actualMonth).toBe(expectedMonth);
     });
   });
 
@@ -199,6 +233,71 @@ describe('DATE Functions', () => {
       let expectedYear: number = testDate.getFullYear();
       let actualYear: number = getYear(testDate);
       expect(actualYear).toBe(expectedYear);
+    });
+  });
+
+  describe('getFirstDateOfTheWeek()', () => {
+    it(`given no parameter should return the first date of the week`, () => {
+      let expectedDay: number = new Date().getDate() - new Date().getDay();
+      let actualDay: number = getFirstDateOfTheWeek();
+      expect(actualDay).toBe(expectedDay);
+    });
+    it(`given parameter should return the first date of the given week`, () => {
+      let testDate = new Date(2022, 7, 11);
+      let expectedDay: number = testDate.getDate() - testDate.getDay();
+      let actualDay: number = getFirstDateOfTheWeek(testDate);
+      expect(actualDay).toBe(expectedDay);
+    });
+  });
+
+  describe('getFirstDateOfTheMonth()', () => {
+    it(`given no parameter should return the first date of the month`, () => {
+      let expectedDay = (date: Date = new Date()) => {
+        return date.getFullYear(), date.getMonth(), 1;
+      };
+      let actualDay: number = getFirstDateOfTheMonth(new Date());
+      expect(actualDay).toBe(expectedDay());
+    });
+    it(`given parameter should return the first date of the given month`, () => {
+      let expectedDay = (date: Date = new Date(2022, 7, 11)) => {
+        return date.getFullYear(), date.getMonth(), 1;
+      };
+      let actualDay: number = getFirstDateOfTheMonth(new Date(2022, 7, 11));
+      expect(actualDay).toEqual(expectedDay());
+    });
+  });
+
+  describe('getFirstDateOfTheYear()', () => {
+    it(`given no parameter should return the first date of the year`, () => {
+      let expectedDay = (date: Date = new Date()) => {
+        return new Date(date.getFullYear(), 0, 1);
+      };
+      let actualDay: Date = getFirstDateOfTheYear(new Date());
+      expect(actualDay).toEqual(expectedDay());
+    });
+    it(`given parameter should return the first date of the given year`, () => {
+      let expectedDay = (date: Date = new Date(2022, 7, 11)) => {
+        return new Date(date.getFullYear(), 0, 1);
+      };
+      let actualDay: Date = getFirstDateOfTheYear(new Date(2022, 7, 11));
+      expect(actualDay).toEqual(expectedDay());
+    });
+  });
+
+  describe('getLastDateOfThePreviousYear()', () => {
+    it(`given no parameter should return the last date of the previous year`, () => {
+      let expectedDay = (date: Date = new Date()) => {
+        return new Date(date.getFullYear() - 1, 11, 31);
+      };
+      let actualDay: Date = getLastDateOfThePreviousYear(new Date());
+      expect(actualDay).toEqual(expectedDay());
+    });
+    it(`given parameter should return the last date of the previous given year`, () => {
+      let expectedDay = (date: Date = new Date(2022, 7, 11)) => {
+        return new Date(date.getFullYear() - 1, 11, 31);
+      };
+      let actualDay: Date = getLastDateOfThePreviousYear(new Date(2022, 7, 11));
+      expect(actualDay).toEqual(expectedDay());
     });
   });
 
@@ -238,6 +337,69 @@ describe('DATE Functions', () => {
       expect(actualDate.getFullYear()).toBe(testDate.getFullYear());
       expect(actualDate.getMonth()).toBe(testDate.getMonth() + monthIncrement);
       expect(actualDate.getDate()).toBe(testDate.getDate());
+    });
+  });
+
+  describe('addYearsToDate()', () => {
+    it(`should return correct added years`, () => {
+      let yearIncrement = 5;
+      let testDate = new Date(2020, 1, 1);
+
+      let actualDate = addYearsToDate(testDate, yearIncrement);
+
+      expect(actualDate.getFullYear()).toBe(testDate.getFullYear() + yearIncrement);
+      expect(actualDate.getMonth()).toBe(testDate.getMonth());
+      expect(actualDate.getDate()).toBe(testDate.getDate());
+    });
+  });
+
+  describe('getDateOnly()', () => {
+    it(`should return correct date only from the given input excluding the time settings`, () => {
+      let testDate = new Date("Mon Jul 11 2022 15:07:11 GMT+0800");
+      testDate.setSeconds(0);
+      testDate.setMinutes(0);
+      testDate.setHours(0);
+
+      let actualDate = getDateOnly(testDate);
+
+      expect(actualDate.getHours()).toBe(testDate.getHours());
+      expect(actualDate.getMinutes()).toBe(testDate.getMinutes());
+      expect(actualDate.getSeconds()).toBe(testDate.getSeconds());
+      expect(actualDate.getDate()).toBe(testDate.getDate());
+    });
+  });
+
+  describe('getTimestamp()', () => {
+    it(`should return the timestamp in seconds`, () => {
+      let testDate = new Date("Mon Jul 11 2022 15:07:11 GMT+0800").getTime();
+
+      let actualDate = getTimestamp(new Date("Mon Jul 11 2022 15:07:11 GMT+0800"));
+
+      expect(actualDate).toBe(testDate);
+    });
+  });
+
+  describe('setDateToFirstDayOftheMonth()', () => {
+    it(`should return the first day of the month`, () => {
+      let testDate = (date: Date = new Date("Mon Jul 11 2022 15:07:11 GMT+0800")) => {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+      };
+
+      let actualDate = setDateToFirstDayOftheMonth(new Date("Mon Jul 11 2022 15:07:11 GMT+0800"));
+
+      expect(actualDate).toEqual(testDate());
+    });
+  });
+
+  describe('setDateToLastDayOftheMonth()', () => {
+    it(`should return the last day of the month`, () => {
+      let testDate = (date: Date = new Date("Mon Jul 11 2022 15:07:11 GMT+0800")) => {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      };
+
+      let actualDate = setDateToLastDayOftheMonth(new Date("Mon Jul 11 2022 15:07:11 GMT+0800"));
+
+      expect(actualDate).toEqual(testDate());
     });
   });
 });

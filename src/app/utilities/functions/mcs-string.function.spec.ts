@@ -8,7 +8,11 @@ import {
   compareStrings,
   containsString,
   convertSpacesToDash,
-  formatStringToPhoneNumber
+  formatStringToPhoneNumber,
+  removeSpaces,
+  formatStringToText,
+  removeNonAlphaNumericChars,
+  formatFirstLetterOfEachWordToUpperCase
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -32,10 +36,38 @@ describe('STRING Functions', () => {
   });
 
   describe('replacePlaceholder()', () => {
-    it(`should replace the placeholder based on the given content`, () => {
+    it(`should replace the placeholder if the given content is a string`, () => {
       let stringContent = 'hello {{name}}';
       let replacedString = replacePlaceholder(stringContent, 'name', 'arrian');
       expect(replacedString).toBe(stringContent.replace('{{name}}', 'arrian'));
+    });
+    it(`should replace the placeholder if the given content is an array of string`, () => {
+      let stringContent = 'Hi I am {{name}}. {{age}} years old.';
+      let replacedString = replacePlaceholder(stringContent, ['name', 'age'], ['arrian', '28']);
+      let expectedValue = `Hi I am arrian. 28 years old.`;
+
+      expect(replacedString).toBe(expectedValue);
+    });
+    it(`should return undefined if fullstring is empty`, () => {
+      let stringContent = '';
+      let replacedString = replacePlaceholder(stringContent, 'name', 'arrian');
+      expect(replacedString).toBe(undefined);
+    });
+    it(`should return undefined if fullstring is null`, () => {
+      let stringContent = null;
+      let replacedString = replacePlaceholder(stringContent, 'name', 'arrian');
+      expect(replacedString).toBe(undefined);
+    });
+    it(`should return undefined if fullstring is undefined`, () => {
+      let stringContent = undefined;
+      let replacedString = replacePlaceholder(stringContent, 'name', 'arrian');
+      expect(replacedString).toBe(undefined);
+    });
+    it(`should throw an error if placeholder names and values length are not the same`, () => {
+      let stringContent = 'Hi I am {{name}}. {{age}} years old.';
+      expect(
+        () => { replacePlaceholder(stringContent, ['name'], ['arrian', '28']); }
+      ).toThrow(new Error('Count of placeholders and values are not the same'));
     });
   });
 
@@ -82,6 +114,10 @@ describe('STRING Functions', () => {
       let result = compareStrings('Beta', 'Alpha');
       expect(result).toBe(1);
     });
+    it(`should return 0 if firstString and secondString is empty`, () => {
+      let result = compareStrings(null, '');
+      expect(result).toBe(0);
+    });
   });
 
   describe('containsString()', () => {
@@ -99,7 +135,28 @@ describe('STRING Functions', () => {
   describe('convertSpacesToDash()', () => {
     it(`should return the converted string spaces into dash.`, () => {
       let result = convertSpacesToDash('Something to check');
-      expect(result).toBeTruthy('something-to-check');
+      expect(result).toEqual('something-to-check');
+    });
+  });
+
+  describe('removeSpaces()', () => {
+    it(`should return the converted string without spaces.`, () => {
+      let result = removeSpaces(' Something to check ');
+      expect(result).toEqual('Somethingtocheck');
+    });
+  });
+
+  describe('removeNonAlphaNumericChars()', () => {
+    it(`should return the converted string without without spaces and non-alphanumeric characters.`, () => {
+      let result = removeNonAlphaNumericChars(' Something%to% check %@42564');
+      expect(result).toEqual('Somethingtocheck42564');
+    });
+  });
+
+  describe('formatStringToText()', () => {
+    it(`should return the converted string to text without tab.`, () => {
+      let result = formatStringToText('test	test');
+      expect(result).toEqual('test test');
     });
   });
 
@@ -108,7 +165,7 @@ describe('STRING Functions', () => {
     describe('given valid number string and no custom regex', () => {
       it(`should format the string to default phone number format`, () => {
         let result = formatStringToPhoneNumber('1111222333');
-        expect(result).toBeTruthy('1111 222 333');
+        expect(result).toEqual('1111 222 333');
       });
     });
 
@@ -116,20 +173,20 @@ describe('STRING Functions', () => {
       it(`should remove country code with plus sign`, () => {
         let sampleRegExp = CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN;
         let result = formatStringToPhoneNumber('+61400000000',sampleRegExp, true);
-        expect(result).toBeTruthy('400000000');
+        expect(result).toEqual('1400000000');
       });
 
       it(`should remove country codes`, () => {
         let sampleRegExp = CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN;
         let result = formatStringToPhoneNumber('61400000000',sampleRegExp, true);
-        expect(result).toBeTruthy('400000000');
+        expect(result).toEqual('1400000000');
       });
 
 
       it(`should return exact 10 digit mobile number`, () => {
         let sampleRegExp = CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN;
         let result = formatStringToPhoneNumber('0400000000',sampleRegExp, true);
-        expect(result).toBeTruthy('400000000');
+        expect(result).toEqual('0400000000');
       });
     });
 
@@ -138,19 +195,19 @@ describe('STRING Functions', () => {
       it(`should return mobile number wihout plus sign`, () => {
         let sampleRegExp = CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN;
         let result = formatStringToPhoneNumber('+61400000000',sampleRegExp, false);
-        expect(result).toBeTruthy('61400000000');
+        expect(result).toEqual('61400000000');
       });
 
       it(`should return complete mobile number`, () => {
         let sampleRegExp = CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN;
         let result = formatStringToPhoneNumber('61400000000',sampleRegExp, false);
-        expect(result).toBeTruthy('61400000000');
+        expect(result).toEqual('61400000000');
       });
 
       it(`should return 10 digit mobile number`, () => {
         let sampleRegExp = CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN;
         let result = formatStringToPhoneNumber('0400000000',sampleRegExp, false);
-        expect(result).toBeTruthy('0400000000');
+        expect(result).toEqual('0400000000');
       });
     });
 
@@ -168,5 +225,12 @@ describe('STRING Functions', () => {
       });
     });
 
+  });
+  
+  describe('formatFirstLetterOfEachWordToUpperCase()', () => {
+    it(`should convert the first letter of each word to upper case`, () => {
+      let result = formatFirstLetterOfEachWordToUpperCase('hello world. welcome.');
+      expect(result).toEqual('Hello World. Welcome.');
+    });
   });
 });

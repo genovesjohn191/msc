@@ -7,7 +7,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { AppComponent } from './app.component';
+import { McsAuthenticationService } from './core';
 import { CoreTestingModule } from './core/testing';
+import { ServicesModule } from './services';
+import { McsApiService } from './services/mcs-api.service';
+import { McsAzureResourcesRepository } from './services/repositories/mcs-azure-resources.repository';
 
 describe(`AppComponent`, () => {
   let component: AppComponent;
@@ -22,7 +26,11 @@ describe(`AppComponent`, () => {
       ],
       imports: [
         CoreTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        ServicesModule
+      ],
+      providers: [
+        McsAuthenticationService
       ]
     });
 
@@ -40,7 +48,7 @@ describe(`AppComponent`, () => {
     });
 
     /** Tesbed Component Compilation and Creation */
-    TestBed.compileComponents().then(() => {
+  TestBed.compileComponents().then(() => {
       fixture = TestBed.createComponent(AppComponent);
       fixture.detectChanges();
 

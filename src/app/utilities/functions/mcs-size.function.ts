@@ -43,3 +43,13 @@ export function convertMbitToGbit(value: number): number {
 
   return (value / gbitToMbitMultiplier);
 }
+
+/**
+ * This will return the value converted from Gigabit to Megabit
+ * @param value Value in Gigabit
+ */
+ export function convertGbitToMbit(value: number): number {
+  if (!value) { return 0; }
+
+  return (value * gbitToMbitMultiplier);
+}

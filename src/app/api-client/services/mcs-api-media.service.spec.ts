@@ -5,6 +5,7 @@ import {
 } from '@angular/core/testing';
 import {
   McsApiSuccessResponse,
+  McsQueryParam,
   McsResourceMedia,
   McsResourceMediaServer
 } from '@app/models';
@@ -46,11 +47,11 @@ describe('McsApiMediaService', () => {
   /** Test Implementation */
   describe('getMedia()', () => {
     it('should get media from API calls', () => {
-      mediaApiService.getMedia({
-        pageIndex: requestOptions.page,
-        pageSize: requestOptions.perPage,
-        keyword: undefined
-      }).subscribe((response) => {
+      let query = new McsQueryParam();
+      query.pageIndex = requestOptions.page;
+      query.pageSize = requestOptions.perPage;
+
+      mediaApiService.getMedia(query).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);

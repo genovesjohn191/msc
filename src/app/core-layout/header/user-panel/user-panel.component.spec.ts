@@ -1,7 +1,9 @@
+import { Overlay } from '@angular/cdk/overlay';
 import {
   waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { SideSheetService } from '@app/shared/side-sheet/sidesheet.service';
 import { CommonDefinition } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -25,7 +27,11 @@ describe('UserPanelComponent', () => {
       imports: [
         CoreLayoutTestingModule
       ],
-      providers: [TranslateService]
+      providers: [
+        TranslateService,
+        SideSheetService,
+        Overlay
+      ]
     });
 
     /** Testbed Onverriding of Components */

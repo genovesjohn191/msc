@@ -6,7 +6,11 @@ import {
   updateObjectData,
   getSafeProperty,
   cloneObject,
-  createObject
+  createObject,
+  isEmptyObject,
+  cloneDeep,
+  convertRawObjectToString,
+  IRawObject
 } from './mcs-object.function';
 
 describe('OBJECT Functions', () => {
@@ -106,6 +110,33 @@ describe('OBJECT Functions', () => {
     });
   });
 
+  describe('isEmptyObject()', () => {
+    it('should return false when the value of the object provided is 0', () => {
+      let numberObject: number = 0;
+      expect(isEmptyObject(numberObject)).toBeTruthy();
+    });
+
+    it('should return false when the object provided is empty string', () => {
+      let stringObject: string = '';
+      expect(isEmptyObject(stringObject)).toBeTruthy();
+    });
+
+    it('should return false when the value of the object provided is an array', () => {
+      let arrayObject: string[] = ['a', 'b', 'c'];
+      expect(isEmptyObject(arrayObject)).toBeFalsy();
+    });
+
+    it('should return false when the object provided is a string', () => {
+      let stringObject: string = 'hello';
+      expect(isEmptyObject(stringObject)).toBeFalsy();
+    });
+
+    it('should return false when the value of the object provided is an object', () => {
+      let arrayObject = { 0: 'a', 1: 'b', 2: 'c' };;
+      expect(isEmptyObject(arrayObject)).toBeFalsy();
+    });
+  });
+
   describe('unsubscribeSafely()', () => {
     it('should close the subscription', () => {
       let subscription = new Subscription();
@@ -159,6 +190,21 @@ describe('OBJECT Functions', () => {
     });
   });
 
+  describe('cloneDeep()', () => {
+    it('should deep clone the provided source object', () => {
+      class TestClass {
+        public name: string;
+        public age: number;
+      }
+
+      let sourceInstance = { name: 'Yvonne', age: 28 } as TestClass;
+      let targetInstance = cloneDeep(sourceInstance);
+      sourceInstance.age = 27;
+      expect(targetInstance.age).toBe(28);
+      expect(targetInstance.age).not.toBe(sourceInstance.age);
+    });
+  });
+
   describe('createObject()', () => {
     it('should create a new target object with populated fields', () => {
       class TestClass {
@@ -179,6 +225,66 @@ describe('OBJECT Functions', () => {
       let targetInstance = cloneObject(testDate);
       expect(targetInstance).toBeDefined();
       expect(targetInstance instanceof Date).toBe(true);
+    });
+  });
+
+  describe('convertRawObjectToString()', () => {
+    it('should convert the raw object into a string', () => {
+      let rawObject = {
+        'mcs-select-field-size': 'xs'
+      }
+
+      let convertedRawObject = convertRawObjectToString(rawObject);
+
+      expect(convertedRawObject).toBe('mcs-select-field-size-xs');
+    });
+    it('should convert the raw object with true value into a string', () => {
+      let rawObject = { 'mcs-select-field': true }
+
+      let convertedRawObject = convertRawObjectToString(rawObject);
+
+      expect(convertedRawObject).toBe('mcs-select-field');
+    });
+    it('should convert the raw object with number value into a string', () => {
+      let rawObject = { 'mcs-select-field': '0' }
+
+      let convertedRawObject = convertRawObjectToString(rawObject);
+
+      expect(convertedRawObject).toBe('mcs-select-field-0');
+    });
+    it('should not convert the item in the object with false value into a string', () => {
+      let rawObject = {
+        'mcs-select-field': false,
+        'mcs-option-field': true
+      }
+
+      let convertedRawObject = convertRawObjectToString(rawObject);
+
+      expect(convertedRawObject).toBe('mcs-option-field');
+    });
+    it('should convert the raw object with multiple object items into a string', () => {
+      let rawObject = {
+        'mcs-select-field': true,
+        'mcs-select-field-position': 'bottom'
+      }
+
+      let convertedRawObject = convertRawObjectToString(rawObject);
+
+      expect(convertedRawObject).toBe('mcs-select-field mcs-select-field-position-bottom');
+    });
+    it('should return an empty string if the raw object is empty', () => {
+      let rawObject: IRawObject;
+
+      let convertedRawObject = convertRawObjectToString(rawObject);
+
+      expect(convertedRawObject).toBe('');
+    });
+    it('should return an empty string if the raw object is null', () => {
+      let rawObject: IRawObject = null;
+
+      let convertedRawObject = convertRawObjectToString(rawObject);
+
+      expect(convertedRawObject).toBe('');
     });
   });
 });
