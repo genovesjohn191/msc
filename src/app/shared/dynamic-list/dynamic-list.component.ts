@@ -73,6 +73,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
   implements ControlValueAccessor, Validator, OnInit, OnChanges, DoCheck {
 
   public list$: Observable<DynamicListItem[]>;
+  public fcInput: FormControl<string>;
 
   private _templateListChange: BehaviorSubject<DynamicListItem[]>;
   private _validators: Map<string, Function>;
@@ -159,6 +160,13 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
   public set enableOrdering(value: boolean) { this._enableOrdering = coerceBoolean(value); }
   private _enableOrdering: boolean = true;
 
+  @Input()
+  public get inputValidators(): any[] {
+    return this._inputValidators;
+  }
+  public set inputValidators(value: any[]) { this._inputValidators = value; }
+  private _inputValidators: any[] = [];
+
   @ViewChild('inputItemFc')
   public inputItemFc: ElementRef;
 
@@ -195,6 +203,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
     this._templateListChange = new BehaviorSubject([]);
     this.listChange = new EventEmitter();
     this._validators = new Map();
+    this.fcInput = new FormControl('', this.inputValidators);
   }
 
   public ngOnInit(): void {
@@ -215,6 +224,8 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
     if (changes.required?.currentValue) {
       this._validators.set('required', CoreValidators.requiredArray);
     }
+
+    this.fcInput.addValidators(this.inputValidators);
   }
 
   /**
@@ -288,7 +299,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
    * @param list list of items
    */
   public addListItem(value: string, list: DynamicListItem[]): void {
-    if (isNullOrEmpty(value) || this.isMaximum(list)) { return; }
+    if (isNullOrEmpty(value) || this.isMaximum(list) || this.fcInput.invalid) { return; }
     list.push(this._createDynamicListItem(value));
     this._updateListValues(list);
     this._resetInput(list);

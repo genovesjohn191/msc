@@ -82,6 +82,12 @@ export class DynamicFormValidationService {
     if (control.hasError('ouPath')) {
       return 'Incorrect OU Path format';
     }
+    if (control.hasError('networkAddress')) {
+      return 'Invalid IP address';
+    }
+    if (control.hasError('networkPort')) {
+      return 'Invalid port';
+    }
   }
 
   public getValidators(controlData: DynamicFormFieldConfig): ValidatorFn[] {

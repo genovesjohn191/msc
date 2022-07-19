@@ -273,6 +273,9 @@ export class CommonDefinition {
   public static REGEX_FIREWALL_SERVICE_ID_PATTERN = /^[mM][1-9pPwWxX][dD][fF][wW][0-9]{6,9}$/;
   public static REGEX_HOSTNAME_PATTERN = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]))$/;
 
+  public static REGEX_NETWORK_ADDRESS_PATTERN = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(([0-9])|([01]?[0-9][0-9])|(2?[0-4][0-9])|((25)?[0-5]))\.(([0-9])|([01]?[0-9][0-9])|(2?[0-4][0-9])|((25)?[0-5]))\.(([0-9])|([01]?[0-9][0-9])|(2?[0-4][0-9])|((25)?[0-5]))\.(([0-9])|([01]?[0-9][0-9])|(2?[0-4][0-9])|((25)?[0-5]))\/(([0-2]?[0-9]$)|([3]?[012]$))$/;
+  public static REGEX_NETWORK_PORT_PATTERN = /^((\d{1,5}[ ]?-[ ]?)?(\d{1,5}))([ ]?,[ ]?(\d{1,5}[ ]?-[ ]?)?(\d{1,5}))*$/;
+
   /** Session count */
   public static SESSION_IDLE_TIME_IN_SECONDS = 900;
   public static SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS = 10;

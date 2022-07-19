@@ -46,6 +46,9 @@ export class OrderFirewallPolicyEditDialogComponent implements OnInit {
   public fcNatDestinationIP : FormControl<string>;
   public fcNatDestinationPort : FormControl<string>;
 
+  public networkAddressValidator = [ CoreValidators.networkAddress ];
+  public networkPortValidator = [ CoreValidators.networkPort ];
+
   public constructor(
     public dialogRef: MatDialogRef<OrderFirewallPolicyEditDialogComponent>,
     private _translateService: TranslateService,
@@ -71,10 +74,10 @@ export class OrderFirewallPolicyEditDialogComponent implements OnInit {
     this.fcDestinationInterface = new FormControl<string[]>([]);
     this.fcDestinationAddress = new FormControl<string[]>([]);
     this.fcDestinationPort = new FormControl<string[]>([]);
-    this.fcNatSourceIP = new FormControl<string>('');
-    this.fcNatSourcePort = new FormControl<string>('');
-    this.fcNatDestinationIP = new FormControl<string>('');
-    this.fcNatDestinationPort = new FormControl<string>('');
+    this.fcNatSourceIP = new FormControl<string>('', [CoreValidators.networkAddress]);
+    this.fcNatSourcePort = new FormControl<string>('', [CoreValidators.networkPort]);
+    this.fcNatDestinationIP = new FormControl<string>('', [CoreValidators.networkAddress]);
+    this.fcNatDestinationPort = new FormControl<string>('', [CoreValidators.networkPort]);
 
     this.fgPolicy = new FormGroup<any>({
       fcLabel: this.fcLabel,
@@ -118,7 +121,7 @@ export class OrderFirewallPolicyEditDialogComponent implements OnInit {
     this.data.policy.sourceAddresses = this.fcSourceAddress.value;
     this.data.policy.sourcePorts = this.fcSourcePort.value;
     this.data.policy.destinationInterfaces = this.fcDestinationInterface.value;
-    this.data.policy.destinationInterfaces = this.fcDestinationInterface.value;
+    this.data.policy.destinationAddresses = this.fcDestinationAddress.value;
     this.data.policy.destinationPorts = this.fcDestinationPort.value;
     this.data.policy.natSourceIpAddress = this.fcNatSourceIP.value;
     this.data.policy.natSourcePort = this.fcNatSourcePort.value;

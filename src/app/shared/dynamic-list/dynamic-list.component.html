@@ -4,8 +4,16 @@
       <input mcsInput type="text" #inputItemFc
         [placeholder]="placeholder"
         maxlength="140"
+        [formControl]="fcInput"
         (keyup.enter)="onEnterAddItem($event, inputItemFc.value, list)"
         (blur)="onBlur()">
+
+      <mcs-error mcsError errorState="networkAddress">
+        {{ 'message.validationIpAdress' | translate }}
+      </mcs-error>
+      <mcs-error mcsError errorState="networkPort">
+        {{ 'message.validationPort' | translate }}
+      </mcs-error>
 
       <mcs-icon [key]="addIconKey"
         size="small"
