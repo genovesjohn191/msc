@@ -120,7 +120,7 @@ export class McsSystemMessageService implements McsDisposable {
         CommonDefinition.COOKIE_ACTIVE_MESSAGE
       );
 
-      let sameMessage = compareStrings(message?.message, activeSystemMessageCookie?.message) === 0;
+      let sameMessage = compareStrings(message?.id, activeSystemMessageCookie?.id) === 0;
       let hasSystemMessagePermission = this._accessControlService.hasPermission(
         [McsPermission.SystemMessageEdit, McsPermission.SystemMessageView]);
       let userAllowedToViewPortal = sameMessage && hasSystemMessagePermission;
