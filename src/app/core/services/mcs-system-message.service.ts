@@ -19,19 +19,18 @@ import { Injectable } from '@angular/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
-  McsFeatureFlag,
   McsPermission,
   McsSystemMessage,
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  compareJsons,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition,
-  McsDisposable
+  McsDisposable,
+  compareStrings
 } from '@app/utilities';
 import {
   LogClass,
@@ -121,7 +120,7 @@ export class McsSystemMessageService implements McsDisposable {
         CommonDefinition.COOKIE_ACTIVE_MESSAGE
       );
 
-      let sameMessage = compareJsons(message, activeSystemMessageCookie) === 0;
+      let sameMessage = compareStrings(message?.message, activeSystemMessageCookie?.message) === 0;
       let hasSystemMessagePermission = this._accessControlService.hasPermission(
         [McsPermission.SystemMessageEdit, McsPermission.SystemMessageView]);
       let userAllowedToViewPortal = sameMessage && hasSystemMessagePermission;
