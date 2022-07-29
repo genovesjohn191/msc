@@ -1249,7 +1249,7 @@
       "add": {
         "description": "You can use this wizard to request new rules be added to your firewall service.",
         "label": "What firewall rules would you like to add?",
-        "helpText": "Enter the source and destination details, and the protocol for your new rule. Use the Additional Change button to add multiple.",
+        "helpText": "Enter the source and destination details, and the protocol for your new rule. Blank values will be interpreted as ANY/*. Use the Additional Change button to add multiple.",
         "action": {
           "errorRequired": "Action is required"
         },
@@ -1275,7 +1275,9 @@
         },
         "destinationPort": {
           "placeholder": "Destination Port(s)",
-          "errorRequired": "Destination is required"
+          "helpText": "Acceptable format examples:\r\n80\r\n80-85\r\n80, 81, 82, 83-85",
+          "errorRequired": "Destination is required",
+          "invalidFormat": "Please enter a valid port"
         },
         "protocol": {
           "errorRequired": "Protocol is required"

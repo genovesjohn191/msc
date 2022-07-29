@@ -15,14 +15,11 @@ export class FirewallChangesRuleHelper {
     let formControls: customFormControlWrapper[] = [];
     if (action === RuleAction.Add) {
       formControls = [
-      { controlName: 'fcSourceZoneInterface', control: new FormControl<any>('', [CoreValidators.required]) },
-      { controlName: 'fcSourceIpSubnet', control: new FormControl<any>('', [CoreValidators.required,
-                                                                       CoreValidators.ipAddressShortHandMask]) },
-      { controlName: 'fcSourceZoneInterface', control: new FormControl<any>('', [CoreValidators.required]) },
-      { controlName: 'fcDestinationIpSubnet', control: new FormControl<any>('', [CoreValidators.required,
-                                                                            CoreValidators.ipAddressShortHandMask]) },
-      { controlName: 'fcDestinationZoneInterface', control: new FormControl<any>('', [CoreValidators.required]) },
-      { controlName: 'fcDestinationPort', control: new FormControl<any>('', [CoreValidators.required]) },
+      { controlName: 'fcSourceZoneInterface', control: new FormControl<any>('') },
+      { controlName: 'fcSourceIpSubnet', control: new FormControl<any>('', [CoreValidators.networkAddress]) },
+      { controlName: 'fcDestinationIpSubnet', control: new FormControl<any>('', [CoreValidators.networkAddress]) },
+      { controlName: 'fcDestinationZoneInterface', control: new FormControl<any>('') },
+      { controlName: 'fcDestinationPort', control: new FormControl<any>('', [CoreValidators.networkPort]) },
       { controlName: 'fcProtocol', control: new FormControl<any>(ProtocolType.TCP, [CoreValidators.required]) }]
     } else if (action === RuleAction.Modify) {
       formControls = this._createModifySpecificFormControls();
