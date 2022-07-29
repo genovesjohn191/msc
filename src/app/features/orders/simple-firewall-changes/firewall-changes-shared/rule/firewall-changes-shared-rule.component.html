@@ -24,11 +24,7 @@
                     <input mcsInput
                       [formControl]="formGroup?.controls['fcSourceZoneInterface']"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.sourceZoneOrInterface.placeholder' | translate"
-                      mcsId="add-simple-firewall-change-source-zone-interface"
-                      required>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceZoneOrInterface.errorRequired' | translate }}
-                    </mcs-error>
+                      mcsId="add-simple-firewall-change-source-zone-interface">
                   </mcs-form-field>
                 </mcs-grid-column>
                 <mcs-grid-column sizeLg="6">
@@ -37,12 +33,8 @@
                       [formControl]="formGroup?.controls['fcSourceIpSubnet']"
                       [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.helpText' | translate"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.placeholder' | translate"
-                      mcsId="add-simple-firewall-change-source-ip-subnet"
-                      required>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.errorRequired' | translate }}
-                    </mcs-error>
-                    <mcs-error mcsError errorState="ipAddressShortHandMask">
+                      mcsId="add-simple-firewall-change-source-ip-subnet">
+                    <mcs-error mcsError errorState="networkAddress">
                       {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.invalidFormat' | translate }}
                     </mcs-error>
                   </mcs-form-field>
@@ -55,11 +47,7 @@
                     <input mcsInput
                       [formControl]="formGroup?.controls['fcDestinationZoneInterface']"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationZoneOrInterface.placeholder' | translate"
-                      mcsId="add-simple-firewall-change-destination-zone-interface"
-                      required>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationZoneOrInterface.errorRequired' | translate }}
-                    </mcs-error>
+                      mcsId="add-simple-firewall-change-destination-zone-interface">
                   </mcs-form-field>
                 </mcs-grid-column>
                 <mcs-grid-column sizeLg="6">
@@ -68,12 +56,8 @@
                       [formControl]="formGroup?.controls['fcDestinationIpSubnet']"
                       [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.helpText' | translate"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.placeholder' | translate"
-                      mcsId="add-simple-firewall-change-destination-ip-subnet"
-                      required>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.errorRequired' | translate }}
-                    </mcs-error>
-                    <mcs-error mcsError errorState="ipAddressShortHandMask">
+                      mcsId="add-simple-firewall-change-destination-ip-subnet">
+                    <mcs-error mcsError errorState="networkAddress">
                       {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.invalidFormat' | translate }}
                     </mcs-error>
                   </mcs-form-field>
@@ -86,10 +70,9 @@
                     <input mcsInput
                       [formControl]="formGroup?.controls['fcDestinationPort']"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationPort.placeholder' | translate"
-                      mcsId="add-simple-firewall-change-destination-port"
-                      required>
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationPort.errorRequired' | translate }}
+                      mcsId="add-simple-firewall-change-destination-port">
+                    <mcs-error mcsError errorState="networkPort">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationPort.invalidFormat' | translate }}
                     </mcs-error>
                   </mcs-form-field>
                 </mcs-grid-column>
