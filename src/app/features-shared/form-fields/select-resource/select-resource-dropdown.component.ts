@@ -64,7 +64,8 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
   @Input()
   public set value(val: McsResource) {
     if (isNullOrEmpty(val)) { return; }
-    this.fcResource.setValue(val);
+    let resource = this._resources.find(r => r.id === val.id);
+    this.fcResource.setValue(resource);
     this._value = val;
   }
 
@@ -139,7 +140,11 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
 
   private _subscribeToAllResources(): void {
     this.resources$ = this.getResourcesByAccess().pipe(
-      map((resources) => resources.filter((resource) => !resource.isDedicated))
+      map((resources) => {
+        let result = resources.filter((resource) => !resource.isDedicated);
+        this._resources = result;
+        return result;
+      })
     );
     this._changeDetectorRef.markForCheck();
   }
