@@ -21,74 +21,70 @@
   </mcs-form-field>
 
   <!-- Network switcher -->
-  <ng-container *ngIf="!disableDynamicIp || !disableCustomEntry">
-    <mcs-item orientation="separated">
-      <h2 auto-width>{{ 'serverShared.manageNetwork.ipAddressLabel' | translate }}</h2>
-      <div *ngIf="!disableDynamicIp">
-        <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
-          (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
-          {{ 'serverShared.manageNetwork.buttonSwitch' | translate }}</a>
-        <a *ngIf="inputManageType === inputManageTypeEnum.Auto && !disableCustomEntry" mcsId
-          (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-          {{ 'serverShared.manageNetwork.customSwitch' | translate }}</a>
-      </div>
-    </mcs-item>
-
-    <div [ngSwitch]="inputManageType">
-      <!-- Ip address DHCP Mode -->
-      <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
-        <div>{{ 'serverShared.manageNetwork.buttonMessage' | translate }}</div>
-
-        <mcs-radio-button-group orientation="vertical" [formControl]="fcIpAllocationMode">
-          <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value" mcsId>
-            {{ item.text }}
-          </mcs-radio-button>
-        </mcs-radio-button-group>
-      </mcs-section>
-
-      <!-- IP address custom mode -->
-      <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
-        <div>{{ 'serverShared.manageNetwork.customMessage' | translate }}</div>
-
-        <mcs-item orientation="block">
-          <ng-container *ngIf="netMasks | mcsArrayHasElement">
-            {{ 'serverShared.manageNetwork.hints.ipRange' | translate }}:
-            <span read-only *ngFor="let netMask of netMasks">
-              {{ netMask.first }} - {{ netMask.last }}
-            </span>
-          </ng-container>
-          <mcs-form-field class="form-field-size-medium">
-            <input mcsInput placeholder="Enter IP Address" #customInput [disabled]="isIpValidationLoading"
-              mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
-
-            <mcs-error mcsError errorState="required">
-              {{ 'serverShared.manageNetwork.errors.ipAddressRequired' | translate }}
-            </mcs-error>
-            <mcs-error mcsError errorState="ipAddress">
-              {{ 'serverShared.manageNetwork.errors.ipAddressInvalid' | translate }}
-            </mcs-error>
-            <mcs-error mcsError errorState="ipRange"
-            [innerHTML]="(ipRangeErrorText | translate)  | mcsNewLines">
-            </mcs-error>
-            <mcs-error mcsError errorState="ipIsGateway">
-              {{ 'serverShared.manageNetwork.errors.ipAddressIsUsedAsGateway' | translate }}
-            </mcs-error>
-            <mcs-error mcsError errorState="subnetAutomationUnavailable">
-              {{ 'serverShared.manageNetwork.errors.subnetAutomationUnavailable' | translate }}
-            </mcs-error>
-          </mcs-form-field>
-        </mcs-item>
-
-        <ng-container *ngIf="isIpAddressInUsed(customInput?.value)">
-          <mcs-data-status-warning [@fadeInOut]>
-            <span [innerHTML]="('serverShared.manageNetwork.inUsedEnteredIpMessage' | translate)  | mcsNewLines"></span>
-          </mcs-data-status-warning>
-        </ng-container>
-      </mcs-section>
+  <mcs-item orientation="separated">
+    <h2 auto-width>{{ 'serverShared.manageNetwork.ipAddressLabel' | translate }}</h2>
+    <div *ngIf="!disableDynamicIp">
+      <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
+        (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
+        {{ 'serverShared.manageNetwork.buttonSwitch' | translate }}</a>
+      <a *ngIf="inputManageType === inputManageTypeEnum.Auto && !disableCustomEntry" mcsId
+        (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+        {{ 'serverShared.manageNetwork.customSwitch' | translate }}</a>
     </div>
-  </ng-container>
+  </mcs-item>
 
-  <div>
-    <ng-content select="[mcsManageNetworkWarning]"></ng-content>
+  <div [ngSwitch]="inputManageType">
+    <!-- Ip address DHCP Mode -->
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
+      <div>{{ 'serverShared.manageNetwork.buttonMessage' | translate }}</div>
+
+      <mcs-radio-button-group orientation="vertical" [formControl]="fcIpAllocationMode">
+        <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value" mcsId>
+          {{ item.text }}
+        </mcs-radio-button>
+      </mcs-radio-button-group>
+    </mcs-section>
+
+    <!-- IP address custom mode -->
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+      <div>{{ 'serverShared.manageNetwork.customMessage' | translate }}</div>
+
+      <mcs-item orientation="block">
+        <ng-container *ngIf="netMasks | mcsArrayHasElement">
+          {{ 'serverShared.manageNetwork.hints.ipRange' | translate }}:
+          <span read-only *ngFor="let netMask of netMasks">
+            {{ netMask.first }} - {{ netMask.last }}
+          </span>
+        </ng-container>
+        <mcs-form-field class="form-field-size-medium">
+          <input mcsInput placeholder="Enter IP Address" #customInput [disabled]="isIpValidationLoading"
+            mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
+
+          <mcs-error mcsError errorState="required">
+            {{ 'serverShared.manageNetwork.errors.ipAddressRequired' | translate }}
+          </mcs-error>
+          <mcs-error mcsError errorState="ipAddress">
+            {{ 'serverShared.manageNetwork.errors.ipAddressInvalid' | translate }}
+          </mcs-error>
+          <mcs-error mcsError errorState="ipRange"
+          [innerHTML]="(ipRangeErrorText | translate)  | mcsNewLines">
+          </mcs-error>
+          <mcs-error mcsError errorState="ipIsGateway">
+            {{ 'serverShared.manageNetwork.errors.ipAddressIsUsedAsGateway' | translate }}
+          </mcs-error>
+          <mcs-error mcsError errorState="subnetAutomationUnavailable">
+            {{ 'serverShared.manageNetwork.errors.subnetAutomationUnavailable' | translate }}
+          </mcs-error>
+        </mcs-form-field>
+      </mcs-item>
+
+      <ng-container *ngIf="isIpAddressInUsed(customInput?.value)">
+        <mcs-data-status-warning [@fadeInOut]>
+          <span [innerHTML]="('serverShared.manageNetwork.inUsedEnteredIpMessage' | translate)  | mcsNewLines"></span>
+        </mcs-data-status-warning>
+      </ng-container>
+    </mcs-section>
   </div>
+
+  <div><ng-content select="[mcsManageNetworkWarning]"></ng-content></div>
 </form>
