@@ -1,0 +1,230 @@
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'label.baselines' | translate">
+
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <ng-container *mcsAccessControl="[]; feature: ['EnableVcenterBaselineRemediation']">
+      <!-- Baselines actions -->
+      <mcs-top-panel-item *mcsTopPanelItemDef>
+        <mcs-action-item
+          (click)="onClickRemediateEsxi()"
+          [disabled]="dataSource?.hasNoRecords$ | async"
+          mcsId
+          mcsEventTracker="remediate-esxi-hosts"
+          mcsEventCategory="vcenter-baseline"
+          mcsEventLabel="vcenter-baseline-top-panel">
+          <mcs-icon key="plus"></mcs-icon>
+          <span>{{ 'label.remediateEsxiHosts' | translate }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </ng-container>
+
+    <!-- Baselines Information -->
+    <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
+      <div class="listing-action-wrapper">
+        <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalCount | mcsPlural: ('label.baseline' | translate) : ('label.baselines' | translate) }}</span>
+          </div>
+        </ng-template>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'label.baselineFilter' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="vcenter-baseline-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'label.columnFilter' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        [storageKey]="featureName"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="vcenter-baseline-mobile-search"></mcs-search>
+
+      <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
+
+        <!-- Baseline Column -->
+        <ng-container matColumnDef="baseline">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="baseline" disableClear>
+            {{ 'columnHeader.baseline' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mcs-item>
+              <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
+                <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
+              </div>
+              <span>{{ row.name }}</span>
+            </mcs-item>
+          </td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.description' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.description }}
+          </td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.type' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.baselineType }}
+          </td>
+        </ng-container>
+
+        <!-- Target Type Column -->
+        <ng-container matColumnDef="targetType">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.targetType' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.targetType }}
+          </td>
+        </ng-container>
+
+        <!-- Content Type Column -->
+        <ng-container matColumnDef="contentType">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.contentType' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.contentType }}
+          </td>
+        </ng-container>
+
+        <!-- Compliance Sets Column -->
+        <ng-container matColumnDef="complianceSets">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.complianceSets' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.complianceSet?.length }}
+          </td>
+        </ng-container>
+
+        <!-- Hosts Column -->
+        <ng-container matColumnDef="hosts">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.hosts' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.hosts?.length }}
+          </td>
+        </ng-container>
+
+        <!-- VCenter Column -->
+        <ng-container matColumnDef="vCenter">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.vCenter' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.vCenter?.name }}
+          </td>
+        </ng-container>
+
+        <!-- Approved Column -->
+        <ng-container matColumnDef="approved">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall text-center>
+            {{ 'columnHeader.approved' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall text-center>
+            <mcs-icon key="check" *ngIf="row.approved"></mcs-icon>
+            <mcs-icon key="close" *ngIf="!row.approved"></mcs-icon>
+          </td>
+        </ng-container>
+
+        <!-- Updated On Column -->
+        <ng-container matColumnDef="updatedOn">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.updatedOn' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            {{ row.lastUpdateTime | mcsStdDateFormat }}
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef class="action-header-cell"></th>
+          <td mat-cell *matCellDef="let row"
+            mcsCursor="default"
+            mcsStopPropagation
+            text-center
+            class="action-data-cell">
+
+            <mat-menu #actionMenu="matMenu">
+              <button mat-menu-item mcsId="remediate-esxi"
+                (click)="onClickRemediateEsxi(row)"
+                mcsEventTracker="remediate-esxi"
+                mcsEventCategory="vcenter-baseline"
+                mcsEventLabel="vcenter-baseline-listing">
+                {{ 'label.remediateEsxiHosts' | translate }}
+              </button>
+            </mat-menu>
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+              <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          [disabled]="row.isDisabled"
+          (click)="onNavigateToDetails(row)"
+          mcsId="vcenter-baseline-{{ row.name }}"
+          mcsEventTracker="navigate-to-baseline"
+          mcsEventCategory="vcenter-baseline"
+          mcsEventLabel="vcenter-baseline-listing"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          {{ 'message.noVCenterBaselines' | translate }}
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'message.tableError' | translate }}</span>
+          </div>
+        </div>
+      </mcs-item>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

@@ -1,4 +1,6 @@
 .mat-menu-item {
+  @include font-size($font-size-default);
+
   &.active {
     color: $color-primary-01;
     font-weight: bold;

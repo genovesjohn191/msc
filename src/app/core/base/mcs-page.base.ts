@@ -7,7 +7,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { RouteKey } from '@app/models';
+import { McsEvent } from '@app/events';
+import {
+  McsStateNotification,
+  RouteKey
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   unsubscribeSafely,
@@ -49,5 +53,16 @@ export abstract class McsPageBase implements McsDisposable {
 
   public refreshAngularView(): void {
     this.changeDetector.markForCheck();
+  }
+
+  public showSuccessfulMessage(message: string): void {
+    this.eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+      new McsStateNotification('success', message)
+    );
+  }
+
+  public showErrorMessage(message: string, tryAgainFunc?: () => void): void {
+    this.eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+      new McsStateNotification('error', message, tryAgainFunc));
   }
 }

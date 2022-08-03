@@ -4,11 +4,13 @@ export enum RouteKey {
   LaunchPad,
   LaunchPadSearch,
   LaunchPadWorkflowLaunch,
+
   LaunchPadAzureDeployments,
   LaunchPadAzureDeploymentCreate,
   LaunchPadAzureDeploymentDetails,
   LaunchPadAzureDeploymentDetailsOverview,
   LaunchPadAzureDeploymentDetailsHistory,
+
   LaunchPadNetworkDbSites,
   LaunchPadNetworkDbPods,
   LaunchPadNetworkDbVlans,
@@ -25,9 +27,14 @@ export enum RouteKey {
   LaunchPadNetworkDbNetworkDetailsEvents,
   LaunchPadNetworkDbNetworkDetailsEdit,
   LaunchPadNetworkDbNetworkDetailsVlans,
+
+  LaunchPadVCenterBaselines,
+  LaunchPadVCenterRemediateEsxiHosts,
+
   LaunchPadCrispOrders,
   LaunchPadCrispOrderDetails,
   LaunchPadCrispOrderDetailsElements,
+
   LaunchPadDashboardProjects,
   LaunchPadDashboardProjectDetails,
   LaunchPadDashboardProjectDetailsTasks,

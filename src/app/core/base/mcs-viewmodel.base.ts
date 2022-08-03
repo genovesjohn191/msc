@@ -15,6 +15,10 @@ export abstract class McsViewModelBase {
     this.formGroupService = injector.get<McsFormGroupService>(McsFormGroupService);
   }
 
+  public get valid(): boolean {
+    return this.formGroupService.allFormFieldsValid(this.fgGroup);
+  }
+
   public registerControls(controls: { [key: string]: AbstractControl }): void {
     this.fgGroup = new FormGroup(controls);
   }
@@ -24,7 +28,6 @@ export abstract class McsViewModelBase {
     if (host) {
       this.formGroupService.scrollToFirstInvalidField(host);
     }
-
     return this.formGroupService.allFormFieldsValid(this.fgGroup);
   }
 

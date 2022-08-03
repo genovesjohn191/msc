@@ -1,0 +1,121 @@
+<mcs-page [header]="'label.remediateEsxiHosts' | translate">
+
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to previous URL -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="vcenter-baseline"
+        mcsEventLabel="navigate-back">
+        <mcs-icon key="chevron-left" size="small"></mcs-icon>
+        <span>{{ 'shared.wizard.previous' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard>
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Details Step-->
+      <mcs-wizard-step id="remediate-esxi-details-step"
+        [stepTitle]="'label.details' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="viewModel?.formGroup">
+
+          <!-- Company Autocomplete -->
+          <mcs-field-autocomplete size="auto"
+            mcsId="autocomplete-company"
+            [label]="'label.company' | translate"
+            [dataSource]="'Company' | mcsFieldAutocomplete"
+            [formControl]="viewModel?.fcCompany"
+            [mcsContextualHelp]="'message.remediateSelectCompany' | translate">
+          </mcs-field-autocomplete>
+
+          <!-- VCenter Instance Select -->
+          <mcs-field-select size="auto"
+            mcsId="select-vcenter-instance"
+            [label]="'label.vCenter' | translate"
+            [dataSource]="'VCenterInstance' | mcsFieldSelect: { data: companyId$ }"
+            [formControl]="viewModel?.fcVCenter"
+            [mcsContextualHelp]="'message.remediateSelectVCenter' | translate">
+          </mcs-field-select>
+
+          <!-- VCenter Baseline Select -->
+          <mcs-field-select size="auto"
+            mcsId="select-vcenter-baseline"
+            [label]="'label.baseline' | translate"
+            [dataSource]="'VCenterBaseline' | mcsFieldSelect: { data: { vcenterId: vcenterId$, companyId: companyId$ } }"
+            [formControl]="viewModel?.fcBaseline"
+            (optionsChange)="onBaselineOptionsChange($event)"
+            [mcsContextualHelp]="'message.remediateSelectBaseline' | translate">
+          </mcs-field-select>
+
+          <!-- VCenter Data Centre Select -->
+          <mcs-field-select size="auto"
+            mcsId="select-vcenter-datacentre"
+            [label]="'label.dataCentre' | translate"
+            [dataSource]="'VCenterDatacentre' | mcsFieldSelect: { data: companyId$ }"
+            [formControl]="viewModel?.fcDatacentre"
+            [mcsContextualHelp]="'message.remediateSelectDataCentre' | translate">
+          </mcs-field-select>
+
+          <!-- VCenter Hosts -->
+          <ng-container *ngIf="viewModel?.fcCompany?.value">
+            <mcs-field-select-tree-view size="large"
+              [formControl]="viewModel?.fcHosts"
+              [label]="'label.hosts' | translate"
+              [hideChips]="false"
+              [multiple]="true"
+              [dataSource]="treeDatasource"
+              [expandFirst]="true"
+              [selectAllByDefault]="false"
+              [alwaysShowPanel]="true"
+              [mcsContextualHelp]="'message.remediateSelectHosts' | translate">
+            </mcs-field-select-tree-view>
+          </ng-container>
+
+          <!-- Action Items -->
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              [disabled]="!viewModel.valid"
+              (click)="onClickRemediate()"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="vcenter-baseline"
+              mcsEventLabel="remediate-esxi-hosts">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+          <ng-container mcsProvisioningStepDescription>
+            {{ 'orderAddBat.provisioningStep.description' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepInProgress>
+            <span *ngIf="orderIsToBeSubmitted">{{ 'orderAddBat.provisioningStep.dataInProgress' | translate }}</span>
+            <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
+          </ng-container>
+        </mcs-step-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+  </mcs-content-panel>
+</mcs-page>

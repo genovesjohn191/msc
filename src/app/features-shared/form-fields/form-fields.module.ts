@@ -6,6 +6,10 @@ import { McsApiService } from '@app/services';
 import { SharedModule } from '@app/shared';
 
 import { CheckBoxListComponent } from './checkbox-list/checkbox-list.component';
+import { FieldAutocompleteComponent } from './field-autocomplete/field-autocomplete.component';
+import { FieldAutocompletePipe } from './field-autocomplete/field-autocomplete.pipe';
+import { FieldAutocompleteService } from './field-autocomplete/field-autocomplete.service';
+import { MCS_FIELD_AUTOCOMPLETE_TOKEN } from './field-autocomplete/services/field-autocomplete.service';
 import { FieldErrorMessageDirective } from './field-directives/field-error-message.directive';
 import { FieldInputDatePickerComponent } from './field-input-date-picker/field-input-date-picker.component';
 import { FieldInputNoteComponent } from './field-input-note/field-input-note.component';
@@ -60,13 +64,16 @@ const exports: any[] | Type<any> = [
   FieldSelectBillingServiceComponent,
   FieldSelectMonthPeriodComponent,
 
+  FieldAutocompleteComponent,
+  FieldAutocompletePipe,
+
   OrderListBoxComponent,
   SelectColocationDeviceComponent,
   SelectManagementTagComponent
 ];
 
 @NgModule({
-  imports: [ SharedModule ],
+  imports: [SharedModule],
   declarations: [...exports],
   exports: [...exports],
   providers: [
@@ -74,7 +81,8 @@ const exports: any[] | Type<any> = [
     McsApiService,
 
     // Token based settings
-    { provide: MCS_FIELD_SELECT_TOKEN, useClass: FieldSelectService }
+    { provide: MCS_FIELD_SELECT_TOKEN, useClass: FieldSelectService },
+    { provide: MCS_FIELD_AUTOCOMPLETE_TOKEN, useClass: FieldAutocompleteService }
   ]
 })
 export class FormFieldsModule { }

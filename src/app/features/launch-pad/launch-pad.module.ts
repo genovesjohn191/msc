@@ -49,6 +49,8 @@ import { NetworkVlanOverviewComponent } from './network-db/vlan-db/vlans/vlan/ov
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
 import { LaunchPadSearchElementsResultComponent } from './search/results-table/elements-result.component';
 import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
+import { VCenterRemediateEsxiHostsComponent } from './vcenter-baselines/remediate-esxi-hosts/remediate-esxi-hosts.component';
+import { VCenterBaselinesComponent } from './vcenter-baselines/vcenter-baselines.component';
 import { LaunchPadWorkflowLaunchComponent } from './workflows/workflow-launch.component';
 import { LaunchPadWorkflowCoreModule } from './workflows/workflow/workflow-core.module';
 
@@ -82,6 +84,9 @@ import { LaunchPadWorkflowCoreModule } from './workflows/workflow/workflow-core.
     NetworkDbNetworkCreateComponent,
     NetworkDbNetworkEditComponent,
     NetworkDbNetworkVlansComponent,
+    // VCenter Baselines
+    VCenterBaselinesComponent,
+    VCenterRemediateEsxiHostsComponent,
     // Dashboard
     DashboardProjectsComponent,
     DashboardProjectDetailsComponent,

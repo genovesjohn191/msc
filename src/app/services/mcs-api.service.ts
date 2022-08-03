@@ -51,6 +51,7 @@ import {
   IMcsApiTicketsService,
   IMcsApiToolsService,
   IMcsApiVmSizesService,
+  IMcsApiVCenterService,
   IMcsApiWorkflowsService,
   McsApiAccountFactory,
   McsApiApplicationRecoveryFactory,
@@ -89,6 +90,7 @@ import {
   McsApiTicketsFactory,
   McsApiToolsFactory,
   McsApiVmSizesFactory,
+  McsApiVCenterFactory,
   McsApiWorkflowsFactory
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
@@ -138,6 +140,7 @@ import {
   McsCompany,
   McsConsole,
   McsEntityRequester,
+  McsExtendersQueryParams,
   McsExtenderService,
   McsFirewall,
   McsFirewallFortiAnalyzer,
@@ -151,6 +154,7 @@ import {
   McsKeyValue,
   McsLicense,
   McsLocation,
+  McsManagementServiceQueryParams,
   McsNetworkDbMazAaQueryParams,
   McsNetworkDbMulticastIp,
   McsNetworkDbNetwork,
@@ -297,11 +301,15 @@ import {
   McsTicketQueryParams,
   McsValidation,
   McsVmSize,
-  McsWorkflowCreate,
-  McsExtendersQueryParams,
-  McsManagementServiceQueryParams
+  McsVCenterBaseline,
+  McsVCenterBaselineRemediate,
+  McsVCenterInstance,
+  McsWorkflowCreate
 } from '@app/models';
+import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
+import { McsVCenterDataCentre } from '@app/models/response/vcenter/mcs-vcenter-data-centre';
+import { McsVCenterHost } from '@app/models/response/vcenter/mcs-vcenter-host';
 import {
   getSafeProperty,
   isNullOrEmpty
@@ -333,6 +341,7 @@ import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
+import { McsVCenterBaselinesRepository } from './repositories/mcs-vcenter-baselines.repository';
 
 @Injectable()
 @LogClass()
@@ -362,6 +371,7 @@ export class McsApiService {
   private readonly _ticketsRepository: McsTicketsRepository;
   private readonly _terraformDeploymentsRepository: McsTerraformDeploymentsRepository;
   private readonly _networkDbNetworksRepository: McsNetworkDbNetworksRepository;
+  private readonly _vCenterBaselinesRepository: McsVCenterBaselinesRepository;
 
   private readonly _accountApi: IMcsApiAccountService;
   private readonly _availabilityZonesApi: IMcsApiAvailabilityZonesService;
@@ -403,7 +413,7 @@ export class McsApiService {
   private readonly _toolsService: IMcsApiToolsService;
   private readonly _vmSizesApi: IMcsApiVmSizesService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
-
+  private readonly _vCenterApi: IMcsApiVCenterService;
 
   constructor(_injector: Injector) {
     this._translate = _injector.get(TranslateService);
@@ -431,6 +441,7 @@ export class McsApiService {
     this._ticketsRepository = _injector.get(McsTicketsRepository);
     this._terraformDeploymentsRepository = _injector.get(McsTerraformDeploymentsRepository);
     this._networkDbNetworksRepository = _injector.get(McsNetworkDbNetworksRepository);
+    this._vCenterBaselinesRepository = _injector.get(McsVCenterBaselinesRepository);
 
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
@@ -474,7 +485,7 @@ export class McsApiService {
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
     this._vmSizesApi = apiClientFactory.getService(new McsApiVmSizesFactory());
     this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
-
+    this._vCenterApi = apiClientFactory.getService(new McsApiVCenterFactory());
 
     // Register events
     this._eventDispatcher = _injector.get(EventBusDispatcherService);
@@ -1646,7 +1657,10 @@ export class McsApiService {
     );
   }
 
-  public getFirewallFortiManagers(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsFirewallFortiManager>> {
+  public getFirewallFortiManagers(
+    query?: McsQueryParam,
+    optionalHeaders?: Map<string, any>
+  ): Observable<McsApiCollection<McsFirewallFortiManager>> {
     return this._firewallsApi.getFirewallFortiManagers(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewallFortiManagers'))
@@ -1655,7 +1669,10 @@ export class McsApiService {
     );
   }
 
-  public getFirewallFortiAnalyzers(query?: McsFwFortiAnalyzerQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsFirewallFortiAnalyzer>> {
+  public getFirewallFortiAnalyzers(
+    query?: McsFwFortiAnalyzerQueryParams,
+    optionalHeaders?: Map<string, any>
+  ): Observable<McsApiCollection<McsFirewallFortiAnalyzer>> {
     return this._firewallsApi.getFirewallFortiAnalyzers(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewallFortiAnalyzers'))
@@ -2806,6 +2823,76 @@ export class McsApiService {
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
+
+  //#region VCenter Services
+  public getVCenterBaselines(
+    query?: McsVCenterBaselineQueryParam,
+    optionalHeaders?: Map<string, any>
+  ): Observable<McsApiCollection<McsVCenterBaseline>> {
+    return this._vCenterApi.getVCenterBaselines(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterBaselines'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+    // TODO: We need to think on how to pass the optionalheaders in the repository.
+    // otherwise, the job wont work as expected if we want to implement the loading mechanism.
+    // return this._mapToEntityRecords(this._vCenterBaselinesRepository, query).pipe(
+    //   catchError((error) =>
+    //     this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterBaselines'))
+    //   )
+    // );
+  }
+
+  public getVCenterBaseline(id: string): Observable<McsVCenterBaseline> {
+    return this._vCenterApi.getVCenterBaseline(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterBaseline'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public remediateBaseline(id: string, payload: McsVCenterBaselineRemediate): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.VCenter, id);
+
+    return this._vCenterApi.remediateBaseline(id, payload).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.VCenter, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.remediateBaseline'))
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.VCenter, id)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getVCenterInstances(optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVCenterInstance>> {
+    return this._vCenterApi.getVCenterInstances(optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterInstances'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getVCenterDataCentres(optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVCenterDataCentre>> {
+    return this._vCenterApi.getVCenterDataCentres(optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterDataCentres'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getVCenterHosts(optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVCenterHost>> {
+    return this._vCenterApi.getVCenterHosts(optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterHosts'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+  //#endregion
 
   /**
    * Dispatch the entity requester event based on the action provided

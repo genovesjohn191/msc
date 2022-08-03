@@ -14,5 +14,6 @@ export enum EntityRequester {
   TerraformDeployment,
   NetworkDbNetwork,
   NetworkDbVlan,
-  Extender
+  Extender,
+  VCenter
 }

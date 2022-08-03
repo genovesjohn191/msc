@@ -36,6 +36,8 @@ import { NetworkVlanComponent } from './network-db/vlan-db/vlans/vlan/network-vl
 import { NetworkVlanResolver } from './network-db/vlan-db/vlans/vlan/network-vlan.resolver';
 import { NetworkVlanOverviewComponent } from './network-db/vlan-db/vlans/vlan/overview/vlan-overview.component';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
+import { VCenterRemediateEsxiHostsComponent } from './vcenter-baselines/remediate-esxi-hosts/remediate-esxi-hosts.component';
+import { VCenterBaselinesComponent } from './vcenter-baselines/vcenter-baselines.component';
 import {
   companyIdParam,
   productIdParam,
@@ -211,6 +213,18 @@ export const launchPadRoutes: Routes = [
         data: { routeId: RouteKey.LaunchPadNetworkDbNetworkDetailsVlans }
       }
     ]
+  },
+  {
+    path: 'vcenter/baselines',
+    component: VCenterBaselinesComponent,
+    data: { routeId: RouteKey.LaunchPadVCenterBaselines },
+    canActivate: [ LaunchPadGuard ]
+  },
+  {
+    path: 'vcenter/baselines/remediate',
+    component: VCenterRemediateEsxiHostsComponent,
+    data: { routeId: RouteKey.LaunchPadVCenterRemediateEsxiHosts },
+    canActivate: [ LaunchPadGuard ]
   },
   {
     path: 'dashboard/projects',

@@ -1,0 +1,11 @@
+mat-option.mat-option {
+  @include font-size($font-size-default);
+
+  .mcs-inline-script {
+    display: inline-block;
+  }
+
+  .mcs-subscript {
+    display: block;
+  }
+}

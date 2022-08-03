@@ -1,17 +1,17 @@
 import { AccountChangeEvent } from './items/account-change.event';
 import { DataChangeAggregationTargetsEvent } from './items/data-change-aggregation-targets.event';
+import { DataChangeApplicationRecoveryEvent } from './items/data-change-application-recovery.event';
 import { DataChangeAzureManagedServicesEvent } from './items/data-change-azure-managed-services.event';
 import { DataChangeAzureManagementServicesEvent } from './items/data-change-azure-management-services.event';
-import { DataChangeExtendersEvent } from './items/data-change-extenders.event';
-import { DataChangeApplicationRecoveryEvent } from './items/data-change-application-recovery.event';
 import { DataChangeAzureReservationsEvent } from './items/data-change-azure-reservations.event';
 import { DataChangeAzureResourcesEvent } from './items/data-change-azure-resources.event';
 import { DataChangeAzureSoftwareSubscriptionsEvent } from './items/data-change-azure-software-subscriptions.event';
 import { DataChangeCompaniesEvent } from './items/data-change-companies.event';
 import { DataChangeConsoleEvent } from './items/data-change-console.event';
+import { DataChangeCreateNetworkPanelsEvent } from './items/data-change-create-network-panels.event';
 import { DnsDetailsChangeEvent } from './items/data-change-dns-details.event';
 import { DnsListingEvent } from './items/data-change-dns-listing.event';
-import { DataChangePlannedWorkDetailsEvent } from './items/data-change-planned-work-details.event';
+import { DataChangeExtendersEvent } from './items/data-change-extenders.event';
 import { DataChangeFirewallsEvent } from './items/data-change-firewalls.event';
 import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports.event';
 import { DataChangeJobsEvent } from './items/data-change-jobs.event';
@@ -19,6 +19,7 @@ import { DataChangeLicensesEvent } from './items/data-change-licenses.event';
 import { DataChangeMediaEvent } from './items/data-change-media.event';
 import { DataChangeNetworkDbNetworksEvent } from './items/data-change-networks.event';
 import { DataChangeOrdersEvent } from './items/data-change-orders.event';
+import { DataChangePlannedWorkDetailsEvent } from './items/data-change-planned-work-details.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
 import { DataChangeServersEvent } from './items/data-change-servers.event';
 import { DataChangeSystemMessagesEvent } from './items/data-change-system-messages.event';
@@ -36,6 +37,7 @@ import { EntityDeletedEvent } from './items/entity-deleted.event';
 import { EntityUpdatedEvent } from './items/entity-updated.event';
 import { ErrorShowEvent } from './items/error-show.event';
 import { InternetChangePortPlanSelectedEvent } from './items/internet-change-port-plan-selected.event';
+import { JobAzureExtendSpeedChangeEvent } from './items/job-azure-extend-speed-change.event';
 import { JobBackupAggregationTargetAddEvent } from './items/job-backup-aggregation-target-add.event';
 import { JobCurrentUserEvent } from './items/job-current-user.event';
 import { JobErrorEvent } from './items/job-error.event';
@@ -100,10 +102,10 @@ import { StateNotificationShowEvent } from './items/state-notification-show.even
 import { SystemMessageHideEvent } from './items/system-message-hide.event';
 import { SystemMessageShowEvent } from './items/system-message-show.event';
 import { UserChangeEvent } from './items/user-change.event';
+import { DataChangeVCenterBaselineEvent } from './items/vcenter/data-change-vcenter-baseline.event';
+import { DataClearVCenterBaselineEvent } from './items/vcenter/data-clear-vcenter-baseline.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
-import { DataChangeCreateNetworkPanelsEvent } from './items/data-change-create-network-panels.event';
-import { JobAzureExtendSpeedChangeEvent } from './items/job-azure-extend-speed-change.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -165,11 +167,13 @@ export class McsEvent {
   public static dataChangeNetworkDbNetworksEvent = new DataChangeNetworkDbNetworksEvent();
   public static dataChangeCreateNetworkPanelsEvent = new DataChangeCreateNetworkPanelsEvent();
   public static dataChangePlannedWorkDetailsEvent = new DataChangePlannedWorkDetailsEvent();
+  public static dataChangeVCenterBaselineEvent = new DataChangeVCenterBaselineEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();
   public static dataClearSystemMessage = new DataClearSystemMessageEvent();
   public static dataClearTerraformDeployments = new DataClearTerraformDeploymentsEvent();
+  public static dataClearVCenterBaseline = new DataClearVCenterBaselineEvent();
 
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();

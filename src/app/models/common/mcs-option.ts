@@ -8,18 +8,24 @@ export class McsOption {
   public data?: any;
   public helpText?: string;
   public disabled?: boolean;
+  public subscript?: string;
+  public inlinescript?: string;
 
   constructor(
     _value: any,
     _text: string,
     _helpText?: string,
     _disabled?: boolean,
-    _data?: any) {
+    _data?: any,
+    _subscript?: string,
+    _inlinescript?: string) {
 
     this.text = _text;
     this.value = _value;
     this.helpText = _helpText || undefined;
     this.disabled = _disabled || false;
     this.data = _data || null;
+    this.subscript = _subscript || null;
+    this.inlinescript = _inlinescript || null;
   }
 }

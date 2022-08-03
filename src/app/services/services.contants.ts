@@ -4,16 +4,16 @@ import { Provider } from '@angular/core';
 import { McsJobManagerClient } from './job-manager/mcs-job-manager.client';
 import { McsApiService } from './mcs-api.service';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
+import { McsApplicationRecoveryRepository } from './repositories/mcs-application-recovery.repository';
+import { McsAzureManagementServicesRepository } from './repositories/mcs-azure-management-services.repository';
 import { McsAzureReservationsRepository } from './repositories/mcs-azure-reservations.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
-import { McsAzureManagementServicesRepository } from './repositories/mcs-azure-management-services.repository';
-import { McsExtendersRepository } from './repositories/mcs-extenders.repository';
-import { McsApplicationRecoveryRepository } from './repositories/mcs-application-recovery.repository';
 import { McsAzureSoftwareSubscriptionsRepository } from './repositories/mcs-azure-software-subscriptions.repository';
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
+import { McsExtendersRepository } from './repositories/mcs-extenders.repository';
 /** Repositories */
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
@@ -28,6 +28,7 @@ import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
+import { McsVCenterBaselinesRepository } from './repositories/mcs-vcenter-baselines.repository';
 import { McsStateManagerClient } from './state-manager/mcs-state-manager.client';
 
 export const repositoryProviders: any[] = [
@@ -54,6 +55,7 @@ export const repositoryProviders: any[] = [
   McsAzureReservationsRepository,
   McsAzureSoftwareSubscriptionsRepository,
   McsTerraformDeploymentsRepository,
+  McsVCenterBaselinesRepository,
   McsNetworkDbNetworksRepository,
   McsApiService
 ];

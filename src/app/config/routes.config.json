@@ -216,6 +216,24 @@
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
+  "launchPadVCenterBaselines": {
+    "enumKey": "LaunchPadVCenterBaselines",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/vcenter/baselines",
+    "documentTitle": "LaunchPad - VCenter Baselines",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableVcenterBaselineRemediation"],
+    "requireAllFeatures": true
+  },
+  "launchPadVCenterRemediateEsxiHosts": {
+    "enumKey": "LaunchPadVCenterRemediateEsxiHosts",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/vcenter/baselines/remediate",
+    "documentTitle": "LaunchPad - Remediate ESXi Hosts",
+    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredFeatureFlag": ["EnableLaunchPad", "EnableVcenterBaselineRemediation"],
+    "requireAllFeatures": true
+  },
   "launchPadDashboardProjects": {
     "enumKey": "LaunchPadDashboardProjects",
     "enumCategory": "LaunchPadDashboard",

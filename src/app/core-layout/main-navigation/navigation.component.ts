@@ -13,9 +13,9 @@ import {
   CoreConfig,
   McsAccessControlService,
   McsAuthenticationIdentity,
+  McsAuthenticationService,
   McsRouteSettingsService
 } from '@app/core';
-import { McsAuthenticationService } from '@app/core/authentication/mcs-authentication.service';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {

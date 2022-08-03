@@ -71,6 +71,17 @@
                 {{ 'navigation.launchPad.azureDeployments' | translate }}
               </a>
             </li>
+            <!-- VCenter Baselines -->
+            <li>
+              <a [mcsRouterLink]="routeKeyEnum.LaunchPadVCenterBaselines"
+                mcsId="launch-pad-vcenter-baselines-link"
+                mcsEventTracker="navigate-to-launch-pad-vcenter-baselines"
+                mcsEventCategory="navigation"
+                mcsEventLabel="main-nav"
+                mcsRouterLinkActive="active">
+                {{ 'navigation.launchPad.vCenterBaselines' | translate }}
+              </a>
+            </li>
             <!-- Reporting -->
             <li *ngIf="workflowReportingLink">
               <a [href]="workflowReportingLink"

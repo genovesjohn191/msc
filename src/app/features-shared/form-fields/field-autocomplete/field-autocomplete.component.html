@@ -1,0 +1,29 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ displayedLabel }}</mat-label>
+
+  <input type="text" matInput
+    [formControl]="fcInputCtrl"
+    [matAutocomplete]="auto">
+
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+    [displayWith]="displayFn.bind(this)"
+    (optionSelected)="onOptionSelected($event)">
+    <ng-container *ngIf="optionItems$ | async as optionItems">
+      <mat-option *ngFor="let optionItem of optionItems"
+        [disabled]="optionItem.disabled"
+        [mcsTooltip]="optionItem.helpText" [mcsTooltipShow]="optionItem.disabled"
+        [value]="optionItem.value">
+        <span>{{ optionItem.text }}</span>
+        <span [mcsGreyedOut]="true" *ngIf="optionItem.inlinescript">{{ optionItem.inlinescript }}</span>
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+
+  <mcs-loader size="small"
+    matSuffix *ngIf="dataProcess?.inProgress$ | async">
+  </mcs-loader>
+
+  <mat-error mcsFieldErrorMessage="select">{{ displayedErrorMessage }}</mat-error>
+  <mat-hint *ngIf="startHint" align="start">{{ startHint }}</mat-hint>
+  <mat-hint *ngIf="endHint" align="end">{{ endHint }}</mat-hint>
+</mat-form-field>

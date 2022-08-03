@@ -8,14 +8,15 @@ import { McsApiService } from '@app/services';
 import { isNullOrEmpty } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
-import {
-  SelectMediaExtensionDatasource,
-  SelectResourceCatalogDatasource,
-  SelectResourceDatasource,
-  SelectTicketTypeDatasource
-} from './datasources';
+import { SelectMediaExtensionDatasource } from './datasources/factories/select-media-extension.datasource';
+import { SelectResourceCatalogDatasource } from './datasources/factories/select-resource-catalog.datasource';
+import { SelectResourceDatasource } from './datasources/factories/select-resource.datasource';
 import { SelectServerConsoleDatasource } from './datasources/factories/select-server-console.datasource';
 import { SelectServerDatasource } from './datasources/factories/select-server.datasource';
+import { SelectTicketTypeDatasource } from './datasources/factories/select-ticket-type.datasource';
+import { SelectVCenterBaselineDatasource } from './datasources/factories/select-vcenter-baseline.datasource';
+import { SelectVCenterDataCentreDatasource } from './datasources/factories/select-vcenter-datacentre.datasource';
+import { SelectVCenterInstanceDatasource } from './datasources/factories/select-vcenter-instance.datasource';
 
 export enum SelectDatasourceType {
   None = 0,
@@ -24,7 +25,10 @@ export enum SelectDatasourceType {
   Resource,
   ResourceCatalog,
   Server,
-  ServerConsole
+  ServerConsole,
+  VCenterInstance,
+  VCenterBaseline,
+  VCenterDatacentre
 }
 
 @Injectable({ providedIn: 'root' })
@@ -52,7 +56,16 @@ export class FieldSelectService implements IFieldSelectService {
       new SelectServerDatasource(_apiService));
 
     this._selectDatasourceMap.set(SelectDatasourceType.ServerConsole,
-      new SelectServerConsoleDatasource(_accessControl,_apiService, _translate));
+      new SelectServerConsoleDatasource(_accessControl, _apiService, _translate));
+
+    this._selectDatasourceMap.set(SelectDatasourceType.VCenterInstance,
+      new SelectVCenterInstanceDatasource(_apiService));
+
+    this._selectDatasourceMap.set(SelectDatasourceType.VCenterBaseline,
+      new SelectVCenterBaselineDatasource(_apiService));
+
+    this._selectDatasourceMap.set(SelectDatasourceType.VCenterDatacentre,
+      new SelectVCenterDataCentreDatasource(_apiService));
   }
 
   public get(type: string, data?: any): FieldSelectDatasource {

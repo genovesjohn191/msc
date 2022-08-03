@@ -2,6 +2,7 @@
 
   "svgIcons": {
     "no-icon-available": "no-icon-available.svg",
+    "close": "close.svg",
     "close-black": "close-black.svg",
     "close-blue": "close-blue.svg",
     "close-white": "close-white.svg",

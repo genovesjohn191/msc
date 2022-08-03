@@ -1,5 +1,10 @@
-import { Subject } from 'rxjs';
 import {
+  BehaviorSubject,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  debounceTime,
   take,
   takeUntil,
   tap
@@ -114,6 +119,9 @@ export abstract class FormFieldBaseComponent2<TValue>
   private _customControls: Array<FormControl<any>>;
   private _customValidators: Array<ValidatorFn>;
 
+  private _formValueWasTriggeredInside: boolean;
+  private _outsideFormValueChange: BehaviorSubject<boolean>;
+
   constructor(protected injector: Injector) {
     this.translate = injector.get(TranslateService);
     this.renderer = injector.get(Renderer2);
@@ -121,6 +129,8 @@ export abstract class FormFieldBaseComponent2<TValue>
     this.elementRef = injector.get(ElementRef);
     this.ngControl = injector.get(NgControl);
     this.ngZone = injector.get(NgZone);
+
+    this._outsideFormValueChange = new BehaviorSubject(null);
 
     if (!isNullOrEmpty(this.ngControl)) {
       this.ngControl.valueAccessor = this;
@@ -162,6 +172,13 @@ export abstract class FormFieldBaseComponent2<TValue>
     }
   }
 
+  protected outsideFormValueChanges(): Observable<boolean> {
+    return this._outsideFormValueChange.asObservable().pipe(
+      takeUntil(this.destroySubject),
+      debounceTime(300)
+    );
+  }
+
   public writeValue(value: TValue): void {
     this._onChange(value);
   }
@@ -169,9 +186,13 @@ export abstract class FormFieldBaseComponent2<TValue>
   public registerOnChange(fn: (value: TValue) => void): void {
     this._onChange = fn;
 
-    this.ngControl?.valueChanges.pipe(
+    this.ngControl.valueChanges?.pipe(
       takeUntil(this.destroySubject),
       tap(() => {
+        if (!this._formValueWasTriggeredInside) {
+          this._outsideFormValueChange.next(true);
+          this._formValueWasTriggeredInside = false
+        }
         this.changeDetectorRef.markForCheck();
       })
     ).subscribe();
@@ -241,7 +262,9 @@ export abstract class FormFieldBaseComponent2<TValue>
     }
     let shouldNotifyChanges = matchCount !== nextFormValues?.length ||
       existingFormValues?.length !== nextFormValues?.length;
+
     if (!shouldNotifyChanges) { return; }
+    this._formValueWasTriggeredInside = true;
 
     multiple ?
       this.ngControl.control.setValue(nextFormValues) :

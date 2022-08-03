@@ -178,6 +178,8 @@ export * from './request/mcs-network-db-network-update'
 export * from './request/mcs-network-db-network-reserve';
 export * from './request/mcs-network-db-vlan-action';
 export * from './request/mcs-network-dns-zone-ttl-request';
+export * from './request/vcenter/mcs-vcenter-baseline-query-param';
+export * from './request/vcenter/mcs-vcenter-baseline-remediate';
 
 /** Response */
 export * from './response/mcs-availability-zone';
@@ -370,6 +372,13 @@ export * from './response/mcs-report-billing-service-summary';
 export * from './response/mcs-report-billing-service-tenant';
 export * from './response/mcs-locations';
 export * from './response/mcs-vm-sizes';
+export * from './response/vcenter/mcs-vcenter';
+export * from './response/vcenter/mcs-vcenter-baseline';
+export * from './response/vcenter/mcs-vcenter-baseline-compliance-set';
+export * from './response/vcenter/mcs-vcenter-data-centre';
+export * from './response/vcenter/mcs-vcenter-host';
+export * from './response/vcenter/mcs-vcenter-host-cluster';
+export * from './response/vcenter/mcs-vcenter-instance';
 
 /** Common */
 export * from './common/mcs-api-search-key';

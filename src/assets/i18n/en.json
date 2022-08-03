@@ -17,7 +17,8 @@
       "vlanDb": "VLAN DB",
       "vlans": "VLANs",
       "vnis": "VNIs",
-      "workflows": "Workflows"
+      "workflows": "Workflows",
+      "vCenterBaselines": "vCenter Baselines"
     },
     "privateCloud": {
       "label": "Private Cloud",
@@ -3521,6 +3522,14 @@
     "inProgress": "Processing request..."
   },
   "columnHeader": {
+    "baseline": "Baseline",
+    "baselines": "Baselines",
+    "targetType": "Target Type",
+    "contentType": "Content Type",
+    "complianceSets": "Compliance Sets",
+    "hosts": "Hosts",
+    "vCenter": "vCenter",
+    "approved": "Approved",
     "networkServiceId": "Network Service ID",
     "networkCompanyId": "Network Company ID",
     "value": "Value",
@@ -3738,6 +3747,14 @@
     "enabled": "Enabled"
   },
   "label": {
+    "dataCentre": "Data Centre",
+    "hosts": "Hosts",
+    "vCenter": "VCenter",
+    "columnFilter": "Column Filter",
+    "remediateEsxiHosts": "Remediate ESXi Hosts",
+    "baseline": "Baseline",
+    "baselines": "Baselines",
+    "baselineFilter": "Baseline Filter",
     "viewDetails": "View Details",
     "raiseTicket": "Raise a Ticket",
     "isInfrastructure": "Is Infrastructure",
@@ -3963,6 +3980,16 @@
     "rollback": "Rollback"
   },
   "message": {
+    "hostNotCompliant": "This host is not compliant with the selected baseline.",
+    "remediateSelectCompany": "If the host(s) that require remediation reside in a customer's dedicated vCenter instance, select the relevant company here.",
+    "remediateSelectVCenter": "Select a vCenter instance to view baselines for.",
+    "remediateSelectBaseline": "Select a baseline to use for remediation.",
+    "remediateSelectDataCentre": "Select a data centre to view applicable hosts for it.",
+    "remediateSelectHosts": "Select one or more hosts to remediate.",
+    "remediateSuccess": "Remediate ESXI host succeeded.",
+    "remediateInitiated": "Remediate ESXI host initiated.",
+    "commandFailed": "Sorry, something's not right. Unable to process your request.",
+    "noVCenterBaselines": "There are no baselines to display.",
     "tableError": "An unexpected error occurred when attempting to load this data. Please try again.",
     "jobOnTicket": "This ticket will include the details of your <b>{{operationName}}</b> operation, for our team to investigate.",
     "openForConsole": "Select a server to open the console for.",
