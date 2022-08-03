@@ -103,9 +103,9 @@ export class ServerManageNetworkComponent
     value = coerceBoolean(value);
     if (this._disableDynamicIp !== value) {
       this._disableDynamicIp = value;
-    }
-    if (this._disableDynamicIp) {
-      this.inputManageType = this._disableCustomEntry? InputManageType.Auto : InputManageType.Custom;
+      if (this._disableDynamicIp) {
+        this.inputManageType = InputManageType.Custom;
+      }
     }
   }
   private _disableDynamicIp: boolean;
@@ -261,7 +261,7 @@ export class ServerManageNetworkComponent
       default:
         this._networkOutput.network = this.selectedNetwork;
         this._networkOutput.customIpAddress = null;
-        this._networkOutput.ipAllocationMode = (this._disableDynamicIp && this._disableCustomEntry)? null : this.fcIpAllocationMode.value;
+        this._networkOutput.ipAllocationMode = this.fcIpAllocationMode.value;
         this._networkOutput.valid = this.fcIpAllocationMode.valid && !isNullOrEmpty(this.selectedNetwork);
         break;
     }
