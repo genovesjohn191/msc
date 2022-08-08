@@ -5,6 +5,7 @@ import {
 } from 'rxjs';
 import {
   map,
+  startWith,
   switchMap,
   takeUntil,
   tap
@@ -29,14 +30,14 @@ export class SelectVCenterInstanceDatasource extends FieldSelectDatasource {
   }
 
   public initialize(prerequisite?: FieldSelectPrerequisite<Observable<string>>): void {
-    // Note: company Id is optional, once it was changed, the data should be filtered and update.
-    // It means this is dynamic!!!
-
     prerequisite.data.pipe(
+      startWith(null),
       takeUntil(this._destroySubject),
       switchMap(companyId => {
         let optionalHeaders = new Map<string, string>();
-        optionalHeaders.set('company-id', companyId);
+        if (companyId) {
+          optionalHeaders.set('company-id', companyId);
+        }
 
         return this._apiService.getVCenterInstances(optionalHeaders).pipe(
           map(result => result?.collection

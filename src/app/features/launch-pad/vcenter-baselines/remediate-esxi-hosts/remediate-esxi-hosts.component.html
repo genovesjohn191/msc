@@ -49,6 +49,7 @@
             [label]="'label.vCenter' | translate"
             [dataSource]="'VCenterInstance' | mcsFieldSelect: { data: companyId$ }"
             [formControl]="viewModel?.fcVCenter"
+            (optionsChange)="onVCenterOptionsChange($event)"
             [mcsContextualHelp]="'message.remediateSelectVCenter' | translate">
           </mcs-field-select>
 
@@ -56,7 +57,7 @@
           <mcs-field-select size="auto"
             mcsId="select-vcenter-baseline"
             [label]="'label.baseline' | translate"
-            [dataSource]="'VCenterBaseline' | mcsFieldSelect: { data: { vcenterId: vcenterId$, companyId: companyId$ } }"
+            [dataSource]="'VCenterBaseline' | mcsFieldSelect: { data: { vcenterName: vcenterName$, companyId: companyId$ } }"
             [formControl]="viewModel?.fcBaseline"
             (optionsChange)="onBaselineOptionsChange($event)"
             [mcsContextualHelp]="'message.remediateSelectBaseline' | translate">
@@ -72,7 +73,7 @@
           </mcs-field-select>
 
           <!-- VCenter Hosts -->
-          <ng-container *ngIf="viewModel?.fcCompany?.value">
+          <ng-container *ngIf="showHostsSelection">
             <mcs-field-select-tree-view size="large"
               [formControl]="viewModel?.fcHosts"
               [label]="'label.hosts' | translate"
@@ -105,7 +106,7 @@
         [stepTitle]="'shared.wizard.completed' | translate"
         customClass="limited-view">
 
-        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+        <mcs-step-provisioning [jobs]="jobEvents?.jobs$ | async" [requestState]="jobEvents?.dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
             {{ 'orderAddBat.provisioningStep.description' | translate }}
           </ng-container>

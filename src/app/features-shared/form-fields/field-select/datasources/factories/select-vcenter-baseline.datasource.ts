@@ -6,6 +6,7 @@ import {
 } from 'rxjs';
 import {
   map,
+  startWith,
   switchMap,
   takeUntil,
   tap
@@ -28,7 +29,7 @@ import {
 import { FieldSelectPrerequisite } from '../field-select.prerequisite';
 
 interface VCenterBaselineQuery {
-  vcenterId: Observable<string>;
+  vcenterName: Observable<string>;
   companyId: Observable<string>;
 }
 
@@ -41,21 +42,24 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
   }
 
   public initialize(prerequisite?: FieldSelectPrerequisite<VCenterBaselineQuery>): void {
-    if (isNullOrEmpty(prerequisite?.data?.vcenterId)) {
+    if (isNullOrEmpty(prerequisite?.data?.vcenterName)) {
       throw new Error('VCenterId is required for vcenter-baselines.');
     }
 
     combineLatest([
-      prerequisite?.data.vcenterId,
+      prerequisite?.data.vcenterName,
       prerequisite?.data.companyId
     ]).pipe(
+      startWith([null, null]),
       takeUntil(this._destroySubject),
-      switchMap(([vcenterId, companyId]) => {
+      switchMap(([vcenterName, companyId]) => {
         let query = new McsVCenterBaselineQueryParam();
-        query.vcenter = vcenterId;
+        query.vcenter = vcenterName || null;
 
         let optionalHeaders = new Map<string, string>();
-        optionalHeaders.set('company-id', companyId);
+        if (companyId) {
+          optionalHeaders.set('company-id', companyId);
+        }
 
         return this._apiService.getVCenterBaselines(query, optionalHeaders).pipe(
           map(result => result?.collection

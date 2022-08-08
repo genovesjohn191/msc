@@ -17,23 +17,15 @@ export class RemediateEsxiHostsViewModel extends McsViewModelBase {
   public fcDatacentre: FormControl<string>;
   public fcHosts: FormControl<string[]>;
 
-  private _baseline: McsVCenterBaseline;
-
   constructor(injector: Injector) {
     super(injector);
 
-    this.fcCompany = new FormControl<string>('', [
-      CoreValidators.required
-    ]);
-    this.fcVCenter = new FormControl<string>('', [
-      CoreValidators.required
-    ]);
+    this.fcCompany = new FormControl<string>('', []);
+    this.fcVCenter = new FormControl<string>('', []);
     this.fcBaseline = new FormControl<string>('', [
       CoreValidators.required
     ]);
-    this.fcDatacentre = new FormControl<string>('', [
-      CoreValidators.required
-    ]);
+    this.fcDatacentre = new FormControl<string>('', []);
     this.fcHosts = new FormControl<string[]>([], [
       CoreValidators.required
     ]);
@@ -48,7 +40,7 @@ export class RemediateEsxiHostsViewModel extends McsViewModelBase {
   }
 
   public get baselineId(): string {
-    return this._baseline?.id;
+    return this.fcBaseline?.value;
   }
 
   public get forUpdate(): boolean {
@@ -57,7 +49,6 @@ export class RemediateEsxiHostsViewModel extends McsViewModelBase {
 
   public updateViewModel(baseline: McsVCenterBaseline): void {
     if (isNullOrEmpty(baseline)) { return; }
-    this._baseline = baseline;
 
     this.fcCompany.setValue(baseline.vCenter?.companyId);
     this.fcVCenter.setValue(baseline.vCenter?.id);
