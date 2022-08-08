@@ -4,6 +4,7 @@ import {
   distinctUntilChanged,
   map,
   shareReplay,
+  startWith,
   switchMap,
   takeUntil,
   tap,
@@ -19,8 +20,12 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { McsPageBase } from '@app/core';
 import {
+  McsJobEvents,
+  McsPageBase
+} from '@app/core';
+import {
+  DataStatus,
   McsOption,
   McsOptionGroup,
   McsVCenterBaseline,
@@ -45,17 +50,20 @@ import { RemediateEsxiHostsViewModel } from './remediate-esxi-hosts.viewmodel';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements OnInit, OnDestroy {
+  public readonly jobEvents: McsJobEvents;
   public readonly viewModel: RemediateEsxiHostsViewModel;
   public readonly treeDatasource: TreeDatasource<McsOptionGroup>;
 
   public companyId$: Observable<string>;
-  public vcenterId$: Observable<string>;
+  public vcenterName$: Observable<string>;
 
   private _hostGroupChange = new BehaviorSubject<McsOptionGroup[]>(null);
   private _baselineOptionsChange = new BehaviorSubject<McsOption[]>(null);
+  private _vcenterOptionsChange = new BehaviorSubject<McsOption[]>(null);
 
   public constructor(injector: Injector) {
     super(injector);
+    this.jobEvents = new McsJobEvents(injector);
     this.viewModel = new RemediateEsxiHostsViewModel(injector);
     this.treeDatasource = new TreeDatasource<McsOptionGroup>(this._convertServerGroupToTreeItems.bind(this));
   }
@@ -64,7 +72,13 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
     return 'vcenter-remediate-esxi-hosts';
   }
 
+  public get showHostsSelection(): boolean {
+    return !isNullOrEmpty(this.viewModel?.fcCompany?.value) ||
+      !isNullOrEmpty(this.viewModel?.fcVCenter?.value);
+  }
+
   public ngOnInit(): void {
+    // TODO: Imprve company selection change to query only based on the filtered items and do pagination.
     this._subscribeToCompanyChange();
     this._subscribeToVCenterChange();
     this._subscribeToHostGroups();
@@ -78,12 +92,15 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   public onClickRemediate(): void {
     if (!this.viewModel.validate()) { return; }
 
+    this.jobEvents.setStatus(DataStatus.Active);
     let apiModel = this.viewModel.generateApiModel();
     this.apiService.remediateBaseline(this.viewModel.baselineId, apiModel).pipe(
-      tap(() => {
+      tap(job => {
+        this.jobEvents.setJobs(job).setStatus(DataStatus.Success);
         this.showSuccessfulMessage('message.remediateInitiated');
       }),
       catchError(error => {
+        this.jobEvents.setStatus(DataStatus.Error);
         this.showSuccessfulMessage('message.commandFailed');
         return throwError(() => error);
       }),
@@ -92,6 +109,10 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
   public onBaselineOptionsChange(options: McsOption[]): void {
     this._baselineOptionsChange.next(options ?? []);
+  }
+
+  public onVCenterOptionsChange(options: McsOption[]): void {
+    this._vcenterOptionsChange.next(options);
   }
 
   private _subscribeToCompanyChange(): void {
@@ -104,21 +125,29 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   }
 
   private _subscribeToVCenterChange(): void {
-    this.vcenterId$ = this.viewModel.fcVCenter.valueChanges.pipe(
+    this.vcenterName$ = this.viewModel.fcVCenter.valueChanges.pipe(
       takeUntil(this.destroySubject),
       distinctUntilChanged(),
       debounceTime(500),
+      map(vcenterId => {
+        let vcenterFound = (this._vcenterOptionsChange.getValue() || [])
+          .find(option => option.data.id === vcenterId);
+        return vcenterFound?.data?.name;
+      }),
       shareReplay(1)
     );
   }
 
   private _subscribeToHostGroups(): void {
     this.viewModel.fcCompany.valueChanges.pipe(
+      startWith(null),
       takeUntil(this.destroySubject),
       debounceTime(500),
       switchMap(companyId => {
         let optionalHeaders = new Map<string, string>();
-        optionalHeaders.set('company-id', companyId);
+        if (companyId) {
+          optionalHeaders.set('Company-id', companyId);
+        }
 
         return this.apiService.getVCenterHosts(optionalHeaders).pipe(
           map(response => response?.collection)
@@ -129,7 +158,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
         let groupRecords = new Array<McsOptionGroup>();
         hosts?.forEach(host => {
-          let groupName = host.parentCluster;
+          let groupName = host.parentCluster?.name || 'Others';
           let optionItem = new McsOption(
             host.id,
             host.managementName,
@@ -147,7 +176,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
           let newOptions = new Array<McsOption>();
           newOptions.push(optionItem);
-          groupRecords.push(new McsOptionGroup(host.parentCluster, ...newOptions));
+          groupRecords.push(new McsOptionGroup(groupName, ...newOptions));
         });
 
         this._hostGroupChange.next(groupRecords);
@@ -160,7 +189,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
       map(groups =>
         TreeUtility.convertEntityToTreemItems(groups,
           group => new TreeGroup(group.groupName, group.groupName, group.options, {
-            selectable: true,
+            selectable: false,
             excludeFromSelection: false,
             disableWhen: () => this._disableClusterFunc(group.options)
           }),

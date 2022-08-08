@@ -111,9 +111,8 @@
           [checked]="itemIsChecked(node)">
           <div [mcsTextTruncate]="node.name">
             <span [innerHTML]="node.name"></span>
-            <ng-container *ngIf="node.subscript">
-              <br/><small [mcsGreyedOut]="true">{{ node.subscript }}</small>
-            </ng-container>
+            <small [mcsGreyedOut]="true" *ngIf="node.inlinescript" class="mcs-inline-script">{{ node.inlinescript }}</small>
+            <small [mcsGreyedOut]="true" *ngIf="node.subscript" class="mcs-subscript">{{ node.subscript }}</small>
           </div>
         </mcs-checkbox>
       </ng-container>
@@ -121,9 +120,8 @@
       <ng-template #nonSelectableView>
         <div [mcsTextTruncate]="node.name">
           <span [innerHTML]="node.name"></span>
-          <ng-container *ngIf="node.subscript">
-            <br/><small [mcsGreyedOut]="true">{{ node.subscript }}</small>
-          </ng-container>
+          <small [mcsGreyedOut]="true" *ngIf="node.inlinescript" class="mcs-inline-script">{{ node.inlinescript }}</small>
+          <small [mcsGreyedOut]="true" *ngIf="node.subscript" class="mcs-subscript">{{ node.subscript }}</small>
         </div>
       </ng-template>
     </ng-container>
@@ -144,9 +142,8 @@
 
           <div [mcsTextTruncate]="node.name">
             <span [innerHTML]="node.name"></span>
-            <ng-container *ngIf="node.subscript">
-              <br/><small [mcsGreyedOut]="true">{{ node.subscript }}</small>
-            </ng-container>
+            <small [mcsGreyedOut]="true" *ngIf="node.inlinescript" class="mcs-inline-script">{{ node.inlinescript }}</small>
+            <small [mcsGreyedOut]="true" *ngIf="node.subscript" class="mcs-subscript">{{ node.subscript }}</small>
           </div>
         </mcs-checkbox>
       </ng-container>
@@ -154,9 +151,8 @@
       <ng-template #nonSelectableView>
         <div [mcsTextTruncate]="node.name">
           <span [innerHTML]="node.name" class="mcs-node-expandable-text"></span>
-          <ng-container *ngIf="node.subscript">
-            <br/><small [mcsGreyedOut]="true">{{ node.subscript }}</small>
-          </ng-container>
+          <small [mcsGreyedOut]="true" *ngIf="node.inlinescript" class="mcs-inline-script">{{ node.inlinescript }}</small>
+          <small [mcsGreyedOut]="true" *ngIf="node.subscript" class="mcs-subscript">{{ node.subscript }}</small>
         </div>
       </ng-template>
     </ng-template>

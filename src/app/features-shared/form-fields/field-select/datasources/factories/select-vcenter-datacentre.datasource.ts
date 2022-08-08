@@ -5,6 +5,7 @@ import {
 } from 'rxjs';
 import {
   map,
+  startWith,
   switchMap,
   takeUntil,
   tap
@@ -37,10 +38,13 @@ export class SelectVCenterDataCentreDatasource extends FieldSelectDatasource {
     }
 
     prerequisite?.data.pipe(
+      startWith(null),
       takeUntil(this._destroySubject),
       switchMap(companyId => {
         let optionalHeaders = new Map<string, string>();
-        optionalHeaders.set('company-id', companyId);
+        if (companyId) {
+          optionalHeaders.set('company-id', companyId);
+        }
 
         return this._apiService.getVCenterDataCentres(optionalHeaders).pipe(
           map(result => result?.collection

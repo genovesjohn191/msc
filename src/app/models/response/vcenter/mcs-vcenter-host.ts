@@ -14,7 +14,7 @@ export class McsVCenterHost extends McsEntityBase {
   public vpxId: string = undefined;
 
   @JsonProperty({ target: McsVCenterHostCluster })
-  public parentCluster: string = undefined;
+  public parentCluster: McsVCenterHostCluster = undefined;
 
   @JsonProperty()
   public serviceId: string = undefined;
