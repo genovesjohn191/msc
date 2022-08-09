@@ -15,6 +15,7 @@ import { DataChangeExtendersEvent } from './items/data-change-extenders.event';
 import { DataChangeFirewallsEvent } from './items/data-change-firewalls.event';
 import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports.event';
 import { DataChangeJobsEvent } from './items/data-change-jobs.event';
+import { DataChangeNoticesEvent } from './items/data-change-notices.event';
 import { DataChangeLicensesEvent } from './items/data-change-licenses.event';
 import { DataChangeMediaEvent } from './items/data-change-media.event';
 import { DataChangeNetworkDbNetworksEvent } from './items/data-change-networks.event';
@@ -152,6 +153,7 @@ export class McsEvent {
   public static dataChangeSystemMessages = new DataChangeSystemMessagesEvent();
   public static dataChangeTickets = new DataChangeTicketsEvent();
   public static dataChangeJobs = new DataChangeJobsEvent();
+  public static dataChangeNotices = new DataChangeNoticesEvent();
   public static dataChangeInternetPorts = new DataChangeInternetPortsEvent();
   public static dataChangeAggregationTargets = new DataChangeAggregationTargetsEvent();
   public static dataChangeAzureResources = new DataChangeAzureResourcesEvent();
@@ -177,6 +179,7 @@ export class McsEvent {
 
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();
+  public static noticeReceive = new JobReceiveEvent();
   public static jobError = new JobErrorEvent();
   public static jobSuccessful = new JobSuccessfulEvent();
   public static jobInProgress = new JobInProgressEvent();

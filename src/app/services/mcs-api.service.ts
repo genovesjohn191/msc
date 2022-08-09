@@ -39,6 +39,7 @@ import {
   IMcsApiMetadataService,
   IMcsApiNetworkDbService,
   IMcsApiNetworkDnsService,
+  IMcsApiNoticesService,
   IMcsApiOrdersService,
   IMcsApiPlannedWorkService,
   IMcsApiPlatformService,
@@ -78,6 +79,7 @@ import {
   McsApiMetadataFactory,
   McsApiNetworkDbFactory,
   McsApiNetworkDnsFactory,
+  McsApiNoticesFactory,
   McsApiOrdersFactory,
   McsApiPlannedWorkFactory,
   McsApiPlatformFactory,
@@ -178,6 +180,7 @@ import {
   McsNetworkDnsZone,
   McsNetworkDnsZoneTtlRequest,
   McsNetworkVdcPrecheckVlan,
+  McsNotice,
   McsObjectCrispElement,
   McsObjectCrispObject,
   McsObjectCrispOrder,
@@ -304,7 +307,8 @@ import {
   McsVCenterBaseline,
   McsVCenterBaselineRemediate,
   McsVCenterInstance,
-  McsWorkflowCreate
+  McsWorkflowCreate,
+  McsNoticeAssociatedService
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -335,6 +339,7 @@ import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 import { McsMediaRepository } from './repositories/mcs-media.repository';
 import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-networks.repository';
+import { McsNoticesRepository } from './repositories/mcs-notices.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
@@ -364,6 +369,7 @@ export class McsApiService {
   private readonly _jobsRepository: McsJobsRepository;
   private readonly _licensesRepository: McsLicensesRepository;
   private readonly _mediaRepository: McsMediaRepository;
+  private readonly _noticesRepository: McsNoticesRepository;
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _resourcesRepository: McsResourcesRepository;
   private readonly _serversRepository: McsServersRepository;
@@ -399,6 +405,7 @@ export class McsApiService {
   private readonly _metadataApi: IMcsApiMetadataService;
   private readonly _networkDbApi: IMcsApiNetworkDbService;
   private readonly _networkDnsApi: IMcsApiNetworkDnsService;
+  private readonly _noticesApi: IMcsApiNoticesService;
   private readonly _objectsApi: IMcsApiObjectsService;
   private readonly _ordersApi: IMcsApiOrdersService;
   private readonly _platformApi: IMcsApiPlatformService;
@@ -434,6 +441,7 @@ export class McsApiService {
     this._internetRepository = _injector.get(McsInternetRepository);
     this._licensesRepository = _injector.get(McsLicensesRepository);
     this._mediaRepository = _injector.get(McsMediaRepository);
+    this._noticesRepository = _injector.get(McsNoticesRepository);
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._resourcesRepository = _injector.get(McsResourcesRepository);
     this._serversRepository = _injector.get(McsServersRepository);
@@ -472,6 +480,7 @@ export class McsApiService {
     this._metadataApi = apiClientFactory.getService(new McsApiMetadataFactory());
     this._networkDbApi = apiClientFactory.getService(new McsApiNetworkDbFactory());
     this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
+    this._noticesApi = apiClientFactory.getService(new McsApiNoticesFactory());
     this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
     this._plannedWorkApi = apiClientFactory.getService(new McsApiPlannedWorkFactory());
@@ -536,6 +545,32 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getJobConnection'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getNotices(query?: McsQueryParam): Observable<McsApiCollection<McsNotice>> {
+    return this._mapToEntityRecords(this._noticesRepository, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNotices'))
+      )
+    );
+  }
+
+  public getNotice(id: string): Observable<McsNotice> {
+    return this._mapToEntityRecord(this._noticesRepository, id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNotice'))
+      )
+    );
+  }
+
+  public getNoticeAssociatedServices(id: string, query?: McsQueryParam):
+    Observable<McsApiCollection<McsNoticeAssociatedService>> {
+    return this._noticesApi.getNoticeAssociatedServices(id, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNoticeAssociatedServices'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

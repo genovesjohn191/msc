@@ -399,7 +399,7 @@ export class OrderComponent implements OnInit, OnDestroy {
           })
         ).pipe(
           tap((approvedOrder) => this._navigationService.navigateTo(
-            RouteKey.Notification,
+            RouteKey.Activity,
             [getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id)])
           )
         );

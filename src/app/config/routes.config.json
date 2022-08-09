@@ -772,10 +772,39 @@
     "navigationPath": "notifications",
     "documentTitle": "Notifications - Macquarie Cloud Services"
   },
-  "notification": {
-    "enumKey": "Notification",
-    "navigationPath": "notifications",
-    "documentTitle": "Notification - Macquarie Cloud Services"
+  "activities": {
+    "enumKey": "Activities",
+    "navigationPath": "notifications/activities",
+    "documentTitle": "Activities - Macquarie Cloud Services"
+  },
+  "activity": {
+    "enumKey": "Activity",
+    "navigationPath": "notifications/activities",
+    "documentTitle": "Activity - Macquarie Cloud Services"
+  },
+  "notices": {
+    "enumKey": "Notices",
+    "navigationPath": "notifications/notices",
+    "requiredFeatureFlag": "EnableNotices",
+    "documentTitle": "Notices - Macquarie Cloud Services"
+  },
+  "noticeDetails": {
+    "enumKey": "Notice",
+    "navigationPath": "notifications/notices",
+    "requiredFeatureFlag": "EnableNotices",
+    "documentTitle": "Notice Details - Macquarie Cloud Services"
+  },
+  "noticeDetailsOverview": {
+    "enumKey": "NoticeOverview",
+    "navigationPath": "overview",
+    "requiredFeatureFlag": "EnableNotices",
+    "documentTitle": "Notice Overview - Macquarie Cloud Services"
+  },
+  "noticeAffectedServices": {
+    "enumKey": "NoticeAssociatedService",
+    "navigationPath": "associated-service",
+    "requiredFeatureFlag": "EnableNotices",
+    "documentTitle": "Notice Associated Services - Macquarie Cloud Services"
   },
   "catalog": {
     "enumKey": "Catalog",

@@ -1,0 +1,68 @@
+<mcs-page leftPanelExpandedByDefault="true"
+  [header]="('notifications.notices.details.header' | translate) + (selectedNotice$ | async)?.referenceId">
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'notifications.notices.details.leftPanelHeader' | translate">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <div class="listing-panel-wrapper">
+        <mcs-search #search mcsId="notice-details-panel-search"></mcs-search>
+        <mcs-list-panel [dataSource]="listviewDatasource" [config]="listviewDatasource?.config?.panelSettings">
+          <ng-container *mcsListPanelContent="let entity">
+            <a *ngIf="entity.referenceId"
+              [mcsRouterLink]="[routeKeyEnum.Notice, entity.id]"
+              mcsId="select-notice"
+              mcsEventTracker="select-notice"
+              mcsEventCategory="notice"
+              mcsEventLabel="notice-details-panel">
+
+              <mcs-option [value]="entity" [selected]="selectedNoticeId === entity.id">
+                <mcs-item>
+                  <span [innerHTML]="entity.referenceId | mcsDataLabel"></span>
+                </mcs-item>
+              </mcs-option>
+            </a>
+          </ng-container>
+        </mcs-list-panel>
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="routing-tab-wrapper" *mcsComponentHandler>
+      <ng-container *ngIf="selectedNotice$ | async as selectedNotice">
+        <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+
+          <!-- Overview Tab -->
+          <mcs-tab [label]="overviewTabLabel" id="overview">
+          </mcs-tab>
+
+          <!-- Associated Services Tab -->
+          <mcs-tab [label]="associatedServiceTabLabel" id="associated-service">
+          </mcs-tab>
+
+          <!-- Action tab -->
+          <ng-container mcsTabHeaderCustom *mcsAccessControl="['NoticeInternalView']; feature: []">
+            <mat-menu #actionMenu="matMenu" mcsAlign="end">
+              <a mat-menu-item *mcsAccessControl="['NoticeInternalView']; feature: []"
+                [href]="openTracks((selectedNotice$ | async)?.id)"
+                target="_blank"
+                mcsId="open-tracks"
+                mcsEventTracker="open-tracks"
+                mcsEventCategory="notice"
+                mcsEventLabel="notice-details-page">
+                {{ 'action.openInTracks' | translate }}
+              </a>
+            </mat-menu>
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+              <mcs-icon key="ellipsis-horizontal" size="large"></mcs-icon>
+            </button>
+          </ng-container>
+        </mcs-tab-group>
+
+        <!-- Tab content for routing tab -->
+        <div class="routing-tab-content-wrapper limited-view">
+          <router-outlet></router-outlet>
+        </div>
+      </ng-container>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

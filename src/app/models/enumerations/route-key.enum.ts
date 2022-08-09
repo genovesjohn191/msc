@@ -94,7 +94,12 @@ export enum RouteKey {
   TicketCreate,
 
   Notifications,
-  Notification,
+  Activities,
+  Activity,
+  Notices,
+  Notice,
+  NoticeOverview,
+  NoticeAssociatedService,
 
   PlannedWorkListing,
   PlannedWorkDetails,

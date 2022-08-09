@@ -1,0 +1,54 @@
+<ng-container *ngIf="selectedNotice$ | async as selectedNotice">
+  <mcs-grid-row>
+    <!-- Basic Information -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="basic-information">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'label.basicInformation' | translate }}</h2>
+        </ng-container>
+          <mcs-item *mcsAccessControl="['NoticeInternalView']; feature: []">
+            <span>{{ 'label.parentReferenceId' | translate }}:</span>
+            <span [innerHTML]="selectedNotice.parentReferenceId | mcsDataLabel: 'Unknown'"></span>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'label.referenceId' | translate }}:</span>
+            <span [innerHTML]="selectedNotice.referenceId | mcsDataLabel: 'Unknown'"></span>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'label.summary' | translate }}:</span>
+          </mcs-item>
+          <mcs-item>
+            <span [innerHTML]="selectedNotice.summary | mcsDataLabel: 'No summary to display'"></span>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'label.created' | translate }}:</span>
+            <ng-container *ngIf="(selectedNotice.createdOn); else NoCreatedOn">
+              <mcs-item>
+                <div>
+                  <span>{{ selectedNotice.createdOn | mcsStdDateFormat }}</span>
+                </div>
+                <span class="material-icons" [matTooltip]="timeZone">info_outline</span>
+              </mcs-item>
+            </ng-container>
+            <ng-template #NoCreatedOn>
+              <span [mcsGreyedOut]="true">{{'label.unknown' | translate}}</span>
+            </ng-template>
+          </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+  <mcs-grid-row>
+    <!-- Description  -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="description">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'label.description' | translate }}</h2>
+        </ng-container>
+
+        <div>
+          <span [innerHTML]="selectedNotice.description | mcsDataLabel: 'No description to display'"></span>
+        </div>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</ng-container>

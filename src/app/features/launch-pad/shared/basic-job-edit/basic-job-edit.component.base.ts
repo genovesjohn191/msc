@@ -105,7 +105,7 @@ export abstract class BasicJobEditComponentBase<TPayload> implements OnDestroy, 
   }
 
   public getNotificationRoute(): any[] {
-    return [RouteKey.Notification, this.watchedJob.id];
+    return [RouteKey.Activity, this.watchedJob.id];
   }
 
   public retry(): void {
