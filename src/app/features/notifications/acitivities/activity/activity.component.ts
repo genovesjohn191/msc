@@ -25,12 +25,12 @@ import {
 } from '@app/utilities';
 
 @Component({
-  selector: 'mcs-notification',
-  templateUrl: './notification.component.html',
+  selector: 'mcs-activity',
+  templateUrl: './activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NotificationComponent implements OnInit, OnDestroy {
+export class ActivityComponent implements OnInit, OnDestroy {
   public job$: Observable<McsJob>;
 
   private _jobDataChangeHandler: Subscription;
@@ -44,7 +44,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this._subscribeToNotificationResolver();
+    this._subscribeToActivityResolver();
   }
 
   public ngOnDestroy() {
@@ -59,12 +59,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
     return CommonDefinition.ASSETS_SVG_BULLET;
   }
 
-  /**
-   * Subscribes to notification resolver
-   */
-  private _subscribeToNotificationResolver(): void {
+  private _subscribeToActivityResolver(): void {
     this.job$ = this._activatedRoute.data.pipe(
-      map((resolver) => getSafeProperty(resolver, (obj) => obj.notification)),
+      map((resolver) => {
+        return getSafeProperty(resolver, (obj) => obj.activity)
+      }),
       shareReplay(1)
     );
   }

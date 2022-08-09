@@ -15,6 +15,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewEncapsulation
 } from '@angular/core';
 import { McsUniqueId } from '@app/core';
@@ -51,6 +52,9 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
     }
   }
 
+  @Output()
+  public searchChanged: EventEmitter<Search>;
+
   public get defaultValue(): string {
     return this._defaultValue;
   }
@@ -70,6 +74,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this._searchSubject = new Subject<string>();
     this.searchChangedStream = new EventEmitter<any>();
+    this.searchChanged = new EventEmitter();
   }
 
   public ngOnInit(): void {
@@ -125,6 +130,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   private _notifySearchKeywordChange() {
     this.showLoading(true);
     this.searchChangedStream.emit(this);
+    this.searchChanged.emit(this);
     this._changeDetectorRef.markForCheck();
   }
 

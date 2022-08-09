@@ -1,49 +1,30 @@
 import {
-  Observable,
-  Subscription
-} from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Injector,
-  OnDestroy,
   ViewChild
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
   McsAuthenticationIdentity,
-  McsMatTableContext,
-  McsMatTableQueryParam,
-  McsNavigationService,
-  McsPageBase,
-  McsTableDataSource2,
-  McsTableEvents
+  McsPageBase
 } from '@app/core';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/events';
 import {
   McsCompany,
+  McsFeatureFlag,
   McsFilterInfo,
-  McsJob,
-  McsQueryParam,
   RouteKey
 } from '@app/models';
-import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
-  Paginator,
   Search
 } from '@app/shared';
 import {
   createObject,
-  getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationsService } from './notifications.component.service';
 
 @Component({
   selector: 'mcs-notifications',
@@ -52,11 +33,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NotificationsComponent extends McsPageBase implements OnDestroy {
-  public readonly dataSource: McsTableDataSource2<McsJob>;
-  public readonly dataEvents: McsTableEvents<McsJob>;
-  public readonly filterPredicate = this._isColumnIncluded.bind(this);
-  public readonly defaultColumnFilters = [
+export class NotificationsComponent extends McsPageBase {
+  public readonly activitiesFilterPredicate = this._activitiesIsColumnIncluded.bind(this);
+  public readonly defaultActivitiesColumnFilters = [
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'id' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'notification' }),
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'serviceId' }),
@@ -66,106 +45,129 @@ export class NotificationsComponent extends McsPageBase implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'completed' })
   ];
 
-  private _accountChangeHandler: Subscription;
+  public readonly noticesFilterPredicate = this._noticesIsColumnIncluded.bind(this);
+  public readonly defaultNoticesColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'parentReferenceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'referenceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'summary' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' })
+  ];
+
+  public activitiesTableFilters: ColumnFilter;
+  public noticesTableFilters: ColumnFilter;
+  public defaultColumnFilters: McsFilterInfo[] = this.defaultActivitiesColumnFilters;
+
+  public selectedTabIndex: number = 0;
+  public filterFeatureName: string = this.activitiesFeatureName;
+  public isSorting: boolean;
+  public keyword: Search;
+
+  private _search: Search;
 
   public constructor(
     _injector: Injector,
-    private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _navigationService: McsNavigationService,
     private _accessControlService: McsAccessControlService,
+    private _notificationService: NotificationsService,
+    private _translate: TranslateService
   ) {
     super(_injector);
-    this.dataSource = new McsTableDataSource2(this._getJobs.bind(this));
-    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
-      dataChangeEvent: McsEvent.dataChangeJobs
-    });
-    this._registerEvents();
+  }
+
+  @ViewChild('activitiesColumnFilter')
+  public set activitiesColumnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value) && isNullOrEmpty(this.activitiesTableFilters)) {
+      this.activitiesTableFilters = value;
+    }
+  }
+
+  @ViewChild('noticesColumnFilter')
+public set noticesColumnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value) && isNullOrEmpty(this.noticesTableFilters)) {
+      this.noticesTableFilters = value;
+    }
   }
 
   @ViewChild('search')
   public set search(value: Search) {
-    if (!isNullOrEmpty(value)) {
-      this.dataSource.registerSearch(value);
+    if (this._search !== value) {
+      this._search = value;
+      this.keyword = value;
+      this.changeDetector.markForCheck();
     }
   }
 
-  @ViewChild('paginator')
-  public set paginator(value: Paginator) {
-    if (!isNullOrEmpty(value)) {
-      this.dataSource.registerPaginator(value);
-    }
-  }
-
-  @ViewChild('columnFilter')
-  public set columnFilter(value: ColumnFilter) {
-    if (!isNullOrEmpty(value)) {
-      this.dataSource.registerColumnFilter(value);
-    }
-  }
-
-  @ViewChild('sort')
-  public set sort(value: MatSort) {
-    if (!isNullOrEmpty(value)) {
-      this.dataSource.registerSort(value);
-    }
-  }
-
-  public ngOnDestroy(): void {
-    unsubscribeSafely(this._accountChangeHandler);
+  public onChangeSearch(search: Search): void {
+    this.keyword = search;
+    this.changeDetector.markForCheck();
   }
 
   public get featureName(): string {
-    return 'notifications';
+    return this._setFeatureName();
+  }
+
+  public get noticesFeatureName(): string {
+    return 'notices';
+  }
+
+  public get activitiesFeatureName(): string {
+    return 'activities';
+  }
+
+  public get activitiesTabLabel(): string {
+    return this._translate.instant('label.activity');
+  }
+
+  public get noticesTabLabel(): string {
+    return this._translate.instant('label.notices');
   }
 
   public get activeCompany(): McsCompany {
     return this._authenticationIdentity.activeAccount;
   }
 
-  public retryDatasource(): void {
-    this.dataSource.refreshDataRecords();
+  public get hasAccessToNotices(): boolean {
+    return this._accessControlService.hasAccessToFeature(McsFeatureFlag.NoticesListing);
   }
 
-  /**
-   * Navigates to notification page
-   * @param job Notification job on where to go
-   */
-  public navigateToNotification(job: McsJob): void {
-    if (isNullOrEmpty(job)) { return; }
-    this._navigationService.navigateTo(RouteKey.Notification, [job.id]);
+  public get activitiesTotalCount(): number {
+    return this._notificationService.getActivitiesTotalCount();
   }
 
-
-
-  private _getJobs(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsJob>> {
-    let queryParam = new McsQueryParam();
-    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
-    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
-    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
-    queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
-    queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
-
-    return this._apiService.getJobs(queryParam).pipe(
-
-      map(response => {
-        return new McsMatTableContext(response?.collection,
-          response?.totalCollectionCount)
-      })
-    );
+  public get noticesTotalCount(): number {
+    return this._notificationService.getNoticesTotalCount();
   }
 
-  private _isInLPContext(): boolean {
-    let _isImpersonating = !!this._authenticationIdentity.activeAccountStatus;
-    if (this._accessControlService.hasPermission(['InternalEngineerAccess']) && !_isImpersonating) {
-      return true;
+  public isTableSorting(isSorting: boolean): void {
+    this.isSorting = isSorting;
+    this.changeDetector.markForCheck();
+  }
+
+  public onTabChanged(tab: any) {
+    let path = tab.index === 0 ? this.activitiesFeatureName : this.noticesFeatureName;
+    this.defaultColumnFilters = this._setDefaultColumnFilters();
+    this.filterFeatureName = this._setFeatureName();
+
+    this.changeDetector.markForCheck();
+    this.navigation.navigateTo(RouteKey.Notifications, [path]);
+  }
+
+  private _setDefaultColumnFilters(): McsFilterInfo[] {
+    if (this.selectedTabIndex === 0) {
+      return this.defaultActivitiesColumnFilters;
     }
-    return false;
+    return this.defaultNoticesColumnFilters;
   }
 
-  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+  private _setFeatureName(): string {
+    if (this.selectedTabIndex === 0) {
+      return this.activitiesFeatureName;
+    }
+    return this.noticesFeatureName;
+  }
+
+  private _activitiesIsColumnIncluded(filter: McsFilterInfo): boolean {
     if (filter.id === 'serviceId') {
       return this._isInLPContext();
     }
@@ -176,12 +178,18 @@ export class NotificationsComponent extends McsPageBase implements OnDestroy {
     return true;
   }
 
-  /**
-   * Register the events
-   */
-  private _registerEvents(): void {
-    this._accountChangeHandler = this._eventDispatcher.addEventListener(
-      McsEvent.accountChange, () => this._changeDetectorRef.markForCheck()
-    );
+  private _noticesIsColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id === 'parentReferenceId') {
+      return this._accessControlService.hasPermission(['NoticeInternalView']);
+    }
+    return true;
+  }
+
+  private _isInLPContext(): boolean {
+    let _isImpersonating = !!this._authenticationIdentity.activeAccountStatus;
+    if (this._accessControlService.hasPermission(['InternalEngineerAccess']) && !_isImpersonating) {
+      return true;
+    }
+    return false;
   }
 }

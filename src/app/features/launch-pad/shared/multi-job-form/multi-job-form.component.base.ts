@@ -145,7 +145,7 @@ export abstract class MultiJobFormComponentBase<TPayload> implements IMcsNavigat
   }
 
   public getNotificationRoute(): any[] {
-    return [RouteKey.Notification, this.watchedJob.id];
+    return [RouteKey.Activity, this.watchedJob.id];
   }
 
   public retry(): void {

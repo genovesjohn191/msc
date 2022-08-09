@@ -21,7 +21,7 @@ export enum McsFeatureFlag {
   AzureManagementServiceListing = 'EnableAzureManagementServiceListing',
   ExtenderListing = 'EnableExtenderListing',
   ApplicationRecoveryListing = 'EnableApplicationRecoveryListing',
-
+  NoticesListing = 'EnableNotices',
 
   PrivateCloudDashboard = 'EnablePrivateCloudDashboard',
 

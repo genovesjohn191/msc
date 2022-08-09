@@ -442,7 +442,7 @@ export class NetworkDbNetworkVlansComponent implements OnInit, OnDestroy {
   }
 
   public getNotificationRoute(): any[] {
-    return [RouteKey.Notification, this.watchedReservationJob.id];
+    return [RouteKey.Activity, this.watchedReservationJob.id];
   }
 
   public toggleMazAa(): void {

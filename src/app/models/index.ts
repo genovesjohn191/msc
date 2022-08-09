@@ -186,6 +186,8 @@ export * from './response/mcs-availability-zone';
 export * from './response/mcs-identity';
 export * from './response/mcs-job-connection';
 export * from './response/mcs-job';
+export * from './response/mcs-notice';
+export * from './response/mcs-notice-associated-service';
 export * from './response/mcs-task';
 export * from './response/mcs-task-log';
 export * from './response/mcs-console';

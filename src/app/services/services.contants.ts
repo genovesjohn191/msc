@@ -30,6 +30,7 @@ import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsVCenterBaselinesRepository } from './repositories/mcs-vcenter-baselines.repository';
 import { McsStateManagerClient } from './state-manager/mcs-state-manager.client';
+import { McsNoticesRepository } from './repositories/mcs-notices.repository';
 
 export const repositoryProviders: any[] = [
   McsFirewallsRepository,
@@ -57,6 +58,7 @@ export const repositoryProviders: any[] = [
   McsTerraformDeploymentsRepository,
   McsVCenterBaselinesRepository,
   McsNetworkDbNetworksRepository,
+  McsNoticesRepository,
   McsApiService
 ];
 

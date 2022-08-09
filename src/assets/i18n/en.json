@@ -3118,19 +3118,28 @@
     "account": "(Macquarie)",
     "dataSingular": "Notification",
     "dataPlural": "Notifications",
-    "tableHeader": {
-      "id": "id",
-      "status": "Status",
-      "notification": "Notification",
-      "serviceId": "Service ID",
-      "targetCompany": "Target Company",
-      "user": "User",
-      "startTime": "Start Time",
-      "completed": "Completed",
-      "vdc": "VDC"
+    "activities": {
+      "tabLabel": "Activities",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of activities.",
+      "noNotifications": "There are no activities to display."
     },
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of notifications.",
-    "noNotifications": "No notifications to display.",
+    "notices": {
+      "details": {
+        "header": "Notice ",
+        "leftPanelHeader": "Notice Filter",
+        "overview": {
+          "tabName": "Overview"
+        },
+        "associatedService": {
+          "tabName": "Associated Services"
+        }
+      },
+      "tabLabel": "Notices",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of notices.",
+      "noNotices": "There are no notices to display.",
+      "loading": "Loading notice events list",
+      "noRecordsFoundMessage": "No notices to display."
+    },
     "retry": "Try again shortly"
   },
   "pageHttpError": {
@@ -3312,6 +3321,9 @@
     "getJobs": "Something went wrong while retrieving your notifications.",
     "getJob": "Something went wrong while retrieving this notification.",
     "getJobConnection": "Something went wrong while retrieving your notifications.",
+    "getNotices": "Something went wrong while retrieving your notices.",
+    "getNotice": "Something went wrong while retrieving this notice.",
+    "getNoticeAssociatedServices": "Something went wrong while retrieving this Notice's associated services. Please try again.",
     "getInternetPorts": "Something went wrong while retrieving your internet services.",
     "getInternetPort": "Something went wrong while retrieving your internet service.",
     "getNetworkDns": "Something went wrong while retrieving your DNS services.",
@@ -3577,6 +3589,7 @@
     "companyName": "Company Name",
     "completed": "Completed",
     "cost": "Cost",
+    "created": "Created",
     "createdBy": "Created By",
     "createdOn": "Created On",
     "cpuScore": "CPU Score",
@@ -3886,13 +3899,16 @@
     "newActivity": "New Comment/Attachment",
     "none": "None",
     "notes": "Notes",
+    "notices": "Notices",
     "otherDatastores": "Other Datastores",
     "otherStorageProfiles": "Other Storage Profiles",
     "overview": "Overview",
     "openAzureTickets": "Open Azure Tickets",
     "openPrivateCloudTickets": "Open Private Cloud Tickets",
     "ownership": "Ownership",
+    "parentReferenceId": "Parent Reference ID",
     "phone": "Phone",
+    "referenceId":"Reference ID",
     "requestType": "Request Type",
     "requestor": "Requestor",
     "reservations": "Reservations",
@@ -3957,6 +3973,7 @@
     "ok": "OK",
     "open": "Open",
     "openInCrisp": "Open in CRISP",
+    "openInTracks": "Open in TRACKS",
     "rename": "Rename",
     "reset": "Reset",
     "save": "Save",
@@ -3997,6 +4014,7 @@
     "consoleUnavailable": "Console unavailable while server is {{state}}",
     "noEventsToDisplay": "No events to display.",
     "noAffectedServicesToDisplay": "No affected services to display.",
+    "noAssociatedServicesToDisplay": "No associated services to display.",
     "navigateAwaySheet": "Your changes may not be saved. Are you sure you want to close the sheet?",
     "minLength": "Minimum of {{count}} characters",
     "maxLength": "Maximum of {{count}} characters",

@@ -1,0 +1,97 @@
+<!-- Table -->
+<table mat-table [dataSource]="dataSource" matSort #sort="matSort">
+  <!-- Parent Reference ID Column -->
+  <ng-container matColumnDef="parentReferenceId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="parentReferenceId" disableClear>
+      {{ 'columnHeader.parentReferenceId' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <span [innerHTML]="row.parentReferenceId | mcsDataLabel: 'Unknown'"></span>
+    </td>
+  </ng-container>
+
+  <!-- Reference ID Column -->
+  <ng-container matColumnDef="referenceId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="referenceId" disableClear>
+      {{ 'columnHeader.referenceId' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <span [innerHTML]="row.referenceId | mcsDataLabel: 'Unknown'"></span>
+    </td>
+  </ng-container>
+
+  <!-- Summary Column -->
+  <ng-container matColumnDef="summary">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="summary" disableClear>
+      {{ 'columnHeader.summary' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <span [innerHTML]="row.summary | mcsDataLabel: 'None'"></span>
+    </td>
+  </ng-container>
+
+  <!-- Description Column -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="description" disableClear>
+      {{ 'columnHeader.description' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <span [innerHTML]="row.description | mcsDataLabel: 'None'"></span>
+    </td>
+  </ng-container>
+
+  <!-- Created On Column -->
+  <ng-container matColumnDef="createdOn">
+    <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="createdOn" disableClear>
+      <mcs-item>
+        <div>
+          <span>{{ 'columnHeader.created' | translate }}</span>
+        </div>
+        <span class="material-icons timezone-icon" [matTooltip]="timeZone">info_outline</span>
+      </mcs-item>
+    </th>
+    <td mat-cell *matCellDef="let row" hidden-small>
+      <ng-container *ngIf="(row.createdOn); else emptyCreatedOn">
+        <span> {{  row.createdOn | mcsStdDateFormat }}</span>
+      </ng-container>
+      <ng-template #emptyCreatedOn>
+        <span>Unknown</span>
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <!-- Header and Data row -->
+  <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+    [disabled]="dataSource?.isInProgress$ | async"></tr>
+  <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+    (click)="navigateToNotice(row)"
+    mcsCursor="pointer"
+    mcsId="notices-row"
+    mcsEventTracker="try-navigate-to-job-details"
+    mcsEventCategory="notices"
+    mcsEventLabel="notices-listing-page"></tr>
+</table>
+
+<!-- Table Status -->
+<mcs-item orientation="block">
+  <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+    <mcs-loader size="medium"></mcs-loader>
+  </div>
+  <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+    <span>{{ 'notifications.notices.noNotices' | translate }}</span>
+  </div>
+  <div *ngIf="dataSource?.hasError$ | async" text-center>
+    <div class="listing-status-wrapper">
+      <span>{{ 'notifications.notices.errorMessage' | translate }}</span>
+        <a (click)="retryDatasource()"
+          mcsId
+          mcsEventTracker="retry-loading-notices"
+          mcsEventCategory="notices"
+          mcsEventLabel="notices-listing-page">{{ 'notifications.retry' | translate }}</a>.
+    </div>
+  </div>
+</mcs-item>
+
+<!-- Paginator -->
+<mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
+</mcs-paginator>

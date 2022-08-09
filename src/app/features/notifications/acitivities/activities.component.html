@@ -1,0 +1,125 @@
+<!-- Table -->
+<table mat-table [dataSource]="dataSource" matSort #sort="matSort">
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>
+      {{ 'columnHeader.id' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mcs-item>
+        <span>
+          {{ row.id }}
+        </span>
+      </mcs-item>
+    </td>
+  </ng-container>
+
+  <!-- Notification Column -->
+  <ng-container matColumnDef="notification">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="description" disableClear>
+      {{ 'columnHeader.notification' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mcs-item>
+        <ng-container *ngIf="row.inProgress; else iconTemplate">
+          <mcs-loader size="small"></mcs-loader>
+        </ng-container>
+        <ng-template #iconTemplate>
+          <mcs-icon [key]="row.dataStatusIconKey" size="small"></mcs-icon>
+        </ng-template>
+        <span>
+          {{ row.description }}<br/>
+          {{ row.summaryInformation }}
+        </span>
+      </mcs-item>
+    </td>
+  </ng-container>
+
+  <!-- Service ID Column -->
+  <ng-container matColumnDef="serviceId">
+    <th mat-header-cell *matHeaderCellDef>
+      {{ 'columnHeader.serviceId' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row" hidden-small>
+      <span [innerHTML]="row.clientReferenceObject?.serviceId | mcsDataLabel: 'None/Unknown'"></span>
+    </td>
+  </ng-container>
+
+  <!-- Target Company Column -->
+  <ng-container matColumnDef="targetCompany">
+    <th mat-header-cell *matHeaderCellDef hidden-small>
+      {{ 'columnHeader.targetCompany' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row" hidden-small>
+      <span [innerHTML]="row.targetCompanyName | mcsDataLabel: 'Unknown'"></span>
+    </td>
+  </ng-container>
+
+  <!-- User Column -->
+  <ng-container matColumnDef="user">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="initiatorFullName" disableClear>
+      {{ 'columnHeader.user' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <span>{{ row.initiatorFullName }}</span><br/>
+      <span read-only *ngIf="activeCompany?.id !== row.initiatorCompanyId">
+        {{ 'activities.account' | translate }}
+      </span>
+    </td>
+  </ng-container>
+
+  <!-- Start Time Column -->
+  <ng-container matColumnDef="startTime">
+    <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="startedOn" disableClear>
+      {{ 'columnHeader.startTime' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row" hidden-small>
+      {{ row.startedOn | mcsStdDateFormat }}
+    </td>
+  </ng-container>
+
+  <!-- Completed Column -->
+  <ng-container matColumnDef="completed">
+    <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="endedOn" disableClear>
+      {{ 'columnHeader.completed' | translate }}
+    </th>
+    <td mat-cell *matCellDef="let row" hidden-small>
+      {{ row.endedOn | mcsStdDateFormat }}
+    </td>
+  </ng-container>
+
+  <!-- Header and Data row -->
+  <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+    [disabled]="dataSource?.isInProgress$ | async"></tr>
+  <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+    mcsCursor="pointer"
+    (click)="navigateToActivity(row)"
+    mcsId="activities-row"
+    mcsEventTracker="try-navigate-to-job-details"
+    mcsEventCategory="activities"
+    mcsEventLabel="activities-listing-page"></tr>
+</table>
+
+<!-- Table Status -->
+<mcs-item orientation="block">
+  <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+    <mcs-loader size="medium"></mcs-loader>
+  </div>
+  <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+    <span>{{ 'notifications.activities.noNotifications' | translate }}</span>
+  </div>
+  <div *ngIf="dataSource?.hasError$ | async" text-center>
+    <div class="listing-status-wrapper">
+      <span>{{ 'notifications.activities.errorMessage' | translate }}</span>
+        <a (click)="retryDatasource()"
+          mcsId
+          mcsEventTracker="retry-loading-activities"
+          mcsEventCategory="activities"
+          mcsEventLabel="activities-listing-page">{{ 'notifications.retry' | translate }}</a>.
+    </div>
+  </div>
+</mcs-item>
+
+<!-- Paginator -->
+<mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
+</mcs-paginator>
