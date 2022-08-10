@@ -49,7 +49,7 @@ export class SelectVCenterInstanceDatasource extends FieldSelectDatasource {
                 false,
                 resultItem,
                 null,
-                `(${resultItem.availabilityZone} - ${resultItem.pod})`)
+                ` (${resultItem.availabilityZone} - ${resultItem.pod})`)
             )
           )
         );

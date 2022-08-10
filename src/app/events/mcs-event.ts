@@ -105,6 +105,7 @@ import { SystemMessageShowEvent } from './items/system-message-show.event';
 import { UserChangeEvent } from './items/user-change.event';
 import { DataChangeVCenterBaselineEvent } from './items/vcenter/data-change-vcenter-baseline.event';
 import { DataClearVCenterBaselineEvent } from './items/vcenter/data-clear-vcenter-baseline.event';
+import { JobVCenterBaselineRemediateEvent } from './items/vcenter/job-vcenter-baseline-remediate.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
 
@@ -227,4 +228,6 @@ export class McsEvent {
   public static jobPrivateCloudExtenderSpeedChangeEvent = new JobPrivateCloudExtenderSpeedChangeEvent();
   public static jobAzureExtendSpeedChangeEvent = new JobAzureExtendSpeedChangeEvent();
   public static launchPadWorkflowInitEvent = new LaunchPadWorkflowInitEvent();
+
+  public static jobVCenterBaselineRemediate = new JobVCenterBaselineRemediateEvent();
 }

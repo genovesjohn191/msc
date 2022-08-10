@@ -2862,21 +2862,22 @@ export class McsApiService {
   //#region VCenter Services
   public getVCenterBaselines(
     query?: McsVCenterBaselineQueryParam,
-    optionalHeaders?: Map<string, any>
+    fromRepo: boolean = true
   ): Observable<McsApiCollection<McsVCenterBaseline>> {
-    return this._vCenterApi.getVCenterBaselines(query, optionalHeaders).pipe(
+    if (fromRepo) {
+      return this._mapToEntityRecords(this._vCenterBaselinesRepository, query).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterBaselines'))
+        )
+      );
+    }
+
+    return this._vCenterApi.getVCenterBaselines(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterBaselines'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
-    // TODO: We need to think on how to pass the optionalheaders in the repository.
-    // otherwise, the job wont work as expected if we want to implement the loading mechanism.
-    // return this._mapToEntityRecords(this._vCenterBaselinesRepository, query).pipe(
-    //   catchError((error) =>
-    //     this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterBaselines'))
-    //   )
-    // );
   }
 
   public getVCenterBaseline(id: string): Observable<McsVCenterBaseline> {
@@ -2889,14 +2890,14 @@ export class McsApiService {
   }
 
   public remediateBaseline(id: string, payload: McsVCenterBaselineRemediate): Observable<McsJob> {
-    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.VCenter, id);
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.VCenterBaseline, id);
 
     return this._vCenterApi.remediateBaseline(id, payload).pipe(
       catchError((error) => {
-        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.VCenter, id);
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.VCenterBaseline, id);
         return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.remediateBaseline'))
       }),
-      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.VCenter, id)),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.VCenterBaseline, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

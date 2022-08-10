@@ -13,10 +13,7 @@ import {
 
 export interface IMcsApiVCenterService {
 
-  getVCenterBaselines(
-    query?: McsVCenterBaselineQueryParam,
-    optionalHeaders?: Map<string, any>
-  ): Observable<McsApiSuccessResponse<McsVCenterBaseline[]>>;
+  getVCenterBaselines(query?: McsVCenterBaselineQueryParam): Observable<McsApiSuccessResponse<McsVCenterBaseline[]>>;
 
   getVCenterBaseline(id: string): Observable<McsApiSuccessResponse<McsVCenterBaseline>>;
 

@@ -7,9 +7,10 @@
         [disabled]="optionItem.disabled"
         [mcsTooltip]="optionItem.helpText" [mcsTooltipShow]="optionItem.disabled"
         [value]="optionItem.value">
-        <span>{{ optionItem.text }}</span>
-        <small [mcsGreyedOut]="true" *ngIf="optionItem.inlinescript" class="mcs-inline-script">{{ optionItem.inlinescript }}</small>
-        <small [mcsGreyedOut]="true" *ngIf="optionItem.subscript" class="mcs-subscript">{{ optionItem.subscript }}</small>
+        <mcs-item>
+          <span>{{ optionItem.text }}</span>
+          <small [mcsGreyedOut]="true" *ngIf="optionItem.inlinescript" class="mcs-inline-script">{{ optionItem.inlinescript }}</small>
+        </mcs-item>
       </mat-option>
     </ng-container>
   </mat-select>

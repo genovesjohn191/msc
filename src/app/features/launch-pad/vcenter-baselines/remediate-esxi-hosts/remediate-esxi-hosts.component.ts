@@ -78,7 +78,6 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   }
 
   public ngOnInit(): void {
-    // TODO: Imprve company selection change to query only based on the filtered items and do pagination.
     this._subscribeToCompanyChange();
     this._subscribeToVCenterChange();
     this._subscribeToHostGroups();
@@ -154,8 +153,6 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
         );
       }),
       tap(hosts => {
-        if (isNullOrUndefined(hosts)) { return; }
-
         let groupRecords = new Array<McsOptionGroup>();
         hosts?.forEach(host => {
           let groupName = host.parentCluster?.name || 'Others';

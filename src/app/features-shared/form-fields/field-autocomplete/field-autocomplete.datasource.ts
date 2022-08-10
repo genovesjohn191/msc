@@ -22,5 +22,5 @@ export abstract class FieldAutocompleteDatasource {
 
   abstract disconnect(): void;
 
-  abstract filterBy(option: McsOption, keyword: string): boolean;
+  abstract filterRecords(keyword: string): void;
 }

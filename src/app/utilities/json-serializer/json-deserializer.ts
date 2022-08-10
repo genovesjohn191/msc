@@ -46,7 +46,7 @@ function deserializeProperty(targetInstance: any, propertyKey: string, jsonObjec
   if (typeof (jsonObject) !== 'object') { return undefined; }
 
   let propertyMetadata = getPropertyMetadata<any>(targetInstance, propertyKey);
-  if (!propertyMetadata) { return; }
+  if (!propertyMetadata || propertyMetadata.ignore) { return; }
 
   let jsonValue = jsonObject[propertyMetadata.name || propertyKey];
 

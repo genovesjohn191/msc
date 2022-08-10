@@ -30,9 +30,14 @@ export enum TaskType {
   ResourceCreateCatalogItem = 3018,
   ManagedServerPerformOsUpdateAnalysis = 3019,
   ManagedServerApplyOsUpdates = 3020,
+  ManagedServerDeleteServerBackup = 3021,
+  ManagedServerDeleteVmBackup = 3022,
+  ResourceScaleCompute = 3023,
+  ResourceUpdateStorage = 3024,
+  ResourceDeleteCatalogItem = 3025,
 
-  // Orchestration Ordering
-  // Range 5000-6999
+  // Orchestration Ordering (Range 5000-6999)
+  // Private Cloud 5000-5999
   ManagedServerProvision = 5000,
   ManagedServerProvisionAntiVirus = 5001,
   ManagedServerScale = 5002,
@@ -44,12 +49,15 @@ export enum TaskType {
   ManagedServerProvisionHids = 5008,
   ManagedServerProvisionServerBackup = 5009,
   ManagedServerProvisionVmBackup = 5010,
+  ManagedServerProvisionBat = 5011,
+  InternetPortPlanChange = 5012,
+  PrivateCloudLaunchExtenderChangeSpeed = 5013,
 
+  // Public Cloud 6000-6999
   PublicCloudLicenseChangeCount = 6000,
-  PrivateCloudLaunchExtenderChangeSpeed = 6001,
-  AzureExtendChangeSpeed = 6002,
+  AzureExtendChangeSpeed = 6001,
 
-  // LaunchPad 7000-8999
+  // Launchpad 7000-8999
   LaunchpadManagedServerCreate = 7000,
   LaunchpadManagementToolsAdd = 7001,
   LaunchpadManagementToolsDelete = 7002,
@@ -64,6 +72,40 @@ export enum TaskType {
   LaunchpadDedicatedStorageCreateAttachVolumeCluster = 7011,
   LaunchpadDedicatedStorageAttachVolumeCluster = 7012,
   LaunchpadDedicatedStorageRemoveZoning = 7013,
+  LaunchpadManagementToolsRename = 7014,
+  LaunchpadManagementToolsQueryStatus = 7015,
+  LaunchpadPublicCloudMicrosoftCreateSubscription = 7016,
+  LaunchpadManagementToolsUpdate = 7017,
+  LaunchpadPublicCloudMicrosoftProvisionSoftwareSubscription = 7018,
+  LaunchpadPublicCloudMicrosoftProvisionReservation = 7019,
+  LaunchpadVdcCreateNetwork = 7020,
+  LaunchpadPublicCloudAvdProvisionHostPool = 7021,
+  LaunchpadPublicCloudAvdAddHostPoolVms = 7022,
+  LaunchpadPrivateCloudFirewallAllocateVirtual = 7023,
+  LaunchpadPrivateCloudFirewallProvisionVirtual = 7024,
+  LaunchpadPrivateCloudFirewallDeprovisionVirtual = 7025,
+  LaunchpadPrivateCloudFirewallProvisionAdom = 7026,
+  LaunchpadPrivateCloudFirewallAllocatePhysical = 7027,
+  LaunchpadPrivateCloudFirewallProvisionPhysical = 7028,
+  LaunchpadPrivateCloudFirewallDeprovisionPhysical = 7029,
+  LaunchpadPrivateCloudFirewallUpgrade = 7030,
+
+  // Terraform 9000-9999
+  TerraformRunPlan = 9000,
+  TerraformRunApply = 9001,
+  TerraformRunDestroy = 9002,
+  TerraformDeleteDeployment = 9003,
+
+  // Network DB 10000-10999
+  NetworkDbCreateNetwork = 10000,
+  NetworkDbUpdateNetwork = 10001,
+  NetworkDbDeleteNetwork = 10002,
+  NetworkDbReserveNetwork = 10003,
+  NetworkDbRecycleVlan = 10004,
+  NetworkDbReclaimVlan = 10005,
+
+  // vCenter
+  VCenterBaselineRemediate = 11000
 }
 
 /**

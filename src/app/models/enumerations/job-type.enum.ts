@@ -2,8 +2,9 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum JobType {
   Undefined = 0,
+
   // Caching
-  CatalogRefreshCache  = 1,
+  CatalogRefreshCache = 1,
 
   // Jobs for "/servers" endpoint must use prefix 100XXX followed by 3 digit number
   SelfManagedServerCreate = 100001,
@@ -41,14 +42,14 @@ export enum JobType {
   ServerAttachMedia = 100301,
   ServerDetachMedia = 100302,
 
-  // Resource Media
+  // Resource
   ResourceCreateCatalogItem = 100401,
 
   // Patching
   ManagedServerPerformOsUpdateAnalysis = 100501,
   ManagedServerApplyOsUpdates = 100502,
 
-  // VDC Storage
+  // Resource
   VdcExpandStorage = 100601,
   VdcProvisionStorage = 100602,
   VdcScaleCompute = 100603,
@@ -62,7 +63,21 @@ export enum JobType {
   ManagedServerProvisionVmBackup = 100607,
   ManagedServerProvisionBat = 1000608,
 
-  // LaunchPad
+  // Internet
+  InternetPortPlanChange = 1000701,
+
+  // Backup Delete
+  ManagedServerDeleteServerBackup = 101001,
+  ManagedServerDeleteVmBackup = 101002,
+
+  // Resource Update/Delete
+  ResourceScaleCompute = 101101,
+  ResourceUpdateStorage = 101102,
+  ResourceDeleteCatalogItem = 101103,
+
+  PrivateCloudLaunchExtenderChangeSpeed = 101301,
+
+  // Launchpad
   LaunchpadManagedServerCreate = 102001,
   LaunchpadManagementToolsAdd = 102002,
   LaunchpadManagementToolsDelete = 102003,
@@ -81,6 +96,19 @@ export enum JobType {
   LaunchpadManagementToolsQueryStatus = 102016,
   LaunchpadPublicCloudMicrosoftCreateSubscription = 102017,
   LaunchpadManagementToolsUpdate = 102018,
+  LaunchpadPublicCloudMicrosoftProvisionSoftwareSubscription = 102019,
+  LaunchpadPublicCloudMicrosoftProvisionReservation = 102020,
+  LaunchpadVdcCreateNetwork = 102021,
+  LaunchpadPublicCloudAvdProvisionHostPool = 102022,
+  LaunchpadPublicCloudAvdAddHostPoolVms = 102023,
+  LaunchpadPrivateCloudFirewallAllocateVirtual = 102024,
+  LaunchpadPrivateCloudFirewallProvisionVirtual = 102025,
+  LaunchpadPrivateCloudFirewallDeprovisionVirtual = 102026,
+  LaunchpadPrivateCloudFirewallProvisionAdom = 102027,
+  LaunchpadPrivateCloudFirewallAllocatePhysical = 102028,
+  LaunchpadPrivateCloudFirewallProvisionPhysical = 102029,
+  LaunchpadPrivateCloudFirewallDeprovisionPhysical = 102030,
+  LaunchpadPrivateCloudFirewallUpgrade = 102031,
 
   // Terraform
   TerraformRunPlan = 104001,
@@ -96,15 +124,13 @@ export enum JobType {
   NetworkDbRecycleVlan = 105005,
   NetworkDbReclaimVlan = 105006,
 
-  // Microsoft License
-  PublicCloudLicenseChangeCount = 2000001,
+  // Public Cloud endpoint must use prefix 200XXX followed by 3 digit number
+  // License
+  PublicCloudLicenseChangeCount = 2000001, // TODO: change number
+  AzureExtendChangeSpeed = 200002,
 
-  // Internet
-  InternetPortPlanChange = 3000001,
-
-  // Extenders
-  PrivateCloudLaunchExtenderChangeSpeed = 4000001,
-  AzureExtendChangeSpeed = 4000002,
+  // vCenter
+  VCenterBaselineRemediate = 300001
 }
 
 export const jobTypeText = {
@@ -176,6 +202,8 @@ export const jobTypeText = {
 
   [JobType.PrivateCloudLaunchExtenderChangeSpeed]: 'Change LAUNCH™ Extender Speed',
   [JobType.AzureExtendChangeSpeed]: 'Change Azure Extend Speed',
+
+  [JobType.VCenterBaselineRemediate]: 'Remediate Baseline ESXI Host'
 };
 
 /**

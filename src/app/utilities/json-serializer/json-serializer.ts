@@ -26,6 +26,8 @@ function serializeObject(targetInstance: any): any {
   let jsonObject: any = {};
   Object.keys(targetInstance).forEach((propertyKey) => {
     let propertyMetadata = getPropertyMetadata(targetInstance, propertyKey);
+    if (propertyMetadata?.ignore) { return; }
+
     jsonObject[(propertyMetadata && propertyMetadata.name) || propertyKey] =
       serializeProperty(targetInstance, propertyKey);
   });

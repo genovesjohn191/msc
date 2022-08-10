@@ -3,7 +3,8 @@ import {
   Observable
 } from 'rxjs';
 import {
-  map,
+  debounceTime,
+  distinctUntilChanged,
   shareReplay,
   takeUntil,
   tap
@@ -26,6 +27,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { McsOption } from '@app/models';
 import {
   convertRawObjectToString,
+  isNullOrEmpty,
   isNullOrUndefined,
   DataProcess
 } from '@app/utilities';
@@ -119,25 +121,31 @@ export class FieldAutocompleteComponent<TValue>
   private _subscribeToOptionItems(): void {
     this.dataProcess.setInProgress();
 
-    this.dataSource?.connect().pipe(
+    this.optionItems$ = this.dataSource?.connect().pipe(
       takeUntil(this.destroySubject),
       tap(options => {
         this.dataProcess.setCompleted();
         this.optionsChange.next(options);
         this._optionItemsChange.next(options);
-      })
-    ).subscribe();
-
-    this.optionItems$ = this.fcInputCtrl.valueChanges.pipe(
-      takeUntil(this.destroySubject),
-      map(value => this._filterRecords(value || '')),
+      }),
       shareReplay(1)
     );
+
+    this.fcInputCtrl.valueChanges.pipe(
+      takeUntil(this.destroySubject),
+      debounceTime(1000),
+      distinctUntilChanged(),
+      tap(value => this._filterRecords(value || ''))
+    ).subscribe();
   }
 
-  private _filterRecords(keyword: string): McsOption[] {
+  private _filterRecords(keyword: string): void {
     let filterKeyword = (keyword.toLowerCase && keyword.toLowerCase()) || '';
-    return (this._optionItemsChange.getValue() || [])
-      .filter(option => this.dataSource?.filterBy(option, filterKeyword));
+    this.dataSource?.filterRecords(filterKeyword);
+
+    // We need to this in order to notify the outside caller that the value is unselected.
+    if (isNullOrEmpty(keyword)) {
+      this.propagateFormControlChanges(null, false);
+    }
   }
 }

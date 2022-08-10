@@ -13,8 +13,10 @@
         [disabled]="optionItem.disabled"
         [mcsTooltip]="optionItem.helpText" [mcsTooltipShow]="optionItem.disabled"
         [value]="optionItem.value">
-        <span>{{ optionItem.text }}</span>
-        <span [mcsGreyedOut]="true" *ngIf="optionItem.inlinescript">{{ optionItem.inlinescript }}</span>
+        <mcs-item>
+          <span>{{ optionItem.text }}</span>
+          <span [mcsGreyedOut]="true" *ngIf="optionItem.inlinescript">{{ optionItem.inlinescript }}</span>
+        </mcs-item>
       </mat-option>
     </ng-container>
   </mat-autocomplete>
