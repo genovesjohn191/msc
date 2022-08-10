@@ -46,6 +46,7 @@ import {
   McsOrderItemCreate,
   McsOrderServerBackupAdd,
   McsOrderWorkflow,
+  McsQueryParam,
   McsServer,
   McsServerBackupServer,
   OrderIdType,
@@ -288,7 +289,9 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _subscribeToAggregationTargets(): void {
-    this.aggregationTargets$ = this._apiService.getBackupAggregationTargets().pipe(
+    let queryParam = new McsQueryParam();
+    queryParam.keyword = '';
+    this.aggregationTargets$ = this._apiService.getBackupAggregationTargets(queryParam).pipe(
       map((response) => response && response.collection)
     );
   }
