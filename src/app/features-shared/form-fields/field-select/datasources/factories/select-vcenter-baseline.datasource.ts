@@ -56,12 +56,13 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
         let query = new McsVCenterBaselineQueryParam();
         query.vcenter = vcenterName || null;
 
-        let optionalHeaders = new Map<string, string>();
         if (companyId) {
+          let optionalHeaders = new Map<string, string>();
           optionalHeaders.set('company-id', companyId);
+          query.optionalHeaders = optionalHeaders;
         }
 
-        return this._apiService.getVCenterBaselines(query, optionalHeaders).pipe(
+        return this._apiService.getVCenterBaselines(query, false).pipe(
           map(result => result?.collection
             ?.map(resultItem =>
               new McsOption(

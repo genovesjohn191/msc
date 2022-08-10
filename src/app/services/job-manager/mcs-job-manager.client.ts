@@ -37,14 +37,15 @@ import {
 import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
 import { IMcsJobEntity } from './base/mcs-job-entity.interface';
 import { McsJobBackupAggregationTargetManager } from './entities/mcs-job-backup-aggregation-target.manager';
+import { McsJobExtenderManager } from './entities/mcs-job-extender.manager';
 import { McsJobInternetManager } from './entities/mcs-job-internet.manager';
 import { McsJobLicenseManager } from './entities/mcs-job-license.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
+import { McsJobNetworkDbNetworkManager } from './entities/mcs-job-network-db-network.manager';
 import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobTerraformDeploymentManager } from './entities/mcs-job-terraform-deployment.manager';
-import { McsJobNetworkDbNetworkManager } from './entities/mcs-job-network-db-network.manager';
-import { McsJobExtenderManager } from './entities/mcs-job-extender.manager';
+import { McsJobVCenterBaselineManager } from './entities/mcs-job-vcenter-baseline-deployment.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -355,6 +356,11 @@ export class McsJobManagerClient implements McsDisposable {
     );
     this._jobEntitiesFactory.set(JobType.NetworkDbUpdateNetwork,
       new McsJobNetworkDbNetworkManager(ActionStatus.Update, this._injector)
+    );
+
+    // VCenter
+    this._jobEntitiesFactory.set(JobType.VCenterBaselineRemediate,
+      new McsJobVCenterBaselineManager(ActionStatus.Update, this._injector)
     );
   }
 }

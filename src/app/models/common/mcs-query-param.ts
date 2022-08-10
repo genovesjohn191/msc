@@ -22,6 +22,9 @@ export class McsQueryParam {
   @JsonProperty({ name: 'sort_field' })
   public sortField?: string;
 
+  @JsonProperty({ ignore: true })
+  public optionalHeaders?: Map<string, string>;
+
   constructor() {
     this.keyword = '';
     this.pageIndex = CommonDefinition.PAGE_INDEX_DEFAULT;

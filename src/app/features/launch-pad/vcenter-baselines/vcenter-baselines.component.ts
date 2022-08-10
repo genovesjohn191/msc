@@ -68,13 +68,6 @@ export class VCenterBaselinesComponent extends McsPageBase implements OnInit, On
       dataChangeEvent: McsEvent.dataChangeVCenterBaselineEvent,
       dataClearEvent: McsEvent.dataClearVCenterBaseline
     });
-
-    // TODO: Things to consider:
-    // 1. Add the feature flag for: EnableVCenterBaselines, EnableRemediateESXiHosts
-
-    // To be confirmed:
-    // 1. Why the remediate request has only clusterid?
-    // 2. From the baseline details, how to get the associated clusterId? to be passed on remediate
   }
 
   @ViewChild('search')

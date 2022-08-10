@@ -181,6 +181,7 @@
             <mat-menu #actionMenu="matMenu">
               <button mat-menu-item mcsId="remediate-esxi"
                 (click)="onClickRemediateEsxi(row)"
+                [disabled]="row.isProcessing"
                 mcsEventTracker="remediate-esxi"
                 mcsEventCategory="vcenter-baseline"
                 mcsEventLabel="vcenter-baseline-listing">

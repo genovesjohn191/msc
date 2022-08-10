@@ -24,19 +24,15 @@ import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 
 @Injectable()
 export class McsApiVCenterService implements IMcsApiVCenterService {
-
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getVCenterBaselines(
-    query?: McsVCenterBaselineQueryParam,
-    optionalHeaders?: Map<string, any>
-  ): Observable<McsApiSuccessResponse<McsVCenterBaseline[]>> {
+  public getVCenterBaselines(query?: McsVCenterBaselineQueryParam): Observable<McsApiSuccessResponse<McsVCenterBaseline[]>> {
     if (isNullOrEmpty(query)) { query = new McsVCenterBaselineQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/vcenter/baselines';
     mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
-    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
+    mcsApiRequestParameter.optionalHeaders = query.optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter).pipe(
       map((response) => {
@@ -49,8 +45,6 @@ export class McsApiVCenterService implements IMcsApiVCenterService {
 
   public getVCenterBaseline(id: string): Observable<McsApiSuccessResponse<McsVCenterBaseline>> {
     let query = new McsQueryParam();
-    query.pageSize = 1;
-
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/vcenter/baselines';
     mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
@@ -65,6 +59,7 @@ export class McsApiVCenterService implements IMcsApiVCenterService {
         let result = new McsApiSuccessResponse<McsVCenterBaseline>();
         result.totalCount = 1;
         result.content = foundRecord;
+
         return result;
       })
     );

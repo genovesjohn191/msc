@@ -10,13 +10,14 @@ import {
 } from 'rxjs/operators';
 
 import {
-  McsCompany,
-  McsOption
+  McsOption,
+  McsQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 
 import {
@@ -36,14 +37,7 @@ export class AutocompleteCompanyDatasource extends FieldAutocompleteDatasource {
   public initialize(_prerequisite?: FieldAutocompletePrerequisite<Observable<string>>): void {
     let dataOptions = this._dataOptionsChange.getValue();
     if (!isNullOrEmpty(dataOptions)) { return; }
-
-    this._apiService.getCompanies().pipe(
-      tap(response => {
-        let companies = response?.collection || [];
-        let optionItems = companies.map(company => new McsOption(company.id, company.name, null, false, company, null, `(${company.id})`));
-        this._dataOptionsChange.next(optionItems);
-      })
-    ).subscribe();
+    this._updateDataRecords();
   }
 
   public connect(): Observable<McsOption[]> {
@@ -56,11 +50,22 @@ export class AutocompleteCompanyDatasource extends FieldAutocompleteDatasource {
     unsubscribeSafely(this._destroySubject);
   }
 
-  public filterBy(option: McsOption, keyword: string): boolean {
-    let companyData = option.data as McsCompany;
-    if (isNullOrEmpty(companyData)) { return false; }
+  public filterRecords(keyword: string): void {
+    this._updateDataRecords(keyword);
+  }
 
-    return companyData.id?.toLowerCase().includes(keyword) ||
-      companyData.name?.toLowerCase().includes(keyword);
+  private _updateDataRecords(keyword?: string): void {
+    let query = new McsQueryParam();
+    query.pageIndex = CommonDefinition.PAGE_INDEX_DEFAULT;
+    query.pageSize = CommonDefinition.PAGE_SIZE_MIN;
+    query.keyword = keyword;
+
+    this._apiService.getCompanies(query).pipe(
+      tap(response => {
+        let companies = response?.collection || [];
+        let optionItems = companies.map(company => new McsOption(company.id, company.name, null, false, company, null, ` (${company.id})`));
+        this._dataOptionsChange.next(optionItems);
+      })
+    ).subscribe();
   }
 }
