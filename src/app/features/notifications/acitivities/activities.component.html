@@ -63,7 +63,7 @@
     <td mat-cell *matCellDef="let row">
       <span>{{ row.initiatorFullName }}</span><br/>
       <span read-only *ngIf="activeCompany?.id !== row.initiatorCompanyId">
-        {{ 'activities.account' | translate }}
+        {{ 'notifications.account' | translate }}
       </span>
     </td>
   </ng-container>
