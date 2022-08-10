@@ -533,7 +533,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
         this._licenseCache = licenses;
         let licensesOptions: McsOption[] = [];
         licenses.filter((license) => isNullOrEmpty(license.parentId)).forEach((license) => {
-          licensesOptions.push(createObject(McsOption, { text: license.name, value: license }));
+          licensesOptions.push(createObject(McsOption, { text: this._getLicenseText(license), value: license }));
         });
         this._licenseCount = licensesOptions?.length;
         return licensesOptions;
@@ -545,5 +545,17 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
         return throwError(error);
       })
     );
+  }
+
+  private _getLicenseText(license: McsLicense): string {
+    let licenseText = license.name + ' – ' + license.termDuration; 
+    switch(license.billingCycle) {
+    case 'annual':
+      return licenseText + ' billed Annually';
+    case 'monthly':
+      return licenseText + ' billed Monthly';
+    default:
+      return licenseText;
+    }
   }
 }
