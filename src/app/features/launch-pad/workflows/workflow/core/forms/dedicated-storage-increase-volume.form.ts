@@ -8,11 +8,12 @@ export const dedicatedStorageIncreaseVolumeForm: LaunchPadForm = {
   config: [
     new DynamicInputSizeField({
       key: 'diskSizeInGB',
-      label: 'New Size',
+      label: 'New Provisioning Quota',
       placeholder: 'Enter new size',
       validators: { required: true, minSize: 1, maxSize: 17592 },
       hint: 'Allowed value is 1 - 17592',
-      suffix: 'GB'
+      contextualHelp: 'Take care, we provision in GiB and the customer is charged in GB. 100Gb Disk Space Required is equivalent to 93Gib of provisioned storage.',
+      suffix: 'GiB'
     }),
   ],
 
@@ -20,8 +21,9 @@ export const dedicatedStorageIncreaseVolumeForm: LaunchPadForm = {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'diskSizeInGB',
-      value: findCrispElementAttribute(CrispAttributeNames.Ic2DiskSpace, attributes)?.value } );
+    let provisionQuotaGib = findCrispElementAttribute(CrispAttributeNames.ProvisionQuotaGib, attributes)?.value;
+    let provisionQuotaGib2 = findCrispElementAttribute(CrispAttributeNames.ProvisionQuotaGib2, attributes)?.value;
+    mappedProperties.push({ key: 'diskSizeInGB', value: provisionQuotaGib ?? provisionQuotaGib2 } );
 
     return mappedProperties;
   }

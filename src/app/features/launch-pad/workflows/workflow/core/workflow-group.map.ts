@@ -34,7 +34,8 @@ import {
   VfwProvisionWorkflowGroup,
   FirewallProvisionWorkflowGroup,
   FirewallUpgradeWorkflowGroup,
-  FirewallAssessUpgradeReadinessWorkflowGroup
+  FirewallAssessUpgradeReadinessWorkflowGroup,
+  StretchedDedicatedStorageCreateAndAttachVolumeWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 
@@ -50,6 +51,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.DedicatedStorageIncreaseVolumeSize, DedicatedStorageIncreaseVolumeWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageRemoveZoning, DedicatedStorageRemoveZoningWorkflowGroup ],
   [ WorkflowGroupId.DedicatedStorageUnmaskVolume, DedicatedStorageUnmaskVolumeWorkflowGroup ],
+  [ WorkflowGroupId.StretchedDedicatedStorageCreateAttachVolume, StretchedDedicatedStorageCreateAndAttachVolumeWorkflowGroup ],
 
   [ WorkflowGroupId.HostSecurityProvisionAntiVirus, HostSecurityProvisionAntiVirusWorkflowGroup ],
   [ WorkflowGroupId.HostSecurityProvisionHids, HostSecurityProvisionHidsWorkflowGroup ],

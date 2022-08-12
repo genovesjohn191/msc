@@ -15,7 +15,7 @@ import {
 } from './mapping-helper';
 import { standardContextMapper } from './shared/standard-context-mapper';
 
-export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
+export const stretchedDedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
   config: [
     new DynamicInputHiddenField({
       key: 'companyId',
@@ -28,10 +28,10 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
       label: 'Storage Tier',
       validators: { required: true },
       options: [
-        { key: 'SPR', value: 'P700'},
-        { key: 'PR2', value: 'P2000'},
-        { key: 'PR8', value: 'P8000'},
-        { key: 'PR16', value: 'P16000'}
+        { key: 'SPR-MAZ', value: 'P700'},
+        { key: 'PR2-MAZ', value: 'P2000'},
+        { key: 'PR8-MAZ', value: 'P8000'},
+        { key: 'PR16-MAZ', value: 'P16000'}
       ]
     }),
     new DynamicInputSizeField({
@@ -43,9 +43,9 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
       contextualHelp: 'Take care, we provision in GiB and the customer is charged in GB. 100Gb Disk Space Required is equivalent to 93Gib of provisioned storage.',
       suffix: 'GiB'
     }),
-    new DynamicSlideToggleField({
+    new DynamicInputHiddenField({
       key: 'bootLun',
-      label: 'Boot'
+      value: 'false'
     }),
     new DynamicSelectChipsVmField({
       key: 'server',
@@ -66,21 +66,18 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
     let tierMap: Map<string, string> = new Map([
-      ['PERFORMANCE-700', 'SPR'],
-      ['PERFORMANCE-2000', 'PR2'],
-      ['PERFORMANCE-8000', 'PR8'],
-      ['PERFORMANCE-16000', 'PR16']
+      ['PERFORMANCE-700', 'SPR-MAZ'],
+      ['PERFORMANCE-2000', 'PR2-MAZ'],
+      ['PERFORMANCE-8000', 'PR8-MAZ'],
+      ['PERFORMANCE-16000', 'PR16-MAZ']
     ]);
-    let crispTierValue = findCrispElementAttribute(CrispAttributeNames.Ic2StorageTier, attributes)?.value;
+    let crispTierValue = findCrispElementAttribute(CrispAttributeNames.MazaStorageTier, attributes)?.value;
     if (!isNullOrEmpty(crispTierValue)) {
       mappedProperties.push({ key: 'tier', value: tierMap.get(crispTierValue.toString().toUpperCase()) });
     }
 
     mappedProperties.push({ key: 'diskSizeInGB',
-    value: findCrispElementAttribute(CrispAttributeNames.ProvisionQuotaGib2, attributes)?.value } );
-
-    let bootLun: boolean = findCrispElementAttribute(CrispAttributeNames.DesignatedUsage, attributes)?.value === 'BOOT';
-    mappedProperties.push({ key: 'bootLun', value: bootLun } );
+    value: findCrispElementAttribute(CrispAttributeNames.ProvisionQuotaGib, attributes)?.value } );
 
     let server: string = findCrispElementAttribute(CrispAttributeNames.Ic2Server, attributes)?.displayValue;
     let servers: DynamicSelectChipsValue[]  = [
