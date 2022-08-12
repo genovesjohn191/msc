@@ -19,6 +19,7 @@ export enum WorkflowGroupId {
   DedicatedStorageIncreaseVolumeSize  = 200005,
   DedicatedStorageRemoveZoning = 200006,
   DedicatedStorageUnmaskVolume = 200007,
+  StretchedDedicatedStorageCreateAttachVolume = 200008,
 
   ManagementToolsQueryStatus = 300001,
   ManagementToolsAdd = 300002,
@@ -63,6 +64,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.DedicatedStorageIncreaseVolumeSize]: 'Increase Volume Size',
   [WorkflowGroupId.DedicatedStorageRemoveZoning]: 'Remove Zoning',
   [WorkflowGroupId.DedicatedStorageUnmaskVolume]: 'Unmask Volume',
+  [WorkflowGroupId.StretchedDedicatedStorageCreateAttachVolume]: 'Create New Volume',
 
   [WorkflowGroupId.ManagementToolsQueryStatus]: 'Query Management Tools Status',
   [WorkflowGroupId.ManagementToolsAdd]: 'Add To Management Tools',

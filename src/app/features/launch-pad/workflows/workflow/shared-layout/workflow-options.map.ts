@@ -14,6 +14,7 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.DedicatedStorageAttachVolume, 'Attach existing dedicated storage volume.'],
   [WorkflowGroupId.DedicatedStorageCreateAttachVolume, 'Create new dedicated storage volume.'],
   [WorkflowGroupId.DedicatedStorageRemoveZoning, 'Remove dedicated storage zoning.'],
+  [WorkflowGroupId.StretchedDedicatedStorageCreateAttachVolume, 'Create new dedicated storage volume.'],
 
   [WorkflowGroupId.HostSecurityProvisionAntiVirus, 'Provision an anti-virus software.'],
   [WorkflowGroupId.HostSecurityProvisionHids, 'Provision a host intrusion prevention system.'],

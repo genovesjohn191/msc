@@ -905,7 +905,24 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
     ],
 
     [ ProductType.StretchedDedicatedStorage,
-      [ ]
+      [
+        {
+          workflowId: WorkflowGroupId.StretchedDedicatedStorageCreateAttachVolume,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.DedicatedStorageAttachVolume,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.DedicatedStorageIncreaseVolumeSize,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.DedicatedStorageRemoveZoning,
+          allowedElementStatuses: [ ]
+        }
+      ]
     ],
 
     [ ProductType.TwentyFourPortSwitch,

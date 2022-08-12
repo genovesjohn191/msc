@@ -10,6 +10,7 @@ export * from './dedicated-storage-create-attach-volume.workflow';
 export * from './dedicated-storage-increase-volume.workflow';
 export * from './dedicated-storage-remove-zoning.workflow';
 export * from './dedicated-storage-unmask-volume.workflow';
+export * from './stretched-dedicated-storage-create-attach-volume.workflow';
 
 export * from './host-security-provision-anti-virus.workflow';
 export * from './host-security-provision-hids.workflow';

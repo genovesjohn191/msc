@@ -18,6 +18,7 @@ export enum WorkflowType {
   DedicatedStorageIncreaseVolume = 'launchpad.dedicatedstorage.increasevolume',
   DedicatedStorageRemoveZoning = 'launchpad.dedicatedstorage.removezoning',
   DedicatedStorageUmaskVolume = 'launchpad.dedicatedstorage.unmaskvolume',
+  StretchedDedicatedStorageCreateAttachVolume = 'launchpad.dedicatedstorage.createattachvolume',
 
   HostSecurityProvisionAntiVirus = 'launchpad.hostsecurity.provisionantivirus',
   HostSecurityProvisionHids = 'launchpad.hostsecurity.provisionhids',
