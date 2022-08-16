@@ -3,6 +3,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   map,
+  merge,
   shareReplay,
   startWith,
   switchMap,
@@ -138,11 +139,15 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   }
 
   private _subscribeToHostGroups(): void {
-    this.viewModel.fcCompany.valueChanges.pipe(
+    merge(
+      this.viewModel.fcCompany.valueChanges,
+      this.viewModel.fcVCenter.valueChanges
+    ).pipe(
       startWith(null),
       takeUntil(this.destroySubject),
       debounceTime(500),
-      switchMap(companyId => {
+      switchMap(() => {
+        let companyId = getSafeFormValue<string>(this.viewModel.fcCompany);
         let optionalHeaders = new Map<string, string>();
         if (companyId) {
           optionalHeaders.set('Company-id', companyId);
@@ -155,6 +160,20 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
       tap(hosts => {
         let groupRecords = new Array<McsOptionGroup>();
         hosts?.forEach(host => {
+
+          // Filter host by vcenter if this one is selected.
+          let vcenterId = getSafeFormValue<string>(this.viewModel.fcVCenter);
+          if (!isNullOrEmpty(vcenterId)) {
+            let vcenterFound = (this._vcenterOptionsChange.getValue() || [])
+              .find(option => option.data.id === vcenterId);
+
+            let hostFound = host?.vCenter?.toLowerCase() === vcenterFound?.data?.name?.toLowerCase();
+            if (isNullOrEmpty(hostFound)) {
+              return; // skip this host if it not in the vcenter
+            }
+          }
+
+          // Do the grouping per option item
           let groupName = host.parentCluster?.name || 'Others';
           let optionItem = new McsOption(
             host.id,
@@ -188,32 +207,34 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
           group => new TreeGroup(group.groupName, group.groupName, group.options, {
             selectable: false,
             excludeFromSelection: false,
-            disableWhen: () => this._disableClusterFunc(group.options)
+            disableWhen: (data) => this._disableClusterFunc(group.options)
           }),
           option => new TreeGroup(option.text, option.value, null, {
             selectable: !option.disabled,
             subscript: option.subscript,
-            disableWhen: this._disableHostFunc.bind(this),
-            tooltipFunc: (data) => this._disableHostFunc(data) ? null : option.helpText
+            disableWhen: (dataId) => this._disableHostFunc(dataId),
+            tooltipFunc: (dataId) => this._disableHostFunc(dataId) ? option.helpText : null
           })
         )
       )
     );
   }
 
-  private _disableHostFunc(data: McsVCenterHost): boolean {
+  private _disableHostFunc(hostId: string): boolean {
     let baselineId = getSafeFormValue<string>(this.viewModel.fcBaseline);
     if (isNullOrUndefined(baselineId)) { return false; }
 
     let baselines = this._baselineOptionsChange.getValue()?.map(b => b.data) ?? [];
     let baselineFound = (baselines as Array<McsVCenterBaseline>).find(baseline => baseline.id === baselineId);
+
     if (isNullOrEmpty(baselineFound)) { return false; }
 
-    // TODO: Check this out, is the complianceset host is the id? or the name
-    let hostFound = baselineFound.complianceSet
+    // Check if host is not in the baseline complianceset
+    let hostCannotBeRemediate = baselineFound.complianceSet
       ?.filter(cs => cs.status === 'Compliant')
-      ?.find(cs => cs.host === data.id);
-    return !isNullOrEmpty(hostFound);
+      ?.find(cs => cs.host === hostId);
+
+    return !isNullOrEmpty(hostCannotBeRemediate);
   }
 
   private _disableClusterFunc(options: McsOption[]): boolean {
@@ -224,7 +245,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
     let hasEnabledItem = false;
 
     for (const host of hosts) {
-      hasEnabledItem = !this._disableHostFunc(host);
+      hasEnabledItem = !this._disableHostFunc(host.id);
       if (hasEnabledItem) {
         break;
       }
@@ -248,6 +269,11 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
     this.apiService.getVCenterBaseline(id).pipe(
       tap(response => {
+        if (!response?.approved) {
+          this.showErrorMessage('message.unapprovedBaseline');
+          return;
+        }
+
         refreshView(() => {
           this.viewModel.updateViewModel(response);
         })

@@ -43,26 +43,19 @@ export class McsApiVCenterService implements IMcsApiVCenterService {
     );
   }
 
-  public getVCenterBaseline(id: string): Observable<McsApiSuccessResponse<McsVCenterBaseline>> {
-    let query = new McsQueryParam();
+  public getVCenterBaseline(id: any): Observable<McsApiSuccessResponse<McsVCenterBaseline>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/vcenter/baselines';
-    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.endPoint = `/vcenter/baselines/${id}`;
 
-    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
-      map((response) => {
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsVCenterBaseline[]>(McsVCenterBaseline, response);
-
-        // TODO: This is just temporary since it needs the endpoint in api.
-        let foundRecord = apiResponse.content?.find(item => item.id === id);
-        let result = new McsApiSuccessResponse<McsVCenterBaseline>();
-        result.totalCount = 1;
-        result.content = foundRecord;
-
-        return result;
-      })
-    );
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsVCenterBaseline>(McsVCenterBaseline, response);
+          return apiResponse;
+        })
+      );
   }
 
   public remediateBaseline(id: string, request: McsVCenterBaselineRemediate): Observable<McsApiSuccessResponse<McsJob>> {

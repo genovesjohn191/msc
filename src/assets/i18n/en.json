@@ -3997,6 +3997,7 @@
     "rollback": "Rollback"
   },
   "message": {
+    "unapprovedBaseline": "Unable to remediate unapproved baseline.",
     "hostNotCompliant": "This host is not compliant with the selected baseline.",
     "remediateSelectCompany": "If the host(s) that require remediation reside in a customer's dedicated vCenter instance, select the relevant company here.",
     "remediateSelectVCenter": "Select a vCenter instance to view baselines for.",
