@@ -140,7 +140,8 @@ export class VCenterBaselinesComponent extends McsPageBase implements OnInit, On
 
     return this.apiService.getVCenterBaselines(queryParam).pipe(
       map(response => {
-        return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
+        let approvedBaselines = response?.collection?.filter(item => item.approved);
+        return new McsMatTableContext(approvedBaselines, response?.totalCollectionCount);
       })
     );
   }

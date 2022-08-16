@@ -7,7 +7,7 @@ import {
 import { McsFormGroupService } from '../services/mcs-form-group.service';
 
 export abstract class McsViewModelBase {
-  public fgGroup: FormGroup;
+  public formGroup: FormGroup;
 
   private readonly formGroupService: McsFormGroupService;
 
@@ -16,22 +16,22 @@ export abstract class McsViewModelBase {
   }
 
   public get valid(): boolean {
-    return this.formGroupService.allFormFieldsValid(this.fgGroup);
+    return this.formGroupService.allFormFieldsValid(this.formGroup);
   }
 
   public registerControls(controls: { [key: string]: AbstractControl }): void {
-    this.fgGroup = new FormGroup(controls);
+    this.formGroup = new FormGroup(controls);
   }
 
   public validate(host?: HTMLElement): boolean {
-    this.formGroupService.touchAllFormFields(this.fgGroup);
+    this.formGroupService.touchAllFormFields(this.formGroup);
     if (host) {
       this.formGroupService.scrollToFirstInvalidField(host);
     }
-    return this.formGroupService.allFormFieldsValid(this.fgGroup);
+    return this.formGroupService.allFormFieldsValid(this.formGroup);
   }
 
   public reset(): void {
-    this.formGroupService.resetAllControls(this.fgGroup);
+    this.formGroupService.resetAllControls(this.formGroup);
   }
 }

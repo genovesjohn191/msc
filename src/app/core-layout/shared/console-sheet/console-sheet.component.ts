@@ -75,7 +75,7 @@ export class ConsoleSheetComponent extends McsPageBase implements OnInit, OnDest
   }
 
   public get hasSelectedVm(): boolean {
-    return this.viewModel?.fgGroup?.valid;
+    return this.viewModel?.formGroup?.valid;
   }
 
   public get consoleDescription(): string {

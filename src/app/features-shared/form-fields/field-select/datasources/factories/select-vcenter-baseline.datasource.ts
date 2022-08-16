@@ -64,6 +64,7 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
 
         return this._apiService.getVCenterBaselines(query, false).pipe(
           map(result => result?.collection
+            ?.filter(item => item.approved)
             ?.map(resultItem =>
               new McsOption(
                 resultItem.id,
