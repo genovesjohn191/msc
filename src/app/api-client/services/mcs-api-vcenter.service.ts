@@ -12,6 +12,7 @@ import {
   McsVCenterBaselineRemediate,
   McsVCenterDataCentre,
   McsVCenterHost,
+  McsVCenterHostQueryParam,
   McsVCenterInstance
 } from '@app/models';
 import {
@@ -102,10 +103,13 @@ export class McsApiVCenterService implements IMcsApiVCenterService {
     );
   }
 
-  public getVCenterHosts(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsVCenterHost[]>> {
+  public getVCenterHosts(query?: McsVCenterHostQueryParam): Observable<McsApiSuccessResponse<McsVCenterHost[]>> {
+    if (isNullOrEmpty(query)) { query = new McsVCenterBaselineQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/vcenter/hosts';
-    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = query.optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter).pipe(
       map((response) => {

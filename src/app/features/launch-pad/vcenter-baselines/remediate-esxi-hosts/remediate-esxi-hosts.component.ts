@@ -30,7 +30,8 @@ import {
   McsOption,
   McsOptionGroup,
   McsVCenterBaseline,
-  McsVCenterHost
+  McsVCenterHost,
+  McsVCenterHostQueryParam
 } from '@app/models';
 import {
   getSafeFormValue,
@@ -61,6 +62,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   private _hostGroupChange = new BehaviorSubject<McsOptionGroup[]>(null);
   private _baselineOptionsChange = new BehaviorSubject<McsOption[]>(null);
   private _vcenterOptionsChange = new BehaviorSubject<McsOption[]>(null);
+  private _dataCentreOptionsChange = new BehaviorSubject<McsOption[]>(null);
 
   public constructor(injector: Injector) {
     super(injector);
@@ -115,6 +117,10 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
     this._vcenterOptionsChange.next(options);
   }
 
+  public onDataCentreOptionsChange(options: McsOption[]): void {
+    this._dataCentreOptionsChange.next(options);
+  }
+
   private _subscribeToCompanyChange(): void {
     this.companyId$ = this.viewModel.fcCompany.valueChanges.pipe(
       takeUntil(this.destroySubject),
@@ -141,19 +147,30 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   private _subscribeToHostGroups(): void {
     merge(
       this.viewModel.fcCompany.valueChanges,
-      this.viewModel.fcVCenter.valueChanges
+      this.viewModel.fcVCenter.valueChanges,
+      this.viewModel.fcDatacentre.valueChanges
     ).pipe(
       startWith(null),
       takeUntil(this.destroySubject),
       debounceTime(500),
       switchMap(() => {
-        let companyId = getSafeFormValue<string>(this.viewModel.fcCompany);
-        let optionalHeaders = new Map<string, string>();
-        if (companyId) {
-          optionalHeaders.set('Company-id', companyId);
+        let query = new McsVCenterHostQueryParam();
+
+        let dataCentreId = getSafeFormValue<string>(this.viewModel.fcDatacentre);
+        if (dataCentreId) {
+          let dataCentreFound = (this._dataCentreOptionsChange.getValue() || [])
+            .find(option => option.data.id === dataCentreId);
+          query.dataCentre = dataCentreFound?.text || null;
         }
 
-        return this.apiService.getVCenterHosts(optionalHeaders).pipe(
+        let companyId = getSafeFormValue<string>(this.viewModel.fcCompany);
+        if (companyId) {
+          let optionalHeaders = new Map<string, string>();
+          optionalHeaders.set('Company-id', companyId);
+          query.optionalHeaders = optionalHeaders;
+        }
+
+        return this.apiService.getVCenterHosts(query).pipe(
           map(response => response?.collection)
         );
       }),

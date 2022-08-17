@@ -84,8 +84,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
     if (queryIsDifferent) { this.filteredRecords = new Array(); }
     this._previousQuery = Object.assign({}, query);
 
-    let isSearching = !isNullOrEmpty(query.keyword) || queryIsDifferent;
-    filteredRecords = isSearching ?
+    filteredRecords = queryIsDifferent ?
       this._filterRecordsBySearchQuery(query) :
       this._filterRecordsByPageQuery(query, parentId);
 

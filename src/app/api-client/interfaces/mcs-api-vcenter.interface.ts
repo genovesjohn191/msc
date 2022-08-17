@@ -8,6 +8,7 @@ import {
   McsVCenterBaselineRemediate,
   McsVCenterDataCentre,
   McsVCenterHost,
+  McsVCenterHostQueryParam,
   McsVCenterInstance
 } from '@app/models';
 
@@ -23,5 +24,5 @@ export interface IMcsApiVCenterService {
 
   getVCenterDataCentres(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsVCenterDataCentre[]>>;
 
-  getVCenterHosts(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsVCenterHost[]>>;
+  getVCenterHosts(query?: McsVCenterHostQueryParam): Observable<McsApiSuccessResponse<McsVCenterHost[]>>;
 }

@@ -181,6 +181,7 @@ import {
   McsNetworkDnsZoneTtlRequest,
   McsNetworkVdcPrecheckVlan,
   McsNotice,
+  McsNoticeAssociatedService,
   McsObjectCrispElement,
   McsObjectCrispObject,
   McsObjectCrispOrder,
@@ -307,8 +308,7 @@ import {
   McsVCenterBaseline,
   McsVCenterBaselineRemediate,
   McsVCenterInstance,
-  McsWorkflowCreate,
-  McsNoticeAssociatedService
+  McsWorkflowCreate
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -2920,8 +2920,8 @@ export class McsApiService {
     );
   }
 
-  public getVCenterHosts(optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVCenterHost>> {
-    return this._vCenterApi.getVCenterHosts(optionalHeaders).pipe(
+  public getVCenterHosts(query?: McsVCenterBaselineQueryParam,): Observable<McsApiCollection<McsVCenterHost>> {
+    return this._vCenterApi.getVCenterHosts(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterHosts'))
       ),

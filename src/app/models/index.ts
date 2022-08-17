@@ -178,6 +178,7 @@ export * from './request/mcs-network-db-network-update'
 export * from './request/mcs-network-db-network-reserve';
 export * from './request/mcs-network-db-vlan-action';
 export * from './request/mcs-network-dns-zone-ttl-request';
+export * from './request/vcenter/mcs-vcenter-host-query-param';
 export * from './request/vcenter/mcs-vcenter-baseline-query-param';
 export * from './request/vcenter/mcs-vcenter-baseline-remediate';
 

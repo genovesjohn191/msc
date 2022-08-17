@@ -69,6 +69,7 @@
             [label]="'label.dataCentre' | translate"
             [dataSource]="'VCenterDatacentre' | mcsFieldSelect: { data: companyId$ }"
             [formControl]="viewModel?.fcDatacentre"
+            (optionsChange)="onDataCentreOptionsChange($event)"
             [mcsContextualHelp]="'message.remediateSelectDataCentre' | translate">
           </mcs-field-select>
 
