@@ -37,10 +37,17 @@
 
       <!-- Jobs -->
       <div *ngFor="let notification of (notifications | mcsArrayTakeMax: 3)">
-        <mcs-notification-panel
-          type="running"
-          [notification]="notification">
-        </mcs-notification-panel>
+        <ng-container *ngIf="isNotificationJob(notification); else NoticePanelTemplate">
+          <mcs-activity-panel
+            type="running"
+            [activity]="notification">
+          </mcs-activity-panel>
+        </ng-container>
+        <ng-template #NoticePanelTemplate>
+          <mcs-notice-panel
+            [notice]="notification">
+          </mcs-notice-panel>
+        </ng-template>
       </div>
 
       <div class="notification-item" text-center>
@@ -76,7 +83,7 @@
       [content]="notificationsContent">
 
       <mcs-icon [key]="bellIconKey" size="medium" color="light"
-        [ngClass]="{'active-job': notifications | mcsIsNotNullOrEmpty}"></mcs-icon>
+        [ngClass]="{'active-job': hasOngoingJob(notifications)}"></mcs-icon>
       <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
     </a>
   </div>

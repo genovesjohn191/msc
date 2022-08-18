@@ -17,6 +17,7 @@ export * from './services/mcs-storage.service';
 export * from './services/mcs-cookie.service';
 export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
+export * from './services/mcs-notification-notice.service';
 export * from './services/mcs-notification-context.service';
 export * from './services/mcs-notification-events.service';
 export * from './services/mcs-global-element.service';

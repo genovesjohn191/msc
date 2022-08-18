@@ -34,7 +34,7 @@ export class McsApiNoticesService implements IMcsApiNoticesService {
       );
   }
 
-  public getNotice(id: any): Observable<McsApiSuccessResponse<McsNotice>> {
+  public getNotice(id: string): Observable<McsApiSuccessResponse<McsNotice>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/notices/${id}`;
 
@@ -43,6 +43,20 @@ export class McsApiNoticesService implements IMcsApiNoticesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse.deserializeResponse<McsNotice>(McsNotice, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public acknowledgeNotice(id: string): Observable<McsApiSuccessResponse<any>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/notices/${id}/acknowledge`;
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<any>(null, response);
           return apiResponse;
         })
       );

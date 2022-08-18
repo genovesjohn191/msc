@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -54,7 +55,8 @@ export class NoticesComponent implements OnDestroy {
     private _navigationService: McsNavigationService,
     private _notificationService: NotificationsService
   ) {
-    this.dataSource = new McsTableDataSource2(this._getNotices.bind(this));
+    this.dataSource = new McsTableDataSource2<McsNotice>(this._getNotices.bind(this))
+      .registerConfiguration(new McsMatTableConfig(true));
   }
 
   @ViewChild('paginator')
@@ -105,6 +107,12 @@ export class NoticesComponent implements OnDestroy {
   public navigateToNotice(notice: McsNotice): void {
     if (isNullOrEmpty(McsNotice)) { return; }
     this._navigationService.navigateTo(RouteKey.Notice, [notice.id]);
+  }
+
+  public removeHTMLTag(description: string): string {
+    if (isNullOrEmpty(description)) { return; }
+    console.log(description.replace(/(<([^>]+)>)/gi, ''));
+    return description.replace(/(<([^>]+)>)/gi, '');
   }
 
   private _getNotices(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNotice>> {

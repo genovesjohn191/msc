@@ -75,7 +75,6 @@ export class NoticeDetailsComponent implements OnInit, OnDestroy {
     this.listviewDatasource = new McsListviewDataSource2(
       this._getNoticeList.bind(this),
       {
-        sortPredicate: this._sortNoticePredicate.bind(this),
         panelSettings: {
           inProgressText: _translate.instant('notifications.notices.loading'),
           emptyText: _translate.instant('notifications.notices.noRecordsFoundMessage'),
@@ -158,8 +157,8 @@ export class NoticeDetailsComponent implements OnInit, OnDestroy {
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getNotices(queryParam).pipe(
-      map((networkDns) => {
-        return new McsListviewContext<McsNotice>(networkDns?.collection);
+      map((notices) => {
+        return new McsListviewContext<McsNotice>(notices?.collection);
       })
     );
   }
@@ -173,10 +172,6 @@ export class NoticeDetailsComponent implements OnInit, OnDestroy {
       }),
       shareReplay(1)
     );
-  }
-
-  private _sortNoticePredicate(first: McsNotice, second: McsNotice): number {
-    return compareDates(first.createdOn, second.createdOn);
   }
 
   private _registerEvents(): void {

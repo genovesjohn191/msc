@@ -20,7 +20,8 @@ import {
   AccountPanelComponent,
   ConsoleSheetComponent,
   FeedbackSheetComponent,
-  NotificationPanelComponent,
+  NoticePanelComponent,
+  ActivityPanelComponent,
   RecentCompaniesMaxPipe,
   SwitchAccountComponent
 } from './shared';
@@ -30,7 +31,8 @@ import { StateChangeNotificationsComponent } from './state-change-notifications'
 @NgModule({
   declarations: [
     AccountPanelComponent,
-    NotificationPanelComponent,
+    ActivityPanelComponent,
+    NoticePanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
     FeedbackSheetComponent,
@@ -51,7 +53,7 @@ import { StateChangeNotificationsComponent } from './state-change-notifications'
   ],
   exports: [
     AccountPanelComponent,
-    NotificationPanelComponent,
+    ActivityPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
     FeedbackSheetComponent,

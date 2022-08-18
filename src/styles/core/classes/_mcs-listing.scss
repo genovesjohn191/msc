@@ -30,6 +30,10 @@ $listing-table-widget-max-height: 350px;
     @include breakpoint(small) {
       min-width: $listing-table-small-width;
     }
+
+    p {
+      margin-bottom: 0;
+    }
   }
 }
 

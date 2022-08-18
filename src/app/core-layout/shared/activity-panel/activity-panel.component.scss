@@ -1,0 +1,80 @@
+@import "shared/index";
+
+// Main panel settings
+$activity-panel-max-width: 400px;
+$activity-panel-content-margin-size: 7px;
+// activity panel state change settings
+$activity-panel-statechange-bg-color: rgba($color-black, 0.87);
+$activity-panel-statechange-hover-bg-color: rgba($color-black, 0.9);
+$activity-panel-statechange-border-color: $color-grey-05;
+$activity-panel-statechange-color: $dark-bg-text-color;
+// activity panel running settings
+$activity-panel-running-bg-color: transparent;
+$activity-panel-running-hover-bg-color: $color-grey-07;
+$activity-panel-running-color: $light-bg-text-color;
+
+.activity-panel-wrapper {
+  display: block;
+  width: 100%;
+  max-width: $activity-panel-max-width;
+  position: relative;
+
+  &.activity-running-wrapper {
+    .activity-panel-content-wrapper {
+      color: $activity-panel-running-color;
+      background-color: $activity-panel-running-bg-color;
+
+      &:hover {
+        background-color: $activity-panel-running-hover-bg-color;
+      }
+    }
+  }
+
+  &.activity-statechange-wrapper {
+    .activity-panel-content-wrapper {
+      color: $activity-panel-statechange-color;
+      border: 1px solid $activity-panel-statechange-border-color;
+      background-color: $activity-panel-statechange-bg-color;
+
+      &:hover {
+        background-color: $activity-panel-statechange-hover-bg-color;
+      }
+    }
+  }
+}
+
+.activity-panel-content-wrapper {
+  @include display-flex(row);
+
+  .activity-panel-details {
+    @include flex(1 1 auto);
+    @include display-flex(row);
+    padding: $space-small;
+
+    .activity-panel-status-icon {
+      margin: $space-xsmall;
+    }
+
+    .activity-panel-content {
+      margin-left: $space-small;
+      @include display-flex(column);
+      @include set-items-interval($space-xsmall);
+
+      .activity-panel-message {
+        display: block;
+        margin-bottom: $activity-panel-content-margin-size;
+      }
+
+      .activity-panel-user-info {
+        @include display-flex(row);
+        @include set-items-interval($space-xsmall, horizontal);
+      }
+    }
+  }
+
+  .activity-panel-close {
+    @include flex(0 0 auto);
+    padding: $space-small $space-medium;
+    margin-top: $space-xsmall;
+  }
+}

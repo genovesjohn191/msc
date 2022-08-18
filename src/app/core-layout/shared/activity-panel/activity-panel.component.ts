@@ -22,19 +22,19 @@ import {
   getSafeProperty
 } from '@app/utilities';
 
-// Notification type
-type notificationType = 'statechange' | 'running';
+// Activity type
+type activityType = 'statechange' | 'running';
 
 @Component({
-  selector: 'mcs-notification-panel',
-  templateUrl: './notification-panel.component.html',
-  styleUrls: ['./notification-panel.component.scss'],
+  selector: 'mcs-activity-panel',
+  templateUrl: './activity-panel.component.html',
+  styleUrls: ['./activity-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'notification-panel-wrapper',
-    '[class.notification-running-wrapper]': 'type === "running"',
-    '[class.notification-statechange-wrapper]': 'type === "statechange"',
+    'class': 'activity-panel-wrapper',
+    '[class.activity-running-wrapper]': 'type === "running"',
+    '[class.activity-statechange-wrapper]': 'type === "statechange"',
     '(mouseenter)': 'onMouseEnter()',
     '(focusin)': 'onMouseEnter()',
     '(mouseleave)': 'onMouseLeave()',
@@ -42,13 +42,13 @@ type notificationType = 'statechange' | 'running';
   }
 })
 
-export class NotificationPanelComponent implements OnInit, OnChanges {
+export class ActivityPanelComponent implements OnInit, OnChanges {
   // Icon strategy
   public iconStatusKey: string;
   public iconStatusColor: any;
 
   @Input()
-  public notification: McsJob = new McsJob();
+  public activity: McsJob = new McsJob();
 
   @Input()
   public pauseOnHover: boolean = true;
@@ -57,15 +57,15 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   public remove = new EventEmitter<McsJob>();
 
   /**
-   * Type of the notification panel to be displayed
+   * Type of the activity panel to be displayed
    */
   @Input()
-  public get type(): notificationType { return this._type; }
-  public set type(value: notificationType) {
+  public get type(): activityType { return this._type; }
+  public set type(value: activityType) {
     this._type = value;
     this._changeDetectorRef.markForCheck();
   }
-  private _type: notificationType = 'statechange';
+  private _type: activityType = 'statechange';
 
   /**
    * Slider type to be trigger during the transition
@@ -97,7 +97,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   }
 
   public get timeOutInMilliSeconds(): number {
-    let dataStatus = getSafeProperty(this.notification, (obj) => obj.dataStatus);
+    let dataStatus = getSafeProperty(this.activity, (obj) => obj.dataStatus);
     if (dataStatus === DataStatus.Active) { return undefined; }
     return dataStatus === DataStatus.Success ?
       CommonDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS :
@@ -110,14 +110,14 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   ) { }
 
   public ngOnInit() {
-    // Set the animation based on notification type
+    // Set the animation based on activity type
     this._triggerAnimation('enter');
   }
 
   public ngOnChanges() {
     // Set the timer gradually
     if (this.timeOutInMilliSeconds) {
-      this._removeNotification(this.timeOutInMilliSeconds);
+      this._removeActivity(this.timeOutInMilliSeconds);
     }
   }
 
@@ -144,10 +144,10 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Event that triggers when the notification was closed manually
+   * Event that triggers when the activity was closed manually
    */
-  public removeNotification(): void {
-    this._removeNotification(0);
+  public removeActivity(): void {
+    this._removeActivity(0);
   }
 
   /**
@@ -163,7 +163,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Pause the current timer for the notification before it fades out
+   * Pause the current timer for the activity before it fades out
    */
   private _pauseTimeOut(): void {
     this._setTimeRemaining();
@@ -176,27 +176,27 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Resume the timer of the notification before it fades out
+   * Resume the timer of the activity before it fades out
    */
   private _resumeTimeOut(): void {
     if (this._timeRemainingInMilliSeconds) {
-      this._removeNotification(this._timeRemainingInMilliSeconds);
+      this._removeActivity(this._timeRemainingInMilliSeconds);
     }
   }
 
   /**
-   * Remove the notification panel based on the timer set
+   * Remove the activity panel based on the timer set
    */
-  private _removeNotification(timeOut: number): void {
+  private _removeActivity(timeOut: number): void {
     this._timeStart = new Date().getTime();
 
-    // Remove notification from the list when fade out animation is finished
+    // Remove activity from the list when fade out animation is finished
     this._timer = refreshView(() => {
       this._triggerAnimation('leave');
 
       this._ngZone.runOutsideAngular(() => {
         refreshView(() => {
-          this.remove.emit(this.notification);
+          this.remove.emit(this.activity);
         }, CommonDefinition.NOTIFICATION_ANIMATION_DELAY);
       });
     }, timeOut);

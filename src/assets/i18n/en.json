@@ -3324,6 +3324,7 @@
     "getNotices": "Something went wrong while retrieving your notices.",
     "getNotice": "Something went wrong while retrieving this notice.",
     "getNoticeAssociatedServices": "Something went wrong while retrieving this Notice's associated services. Please try again.",
+    "acknowledgeNotice": "Something went wrong while acknowledging your notice.",
     "getInternetPorts": "Something went wrong while retrieving your internet services.",
     "getInternetPort": "Something went wrong while retrieving your internet service.",
     "getNetworkDns": "Something went wrong while retrieving your DNS services.",
@@ -4098,7 +4099,8 @@
     "noAlertDescriptionDialog": "<span class='read-only'>No description is available for this alert.</span>",
     "emptySubscriptionId": "Unable to find the subscription ID for this item. Please ensure that it has a 'CSP Consumption Service' populated in CRISP and that service is properly installed.",
     "scaleRestartServer": "CPU Hot Plug is disabled for this server, meaning scaling it will cause it to restart.",
-    "scaleRestartCheckbox": "Restart this server as part of the scaling process."
+    "scaleRestartCheckbox": "Restart this server as part of the scaling process.",
+    "noDescription": "No description to display"
   },
   "tooltip": {
     "exportWord": "Export Word Document",
