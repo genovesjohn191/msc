@@ -46,7 +46,12 @@
         </ng-container>
 
         <div>
-          <span [innerHTML]="selectedNotice.description | mcsDataLabel: 'No description to display'"></span>
+          <ng-container *ngIf="(selectedNotice.description); else NoDescription">
+            <span [innerHTML]="selectedNotice.description"></span>
+          </ng-container>
+          <ng-template #NoDescription>
+            <span [mcsGreyedOut]="true">{{ 'message.noDescription' | translate }}</span>
+          </ng-template>
         </div>
       </mcs-presentation-panel>
     </mcs-grid-column>

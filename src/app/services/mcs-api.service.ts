@@ -549,18 +549,29 @@ export class McsApiService {
   }
 
   public getNotices(query?: McsQueryParam): Observable<McsApiCollection<McsNotice>> {
-    return this._mapToEntityRecords(this._noticesRepository, query).pipe(
+    return this._noticesApi.getNotices(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNotices'))
-      )
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
   public getNotice(id: string): Observable<McsNotice> {
-    return this._mapToEntityRecord(this._noticesRepository, id).pipe(
+    return this._noticesApi.getNotice(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNotice'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsById'))
       )
+    );
+  }
+
+  public acknowledgeNotice(id: string): Observable<any> {
+    return this._noticesApi.acknowledgeNotice(id).pipe(
+      catchError((error) => {
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.acknowledgeNotice'))
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj))
     );
   }
 

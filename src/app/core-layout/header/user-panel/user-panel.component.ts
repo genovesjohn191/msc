@@ -30,6 +30,7 @@ import {
   McsCompany,
   McsIdentity,
   McsJob,
+  McsNotice,
   RouteKey
 } from '@app/models';
 import { SideSheetService } from '@app/shared/side-sheet';
@@ -48,6 +49,8 @@ import {
 } from '../../shared';
 import { UserPanelService } from './user-panel.service';
 
+export type Notifications = McsJob | McsNotice;
+
 const NOTIFICATIONS_COUNT_LIMIT = 3;
 @Component({
   selector: 'mcs-user-panel',
@@ -57,7 +60,7 @@ const NOTIFICATIONS_COUNT_LIMIT = 3;
 })
 
 export class UserPanelComponent implements OnInit, OnDestroy {
-  public notifications$: Observable<McsJob[]>;
+  public notifications$: Observable<Notifications[]>;
   public hasConnectionError: boolean;
   public deviceType: Breakpoint;
 
@@ -136,7 +139,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Navigate to notifications page to see all the jobs
    */
   public navigateToNotificationsPage(): void {
-    this._navigationService.navigateTo(RouteKey.Notifications);
+    this._navigationService.navigateTo(RouteKey.Activities);
   }
 
   /**
@@ -196,13 +199,28 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     sidesheetRef.afterClosed().subscribe();
   }
 
+  public hasOngoingJob(notifications: Notifications[]): boolean {
+    let hasActiveJob = notifications.find((notification) => this.isNotificationJob(notification));
+    return !isNullOrEmpty(hasActiveJob);
+  }
+
+  public isNotificationJob(notification: Notifications): boolean {
+    return notification instanceof McsJob;
+  }
+
   /**
    * Subscribe to notifications changes
    */
   private _subscribeToNotificationsChange(): void {
     this.notifications$ = this._userPanelService.notificationsChange().pipe(
       takeUntil(this._destroySubject),
-      map((notifications) => notifications.filter((notification) => notification.inProgress)),
+      map((notifications) => {
+        let notificationItems = notifications.filter((notification) => {
+          return this.isNotificationJob(notification) ?
+            notification.inProgress : !notification.acknowledged;
+        });
+        return notificationItems;
+      }),
       shareReplay(1)
     );
   }

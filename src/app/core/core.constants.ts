@@ -41,6 +41,7 @@ import { McsSystemMessageService } from './services/mcs-system-message.service';
 import { McsViewportService } from './services/mcs-viewport.service';
 import { McsSessionService } from './session/session.service';
 import { SwitchAccountService } from './services/switch-account.service';
+import { McsNotificationNoticeService } from './services/mcs-notification-notice.service';
 
 /**
  * Array coverage for the core modules
@@ -54,6 +55,7 @@ export const coreProviders: any[] = [
   McsNotificationJobService,
   McsNotificationContextService,
   McsNotificationEventsService,
+  McsNotificationNoticeService,
   McsGlobalElementService,
   McsScrollDispatcherService,
   McsViewportService,

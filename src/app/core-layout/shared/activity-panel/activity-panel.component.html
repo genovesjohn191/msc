@@ -1,0 +1,60 @@
+<div class="activity-panel-content-wrapper"
+  animate [trigger]="animationTrigger"
+  mcsId="navigate-to-activity"
+  mcsEventTracker="navigate-to-activity"
+  mcsEventCategory="activity"
+  mcsEventLabel="activity-panel">
+
+  <div class="activity-panel-details">
+    <!-- Activity Status Icon -->
+    <div class="activity-panel-status-icon">
+      <ng-container *ngIf="activity.inProgress; else iconTemplate">
+        <mcs-loader></mcs-loader>
+      </ng-container>
+      <ng-template #iconTemplate>
+        <mcs-icon [key]="activity.dataStatusIconKey"></mcs-icon>
+      </ng-template>
+    </div>
+
+    <!-- Activity content -->
+    <div class="activity-panel-content">
+      <strong>
+        <a [mcsRouterLink]="[routeKeyEnum.Activity, activity?.id]">
+          {{ activity.description }}
+        </a>
+      </strong>
+
+      <small class="activity-panel-message">{{ activity.summaryInformation }}</small>
+      <ng-container *ngIf="activity.errorMessage">
+        <small class="activity-panel-message">{{ activity.errorMessage }}</small>
+      </ng-container>
+      <div class="activity-panel-user-info">
+        <small read-only>{{ activity.initiatorFullName }}</small>
+        <mcs-icon [key]="bulletIconKey" color="grey-02" size="xxsmall"></mcs-icon>
+
+        <!-- Activity date -->
+        <ng-container [ngSwitch]="activity?.dataStatus">
+          <ng-container *ngSwitchCase="dataStatusEnum.Active">
+            <small read-only>{{ activity.startedOn | mcsStdDateFormat: 'shortTime' }}</small>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <small read-only>{{ activity.endedOn | mcsStdDateFormat: 'shortTime' }}</small>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Close button -->
+  <ng-container *ngIf="type === 'statechange'">
+    <div class="activity-panel-close">
+      <mcs-icon mcsCursor="pointer"
+        (click)="removeActivity()"
+        mcsId="close-panel"
+        mcsEventTracker="close-panel"
+        mcsEventCategory="activity"
+        mcsEventLabel="activity-panel"
+        [key]="closeIconKey" size="small"></mcs-icon>
+    </div>
+  </ng-container>
+</div>

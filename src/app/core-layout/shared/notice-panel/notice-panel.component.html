@@ -1,0 +1,53 @@
+<div class="notice-panel-content-wrapper"
+  animate [trigger]="animationTrigger"
+  mcsId="navigate-to-notice"
+  mcsEventTracker="navigate-to-notice"
+  mcsEventCategory="notice"
+  mcsEventLabel="notice-panel">
+
+  <div class="notice-panel-details">
+    <!-- Notice Status Icon -->
+    <div class="notice-panel-status-icon">
+      <mat-icon>new_releases</mat-icon>
+    </div>
+
+    <!-- Notice Content -->
+    <div class="notice-panel-content">
+      <strong>
+        <a [mcsRouterLink]="[routeKeyEnum.Notice, notice?.id]">
+          <ng-container *ngIf="(notice.summary); else NoSummary">
+            <span>
+              {{ (notice.summary.length > 70)? (notice.summary | slice:0:70)+'..':(notice.summary) }}
+            </span>
+          </ng-container>
+          <ng-template #NoSummary>
+            <span [mcsGreyedOut]="true">None</span>
+          </ng-template>
+        </a>
+      </strong>
+
+      <small class="notice-panel-message">
+        <ng-container *ngIf="(notice.description); else NoDesc">
+          <span [innerHTML]="(notice.description.length > 70)? (notice.description | slice:0:70)+'..':(notice.description)">
+          </span>
+        </ng-container>
+        <ng-template #NoDesc>
+          <span [mcsGreyedOut]="true">None</span>
+        </ng-template>
+      </small>
+
+      <div class="notice-panel-user-info">
+        <small read-only>{{ notice.referenceId }}</small>
+        <mcs-icon [key]="bulletIconKey" color="grey-02" size="xxsmall"></mcs-icon>
+        <!-- Notice date -->
+        <small read-only>{{ notice.createdOn | mcsStdDateFormat: 'shortTime' }}</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Close button -->
+  <div class="notice-panel-close" [disabled]="acknowledgeInProgress">
+    <mat-icon mcsCursor="pointer"
+      (click)="onClickNotice(notice)">check_circle</mat-icon>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+@import "shared/index";
+
+// Main panel settings
+$notice-panel-max-width: 400px;
+$notice-panel-content-margin-size: 7px;
+// notice panel state change settings
+$notice-panel-statechange-bg-color: rgba($color-black, 0.87);
+$notice-panel-statechange-hover-bg-color: rgba($color-black, 0.9);
+$notice-panel-statechange-border-color: $color-grey-05;
+$notice-panel-statechange-color: $dark-bg-text-color;
+// notice panel running settings
+$notice-panel-running-bg-color: transparent;
+$notice-panel-running-hover-bg-color: $color-grey-07;
+$notice-panel-running-color: $light-bg-text-color;
+$notice-panel-icon-size: 28;
+$notice-panel-close-icon-size: 23;
+
+.notice-panel-wrapper {
+  display: block;
+  width: 100%;
+  max-width: $notice-panel-max-width;
+  position: relative;
+
+  &.notice-running-wrapper {
+    .notice-panel-content-wrapper {
+      color: $notice-panel-running-color;
+      background-color: $notice-panel-running-bg-color;
+
+      &:hover {
+        background-color: $notice-panel-running-hover-bg-color;
+      }
+    }
+  }
+
+  &.notice-statechange-wrapper {
+    .notice-panel-content-wrapper {
+      color: $notice-panel-statechange-color;
+      border: 1px solid $notice-panel-statechange-border-color;
+      background-color: $notice-panel-statechange-bg-color;
+
+      &:hover {
+        background-color: $notice-panel-statechange-hover-bg-color;
+      }
+    }
+  }
+}
+
+.notice-panel-content-wrapper {
+  @include display-flex(row);
+
+  .notice-panel-details {
+    @include flex(1 1 auto);
+    @include display-flex(row);
+    padding: $space-small;
+
+    .notice-panel-status-icon {
+      margin: $space-xsmall;
+      color: $color-primary-01;
+
+      mat-icon {
+        @include font-size($notice-panel-icon-size);
+      }
+    }
+
+    .notice-panel-content {
+      margin-left: $space-small;
+      @include display-flex(column);
+      @include set-items-interval($space-xsmall);
+
+      .notice-panel-message {
+        display: block;
+        margin-bottom: $notice-panel-content-margin-size;
+
+        p {
+          margin-bottom: 0;
+        }
+      }
+
+      .notice-panel-user-info {
+        @include display-flex(row);
+        @include set-items-interval($space-xsmall, horizontal);
+      }
+    }
+  }
+
+  .notice-panel-close {
+    @include flex(0 0 auto);
+    padding: $space-small $space-medium;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+
+    mat-icon {
+      @include font-size($notice-panel-close-icon-size);
+    }
+  }
+}
