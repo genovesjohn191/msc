@@ -3998,6 +3998,10 @@
     "rollback": "Rollback"
   },
   "message": {
+    "remediateBaselineInProgress": "This baseline is being remediated.",
+    "remediateJobInProgress": "Preparing to remediate Baseline. This may take a moment.",
+    "remediateJobDescription": "Your Baseline Target is being remediated and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+    "dataInProgress": "Preparing to provision your Backup Aggregation Target. This may take a moment.",
     "unapprovedBaseline": "Unable to remediate unapproved baseline.",
     "hostNotCompliant": "This host is not compliant with the selected baseline.",
     "remediateSelectCompany": "If the host(s) that require remediation reside in a customer's dedicated vCenter instance, select the relevant company here.",
