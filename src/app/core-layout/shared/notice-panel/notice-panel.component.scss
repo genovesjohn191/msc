@@ -12,8 +12,9 @@ $notice-panel-statechange-color: $dark-bg-text-color;
 $notice-panel-running-bg-color: transparent;
 $notice-panel-running-hover-bg-color: $color-grey-07;
 $notice-panel-running-color: $light-bg-text-color;
-$notice-panel-icon-size: 28;
-$notice-panel-close-icon-size: 23;
+$notice-panel-icon-size: 24;
+$notice-panel-close-icon-size: 19;
+$notice-panel-icon-height: 36px;
 
 .notice-panel-wrapper {
   display: block;
@@ -59,6 +60,7 @@ $notice-panel-close-icon-size: 23;
 
       mat-icon {
         @include font-size($notice-panel-icon-size);
+        height: $notice-panel-icon-height;
       }
     }
 
@@ -92,6 +94,7 @@ $notice-panel-close-icon-size: 23;
 
     mat-icon {
       @include font-size($notice-panel-close-icon-size);
+      height: $notice-panel-icon-height;
     }
   }
 }
