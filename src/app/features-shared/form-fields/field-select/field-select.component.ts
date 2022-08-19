@@ -20,6 +20,7 @@ import {
 import { McsOption } from '@app/models';
 import {
   convertRawObjectToString,
+  isNullOrEmpty,
   DataProcess
 } from '@app/utilities';
 
@@ -79,8 +80,17 @@ export class FieldSelectComponent<TValue>
       tap(options => {
         this.dataProcess.setCompleted();
         this.optionsChange.next(options);
+        this._updateCurrentSelectionByState(options);
       }),
       shareReplay(1)
     );
+  }
+
+  private _updateCurrentSelectionByState(options: McsOption[]): void {
+    if (isNullOrEmpty(options)) { return; }
+    let currentOption = options.find(option => option.value === this.value);
+    if (currentOption?.disabled) {
+      this.ngControl.control.setValue(null);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import {
+  map,
   shareReplay,
   takeUntil,
   BehaviorSubject,
@@ -19,6 +20,7 @@ import {
 export class McsJobEvents implements McsDisposable {
   public jobs$: Observable<McsJob[]>;
   public dataStatus$: Observable<DataStatus>;
+  public inProgress$: Observable<boolean>;
 
   private _destroySubject = new Subject<void>();
   private _jobsChange = new BehaviorSubject<McsJob[]>(null);
@@ -53,6 +55,13 @@ export class McsJobEvents implements McsDisposable {
   private _subscribeDataStatusChange(): void {
     this.dataStatus$ = this._dataStatusChange.pipe(
       takeUntil(this._destroySubject),
+      shareReplay(1)
+    );
+
+    this.inProgress$ = this._dataStatusChange.pipe(
+      takeUntil(this._destroySubject),
+      map(dataStatus => dataStatus === DataStatus.PreActive ||
+        dataStatus === DataStatus.Active),
       shareReplay(1)
     );
   }

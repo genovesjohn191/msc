@@ -62,7 +62,7 @@ export class FieldSelectService implements IFieldSelectService {
       new SelectVCenterInstanceDatasource(_apiService));
 
     this._selectDatasourceMap.set(SelectDatasourceType.VCenterBaseline,
-      new SelectVCenterBaselineDatasource(_apiService));
+      new SelectVCenterBaselineDatasource(_apiService, _translate));
 
     this._selectDatasourceMap.set(SelectDatasourceType.VCenterDatacentre,
       new SelectVCenterDataCentreDatasource(_apiService));

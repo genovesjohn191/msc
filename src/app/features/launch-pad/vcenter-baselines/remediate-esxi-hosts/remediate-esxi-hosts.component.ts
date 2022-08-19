@@ -11,7 +11,8 @@ import {
   tap,
   throwError,
   BehaviorSubject,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 
 import {
@@ -25,8 +26,10 @@ import {
   McsJobEvents,
   McsPageBase
 } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
   DataStatus,
+  McsJob,
   McsOption,
   McsOptionGroup,
   McsVCenterBaseline,
@@ -34,10 +37,12 @@ import {
   McsVCenterHostQueryParam
 } from '@app/models';
 import {
+  deleteArrayRecord,
   getSafeFormValue,
   isNullOrEmpty,
   isNullOrUndefined,
   refreshView,
+  unsubscribeSafely,
   TreeDatasource,
   TreeGroup,
   TreeItem,
@@ -58,11 +63,14 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
   public companyId$: Observable<string>;
   public vcenterName$: Observable<string>;
+  public activeBaselineIds$: Observable<string[]>;
 
+  private _remediateHandler: Subscription;
   private _hostGroupChange = new BehaviorSubject<McsOptionGroup[]>(null);
   private _baselineOptionsChange = new BehaviorSubject<McsOption[]>(null);
   private _vcenterOptionsChange = new BehaviorSubject<McsOption[]>(null);
   private _dataCentreOptionsChange = new BehaviorSubject<McsOption[]>(null);
+  private _activeBaselineIdsChange = new BehaviorSubject<string[]>(null);
 
   public constructor(injector: Injector) {
     super(injector);
@@ -81,6 +89,9 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   }
 
   public ngOnInit(): void {
+    this._registerEventHandlers();
+
+    this._subscribeToActiveBaselines();
     this._subscribeToCompanyChange();
     this._subscribeToVCenterChange();
     this._subscribeToHostGroups();
@@ -89,6 +100,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
   public ngOnDestroy(): void {
     this.dispose();
+    unsubscribeSafely(this._remediateHandler);
   }
 
   public onClickRemediate(): void {
@@ -105,7 +117,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
         this.jobEvents.setStatus(DataStatus.Error);
         this.showSuccessfulMessage('message.commandFailed');
         return throwError(() => error);
-      }),
+      })
     ).subscribe();
   }
 
@@ -140,6 +152,13 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
           .find(option => option.data.id === vcenterId);
         return vcenterFound?.data?.name;
       }),
+      shareReplay(1)
+    );
+  }
+
+  private _subscribeToActiveBaselines(): void {
+    this.activeBaselineIds$ = this._activeBaselineIdsChange.pipe(
+      takeUntil(this.destroySubject),
       shareReplay(1)
     );
   }
@@ -296,5 +315,28 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
         })
       })
     ).subscribe();
+  }
+
+  private _registerEventHandlers(): void {
+    this._remediateHandler = this.eventDispatcher.addEventListener(
+      McsEvent.jobVCenterBaselineRemediate, this._onSetRemediateFlag.bind(this)
+    );
+
+    // Invoke the event initially
+    this.eventDispatcher.dispatch(McsEvent.jobVCenterBaselineRemediate);
+  }
+
+  private _onSetRemediateFlag(job: McsJob): void {
+    let baselineId = job?.clientReferenceObject?.baselineId;
+    if (isNullOrEmpty(baselineId)) { return; }
+
+    if (job.inProgress) {
+      this._activeBaselineIdsChange.next([baselineId]);
+      return;
+    }
+
+    let baselineIds = this._activeBaselineIdsChange.getValue() || [];
+    baselineIds = deleteArrayRecord(baselineIds, existingId => existingId === baselineId);
+    this._activeBaselineIdsChange.next(baselineIds);
   }
 }

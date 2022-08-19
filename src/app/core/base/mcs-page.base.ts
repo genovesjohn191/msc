@@ -3,7 +3,8 @@ import { Subject } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
-  Injector
+  Injector,
+  ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventBusDispatcherService } from '@app/event-bus';
@@ -13,7 +14,9 @@ import {
   RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import { FormMessageComponent } from '@app/shared';
 import {
+  isNullOrEmpty,
   unsubscribeSafely,
   McsDisposable
 } from '@app/utilities';
@@ -30,6 +33,9 @@ export abstract class McsPageBase implements McsDisposable {
   protected readonly changeDetector: ChangeDetectorRef;
   protected readonly activatedRoute: ActivatedRoute;
   protected readonly navigation: McsNavigationService;
+
+  @ViewChild(FormMessageComponent)
+  private _formMessageRef: FormMessageComponent;
 
   constructor(protected injector: Injector) {
     this.destroySubject = new Subject<void>();
@@ -64,5 +70,18 @@ export abstract class McsPageBase implements McsDisposable {
   public showErrorMessage(message: string, tryAgainFunc?: () => void): void {
     this.eventDispatcher.dispatch(McsEvent.stateNotificationShow,
       new McsStateNotification('error', message, tryAgainFunc));
+  }
+
+  public showErrorBannerMessage(...errors: string[]): void {
+    if (isNullOrEmpty(errors) || isNullOrEmpty(this._formMessageRef)) { return; }
+
+    let translatedErrors = errors.map(error => this.translate.instant(error));
+    this._formMessageRef.showMessage('error', {
+      messages: translatedErrors
+    });
+  }
+
+  public hideErrorBanner(): void {
+    this._formMessageRef?.hideMessage();
   }
 }
