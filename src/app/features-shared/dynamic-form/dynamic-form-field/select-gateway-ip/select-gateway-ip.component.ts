@@ -34,7 +34,7 @@ import { DynamicInputAutocompleteFieldComponentBase } from '../dynamic-input-aut
 
 const defaultPrefixLength = 27;
 const prefixMinSelfManaged = 16;
-const prefixMinManaged = 26;
+const prefixMinManaged = 16;
 const reserveNewSubnetValue = 'Reserve a new subnet';
 
 @Component({
@@ -215,6 +215,8 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
 
   public selected(event: MatAutocompleteSelectedEvent): void {
     let option = event.option;
+    let prefix = this._getSubnetDetails(option.value);
+    this.prefixLength = prefix.prefixLength;
     this.setValue(option.value);
   }
 
@@ -263,7 +265,7 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
   }
 
   private _setNetworkVdcSubnetData(value: any): McsNetworkVdcSubnet {
-    let subnet = this.collection?.find((item) => item.gatewayIp === value);
+    let subnet = this._getSubnetDetails(value);
 
     let gatewayIpValue = isNullOrEmpty(subnet?.gatewayIp) ? value : subnet.gatewayIp;
     let prefixLengthValue = (isNullOrEmpty(subnet?.prefixLength) || subnet?.prefixLength !== this.prefixLength) ? this.prefixLength : subnet.prefixLength;
@@ -275,5 +277,9 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
     }
 
     return data;
+  }
+
+  private _getSubnetDetails(value: string): McsNetworkVdcSubnet {
+    return this.collection?.find((item) => item.gatewayIp === value);
   }
 }
