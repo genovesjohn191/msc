@@ -4000,7 +4000,7 @@
   "message": {
     "remediateBaselineInProgress": "This baseline is being remediated.",
     "remediateJobInProgress": "Preparing to remediate Baseline. This may take a moment.",
-    "remediateJobDescription": "Your Baseline Target is being remediated and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+    "remediateJobDescription": "The selected hosts are being remediated. You can track progress from the notifications menu at the top of the portal.",
     "dataInProgress": "Preparing to provision your Backup Aggregation Target. This may take a moment.",
     "unapprovedBaseline": "Unable to remediate unapproved baseline.",
     "hostNotCompliant": "This host is not compliant with the selected baseline.",
