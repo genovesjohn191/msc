@@ -1,7 +1,7 @@
 <div *ngIf="isInputVisible || isLoading" class="div-container">
   <mat-form-field
     appearance="outline"
-    (focusout)="focusOut(valueInput.value)"
+    (focusout)="focusOut(valueInput?.value)"
     [hintLabel]="config.hint"
     class="gateway-ip-field">
     <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : label }}</mat-label>

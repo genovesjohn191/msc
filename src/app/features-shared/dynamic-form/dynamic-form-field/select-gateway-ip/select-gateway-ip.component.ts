@@ -156,7 +156,7 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
   }
 
   private _updatePrefixValidators() {
-    this.prefixDisabled = !this._resource?.isSelfManaged && this.isInputVisible;
+    this.prefixDisabled = isNullOrEmpty(this._resource);
     this.config.prefixValidators.min = this._resource?.isSelfManaged ? prefixMinSelfManaged : prefixMinManaged;
     this.prefixLength = defaultPrefixLength;
   }
@@ -253,19 +253,27 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
-    let data: McsNetworkVdcSubnet = {
-      gatewayIp: value,
-      prefixLength: this.prefixLength,
-      description: ''
-    }
-
-    let subnet = this.collection.find((item) => item.gatewayIp === value);
-    if (!isNullOrUndefined(subnet)) { data = subnet; }
+    let data = this._setNetworkVdcSubnetData(value);
 
     this.dataChange.emit({
       value: data,
       eventName,
       dependents
     });
+  }
+
+  private _setNetworkVdcSubnetData(value: any): McsNetworkVdcSubnet {
+    let subnet = this.collection?.find((item) => item.gatewayIp === value);
+
+    let gatewayIpValue = isNullOrEmpty(subnet?.gatewayIp) ? value : subnet.gatewayIp;
+    let prefixLengthValue = (isNullOrEmpty(subnet?.prefixLength) || subnet?.prefixLength !== this.prefixLength) ? this.prefixLength : subnet.prefixLength;
+    let descriptionValue = isNullOrEmpty(subnet?.description) ? '' : subnet.description;
+    let data: McsNetworkVdcSubnet = {
+      gatewayIp: gatewayIpValue,
+      prefixLength: prefixLengthValue,
+      description: descriptionValue
+    }
+
+    return data;
   }
 }
