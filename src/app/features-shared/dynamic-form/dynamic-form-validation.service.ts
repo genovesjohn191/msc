@@ -88,6 +88,9 @@ export class DynamicFormValidationService {
     if (control.hasError('networkPort')) {
       return 'Invalid port';
     }
+    if (control.hasError('networkName')) {
+      return 'Invalid network name format';
+    }
   }
 
   public getValidators(controlData: DynamicFormFieldConfig): ValidatorFn[] {

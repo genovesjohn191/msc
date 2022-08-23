@@ -1,5 +1,6 @@
 import { ValidatorFn } from '@angular/forms';
 import { CoreValidators } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
@@ -16,7 +17,9 @@ export class DynamicSelectNetworkVlanField extends DynamicFormFieldConfigBase {
   public vlanVisibility?: boolean;
   public allowCustomInput: boolean = false;
   public options: FlatOption[] = [];
+
   public contentValidator?: (inputValue: any) => boolean = () => true;
+  public networkNameValidator?: (inputValue: any) => boolean = () => true;
 
   public constructor(options: {
     key: string;
@@ -39,6 +42,10 @@ export class DynamicSelectNetworkVlanField extends DynamicFormFieldConfigBase {
   }
 
   public configureValidators(validators: ValidatorFn[]) {
+    validators.push(CoreValidators.custom(
+      this.networkNameValidator.bind(this),
+      'networkName'
+    ));
     validators.push(CoreValidators.custom(
       this.contentValidator.bind(this),
       'required'
