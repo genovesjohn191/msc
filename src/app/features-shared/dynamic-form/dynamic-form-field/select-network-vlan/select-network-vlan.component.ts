@@ -11,6 +11,7 @@ import {
 } from 'rxjs';
 
 import {
+  CommonDefinition,
   isNullOrEmpty,
   isNullOrUndefined
 } from '@app/utilities';
@@ -237,6 +238,7 @@ export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteF
 
   private _configureValidators() {
     this.config.contentValidator = this._contentValidator.bind(this);
+    this.config.networkNameValidator = this._networkNameValidator.bind(this);
   }
 
   private _contentValidator(inputValue: any): boolean {
@@ -244,6 +246,14 @@ export class DynamicSelectNetworkVlanComponent extends DynamicInputAutocompleteF
       return !isNullOrEmpty(this.overrideNetworkNameText);
     }
     return !isNullOrEmpty(this.inputCtrl.value);
+  }
+
+  private _networkNameValidator(inputValue: any): boolean {
+    if (isNullOrEmpty(this.inputCtrl?.value?.value)) { return true; }
+    if(this.isOverrideChecked) {
+      return CommonDefinition.REGEX_NETWORK_NAME.test(this.overrideNetworkNameText);
+    }
+    return CommonDefinition.REGEX_NETWORK_NAME.test(this.inputCtrl?.value?.value);
   }
 
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
