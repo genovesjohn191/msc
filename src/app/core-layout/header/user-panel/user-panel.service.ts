@@ -8,12 +8,14 @@ import {
 
 import { Injectable } from '@angular/core';
 import {
+  McsAccessControlService,
   McsNotificationContextService,
   McsNotificationNoticeService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import {
+  McsFeatureFlag,
   McsJob,
   McsNotice
 } from '@app/models';
@@ -35,14 +37,17 @@ export class UserPanelService implements McsDisposable {
   private _currentUserJobHandler: Subscription;
 
   constructor(
+    private _accessControlService: McsAccessControlService,
     private _eventDispatcher: EventBusDispatcherService,
     private _notificationContext: McsNotificationContextService,
     private _notificationNotices: McsNotificationNoticeService,
   ) {
     this._registerEvents();
     this._notificationContext.getAllActiveJobs().subscribe();
-    this._notificationNotices.getAllUnacknowledgedNotices();
-    this._subscribeToUnacknowledgedNotices();
+    if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.NoticesListing)) {
+      this._notificationNotices.getAllUnacknowledgedNotices();
+      this._subscribeToUnacknowledgedNotices();
+    }
   }
 
   public dispose() {
