@@ -25,6 +25,7 @@
 
     <mcs-server-manage-backup #fgBackupServer
       [aggregationTargets]="aggregationTargets$ | async"
+      [storageSize]="storageSize"
       (dataChange)="onChangeServerBackUpDetails($event)">
     </mcs-server-manage-backup>
   </mcs-collapsible-panel>

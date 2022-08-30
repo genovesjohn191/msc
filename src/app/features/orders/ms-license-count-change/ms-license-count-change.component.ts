@@ -69,6 +69,7 @@ import {
 } from '@app/utilities';
 
 import { MsLicenseCountChangeService } from './ms-license-count-change.service';
+import { LicenseService } from '@app/features/licenses/licenses.service';
 
 const DEFAULT_LICENSE_COUNT_MIN = 1;
 const DEFAULT_LICENSE_COUNT_MAX = 99999;
@@ -132,6 +133,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     private _apiService: McsApiService,
     private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _licenseService: LicenseService,
     private _msLicenseCountChangeService: MsLicenseCountChangeService
   ) {
     super(
@@ -317,6 +319,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   }
 
   public isCurrentLicenseHasActiveJob(licenseServiceId: string, activeJobs: McsJob[]): boolean {
+    if (isNullOrEmpty(activeJobs)) { return; }
     let hasActiveJob = activeJobs.find((job) => job?.clientReferenceObject?.serviceId === licenseServiceId);
     if (!isNullOrEmpty(hasActiveJob)) {
       return true;
@@ -519,7 +522,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   }
 
   private _subscribeToJobLicenseChange(): void {
-    this.activeJob$ = this._licenseJobsChange.asObservable().pipe(
+    this.activeJob$ = this._licenseService.licenseJobsChange().pipe(
       takeUntil(this._destroySubject),
       map((licenseJobs) => licenseJobs.filter((job) => job.inProgress)),
       shareReplay(1)

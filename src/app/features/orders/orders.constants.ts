@@ -48,6 +48,7 @@ import {
   AzureExtendSpeedComponent
 } from './change-extender-speed/azure-extend-speed/azure-extend-speed.component';
 import { ChangeExtenderSpeedComponent } from './change-extender-speed/shared/change-extender-speed.component';
+import { LicenseService } from '../licenses/licenses.service';
 
 /**
  * List of services for the main module
@@ -55,7 +56,8 @@ import { ChangeExtenderSpeedComponent } from './change-extender-speed/shared/cha
 export const ordersProviders: any[] = [
   OrdersGuard,
   OrderResolver,
-  OrdersDashboardService
+  OrdersDashboardService,
+  LicenseService
 ];
 
 /**
