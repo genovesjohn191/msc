@@ -1,4 +1,8 @@
-import { Subscription } from 'rxjs';
+import { NotifierService } from 'angular-notifier';
+import {
+  Subject,
+  Subscription
+} from 'rxjs';
 
 import {
   ChangeDetectionStrategy,
@@ -8,17 +12,14 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarRef
-} from '@angular/material/snack-bar';
+import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
 import { McsStateNotification } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  Guid
 } from '@app/utilities';
 
 @Component({
@@ -35,23 +36,27 @@ export class StateNotificationComponent implements OnDestroy {
   public tryAgainFunc: () => void;
 
   private _notificationRef: MatSnackBarRef<any>
-  private _notificationUi: TemplateRef<McsStateNotification>;
   private _stateNotificationHandler: Subscription;
+  private _destroySubject = new Subject<void>();
+
+  @ViewChild(TemplateRef)
+  private _templateRef: TemplateRef<any>;
 
   constructor(
-    private _snackBar: MatSnackBar,
-    private _eventBusDispatcher: EventBusDispatcherService
+    private _eventBusDispatcher: EventBusDispatcherService,
+    private _notifierService: NotifierService
   ) {
     this._registerEvents();
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._stateNotificationHandler);
+    unsubscribeSafely(this._destroySubject);
   }
 
   @ViewChild(TemplateRef, { static: false })
   public set notificationUi(value: TemplateRef<McsStateNotification>) {
-    this._notificationUi = value;
+    this._templateRef = value;
   }
 
   public onClickTryAgain(): void {
@@ -59,6 +64,14 @@ export class StateNotificationComponent implements OnDestroy {
       this.tryAgainFunc();
     }
     this._notificationRef?.dismiss();
+  }
+
+  public getDataFromString(message: string): McsStateNotification {
+    return message as any;  // Hack mode since the angular notifier only supports string.
+  }
+
+  public onCloseNotification(id: string): void {
+    this._notifierService.hide(id);
   }
 
   private _registerEvents(): void {
@@ -73,14 +86,13 @@ export class StateNotificationComponent implements OnDestroy {
   }
 
   private _showNotification(state: McsStateNotification): void {
-    if (isNullOrEmpty(this._notificationUi)) { return; }
+    if (isNullOrEmpty(this._templateRef)) { return; }
 
-    this._notificationRef = this._snackBar.openFromTemplate(this._notificationUi, {
-      duration: state.duration || CommonDefinition.STATE_NOTIFICATION_DEFAULT_DURATION,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      data: state,
-      panelClass: ['state-notification-snackbar']
+    this._notifierService.show({
+      id: Guid.newGuid().toString(),
+      type: 'default',
+      message: state as any,
+      template: this._templateRef
     });
   }
 }

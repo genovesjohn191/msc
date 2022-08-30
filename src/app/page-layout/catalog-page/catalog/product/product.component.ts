@@ -132,7 +132,7 @@ export class ProductComponent implements OnInit {
               'error', 'message.enquiryError',
               this._onShowEnquiryPanel.bind(this)
             ));
-          return throwError(error);
+          return throwError(() => error);
         }),
         finalize(() => {
           this.processOnGoing.next(false);

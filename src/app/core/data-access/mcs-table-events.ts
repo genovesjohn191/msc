@@ -15,7 +15,10 @@ import {
   EventBusState
 } from '@app/event-bus';
 import { McsEvent } from '@app/events';
-import { DataStatus } from '@app/models';
+import {
+  DataStatus,
+  McsStateNotification
+} from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -99,7 +102,9 @@ export class McsTableEvents<TEntity> implements McsDisposable {
       takeUntil(this._destroySubject),
       filter(status => status === DataStatus.Error),
       tap(() => {
-        this._eventDispatcher.dispatch(McsEvent.errorShow, 'message.tableError');
+        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+          new McsStateNotification('error', 'message.tableError')
+        );
       })
     ).subscribe();
   }

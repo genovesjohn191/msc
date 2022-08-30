@@ -22,3 +22,30 @@
     }
   }
 }
+
+.state-notification-wrapper {
+  .state-notification-item {
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: space-between;
+    width: 100%;
+
+    .state-notification-close {
+      margin-left: auto;
+      padding-left: $space-small;
+
+      button {
+        height: 24px;
+        width: 24px;
+      }
+    }
+  }
+
+  // For the third party angular notifier override class
+  notifier-notification {
+    background-color: $color-white;
+    color: $color-black;
+    max-width: 20rem;
+    width: 100%;
+  }
+}

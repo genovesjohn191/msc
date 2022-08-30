@@ -27,7 +27,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles/base.scss"
+              "src/styles/base.scss",
+              {
+                "input": "node_modules/angular-notifier/styles.scss",
+                "inject": true,
+                "bundleName": "angular-notifier"
+              }
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
