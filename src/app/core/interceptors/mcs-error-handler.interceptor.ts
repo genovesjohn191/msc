@@ -15,7 +15,8 @@ import {
   HttpStatusCode,
   McsApiErrorContext,
   McsApiErrorResponse,
-  McsIdentity
+  McsIdentity,
+  McsStateNotification
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -84,7 +85,9 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    * @param error Error to be handled
    */
   private _handleApiErrorResponse(error: McsApiErrorResponse | HttpErrorResponse): void {
-    this._eventDispatcher.dispatch(McsEvent.errorShow, error.message);
+    this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+      new McsStateNotification('error', error.message)
+    );
   }
 
   /**
@@ -100,7 +103,9 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
       errorHandlerService.redirectToErrorPage(error.details.status);
       return;
     }
-    this._eventDispatcher.dispatch(McsEvent.errorShow, error.message);
+    this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+      new McsStateNotification('error', error.message)
+    );
   }
 
   /**

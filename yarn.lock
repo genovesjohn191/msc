@@ -2084,6 +2084,13 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha512-S2Hw0TtNkMJhIabBwIojKL9YHO5T0n5eNqWJ7Lrlel/zDbftQpxpapi8tZs3X1HWa+u+QeydGmzzNU0m09+Rcg==
 
+angular-notifier@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/angular-notifier/-/angular-notifier-11.0.0.tgz#caca9e2e4dbc6216e8aa88f02574107da30052c1"
+  integrity sha512-A8EzAoao6KuT6EbZeDA4Zn5x2fDuIusQLLnz/lZsWFbDoNwwWjE0v0CRcX4jsm/cACTBqrZyK7+qFzy4ROXcAQ==
+  dependencies:
+    tslib "2.3.x"
+
 angular2-uuid@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/angular2-uuid/-/angular2-uuid-1.1.1.tgz#72f03cd532b7f40032eb1ecfb9f8457384be956e"
@@ -9288,6 +9295,11 @@ ts-node@~9.1.1:
     make-error "^1.1.1"
     source-map-support "^0.5.17"
     yn "3.1.1"
+
+tslib@2.3.x:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 tslib@2.4.0, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
   version "2.4.0"
