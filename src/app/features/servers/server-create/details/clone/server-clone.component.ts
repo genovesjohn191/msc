@@ -169,6 +169,8 @@ export class ServerCloneComponent
       this.servers = response && response.collection.filter((server) => {
         return server.cloneable && server.serviceType === this.serviceType;
       });
+      // sort servers alphabetically
+      this.servers?.sort((first, second) => first.name.localeCompare(second.name));
       this.dataStatusFactory.setSuccessful(this.servers);
     });
     this.serversSubscription.add(() => {
