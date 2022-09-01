@@ -111,7 +111,6 @@ export class NoticesComponent implements OnDestroy {
 
   public removeHTMLTag(description: string): string {
     if (isNullOrEmpty(description)) { return; }
-    console.log(description.replace(/(<([^>]+)>)/gi, ''));
     return description.replace(/(<([^>]+)>)/gi, '');
   }
 
