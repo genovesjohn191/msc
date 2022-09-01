@@ -29,6 +29,11 @@
     @include align-items(center);
     justify-content: space-between;
     width: 100%;
+    padding: $space-small $space-large;
+
+    &.state-notification-error {
+      background-color: rgba($color-red-00, 0.10);
+    }
 
     .state-notification-close {
       margin-left: auto;
@@ -47,5 +52,7 @@
     color: $color-black;
     max-width: 20rem;
     width: 100%;
+    padding: 0;
+    margin: 0;
   }
 }

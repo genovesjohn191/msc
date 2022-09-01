@@ -1,5 +1,6 @@
 <ng-template #templateRef let-notificationData="notification">
-  <div class="state-notification-item" *ngIf="getDataFromString(notificationData.message) as data">
+  <div class="state-notification-item" *ngIf="getDataFromString(notificationData.message) as data"
+    [class.state-notification-error]="data.type === 'error'">
     <mcs-item>
       <mcs-icon [key]="data?.icon" size="small"></mcs-icon>
 
