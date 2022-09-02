@@ -48,12 +48,11 @@ import {
   McsOrder,
   McsOrderApprover,
   McsOrderItem,
+  McsOrderItemType,
   McsOrderWorkflow,
   OrderWorkflowAction,
   RouteKey,
-  WorkflowStatus,
-  OrderIdType,
-  McsOrderItemType
+  WorkflowStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -67,10 +66,10 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   unsubscribeSafely,
-  CommonDefinition,
-  convertMbToGb
+  CommonDefinition
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
+
 import { LineProperties } from './order-line-properties';
 
 enum OrderDetailsView {

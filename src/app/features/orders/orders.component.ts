@@ -125,8 +125,6 @@ export class OrdersComponent extends McsPageBase {
     this.dataSource.refreshDataRecords();
   }
 
-
-
   private _getOrders(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsOrder>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
