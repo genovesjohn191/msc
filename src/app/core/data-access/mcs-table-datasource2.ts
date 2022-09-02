@@ -373,8 +373,8 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
         this.onCompletion(response.dataRecords);
         this._updateDataRecords(response.dataRecords);
         this._setTotalRecordsCount(response.totalCount);
-        this._dataStatusChange.next(response.totalCount > 0 ?
-          DataStatus.Success : DataStatus.Empty
+        this._dataStatusChange.next(
+          isNullOrEmpty(response.dataRecords) ? DataStatus.Empty : DataStatus.Success
         );
       })
     ).subscribe();
