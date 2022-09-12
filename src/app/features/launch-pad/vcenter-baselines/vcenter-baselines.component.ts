@@ -54,7 +54,6 @@ export class VCenterBaselinesComponent extends McsPageBase implements OnInit, On
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'complianceSets' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'hosts' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'vCenter' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'approved' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'updatedOn' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
@@ -99,7 +98,7 @@ export class VCenterBaselinesComponent extends McsPageBase implements OnInit, On
   }
 
   public get featureName(): string {
-    return 'vcenter-baselines';
+    return 'vcenter-baselines-list';
   }
 
   public ngOnInit(): void {
@@ -137,11 +136,11 @@ export class VCenterBaselinesComponent extends McsPageBase implements OnInit, On
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
     queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
     queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
+    queryParam.approved = true;
 
     return this.apiService.getVCenterBaselines(queryParam).pipe(
       map(response => {
-        let approvedBaselines = response?.collection?.filter(item => item.approved);
-        return new McsMatTableContext(approvedBaselines, response?.totalCollectionCount);
+        return new McsMatTableContext(response?.collection, response?.totalCollectionCount);
       })
     );
   }

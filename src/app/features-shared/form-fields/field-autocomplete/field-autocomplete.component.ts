@@ -20,6 +20,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -35,6 +36,10 @@ import {
 import { IFormFieldCustomizable } from '../abstraction/form-field-customizable.interface';
 import { FormFieldBaseComponent2 } from '../abstraction/form-field.base';
 import { IFieldAutocomplete } from './field-autocomplete';
+import {
+  FieldAutocompleteScrollDirective,
+  IAutoCompleteScrollEvent
+} from './field-autocomplete-scroll.directive';
 import { FieldAutocompleteDatasource } from './field-autocomplete.datasource';
 
 @Component({
@@ -77,6 +82,9 @@ export class FieldAutocompleteComponent<TValue>
     });
   }
 
+  @ViewChild('scrollRef', { static: false })
+  private _scrollRef: FieldAutocompleteScrollDirective;
+
   public ngOnInit(): void {
     this._subscribeToOptionItems();
 
@@ -118,6 +126,11 @@ export class FieldAutocompleteComponent<TValue>
     this.propagateFormControlChanges(data.option?.value, false);
   }
 
+  public onOptionScrolled(data: IAutoCompleteScrollEvent): void {
+    if (isNullOrEmpty(data)) { return; }
+    this.dataSource?.filterRecords(null, data.pageIndex);
+  }
+
   private _subscribeToOptionItems(): void {
     this.dataProcess.setInProgress();
 
@@ -141,7 +154,8 @@ export class FieldAutocompleteComponent<TValue>
 
   private _filterRecords(keyword: string): void {
     let filterKeyword = (keyword.toLowerCase && keyword.toLowerCase()) || '';
-    this.dataSource?.filterRecords(filterKeyword);
+    this.dataSource?.filterRecords(filterKeyword, 0);
+    this._scrollRef?.resetPaging();
 
     // We need to this in order to notify the outside caller that the value is unselected.
     if (isNullOrEmpty(keyword)) {

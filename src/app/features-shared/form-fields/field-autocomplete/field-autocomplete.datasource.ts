@@ -22,5 +22,5 @@ export abstract class FieldAutocompleteDatasource {
 
   abstract disconnect(): void;
 
-  abstract filterRecords(keyword: string): void;
+  abstract filterRecords(keyword: string, pageIndex: number): void;
 }

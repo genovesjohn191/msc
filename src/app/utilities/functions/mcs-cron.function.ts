@@ -1,5 +1,9 @@
 import * as Cron from 'cron-converter';
-import { isNullOrEmpty } from './mcs-object.function';
+
+import {
+  isNullOrEmpty,
+  isNullOrUndefined
+} from './mcs-object.function';
 
 type CronInfo = {
   minute: any[],
@@ -19,8 +23,8 @@ export interface CronConfig {
 
 export function buildCron(config: CronConfig) {
   if (!config) { config = {}; }
-  let cronMinute = config.minute || '*';
-  let cronHour = config.hour || '*';
+  let cronMinute = isNullOrUndefined(config.minute) ? '*' : config.minute;
+  let cronHour = isNullOrUndefined(config.hour) ? '*' : config.hour;
   let cronDayMonth = config.dayMonth || '*';
   let cronMonth = config.month || '*';
   let cronDayWeek = config.dayWeek || '*';
