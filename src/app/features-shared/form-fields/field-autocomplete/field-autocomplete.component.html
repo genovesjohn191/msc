@@ -5,9 +5,10 @@
     [formControl]="fcInputCtrl"
     [matAutocomplete]="auto">
 
-  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" #scrollRef="matOptionScroll"
     [displayWith]="displayFn.bind(this)"
-    (optionSelected)="onOptionSelected($event)">
+    (optionSelected)="onOptionSelected($event)"
+    (optionsScroll)="onOptionScrolled($event)">
     <ng-container *ngIf="optionItems$ | async as optionItems">
       <mat-option *ngFor="let optionItem of optionItems"
         [disabled]="optionItem.disabled"

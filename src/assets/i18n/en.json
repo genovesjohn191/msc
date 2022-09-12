@@ -3763,7 +3763,7 @@
   "label": {
     "dataCentre": "Data Centre",
     "hosts": "Hosts",
-    "vCenter": "VCenter",
+    "vCenter": "vCenter",
     "columnFilter": "Column Filter",
     "remediateEsxiHosts": "Remediate ESXi Hosts",
     "baseline": "Baseline",
@@ -4003,7 +4003,7 @@
     "remediateJobDescription": "The selected hosts are being remediated. You can track progress from the notifications menu at the top of the portal.",
     "dataInProgress": "Preparing to provision your Backup Aggregation Target. This may take a moment.",
     "unapprovedBaseline": "Unable to remediate unapproved baseline.",
-    "hostNotCompliant": "This host is not compliant with the selected baseline.",
+    "hostNotCompliant": "This host is already compliant with the selected baseline.",
     "remediateSelectCompany": "If the host(s) that require remediation reside in a customer's dedicated vCenter instance, select the relevant company here.",
     "remediateSelectVCenter": "Select a vCenter instance to view baselines for.",
     "remediateSelectBaseline": "Select a baseline to use for remediation.",

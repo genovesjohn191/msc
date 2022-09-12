@@ -6,6 +6,7 @@ import { McsApiService } from '@app/services';
 import { SharedModule } from '@app/shared';
 
 import { CheckBoxListComponent } from './checkbox-list/checkbox-list.component';
+import { FieldAutocompleteScrollDirective } from './field-autocomplete/field-autocomplete-scroll.directive';
 import { FieldAutocompleteComponent } from './field-autocomplete/field-autocomplete.component';
 import { FieldAutocompletePipe } from './field-autocomplete/field-autocomplete.pipe';
 import { FieldAutocompleteService } from './field-autocomplete/field-autocomplete.service';
@@ -66,6 +67,7 @@ const exports: any[] | Type<any> = [
 
   FieldAutocompleteComponent,
   FieldAutocompletePipe,
+  FieldAutocompleteScrollDirective,
 
   OrderListBoxComponent,
   SelectColocationDeviceComponent,

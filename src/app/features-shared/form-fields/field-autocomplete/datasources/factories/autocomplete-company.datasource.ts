@@ -37,7 +37,7 @@ export class AutocompleteCompanyDatasource extends FieldAutocompleteDatasource {
   public initialize(_prerequisite?: FieldAutocompletePrerequisite<Observable<string>>): void {
     let dataOptions = this._dataOptionsChange.getValue();
     if (!isNullOrEmpty(dataOptions)) { return; }
-    this._updateDataRecords();
+    this._updateDataRecords(null, CommonDefinition.PAGE_INDEX_DEFAULT);
   }
 
   public connect(): Observable<McsOption[]> {
@@ -50,13 +50,13 @@ export class AutocompleteCompanyDatasource extends FieldAutocompleteDatasource {
     unsubscribeSafely(this._destroySubject);
   }
 
-  public filterRecords(keyword: string): void {
-    this._updateDataRecords(keyword);
+  public filterRecords(keyword: string, pageIndex: number): void {
+    this._updateDataRecords(keyword, pageIndex);
   }
 
-  private _updateDataRecords(keyword?: string): void {
+  private _updateDataRecords(keyword: string, pageIndex: number): void {
     let query = new McsQueryParam();
-    query.pageIndex = CommonDefinition.PAGE_INDEX_DEFAULT;
+    query.pageIndex = pageIndex || CommonDefinition.PAGE_INDEX_DEFAULT;
     query.pageSize = CommonDefinition.PAGE_SIZE_MIN;
     query.keyword = keyword;
 

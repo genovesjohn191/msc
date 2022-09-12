@@ -85,7 +85,8 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
   public get showHostsSelection(): boolean {
     return !isNullOrEmpty(this.viewModel?.fcCompany?.value) ||
-      !isNullOrEmpty(this.viewModel?.fcVCenter?.value);
+      (!isNullOrEmpty(this.viewModel?.fcVCenter?.value) &&
+      !isNullOrEmpty(this.viewModel?.fcDatacentre?.value));
   }
 
   public ngOnInit(): void {
@@ -241,7 +242,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
       map(groups =>
         TreeUtility.convertEntityToTreemItems(groups,
           group => new TreeGroup(group.groupName, group.groupName, group.options, {
-            selectable: false,
+            selectable: true,
             excludeFromSelection: false,
             disableWhen: (data) => this._disableClusterFunc(group.options)
           }),

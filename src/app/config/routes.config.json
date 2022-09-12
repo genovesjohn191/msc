@@ -220,7 +220,7 @@
     "enumKey": "LaunchPadVCenterBaselines",
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/vcenter/baselines",
-    "documentTitle": "LaunchPad - VCenter Baselines",
+    "documentTitle": "LaunchPad - vCenter Baselines",
     "requiredPermissions": ["InternalEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableVcenterBaselineRemediation"],
     "requireAllFeatures": true

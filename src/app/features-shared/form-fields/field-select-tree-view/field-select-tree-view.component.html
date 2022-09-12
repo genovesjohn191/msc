@@ -58,9 +58,11 @@
             </ng-container>
           </cdk-virtual-scroll-viewport>
 
-          <div [mcsGreyedOut]="true" padding-small *ngIf="treeControl?.dataNodes?.length === 0">
-            {{ noItemsText }}
-          </div>
+          <ng-container *ngIf="!noDisplayOnNoRecords">
+            <div [mcsGreyedOut]="true" padding-small *ngIf="treeControl?.dataNodes?.length === 0">
+              {{ noItemsText }}
+            </div>
+          </ng-container>
 
           <div padding-small *ngIf="processOnGoing$ | async">
             {{ 'message.loadingItems' | translate }}
@@ -81,9 +83,11 @@
       <ng-container *ngTemplateOutlet="optionViewTemplate; context: {$implicit: node}"></ng-container>
     </ng-container>
 
-    <div [mcsGreyedOut]="true" padding-small *ngIf="treeControl?.dataNodes?.length === 0">
-      {{ noItemsText }}
-    </div>
+    <ng-container *ngIf="!noDisplayOnNoRecords">
+      <div [mcsGreyedOut]="true" padding-small *ngIf="treeControl?.dataNodes?.length === 0">
+        {{ noItemsText }}
+      </div>
+    </ng-container>
 
     <div padding-small *ngIf="processOnGoing$ | async">
       {{ 'message.loadingItems' | translate }}
