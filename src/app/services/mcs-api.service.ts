@@ -307,6 +307,7 @@ import {
   McsVmSize,
   McsVCenterBaseline,
   McsVCenterBaselineRemediate,
+  McsVCenterDatacentreQueryParam,
   McsVCenterInstance,
   McsWorkflowCreate
 } from '@app/models';
@@ -2922,8 +2923,8 @@ export class McsApiService {
     );
   }
 
-  public getVCenterDataCentres(optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVCenterDataCentre>> {
-    return this._vCenterApi.getVCenterDataCentres(optionalHeaders).pipe(
+  public getVCenterDataCentres(query?: McsVCenterDatacentreQueryParam): Observable<McsApiCollection<McsVCenterDataCentre>> {
+    return this._vCenterApi.getVCenterDataCentres(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterDataCentres'))
       ),

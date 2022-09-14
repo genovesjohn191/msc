@@ -1,3 +1,5 @@
+
+
 /**
  * Option model for selection components such as
  * radio button groups and select component
@@ -10,6 +12,7 @@ export class McsOption {
   public disabled?: boolean;
   public subscript?: string;
   public inlinescript?: string;
+  public alwaysShowHelpText?: boolean;
 
   constructor(
     _value: any,
@@ -18,7 +21,8 @@ export class McsOption {
     _disabled?: boolean,
     _data?: any,
     _subscript?: string,
-    _inlinescript?: string) {
+    _inlinescript?: string,
+    _alwaysShowHelpText?: boolean) {
 
     this.text = _text;
     this.value = _value;
@@ -27,5 +31,6 @@ export class McsOption {
     this.data = _data || null;
     this.subscript = _subscript || null;
     this.inlinescript = _inlinescript || null;
+    this.alwaysShowHelpText = _alwaysShowHelpText || null;
   }
 }

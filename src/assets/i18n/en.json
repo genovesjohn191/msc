@@ -3316,6 +3316,7 @@
     "creationInProgress": "This item is still being created or has failed to upload correctly."
   },
   "apiErrorMessage": {
+    "remediateBaseline": "Something went wrong while processing remediation. Please try again.",
     "getIdentity": "Something went wrong while retrieving your session information. Please try logging in again.",
     "getJobsByStatus": "Something went wrong while retrieving your notifications.",
     "getJobs": "Something went wrong while retrieving your notifications.",
@@ -3998,10 +3999,10 @@
     "rollback": "Rollback"
   },
   "message": {
+    "remediateJobError": "Sorry, something's not right. Unable to remediate the selected hosts.",
     "remediateBaselineInProgress": "This baseline is being remediated.",
     "remediateJobInProgress": "Preparing to remediate Baseline. This may take a moment.",
     "remediateJobDescription": "The selected hosts are being remediated. You can track progress from the notifications menu at the top of the portal.",
-    "dataInProgress": "Preparing to provision your Backup Aggregation Target. This may take a moment.",
     "unapprovedBaseline": "Unable to remediate unapproved baseline.",
     "hostNotCompliant": "This host is already compliant with the selected baseline.",
     "remediateSelectCompany": "If the host(s) that require remediation reside in a customer's dedicated vCenter instance, select the relevant company here.",

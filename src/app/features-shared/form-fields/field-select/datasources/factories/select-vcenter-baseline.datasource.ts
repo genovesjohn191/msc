@@ -45,7 +45,7 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
 
   public initialize(prerequisite?: FieldSelectPrerequisite<VCenterBaselineQuery>): void {
     if (isNullOrEmpty(prerequisite?.data?.vcenterName)) {
-      throw new Error('VCenterId is required for vcenter-baselines.');
+      throw new Error('VCenterName is required for vcenter-baselines.');
     }
 
     combineLatest([
@@ -58,6 +58,7 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
       switchMap(([vcenterName, companyId, activeIds]) => {
         let query = new McsVCenterBaselineQueryParam();
         query.vcenter = vcenterName || null;
+        query.approved = true;
 
         if (companyId) {
           let optionalHeaders = new Map<string, string>();

@@ -1,4 +1,5 @@
 import {
+  combineLatest,
   BehaviorSubject,
   Observable,
   Subject
@@ -11,7 +12,10 @@ import {
   tap
 } from 'rxjs/operators';
 
-import { McsOption } from '@app/models';
+import {
+  McsOption,
+  McsVCenterDatacentreQueryParam
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
@@ -24,6 +28,11 @@ import {
 } from '../../field-select.datasource';
 import { FieldSelectPrerequisite } from '../field-select.prerequisite';
 
+interface VCenterDataCentreQuery {
+  vcenterName: Observable<string>;
+  companyId: Observable<string>;
+}
+
 export class SelectVCenterDataCentreDatasource extends FieldSelectDatasource {
   private _destroySubject = new Subject();
   private _optionItemsChange = new BehaviorSubject<McsOption[]>(null);
@@ -32,21 +41,28 @@ export class SelectVCenterDataCentreDatasource extends FieldSelectDatasource {
     super(new FieldSelectConfig('vcenter-datacentre'));
   }
 
-  public initialize(prerequisite?: FieldSelectPrerequisite<Observable<string>>): void {
-    if (isNullOrEmpty(prerequisite?.data)) {
-      throw new Error('CompanyId is required for vcenter-datacentre.');
+  public initialize(prerequisite?: FieldSelectPrerequisite<VCenterDataCentreQuery>): void {
+    if (isNullOrEmpty(prerequisite?.data?.vcenterName)) {
+      throw new Error('VCenterName is required for vcenter-datacentre.');
     }
 
-    prerequisite?.data.pipe(
-      startWith(null),
+    combineLatest([
+      prerequisite?.data.vcenterName,
+      prerequisite?.data.companyId
+    ]).pipe(
+      startWith([null, null]),
       takeUntil(this._destroySubject),
-      switchMap(companyId => {
-        let optionalHeaders = new Map<string, string>();
+      switchMap(([vcenterName, companyId]) => {
+        let query = new McsVCenterDatacentreQueryParam();
+        query.vcenter = vcenterName || null;
+
         if (companyId) {
+          let optionalHeaders = new Map<string, string>();
           optionalHeaders.set('company-id', companyId);
+          query.optionalHeaders = optionalHeaders;
         }
 
-        return this._apiService.getVCenterDataCentres(optionalHeaders).pipe(
+        return this._apiService.getVCenterDataCentres(query).pipe(
           map(result => result?.collection
             ?.map(resultItem =>
               new McsOption(

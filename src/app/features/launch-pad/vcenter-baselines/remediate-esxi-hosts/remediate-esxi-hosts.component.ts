@@ -243,7 +243,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
         TreeUtility.convertEntityToTreemItems(groups,
           group => new TreeGroup(group.groupName, group.groupName, group.options, {
             selectable: true,
-            excludeFromSelection: false,
+            excludeFromSelection: true,
             disableWhen: (data) => this._disableClusterFunc(group.options)
           }),
           option => new TreeGroup(option.text, option.value, null, {

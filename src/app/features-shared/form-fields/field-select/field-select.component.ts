@@ -72,6 +72,11 @@ export class FieldSelectComponent<TValue>
     this.dispose();
   }
 
+  public showHelpText(option: McsOption): boolean {
+    return !isNullOrEmpty(option.helpText) &&
+      (option.disabled || option.alwaysShowHelpText);
+  }
+
   private _subscribeToOptionItems(): void {
     this.dataProcess.setInProgress();
 
