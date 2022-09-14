@@ -198,18 +198,6 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
         let groupRecords = new Array<McsOptionGroup>();
         hosts?.forEach(host => {
 
-          // Filter host by vcenter if this one is selected.
-          let vcenterId = getSafeFormValue<string>(this.viewModel.fcVCenter);
-          if (!isNullOrEmpty(vcenterId)) {
-            let vcenterFound = (this._vcenterOptionsChange.getValue() || [])
-              .find(option => option.data.id === vcenterId);
-
-            let hostFound = host?.vCenter?.toLowerCase() === vcenterFound?.data?.name?.toLowerCase();
-            if (isNullOrEmpty(hostFound)) {
-              return; // skip this host if it not in the vcenter
-            }
-          }
-
           // Do the grouping per option item
           let groupName = host.parentCluster?.name || 'Others';
           let optionItem = new McsOption(

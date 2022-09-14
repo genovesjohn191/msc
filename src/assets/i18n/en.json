@@ -3316,6 +3316,11 @@
     "creationInProgress": "This item is still being created or has failed to upload correctly."
   },
   "apiErrorMessage": {
+    "getVCenterInstances": "Something went wrong while retrieving the list of vcenter.",
+    "getVCenterDataCentres": "Something went wrong while retrieving the list of data centres.",
+    "getVCenterHosts": "Something went wrong while retrieving the list of hosts.",
+    "getVCenterBaselines": "Something went wrong while retrieving the list of baselines.",
+    "getVCenterBaseline": "Something went wrong while retrieving this baseline's information.",
     "remediateBaseline": "Something went wrong while processing remediation. Please try again.",
     "getIdentity": "Something went wrong while retrieving your session information. Please try logging in again.",
     "getJobsByStatus": "Something went wrong while retrieving your notifications.",
