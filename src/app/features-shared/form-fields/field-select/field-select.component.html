@@ -5,7 +5,7 @@
     <ng-container *ngIf="optionItems$ | async as optionItems">
       <mat-option *ngFor="let optionItem of optionItems" [ngStyle]="{'pointer-events': 'auto'}"
         [disabled]="optionItem.disabled"
-        [mcsTooltip]="optionItem.helpText" [mcsTooltipShow]="optionItem.disabled"
+        [mcsTooltip]="optionItem.helpText" [mcsTooltipShow]="showHelpText(optionItem)"
         [value]="optionItem.value">
         <mcs-item>
           <span>{{ optionItem.text }}</span>

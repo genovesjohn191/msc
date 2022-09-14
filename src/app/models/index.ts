@@ -181,6 +181,7 @@ export * from './request/mcs-network-dns-zone-ttl-request';
 export * from './request/vcenter/mcs-vcenter-host-query-param';
 export * from './request/vcenter/mcs-vcenter-baseline-query-param';
 export * from './request/vcenter/mcs-vcenter-baseline-remediate';
+export * from './request/vcenter/mcs-vcenter-datacentre-query-param';
 
 /** Response */
 export * from './response/mcs-availability-zone';

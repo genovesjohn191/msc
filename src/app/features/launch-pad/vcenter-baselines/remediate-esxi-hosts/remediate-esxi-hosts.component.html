@@ -67,7 +67,7 @@
           <mcs-field-select size="auto"
             mcsId="select-vcenter-datacentre"
             [label]="'label.dataCentre' | translate"
-            [dataSource]="'VCenterDatacentre' | mcsFieldSelect: { data: companyId$ }"
+            [dataSource]="'VCenterDatacentre' | mcsFieldSelect: { data: { vcenterName: vcenterName$, companyId: companyId$ }  }"
             [formControl]="viewModel?.fcDatacentre"
             (optionsChange)="onDataCentreOptionsChange($event)"
             [mcsContextualHelp]="'message.remediateSelectDataCentre' | translate">
@@ -115,6 +115,10 @@
 
           <ng-container mcsProvisioningStepDescription>
             {{ 'message.remediateJobDescription' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepError>
+            {{ 'message.remediateJobError' | translate }}
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>

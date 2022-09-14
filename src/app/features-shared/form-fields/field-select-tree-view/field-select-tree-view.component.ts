@@ -291,23 +291,7 @@ export class FieldSelectTreeViewComponent<TEntity>
           this._clearSelection();
           return;
         }
-
-        let selectedNodes = new Array<MatTreeViewModel<TEntity>>();
-        let formValueArray = isArray(formValues) ?
-          formValues : [formValues];
-
-        (formValueArray as Array<any>)?.forEach(formValue => {
-          let nodeFound = this.treeControl.dataNodes
-            .find(dataNode => dataNode.data === formValue);
-          if (isNullOrEmpty(nodeFound)) { return; }
-          if (nodeFound.checkbox?.value === false) {
-            nodeFound.checkbox.setValue(true);
-            this.changeDetectorRef.markForCheck();
-          }
-          selectedNodes.push(nodeFound);
-        });
-
-        this._selectedNodesChange.next(selectedNodes)
+        this._initializeSelection();
       })
     ).subscribe();
   }
@@ -411,6 +395,25 @@ export class FieldSelectTreeViewComponent<TEntity>
     });
   }
 
+  private _initializeSelection(): void {
+    let formValues = this.ngControl.control.value;
+    let selectedNodes = new Array<MatTreeViewModel<TEntity>>();
+    let formValueArray = isArray(formValues) ? formValues : [formValues];
+
+    (formValueArray as Array<any>)?.forEach(formValue => {
+      let nodeFound = this.treeControl.dataNodes
+        .find(dataNode => dataNode.data === formValue);
+      if (isNullOrEmpty(nodeFound)) { return; }
+      if (nodeFound.checkbox?.value === false) {
+        nodeFound.checkbox.setValue(true);
+        this.changeDetectorRef.markForCheck();
+      }
+      selectedNodes.push(nodeFound);
+    });
+
+    this._selectedNodesChange.next(selectedNodes);
+  }
+
   private _treeTransformerDef(
     treeItem: TreeItem<TEntity>,
     treeLevel: number
@@ -434,6 +437,7 @@ export class FieldSelectTreeViewComponent<TEntity>
       tap(dataRecords => {
         this.treeDatasource.data = dataRecords;
         this._initializeRecordsDisplay(dataRecords);
+        this._initializeSelection();
 
         this.changeDetectorRef.markForCheck();
         this._updateViewPortHeight(dataRecords);
