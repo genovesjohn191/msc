@@ -20,13 +20,6 @@ import {
   ServerResolver
 } from './server';
 import { ServerCreateComponent } from './server-create';
-import {
-  VdcComponent,
-  VdcOverviewComponent,
-  VdcStorageComponent,
-  VdcService,
-  VdcResolver
-} from './vdc';
 
 /**
  * List of services for the main module
@@ -35,9 +28,7 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   ServerServicesGuard,
-  ServerResolver,
-  VdcService,
-  VdcResolver
+  ServerResolver
 ];
 
 /**
@@ -94,32 +85,6 @@ export const serversRoutes: Routes = [
         path: 'snapshots',
         component: ServerSnapshotsComponent,
         data: { routeId: RouteKey.ServerDetailsSnapshots }
-      }
-    ]
-  },
-  {
-    path: 'resources/:id',
-    component: VdcComponent,
-    data: { routeId: RouteKey.VdcDetails },
-    resolve: {
-      vdc: VdcResolver
-    },
-    children: [
-      {
-        path: '',
-        redirectTo: 'overview',
-        pathMatch: 'full',
-        data: { routeId: RouteKey.VdcDetailsOverview }
-      },
-      {
-        path: 'overview',
-        component: VdcOverviewComponent,
-        data: { routeId: RouteKey.VdcDetailsOverview }
-      },
-      {
-        path: 'storage',
-        component: VdcStorageComponent,
-        data: { routeId: RouteKey.VdcDetailsStorage }
       }
     ]
   }

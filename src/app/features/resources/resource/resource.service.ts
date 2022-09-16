@@ -7,7 +7,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { McsResource } from '@app/models';
 
 @Injectable()
-export class VdcService {
+export class ResourceService {
   private _resourceId: string;
   private _resourceDetailsChange = new BehaviorSubject<McsResource>(null);
 

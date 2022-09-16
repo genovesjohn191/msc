@@ -19,13 +19,13 @@ import { McsApiService } from '@app/services';
 import { unsubscribeSafely } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
-import { VdcService } from '../vdc/vdc.service';
+import { ResourceService } from '../resource/resource.service';
 
-export abstract class VdcDetailsBase {
+export abstract class ResourceDetailsBase {
   public resource$: Observable<McsResource>;
 
   protected readonly apiService: McsApiService;
-  protected readonly vdcService: VdcService;
+  protected readonly resourceService: ResourceService;
   protected readonly translateService: TranslateService;
   protected readonly eventDispatcher: EventBusDispatcherService;
 
@@ -36,7 +36,7 @@ export abstract class VdcDetailsBase {
     protected changeDetectorRef: ChangeDetectorRef
   ) {
     this.apiService = injector.get(McsApiService);
-    this.vdcService = injector.get(VdcService);
+    this.resourceService = injector.get(ResourceService);
     this.translateService = injector.get(TranslateService);
     this.eventDispatcher = injector.get(EventBusDispatcherService);
 
@@ -71,7 +71,7 @@ export abstract class VdcDetailsBase {
    * and get its value to vdc variable
    */
   private _subscribesToResource(): void {
-    this.resource$ = this.vdcService.getResourceDetails().pipe(
+    this.resource$ = this.resourceService.getResourceDetails().pipe(
       take(1),
       tap((resourceDetails) => this.resourceChange(resourceDetails)),
       shareReplay(1)

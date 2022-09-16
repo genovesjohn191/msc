@@ -34,13 +34,7 @@ import {
   ServerCloneComponent,
   ServerCreateAddOnsComponent
 } from './server-create';
-/** VDC */
-import {
-  DiskPanelComponent,
-  VdcComponent,
-  VdcOverviewComponent,
-  VdcStorageComponent
-} from './vdc';
+
 import { serversProviders } from './servers.constants';
 
 @NgModule({
@@ -69,11 +63,7 @@ import { serversProviders } from './servers.constants';
     ServiceAntiVirusDetailsComponent,
     ServiceHidsComponent,
     ServiceHidsDetailsComponent,
-    ServiceInviewComponent,
-    VdcComponent,
-    VdcOverviewComponent,
-    VdcStorageComponent,
-    DiskPanelComponent
+    ServiceInviewComponent
   ],
   imports: [
     SharedModule,

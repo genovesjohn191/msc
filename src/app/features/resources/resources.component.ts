@@ -20,9 +20,11 @@ import {
 import { McsEvent } from '@app/events';
 import {
   McsFilterInfo,
-  McsInternetPort,
+  McsResource,
   McsQueryParam,
-  RouteKey
+  RouteKey,
+  PlatformType,
+  ServiceType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -31,25 +33,27 @@ import {
   Search
 } from '@app/shared';
 import {
+  CommonDefinition,
   createObject,
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
 
 @Component({
-  selector: 'mcs-internet',
-  templateUrl: './internet.component.html',
+  selector: 'mcs-resources',
+  templateUrl: './resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InternetComponent extends McsPageBase {
+export class ResourcesComponent extends McsPageBase {
 
-  public readonly dataSource: McsTableDataSource2<McsInternetPort>;
-  public readonly dataEvents: McsTableEvents<McsInternetPort>;
+  public readonly dataSource: McsTableDataSource2<McsResource>;
+  public readonly dataEvents: McsTableEvents<McsResource>;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'service' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'speed' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'plan' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'resource' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'vCPU' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'ram' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'zone' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
@@ -60,13 +64,13 @@ export class InternetComponent extends McsPageBase {
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _navigationService: McsNavigationService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _navigationService: McsNavigationService
   ) {
     super(_injector);
-    this.dataSource = new McsTableDataSource2(this._getInternetPorts.bind(this));
+    this.dataSource = new McsTableDataSource2(this._getResources.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
-      dataChangeEvent: McsEvent.dataChangeInternetPorts
+      dataChangeEvent: McsEvent.dataChangeResources
     });
   }
 
@@ -98,24 +102,62 @@ export class InternetComponent extends McsPageBase {
     }
   }
 
+  public get cogIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
+  }
+
   public get featureName(): string {
-    return 'internetPorts';
+    return 'resources';
   }
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
   }
 
-  public navigateToInternet(internet: McsInternetPort): void {
-    if (isNullOrEmpty(internet)) { return; }
-    this._navigationService.navigateTo(RouteKey.InternetDetails, [internet.id]);
+  public isResourceTypeVCloud(resource: McsResource): boolean {
+    return resource.platform === PlatformType.VCloud;
+  }
+
+  public isResourceTypeVCenter(resource: McsResource): boolean {
+    return resource.platform === PlatformType.VCenter;
+  }
+
+  public isResourceManaged(resource: McsResource): boolean {
+    return resource.serviceType === ServiceType.Managed;
+  }
+
+  public validToShowContextMenuItems(resource: McsResource): boolean {
+    return !isNullOrEmpty(resource.portalUrl) || this.metExpectedPropertyValues(resource);
+  }
+
+  public metExpectedPropertyValues(resource: McsResource): boolean {
+    return resource.serviceChangeAvailable && !isNullOrEmpty(resource.serviceId);
+  }
+
+  public navigateToResource(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
+    this._navigationService.navigateTo(RouteKey.ResourceDetails, [resource.id]);
+  }
+
+  public navigateToScaleVdc(serviceId: string): void {
+    this._navigationService.navigateTo(RouteKey.OrderVdcScale, [],
+      { queryParams: {
+        serviceId: serviceId
+      }});
+  }
+
+  public navigateToExpandVdcStorage(resourceId: string): void {
+    this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand, [],
+      { queryParams: {
+        resourceId: resourceId
+      }});
   }
 
   public retryDatasource(): void {
     this.dataSource.refreshDataRecords();
   }
 
-  private _getInternetPorts(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsInternetPort>> {
+  private _getResources(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsResource>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
@@ -123,7 +165,7 @@ export class InternetComponent extends McsPageBase {
     queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
     queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
-    return this._apiService.getInternetPorts(queryParam).pipe(
+    return this._apiService.getResources(null, queryParam).pipe(
       map(response => {
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)

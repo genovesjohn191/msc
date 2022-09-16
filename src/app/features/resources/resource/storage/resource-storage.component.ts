@@ -1,8 +1,7 @@
 import { Observable } from 'rxjs';
 import {
   map,
-  switchMap,
-  tap
+  switchMap
 } from 'rxjs/operators';
 
 import {
@@ -40,11 +39,11 @@ import {
   CommonDefinition
 } from '@app/utilities';
 
-import { VdcDetailsBase } from '../vdc-details.base';
+import { ResourceDetailsBase } from '../resource-details.base';
 
 @Component({
-  selector: 'mcs-vdc-storage',
-  templateUrl: './vdc-storage.component.html',
+  selector: 'mcs-resource-storage',
+  templateUrl: './resource-storage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'block'
@@ -54,7 +53,7 @@ import { VdcDetailsBase } from '../vdc-details.base';
   ]
 })
 
-export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
+export class ResourceStorageComponent extends ResourceDetailsBase implements OnDestroy {
   public readonly dataSource: McsTableDataSource2<McsResourceStorage>;
   public readonly dataEvents: McsTableEvents<McsResourceStorage>;
   public readonly defaultColumnFilters: McsFilterInfo[];
@@ -115,9 +114,9 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
 
   public get storageRefreshMessage(): string {
     if (this._resourcePlatformIsVcloud) {
-      return this.translateService.instant('serversVdcOverview.shared.storageProfiles.storageRefreshMessage');
+      return this.translateService.instant('resources.overview.shared.storageProfiles.storageRefreshMessage');
     }
-    return this.translateService.instant('serversVdcOverview.shared.datastores.storageRefreshMessage')
+    return this.translateService.instant('resources.overview.shared.datastores.storageRefreshMessage')
   }
 
   public get storageColumnHeader(): string {

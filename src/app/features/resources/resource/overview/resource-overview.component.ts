@@ -15,8 +15,7 @@ import {
   replacePlaceholder,
   getSafeProperty,
   CommonDefinition,
-  createObject,
-  pluck
+  createObject
 } from '@app/utilities';
 import {
   RouteKey,
@@ -27,9 +26,7 @@ import {
   McsPermission
 } from '@app/models';
 import { McsEvent } from '@app/events';
-import { VdcDetailsBase } from '../vdc-details.base';
-import { map } from 'rxjs/operators';
-import { McsResourceNetworkSubnet } from '@app/models/response/mcs-resource-network-subnet';
+import { ResourceDetailsBase } from '../resource-details.base';
 
 const VDC_LOW_CAPACITY_STORAGE_PERCENTAGE = 85;
 const VDC_HIGH_CAPACITY_STORAGE_PERCENTAGE = 75;
@@ -46,12 +43,12 @@ type ResourceDetailLabels = {
 };
 
 @Component({
-  selector: 'mcs-vdc-overview',
-  templateUrl: './vdc-overview.component.html',
+  selector: 'mcs-resource-overview',
+  templateUrl: './resource-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
+export class ResourceOverviewComponent extends ResourceDetailsBase implements OnDestroy {
   public resourceDetailLabels: ResourceDetailLabels;
 
   private _resourceDetailLabelMap: Map<PlatformType, ResourceDetailLabels>;
@@ -133,7 +130,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
    * @param keyRoute Keyroute where to navigate
    */
   public navigateVdcDetailTo(resource, keyRoute: RouteKey): void {
-    this._navigationService.navigateTo(RouteKey.VdcDetails,
+    this._navigationService.navigateTo(RouteKey.ResourceDetails,
       [resource.id, CoreRoutes.getNavigationPath(keyRoute)]
     );
   }
@@ -211,25 +208,25 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
    */
   private _createResourceDetailLabelMap(): void {
     let vcloudLabels: ResourceDetailLabels = {
-      propertyTitle: this.translateService.instant('serversVdcOverview.vcloud.properties.title'),
-      platformTitle: this.translateService.instant('serversVdcOverview.vcloud.platform.title'),
+      propertyTitle: this.translateService.instant('resources.overview.vcloud.properties.title'),
+      platformTitle: this.translateService.instant('resources.overview.vcloud.platform.title'),
       newServerButtonShown: true,
-      platformLink: this.translateService.instant('serversVdcOverview.vcloud.platform.linkLabel'),
-      storageTitle: this.translateService.instant('serversVdcOverview.shared.storageProfiles.title'),
-      storageRefreshMessage: this.translateService.instant('serversVdcOverview.shared.storageProfiles.storageRefreshMessage'),
-      lowStorageSummary: this.translateService.instant('serversVdcOverview.shared.storageProfiles.lowStorageSummary'),
-      lowStorageMessage: this.translateService.instant('serversVdcOverview.shared.storageProfiles.lowStorage')
+      platformLink: this.translateService.instant('resources.overview.vcloud.platform.linkLabel'),
+      storageTitle: this.translateService.instant('resources.overview.shared.storageProfiles.title'),
+      storageRefreshMessage: this.translateService.instant('resources.overview.shared.storageProfiles.storageRefreshMessage'),
+      lowStorageSummary: this.translateService.instant('resources.overview.shared.storageProfiles.lowStorageSummary'),
+      lowStorageMessage: this.translateService.instant('resources.overview.shared.storageProfiles.lowStorage')
     };
 
     let vcenterLabels: ResourceDetailLabels = {
-      propertyTitle: this.translateService.instant('serversVdcOverview.vcenter.properties.title'),
-      platformTitle: this.translateService.instant('serversVdcOverview.vcenter.platform.title'),
+      propertyTitle: this.translateService.instant('resources.overview.vcenter.properties.title'),
+      platformTitle: this.translateService.instant('resources.overview.vcenter.platform.title'),
       newServerButtonShown: false,
-      platformLink: this.translateService.instant('serversVdcOverview.vcenter.platform.linkLabel'),
-      storageTitle: this.translateService.instant('serversVdcOverview.shared.datastores.title'),
-      storageRefreshMessage: this.translateService.instant('serversVdcOverview.shared.datastores.storageRefreshMessage'),
-      lowStorageSummary: this.translateService.instant('serversVdcOverview.shared.datastores.lowStorageSummary'),
-      lowStorageMessage: this.translateService.instant('serversVdcOverview.shared.datastores.lowStorage')
+      platformLink: this.translateService.instant('resources.overview.vcenter.platform.linkLabel'),
+      storageTitle: this.translateService.instant('resources.overview.shared.datastores.title'),
+      storageRefreshMessage: this.translateService.instant('resources.overview.shared.datastores.storageRefreshMessage'),
+      lowStorageSummary: this.translateService.instant('resources.overview.shared.datastores.lowStorageSummary'),
+      lowStorageMessage: this.translateService.instant('resources.overview.shared.datastores.lowStorage')
     };
 
     this._resourceDetailLabelMap = new Map();
