@@ -3,5 +3,6 @@ export enum ServiceOrderState {
   OsAutomationNotReady,
   Busy,
   ChangeUnavailable,
-  PoweredOff
+  PoweredOff,
+  Suspended
 }

@@ -321,7 +321,14 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     this._backupProvisionMessageBitMap.set(
       ServiceOrderState.PoweredOff,
       this.translateService.instant('orderAddServerBackup.detailsStep.serverDisabled', {
-        server_issue: this.translateService.instant('orderAddServerBackup.detailsStep.serverPoweredOff')
+        server_issue: this.translateService.instant('orderAddServerBackup.detailsStep.serverNotPoweredOn')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.Suspended,
+      this.translateService.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddServerBackup.detailsStep.serverNotPoweredOn')
       })
     );
 

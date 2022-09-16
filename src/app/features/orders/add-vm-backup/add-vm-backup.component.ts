@@ -323,7 +323,14 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     this._backupProvisionMessageBitMap.set(
       ServiceOrderState.PoweredOff,
       this.translateService.instant('orderAddVmBackup.detailsStep.serverDisabled', {
-        server_issue: this.translateService.instant('orderAddVmBackup.detailsStep.serverPoweredOff')
+        server_issue: this.translateService.instant('orderAddVmBackup.detailsStep.serverNotPoweredOn')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.Suspended,
+      this.translateService.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddVmBackup.detailsStep.serverNotPoweredOn')
       })
     );
 

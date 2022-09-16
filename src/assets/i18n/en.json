@@ -814,7 +814,7 @@
         "optionGroupLabel": "Virtual Data Centres",
         "serverProvisioned": "Provisioned",
         "serverDisabled": "Anti-Virus cannot be installed on this server because {{server_issue}}",
-        "serverPoweredOff": "the server is powered off",
+        "serverNotPoweredOn": "it is not powered on",
         "serverChangeAvailableFalse": "the server is currently being provisioned",
         "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
         "busy": "the server is currently busy. Installation can be performed once its current operation has completed."
@@ -840,7 +840,7 @@
         "optionGroupLabel": "Virtual Data Centres",
         "serverProvisioned": "Provisioned",
         "serverDisabled": "HIDS cannot be installed on this server because {{server_issue}}",
-        "serverPoweredOff": "it is powered off",
+        "serverNotPoweredOn": "it is not powered on",
         "serverChangeAvailableFalse": "it is currently being provisioned",
         "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
         "busy": "the server is currently busy. Installation can be performed once its current operation has completed."
@@ -865,7 +865,7 @@
       "serverHelp": "Select one or more servers to install Server Backup on.",
       "serverProvisioned": "Provisioned",
       "serverDisabled": "Server backup cannot be installed on this server because {{server_issue}}",
-      "serverPoweredOff": "it is powered off",
+      "serverNotPoweredOn": "it is not powered on",
       "serverChangeAvailableFalse": "it is currently being provisioned",
       "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
       "busy": "the server is currently busy. Installation can be performed once its current operation has completed."
@@ -884,7 +884,7 @@
       "serverHelp": "Select one or more servers to install VM Backup on.",
       "serverProvisioned": "Provisioned",
       "serverDisabled": "VM backup cannot be installed on this server because {{server_issue}}",
-      "serverPoweredOff": "it is powered off",
+      "serverNotPoweredOn": "it is not powered on",
       "serverChangeAvailableFalse": "it is currently being provisioned",
       "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
       "busy": "the server currently busy. Installation can be performed once its current operation has completed."

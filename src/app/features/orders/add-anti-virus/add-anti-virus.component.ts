@@ -306,7 +306,14 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     this._avOrderStateMessageMap.set(
       ServiceOrderState.PoweredOff,
       this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
-        server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverPoweredOff')
+        server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverNotPoweredOn')
+      })
+    );
+
+    this._avOrderStateMessageMap.set(
+      ServiceOrderState.Suspended,
+      this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverNotPoweredOn')
       })
     );
 

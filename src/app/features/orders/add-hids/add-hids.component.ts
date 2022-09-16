@@ -321,7 +321,14 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     this._hidsOrderStateMessageMap.set(
       ServiceOrderState.PoweredOff,
       this.translateService.instant('orderAddHids.details.server.serverDisabled', {
-        server_issue: this.translateService.instant('orderAddHids.details.server.serverPoweredOff')
+        server_issue: this.translateService.instant('orderAddHids.details.server.serverNotPoweredOn')
+      })
+    );
+
+    this._hidsOrderStateMessageMap.set(
+      ServiceOrderState.Suspended,
+      this.translateService.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddHids.details.server.serverNotPoweredOn')
       })
     );
 

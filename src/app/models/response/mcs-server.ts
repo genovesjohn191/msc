@@ -426,6 +426,9 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
     if (!this.osAutomationAvailable) {
       return ServiceOrderState.OsAutomationNotReady;
     }
+    if (this.isSuspended) {
+      return ServiceOrderState.Suspended;
+    }
   }
 
   /**
