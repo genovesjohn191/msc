@@ -69,9 +69,10 @@ export enum RouteKey {
   SystemMessageCreate,
   SystemMessageEdit,
 
-  VdcDetails,
-  VdcDetailsOverview,
-  VdcDetailsStorage,
+  Resources,
+  ResourceDetails,
+  ResourceDetailsOverview,
+  ResourceDetailsStorage,
 
   Media,
   Medium,

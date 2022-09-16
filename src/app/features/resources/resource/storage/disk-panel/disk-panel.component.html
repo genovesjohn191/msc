@@ -59,7 +59,7 @@
               [serviceChangeAvailable]="row.serviceChangeAvailable"
               [hasMenuButton]="false"
               [eventCategory]="'servers'"
-              [eventLabel]="'vdc-storage-listing-page'">
+              [eventLabel]="'resource-storage-listing-page'">
             </mcs-context-menu-link>
           </div>
         </ng-template>
@@ -74,23 +74,23 @@
     mcsId="server-{{ row.statusLabel }}"
     mcsEventTracker="navigate-to-server"
     mcsEventCategory="server"
-    mcsEventLabel="vdc-storage-listing-page"></tr>
+    mcsEventLabel="resource-storage-listing-page"></tr>
 </table>
 <mcs-item orientation="block">
   <div *ngIf="dataSource?.isInProgress$ | async" align="center">
     <mcs-loader size="medium"></mcs-loader>
   </div>
   <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-    <span>{{ 'serversVdcStorage.diskPanel.noServers' | translate }} </span>
+    <span>{{ 'resources.storage.diskPanel.noServers' | translate }} </span>
   </div>
   <div *ngIf="dataSource?.hasError$ | async" text-center>
     <div class="listing-status-wrapper">
-      <span>{{ 'serversVdcStorage.diskPanel.errorServers' | translate }}</span>
+      <span>{{ 'resources.storage.diskPanel.errorServers' | translate }}</span>
       <a (click)="retryDatasource()"
         mcsId
         mcsEventTracker="retry-servers-storage-profile"
         mcsEventCategory="servers"
-        mcsEventLabel="vdc-storage-listing-page">{{ 'serversVdcStorage.retry' | translate }}</a>.
+        mcsEventLabel="resource-storage-listing-page">{{ 'action.tryAgainShortly' | translate }}</a>.
     </div>
   </div>
 </mcs-item>

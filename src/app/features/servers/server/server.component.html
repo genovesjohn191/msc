@@ -3,7 +3,7 @@
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
     <mcs-item *ngIf="server$ | async as server">
-      <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, server?.platform?.resourceId]"
+      <a [mcsRouterLink]="[routeKeyEnum.ResourceDetails, server?.platform?.resourceId]"
         mcsId="select-vdc"
         mcsEventTracker="select-vdc"
         mcsEventCategory="vdc"
@@ -27,7 +27,7 @@
             <mcs-option-group>
               <ng-container *mcsOptionGroupLabel>
                 <a *ngIf="entity.group?.resourceId; else noResourceTemplate"
-                  [mcsRouterLink]="[routeKeyEnum.VdcDetails, entity.group?.resourceId]"
+                  [mcsRouterLink]="[routeKeyEnum.ResourceDetails, entity.group?.resourceId]"
                   mcsId="select-vdc"
                   mcsEventTracker="select-vdc"
                   mcsEventCategory="vdc"

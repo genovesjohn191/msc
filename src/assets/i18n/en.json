@@ -371,7 +371,6 @@
     "header": "Orders",
     "leftPanelHeader": "Order Filter",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "newOrder": "New Order",
     "noOrders": "No orders to display.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of orders.",
@@ -1418,7 +1417,6 @@
     "suspend": "Suspend",
     "resume": "Resume",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Server",
     "dataPlural": "Servers",
     "toolsNotInstalled": "Not Installed",
@@ -1437,80 +1435,89 @@
     "leftPanelHeader": "Server Filter",
     "iopsLabel": "Performance {{iops}}"
   },
-  "serversVdcOverview": {
-    "label": "Overview",
-    "vcloud": {
-      "properties": {
-        "title": "Basic Properties"
+  "resources": {
+    "header": "Resources",
+    "leftPanelHeader": "Resource Filter",
+    "loading": "Loading resources..",
+    "noResourcesFound": "There are no resources to display.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of resources.",
+    "columnFilter": "Column Filter",
+    "dataSingular": "Resource",
+    "dataPlural": "Resources",
+    "overview": {
+      "label": "Overview",
+      "vcloud": {
+        "properties": {
+          "title": "Basic Properties"
+        },
+        "platform": {
+          "title": "Actions",
+          "linkLabel": "View in vCloud",
+          "buttonLabel": "New Server"
+        }
       },
-      "platform": {
-        "title": "Actions",
-        "linkLabel": "View in vCloud",
-        "buttonLabel": "New Server"
+      "vcenter": {
+        "properties": {
+          "title": "Basic Properties"
+        },
+        "platform": {
+          "title": "Actions",
+          "linkLabel": "View in vCenter"
+        }
+      },
+      "shared": {
+        "properties": {
+          "serviceType": "Service Type",
+          "zone": "Zone",
+          "configuration": "Configuration",
+          "scale": "Scale",
+          "scaling": "Scaling"
+        },
+        "network": {
+          "title": "Network Information",
+          "description": "Networks associated with this resource",
+          "gateway": "Gateway",
+          "noSubnets": "This network has no subnets to display."
+        },
+        "storageProfiles": {
+          "title": "Storage Profiles",
+          "manageLink": "Manage",
+          "expandLink": "Expand",
+          "status": "Status",
+          "tier": "Tier",
+          "iops": "Performance {{iops}}",
+          "utilisation": "Utilisation",
+          "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on space.",
+          "lowStorage": "You're running low on space in this storage profile.",
+          "storageRefreshMessage": "Please note that storage utilisation may take a few minutes to update after creating, deleting or expanding objects on a storage profile."
+        },
+        "datastores": {
+          "title": "Datastores",
+          "manageLink": "Manage",
+          "expandLink": "Expand",
+          "status": "Status",
+          "tier": "Tier",
+          "iops": "Performance {{iops}}",
+          "utilisation": "Utilisation",
+          "lowStorageSummary": "{{storage_profile_number}} of your datastores {{verb}} running low on space.",
+          "lowStorage": "You're running low on space in this datastore.",
+          "storageRefreshMessage": "Please note that storage utilisation may take a few minutes to update after creating, deleting or expanding objects on a datastore."
+        }
       }
     },
-    "vcenter": {
-      "properties": {
-        "title": "Basic Properties"
-      },
-      "platform": {
-        "title": "Actions",
-        "linkLabel": "View in vCenter"
+    "storage": {
+      "label": "Storage",
+      "title": "Manage Storage",
+      "iopsLabel": "Performance",
+      "expandLink": "Expand",
+      "newStorageProfile": "New Storage Profile",
+      "loadingContent": "Loading list of storage.",
+      "noStorage": "No storage available.",
+      "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage.",
+      "diskPanel": {
+        "noServers": "There are no servers on this storage profile to display.",
+        "errorServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers on this storage profile."
       }
-    },
-    "shared": {
-      "properties": {
-        "serviceType": "Service Type",
-        "zone": "Zone",
-        "configuration": "Configuration",
-        "scale": "Scale",
-        "scaling": "Scaling"
-      },
-      "network": {
-        "title": "Network Information",
-        "description": "Networks associated with this resource",
-        "gateway": "Gateway",
-        "noSubnets": "This network has no subnets to display."
-      },
-      "storageProfiles": {
-        "title": "Storage Profiles",
-        "manageLink": "Manage",
-        "expandLink": "Expand",
-        "status": "Status",
-        "tier": "Tier",
-        "iops": "Performance {{iops}}",
-        "utilisation": "Utilisation",
-        "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on space.",
-        "lowStorage": "You're running low on space in this storage profile.",
-        "storageRefreshMessage": "Please note that storage utilisation may take a few minutes to update after creating, deleting or expanding objects on a storage profile."
-      },
-      "datastores": {
-        "title": "Datastores",
-        "manageLink": "Manage",
-        "expandLink": "Expand",
-        "status": "Status",
-        "tier": "Tier",
-        "iops": "Performance {{iops}}",
-        "utilisation": "Utilisation",
-        "lowStorageSummary": "{{storage_profile_number}} of your datastores {{verb}} running low on space.",
-        "lowStorage": "You're running low on space in this datastore.",
-        "storageRefreshMessage": "Please note that storage utilisation may take a few minutes to update after creating, deleting or expanding objects on a datastore."
-      }
-    }
-  },
-  "serversVdcStorage": {
-    "label": "Storage",
-    "title": "Manage Storage",
-    "iopsLabel": "Performance",
-    "expandLink": "Expand",
-    "newStorageProfile": "New Storage Profile",
-    "loadingContent": "Loading list of storage.",
-    "noStorage": "No storage available.",
-    "retry": "Try again shortly",
-    "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage.",
-    "diskPanel": {
-      "noServers": "There are no servers on this storage profile to display.",
-      "errorServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers on this storage profile."
     }
   },
   "server": {
@@ -2339,7 +2346,6 @@
     "noMedia": "No media to display.",
     "retry": "Try again shortly",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Item",
     "dataPlural": "Items"
   },
@@ -2426,7 +2432,6 @@
     "noRecordsFoundMessage": "No messages to display.",
     "retry": "Try again shortly",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Message",
     "dataPlural": "Messages"
   },
@@ -2483,7 +2488,6 @@
     "noRecordsFoundMessage": "No tickets to display.",
     "retry": "Try again shortly",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Ticket",
     "dataPlural": "Tickets",
     "tooltip": {
@@ -2555,7 +2559,6 @@
     "retry": "Try again shortly",
     "loading": "Loading planned work events list",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Planned Work Event",
     "dataPlural": "Planned Work Events",
     "noScheduleDate": "Unknown",
@@ -2604,7 +2607,6 @@
     "noFirewalls": "No firewalls to display.",
     "retry": "Try again shortly",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Firewall",
     "dataPlural": "Firewalls"
   },
@@ -2678,7 +2680,6 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of internet ports.",
     "retry": "Try again shortly",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Internet Port",
     "dataPlural": "Internet Ports",
     "speedUnit": "Mbps"
@@ -2709,7 +2710,6 @@
     "noData": "No aggregation target to display.",
     "retry": "Try again shortly.",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "dataSingular": "Aggregation Target",
     "dataPlural": "Aggregation Targets"
   },
@@ -3114,7 +3114,6 @@
     "leftPanelHeader": "Notification Filter",
     "description": "Notifications track activity within the portal.",
     "columnFilter": "Column Filter",
-    "tableSearch": "Table Search",
     "account": "(Macquarie)",
     "dataSingular": "Notification",
     "dataPlural": "Notifications",
@@ -3901,6 +3900,7 @@
     "moduleType": "Module Type",
     "month": "Month",
     "multicastIpAddress":"Multicast IP Address",
+    "na": "N/A",
     "name": "Name",
     "new": "New",
     "newActivity": "New Comment/Attachment",
@@ -3977,10 +3977,13 @@
     "dismiss": "Dismiss",
     "edit": "Edit",
     "enquireNow": "Enquire Now",
+    "expandVdcStorage": "Expand VDC Storage",
     "ok": "OK",
     "open": "Open",
     "openInCrisp": "Open in CRISP",
     "openInTracks": "Open in TRACKS",
+    "openInVcloud": "Open in vCloud",
+    "openInVCenter": "Open in vCenter",
     "rename": "Rename",
     "reset": "Reset",
     "save": "Save",
@@ -3997,6 +4000,7 @@
     "yes": "Yes",
     "restart": "Restart",
     "resume": "Resume",
+    "scaleVdc": "Scale VDC",
     "stop": "Stop",
     "suspend": "Suspend",
     "reserveNewSubnet": "Reserve a new subnet",

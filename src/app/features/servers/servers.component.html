@@ -311,7 +311,7 @@
             {{ 'columnHeader.resource' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small matTooltip="{{ getResourceBillingDescription(row.platform?.resourceId) }}">
-            <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, row?.platform?.resourceId]"
+            <a [mcsRouterLink]="[routeKeyEnum.ResourceDetails, row?.platform?.resourceId]"
               mcsId mcsStopPropagation
               mcsEventTracker="navigate-to-resource"
               mcsEventCategory="server"

@@ -369,7 +369,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
 
   public navigateToResource(server: McsServer): void {
     if (isNullOrEmpty(server.platform)) { return; }
-    this._navigationService.navigateTo(RouteKey.VdcDetails, [server.platform.resourceId]);
+    this._navigationService.navigateTo(RouteKey.ResourceDetails, [server.platform.resourceId]);
   }
 
   public navigateToServer(server: McsServer): void {

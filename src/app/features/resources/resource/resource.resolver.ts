@@ -13,7 +13,7 @@ import {
 import { McsApiService } from '@app/services';
 
 @Injectable()
-export class VdcResolver implements Resolve<McsResource> {
+export class ResourceResolver implements Resolve<McsResource> {
 
   constructor(private _apiService: McsApiService) { }
 

@@ -29,17 +29,17 @@ export const defaultPageRoutes: Routes = [
       // Deprecated - FUSION-8369: redirect the old path of servers
       {
         path: 'compute/virtual',
-        redirectTo: 'compute/servers'
+        redirectTo: 'compute/resources'
       },
       {
         path: 'compute/servers',
         data: { routeId: RouteKey.Servers },
         loadChildren: () => import('../../features/servers/servers.module').then(m => m.ServersModule)
       },
-      // Deprecated - FUSION-8369: redirect the old path of resources
       {
-        path: 'compute/virtual/vdc',
-        redirectTo: 'compute/servers/resources'
+        path: 'compute/resources',
+        data: { routeId: RouteKey.Resources },
+        loadChildren: () => import('../../features/resources/resources.module').then(m => m.ResourcesModule)
       },
       {
         path: 'system/messages',

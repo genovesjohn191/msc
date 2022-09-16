@@ -477,28 +477,36 @@
     "requiredPermissions": ["ManagedCloudVmEdit", "SelfManagedCloudVmEdit", "DedicatedVmEdit"],
     "documentTitle": "Create Server - Macquarie Cloud Services"
   },
-  "vdcDetails": {
+  "resources": {
     "enumPlatform": "Private",
     "enumCategory": "Compute",
-    "enumKey": "VdcDetails",
-    "navigationPath": "compute/servers/resources",
-    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
+    "enumKey": "Resources",
+    "navigationPath": "compute/resources",
+    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess"],
+    "documentTitle": "Resources - Macquarie Cloud Services"
+  },
+  "resourceDetails": {
+    "enumPlatform": "Private",
+    "enumCategory": "Compute",
+    "enumKey": "ResourceDetails",
+    "navigationPath": "compute/resources",
+    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess"],
     "documentTitle": "Resource Details - Macquarie Cloud Services"
   },
-  "vdcDetailsOverview": {
+  "resourceDetailsOverview": {
     "enumPlatform": "Private",
     "enumCategory": "Compute",
-    "enumKey": "VdcDetailsOverview",
+    "enumKey": "ResourceDetailsOverview",
     "navigationPath": "overview",
-    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
-    "documentTitle": "Resource Details - Macquarie Cloud Services"
+    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess"],
+    "documentTitle": "Resource Overview - Macquarie Cloud Services"
   },
-  "vdcDetailsStorage": {
+  "resourceDetailsStorage": {
     "enumPlatform": "Private",
     "enumCategory": "Compute",
-    "enumKey": "VdcDetailsStorage",
+    "enumKey": "ResourceDetailsStorage",
     "navigationPath": "storage",
-    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
+    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess"],
     "documentTitle": "Resource Storage - Macquarie Cloud Services"
   },
   "media": {

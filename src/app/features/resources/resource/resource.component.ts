@@ -38,7 +38,9 @@ import {
   McsRouteInfo,
   McsServer,
   McsServerPlatform,
-  RouteKey
+  PlatformType,
+  RouteKey,
+  ServiceType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -46,6 +48,7 @@ import {
   Search
 } from '@app/shared';
 import {
+  CommonDefinition,
   compareStrings,
   getSafeProperty,
   isNullOrEmpty,
@@ -53,7 +56,7 @@ import {
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
-import { VdcService } from './vdc.service';
+import { ResourceService } from './resource.service';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview';
@@ -64,14 +67,14 @@ interface McsVdcGroup {
 }
 
 @Component({
-  selector: 'mcs-vdc',
-  templateUrl: './vdc.component.html',
+  selector: 'mcs-resource',
+  templateUrl: './resource.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'block'
   }
 })
-export class VdcComponent implements OnInit, OnDestroy {
+export class ResourceComponent implements OnInit, OnDestroy {
   public readonly listviewDatasource: McsListviewDataSource2<McsVdcGroup>;
   public readonly dataEvents: McsTableEvents<McsVdcGroup>;
   public selectedResource$: Observable<McsResource>;
@@ -90,7 +93,7 @@ export class VdcComponent implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
-    private _vdcService: VdcService
+    private _resourceService: ResourceService
   ) {
     this.listviewDatasource = new McsListviewDataSource2(
       this._getVdcGroups.bind(this),
@@ -111,7 +114,7 @@ export class VdcComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this._subscribeToParamChange();
-    this._subscribeToVdcResolve();
+    this._subscribeToResourceResolve();
   }
 
   public ngOnDestroy() {
@@ -132,17 +135,59 @@ export class VdcComponent implements OnInit, OnDestroy {
     return RouteKey;
   }
 
+  public get cogIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
+  }
+
   /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */
   public onTabChanged(tab: any): void {
     this._navigationService.navigateTo(
-      RouteKey.VdcDetails,
-      [this._vdcService.getResourceId(), tab.id as tabGroupType]
+      RouteKey.ResourceDetails,
+      [this._resourceService.getResourceId(), tab.id as tabGroupType]
     );
   }
 
+  public isResourceTypeVCloud(resource: McsResource): boolean {
+    return resource.platform === PlatformType.VCloud;
+  }
+
+  public isResourceTypeVCenter(resource: McsResource): boolean {
+    return resource.platform === PlatformType.VCenter;
+  }
+
+  public isResourceManaged(resource: McsResource): boolean {
+    return resource.serviceType === ServiceType.Managed;
+  }
+
+  public validToShowContextMenuItems(resource: McsResource): boolean {
+    return !isNullOrEmpty(resource.portalUrl) || this.metExpectedPropertyValues(resource);
+  }
+
+  public metExpectedPropertyValues(resource: McsResource): boolean {
+    return resource.serviceChangeAvailable && !isNullOrEmpty(resource.serviceId);
+  }
+
+  public navigateToResource(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
+    this._navigationService.navigateTo(RouteKey.ResourceDetails, [resource.id]);
+  }
+
+  public navigateToScaleVdc(serviceId: string): void {
+    this._navigationService.navigateTo(RouteKey.OrderVdcScale, [],
+      { queryParams: {
+        serviceId: serviceId
+      }});
+  }
+
+  public navigateToExpandVdcStorage(resourceId: string): void {
+    this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand, [],
+      { queryParams: {
+        resourceId: resourceId
+      }});
+  }
 
   /**
    * Gets the entity listing from API
@@ -191,20 +236,20 @@ export class VdcComponent implements OnInit, OnDestroy {
         if (isNullOrEmpty(resourceId)) { return; }
 
         this._resetOverviewState();
-        this._vdcService.setResourceId(resourceId);
+        this._resourceService.setResourceId(resourceId);
       })
     ).subscribe();
   }
 
   /**
-   * Subcribes to VDC resolve
+   * Subcribes to resource resolve
    */
-  private _subscribeToVdcResolve(): void {
+  private _subscribeToResourceResolve(): void {
     this.selectedResource$ = this._activatedRoute.data.pipe(
-      map((resolver) => getSafeProperty(resolver, (obj) => obj.vdc)),
-      tap((vdc) => {
-        if (isNullOrEmpty(vdc)) { return; }
-        this._vdcService.setResourceDetails(vdc);
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.resource)),
+      tap((resource) => {
+        if (isNullOrEmpty(resource)) { return; }
+        this._resourceService.setResourceDetails(resource);
       }),
       shareReplay(1)
     );

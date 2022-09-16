@@ -234,6 +234,19 @@
               <mcs-icon [key]="showComputeSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
             </a>
             <ul [class.hidden]="!showComputeSubmenu">
+              <!-- Resources -->
+              <li>
+                <a [mcsRouterLink]="routeKeyEnum.Resources"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="resources-link"
+                  mcsEventTracker="navigate-to-resources"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.privateCloud.compute.resources' | translate }}
+                </a>
+              </li>
+
               <!-- Servers -->
               <li>
                 <a [mcsRouterLink]="routeKeyEnum.Servers"
@@ -246,6 +259,7 @@
                   {{ 'navigation.privateCloud.compute.servers' | translate }}
                 </a>
               </li>
+
               <!-- Media -->
               <li *mcsAccessControl="['TemplateView','CatalogView']; feature: 'EnableMediaCatalog'">
                 <a [mcsRouterLink]="routeKeyEnum.Media"
