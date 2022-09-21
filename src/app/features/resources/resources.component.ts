@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -68,7 +69,8 @@ export class ResourcesComponent extends McsPageBase {
     private _navigationService: McsNavigationService
   ) {
     super(_injector);
-    this.dataSource = new McsTableDataSource2(this._getResources.bind(this));
+    this.dataSource = new McsTableDataSource2<McsResource>(this._getResources.bind(this))
+      .registerConfiguration(new McsMatTableConfig(true));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeResources
     });
