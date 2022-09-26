@@ -246,7 +246,7 @@ export class CommonDefinition {
   public static REGEX_MOBILE_NUMBER_PATTERN = /^(\+?\d{1,3}?)?\d{10}$/;
 
   public static REGEX_DNS_HOSTNAME = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]).$|^\*$|^\@$/;
-  public static REGEX_DNS_HOSTNAME_CNAME_TYPE = /^(([_a-zA-Z0-9]*|[_a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]*)\.)*([_A-Za-z0-9]*|[_A-Za-z0-9]*[A-Za-z0-9\-]*[A-Za-z0-9]*).$|^\*$|^\@$/;
+  public static REGEX_DNS_HOSTNAME_CNAME_OR_TXT_TYPE = /^(([_a-zA-Z0-9]*|[_a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]*)\.)*([_A-Za-z0-9]*|[_A-Za-z0-9]*[A-Za-z0-9\-]*[A-Za-z0-9]*).$|^\*$|^\@$/;
   public static REGEX_DNS_DATA_GENERIC = /.+/;
   public static REGEX_DNS_DATA_DEFAULT = /^((?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?))$/;
   public static REGEX_DNS_DATA_A = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;
