@@ -9,6 +9,7 @@ import { DynamicInputIpComponent } from './input-ip/input-ip.component';
 import { DynamicInputNetworkDbNetworkNameComponent } from './input-network-db-network-name/input-network-db-network-name.component';
 import { DynamicInputNumberComponent } from './input-number/input-number.component';
 import { DynamicInputPasswordComponent } from './input-password/input-password.component';
+import { DynamicInputServerPanelComponent } from './input-server-panel/input-server-panel.component';
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
 import { DynamicInputShortCustomerNameComponent } from './input-short-customer-name/input-short-customer-name.component';
 import { DynamicInputTerraformDeploymentNameComponent } from './input-terraform-deployment-name/input-terraform-deployment-name.component';
@@ -66,6 +67,7 @@ const exports: any[] | Type<any> = [
   DynamicInputTextComponent,
   DynamicInputPasswordComponent,
   DynamicInputTerraformDeploymentNameComponent,
+  DynamicInputServerPanelComponent,
   DynamicInputRandomComponent,
   DynamicInputShortCustomerNameComponent,
   DynamicInputSizeComponent,

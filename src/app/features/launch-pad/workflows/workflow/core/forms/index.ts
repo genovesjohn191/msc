@@ -35,3 +35,5 @@ export * from './firewall-deprovision.form';
 export * from './firewall-allocate.form';
 export * from './vfw-provision.form';
 export * from './firewall-provision.form';
+
+export * from './dedicated-blade-deprovision.form';

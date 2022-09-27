@@ -11,6 +11,7 @@ export * from './input-network-db-network-name/input-network-db-network-name';
 export * from './input-number/input-number';
 export * from './input-terraform-deployment-name/input-terraform-deployment-name';
 export * from './input-random/input-random';
+export * from './input-server-panel/input-server-panel';
 export * from './input-short-customer-name/input-short-customer-name';
 export * from './input-profile-storage-account-name/input-profile-storage-account-name';
 export * from './input-text/input-text';

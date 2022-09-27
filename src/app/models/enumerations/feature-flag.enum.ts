@@ -9,6 +9,7 @@ export enum McsFeatureFlag {
 
   WorkflowCreateVdcNetwork = 'EnableLaunchPadCreateVdcNetwork',
   WorkflowsFirewall = 'EnableLaunchPadFirewallWorkflows',
+  WorkflowsDedicatedBlade = 'EnabledLaunchPadDeprovisionDedicatedBlade',
 
   AzureSlgTicket = 'EnableTicketingAzureSlg',
   AzureReservations = 'EnableAzureReservations',

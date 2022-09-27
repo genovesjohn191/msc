@@ -46,6 +46,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-terraform-deployment-name-field>
 
+        <mcs-dff-input-server-panel-field *ngSwitchCase="'input-server-panel'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-server-panel-field>
+
         <mcs-dff-input-random-field *ngSwitchCase="'input-random'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-random-field>

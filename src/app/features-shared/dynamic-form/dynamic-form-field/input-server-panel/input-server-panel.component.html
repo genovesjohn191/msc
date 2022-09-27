@@ -1,0 +1,27 @@
+
+<div margin-bottom-xlarge>{{ config.description }}</div>
+
+<input #control
+  [required]="required"
+  type="hidden"
+  [(ngModel)]="config.value"
+  (input)="valueChange($event)"/>
+
+<mat-form-field *ngIf="config.value"
+  appearance="outline"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
+
+  <input #control matInput type="text" readonly
+    [placeholder]="config.placeholder"
+    [(ngModel)]="selectedServer.name"/>
+    <span read-only>{{ selectedServer.managementIpAddress }}</span>
+</mat-form-field>
+
+<mat-error *ngIf="noBladesFound">
+  {{ config.noBladeFallback }}
+</mat-error>
+<mat-error *ngIf="hasMultipleBlades">
+  {{ config.multipleBladeFallback }}
+</mat-error>
+
