@@ -61,7 +61,7 @@
         <mcs-tab [label]="'resources.overview.label' | translate" id="overview">
         </mcs-tab>
         <!-- Storage Tab -->
-        <mcs-tab [label]="'resources.storage.label' | translate" id="storage">
+        <mcs-tab [label]="'resources.storage.label' | translate" id="storage" *ngIf="!isResourceTypeUcs(selectedResource$ | async)">
         </mcs-tab>
         <ng-container *ngIf="selectedResource$ | async as selectedResource" mcsTabHeaderCustom>
           <ng-container *ngIf="validToShowContextMenuItems(selectedResource)"> 
@@ -97,9 +97,21 @@
                   {{ 'action.openInVCenter' | translate }}
                 </a>
 
+                <!-- Open in Vendor Portal -->
+                <a *ngIf="isResourceTypeUcs(selectedResource) && selectedResource.portalUrl"
+                  mcsButton="basic" color="white" labelPlacement="left"
+                  target="_blank"
+                  href="{{ selectedResource.portalUrl }}"
+                  mcsId
+                  mcsEventTracker="navigate-to-vendor-portal"
+                  mcsEventCategory="resources"
+                  mcsEventLabel="resources-listing-page">
+                  {{ 'action.openInVendorPortal' | translate }}
+                </a>
+
                 <!-- Scale VDC -->
                 <ng-container *mcsAccessControl="['OrderEdit'];">
-                  <a *ngIf="!selectedResource.isStretched && metExpectedPropertyValues(selectedResource)"
+                  <a *ngIf="isResourceScalableVdc(selectedResource)"
                     mcsButton="basic" color="white" labelPlacement="left"
                     (click)="navigateToScaleVdc(selectedResource.serviceId)"
                     mcsId
@@ -109,10 +121,10 @@
                     {{ 'action.scaleVdc' | translate }}
                   </a>
                 </ng-container>
-                
+
                 <!-- Expand VDC Storage -->
                 <ng-container *mcsAccessControl="['OrderEdit'];">
-                  <a *ngIf="selectedResource.id  && metExpectedPropertyValues(selectedResource)"
+                  <a *ngIf="isResourceExpandableVdc(selectedResource)"
                     mcsButton="basic" color="white" labelPlacement="left"
                     (click)="navigateToExpandVdcStorage(selectedResource.id)"
                     mcsId

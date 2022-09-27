@@ -1465,6 +1465,15 @@
           "linkLabel": "View in vCenter"
         }
       },
+      "ucs": {
+        "properties": {
+          "title": "Basic Properties"
+        },
+        "platform": {
+          "title": "Actions",
+          "linkLabel": "View in Vendor Portal"
+        }
+      },
       "shared": {
         "properties": {
           "serviceType": "Service Type",
@@ -1477,6 +1486,7 @@
           "title": "Network Information",
           "description": "Networks associated with this resource",
           "gateway": "Gateway",
+          "noNetworks": "This resource has no networks to display.",
           "noSubnets": "This network has no subnets to display."
         },
         "storageProfiles": {
@@ -3984,6 +3994,7 @@
     "open": "Open",
     "openInCrisp": "Open in CRISP",
     "openInTracks": "Open in TRACKS",
+    "openInVendorPortal": "Open in Vendor Portal",
     "openInVcloud": "Open in vCloud",
     "openInVCenter": "Open in vCenter",
     "rename": "Rename",

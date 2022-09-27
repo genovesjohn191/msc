@@ -1,6 +1,6 @@
 <mcs-grid *ngIf="resource$ | async as resource">
   <mcs-grid-row>
-    <!-- VDC Properties -->
+    <!-- Resource Properties -->
     <mcs-grid-column sizeSm="12">
       <mcs-presentation-panel mcsId="vdc-properties">
         <ng-container mcsPresentationPanelHeader>
@@ -17,26 +17,28 @@
           <span [innerHTML]="resource?.availabilityZone | mcsDataLabel"></span>
         </mcs-item>
 
-        <mcs-item>
-          <span>{{ 'label.ram' | translate }}:</span>
-          <mcs-capacity-bar full-width
-            [(ngModel)]="resource.compute.memoryUsedMB"
-            [maxValue]="resource.compute.memoryLimitMB"></mcs-capacity-bar>
-        </mcs-item>
+        <ng-container *ngIf="resourceDetailLabels.computeConfigurationShown">
+          <mcs-item>
+            <span>{{ 'label.ram' | translate }}:</span>
+            <mcs-capacity-bar full-width
+              [(ngModel)]="resource.compute.memoryUsedMB"
+              [maxValue]="resource.compute.memoryLimitMB"></mcs-capacity-bar>
+          </mcs-item>
 
-        <mcs-item>
-          <span>{{ 'label.vCpu' | translate }}:</span>
-          <mcs-capacity-bar full-width [matTooltip]="ghzTooltip(resource?.compute?.cpuLimitGhz)"
-            [hideDataSize]="true"
-            [(ngModel)]="resource.compute.cpuUsed"
-            [maxValue]="resource.compute.cpuLimit"></mcs-capacity-bar>
-        </mcs-item>
+          <mcs-item>
+            <span>{{ 'label.vCpu' | translate }}:</span>
+            <mcs-capacity-bar full-width [matTooltip]="ghzTooltip(resource?.compute?.cpuLimitGhz)"
+              [hideDataSize]="true"
+              [(ngModel)]="resource.compute.cpuUsed"
+              [maxValue]="resource.compute.cpuLimit"></mcs-capacity-bar>
+          </mcs-item>
+        </ng-container>
       </mcs-presentation-panel>
     </mcs-grid-column>
 
-    <!-- VCloud Director -->
+    <!-- Vendor Portal Link and New Server Button -->
     <mcs-grid-column sizeSm="12">
-      <mcs-presentation-panel mcsId="resource-vcloud-director">
+      <mcs-presentation-panel mcsId="resource-vcloud-director" *ngIf="canCreateNewServer(resource) || resource.portalUrl">
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ resourceDetailLabels.platformTitle }}</h2>
         </ng-container>
@@ -73,9 +75,8 @@
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'resources.overview.shared.network.title' | translate }}</h2>
         </ng-container>
-        <p>{{ 'resources.overview.shared.network.description' | translate }}</p>
-
-        <mcs-accordion [multi]="true">
+        <mcs-accordion [multi]="true" *ngIf="resource.networks.length > 0; else noNetworksTemplate">
+          <p>{{ 'resources.overview.shared.network.description' | translate }}</p>
           <mcs-accordion-panel
             *ngFor="let network of resource.networks; let i = index"
             [expanded]="i === 0">
@@ -92,12 +93,15 @@
             </ng-template>
           </mcs-accordion-panel>
         </mcs-accordion>
+        <ng-template #noNetworksTemplate>
+          <span read-only>{{ 'resources.overview.shared.network.noNetworks' | translate }}</span>
+        </ng-template>
       </mcs-presentation-panel>
     </mcs-grid-column>
 
     <!-- Storage Profiles / Datastores -->
     <mcs-grid-column sizeSm="12">
-      <mcs-presentation-panel mcsId="resource-storage-profiles">
+      <mcs-presentation-panel mcsId="resource-storage-profiles" *ngIf="resourceDetailLabels.storagePanelShown">
         <ng-container mcsPresentationPanelHeader>
           <mcs-item>
             <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>

@@ -35,6 +35,8 @@ type ResourceDetailLabels = {
   propertyTitle: string;
   platformTitle: string;
   newServerButtonShown: boolean;
+  storagePanelShown: boolean;
+  computeConfigurationShown: boolean;
   platformLink: string;
   storageTitle: string;
   storageRefreshMessage: string;
@@ -122,7 +124,9 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
     let requiredPermissions = isSelfManaged ?
       [McsPermission.SelfManagedCloudVmEdit] :
       [McsPermission.OrderEdit, McsPermission.OrderApprove];
-    return this._accessControlService.hasPermission(requiredPermissions);
+
+    return this._accessControlService.hasPermission(requiredPermissions)
+      && !!getSafeProperty(resource, (obj) => obj.platform === PlatformType.VCloud);
   }
 
   /**
@@ -211,6 +215,8 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
       propertyTitle: this.translateService.instant('resources.overview.vcloud.properties.title'),
       platformTitle: this.translateService.instant('resources.overview.vcloud.platform.title'),
       newServerButtonShown: true,
+      storagePanelShown: true,
+      computeConfigurationShown: true,
       platformLink: this.translateService.instant('resources.overview.vcloud.platform.linkLabel'),
       storageTitle: this.translateService.instant('resources.overview.shared.storageProfiles.title'),
       storageRefreshMessage: this.translateService.instant('resources.overview.shared.storageProfiles.storageRefreshMessage'),
@@ -222,6 +228,8 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
       propertyTitle: this.translateService.instant('resources.overview.vcenter.properties.title'),
       platformTitle: this.translateService.instant('resources.overview.vcenter.platform.title'),
       newServerButtonShown: false,
+      storagePanelShown: true,
+      computeConfigurationShown: true,
       platformLink: this.translateService.instant('resources.overview.vcenter.platform.linkLabel'),
       storageTitle: this.translateService.instant('resources.overview.shared.datastores.title'),
       storageRefreshMessage: this.translateService.instant('resources.overview.shared.datastores.storageRefreshMessage'),
@@ -229,9 +237,24 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
       lowStorageMessage: this.translateService.instant('resources.overview.shared.datastores.lowStorage')
     };
 
+    let ucsLabels: ResourceDetailLabels = {
+      propertyTitle: this.translateService.instant('resources.overview.ucs.properties.title'),
+      platformTitle: this.translateService.instant('resources.overview.ucs.platform.title'),
+      newServerButtonShown: false,
+      storagePanelShown: false,
+      computeConfigurationShown: false,
+      platformLink: this.translateService.instant('resources.overview.ucs.platform.linkLabel'),
+      storageTitle: null,
+      storageRefreshMessage: null,
+      lowStorageSummary: null,
+      lowStorageMessage: null
+    };
+
     this._resourceDetailLabelMap = new Map();
     this._resourceDetailLabelMap.set(PlatformType.VCloud, vcloudLabels);
     this._resourceDetailLabelMap.set(PlatformType.VCenter, vcenterLabels);
+    this._resourceDetailLabelMap.set(PlatformType.UcsCentral, ucsLabels);
+    this._resourceDetailLabelMap.set(PlatformType.UcsDomain, ucsLabels);
   }
 
   /**

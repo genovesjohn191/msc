@@ -16,7 +16,8 @@ import {
   McsNavigationService,
   McsPageBase,
   McsTableDataSource2,
-  McsTableEvents
+  McsTableEvents,
+  McsAccessControlService
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
@@ -25,7 +26,8 @@ import {
   McsQueryParam,
   RouteKey,
   PlatformType,
-  ServiceType
+  ServiceType,
+  McsPermission
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -66,7 +68,8 @@ export class ResourcesComponent extends McsPageBase {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
-    private _navigationService: McsNavigationService
+    private _navigationService: McsNavigationService,
+    private _accessControlService: McsAccessControlService
   ) {
     super(_injector);
     this.dataSource = new McsTableDataSource2<McsResource>(this._getResources.bind(this))
@@ -124,16 +127,31 @@ export class ResourcesComponent extends McsPageBase {
     return resource.platform === PlatformType.VCenter;
   }
 
+  public isResourceTypeUcs(resource: McsResource): boolean {
+    return resource.platform === PlatformType.UcsCentral || resource.platform === PlatformType.UcsDomain;
+  }
+
   public isResourceManaged(resource: McsResource): boolean {
     return resource.serviceType === ServiceType.Managed;
   }
 
   public validToShowContextMenuItems(resource: McsResource): boolean {
-    return !isNullOrEmpty(resource.portalUrl) || this.metExpectedPropertyValues(resource);
+    return !isNullOrEmpty(resource.portalUrl)
+    || (this._accessControlService.hasPermission([McsPermission.OrderEdit]) && !isNullOrEmpty(resource.serviceId) && resource.serviceChangeAvailable)
+    || (this._accessControlService.hasPermission([McsPermission.TicketCreate]) && !isNullOrEmpty(resource.serviceId));
   }
 
-  public metExpectedPropertyValues(resource: McsResource): boolean {
-    return resource.serviceChangeAvailable && !isNullOrEmpty(resource.serviceId);
+  public isResourceScalableVdc(resource: McsResource): boolean {
+    return resource.serviceChangeAvailable
+    && !isNullOrEmpty(resource.serviceId)
+    && this.isResourceTypeVCloud(resource)
+    && !resource.isStretched;
+  }
+
+  public isResourceExpandableVdc(resource: McsResource): boolean {
+    return resource.serviceChangeAvailable
+    && !isNullOrEmpty(resource.serviceId)
+    && this.isResourceTypeVCloud(resource);
   }
 
   public navigateToResource(resource: McsResource): void {

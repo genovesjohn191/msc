@@ -77,11 +77,21 @@
             {{ 'columnHeader.vCPU' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            <span [innerHTML]="row.compute.cpuLimit | mcsDataLabel: 'Unknown'"></span>
+            <ng-container *ngIf="row.compute.cpuLimit; else noVcpuTemplate">
+              {{ row.compute.cpuLimit }}
+            </ng-container>
+            <ng-template #noVcpuTemplate>
+              <ng-container *ngIf="isResourceTypeVCloud(row) || isResourceTypeVCenter(row); else naVcpuTemplate">
+                  <span read-only>{{ 'label.unknown' | translate }}</span>
+              </ng-container>
+              <ng-template #naVcpuTemplate>
+                <span read-only> {{ 'label.na' | translate }} </span>
+              </ng-template>
+            </ng-template>
           </td>
         </ng-container>
 
-        <!-- Memory Limit MB Column -->
+        <!-- RAM Column -->
         <ng-container matColumnDef="ram">
           <th mat-header-cell *matHeaderCellDef>
             {{ 'columnHeader.ram' | translate }}
@@ -91,7 +101,12 @@
               {{ row.compute.memoryLimitMB | mcsDataSize: 'MB'}}
             </ng-container>
             <ng-template #noRamTemplate>
-              {{ 'label.unknown' | translate }}
+              <ng-container *ngIf="isResourceTypeVCloud(row) || isResourceTypeVCenter(row); else naRamTemplate">
+                  <span read-only>{{ 'label.unknown' | translate }}</span>
+              </ng-container>
+              <ng-template #naRamTemplate>
+                <span read-only> {{ 'label.na' | translate }} </span>
+              </ng-template>
             </ng-template>
           </td>
         </ng-container>
@@ -112,18 +127,18 @@
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            <ng-container *ngIf="row.serviceId && isResourceTypeVCloud(row); else noServiceIdTemplate">
-              <span>{{ row.serviceId }}</span>
+            <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
+              {{ row.serviceId }}
             </ng-container>
+
             <ng-template #noServiceIdTemplate>
-              <ng-container *ngIf="!isResourceTypeVCenter(row)
-                && isResourceManaged(row); else noServiceIdSelfManagedTemplate">
-                <mcs-data-status-empty
-                  [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate">
-                  {{ 'label.unknown' | translate }}
-                </mcs-data-status-empty>
+              <ng-container *ngIf="isResourceTypeVCloud(row); else naServiceIdTemplate">
+                  <mcs-data-status-empty
+                    [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate">
+                    {{ 'label.unknown' | translate }}
+                  </mcs-data-status-empty>
               </ng-container>
-              <ng-template #noServiceIdSelfManagedTemplate>
+              <ng-template #naServiceIdTemplate>
                 <span read-only> {{ 'label.na' | translate }} </span>
               </ng-template>
             </ng-template>
@@ -165,9 +180,21 @@
                   {{ 'action.openInVCenter' | translate }}
                 </a>
 
+                <!-- Open in Vendor Portal -->
+                <a *ngIf="isResourceTypeUcs(row) && row.portalUrl"
+                  mcsButton="basic" color="white" labelPlacement="left"
+                  target="_blank"
+                  href="{{ row.portalUrl }}"
+                  mcsId
+                  mcsEventTracker="navigate-to-vendor-portal"
+                  mcsEventCategory="resources"
+                  mcsEventLabel="resources-listing-page">
+                  {{ 'action.openInVendorPortal' | translate }}
+                </a>
+
                 <!-- Scale VDC -->
                 <ng-container *mcsAccessControl="['OrderEdit'];">
-                  <a *ngIf="!row.isStretched && metExpectedPropertyValues(row)"
+                  <a *ngIf="isResourceScalableVdc(row)"
                     mcsButton="basic" color="white" labelPlacement="left"
                     (click)="navigateToScaleVdc(row.serviceId)"
                     mcsId
@@ -177,10 +204,10 @@
                     {{ 'action.scaleVdc' | translate }}
                   </a>
                 </ng-container>
-                
+
                 <!-- Expand VDC Storage -->
                 <ng-container *mcsAccessControl="['OrderEdit'];">
-                  <a *ngIf="row.id  && metExpectedPropertyValues(row)"
+                  <a *ngIf="isResourceExpandableVdc(row)"
                     mcsButton="basic" color="white" labelPlacement="left"
                     (click)="navigateToExpandVdcStorage(row.id)"
                     mcsId
