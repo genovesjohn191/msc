@@ -2,11 +2,22 @@
   <div class="capacity-bar" [ngClass]="{'low': isLow}" [ngStyle]="{width: percentage}"></div>
   <div [ngClass]="{'low': isLow}" class="capacity-bar-label">
     <span *ngIf="(value | mcsIsNotNullOrEmpty); else emptyLabel">
-      {{ value | mcsDataSize: 'MB' }}</span>
+      <ng-container *ngIf="!hideDataSize; else emptyDataSize">
+        {{ value | mcsDataSize: 'MB' }}
+      </ng-container>
+      <ng-template #emptyDataSize>
+        {{ value }}
+      </ng-template>
+    </span>
     <ng-template #emptyLabel>
       <span [innerHTML]="value | mcsDataLabel"></span>
     </ng-template>
     <span> / </span>
-    <span>{{ maxValue | mcsDataSize: 'MB' }}</span>
+    <ng-container *ngIf="!hideDataSize; else emptyDataSize">
+      <span>{{ maxValue | mcsDataSize: 'MB' }}</span>
+    </ng-container>
+    <ng-template #emptyDataSize>
+      <span>{{ maxValue }}</span>
+    </ng-template>
   </div>
 </div>

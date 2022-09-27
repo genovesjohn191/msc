@@ -18,22 +18,18 @@
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'resources.overview.shared.properties.configuration' | translate }}:</span>
-          <span [innerHTML]="resource?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
-          <span>/</span>
-          <span [innerHTML]="resource?.compute?.cpuLimitMBLabel | mcsDataLabel"
-            mcsCursor="default"
-            [matTooltip]="ghzTooltip(resource?.compute?.cpuLimitGhz)"></span>
-          <ng-container *ngIf="resource?.scaleable">
-            <ng-container *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingVdcComputeScale'];">
-              <a (click)="scaleVdc(resource)"
-                mcsId="scale-vdc"
-                mcsEventTracker="vdc-option"
-                mcsEventCategory="resource"
-                mcsEventLabel="resource-details-page">
-                {{ 'resources.overview.shared.properties.scale' | translate }}</a>
-            </ng-container>
-          </ng-container>
+          <span>{{ 'label.ram' | translate }}:</span>
+          <mcs-capacity-bar full-width
+            [(ngModel)]="resource.compute.memoryUsedMB"
+            [maxValue]="resource.compute.memoryLimitMB"></mcs-capacity-bar>
+        </mcs-item>
+
+        <mcs-item>
+          <span>{{ 'label.vCpu' | translate }}:</span>
+          <mcs-capacity-bar full-width [matTooltip]="ghzTooltip(resource?.compute?.cpuLimitGhz)"
+            [hideDataSize]="true"
+            [(ngModel)]="resource.compute.cpuUsed"
+            [maxValue]="resource.compute.cpuLimit"></mcs-capacity-bar>
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>

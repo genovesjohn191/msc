@@ -32,6 +32,11 @@ import { coerceNumber } from '@app/utilities';
 
 export class CapacityBarComponent implements ControlValueAccessor {
   @Input()
+  public get hideDataSize(): boolean { return this._hideDataSize; }
+  public set hideDataSize(value: boolean) { this._hideDataSize = value; }
+  private _hideDataSize: boolean = false;
+
+  @Input()
   public get maxValue(): number { return this._maxValue; }
   public set maxValue(value: number) { this._maxValue = coerceNumber(value); }
   private _maxValue: number;
