@@ -22,6 +22,7 @@ export enum WorkflowGroupId {
   StretchedDedicatedStorageCreateAttachVolume = 200008,
 
   DedicatedBladeDeprovision = 200009,
+  DedicatedBladeProvision = 200010,
 
   ManagementToolsQueryStatus = 300001,
   ManagementToolsAdd = 300002,
@@ -98,5 +99,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.FirewallDeprovision]: 'Deprovision Physical Firewall',
   [WorkflowGroupId.FirewallUpgrade]: 'Upgrade Firewall',
   [WorkflowGroupId.FirewallAssessUpgradeReadiness]: 'Assess Firewall Upgrade Readiness',
+
+  [WorkflowGroupId.DedicatedBladeProvision]: 'Provision Dedicated Blade',
 }
 

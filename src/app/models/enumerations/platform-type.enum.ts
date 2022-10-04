@@ -5,7 +5,8 @@ export enum PlatformType {
   VCenter = 1,
   Ucs = 2,
   UcsCentral = 3,
-  UcsDomain = 4
+  UcsDomain = 4,
+  Dell = 5
 }
 
 export const platformTypeText = {
@@ -13,7 +14,9 @@ export const platformTypeText = {
   [PlatformType.VCenter]: 'VCenter',
   [PlatformType.Ucs]: 'Ucs',
   [PlatformType.UcsCentral]: 'UcsCentral',
-  [PlatformType.UcsDomain]: 'UcsDomain'
+  [PlatformType.UcsDomain]: 'UcsDomain',
+  [PlatformType.Dell]: 'Dell',
+
 };
 
 /**

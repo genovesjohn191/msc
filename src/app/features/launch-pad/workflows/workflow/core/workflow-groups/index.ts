@@ -41,3 +41,4 @@ export * from './firewall-upgrade.workflow';
 export * from './firewall-assess-upgrade-readiness.workflow';
 
 export * from './dedicated-blade-deprovision.workflow';
+export * from './dedicated-blade-provision.workflow';

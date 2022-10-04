@@ -93,7 +93,7 @@ import {
   McsApiToolsFactory,
   McsApiVmSizesFactory,
   McsApiVCenterFactory,
-  McsApiWorkflowsFactory
+  McsApiWorkflowsFactory,
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -309,7 +309,8 @@ import {
   McsVCenterBaselineRemediate,
   McsVCenterDatacentreQueryParam,
   McsVCenterInstance,
-  McsWorkflowCreate
+  McsWorkflowCreate,
+  McsPhysicalServer
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -819,6 +820,15 @@ export class McsApiService {
     return this._resourcesApi.validateCatalogItems(id, catalogItem).pipe(
       catchError((error) => this._handleApiClientError(error)),
       map((response) => this._mapToCollection(response))
+    );
+  }
+  
+  public getPhysicalServers(id: string, query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsPhysicalServer>> {
+    return this._resourcesApi.getPhysicalServers(id, query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcePhysicalServers'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

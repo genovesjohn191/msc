@@ -3355,6 +3355,7 @@
     "getResourceCatalogItems": "Something went wrong while retrieving your catalog media.",
     "getResourceCatalogItem": "Something went wrong while retrieving this media item.",
     "getResourceVApps": "Something went wrong while retrieving your vApps.",
+    "getResourcePhysicalServers": "Something went wrong while retrieving physical servers.",
     "createResourceCatalogItem": "Something went wrong while creating your media.",
     "validateResourceCatalogItems": "Something went wrong while retrieving your catalog media.",
     "getServers": "Something went wrong while retrieving your servers.",

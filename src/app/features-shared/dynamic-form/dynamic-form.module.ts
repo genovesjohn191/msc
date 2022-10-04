@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
 import {
+  DynamicSelectNetworkInterfaceService,
   DynamicSelectPodsService,
   DynamicSelectResourceGroupService
 } from './dynamic-form-field';
@@ -25,7 +26,8 @@ declarations: [
     DynamicFormFieldModule,
     DynamicFormValidationService,
     DynamicSelectResourceGroupService,
-    DynamicSelectPodsService
+    DynamicSelectPodsService,
+    DynamicSelectNetworkInterfaceService
   ]
 })
 export class DynamicFormModule { }

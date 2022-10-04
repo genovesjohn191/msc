@@ -279,6 +279,10 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
           allowedElementStatuses: [ ]
         },
         {
+          workflowId: WorkflowGroupId.DedicatedBladeProvision,
+          allowedElementStatuses: [ ]
+        },
+        {
           workflowId: WorkflowGroupId.DedicatedBladeDeprovision,
           allowedElementStatuses: [ ]
         }
@@ -322,6 +326,10 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
         },
         {
           workflowId: WorkflowGroupId.ManagementToolsUpdate,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.DedicatedBladeProvision,
           allowedElementStatuses: [ ]
         },
         {

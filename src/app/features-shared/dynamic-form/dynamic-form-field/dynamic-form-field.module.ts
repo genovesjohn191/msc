@@ -57,6 +57,11 @@ import { DynamicSelectResourceGroupComponent } from './select-resource-group/sel
 import { DynamicSelectAzureResourceComponent } from './select-azure-resource/select-azure-resource.component';
 import { DynamicSelectFortiManagerComponent } from './select-forti-manager/select-forti-manager.component';
 import { DynamicSelectFortiAnalyzerComponent } from './select-forti-analyzer/select-forti-analyzer.component';
+import { DynamicSelectResourceComponent } from './select-resource/select-resource.component';
+import { DynamicSelectNetworkInterfaceComponent } from './select-network-interface/select-network-interface.component';
+import { DynamicSelectPhysicalServerComponent } from './select-physical-server/select-physical-server.component';
+import { DynamicSelectLunsComponent } from './select-luns/select-luns.component';
+import { DynamicInputComputeComponent } from './input-compute/input-compute.component';
 import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
 
 const exports: any[] | Type<any> = [
@@ -110,7 +115,12 @@ const exports: any[] | Type<any> = [
   DynamicSelectVdcComponent,
   DynamicSelectVmComponent,
   DynamicSelectVmSizeComponent,
-  DynamicSlideToggleComponent
+  DynamicSlideToggleComponent,
+  DynamicSelectResourceComponent,
+  DynamicSelectNetworkInterfaceComponent,
+  DynamicSelectPhysicalServerComponent,
+  DynamicSelectLunsComponent,
+  DynamicInputComputeComponent
 ];
 
 @NgModule({

@@ -38,6 +38,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-size-field>
 
+        <mcs-dff-input-compute-field *ngSwitchCase="'input-compute'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-compute-field>
+
         <mcs-dff-input-subscription-id-field *ngSwitchCase="'input-subscription-id'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-subscription-id-field>
@@ -163,6 +167,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-resource-group-field>
 
+        <mcs-dff-select-resource-field *ngSwitchCase="'select-resource'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-resource-field>
+
         <mcs-dff-select-software-subscription-product-type-field *ngSwitchCase="'select-software-subscription-product-type'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-software-subscription-product-type-field>
@@ -214,6 +222,18 @@
         <mcs-dff-select-forti-analyzer *ngSwitchCase="'select-forti-analyzer'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-forti-analyzer>
+
+        <mcs-dff-select-network-interface-field *ngSwitchCase="'select-network-interface'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-network-interface-field>
+
+        <mcs-dff-select-physical-server-field *ngSwitchCase="'select-physical-server'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-physical-server-field>
+
+        <mcs-dff-select-luns-field *ngSwitchCase="'select-luns'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-luns-field>
         <mat-error *ngIf="!isValidField(input.key)" [innerHTML]="getErrorMessage(input.key)">
         </mat-error>
       </div>

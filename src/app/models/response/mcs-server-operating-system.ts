@@ -32,4 +32,10 @@ export class McsServerOperatingSystem extends McsEntityBase {
 
   @JsonProperty()
   public kickstartAvailable: boolean = undefined;
+
+  @JsonProperty()
+  public minimumMemoryMB: number = undefined;
+
+  @JsonProperty()
+  public minimumCpu: number = undefined;
 }

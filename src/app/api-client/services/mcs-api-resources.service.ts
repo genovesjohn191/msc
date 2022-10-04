@@ -14,12 +14,14 @@ import {
   McsJob,
   McsValidation,
   McsResourceCatalog,
-  McsQueryParam
+  McsQueryParam,
+  McsPhysicalServer
 } from '@app/models';
 import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiResourcesService } from '../interfaces/mcs-api-resources.interface';
 import { McsApiClientDefinition } from '../mcs-api-client.definition';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class McsApiResourcesService implements IMcsApiResourcesService {
@@ -251,6 +253,25 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsValidation[]>(McsValidation, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getPhysicalServers(id:string, query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsPhysicalServer[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/physical-servers`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsPhysicalServer[]>(McsPhysicalServer, response);
           return apiResponse;
         })
       );

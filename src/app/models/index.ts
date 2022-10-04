@@ -383,6 +383,8 @@ export * from './response/vcenter/mcs-vcenter-data-centre';
 export * from './response/vcenter/mcs-vcenter-host';
 export * from './response/vcenter/mcs-vcenter-host-cluster';
 export * from './response/vcenter/mcs-vcenter-instance';
+export * from './response/mcs-physical-server';
+export * from './response/mcs-compute';
 
 /** Common */
 export * from './common/mcs-api-search-key';

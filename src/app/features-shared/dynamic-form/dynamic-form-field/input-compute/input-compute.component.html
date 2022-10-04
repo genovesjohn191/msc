@@ -1,0 +1,64 @@
+<!-- Model -->
+<mat-form-field *ngIf="visible" appearance="outline">
+  <mat-label [attr.for]="id">Model</mat-label>
+
+  <input matInput disabled [(ngModel)]="compute.model" (change)="onComputeChange()" required [min]="1" [max]="16384"
+    step="1" />
+  <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+  </mat-error>
+</mat-form-field>
+
+<!-- CPU Model -->
+<mat-form-field *ngIf="visible" appearance="outline">
+  <mat-label [attr.for]="id">CPU Model</mat-label>
+  <input matInput disabled [(ngModel)]="compute.processorModel" (change)="onComputeChange()" required [min]="1" [max]="16384"
+    step="1" />
+  <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+  </mat-error>
+</mat-form-field>
+
+<!-- CPU Count -->
+<div>
+  <mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
+    <mat-label [attr.for]="id">CPU Count</mat-label>
+    <input matInput disabled type="number" class="number" [(ngModel)]="compute.cpuCount" (change)="onComputeChange()"
+      required [min]="1" [max]="16384" step="1" />
+    <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+    </mat-error>
+  </mat-form-field>
+</div>
+
+<!-- CPU Cores -->
+<div>
+  <mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
+    <mat-label [attr.for]="id">CPU Cores</mat-label>
+    <input matInput disabled type="number" class="number" [(ngModel)]="compute.numCores" (change)="onComputeChange()"
+      required [min]="1" [max]="16384" step="1" />
+    <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+    </mat-error>
+  </mat-form-field>
+</div>
+
+<!-- CPU Frequency (MHz) -->
+<div>
+  <mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
+    <mat-label [attr.for]="id">CPU Frequency (MHz)</mat-label>
+    <input matInput disabled type="number" class="number" [(ngModel)]="compute.cpuMhz" (change)="onComputeChange()"
+      required [min]="1" [max]="16384" step="1" />
+    <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+    </mat-error>
+    <span matSuffix class="suffix">MHz</span>
+  </mat-form-field>
+</div>
+
+<!-- Memory MB -->
+<div>
+  <mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
+    <mat-label [attr.for]="id">RAM (GB)</mat-label>
+    <input matInput disabled type="number" class="number" [value]="convertedTotalMemoryValue" (change)="onComputeChange()"
+      required [min]="1" [max]="16384" step="1" />
+    <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+    </mat-error>
+    <span matSuffix class="suffix">GB</span>
+  </mat-form-field>
+</div>

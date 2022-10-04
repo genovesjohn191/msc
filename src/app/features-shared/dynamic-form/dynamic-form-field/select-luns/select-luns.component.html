@@ -1,0 +1,62 @@
+<div>
+  <!-- Service Id -->
+  <mat-form-field
+    *ngIf="visible"
+    appearance="outline"
+    [matBadge]="hasError ? '!' : ''"
+    matBadgePosition="before"
+    matBadgeColor="warn"
+    matBadgeSize="small"
+    [matTooltip]="hasError && !multipleBootError ? 'Failed to load options' : ''"
+    matTooltipPosition="above">
+    <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : 'Boot Lun' }}</mat-label>
+    <mat-select disabled [(value)]="luns.serviceId" (selectionChange)="onLunsChange()" [required]="required">
+      <mat-option *ngFor="let opt of config.options" [value]="opt.key"
+        [disabled]="opt.disabled" [matTooltip]="opt.hint">
+        {{ opt.value }}
+      </mat-option>
+    </mat-select>
+    <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+    <button mat-icon-button matSuffix
+      (click)="retrieveOptions()"
+      *ngIf="hasError && !multipleBootError"
+      matTooltip="Retry"
+      matTooltipPosition="above">
+      <mat-icon color="primary">refresh</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-error *ngIf="hasError" style="margin-bottom: 20px;">{{ serviceIdErrorMessage }}</mat-error>
+
+  <!-- Storage Tier -->
+  <mat-form-field
+    *ngIf="visible"
+    appearance="outline"
+    matBadgePosition="before"
+    matBadgeColor="warn"
+    matBadgeSize="small"
+    matTooltipPosition="above">
+    <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : 'Storage Tier' }}</mat-label>
+    <mat-select disabled [(value)]="luns.tier" (selectionChange)="onLunsChange()">
+      <mat-option *ngFor="let opt of tierOptions" [value]="opt.key"
+        [disabled]="opt.disabled" [matTooltip]="opt.hint">
+        {{ opt.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+  <!-- Disk Size -->
+  <mat-form-field
+    *ngIf="visible"
+    appearance="outline"
+    style="max-width: 200px;">
+    <mat-label [attr.for]="id">Disk Size</mat-label>
+  
+    <input disabled #control matInput type="number" class="number" [(ngModel)]="luns.sizeGb" (change)="onLunsChange()"
+      [required]="required"
+      [min]="1"
+      [max]="16384"
+      step="1"/>
+    <span matSuffix class="suffix">GB</span>
+  </mat-form-field>
+</div>
+  

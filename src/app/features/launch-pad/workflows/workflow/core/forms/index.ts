@@ -37,3 +37,4 @@ export * from './vfw-provision.form';
 export * from './firewall-provision.form';
 
 export * from './dedicated-blade-deprovision.form';
+export * from './dedicated-blade-provision.form';

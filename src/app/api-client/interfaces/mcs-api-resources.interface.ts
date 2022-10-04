@@ -11,7 +11,8 @@ import {
   McsJob,
   McsValidation,
   McsResourceCatalog,
-  McsQueryParam
+  McsQueryParam,
+  McsPhysicalServer
 } from '@app/models';
 
 export interface IMcsApiResourcesService {
@@ -112,4 +113,10 @@ export interface IMcsApiResourcesService {
    */
   validateCatalogItems(resourceId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsValidation[]>>;
+
+  /**
+   * Get all the Physical Servers
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getPhysicalServers(id:string, query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsPhysicalServer[]>>;
 }

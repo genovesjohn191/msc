@@ -6,11 +6,10 @@ import {
   DynamicFormControlSettings
 } from '../../dynamic-form-field-config.interface';
 
-export class DynamicSelectOsField extends DynamicFormFieldConfigBase {
+export class DynamicSelectPhysicalServerField extends DynamicFormFieldConfigBase {
   // Overrides
-  public type: DynamicFormFieldType = 'select-os';
-  public template: DynamicFormFieldTemplate = 'select-os';
-  public isEsx: boolean;
+  public type: DynamicFormFieldType = 'select-physical-server';
+  public template: DynamicFormFieldTemplate = 'select-physical-server';
 
   public constructor(options: {
     key: string;
@@ -23,9 +22,7 @@ export class DynamicSelectOsField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
-    isEsx?: boolean;
   }) {
     super(options);
-    this.isEsx = options.isEsx || false;
   }
 }

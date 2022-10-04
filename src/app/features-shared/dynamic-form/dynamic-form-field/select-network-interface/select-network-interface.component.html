@@ -1,0 +1,27 @@
+<div style="margin-bottom: 25px">
+  <mcs-field-select-tree-view #treeViewSelect size="large"
+    [formControl]="inputCtrlEth0Eth1"
+    label="Interfaces (eth0 and eth1)"
+    [hideChips]="false"
+    [multiple]="true"
+    [dataSource]="datasourceEth0Eth1"
+    [expandFirst]="true"
+    [selectAllByDefault]="false"
+    [autoClearSelection]="false"
+    [alwaysShowPanel]="true"
+    [required]="true">
+  </mcs-field-select-tree-view>
+</div>
+<div *ngIf="isEsxi" style="margin-bottom: 25px">
+  <mcs-field-select-tree-view #treeViewSelect size="large"
+    [formControl]="inputCtrlEth2Eth3"
+    label="Interfaces (eth2 and eth3)"
+    [hideChips]="false"
+    [multiple]="true"
+    [dataSource]="datasourceEth2Eth3"
+    [expandFirst]="true"
+    [selectAllByDefault]="false"
+    [autoClearSelection]="false"
+    [alwaysShowPanel]="true">
+  </mcs-field-select-tree-view>
+</div>
