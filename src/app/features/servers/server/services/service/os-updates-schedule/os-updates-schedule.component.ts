@@ -272,7 +272,7 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
       (day) => convertedDaysArray.push(formatTime(day.toString(), 'd', 'ddd'))
     );
     let time = formatTime(cronJson.hour[0] + ':' + cronJson.minute[0], 'HH:mm', 'h:mm A');
-    return convertedDaysArray.join(',') + ' at ' + time;
+    return convertedDaysArray.join(', ') + ' at ' + time;
   }
 
   /**
