@@ -25,8 +25,6 @@ export enum McsFeatureFlag {
 
   PrivateCloudDashboard = 'EnablePrivateCloudDashboard',
 
-  PublicCloudResourceListing = 'EnablePublicCloudResourceListing',
-
   MediaCatalog = 'EnableMediaCatalog',
   ResourceMediaUpload = 'EnableResourceMediaUpload',
 
