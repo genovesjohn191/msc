@@ -67,6 +67,7 @@ export * from './form-fields/field-input-note/field-input-note';
 export * from './form-fields/field-input-note/field-input-note.component';
 export * from './form-fields/field-input-url/field-input-url';
 export * from './form-fields/field-input-url/field-input-url.component';
+export * from './form-fields/field-input-list/field-input-list.component';
 
 export * from './form-fields/field-select-contact/field-select-contact';
 export * from './form-fields/field-select-contact/field-select-contact.component';

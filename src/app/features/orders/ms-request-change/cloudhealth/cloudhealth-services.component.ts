@@ -29,8 +29,10 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ManagementTag,
-  managementTagText,
+  CloudHealthAlertType,
+  PeriodicSchedule,
+  periodicScheduleText,
+  McsAzureResourceQueryParams,
   McsCloudHealthAlert,
   McsCloudHealthAlertConfigurationItems,
   McsCloudHealthOption,
@@ -56,12 +58,12 @@ import {
   McsDateTimeService
 } from '@app/core';
 import { McsFormGroupDirective } from '@app/shared';
-import { CloudHealthAlertType } from './cloudhealth-services';
-
-interface CloudHealthPeriodRange {
-  from: Date;
-  until: Date;
-}
+import {
+  CHAlertFieldType,
+  CHAlertInputType,
+  CHAlertInfo,
+  CloudHealthPeriodRange
+} from './cloudhealth-services.config';
 
 @Component({
   selector: 'mcs-cloudhealth-services',
@@ -75,21 +77,23 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
   public fcCloudhealth: FormControl<any>;
   public fcDropdown: FormControl<any>;
   public fcCheckbox: FormControl<any>;
+  public fcInputText: FormControl<any>;
 
   public cloudHealthPeriodRange$: Observable<McsOption[]>;
   public cloudHealthAlerts$: Observable<McsOption[]>;
-  public managementTagOptions$: Observable<McsOption[]>;
+  public dropdownOptions: McsOption[];
 
   public cloudHealthAlertOptions: McsCloudHealthOption[];
   public alertType: string = '';
-  public alertLabel: string = '';
-  public alertSubLabel: string = '';
+  public chALertInfo: CHAlertInfo;
   public isChProcessing: boolean;
   public isChByIdProcessing: boolean;
   public selectedPeriod: PeriodRange;
 
+  private _chAlertHeaderLabelMap = new Map<string, CHAlertInfo>();
   private _valueChangesSubject = new Subject<void>();
   private _formGroup: McsFormGroupDirective;
+  private _storageAccountResources: McsOption[];
 
   @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
@@ -110,30 +114,30 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
     private _translateService: TranslateService,
   ) { }
 
-  public get managementTagEnum(): any {
-    return ManagementTag;
+  public get periodicScheduleEnum(): any {
+    return PeriodicSchedule;
+  }
+
+  public get cloudHealthAlertTypeEnum(): any {
+    return CloudHealthAlertType;
+  }
+
+  public get chAlertFieldTypeEnum(): any {
+    return CHAlertFieldType;
   }
 
   public get periodRangeEnum(): any {
     return PeriodRange;
   }
 
-  public get cloudhealthAlertTypes(): string[] {
-    return Object.values(CloudHealthAlertType);
-  }
-
   public ngOnInit(): void {
     this._registerFormGroup();
-    this._subscribeToCloudhealthPeriodRangeOptions();
-    this._subscribeToManagementTagOptions();
+    this._createCloudhealthPeriodRangeOptions();
+    this._createStorageAccountDropdownOption();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._valueChangesSubject);
-  }
-
-  public get alertManagementTag(): string {
-    return CloudHealthAlertType.ManagementTags;
   }
 
   public onClickPeriodRange(period: McsOption): void {
@@ -148,19 +152,15 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
 
   public onClickCloudHealthAlert(cloudHealthAlert: McsOption): void {
     this.cloudHealthAlertOptions = [];
-    this._getCloudHealthAlertById(cloudHealthAlert.value);
+    this._createCloudHealthHeaderLabelMap();
+    this.chALertInfo = this._chAlertHeaderLabelMap.get(cloudHealthAlert.value.type);
+    this._getCloudHealthAlertById(cloudHealthAlert.value.id);
   }
 
-  /**
-   * Returns the form group
-   */
   public getFormGroup(): McsFormGroupDirective {
     return this._formGroup;
   }
 
-  /**
-   * Returns true if form group is valid
-   */
   public isValid(): boolean {
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
@@ -168,39 +168,41 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
   private _resetFormControlValues(): void {
     this.fcCheckbox.setValue([]);
     this.fcDropdown.setValue([]);
+    this.fcInputText.setValue([]);
   }
 
-  /**
-   * Event that emits when an input has been changed
-   */
-  private notifyDataChange() {
+  private _notifyDataChange() {
     let changes: McsCloudHealthOption;
-    if (this.alertType === CloudHealthAlertType.ManagementTags) {
-      changes = getSafeProperty(this.fcDropdown, (obj) => obj.value);
-    } else {
-      changes = getSafeProperty(this.fcCheckbox, (obj) => obj.value);
+    switch(this.chALertInfo?.controlType) {
+      case CHAlertFieldType.Dropdown:
+        changes = getSafeProperty(this.fcDropdown, (obj) => obj.value);
+        break;
+      case CHAlertFieldType.Checkbox:
+        changes = getSafeProperty(this.fcCheckbox, (obj) => obj.value);
+        break;
+      case CHAlertFieldType.Input:
+        changes = getSafeProperty(this.fcInputText, (obj) => obj.value);
+        break;
+      default:
+        break;
     }
     this.dataChange.emit(changes);
   }
 
-  /**
-   * Register form group elements for custom type
-   */
-   private _registerFormGroup(): void {
+  private _registerFormGroup(): void {
     this.fcDropdown = new FormControl<any>([], [CoreValidators.required]);
     this.fcCheckbox = new FormControl<any>([], [CoreValidators.required]);
+    this.fcInputText = new FormControl<any>([], [CoreValidators.required]);
     this.fcCloudhealth = new FormControl<any>('', []);
 
     this.fgCloudhealth = this._formBuilder.group({
       fcDropdown: this.fcDropdown,
       fcCheckbox: this.fcCheckbox,
+      fcInputText: this.fcInputText,
       fcCloudhealth: this.fcCloudhealth
     });
   }
 
-  /**
-   * Subscribe to the form changes
-   */
   private _subscribeToValueChanges(): void {
     this._valueChangesSubject.next();
     zip(
@@ -208,27 +210,17 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
       this._formGroup.stateChanges()
     ).pipe(
       takeUntil(this._valueChangesSubject),
-      tap(() => this.notifyDataChange())
+      tap(() => this._notifyDataChange())
     ).subscribe();
   }
 
-  /**
-   * Initialize the options for management tag dropdown list
-   */
-  private _subscribeToManagementTagOptions(): void {
-    this.managementTagOptions$ = of(this._mapEnumToOption(this.managementTagEnum, managementTagText));
-  }
-
-  /**
-   * Initialize the options for cloudhealth list period range
-   */
-  private _subscribeToCloudhealthPeriodRangeOptions(): void {
+  private _createCloudhealthPeriodRangeOptions(): void {
     this.cloudHealthPeriodRange$ = of(this._mapEnumToOption(this.periodRangeEnum, periodRangeText));
   }
 
-  private _mapEnumToOption(enumeration: PeriodRange | ManagementTag, enumText: any): McsOption[] {
+  private _mapEnumToOption(enumeration: PeriodRange | PeriodicSchedule, enumText: any): McsOption[] {
     let options = Object.values(enumeration)
-      .filter((objValue) => (typeof objValue === 'number'))
+      .filter((objValue) => (typeof objValue === 'number') && objValue !== PeriodicSchedule.Weekly)
       .map(objValue => createObject(McsOption, { text: enumText[objValue], value: objValue }));
     return options;
   }
@@ -276,11 +268,7 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
         break;
       default:
         break;
-    }
-    return this._createPeriodRangeObject(startDate, endDate);
-  }
-
-  private _createPeriodRangeObject(startDate: Date, endDate: Date): CloudHealthPeriodRange {
+    };
     return {
       from: !isNullOrEmpty(startDate) ? startDate : null,
       until: !isNullOrEmpty(endDate) ? endDate : null
@@ -306,10 +294,12 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
         let options: McsOption[] = [];
         filteredCloudHealthAlerts.forEach((alert) => {
           let timeStarted = this._convertCloudHealthAlertTimeStarted(alert?.createdOn);
-          const managementText = this._translateService.instant('orderMsRequestChange.detailsStep.managementTags.text');
-          let alertType = alert?.type === CloudHealthAlertType.ManagementTags ? managementText : alert.type;
-          let textValue = `${alertType} - ${timeStarted}`;
-          options.push(createObject(McsOption, { text: textValue, value: alert.id }));
+          let alertTypeLabel = alert?.type === CloudHealthAlertType.ManagementTags ?
+            this._translateService.instant('orderMsRequestChange.managementTags.text') : alert.type;
+          options.push(createObject(McsOption, {
+            text: `${alertTypeLabel} - ${timeStarted}`,
+            value: alert
+          }));
         });
         this.isChProcessing = false;
         return options;
@@ -319,8 +309,9 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
   }
 
   private _filterCloudHealthAlertsByRecognizedTypes(cloudHealthAlerts: McsCloudHealthAlert[]): McsCloudHealthAlert[] {
+    let recognizedCHAlertTypes: string[] = Object.values(CloudHealthAlertType);
     return cloudHealthAlerts
-      .filter((cloudHealthAlert) => this.cloudhealthAlertTypes.includes(cloudHealthAlert.type))
+      .filter((cloudHealthAlert) => recognizedCHAlertTypes.includes(cloudHealthAlert.type))
       // sort alerts by date (latest to oldest)
       .sort((alertA, alertB) => new Date(alertB.createdOn).getTime() - new Date(alertA.createdOn).getTime());
   }
@@ -336,84 +327,261 @@ export class CloudHealthServicesComponent implements OnInit, OnDestroy {
     ).subscribe((response) => {
       this.alertType = response.type;
       this.isChByIdProcessing = false;
-      this._setAlertHeaderLabels(this.alertType);
-      this._enableDisableFormControl(this.alertType);
+      this._setDropdownOptions(this.alertType);
+      this._enableDisableFormControl(this.chALertInfo.controlType);
       let alertList = getSafeProperty(response, (obj) => obj.configurationItems) || [];
-      if (alertList.length === 0) { return; }
-      let optionList = new Array<McsCloudHealthOption>();
-      alertList.forEach((alert: McsCloudHealthAlertConfigurationItems) => {
-        let subLabel = this._setAlertOptionsSubLabel(alert, this.alertType);
-        const noName = this._translateService.instant('orderMsRequestChange.detailsStep.noName');
-        optionList.push(createObject(McsCloudHealthOption, {
-          text: `${alert.name || noName}`,
-          subText: subLabel,
-          alertType: this.alertType,
-          config: alert
-        }));
-      });
-      this.cloudHealthAlertOptions = optionList;
+      this.cloudHealthAlertOptions = this._createAlertOptions(alertList);
       this._changeDetectorRef.markForCheck();
     });
   }
 
-  private _enableDisableFormControl(alertType: string): void {
+  private _createAlertOptions(alerts: McsCloudHealthAlertConfigurationItems[]): McsCloudHealthOption[] {
+    if (alerts.length === 0) { return []; }
+    let optionList = new Array<McsCloudHealthOption>();
+    alerts.forEach((alert: McsCloudHealthAlertConfigurationItems) => {
+      optionList.push(createObject(McsCloudHealthOption, {
+        text: `${alert.name || this._translateService.instant('message.noName')}`,
+        subText: this._setCloudhealthFieldLabel(alert, this.alertType),
+        alertType: this.alertType,
+        config: alert,
+        actionLabel: this.chALertInfo.actionLabel
+      }));
+    });
+    return optionList;
+  }
+
+  private _enableDisableFormControl(controlType: CHAlertFieldType): void {
     this._resetFormControlValues();
-    if (alertType === this.alertManagementTag) {
-      this.fcDropdown.enable();
-      this.fcCheckbox.disable();
-    } else {
-      this.fcDropdown.disable();
-      this.fcCheckbox.enable();
+    switch(controlType) {
+      case CHAlertFieldType.Dropdown:
+        this.fcDropdown.enable();
+        this.fcCheckbox.disable();
+        this.fcInputText.disable();
+        break;
+      case CHAlertFieldType.Checkbox:
+        this.fcDropdown.disable();
+        this.fcCheckbox.enable();
+        this.fcInputText.disable();
+        break;
+      case CHAlertFieldType.Input:
+        this.fcDropdown.disable();
+        this.fcCheckbox.disable();
+        this.fcInputText.enable();
+        break;
     }
   }
 
-  private _setAlertHeaderLabels(alertType: string): void {
+  private _setCloudhealthFieldLabel(alert: McsCloudHealthAlertConfigurationItems, alertType: string): string {
+    const noSubName = this._translateService.instant('message.noSubName');
+    const noGrpName = this._translateService.instant('message.noGrpName');
+    const noServiceId = this._translateService.instant('message.noServiceId');
     switch(alertType) {
-      case CloudHealthAlertType.ManagementTags:
-        this.alertLabel =  this._translateService.instant('orderMsRequestChange.detailsStep.managementTags.label');
-        this.alertSubLabel = this._translateService.instant('orderMsRequestChange.detailsStep.managementTags.subLabel');
-        break;
-      case CloudHealthAlertType.UnattachedDisks:
-        this.alertLabel =  this._translateService.instant('orderMsRequestChange.detailsStep.unattachedDisk.label');
-        this.alertSubLabel = this._translateService.instant('orderMsRequestChange.detailsStep.unattachedDisk.subLabel');
-        break;
+      case CloudHealthAlertType.ManagementTags:
+      case CloudHealthAlertType.UnattachedDisks:
+      case CloudHealthAlertType.StorageAccountSecureTransfer:
+      case CloudHealthAlertType.StorageBlobContainerPublicAccess:
+      case CloudHealthAlertType.SQLServerAuditingDisabled:
+      case CloudHealthAlertType.StorageContainerActivityLogsPubliclyAccessible:
+      case CloudHealthAlertType.SQLServerThreatDetectionDisabled:
+      case CloudHealthAlertType.SQLServerVulnerabilityAssessmentNoStorageAccountConfigured:
+      case CloudHealthAlertType.SQLServerVulnerabilityAssessmentPeriodicScansDisabled:
+      case CloudHealthAlertType.SQLServerVulnerabilityAssessmentEmailNotConfigured:
+      case CloudHealthAlertType.SQLServerVulnerabilityAssessmentEmailSubscriptionAdminsNotConfigured:
+      case CloudHealthAlertType.LoggingDisabledforKeyVault:
+        return `${alert.subscriptionName || noSubName}, ${alert.resourceGroupName || noGrpName}`;
+
+      case CloudHealthAlertType.SecurityContactEmailNotConfigured:
+      case CloudHealthAlertType.WindowsDefenderATPIntegrationNotSelected:
+      case CloudHealthAlertType.AzureDefenderDisabledSQLServerMachine:
+      case CloudHealthAlertType.AzureDefenderDisabledAppService:  
+      case CloudHealthAlertType.AzureDefenderDisabledServer:
+      case CloudHealthAlertType.AzureDefenderDisabledStorageAccount:
+      case CloudHealthAlertType.AzureDefenderDisabledSQLDatabaseServer:
+      case CloudHealthAlertType.AzureDefenderDisabledKeyVault:
+      case CloudHealthAlertType.AzureDefenderDisabledKubernetesService:
+      case CloudHealthAlertType.AzureDefenderDisabledContainerRegistry:
+        return `${alert.serviceId || noServiceId}, ${alert.subscriptionId || noSubName}`;
+
       case CloudHealthAlertType.OldSnapshots:
-        this.alertLabel =  this._translateService.instant('orderMsRequestChange.detailsStep.unattachedSnapshot.label');
-        this.alertSubLabel = this._translateService.instant('orderMsRequestChange.detailsStep.unattachedSnapshot.subLabel');
-        break;
+        let size = !isNullOrEmpty(alert.sizeGB) ? `${alert.sizeGB} GB` : this._translateService.instant('message.noSize');
+        return `${alert.subscriptionName || noSubName}, ${alert.resourceGroupName || noGrpName}, ${size}`;
+
       case CloudHealthAlertType.UnattachedIpAddresses:
-        this.alertLabel =  this._translateService.instant('orderMsRequestChange.detailsStep.unattachedIps.label');
-        this.alertSubLabel = this._translateService.instant('orderMsRequestChange.detailsStep.unattachedIps.subLabel');
-        break;
-      default:
-        break;
+        let ipAddress = !isNullOrEmpty(alert.ipAddress) ? alert.ipAddress : this._translateService.instant('message.noIpAddress');
+        return `${alert.subscriptionName || noSubName}, ${alert.resourceGroupName || noGrpName}, ${ipAddress}`;
     }
   }
 
-  private _setAlertOptionsSubLabel(alert: McsCloudHealthAlertConfigurationItems, alertType: string): string {
-    let subText: string = '';
-    const noSubName = this._translateService.instant('orderMsRequestChange.detailsStep.noSubName');
-    const noGrpName = this._translateService.instant('orderMsRequestChange.detailsStep.noGrpName');
-    switch(alertType) {
-      case CloudHealthAlertType.ManagementTags:
-        subText = `${alert.subscriptionName || noSubName}, ${alert.resourceGroupName || noGrpName}`;
+  private _createCloudHealthHeaderLabelMap(): void {
+    this. _chAlertHeaderLabelMap = new Map();
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.ManagementTags, {
+      description: this._translateService.instant('orderMsRequestChange.managementTags.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.managementTags.action'),
+      controlType: CHAlertFieldType.Dropdown
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.UnattachedDisks, {
+      description: this._translateService.instant('orderMsRequestChange.unattachedDisk.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.unattachedDisk.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.OldSnapshots, {
+      description: this._translateService.instant('orderMsRequestChange.unattachedSnapshot.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.unattachedSnapshot.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.UnattachedIpAddresses, {
+      description: this._translateService.instant('orderMsRequestChange.unattachedIps.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.unattachedIps.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.StorageAccountSecureTransfer, {
+      description: this._translateService.instant('orderMsRequestChange.storageAccountSecureTransfer.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.storageAccountSecureTransfer.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.StorageBlobContainerPublicAccess, {
+      description: this._translateService.instant('orderMsRequestChange.storageBlobContainerPublicAccess.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.storageBlobContainerPublicAccess.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.SQLServerAuditingDisabled, {
+      description: this._translateService.instant('orderMsRequestChange.sqlAuditingDisabled.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.sqlAuditingDisabled.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.StorageContainerActivityLogsPubliclyAccessible, {
+      description: this._translateService.instant('orderMsRequestChange.storageContainerActivityLogsPubliclyAccessible.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.storageContainerActivityLogsPubliclyAccessible.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.SecurityContactEmailNotConfigured, {
+      description: this._translateService.instant('orderMsRequestChange.securityContactEmailNotConfigured.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.securityContactEmailNotConfigured.action'),
+      controlType: CHAlertFieldType.Input,
+      inputType: CHAlertInputType.Email
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledStorageAccount, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledStorageAccount.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledStorageAccount.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.WindowsDefenderATPIntegrationNotSelected, {
+      description: this._translateService.instant('orderMsRequestChange.windowsDefenderATPIntegrationNotSelected.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.windowsDefenderATPIntegrationNotSelected.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledSQLServerMachine, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledSQLServerMachine.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledSQLServerMachine.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledAppService, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledAppService.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledAppService.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledServer, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledServer.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledServer.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledSQLDatabaseServer, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledSQLDatabaseServer.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledSQLDatabaseServer.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledKeyVault, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledKeyVault.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledKeyVault.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledKubernetesService, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledKubernetesService.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledKubernetesService.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.AzureDefenderDisabledContainerRegistry, {
+      description: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledContainerRegistry.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.azureDefenderDisabledContainerRegistry.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.SQLServerThreatDetectionDisabled, {
+      description: this._translateService.instant('orderMsRequestChange.sqlThreatDetectionDisabled.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.sqlThreatDetectionDisabled.action'),
+      controlType: CHAlertFieldType.Checkbox
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.SQLServerVulnerabilityAssessmentNoStorageAccountConfigured, {
+      description: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityNoStorageAccountConfigured.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityNoStorageAccountConfigured.action'),
+      controlType: CHAlertFieldType.Dropdown
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.SQLServerVulnerabilityAssessmentPeriodicScansDisabled, {
+      description: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityPeriodicScansDisabled.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityPeriodicScansDisabled.action'),
+      controlType: CHAlertFieldType.Dropdown
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.SQLServerVulnerabilityAssessmentEmailNotConfigured, {
+      description: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityEmailNotConfigured.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityEmailNotConfigured.action'),
+      controlType: CHAlertFieldType.Input,
+      inputType: CHAlertInputType.Email
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.SQLServerVulnerabilityAssessmentEmailSubscriptionAdminsNotConfigured, {
+      description: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityEmailSubAdminsNotConfigured.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.sqlVulnerabilityEmailSubAdminsNotConfigured.action'),
+      controlType: CHAlertFieldType.Input,
+      inputType: CHAlertInputType.Email
+    });
+    this._chAlertHeaderLabelMap.set(CloudHealthAlertType.LoggingDisabledforKeyVault, {
+      description: this._translateService.instant('orderMsRequestChange.loggingDisabledforKeyVault.label'),
+      actionLabel: this._translateService.instant('orderMsRequestChange.loggingDisabledforKeyVault.action'),
+      controlType: CHAlertFieldType.Input,
+      inputType: CHAlertInputType.Number
+    });
+  }
+
+  private _setDropdownOptions(alertType: string): void {
+    switch (alertType){
+      case CloudHealthAlertType.ManagementTags:
+        this.dropdownOptions = this._mapEnumToOption(this.periodicScheduleEnum, periodicScheduleText);
         break;
-      case CloudHealthAlertType.UnattachedDisks:
-        subText = `${alert.subscriptionName || noSubName}, ${alert.resourceGroupName || noGrpName}`;
+      case CloudHealthAlertType.SQLServerVulnerabilityAssessmentNoStorageAccountConfigured:
+        this.dropdownOptions = this._storageAccountResources;
         break;
-      case CloudHealthAlertType.OldSnapshots:
-        const noSize = this._translateService.instant('orderMsRequestChange.detailsStep.noSize');
-        let size = !isNullOrEmpty(alert.sizeGB) ? `${alert.sizeGB} GB` : noSize;
-        subText = `${alert.subscriptionName || noSubName}, ${alert.resourceGroupName || noGrpName}, ${size}`;
+      case CloudHealthAlertType.SQLServerVulnerabilityAssessmentPeriodicScansDisabled:
+        this.dropdownOptions = this._createPeriodicScanDropdownOption();
         break;
-      case CloudHealthAlertType.UnattachedIpAddresses:
-        const noIp = this._translateService.instant('orderMsRequestChange.detailsStep.noIpAddress');
-        let ipAddress = !isNullOrEmpty(alert.ipAddress) ? alert.ipAddress : noIp;
-        subText = `${alert.subscriptionName || noSubName}, ${alert.resourceGroupName || noGrpName}, ${ipAddress}`;
-        break;
-      default:
-        break;
     }
-    return subText;
+  }
+
+  private _createPeriodicScanDropdownOption(): McsOption[] {
+    let options = [];
+    options.push(createObject(McsOption, { text: periodicScheduleText[PeriodicSchedule.NoChange], value: PeriodicSchedule.NoChange }));
+    options.push(createObject(McsOption, { text: periodicScheduleText[PeriodicSchedule.Weekly], value: PeriodicSchedule.Weekly }));
+    return options;
+  }
+
+  private _createStorageAccountDropdownOption(): void {
+    let param = new McsAzureResourceQueryParams();
+    param.type = 'microsoft.storage/storageaccounts';
+
+    this._apiService.getAzureResources(param).pipe(
+      catchError((error) => throwError(error)),
+      shareReplay(1)
+    ).subscribe((response) => {
+      let resources = getSafeProperty(response, (obj) => obj.collection) || [];
+      let options: McsOption[] = [];
+      options.push(createObject(McsOption, { text: periodicScheduleText[PeriodicSchedule.NoChange], value: PeriodicSchedule.NoChange }));
+      if (isNullOrEmpty(resources)) { return options; }
+      resources.forEach((resource) => {
+        if (isNullOrEmpty(resource.name)) { return; }
+        options.push(createObject(McsOption, {
+          text: resource.name,
+          value: resource.name }
+        ));
+      })
+
+      this._storageAccountResources = options;
+    });
   }
 }

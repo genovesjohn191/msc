@@ -73,7 +73,8 @@ import {
   McsAzureResourceQueryParams,
   McsManagementServiceQueryParams,
   McsOptionGroup,
-  McsAzureManagementService
+  McsAzureManagementService,
+  CloudHealthAlertType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -91,7 +92,6 @@ import {
   formatStringToText
 } from '@app/utilities';
 import { MsRequestChangeService } from './ms-request-change.service';
-import { CloudHealthAlertType } from './cloudhealth/cloudhealth-services';
 import {
   addNewResourcesText,
   AzureResources
@@ -163,14 +163,6 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   public get customNotesHelpText(): string {
     return this._translateService.instant('smacShared.form.notes.helpText');
-  }
-
-  public get actionRemoveLabel(): string {
-    return this._translateService.instant('action.remove');
-  }
-
-  public get managementTagLabel(): string {
-    return this._translateService.instant('orderMsRequestChange.detailsStep.managementTags.actionLabel');
   }
 
   public get unknownFallbackText(): string {
@@ -555,30 +547,35 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
         type: alert.config?.type,
         subscription: alert.config?.subscriptionId,
         resourceGroup: alert.config?.resourceGroupName,
-        action: alert?.alertType === CloudHealthAlertType.ManagementTags ?
-          `${this.managementTagLabel} ${alert.text}` : this.actionRemoveLabel
+        action: this._chAlertTypesTextIncluded(alert?.alertType) ?
+          `${alert.actionLabel} ${alert.text}` : alert.actionLabel
       })
     })
     return resources;
   }
 
-  /**
-   * Initialize the options for category control
-   */
+  private _chAlertTypesTextIncluded(alertType): boolean {
+    if (alertType === CloudHealthAlertType.ManagementTags ||
+      alertType === CloudHealthAlertType.SecurityContactEmailNotConfigured ||
+      alertType === CloudHealthAlertType.SQLServerVulnerabilityAssessmentNoStorageAccountConfigured ||
+      alertType === CloudHealthAlertType.SQLServerVulnerabilityAssessmentPeriodicScansDisabled ||
+      alertType === CloudHealthAlertType.SQLServerVulnerabilityAssessmentEmailNotConfigured ||
+      alertType === CloudHealthAlertType.SQLServerVulnerabilityAssessmentEmailSubscriptionAdminsNotConfigured ||
+      alertType === CloudHealthAlertType.LoggingDisabledforKeyVault
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   private _subscribeToAzureProductOptions(): void {
     this.azureProductOptions$ = of(this._mapEnumToOption(this.azureProductsEnum, azureProductsText));
   }
 
-  /**
-   * Initialize the options for request type
-   */
   private _subscribeToRequestTypeOptions(): void {
     this.serviceRequestType$ = of(this._mapRequestTypeEnumToOption(this.requestTypeEnum, azureServiceRequestTypeText));
   }
 
-  /**
-   * Initialize the options for contact control
-   */
   private _subscribeToContactOptions(): void {
     this.contactOptions$ = of(this._mapEnumToOption(this.formResponseEnum, formResponseText));
   }

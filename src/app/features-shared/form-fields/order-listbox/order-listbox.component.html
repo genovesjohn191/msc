@@ -2,10 +2,6 @@
   <div class="left-container">
     <mcs-item *ngFor="let category of categoryList">
       <a (click)="onClickCategory(category)"
-        mcsId="{{ categoryId }}"
-        mcsEventTracker="{{ categoryEventTracker }}"
-        mcsEventCategory="{{ eventCategory }}"
-        mcsEventLabel="{{ eventLabel }}"
         [ngClass]="{'active': selectedCategory?.text === category?.text}">
         {{ category.text }}
         <mat-icon color="black" style="float: right">arrow_right</mat-icon>
@@ -25,10 +21,6 @@
       <mcs-item *ngFor="let item of selectedItemList"
         (mouseover)="selectedItemOnHover(item.value)">
         <a (click)="onClickSelectedItem(item)"
-          mcsId="{{ selectedItemId }}"
-          mcsEventTracker="{{ selectedItemEventTracker }}"
-          mcsEventCategory="{{ eventCategory }}"
-          mcsEventLabel="{{ eventLabel }}"
           [ngClass]="{'active': selectedItem === item?.value}">
           {{ item.text }}
         </a>

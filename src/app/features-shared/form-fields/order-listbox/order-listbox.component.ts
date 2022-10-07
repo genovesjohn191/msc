@@ -52,24 +52,6 @@ export class OrderListBoxComponent extends FormFieldBaseComponent2<McsOption> {
     public isProcessing: boolean;
 
   @Input()
-    public categoryId: string;
-
-  @Input()
-    public selectedItemId: string;
-
-  @Input()
-    public categoryEventTracker: string;
-
-  @Input()
-    public selectedItemEventTracker: string;
-
-  @Input()
-    public eventCategory: string;
-
-  @Input()
-    public eventLabel: string;
-
-  @Input()
     public noItemsFallbackText: string;
 
   @Output()

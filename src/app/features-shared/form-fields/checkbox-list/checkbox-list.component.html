@@ -3,10 +3,6 @@
     [(ngModel)]="selectedOptions"
     (ngModelChange)="onSelected($event)">
     <mat-list-option *ngFor="let option of optionList"
-      mcsId="{{ eventId }}"
-      mcsEventTracker="{{ eventTracker }}"
-      mcsEventCategory="{{ eventCategory }}"
-      mcsEventLabel="{{ eventLabel }}"
       [value]="option">
       <div class="text">{{ option.text }}</div>
       <div class="sub-text">{{ option.subText }}</div>

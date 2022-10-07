@@ -1,0 +1,29 @@
+<div class="field-input-list-container">
+  <mat-list>
+    <ng-container *ngIf="childInputFcConfig$ | async as childInputFcConfig">
+      <ng-container *ngIf="childInputFcConfig | mcsArrayHasElement">
+        <mat-list-item *ngFor="let config of childInputFcConfig">
+          <div class="option-label">
+            <div class="text">{{ config.option.text }}</div>
+            <div class="sub-text">{{ config.option.subText }}</div>
+          </div>
+          <mat-form-field appearance="outline">
+            <input matInput
+              [formControl]="getFormControl(config?.childFormControlName)"
+              [placeholder]="placeholder"
+              (input)="onInputChange($event, config.option)">
+            <mat-error *ngIf="getFormControl(config?.childFormControlName)?.hasError('email')">
+              {{ 'orderMsRequestChange.detailsStep.emailError' | translate }}
+            </mat-error>
+            <mat-error *ngIf="getFormControl(config?.childFormControlName)?.hasError('numeric')">
+              {{ 'orderMsRequestChange.detailsStep.numberError' | translate }}
+            </mat-error>
+            <mat-error *ngIf="getFormControl(config?.childFormControlName)?.hasError('min')">
+              {{ 'orderMsRequestChange.detailsStep.numberMinError' | translate: { min_value: minNum } }}
+            </mat-error>
+          </mat-form-field>
+        </mat-list-item>
+      </ng-container>
+    </ng-container>
+  </mat-list>
+</div>
