@@ -1,9 +1,8 @@
 @import "shared/index";
 
-$dropdown-container-width: 184px;
 $border: 1px solid $color-black;
 
-.select-management-tag-container {
+.field-input-list-container {
   margin-top: $space-medium;
 
   div {
@@ -24,14 +23,20 @@ $border: 1px solid $color-black;
 
       .mat-list-item-content {
         justify-content: space-between;
-        padding: $space-small;
+        padding: $space-small $space-small 0 $space-small;
+        word-break: break-all;
+
+        .mat-form-field-wrapper {
+          margin: 0;
+          padding: 0 0 $space-medium;
+
+          mat-error {
+            @include font-size($font-size-small);
+          }
+        }
 
         .sub-text {
           @include font-size($font-size-small);
-        }
-
-        .dropdown-container {
-          min-width: $dropdown-container-width;
         }
       }
     }

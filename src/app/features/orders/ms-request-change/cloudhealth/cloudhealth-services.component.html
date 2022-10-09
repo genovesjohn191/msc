@@ -1,54 +1,50 @@
 <form [formGroup]="fgCloudhealth" mcsFormGroup>
-  <div style="margin-top: 15px">
+  <div margin-top-medium>
     <mcs-order-listbox *ngIf="cloudHealthPeriodRange$ | async"
+      [formControl]="fcCloudhealth"
       [categoryList]="cloudHealthPeriodRange$ | async"
       [selectedItemList]="cloudHealthAlerts$ | async"
-      [categoryId]="'select-cloudhealth-period-range'"
-      [selectedItemId]="'select-cloudhealth-alert'"
-      [categoryEventTracker]="'period-range'"
-      [selectedItemEventTracker]="'cloudhealth-alert'"
-      [eventCategory]="'cloudhealth'"
       [isProcessing]="isChProcessing"
-      [eventLabel]="'azure-service-request-page'"
       [noItemsFallbackText]="'message.noCloudHealthAlertsDisplay' | translate"
       (categoryChange)="onClickPeriodRange($event)"
-      [formControl]="fcCloudhealth"
       (selectedItemChange)="onClickCloudHealthAlert($event)">
     </mcs-order-listbox>
 
     <!-- Cloudhealth alert list by Type-->
-    <div style="margin-top: 15px">
+    <div margin-top-medium>
       <ng-container *ngIf="isChByIdProcessing; else cloudHealthByIdTemplate">
-        <mcs-loader style="padding-top: 10px" size="medium"></mcs-loader>
+        <mcs-loader padding-top-medium size="medium"></mcs-loader>
       </ng-container>
       <ng-template #cloudHealthByIdTemplate>
         <ng-container *ngIf="alertType">
-          <h6>{{ alertLabel }}</h6>
-          <span>{{ alertSubLabel }}</span>
+          <span [innerHTML]="chALertInfo.description | mcsNewLines"></span>
           <ng-container *ngIf="cloudHealthAlertOptions?.length === 0; else hasDataTemplate">
-            <mcs-item>
-              <span>{{ 'message.noDataFound' | translate }}</span>
-            </mcs-item>
+            <span display-block>{{ 'message.noDataFound' | translate }}</span>
           </ng-container>
+
           <ng-template #hasDataTemplate>
-            <ng-container *ngIf="alertType === alertManagementTag; else notManagementTagTemplate">
-              <mcs-select-management-tag
-                [managementTagList]="cloudHealthAlertOptions"
-                [dropdownList]="managementTagOptions$ | async"
+            <ng-container *ngIf="chALertInfo.controlType === chAlertFieldTypeEnum.Dropdown">
+              <mcs-field-select-list
+                [optionList]="cloudHealthAlertOptions"
+                [dropdownOptions]="dropdownOptions"
                 [formControl]="fcDropdown">
-              </mcs-select-management-tag>
+              </mcs-field-select-list>
             </ng-container>
     
-            <ng-template #notManagementTagTemplate>
+            <ng-container *ngIf="chALertInfo.controlType === chAlertFieldTypeEnum.Checkbox">
               <mcs-checkbox-list
-                [eventId]="'cloudhealth-alert-checkbox'"
-                [eventTracker]="'select-cloudhealth-alert-checkbox'"
-                [eventCategory]="'cloudhealth'"
-                [eventLabel]="'azure-service-request-page'"
                 [optionList]="cloudHealthAlertOptions"
                 [formControl]="fcCheckbox">
               </mcs-checkbox-list>
-            </ng-template>
+            </ng-container>
+
+            <ng-container *ngIf="chALertInfo.controlType === chAlertFieldTypeEnum.Input">
+              <mcs-field-input-list
+                [optionList]="cloudHealthAlertOptions"
+                [inputType]="chALertInfo.inputType"
+                [formControl]="fcInputText">
+              </mcs-field-input-list>
+            </ng-container>
           </ng-template>
         </ng-container>
       </ng-template>

@@ -13,6 +13,7 @@ import { FieldAutocompleteService } from './field-autocomplete/field-autocomplet
 import { MCS_FIELD_AUTOCOMPLETE_TOKEN } from './field-autocomplete/services/field-autocomplete.service';
 import { FieldErrorMessageDirective } from './field-directives/field-error-message.directive';
 import { FieldInputDatePickerComponent } from './field-input-date-picker/field-input-date-picker.component';
+import { FieldInputListComponent } from './field-input-list/field-input-list.component';
 import { FieldInputNoteComponent } from './field-input-note/field-input-note.component';
 import { FieldInputNumberArrowComponent } from './field-input-number-arrow/field-input-number-arrow.component';
 import { FieldInputTextareaComponent } from './field-input-textarea/field-input-textarea.component';
@@ -33,7 +34,7 @@ import { MCS_FIELD_SELECT_TOKEN } from './field-select/services/field-select.ser
 import { InputInlineEditComponent } from './input-inline-edit/input-inline-edit.component';
 import { OrderListBoxComponent } from './order-listbox/order-listbox.component';
 import { SelectColocationDeviceComponent } from './select-colocation-service/select-colocation-service.component';
-import { SelectManagementTagComponent } from './select-management-tag/select-management-tag.component';
+import { FieldSelectListComponent } from './field-select-list/field-select-list.component';
 import { SelectResourceDropdownComponent } from './select-resource/select-resource-dropdown.component';
 import { SelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 
@@ -54,6 +55,7 @@ const exports: any[] | Type<any> = [
   FieldInputTimePickerComponent,
   FieldInputUrlComponent,
   FieldInputTextareaComponent,
+  FieldInputListComponent,
 
   FieldSelectComponent,
   FieldSelectPipe,
@@ -64,14 +66,14 @@ const exports: any[] | Type<any> = [
   FieldSelectBillingAccountComponent,
   FieldSelectBillingServiceComponent,
   FieldSelectMonthPeriodComponent,
+  FieldSelectListComponent,
 
   FieldAutocompleteComponent,
   FieldAutocompletePipe,
   FieldAutocompleteScrollDirective,
 
   OrderListBoxComponent,
-  SelectColocationDeviceComponent,
-  SelectManagementTagComponent
+  SelectColocationDeviceComponent
 ];
 
 @NgModule({

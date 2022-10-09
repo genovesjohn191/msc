@@ -994,29 +994,108 @@
       "resourceGroupContextualHelp": "Select a relevant resource group or the name of a new resource group to provision to.",
       "provisionNotesContextualHelp": "Specify the requirements for this provisioning request. Note: provisioning requests are for the addition of a few resources to your subscription. If you have a new project that requires architecture or design, please get in contact with your SDM.",
       "newResourceGroupNameLabel": "New resource group name",
-      "noSubName": "Unknown subscription",
-      "noName": "Unknown name",
-      "noGrpName": "Unknown resource group",
-      "noSize": "Unknown size",
-      "noIpAddress": "Unknown IP address",
-      "unattachedDisk" : {
-        "label": "Please remove the following unattached disks:",
-        "subLabel": "Unchecked disks below will be left as is."
-      },
-      "managementTags" : {
-        "text": "Undefined Update Management Tags",
-        "label": "Please correct the mcsUpdateMgmt tags for the following VMs:",
-        "subLabel": "Deployment schedules will run at 11pm on the chosen day.",
-        "actionLabel": "Correct Update Management Tag:"
-      },
-      "unattachedIps" : {
-        "label": "Please remove the following unattached IP addresses:",
-        "subLabel": "Unchecked IP addresses below will be left as is."
-      },
-      "unattachedSnapshot" : {
-        "label": "Please remove the following old snapshots:",
-        "subLabel": "Unchecked snapshots below will be left as is."
-      }
+      "emailPlaceHolder": "Enter an email (optional)",
+      "numberPlaceHolder": "Enter a number (optional)",
+      "emailError": "Incorrect email format",
+      "numberError": "Invalid number",
+      "numberMinError": "Minimum number is {{min_value}}"
+    },
+    "unattachedDisk": {
+      "label": "<strong>Please remove the following unattached disks:</strong>\r\n Unchecked disks below will be left as is.",
+      "action": "Remove"
+    },
+    "managementTags": {
+      "text": "Undefined Update Management Tags",
+      "label": "<strong>Please correct the mcsUpdateMgmt tags for the following VMs:</strong>\r\n Deployment schedules will run at 11pm on the chosen day.",
+      "action": "Correct Update Management Tag:"
+    },
+    "unattachedIps": {
+      "label": "<strong>Please remove the following unattached IP addresses:</strong>\r\n Unchecked IP addresses below will be left as is.",
+      "action": "Remove"
+    },
+    "unattachedSnapshot": {
+      "label": "<strong>Please remove the following old snapshots:</strong>\r\n Unchecked snapshots below will be left as is.",
+      "action": "Remove"
+    },
+    "storageAccountSecureTransfer": {
+      "label": "<strong>Please select the storage accounts you would like us to enable secure transfer for:</strong>\r\n Unchecked storage accounts below will be left as-is.",
+      "action": "Enable secure transfer"
+    },
+    "storageBlobContainerPublicAccess": {
+      "label": "<strong>Please select the storage blob containers would you like us to disable anonymous access for:</strong>\r\n Unchecked storage blob containers below will be left as-is.",
+      "action": "Disable anonymous access"
+    },
+    "sqlAuditingDisabled": {
+      "label": "<strong>Please select the servers you would like us to enable SQL Server auditing for:</strong>\r\n Unchecked servers below will be left as-is.",
+      "action": "Enable SQL Server auditing"
+    },
+    "storageContainerActivityLogsPubliclyAccessible": {
+      "label": "<strong>Please select the storage containers you would like us to disable anonymous access for:</strong>\r\n Unchecked storage containers below will be left as-is.",
+      "action": "Disable anonymous access"
+    },
+    "securityContactEmailNotConfigured": {
+      "label": "<strong>Please specify a security contact email to use for the following subscriptions:</strong>\r\n Subscriptions with no email address specified below will be left as-is.",
+      "action": "Security contact email:"
+    },
+    "azureDefenderDisabledStorageAccount": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for Storage Account:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for Storage Account"
+    },
+    "windowsDefenderATPIntegrationNotSelected": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Windows Defender ATP Integration:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Windows Defender ATP Integration"
+    },
+    "azureDefenderDisabledSQLServerMachine": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for SQL Server on Machine:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for SQL Server on Machine"
+    },
+    "azureDefenderDisabledAppService": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for App Service:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for App Service"
+    },
+    "azureDefenderDisabledServer": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for Servers:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for Servers"
+    },
+    "azureDefenderDisabledSQLDatabaseServer": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for SQL Database Server:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for SQL Database Server"
+    },
+    "azureDefenderDisabledKeyVault": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for Key Vault:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for Key Vault"
+    },
+    "azureDefenderDisabledKubernetesService": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for Kubernetes Service:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for Kubernetes Service"
+    },
+    "azureDefenderDisabledContainerRegistry": {
+      "label": "<strong>Please select the subscriptions for which you would like us to enable Azure Defender for Container Registry:</strong>\r\n Unchecked subscriptions below will be left as-is.",
+      "action": "Enable Azure Defender for Container Registry"
+    },
+    "sqlThreatDetectionDisabled": {
+      "label": "<strong>Please select the servers for which you would like us to enable Azure Defender for SQL:</strong>\r\n Unchecked servers below will be left as-is.",
+      "action": "Enable Azure Defender for SQL"
+    },
+    "sqlVulnerabilityNoStorageAccountConfigured": {
+      "label": "<strong>Please specify a storage account to store SQL Server vulnerability assessment scan results in for the following servers:</strong>\r\n Servers with no storage account specified below will be left as-is.",
+      "action": "Correct storage account for SQL Server vulnerability assessment scan results:"
+    },
+    "sqlVulnerabilityPeriodicScansDisabled": {
+      "label": "<strong>Please specify an SQL Server vulnerability assessment schedule for the following servers:</strong>\r\n Servers with no schedule specified below will be left as-is.",
+      "action": "Correct SQL Server vulnerability assessment schedule: "
+    },
+    "sqlVulnerabilityEmailNotConfigured": {
+      "label": "<strong>Please specify an email to use when notifying of SQL Server vulnerability assessments for the following servers:</strong>\r\n Servers with no email address specified below will be left as-is.",
+      "action": "Correct email for SQL Server vulnerability assessments:"
+    },
+    "sqlVulnerabilityEmailSubAdminsNotConfigured": {
+      "label": "<strong>Please specify a subscription admin contact email to use when notifying of SQL Server vulnerabilities for the following servers:</strong>\r\n Servers with no email address specified below will be left as-is.",
+      "action": "Correct subscription admin contact email to use for SQL Server vulnerabilities: "
+    },
+    "loggingDisabledforKeyVault" : {
+      "label": "<strong>Please select the Key Vaults you would like us to enable logging for:</strong>\r\n Key Vaults with no retention period specified below will be left as-is.",
+      "action": "Enable Key Vault logging:"
     },
     "errors": {
       "complexity": "You must select a complexity",
@@ -4128,7 +4207,13 @@
     "emptySubscriptionId": "Unable to find the subscription ID for this item. Please ensure that it has a 'CSP Consumption Service' populated in CRISP and that service is properly installed.",
     "scaleRestartServer": "CPU Hot Plug is disabled for this server, meaning scaling it will cause it to restart.",
     "scaleRestartCheckbox": "Restart this server as part of the scaling process.",
-    "noDescription": "No description to display"
+    "noDescription": "No description to display",
+    "noSubName": "Unknown subscription",
+    "noName": "Unknown name",
+    "noGrpName": "Unknown resource group",
+    "noSize": "Unknown size",
+    "noIpAddress": "Unknown IP address",
+    "noServiceId": "Unknown service"
   },
   "tooltip": {
     "exportWord": "Export Word Document",

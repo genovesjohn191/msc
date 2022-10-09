@@ -1,0 +1,53 @@
+@import "shared/index";
+
+$dropdown-container-width: 184px;
+$border: 1px solid $color-black;
+
+.field-select-list-container {
+  margin-top: $space-medium;
+
+  div {
+    @include font-size($font-size-default);
+    line-height: normal;
+
+    @include breakpoint(small) {
+      @include font-size($font-size-small);
+    }
+  }
+
+  .mat-list-base {
+    border: $border;
+    padding: 0;
+
+    .mat-list-item {
+      height: 100%;
+
+      .mat-list-item-content {
+        justify-content: space-between;
+        padding: $space-small;
+        word-break: break-all;
+
+        .sub-text {
+          @include font-size($font-size-small);
+        }
+
+        .dropdown-container {
+          min-width: $dropdown-container-width;
+          mcs-select {
+            max-width: 182px;
+
+            .select-trigger div {
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+
+    .mat-list-item:not(:last-child) {
+      border-bottom: $border;
+    }
+  }
+}

@@ -35,18 +35,6 @@ export class CheckBoxListComponent  extends FormFieldBaseComponent2<McsOptionTyp
       }
     }
 
-  @Input()
-    public eventId: string;
-
-  @Input()
-    public eventTracker: string;
-
-  @Input()
-    public eventCategory: string;
-
-  @Input()
-    public eventLabel: string;
-
   public onSelected(optionList: McsOptionType[]): void {
     this.writeValue(optionList);
   }

@@ -10,4 +10,7 @@ export class McsAzureResourceQueryParams extends McsQueryParam {
 
   @JsonProperty({ name: 'subscription_id' })
   public subscriptionId?: string = undefined;
+
+  @JsonProperty({ name: 'type' })
+  public type?: string = undefined;
 }

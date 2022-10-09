@@ -1,0 +1,21 @@
+<div class="field-select-list-container">
+  <mat-list>
+    <mat-list-item *ngFor="let option of optionList">
+      <div class="option-label">
+        <div class="text">{{ option.text }}</div>
+        <div class="sub-text">{{ option.subText }}</div>
+      </div>
+      <div class="dropdown-container">
+        <mcs-form-field>
+          <mcs-select required
+            (selectionChange)="onSelectChange($event, option)">
+            <mcs-option *ngFor="let dropdown of dropdownOptions"
+              [value]="dropdown">
+              {{ dropdown.text }}
+            </mcs-option>
+          </mcs-select>
+        </mcs-form-field>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

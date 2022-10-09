@@ -23,20 +23,14 @@
     </ng-container>
     <ng-container *ngIf="terraformCategories.length > 0">
       <mcs-order-listbox
+        [formControl]="fcTerraformModule"
         [mcsContextualHelp]="moduleHelpText"
         [categoryList]="terraformCategories"
         [selectedItemList]="moduleList"
         [selectedCategory]="terraformCategories[0]"
-        [categoryId]="'select-terraform-category'"
-        [selectedItemId]="'select-terraform-module'"
-        [categoryEventTracker]="'terraform-category'"
-        [selectedItemEventTracker]="'terraform-module'"
-        [eventCategory]="'provision'"
-        [eventLabel]="'azure-service-request-page'"
         [noItemsFallbackText]="'message.noTerraformModulesDisplay' | translate"
         (categoryChange)="onClickCategory($event)"
-        (hoveredItemChange)="setModuleHelpText($event)"
-        [formControl]="fcTerraformModule">
+        (hoveredItemChange)="setModuleHelpText($event)">
       </mcs-order-listbox>
     </ng-container>
   </div>

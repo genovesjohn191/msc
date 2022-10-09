@@ -100,7 +100,7 @@ export * from './enumerations/terraform-deployment-activity-type.enum';
 export * from './enumerations/terraform-deployment-status.enum';
 export * from './enumerations/azure-service-request-type.enum';
 export * from './enumerations/period-range.enum';
-export * from './enumerations/cloudhealth-management-tag.enum';
+export * from './enumerations/periodic-schedule.enum';
 export * from './enumerations/module-type.enum';
 export * from './enumerations/install-base-state.enum';
 export * from './enumerations/network-db-pod-type.enum';
@@ -117,6 +117,7 @@ export * from './enumerations/journal-history.enum';
 export * from './enumerations/extender-type.enum';
 export * from './enumerations/sort-direction.enum';
 export * from './enumerations/crisp-object-status.enum';
+export * from './enumerations/cloudhealth-alert-type.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';

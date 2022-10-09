@@ -11,6 +11,9 @@ export class McsCloudHealthAlertConfigurationItems {
   public subscriptionId: string = undefined;
 
   @JsonProperty()
+  public serviceId: string = undefined;
+
+  @JsonProperty()
   public subscriptionName: string = undefined;
 
   @JsonProperty()
