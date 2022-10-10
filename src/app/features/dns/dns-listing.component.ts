@@ -115,16 +115,22 @@ export class DnsListingComponent extends McsPageBase {
     return this._translateService.instant('dnsListing.unavailable');;
   }
 
-  public onRequestChange(dns: McsNetworkDnsBase): string {
-    return isNullOrEmpty(dns.serviceId) ?
-      CoreRoutes.getNavigationPath(RouteKey.OrderHostedDnsChange) :
-      `${CoreRoutes.getNavigationPath(RouteKey.OrderHostedDnsChange)}?serviceId=${dns.serviceId}`;
+  public onRequestChange(dns: McsNetworkDnsBase): void {
+    if (isNullOrEmpty(dns.serviceId)) {
+      this._navigationService.navigateTo(RouteKey.OrderHostedDnsChange)
+    }
+    this._navigationService.navigateTo(RouteKey.OrderHostedDnsChange, [], {
+      queryParams: { serviceId: dns.serviceId }
+    });
   }
 
-  public onRaiseTicket(dns: McsNetworkDnsBase): string {
-    return isNullOrEmpty(dns.serviceId) ?
-      CoreRoutes.getNavigationPath(RouteKey.TicketCreate) :
-      `${CoreRoutes.getNavigationPath(RouteKey.TicketCreate)}?serviceId=${dns.serviceId}`;
+  public onRaiseTicket(dns: McsNetworkDnsBase): void {
+    if (isNullOrEmpty(dns.serviceId)) {
+      this._navigationService.navigateTo(RouteKey.TicketCreate)
+    }
+    this._navigationService.navigateTo(RouteKey.TicketCreate, [], {
+      queryParams: { serviceId: dns.serviceId }
+    });
   }
 
   public isPrimary(isPrimaryDns: boolean): string {

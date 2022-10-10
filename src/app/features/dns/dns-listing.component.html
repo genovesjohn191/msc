@@ -111,7 +111,7 @@
                 <div *mcsAccessControl="['OrderEdit']"
                   class="cog-actions-wrapper">
                   <a mcsButton="basic" color="white" labelPlacement="left"
-                    [href]="onRequestChange(row)"
+                    (click)="onRequestChange(row)"
                     mcsId="dns-listing-request-change"
                     mcsEventTracker="dns-request-change"
                     mcsEventCategory="dns"
@@ -124,7 +124,7 @@
                 <div *mcsAccessControl="['TicketCreate']"
                   class="cog-actions-wrapper">
                   <a mcsButton="basic" color="white" labelPlacement="left"
-                    [href]="onRaiseTicket(row)"
+                    (click)="onRaiseTicket(row)"
                     mcsId="dns-raise-ticket"
                     mcsEventTracker="navigate-to-raise-ticket"
                     mcsEventCategory="dns"

@@ -414,16 +414,16 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
         let zonesList = getSafeProperty(response, (obj) => obj.zones) || [];
         let optionList = new Array<McsOption>();
         if(zonesList.length === 0) {
+          this.networkDnsZoneOptions = [];
           this.loadingDNSZones = false;
-          return;
         } else {
           zonesList.forEach((zone) => {
             optionList.push(createObject(McsOption, { text: zone.name, value: zone }));
           });
           this.networkDnsZoneOptions = optionList;
           this.loadingDNSZones = false;
-          this._changeDetectionRef.detectChanges();
         }
+        this._changeDetectionRef.detectChanges();
       }
     );
   }
@@ -449,7 +449,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
       tap((params) => {
           let preSelectedOption: McsOption = this.networkDnsOptions.find(_dnsNetwork => _dnsNetwork.value.serviceId === params.serviceId);
           this.fcDnsService.setValue(preSelectedOption.value);
-          this._getNetworkDnsZones(params.serviceId);
+          this._getNetworkDnsZones(preSelectedOption.value.id);
       }),
       shareReplay(1)
     );
