@@ -42,6 +42,8 @@
           <ng-template #dataFieldArrayTemplate>
             <mcs-form-field class="dynamic-list" [ngStyle]="{'margin-top': '8px'}">
               <mcs-dynamic-list
+                [maximum]="257"
+                [maxlength]="255"
                 [placeholder]="'label.data' | translate"
                 [required]="true"
                 [formControl]="viewmodel.fcData">

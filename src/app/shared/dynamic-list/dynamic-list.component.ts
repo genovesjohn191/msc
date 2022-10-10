@@ -49,6 +49,7 @@ import {
 
 const DEFAULT_MINIMUM_ITEM = 0;
 const DEFAULT_MAXIMUM_ITEM = 10;
+const DEFAULT_MAX_LENGTH_CHAR = 140;
 
 interface DynamicListItem {
   id: string;
@@ -152,6 +153,15 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
     this._maximum = max;
   }
   private _maximum: number = DEFAULT_MAXIMUM_ITEM;
+
+  @Input()
+  public get maxLength(): number {
+    return this._maxLength;
+  }
+  public set maxLength(max: number) {
+    this._maxLength = max;
+  }
+  private _maxLength: number = DEFAULT_MAX_LENGTH_CHAR;
 
   @Input()
   public get enableOrdering(): boolean {

@@ -3,7 +3,7 @@
     <mcs-form-field [disabled]="isMaximum(list)">
       <input mcsInput type="text" #inputItemFc
         [placeholder]="placeholder"
-        maxlength="255"
+        [maxlength]="maxLength"
         [formControl]="fcInput"
         (keyup.enter)="onEnterAddItem($event, inputItemFc.value, list)"
         (blur)="onBlur()">
