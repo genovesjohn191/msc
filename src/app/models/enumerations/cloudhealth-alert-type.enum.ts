@@ -9,7 +9,7 @@ export enum CloudHealthAlertType {
   StorageContainerActivityLogsPubliclyAccessible = 'Storage Container Activity Logs Publicly Accessible',
   SecurityContactEmailNotConfigured = 'Security Contact Email Not Configured',
   AzureDefenderDisabledStorageAccount = 'Azure Defender Disabled for Storage Account',
-  WindowsDefenderATPIntegrationNotSelected = ' Windows Defender ATP Integration Not Selected',
+  WindowsDefenderATPIntegrationNotSelected = 'Windows Defender ATP Integration Not Selected',
   AzureDefenderDisabledSQLServerMachine = 'Azure Defender Disabled for SQL Server on Machine',
   AzureDefenderDisabledAppService = 'Azure Defender Disabled for App Service',
   AzureDefenderDisabledServer = 'Azure Defender Disabled for Server',
