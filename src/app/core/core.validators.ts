@@ -231,7 +231,8 @@ export class CoreValidators {
    * {'email': true}
    */
   public static email(control: AbstractControl): ValidationErrors | null {
-    return Validators.email(control);
+    return CommonDefinition.REGEX_EMAIL_PATTERN.test(control.value) ?
+      null : { email: true };
   }
 
   /**
