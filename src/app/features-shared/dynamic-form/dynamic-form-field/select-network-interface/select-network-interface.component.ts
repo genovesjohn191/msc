@@ -30,7 +30,9 @@ import {
 
 import {
   animateFactory,
+  CommonDefinition,
   isNullOrEmpty,
+  isNullOrUndefined,
   TreeDatasource,
   TreeGroup,
   TreeItem,
@@ -58,6 +60,9 @@ import { McsEvent } from '@app/events';
 export interface NetworkInterface {
   networkInterface: string;
   uuids: string[];
+  ipAddress?: string;
+  gateway?: string;
+  prefix?: number;
 }
 
 export interface operatingSystem {
@@ -68,7 +73,7 @@ export interface operatingSystem {
 @Component({
   selector: 'mcs-dff-select-network-interface-field',
   templateUrl: './select-network-interface.component.html',
-  styleUrls: [ '../dynamic-form-field.scss' ],
+  styleUrls: ['../dynamic-form-field.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -99,13 +104,13 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   public datasourceEth0Eth1: TreeDatasource<FlatOption>;
   public datasourceEth2Eth3: TreeDatasource<FlatOption>;
 
-  private _networkInterfaceValue : NetworkInterface[] = [];
+  private _networkInterfaceValue: NetworkInterface[] = [];
   private _optionsEth0Eth1 = new BehaviorSubject<FlatOption[]>(null);
   private _optionsEth2Eth3 = new BehaviorSubject<FlatOption[]>(null);
   private _destroySubject = new Subject<void>();
-  
-  private get _interfaceList(): string[]{
-    if(this.isEsxi) {
+
+  private get _interfaceList(): string[] {
+    if (this.isEsxi) {
       return ['eth0', 'eth1', 'eth2', 'eth3'];
     }
     return ['eth0', 'eth1'];
@@ -117,6 +122,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   public constructor(
     private _eventDispatcher: EventBusDispatcherService,
     private _networkInterfaceService: DynamicSelectNetworkInterfaceService,
+    private _apiService: McsApiService,
     _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_changeDetectorRef);
@@ -131,6 +137,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   }
 
   protected callService(): Observable<FlatOption[]> {
+    if(isNullOrUndefined(this._resource) || isNullOrUndefined(this._companyId)) { return of([]); }
     return this._networkInterfaceService.getNetworks(this._resource.id, this._companyId).pipe((
       tap((options) => {
         this._optionsEth0Eth1.next(options);
@@ -146,7 +153,8 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
       value: this.config.value,
       eventName,
       dependents
-    });  }
+    });
+  }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     switch (params.eventName) {
@@ -161,8 +169,9 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
       case 'os-change':
         this._os = params.value as operatingSystem;
         this.isEsxi = false;
-        if(this._os.type === 'ESX') { this.isEsxi = true; }
+        if (this._os.type === 'ESX') { this.isEsxi = true; }
         this._reset();
+        this.retrieveOptions();
         break;
     }
   }
@@ -184,10 +193,29 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   }
 
   private _onNetworkEth0Eth1Change(selectedNetworks: string[]): void {
-    this._networkInterfaceValue.forEach(item => {
-      if(item.networkInterface === 'eth0' || item.networkInterface === 'eth1'){
-        item.uuids = selectedNetworks;
+    let networkCounter = 1;
+    this._networkInterfaceValue.forEach(networkInterface => {
+      if (networkInterface.networkInterface === 'eth0') {
+        networkInterface.uuids = selectedNetworks;
+        if (!isNullOrEmpty(selectedNetworks) && networkCounter === 1
+            && !isNullOrUndefined(this._companyId) && !isNullOrUndefined(this._resource)) {
+          let optionalHeaders = new Map<string, any>([
+            [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+          ]);
+          let firstSelectedNetwork = this._networkInterfaceService.networkList.find(network => network.id === selectedNetworks[0]);
+          this._apiService.getResourceNetwork(this._resource.id, firstSelectedNetwork.id,optionalHeaders).pipe(
+            tap(response => {
+              networkInterface.gateway = response.subnets[0]?.gateway;
+              networkInterface.ipAddress = response.ipAddresses[0]?.ipAddress;
+              networkInterface.prefix = 26;
+            })
+          ).subscribe();
+        }
       }
+      else if(networkInterface.networkInterface === 'eth1'){
+        networkInterface.uuids = selectedNetworks;
+      }
+      networkCounter++;
     });
 
     this.config.value = this._networkInterfaceValue;
@@ -197,7 +225,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
 
   private _onNetworkEth2Eth3Change(selectedNetworks: string[]): void {
     this._networkInterfaceValue.forEach(item => {
-      if(item.networkInterface === 'eth2' || item.networkInterface === 'eth3'){
+      if (item.networkInterface === 'eth2' || item.networkInterface === 'eth3') {
         item.uuids = selectedNetworks;
       }
     });
@@ -224,7 +252,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
           record => new TreeGroup(record, record, records),
           child => new TreeGroup(child.value, child.key, null, {
             selectable: true
-      }))),
+          }))),
       tap(() => this._changeDetectorRef.markForCheck())
     );
   }
@@ -237,7 +265,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
           record => new TreeGroup(record, record, records),
           child => new TreeGroup(child.value, child.key, null, {
             selectable: true
-      }))),
+          }))),
       tap(() => this._changeDetectorRef.markForCheck())
     );
   }
@@ -251,11 +279,11 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
       };
       this._networkInterfaceValue.push(networkInterface);
     });
-    
+
     this.inputCtrlEth0Eth1.reset();
     this.inputCtrlEth0Eth1.setValue([]);
     this.inputCtrlEth0Eth1.updateValueAndValidity();
-    
+
     this.inputCtrlEth2Eth3.reset();
     this.inputCtrlEth2Eth3.setValue([]);
     this.inputCtrlEth2Eth3.updateValueAndValidity();

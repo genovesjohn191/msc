@@ -77,8 +77,8 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
         break;
 
       case 'compute-change':
-        this._cpuCount = params.value.cpuCount;
-        this._minimumMemoryMB = params.value.memoryMB;
+        this._cpuCount = params.value?.cpuCount;
+        this._minimumMemoryMB = params.value?.memoryMB;
         this.filterOptions();
         break;
     }
