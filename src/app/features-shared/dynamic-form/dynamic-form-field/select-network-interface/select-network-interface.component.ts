@@ -1,17 +1,13 @@
 import {
   takeUntil,
   map,
-  tap,
-  distinctUntilChanged,
-  catchError
+  tap
 } from 'rxjs/operators';
 import {
   BehaviorSubject,
-  forkJoin,
   Observable,
   of,
-  Subject,
-  throwError
+  Subject
 } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -30,7 +26,6 @@ import {
 
 import {
   animateFactory,
-  CommonDefinition,
   isNullOrEmpty,
   isNullOrUndefined,
   TreeDatasource,
@@ -38,17 +33,14 @@ import {
   TreeItem,
   TreeUtility
 } from '@app/utilities';
-import { McsApiService } from '@app/services';
 import {
-  McsNetworkDbMazAaQueryParams,
   McsNetworkDbPod,
   McsResource
 } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
   DynamicFormFieldOnChangeEvent,
-  FlatOption,
-  GroupedOption
+  FlatOption
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { DynamicSelectNetworkInterfaceField } from './select-network-interface';
@@ -56,6 +48,8 @@ import { DynamicSelectNetworkInterfaceService } from './select-network-interface
 import { FieldSelectTreeViewComponent } from '@app/features-shared/form-fields/field-select-tree-view/field-select-tree-view.component';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/events';
+import { CoreValidators } from '@app/core';
+import { DynamicFormValidationService } from '../../dynamic-form-validation.service';
 
 export interface NetworkInterface {
   networkInterface: string;
@@ -73,7 +67,10 @@ export interface operatingSystem {
 @Component({
   selector: 'mcs-dff-select-network-interface-field',
   templateUrl: './select-network-interface.component.html',
-  styleUrls: ['../dynamic-form-field.scss'],
+  styleUrls: [
+    '../dynamic-form-field.scss',
+    './select-network-interface.component.scss'
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -103,6 +100,11 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   public inputCtrlEth2Eth3 = new FormControl<any>(null);
   public datasourceEth0Eth1: TreeDatasource<FlatOption>;
   public datasourceEth2Eth3: TreeDatasource<FlatOption>;
+  public fcGateway = new FormControl<string>('');
+  public fcManagementIp = new FormControl<string>('');
+  public fcPrefix = new FormControl<number>(null);
+  public prefixMinValue: number = 22;
+  public prefixMaxValue: number = 30;
 
   private _networkInterfaceValue: NetworkInterface[] = [];
   private _optionsEth0Eth1 = new BehaviorSubject<FlatOption[]>(null);
@@ -122,10 +124,12 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   public constructor(
     private _eventDispatcher: EventBusDispatcherService,
     private _networkInterfaceService: DynamicSelectNetworkInterfaceService,
-    private _apiService: McsApiService,
+    private _validationService: DynamicFormValidationService,
     _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_changeDetectorRef);
+    this._initializeNetworkValue();
+    this._registerFormControls();
     this.datasourceEth0Eth1 = new TreeDatasource<FlatOption>(this._convertEth0Eth1OptionsToTreeItems.bind(this));
     this.datasourceEth2Eth3 = new TreeDatasource<FlatOption>(this._convertEth2Eth3OptionsToTreeItems.bind(this));
     this._subscribeToValueChanges();
@@ -136,8 +140,20 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
     this.retrieveOptions();
   }
 
+  public get gatewayErrorMessage(): string {
+    return this._validationService.getErrorMessage(this.fcGateway);
+  }
+
+  public get managementIpErrorMessage(): string {
+    return this._validationService.getErrorMessage(this.fcManagementIp);
+  }
+
+  public get prefixErrorMessage(): string {
+    return this._validationService.getErrorMessage(this.fcPrefix);
+  }
+
   protected callService(): Observable<FlatOption[]> {
-    if(isNullOrUndefined(this._resource) || isNullOrUndefined(this._companyId)) { return of([]); }
+    if (isNullOrUndefined(this._resource) || isNullOrUndefined(this._companyId)) { return of([]); }
     return this._networkInterfaceService.getNetworks(this._resource.id, this._companyId).pipe((
       tap((options) => {
         this._optionsEth0Eth1.next(options);
@@ -176,7 +192,72 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
     }
   }
 
+  private _registerFormControls(): void {
+    this.fcGateway = new FormControl<any>('', [
+      CoreValidators.required,
+      CoreValidators.ipAddress,
+      CoreValidators.privateIpAddress
+    ]);
+
+    this.fcManagementIp = new FormControl<any>('', [
+      CoreValidators.required,
+      CoreValidators.ipAddress,
+      CoreValidators.custom(
+        this._ipMaskValidator.bind(this),
+        'ipRange'
+      ),
+      CoreValidators.custom(
+        this._ipGatewayValidator.bind(this),
+        'ipIsGateway'
+      )
+    ]);
+
+    this.fcPrefix = new FormControl<number>(null, [
+      CoreValidators.required,
+      CoreValidators.min(this.prefixMinValue),
+      CoreValidators.max(this.prefixMaxValue)
+    ]);
+
+    this._setManagementIpEnabling();
+  }
+
+  private _setManagementIpEnabling(): void {
+    if (this.fcGateway.valid && this.fcPrefix.valid) {
+      this.fcManagementIp.enable();
+    }
+    else {
+      this.fcManagementIp.reset();
+      this.fcManagementIp.disable();
+    }
+  }
+
   private _subscribeToValueChanges(): void {
+    this.fcGateway.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(changes => {
+        this._networkInterfaceValue[0].gateway = changes;
+        this._updateValue();
+        this._setManagementIpEnabling();
+      })
+    ).subscribe();
+
+    this.fcPrefix.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(changes => {
+        this._networkInterfaceValue[0].prefix = changes;
+        this._updateValue();
+        this._setManagementIpEnabling();
+      })
+    ).subscribe();
+
+    this.fcManagementIp.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(changes => {
+        this._networkInterfaceValue[0].ipAddress = changes;
+        this._updateValue();
+      })
+    ).subscribe();
+    
     this.inputCtrlEth0Eth1.valueChanges.pipe(
       takeUntil(this._destroySubject),
       tap(changes => {
@@ -193,43 +274,24 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   }
 
   private _onNetworkEth0Eth1Change(selectedNetworks: string[]): void {
-    let networkCounter = 1;
     this._networkInterfaceValue.forEach(networkInterface => {
-      if (networkInterface.networkInterface === 'eth0') {
+      if (networkInterface.networkInterface === 'eth0' || networkInterface.networkInterface === 'eth1') {
         networkInterface.uuids = selectedNetworks;
-        if (!isNullOrEmpty(selectedNetworks) && networkCounter === 1
-            && !isNullOrUndefined(this._companyId) && !isNullOrUndefined(this._resource)) {
-          let optionalHeaders = new Map<string, any>([
-            [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
-          ]);
-          let firstSelectedNetwork = this._networkInterfaceService.networkList.find(network => network.id === selectedNetworks[0]);
-          this._apiService.getResourceNetwork(this._resource.id, firstSelectedNetwork.id,optionalHeaders).pipe(
-            tap(response => {
-              networkInterface.gateway = response.subnets[0]?.gateway;
-              networkInterface.ipAddress = response.ipAddresses[0]?.ipAddress;
-              networkInterface.prefix = 26;
-            })
-          ).subscribe();
-        }
+        this._updateValue();
       }
-      else if(networkInterface.networkInterface === 'eth1'){
-        networkInterface.uuids = selectedNetworks;
-      }
-      networkCounter++;
     });
-
-    this.config.value = this._networkInterfaceValue;
-    this.valueChange(this.config.value);
-    this._eventDispatcher.dispatch(McsEvent.dataChangeCreateNetworkPanelsEvent);
   }
 
   private _onNetworkEth2Eth3Change(selectedNetworks: string[]): void {
-    this._networkInterfaceValue.forEach(item => {
-      if (item.networkInterface === 'eth2' || item.networkInterface === 'eth3') {
-        item.uuids = selectedNetworks;
+    this._networkInterfaceValue.forEach(networkInterface => {
+      if (networkInterface.networkInterface === 'eth2' || networkInterface.networkInterface === 'eth3') {
+        networkInterface.uuids = selectedNetworks;
+        this._updateValue();
       }
     });
+  }
 
+  private _updateValue() {
     this.config.value = this._networkInterfaceValue;
     this.valueChange(this.config.value);
     this._eventDispatcher.dispatch(McsEvent.dataChangeCreateNetworkPanelsEvent);
@@ -270,7 +332,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
     );
   }
 
-  private _reset(): void {
+  private _initializeNetworkValue(): void {
     this._networkInterfaceValue = [];
     this._interfaceList.forEach(item => {
       let networkInterface: NetworkInterface = {
@@ -279,7 +341,10 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
       };
       this._networkInterfaceValue.push(networkInterface);
     });
+  }
 
+  private _reset(): void {
+    this._initializeNetworkValue();
     this.inputCtrlEth0Eth1.reset();
     this.inputCtrlEth0Eth1.setValue([]);
     this.inputCtrlEth0Eth1.updateValueAndValidity();
@@ -289,5 +354,30 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
     this.inputCtrlEth2Eth3.updateValueAndValidity();
 
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _ipMaskValidator(inputValue: any): boolean {
+    if (isNullOrEmpty(this.fcGateway.value) || isNullOrUndefined(this.fcPrefix.value)) { return false; }
+    var Netmask = require('netmask').Netmask;
+    var gatewayIp: string = this.fcGateway.value;
+    var subnet = new Netmask(gatewayIp + '/' + this.fcPrefix.value);
+
+    try {
+      return (subnet.contains(inputValue) &&
+        subnet.broadcast !== inputValue &&
+        subnet.base !== inputValue);
+    }
+    catch (error) {
+      return false;
+    }
+  }
+
+   private _ipGatewayValidator(inputValue: any): boolean {
+    try {
+      return this.fcGateway.value !== inputValue;
+    }
+    catch (error) {
+      return false;
+    }
   }
 }

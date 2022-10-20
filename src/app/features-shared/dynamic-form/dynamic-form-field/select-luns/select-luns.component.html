@@ -9,7 +9,7 @@
     matBadgeSize="small"
     [matTooltip]="hasError && !multipleBootError ? 'Failed to load options' : ''"
     matTooltipPosition="above">
-    <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : 'Boot Lun' }}</mat-label>
+    <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : 'Boot LUN' }}</mat-label>
     <mat-select disabled [(value)]="luns.serviceId" (selectionChange)="onLunsChange()" [required]="required">
       <mat-option *ngFor="let opt of config.options" [value]="opt.key"
         [disabled]="opt.disabled" [matTooltip]="opt.hint">
