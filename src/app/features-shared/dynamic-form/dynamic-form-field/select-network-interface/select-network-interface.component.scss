@@ -1,0 +1,33 @@
+@import "shared/index";
+
+.divider {
+  font-size: $font-size-xxlarge;
+  margin: $space-medium;
+}
+
+.gateway-ip-field {
+  max-width: 250px;
+}
+
+.div-gateway {
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.prefix-field {
+  max-width: 100px;
+}
+
+.div-prefix {
+  max-width: 100px;
+  display: inline-block;
+}
+
+.div-ip {
+  margin-bottom: 10px;
+}
+
+.div-network {
+  margin-bottom: 25px;
+  max-width: 400px;
+}

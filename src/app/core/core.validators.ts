@@ -34,6 +34,18 @@ export class CoreValidators {
       || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
       null : { ipAddress: true };
   }
+  
+  /**
+   * Validator that performs private ip address validation
+   *
+   * `@Note` This will produce the following value when false
+   * { 'privateIpAddress': true }
+   */
+   public static privateIpAddress(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_PRIVATE_IP_PATTERN.test(control.value)
+      || (Validators.required(control) !== null && isNullOrEmpty(control.value)) ?
+      null : { privateIpAddress: true };
+  }
 
   /**
    * Validator that performs network address validation

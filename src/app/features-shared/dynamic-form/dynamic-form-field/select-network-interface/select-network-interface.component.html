@@ -1,4 +1,35 @@
-<div style="margin-bottom: 25px">
+<div class="div-gateway">
+  <mat-form-field
+    appearance="outline"
+    class="gateway-ip-field">
+    <mat-label>Gateway IP</mat-label>
+    <input matInput type="text" mcsId="inputGateway" [formControl]="fcGateway" />
+    <mat-error *ngIf="fcGateway.hasError" [innerHTML]="gatewayErrorMessage"></mat-error>
+  </mat-form-field>
+</div>
+
+<span class="divider"> / </span>
+
+<div class="div-prefix">
+  <mat-form-field
+    appearance="outline"
+    class="prefix-field">
+    <mat-label> Prefix Length </mat-label>
+    <input matInput type="number" class="number" mcsId="input-prefix" [formControl]="fcPrefix"/>
+    <mat-error *ngIf="fcPrefix.hasError" [innerHTML]="prefixErrorMessage"></mat-error>
+  </mat-form-field>
+</div>
+
+<div class="div-ip">
+  <mat-form-field
+    appearance="outline">
+    <mat-label>Management IP</mat-label>
+    <input matInput type="text" mcsId="management-ip" [formControl]="fcManagementIp"/>
+    <mat-error *ngIf="fcManagementIp.hasError" [innerHTML]="managementIpErrorMessage"></mat-error>
+  </mat-form-field>
+</div>
+
+<div class="div-network">
   <mcs-field-select-tree-view #treeViewSelect size="large"
     [formControl]="inputCtrlEth0Eth1"
     label="Interfaces (eth0 and eth1)"
@@ -12,7 +43,7 @@
     [required]="true">
   </mcs-field-select-tree-view>
 </div>
-<div *ngIf="isEsxi" style="margin-bottom: 25px">
+<div *ngIf="isEsxi" class="div-network">
   <mcs-field-select-tree-view #treeViewSelect size="large"
     [formControl]="inputCtrlEth2Eth3"
     label="Interfaces (eth2 and eth3)"

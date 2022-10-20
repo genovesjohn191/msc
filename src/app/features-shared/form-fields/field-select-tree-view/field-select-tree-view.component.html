@@ -64,7 +64,7 @@
             </div>
           </ng-container>
 
-          <div padding-small *ngIf="processOnGoing$ | async">
+          <div padding-small *ngIf="processOnGoing$ | async" [mcsGreyedOut]="true">
             {{ 'message.loadingItems' | translate }}
           </div>
         </div>
@@ -89,7 +89,7 @@
       </div>
     </ng-container>
 
-    <div padding-small *ngIf="processOnGoing$ | async">
+    <div padding-small *ngIf="processOnGoing$ | async" [mcsGreyedOut]="true">
       {{ 'message.loadingItems' | translate }}
     </div>
   </div>
