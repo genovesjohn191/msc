@@ -196,7 +196,9 @@
       <th mat-header-cell *matHeaderCellDef>
         {{ 'columnHeader.name' | translate }}
       </th>
-      <td mat-cell *matCellDef="let row" text-top>
+      <td mat-cell *matCellDef="let row" text-top
+        [mcsTextTruncate]="row.recordInfo?.hostName"
+        mcsTextTruncateSize="200px">
         {{ row.recordInfo?.hostName }}
       </td>
     </ng-container>
@@ -206,7 +208,9 @@
       <th mat-header-cell *matHeaderCellDef>
         {{ 'columnHeader.value' | translate }}
       </th>
-      <td mat-cell *matCellDef="let row" text-top>
+      <td mat-cell *matCellDef="let row" text-top
+        [mcsTextTruncate]="row.targetOrDataValue"
+        mcsTextTruncateSize="200px">
         <ng-container *ngIf="row.isNaptr; else defaultTargetTemplate">
           <span [mcsGreyedOut]="true">{{ 'message.editToView' | translate }}</span>
         </ng-container>
