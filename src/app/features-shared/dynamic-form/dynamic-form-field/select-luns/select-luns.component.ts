@@ -110,6 +110,7 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
         this._apiService.getCrispElement(item.productId).pipe(
           takeUntil(this.destroySubject),
           tap((crispElement) => {
+            debugger;
             let bootService = crispElement.serviceAttributes.find(attr =>
               attr.code === CrispAttributeNames.DesignatedUsage && attr.displayValue === 'BOOT'
             );
@@ -123,17 +124,20 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
 
               if(options.length === 1){
                 this._updateLunValues(crispElement);
-              }
-              else{
-                this._clearLunsValues();
-                this.hasError = true;
-                this.multipleBootError = true;
-                this._serviceIdErrorMessage = 'Exactly one boot LUN must be associated with this element in CRISP.';
+                return;
               }
             }
+            this._showNoBootLunError();
           })).subscribe();
       });
     return options;
+  }
+
+  private _showNoBootLunError(){
+    this._clearLunsValues();
+    this.hasError = true;
+    this.multipleBootError = true;
+    this._serviceIdErrorMessage = 'Exactly one boot LUN must be associated with this element in CRISP.';
   }
 
   private _clearLunsValues(){
