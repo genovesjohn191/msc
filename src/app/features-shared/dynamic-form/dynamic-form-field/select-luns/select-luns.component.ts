@@ -110,7 +110,7 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
         this._apiService.getCrispElement(item.productId).pipe(
           takeUntil(this.destroySubject),
           tap((crispElement) => {
-            debugger;
+
             let bootService = crispElement.serviceAttributes.find(attr =>
               attr.code === CrispAttributeNames.DesignatedUsage && attr.displayValue === 'BOOT'
             );
@@ -124,12 +124,17 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
 
               if(options.length === 1){
                 this._updateLunValues(crispElement);
-                return;
+              }
+              else{
+                this._showNoBootLunError();
               }
             }
-            this._showNoBootLunError();
           })).subscribe();
       });
+
+      if(options.length === 0){
+        this._showNoBootLunError();
+      }
     return options;
   }
 
