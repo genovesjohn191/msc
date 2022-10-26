@@ -3,7 +3,7 @@ import {
   forwardRef,
   ChangeDetectorRef,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 
 import {
@@ -13,10 +13,11 @@ import {
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { McsNetworkDbPod, McsObjectCrispElement, McsObjectCrispElementService, ProductType } from '@app/models';
 import { McsApiService } from '@app/services';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { delay, map, takeUntil, tap } from 'rxjs/operators';
 import { isNullOrEmpty, isNullOrUndefined } from '@app/utilities';
 import { DynamicSelectLunsField } from './select-luns';
 import { CrispAttributeNames, findCrispElementAttribute } from '@app/features/launch-pad/workflows/workflow/core/forms/mapping-helper';
+import { CoreValidators } from '@app/core';
 
 export interface Luns {
   serviceId: string;
@@ -38,11 +39,18 @@ export interface Luns {
       useExisting: forwardRef(() => DynamicSelectLunsComponent),
       multi: true
     }
-  ]
+  ],
+  host: {
+    '(blur)': 'onTouched()'
+  }
 })
 export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<McsObjectCrispElementService>{
   public config: DynamicSelectLunsField;
   public multipleBootError: boolean = true;
+  public lunSizeError: boolean = true;
+  public fcLunSize: FormControl<number>;
+  public minLunSize: number = 8;
+  public maxLunSize: number = 65000;
 
   public luns: Luns = {
     serviceId: null,
@@ -70,6 +78,10 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
     _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_changeDetectorRef);
+    this.fcLunSize = new FormControl(null,[
+      CoreValidators.min(this.minLunSize),
+      CoreValidators.max(this.maxLunSize)
+    ]);
   }
 
   public onLunsChange(): void {
@@ -123,7 +135,7 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
               options.push(option);
 
               if(options.length === 1){
-                this._updateLunValues(crispElement);
+                this._setInitialLunValues(crispElement);
               }
               else{
                 this._showNoBootLunError();
@@ -156,7 +168,7 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
     this.valueChange(this.config.value);
   }
 
-  private _updateLunValues(service: McsObjectCrispElement){
+  private _setInitialLunValues(service: McsObjectCrispElement){
     let sizeGbValue: number = null;
     let tierValue: string = '';
     switch(service.productType.toString()){
@@ -194,6 +206,7 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
       tier: tierValue,
       bootLun: true
     }
+    this._setLunSize();
     this.onLunsChange();
     this.hasError = false;
     this.multipleBootError = false;
@@ -204,5 +217,10 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
       return false;
     }
     return true;
+  }
+
+  private _setLunSize(): void{
+    this.fcLunSize.setValue(this.luns.sizeGb);
+    this.fcLunSize.markAsTouched();
   }
 }

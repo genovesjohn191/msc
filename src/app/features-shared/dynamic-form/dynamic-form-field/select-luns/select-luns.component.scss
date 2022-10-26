@@ -8,3 +8,12 @@ mat-select {
   color: $color-black !important;
   opacity: 1 !important;
 }
+
+.number {
+  opacity: 0.4 !important;
+}
+
+mat-error {
+  margin-bottom: 20px;
+  margin-top: -10px;
+}
