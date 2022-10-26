@@ -25,7 +25,7 @@
       <mat-icon color="primary">refresh</mat-icon>
     </button>
   </mat-form-field>
-  <mat-error *ngIf="hasError || multipleBootError" style="margin-bottom: 20px;">{{ serviceIdErrorMessage }}</mat-error>
+  <mat-error *ngIf="hasError || multipleBootError">{{ serviceIdErrorMessage }}</mat-error>
 
   <!-- Storage Tier -->
   <mat-form-field
@@ -51,12 +51,16 @@
     style="max-width: 200px;">
     <mat-label [attr.for]="id">Disk Size</mat-label>
   
-    <input disabled #control matInput type="number" class="number" [(ngModel)]="luns.sizeGb" (change)="onLunsChange()"
-      [required]="required"
-      [min]="1"
-      [max]="16384"
+    <input matInput type="number" class="number" readonly
+      [formControl]="fcLunSize"
       step="1"/>
     <span matSuffix class="suffix">GB</span>
   </mat-form-field>
+  <mat-error *ngIf="fcLunSize?.hasError('min')">
+    Boot LUN must be {{ minLunSize | number }} GB or greater.
+  </mat-error>
+  <mat-error *ngIf="fcLunSize?.hasError('max')" >
+    LUN size must not exceed {{ maxLunSize | number }} GB.
+  </mat-error>
 </div>
   
