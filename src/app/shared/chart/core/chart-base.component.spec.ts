@@ -1,200 +1,208 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import {
+  ComponentFixture,
+  TestBed,
+  waitForAsync
+} from "@angular/core/testing";
+import {
+  ChartComponentBase,
+  ChartConfig
+} from "./chart-base.component";
 import { By } from "@angular/platform-browser";
 import { CoreTestingModule } from "@app/core/testing";
 import { ServicesTestingModule } from "@app/services/testing";
 import { StatusMessageModule } from "@app/shared/status-message/status-message.module";
 import { NgApexchartsModule } from "ng-apexcharts";
 import { ChartDataService } from "../chart-data.service";
-import { ChartComponentBase, ChartConfig } from "./chart-base.component";
+
 
 describe("ChartComponentBase", () => {
-    /** Stub Services/Components */
-    let component: ChartComponentBase;
-    let fixture: ComponentFixture<ChartComponentBase>;
+  /** Stub Services/Components */
+  let component: ChartComponentBase;
+  let fixture: ComponentFixture<ChartComponentBase>;
 
-    beforeEach(waitForAsync(() => {
+  beforeEach(waitForAsync(() => {
 
-        /** Testbed Reset Module */
-        TestBed.resetTestingModule();
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
 
-        /** Testbed Configuration */
-        TestBed.configureTestingModule({
-            declarations: [
-                ChartComponentBase,
-            ],
-            imports: [
-                CoreTestingModule,
-                ServicesTestingModule,
-                NgApexchartsModule,
-                StatusMessageModule
-            ],
-            providers: [
-                ChartDataService
-            ]
-        });
-
-        /** Tesbed Component Compilation and Creation */
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ChartComponentBase);
-            // fixture.detectChanges();
-
-            component = fixture.componentInstance;
-            
-        });
-    }));
-
-    /** Test Implementation */
-    describe('ngOnInit()', () => {
-        it(`should create the component`, () => {
-            expect(component).toBeTruthy();
-        });
-
+    /** Testbed Configuration */
+    TestBed.configureTestingModule({
+      declarations: [
+        ChartComponentBase,
+      ],
+      imports: [
+        CoreTestingModule,
+        ServicesTestingModule,
+        NgApexchartsModule,
+        StatusMessageModule
+      ],
+      providers: [
+        ChartDataService
+      ]
     });
 
-    describe("setInputConfig", () => {
+    /** Tesbed Component Compilation and Creation */
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(ChartComponentBase);
+      // fixture.detectChanges();
 
-        let chartConfig: ChartConfig;
+      component = fixture.componentInstance;
 
-        beforeEach(() => {
+    });
+  }));
 
-        })
-        it("should set the config values", () => {
+  /** Test Implementation */
+  describe('ngOnInit()', () => {
+    it(`should create the component`, () => {
+      expect(component).toBeTruthy();
+    });
 
-            chartConfig = {
-                type: 'donut'
-            };
-            component.config = chartConfig;
+  });
 
-            expect(component.options.chart).toBeTruthy();
-        });
+  describe("setInputConfig", () => {
 
-        it("should set the chart config type", () => {
+    let chartConfig: ChartConfig;
 
-            chartConfig = {
-                type: 'donut'
-            };
-            component.config = chartConfig;
+    beforeEach(() => {
 
-            expect(component.options.chart.type).toEqual("donut");
-        });
+    })
+    it("should set the config values", () => {
 
-        it("should set the height value", () => {
+      chartConfig = {
+        type: 'donut'
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                height: '380px'
-            };
-            component.config = chartConfig;
+      expect(component.options.chart).toBeTruthy();
+    });
 
-            expect(component.options.chart.height).toEqual("380px");
-        });
+    it("should set the chart config type", () => {
 
-        it("should set the height to auto if not specified", () => {
+      chartConfig = {
+        type: 'donut'
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                type: 'donut'
-            };
-            component.config = chartConfig;
+      expect(component.options.chart.type).toEqual("donut");
+    });
 
-            expect(component.options.chart.height).toEqual("auto");
-        });
+    it("should set the height value", () => {
 
-        it("should set the x-axis value", () => {
+      chartConfig = {
+        height: '380px'
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                xaxis: {
-                    title: "Test chart X"
-                }
-            };
-            component.config = chartConfig;
+      expect(component.options.chart.height).toEqual("380px");
+    });
 
-            expect(component.options.xaxis).toBeTruthy();
-        });
+    it("should set the height to auto if not specified", () => {
 
-        it("should set the y-axis value", () => {
+      chartConfig = {
+        type: 'donut'
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                yaxis: {
-                    title: "Test chart Y"
-                }
-            };
-            component.config = chartConfig;
+      expect(component.options.chart.height).toEqual("auto");
+    });
 
-            expect(component.options.yaxis).toBeTruthy();
-        });
+    it("should set the x-axis value", () => {
 
-        it("should set the datalabels value", () => {
+      chartConfig = {
+        xaxis: {
+          title: "Test chart X"
+        }
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                dataLabels: {
-                    enabled: true
-                }
-            };
-            component.config = chartConfig;
+      expect(component.options.xaxis).toBeTruthy();
+    });
 
-            expect(component.options.dataLabels).toBeTruthy();
-        });
+    it("should set the y-axis value", () => {
 
-        it("should set the legend value", () => {
+      chartConfig = {
+        yaxis: {
+          title: "Test chart Y"
+        }
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                legend: {
-                }
-            };
-            component.config = chartConfig;
+      expect(component.options.yaxis).toBeTruthy();
+    });
 
-            expect(component.options.legend).toBeTruthy();
-        });
+    it("should set the datalabels value", () => {
 
-        it("should set the plotoptions value", () => {
+      chartConfig = {
+        dataLabels: {
+          enabled: true
+        }
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                plotOptions: {
-                    bar: {}
-                }
-            };
-            component.config = chartConfig;
+      expect(component.options.dataLabels).toBeTruthy();
+    });
 
-            expect(component.options.plotOptions).toBeTruthy();
-        });
+    it("should set the legend value", () => {
 
-        it("should set the colors value", () => {
+      chartConfig = {
+        legend: {
+        }
+      };
+      component.config = chartConfig;
 
-            chartConfig = {
-                colors: ["blue"]
-            };
-            component.config = chartConfig;
+      expect(component.options.legend).toBeTruthy();
+    });
 
-            expect(component.options.colors).toBeTruthy();
-        });
+    it("should set the plotoptions value", () => {
 
-        it("should call the updateChart() method", () => {
+      chartConfig = {
+        plotOptions: {
+          bar: {}
+        }
+      };
+      component.config = chartConfig;
 
-            spyOn(component, "updateChart");
-            chartConfig = {
-                type: "donut"
-            };
-            component.config = chartConfig;
+      expect(component.options.plotOptions).toBeTruthy();
+    });
 
-            expect(component.updateChart).toHaveBeenCalled();
-        });
+    it("should set the colors value", () => {
+
+      chartConfig = {
+        colors: ["blue"]
+      };
+      component.config = chartConfig;
+
+      expect(component.options.colors).toBeTruthy();
+    });
+
+    it("should call the updateChart() method", () => {
+
+      spyOn(component, "updateChart");
+      chartConfig = {
+        type: "donut"
+      };
+      component.config = chartConfig;
+
+      expect(component.updateChart).toHaveBeenCalled();
+    });
+  })
+
+  describe("setInputnoDataMessage", () => {
+
+    it("should display the data message value", () => {
+      component.noDataMessage = "Sample Chart";
+      fixture.detectChanges();
+      const msgElement = fixture.debugElement.queryAll(By.css("mcs-status-message"));
+
+      expect(msgElement[0].nativeElement.innerText).toContain("Sample Chart")
     })
 
-    describe("setInputnoDataMessage", () => {
-        
-        it("should display the data message value", () => {
-            component.noDataMessage = "Sample Chart";
-            fixture.detectChanges();
-            const msgElement = fixture.debugElement.queryAll(By.css("mcs-status-message"));
+    it("should display 'No chart items to display' if value is empty", () => {
+      component.noDataMessage = "";
+      fixture.detectChanges();
+      const msgElement = fixture.debugElement.queryAll(By.css("mcs-status-message"));
 
-            expect(msgElement[0].nativeElement.innerText).toContain("Sample Chart") 
-        })
-
-        it("should display 'No chart items to display' if value is empty", () => {
-            component.noDataMessage = "";
-            fixture.detectChanges();
-            const msgElement = fixture.debugElement.queryAll(By.css("mcs-status-message"));
-
-            expect(msgElement[0].nativeElement.innerText).toContain("No chart items to display") 
-        })
+      expect(msgElement[0].nativeElement.innerText).toContain("No chart items to display")
     })
+  })
 })
