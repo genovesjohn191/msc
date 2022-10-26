@@ -2,13 +2,12 @@
 import {
   Component,
   ElementRef,
-  ViewChild,
-  ViewChildren
+  ViewChild
 } from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
-  TestBed
+  TestBed,
+  waitForAsync
 } from '@angular/core/testing';
 import { SafeHtmlPipe } from './safe-html.pipe';
 
@@ -20,7 +19,7 @@ import { SafeHtmlPipe } from './safe-html.pipe';
 export class TestComponent {
   @ViewChild('testElement1')
   public testElement1: ElementRef;
-  
+
   @ViewChild(SafeHtmlPipe)
   public pipe: SafeHtmlPipe;
 
@@ -72,9 +71,9 @@ describe('SafeHtmlPipe', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it(`should create the element`, () => {
-        let textContentElement = component.testElement1.nativeElement as HTMLElement;
-        expect(textContentElement).toBeDefined();
-      });
+      let textContentElement = component.testElement1.nativeElement as HTMLElement;
+      expect(textContentElement).toBeDefined();
+    });
 
     it(`should sanitize the value as trusted html`, () => {
       let textContentElement = component.testElement1.nativeElement as HTMLElement;
