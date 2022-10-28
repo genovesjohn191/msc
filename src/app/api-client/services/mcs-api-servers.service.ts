@@ -742,9 +742,12 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  public getServerBackupVms(): Observable<McsApiSuccessResponse<McsServerBackupVm[]>> {
+  public getServerBackupVms(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServerBackupVm[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/vm-backups`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -792,10 +795,13 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-  public getServerBackupServers():
+  public getServerBackupServers(query?: McsQueryParam):
     Observable<McsApiSuccessResponse<McsServerBackupServer[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/servers/server-backups`;
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
