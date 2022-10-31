@@ -54,8 +54,8 @@ export class CrispOrdersComponent extends McsPageBase implements OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'assignee' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'hostingEngineer' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerName' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' })
   ];
 

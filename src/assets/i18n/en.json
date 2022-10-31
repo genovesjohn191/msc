@@ -102,8 +102,8 @@
           "orderId": "Order ID",
           "description": "Description",
           "status": "Status",
-          "companyName": "Customer Name",
-          "companyId": "Customer ID",
+          "companyName": "Company Name",
+          "companyId": "Company ID",
           "createdOn": "Created On"
         },
         "noRecordsFoundMessage": "No orders to display.",
@@ -129,8 +129,8 @@
       "table": {
         "header": {
           "serviceId": "Service ID",
-          "companyName": "Customer Name",
-          "companyId": "Customer ID"
+          "companyName": "Company Name",
+          "companyId": "Company ID"
         },
         "noRecordsFoundMessage": "No items to display.",
         "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of items.",
@@ -3689,8 +3689,8 @@
     "createdBy": "Created By",
     "createdOn": "Created On",
     "cpuScore": "CPU Score",
-    "customerId": "Customer ID",
-    "customerName": "Customer Name",
+    "companyId": "Company ID",
+    "companyName": "Company Name",
     "customerReference": "Customer Reference",
     "datastore": "Datastore",
     "deployment": "Deployment",
@@ -3715,7 +3715,6 @@
     "isInfrastructure": "Is Infrastructure",
     "impactedRegions": "Impacted Regions",
     "impactedServices": "Impacted Services",
-    "installedBaseState": "Installed Base State",
     "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
     "isPrimary": "Type",
