@@ -420,8 +420,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
       return this._accessControlService.hasPermission([
         'DedicatedVmPowerStateEdit',
         'ManagedCloudVmPowerStateEdit',
-        'SelfManagedCloudVmPowerStateEdit',
-        'ManagedCloudVmManagementIpView'
+        'SelfManagedCloudVmPowerStateEdit'
       ]);
     }
 
