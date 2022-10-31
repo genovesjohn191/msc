@@ -9,8 +9,7 @@ import { DataChangeAzureSoftwareSubscriptionsEvent } from './items/data-change-a
 import { DataChangeCompaniesEvent } from './items/data-change-companies.event';
 import { DataChangeConsoleEvent } from './items/data-change-console.event';
 import { DataChangeCreateNetworkPanelsEvent } from './items/data-change-create-network-panels.event';
-import { DnsDetailsChangeEvent } from './items/data-change-dns-details.event';
-import { DnsListingEvent } from './items/data-change-dns-listing.event';
+import { DnsZoneListingEvent } from './items/data-change-dns-zone-listing.event';
 import { DataChangeExtendersEvent } from './items/data-change-extenders.event';
 import { DataChangeFirewallsEvent } from './items/data-change-firewalls.event';
 import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports.event';
@@ -162,8 +161,7 @@ export class McsEvent {
   public static dataChangeApplicationRecovery = new DataChangeApplicationRecoveryEvent();
   public static dataChangeAzureReservations = new DataChangeAzureReservationsEvent();
   public static dataChangeAzureSoftwareSubscriptions = new DataChangeAzureSoftwareSubscriptionsEvent();
-  public static dataChangeDnsListing = new DnsListingEvent();
-  public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
+  public static dataChangeDnsZoneListing = new DnsZoneListingEvent();
   public static dataChangeTerraformDeployments = new DataChangeTerraformDeploymentsEvent();
   public static dataChangeNetworkDbNetworksEvent = new DataChangeNetworkDbNetworksEvent();
   public static dataChangeCreateNetworkPanelsEvent = new DataChangeCreateNetworkPanelsEvent();

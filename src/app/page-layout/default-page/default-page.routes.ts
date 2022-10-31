@@ -73,7 +73,7 @@ export const defaultPageRoutes: Routes = [
       },
       {
         path: 'network/dns',
-        data: { routeId: RouteKey.DnsListing },
+        data: { routeId: RouteKey.DnsZoneListing },
         loadChildren: () =>
           import('../../features/dns/dns-listing.module').then(m => m.DnsListingModule)
       },

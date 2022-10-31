@@ -176,7 +176,6 @@ import {
   McsNetworkDbVni,
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
-  McsNetworkDnsSummary,
   McsNetworkDnsZone,
   McsNetworkDnsZoneTtlRequest,
   McsNetworkVdcPrecheckVlan,
@@ -310,7 +309,9 @@ import {
   McsVCenterDatacentreQueryParam,
   McsVCenterInstance,
   McsWorkflowCreate,
-  McsPhysicalServer
+  McsPhysicalServer,
+  McsNetworkDnsService,
+  McsNetworkDnsZoneBase
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -563,7 +564,7 @@ export class McsApiService {
     return this._noticesApi.getNotice(id).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsById'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNotice'))
       )
     );
   }
@@ -608,30 +609,47 @@ export class McsApiService {
     );
   }
 
-  public getNetworkDns(query?: McsQueryParam): Observable<McsApiCollection<McsNetworkDnsSummary>> {
-    return this._networkDnsApi.getNetworkDns(query).pipe(
+  public getNetworkDnsServices(query?: McsQueryParam): Observable<McsApiCollection<McsNetworkDnsService>> {
+    return this._networkDnsApi.getNetworkDnsServices(query).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDns'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsServices'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
-  public getNetworkDnsById(id: string): Observable<McsNetworkDnsSummary> {
-    return this._networkDnsApi.getNetworkDnsById(id).pipe(
+  public getNetworkDnsServiceById(id: string): Observable<McsNetworkDnsService> {
+    return this._networkDnsApi.getNetworkDnsServiceById(id).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsById'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsService'))
+      )
+    );
+  }
+
+  public getNetworkDnsZones(query?: McsQueryParam): Observable<McsApiCollection<McsNetworkDnsZoneBase>> {
+    return this._networkDnsApi.getNetworkDnsZones(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsZones'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getNetworkDnsZoneById(id: string): Observable<McsNetworkDnsZone> {
+    return this._networkDnsApi.getNetworkDnsZoneById(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsZone'))
       )
     );
   }
 
   public createNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     request: McsNetworkDnsRecordRequest
   ): Observable<McsNetworkDnsRrSetsRecord> {
-    return this._networkDnsApi.createNetworkDnsZoneRecord(dnsId, zoneId, request).pipe(
+    return this._networkDnsApi.createNetworkDnsZoneRecord(zoneId, request).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createNetworkDnsZoneRecord'))
       ),
@@ -640,12 +658,11 @@ export class McsApiService {
   }
 
   public updateNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     recordId: string,
     request: McsNetworkDnsRecordRequest
   ): Observable<McsNetworkDnsRrSetsRecord> {
-    return this._networkDnsApi.updateNetworkDnsZoneRecord(dnsId, zoneId, recordId, request).pipe(
+    return this._networkDnsApi.updateNetworkDnsZoneRecord(zoneId, recordId, request).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateNetworkDnsZoneRecord'))
       ),
@@ -654,11 +671,10 @@ export class McsApiService {
   }
 
   public deleteNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     recordId: string
   ): Observable<boolean> {
-    return this._networkDnsApi.deleteNetworkDnsZoneRecord(dnsId, zoneId, recordId).pipe(
+    return this._networkDnsApi.deleteNetworkDnsZoneRecord(zoneId, recordId).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteNetworkDnsZoneRecord'))
       ),
@@ -667,11 +683,10 @@ export class McsApiService {
   }
 
   public updateNetworkDnsZoneTTL(
-    dnsId: string,
     zoneId: string,
     request: McsNetworkDnsZoneTtlRequest
   ): Observable<McsNetworkDnsZone> {
-    return this._networkDnsApi.updateNetworkDnsZoneTTL(dnsId, zoneId, request).pipe(
+    return this._networkDnsApi.updateNetworkDnsZoneTTL(zoneId, request).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateGeneric'))
       ),

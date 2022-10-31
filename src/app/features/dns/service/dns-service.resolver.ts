@@ -9,17 +9,17 @@ import {
 } from '@angular/router';
 import {
   McsApiErrorContext,
-  McsNetworkDnsSummary
+  McsNetworkDnsService,
 } from '@app/models';
 import { McsApiService } from '@app/services';
 
 @Injectable()
-export class DnsDetailsResolver implements Resolve<McsNetworkDnsSummary> {
+export class DnsServiceDetailsResolver implements Resolve<McsNetworkDnsService> {
 
   constructor(private _apiService: McsApiService) { }
 
   public resolve(route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): Observable<any> {
-    return this._apiService.getNetworkDnsById(route.paramMap.get('id')).pipe(
+    return this._apiService.getNetworkDnsServiceById(route.paramMap.get('id')).pipe(
       catchError((error) => McsApiErrorContext.throwPrimaryError(error))
     );
   }

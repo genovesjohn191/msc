@@ -1,179 +1,176 @@
 <mcs-page [storageKey]="featureName"
   [defaultFilters]="defaultColumnFilters"
-  [header]="'dnsListing.header'| translate">
+  [header]="'dns.header'| translate">
 
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
-   <mcs-top-panel-item *mcsTopPanelItemDef>
-     <div class="listing-action-wrapper">
-      <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
-        <div class="sorting-label">
-          <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
-        </div>
-      </ng-container>
-      <ng-template #totalCountTemplate>
-        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
-          <span>{{ totalCount | mcsPlural:
-                ('dnsListing.dataSingular' | translate) : ('dnsListing.dataPlural' | translate) }}
-          </span>
-        </div>
-      </ng-template>
-     </div>
-   </mcs-top-panel-item>
- </mcs-top-panel>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalCount | mcsPlural:
+                  ('dns.dataSingular' | translate) : ('dns.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
 
- <!-- Left Panel -->
- <mcs-left-panel *mcsLeftPanelDef="'dnsListing.leftPanelHeader' | translate">
-   <!-- Search -->
-   <!--TODO: uncomment after orch & api implementation of search -->
-   <!-- <mcs-left-panel-item *mcsLeftPanelItemDef>
-     <mcs-search *ngIf="!isMobile" #search mcsId="dns-listing-desktop-search"></mcs-search>
-   </mcs-left-panel-item> -->
-
-   <!-- Column Filter -->
-   <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'dnsListing.columnFilter' | translate" offset="medium">
-    <mcs-column-selector #columnFilter
-      [storageKey]="featureName"
-      [defaultFilters]="defaultColumnFilters"
-      [filterPredicate]="filterPredicate">
-    </mcs-column-selector>
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'dns.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="dns-listing-desktop-search"></mcs-search>
     </mcs-left-panel-item>
- </mcs-left-panel>
 
- <!-- Content Panel -->
- <mcs-content-panel *mcsContentPanelDef>
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'dns.columnFilter' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        [storageKey]="featureName"
+        [defaultFilters]="defaultColumnFilters"
+        [filterPredicate]="filterPredicate">
+      </mcs-column-selector>
+      </mcs-left-panel-item>
+  </mcs-left-panel>
 
-   <div class="listing-table-wrapper">
-     <!-- Table -->
-     <table mat-table  #table [dataSource]="dataSource" matSort #sort="matSort">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="dns-listing-mobile-search"></mcs-search>
 
-      <!-- Description Column -->
-      <ng-container matColumnDef="billingDescription">
-        <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="billingDescription" disableClear>
-          {{ 'columnHeader.description' | translate }}
+      <!-- Table -->
+      <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
+
+      <!-- Zone Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef hidden-small disableClear>
+          {{ 'columnHeader.zone' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" hidden-small>
-          <span [innerHTML]="row.billingDescription | mcsDataLabel: 'Unknown'">
+          <span [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
           </span>
         </td>
       </ng-container>
 
-      <!-- Type Column -->
-      <ng-container matColumnDef="isPrimary">
+      <!-- Record Count Column -->
+      <ng-container matColumnDef="records">
         <th mat-header-cell *matHeaderCellDef hidden-small>
-          {{ 'columnHeader.isPrimary' | translate }}
+          {{ 'columnHeader.records' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small
-          [innerHtml]="isPrimary(row.isPrimary) | mcsDataLabel: unavailableText">
+        <td mat-cell *matCellDef="let row" hidden-small>
+          <span [innerHTML]="row.recordCount">
+          </span>
         </td>
       </ng-container>
 
-      <!-- ServiceID Column -->
+      <!-- Parent Service ID Column -->
       <ng-container matColumnDef="serviceId">
-        <th mat-header-cell *matHeaderCellDef hidden- mat-sort-header="serviceId" disableClear>
+        <th mat-header-cell *matHeaderCellDef hidden-small disableClear>
           {{ 'columnHeader.serviceId' | translate }}
         </th>
         <td mat-cell *matCellDef="let row" hidden-small>
-          <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
-            <span>{{ row.serviceId }}</span>
+          <ng-container *ngIf="row.parentServiceId; else noServiceIdTemplate">
+            <a [mcsRouterLink]="[routeKeyEnum.DnsServiceDetails, row?.parentUuid]"
+              mcsId mcsStopPropagation
+              mcsEventTracker="navigate-to-service-details"
+              mcsEventCategory="dns"
+              mcsEventLabel="dns-listing-page">
+              <span [innerHTML]="row?.parentServiceId | mcsDataLabel: 'Unknown'">
+              </span>
+            </a>
           </ng-container>
           <ng-template #noServiceIdTemplate>
             <mcs-data-status-empty
               [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
-              [mcsTooltipShow]="!row.serviceId">
+              [mcsTooltipShow]="!row.parentServiceId">
               {{ 'label.unknown' | translate }}
             </mcs-data-status-empty>
           </ng-template>
         </td>
       </ng-container>
 
-      <!-- Zone Column -->
-      <ng-container matColumnDef="zoneCount">
-        <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="zoneCount" disableClear>
-          {{ 'columnHeader.zoneCount' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let row" hidden-small
-          [innerHtml]="row.zoneCount">
-        </td>
-      </ng-container>
-
-       <!-- Action Column -->
-       <ng-container matColumnDef="action">
-         <th mat-header-cell *matHeaderCellDef hidden-small></th>
-         <td mat-cell *matCellDef="let row" hidden-small text-center>
-           <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
-            *ngIf="actionsEnabled(row) && row.serviceId"
-             mcsPopover placement="bottom" orientation="left" theme="light"
-             padding="none" [content]="actionContent" mcsCursor="pointer">
-           </mcs-icon>
-           <ng-template #actionContent>
-             <ng-container *ngIf="hasServiceChangeAccess(row)">
-                <div *mcsAccessControl="['OrderEdit']"
-                  class="cog-actions-wrapper">
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef hidden-small></th>
+          <td mat-cell *matCellDef="let row" hidden-small text-center>
+            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
+              *ngIf="actionsEnabled(row) && row.parentServiceId"
+              mcsPopover placement="bottom" orientation="left" theme="light"
+              padding="none" [content]="actionContent" mcsCursor="pointer">
+            </mcs-icon>
+            <ng-template #actionContent>
+              <ng-container *ngIf="hasServiceChangeAccess(row)">
+                <div class="cog-actions-wrapper">
                   <a mcsButton="basic" color="white" labelPlacement="left"
                     (click)="onRequestChange(row)"
                     mcsId="dns-listing-request-change"
                     mcsEventTracker="dns-request-change"
                     mcsEventCategory="dns"
                     mcsEventLabel="dns-listing-page">
-                    {{ 'dnsListing.requestChange' | translate }}
+                    {{ 'action.requestRecordChange' | translate }}
                   </a>
-              </div>
+                </div>
               </ng-container>
-              <ng-container *ngIf="row.serviceId">
-                <div *mcsAccessControl="['TicketCreate']"
-                  class="cog-actions-wrapper">
+              <ng-container *mcsAccessControl="['TicketCreate']">
+                <div class="cog-actions-wrapper">
                   <a mcsButton="basic" color="white" labelPlacement="left"
                     (click)="onRaiseTicket(row)"
                     mcsId="dns-raise-ticket"
                     mcsEventTracker="navigate-to-raise-ticket"
                     mcsEventCategory="dns"
                     mcsEventLabel="dns-listing-page">
-                    {{ 'dnsListing.raiseTicket' | translate }}
+                    {{ 'action.raiseTicket' | translate }}
                   </a>
                 </div>
               </ng-container>
           </ng-template>
-         </td>
-       </ng-container>
+          </td>
+        </ng-container>
 
-       <!-- Header and Data row -->
-       <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
         [disabled]="dataSource?.isInProgress$ | async"></tr>
-       <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
-         mcsCursor="pointer"
-         mcsId="dns-listing-row"
-         (click)="navigateToDNSDetails(row)"
-         mcsEventTracker="navigate-to-hosted-dns-change"
-         mcsEventCategory="dns"
-         mcsEventLabel="dns-listing-page"></tr>
-     </table>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          mcsId="dns-listing-row"
+          (click)="navigateToDnsZoneDetails(row)"
+          mcsEventTracker="navigate-to-zone-details"
+          mcsEventCategory="dns"
+          mcsEventLabel="dns-listing-page"></tr>
+      </table>
 
-     <!-- Table Statuses -->
-     <mcs-item orientation="block">
-       <div *ngIf="dataSource?.isInProgress$ | async" align="center">
-         <mcs-loader size="medium"></mcs-loader>
-       </div>
-       <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-         {{ 'dnsListing.noRecordsFoundMessage' | translate }}
-       </div>
-       <div *ngIf="dataSource?.hasError$ | async" text-center>
-         <div class="listing-status-wrapper">
-           <span>{{ 'dnsListing.shared.errorMessage' | translate }}</span>
-           <a (click)="retryDatasource()"
-             mcsId
-             mcsEventTracker="retry-loading-dns-listing"
-             mcsEventCategory="dns"
-             mcsEventLabel="dns-listing-page">{{ 'dnsListing.retry' | translate }}</a>.
-         </div>
-       </div>
-     </mcs-item>
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          {{ 'dns.noRecordsFoundMessage' | translate }}
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'dns.zoneErrorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-loading-dns-listing"
+              mcsEventCategory="dns"
+              mcsEventLabel="dns-listing-page">{{ 'message.pleaseTryAgain' | translate }}</a>
+          </div>
+        </div>
+      </mcs-item>
 
-       <!-- Paginator -->
-       <mcs-paginator #paginator
-         [hidden]="!hasNextPage"
-         [totalCount]="dataSource?.totalCount$ | async">
-       </mcs-paginator>
-     </div>
-   </mcs-content-panel>
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="!hasNextPage"
+        [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
 </mcs-page>

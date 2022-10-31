@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
-  CoreRoutes,
   McsAccessControlService,
   McsMatTableConfig,
   McsMatTableContext,
@@ -23,7 +22,7 @@ import {
 import { McsEvent } from '@app/events';
 import {
   McsFilterInfo,
-  McsNetworkDnsBase,
+  McsNetworkDnsZoneBase,
   McsQueryParam,
   RouteKey
 } from '@app/models';
@@ -39,7 +38,6 @@ import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-dns-listing',
@@ -47,31 +45,29 @@ import { TranslateService } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DnsListingComponent extends McsPageBase {
-  public readonly dataSource: McsTableDataSource2<McsNetworkDnsBase>;
-  public readonly dataEvents: McsTableEvents<McsNetworkDnsBase>;
+  public readonly dataSource: McsTableDataSource2<McsNetworkDnsZoneBase>;
+  public readonly dataEvents: McsTableEvents<McsNetworkDnsZoneBase>;
   public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters = [
-    createObject(McsFilterInfo, { value: true, exclude: true, id: 'billingDescription' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'isPrimary' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'records' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'zoneCount' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
 
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _translateService: TranslateService,
-    private _navigationService: McsNavigationService,
-    private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
+    private _apiService: McsApiService,
+    private _navigationService: McsNavigationService
   ) {
     super(_injector);
-    this.dataSource = new McsTableDataSource2<McsNetworkDnsBase>(this._getNetworkDNS.bind(this))
+    this.dataSource = new McsTableDataSource2<McsNetworkDnsZoneBase>(this._getNetworkDnsZones.bind(this))
       .registerConfiguration(new McsMatTableConfig(true));
 
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
-      dataChangeEvent: McsEvent.dataChangeDnsListing
+      dataChangeEvent: McsEvent.dataChangeDnsZoneListing
     });
   }
 
@@ -104,47 +100,21 @@ export class DnsListingComponent extends McsPageBase {
   }
 
   public get featureName(): string {
-    return 'dnsListing';
+    return 'dns';
   }
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
-  public get unavailableText(): string {
-    return this._translateService.instant('dnsListing.unavailable');;
-  }
-
-  public onRequestChange(dns: McsNetworkDnsBase): void {
-    if (isNullOrEmpty(dns.serviceId)) {
-      this._navigationService.navigateTo(RouteKey.OrderHostedDnsChange)
-    }
-    this._navigationService.navigateTo(RouteKey.OrderHostedDnsChange, [], {
-      queryParams: { serviceId: dns.serviceId }
-    });
-  }
-
-  public onRaiseTicket(dns: McsNetworkDnsBase): void {
-    if (isNullOrEmpty(dns.serviceId)) {
-      this._navigationService.navigateTo(RouteKey.TicketCreate)
-    }
-    this._navigationService.navigateTo(RouteKey.TicketCreate, [], {
-      queryParams: { serviceId: dns.serviceId }
-    });
-  }
-
-  public isPrimary(isPrimaryDns: boolean): string {
-    return (isPrimaryDns) ? 'Primary' : 'Secondary';
-  }
-
-  public hasServiceChangeAccess(dns: McsNetworkDnsBase) {
-    return (dns.isPrimary && dns.serviceChangeAvailable) &&
+  public hasServiceChangeAccess(dns: McsNetworkDnsZoneBase) {
+    return (dns.parentServiceChangeAvailable) &&
       this._accessControlService.hasPermission([
         'OrderEdit'
       ]);
   }
 
-  public actionsEnabled(dns: McsNetworkDnsBase) {
+  public actionsEnabled(dns: McsNetworkDnsZoneBase) {
     let hasRequestChangeAccess = this.hasServiceChangeAccess(dns);
     let hasTicketCreatePermission = this._accessControlService.hasPermission([
       'TicketCreate'
@@ -152,9 +122,24 @@ export class DnsListingComponent extends McsPageBase {
     return hasRequestChangeAccess || hasTicketCreatePermission;
   }
 
-  public navigateToDNSDetails(dns: McsNetworkDnsBase) {
+  public onRequestChange(dns: McsNetworkDnsZoneBase): void {
+    this._navigationService.navigateTo(RouteKey.OrderHostedDnsChange, [], {
+      queryParams: {
+        serviceId: dns.parentServiceId,
+        zoneName: dns.name
+      }
+    });
+  }
+
+  public onRaiseTicket(dns: McsNetworkDnsZoneBase): void {
+    this._navigationService.navigateTo(RouteKey.TicketCreate, [], {
+      queryParams: { serviceId: dns.parentServiceId }
+    });
+  }
+
+  public navigateToDnsZoneDetails(dns: McsNetworkDnsZoneBase) {
     if (isNullOrEmpty(dns)) { return; }
-    this._navigationService.navigateTo(RouteKey.DnsDetails, [dns.id]);
+    this._navigationService.navigateTo(RouteKey.DnsZoneDetails, [dns.id]);
   }
 
   public retryDatasource(): void {
@@ -171,7 +156,7 @@ export class DnsListingComponent extends McsPageBase {
     return true;
   }
 
-  private _getNetworkDNS(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDnsBase>> {
+  private _getNetworkDnsZones(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDnsZoneBase>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
     queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
@@ -179,7 +164,7 @@ export class DnsListingComponent extends McsPageBase {
     queryParam.sortDirection = getSafeProperty(param, obj => obj.sort.direction);
     queryParam.sortField = getSafeProperty(param, obj => obj.sort.active);
 
-    return this._apiService.getNetworkDns(queryParam).pipe(
+    return this._apiService.getNetworkDnsZones(queryParam).pipe(
       map(response => {
         return new McsMatTableContext(response?.collection,
         response?.totalCollectionCount)

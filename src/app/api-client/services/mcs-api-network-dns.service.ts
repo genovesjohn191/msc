@@ -7,8 +7,9 @@ import {
   McsApiSuccessResponse,
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
-  McsNetworkDnsSummary,
+  McsNetworkDnsService,
   McsNetworkDnsZone,
+  McsNetworkDnsZoneBase,
   McsNetworkDnsZoneTtlRequest,
   McsQueryParam
 } from '@app/models';
@@ -25,38 +26,62 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
 
   constructor(private _apiClientService: McsApiClientHttpService) { }
 
-  public getNetworkDns(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsSummary[]>> {
+  public getNetworkDnsServices(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsService[]>> {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/private-cloud/networks/dns';
+    mcsApiRequestParameter.endPoint = '/private-cloud/networks/dns/services';
     mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
 
     return this._apiClientService.get(mcsApiRequestParameter).pipe(
       map((response) =>
-        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsSummary[]>(McsNetworkDnsSummary, response)
+        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsService[]>(McsNetworkDnsService, response)
       )
     );
   }
 
-  public getNetworkDnsById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsSummary>> {
+  public getNetworkDnsServiceById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsService>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${id}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/services/${id}`;
 
     return this._apiClientService.get(mcsApiRequestParameter).pipe(
       map((response) =>
-        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsSummary>(McsNetworkDnsSummary, response)
+        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsService>(McsNetworkDnsService, response)
+      )
+    );
+  }
+
+  public getNetworkDnsZones(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsZoneBase[]>> {
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/private-cloud/networks/dns/zones';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+
+    return this._apiClientService.get(mcsApiRequestParameter).pipe(
+      map((response) =>
+        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsZoneBase[]>(McsNetworkDnsZoneBase, response)
+      )
+    );
+  }
+
+  public getNetworkDnsZoneById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsZone>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/zones/${id}`;
+
+    return this._apiClientService.get(mcsApiRequestParameter).pipe(
+      map((response) =>
+        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsZone>(McsNetworkDnsZone, response)
       )
     );
   }
 
   public createNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     request: McsNetworkDnsRecordRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/records`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/zones/${zoneId}/records`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(request);
 
     return this._apiClientService.post(mcsApiRequestParameter).pipe(
@@ -67,13 +92,12 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
   }
 
   public updateNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     recordId: string,
     request: McsNetworkDnsRecordRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/records/${recordId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/zones/${zoneId}/records/${recordId}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(request);
 
     return this._apiClientService.put(mcsApiRequestParameter).pipe(
@@ -84,12 +108,11 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
   }
 
   public deleteNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     recordId: string
   ): Observable<McsApiSuccessResponse<boolean>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/records/${recordId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/zones/${zoneId}/records/${recordId}`;
 
     return this._apiClientService.delete(mcsApiRequestParameter).pipe(
       map((response) =>
@@ -99,12 +122,11 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
   }
 
   public updateNetworkDnsZoneTTL(
-    dnsId: string,
     zoneId: string,
     request: McsNetworkDnsZoneTtlRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsZone>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${dnsId}/zones/${zoneId}/ttl`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/zones/${zoneId}/ttl`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(request);
 
     return this._apiClientService.put(mcsApiRequestParameter).pipe(

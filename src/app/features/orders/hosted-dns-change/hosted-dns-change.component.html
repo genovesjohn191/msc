@@ -54,7 +54,7 @@
                         mcsId="select-dns-service"
                         (selectionChange)="onDnsServiceChange($event)">
                         <mcs-option *ngFor="let networkDnsOption of networkDnsOptions" [value]="networkDnsOption.value"
-                        [selected]="(selectedDnsNetwork$ | async)?.serviceId === networkDnsOption.value.serviceId">
+                          [selected]="(selectedDnsNetwork$ | async)?.serviceId === networkDnsOption.value.serviceId">
                           {{ networkDnsOption.text }}
                         </mcs-option>
                       </mcs-select>
@@ -80,7 +80,8 @@
                         [placeholder]="'orderHostedDnsChange.requestDetails.zones.placeholder' | translate"
                         [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.zones.helptext' | translate"
                         mcsId="select-dns-zones">
-                        <mcs-option *ngFor="let zone of networkDnsZoneOptions" [value]="zone.value.name">
+                        <mcs-option *ngFor="let zone of networkDnsZoneOptions" [value]="zone.value.name"
+                          [selected]="(selectedDnsNetwork$ | async)?.zoneName === zone.value.name">
                             {{ zone.value.name }}
                         </mcs-option>
                       </mcs-select>

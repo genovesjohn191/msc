@@ -1,0 +1,97 @@
+<mcs-page [header]="(selectedDnsZone$ | async)?.name">
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'dns.leftPanelHeader' | translate">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <div class="listing-panel-wrapper">
+        <mcs-search #search mcsId="dns-zone-details-panel-search"></mcs-search>
+        <mcs-list-panel [dataSource]="listviewDatasource" [config]="listviewDatasource?.config?.panelSettings">
+          <ng-container *mcsListPanelContent="let entity">
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupLabel>
+                <a [mcsRouterLink]="[routeKeyEnum.DnsServiceDetails, entity.group?.id]"
+                  mcsId="select-dns-service"
+                  mcsEventTracker="select-dns-service"
+                  mcsEventCategory="dns"
+                  mcsEventLabel="dns-list-panel">
+                  <span [innerHTML]="entity.group.billingDescription | mcsDataLabel: 'Unknown'"></span>
+                </a>
+              </ng-container>
+
+              <a *ngFor="let zone of entity?.zones"
+                [mcsRouterLink]="[routeKeyEnum.DnsZoneDetails, zone.id]"
+                mcsId="select-dns-zone"
+                mcsEventTracker="select-dns-zone"
+                mcsEventCategory="dns"
+                mcsEventLabel="dns-list-panel">
+
+                <mcs-option [value]="zone"
+                  [selected]="(selectedDnsZone$ | async)?.id === zone.id">
+                  <mcs-item>
+                    <span [innerHTML]="zone.name | mcsDataLabel"></span>
+                  </mcs-item>
+                </mcs-option>
+              </a>
+            </mcs-option-group>
+          </ng-container>
+        </mcs-list-panel>
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="routing-tab-wrapper" *mcsComponentHandler>
+      <ng-container *ngIf="selectedDnsZone$ | async as selectedDnsZone">
+
+        <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+          <!-- Overview Tab -->
+          <mcs-tab [label]="'label.overview' | translate" id="overview"></mcs-tab>
+
+          <!-- Records Tab -->
+          <mcs-tab [label]="'label.records' | translate" id="records"></mcs-tab>
+
+          <!-- Action tab -->
+          <ng-container mcsTabHeaderCustom>
+            <button *ngIf="actionsEnabled(selectedDnsZone) && selectedDnsZone.parentServiceId"
+              mcsButton="icon" mcsId="dns-action"  mcsAlign="end"
+              #popoverActionElement="mcsPopover" [autoCalculatePosition]="false"
+              mcsPopover placement="bottom" orientation="left"
+              theme="light" padding="none" [content]="actionContent">
+              <mcs-icon [key]="cogIconKey" size="large"></mcs-icon>
+            </button>
+
+            <ng-template #actionContent>
+              <ng-container *ngIf="hasServiceChangeAccess(selectedDnsZone)">
+                <div class="cog-actions-wrapper">
+                  <a mcsButton="basic" color="white" labelPlacement="left"
+                    (click)="onRequestChange(selectedDnsZone)"
+                    mcsId="dns-zone-details-request-change"
+                    mcsEventTracker="dns-zone-details-request-change"
+                    mcsEventCategory="dns"
+                    mcsEventLabel="dns-zone-details-page">
+                    {{ 'action.requestRecordChange' | translate }}
+                  </a>
+                </div>
+              </ng-container>
+
+              <div *mcsAccessControl="['TicketCreate']" class="cog-actions-wrapper">
+                <a mcsButton="basic" color="white" labelPlacement="left"
+                  (click)="onRaiseTicket(selectedDnsZone)"
+                  mcsId="dns-zone-details-raise-ticket"
+                  mcsEventTracker="dns-zone-details-raise-ticket"
+                  mcsEventCategory="dns"
+                  mcsEventLabel="dns-zone-details-page">
+                  {{ 'action.raiseTicket' | translate }}
+                </a>
+              </div>
+            </ng-template>
+          </ng-container>
+        </mcs-tab-group>
+
+        <!-- Tab content for routing tab -->
+        <div class="routing-tab-content-wrapper limited-view">
+          <router-outlet></router-outlet>
+        </div>
+      </ng-container>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

@@ -281,10 +281,10 @@ export * from './response/mcs-portal-access';
 export * from './response/mcs-portal';
 export * from './response/mcs-validation';
 export * from './response/mcs-internet-port';
-export * from './response/mcs-network-dns-base';
-export * from './response/mcs-network-dns-summary';
-export * from './response/mcs-network-dns-zone';
-export * from './response/mcs-network-dns-rrsets';
+export * from './response/dns/mcs-network-dns-service';
+export * from './response/dns/mcs-network-dns-zone-base';
+export * from './response/dns/mcs-network-dns-zone';
+export * from './response/dns/mcs-network-dns-rrsets';
 export * from './response/mcs-network-dns-rrsets-record';
 export * from './response/mcs-catalog';
 export * from './response/mcs-catalog-product';
@@ -446,6 +446,7 @@ export * from './common/mcs-report-inefficient-vm-params';
 export * from './common/mcs-report-update-management-params';
 export * from './common/mcs-multi-job-form-config';
 export * from './common/mcs-extenders-query-params';
+export * from './common/mcs-dns-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

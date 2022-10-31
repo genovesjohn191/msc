@@ -1,0 +1,36 @@
+<ng-container *ngIf="selectedDnsService$ | async as service">
+  <mcs-grid-row>
+    <!-- DNS Service Properties -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="dns-service-properties">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'dns.details.properties.label' | translate }}</h2>
+        </ng-container>
+
+          <mcs-item>
+            <span>{{ 'dns.details.properties.type' | translate }}</span>
+            <span>{{ isPrimary(service) }}</span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'dns.details.properties.zoneCount' | translate }}</span>
+            <span>{{ service.zoneCount }}</span>
+          </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+
+    <!-- Service Information -->
+    <mcs-grid-column sizeSm="12" hidden-small>
+      <mcs-presentation-panel mcsId="dns-service-information">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'dns.details.info.label' | translate }}</h2>
+        </ng-container>
+
+        <div>
+          <span>{{ 'dns.details.info.serviceId' | translate }}</span>
+          <span>{{ service?.serviceId }}</span>
+        </div>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</ng-container>

@@ -610,40 +610,58 @@
     "documentTitle": "Internet Port Management - Macquarie Cloud Services"
   },
   "dnsListing": {
-    "enumKey": "DnsListing",
+    "enumKey": "DnsZoneListing",
     "enumPlatform": "Private",
     "enumCategory": "Network",
     "navigationPath": "network/dns",
     "requireAllFeatures": true,
     "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
-    "documentTitle": "DNS Services - Macquarie Cloud Services"
+    "documentTitle": "DNS Zones - Macquarie Cloud Services"
   },
-  "dnsDetails": {
-    "enumKey": "DnsDetails",
+  "dnsZoneDetails": {
+    "enumKey": "DnsZoneDetails",
     "enumPlatform": "Private",
     "enumCategory": "Network",
-    "navigationPath": "network/dns/details",
+    "navigationPath": "network/dns/zones",
     "requireAllFeatures": true,
     "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
-    "documentTitle": "DNS Details - Macquarie Cloud Services"
+    "documentTitle": "DNS Zone Details - Macquarie Cloud Services"
   },
-  "dnsManagement": {
-    "enumKey": "DnsManagement",
+  "dnsZoneOverview": {
+    "enumKey": "DnsZoneOverview",
     "enumPlatform": "Private",
     "enumCategory": "Network",
-    "navigationPath": "management",
+    "navigationPath": "overview",
     "requireAllFeatures": true,
     "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
-    "documentTitle": "DNS Management - Macquarie Cloud Services"
+    "documentTitle": "DNS Zone Overview - Macquarie Cloud Services"
   },
-  "dnsZones": {
-    "enumKey": "DnsZones",
+  "dnsZoneRecords": {
+    "enumKey": "DnsZoneRecords",
     "enumPlatform": "Private",
     "enumCategory": "Network",
     "navigationPath": "zones",
     "requireAllFeatures": true,
     "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
-    "documentTitle": "DNS Zones - Macquarie Cloud Services"
+    "documentTitle": "DNS Zone Records - Macquarie Cloud Services"
+  },
+  "dnsServiceDetails": {
+    "enumKey": "DnsServiceDetails",
+    "enumPlatform": "Private",
+    "enumCategory": "Network",
+    "navigationPath": "network/dns/services",
+    "requireAllFeatures": true,
+    "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
+    "documentTitle": "DNS Service Details - Macquarie Cloud Services"
+  },
+  "dnsServiceOverview": {
+    "enumKey": "DnsServiceOverview",
+    "enumPlatform": "Private",
+    "enumCategory": "Network",
+    "navigationPath": "overview",
+    "requireAllFeatures": true,
+    "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
+    "documentTitle": "DNS Service Overview - Macquarie Cloud Services"
   },
   "backupAggregationTargets": {
     "enumPlatform": "Private",

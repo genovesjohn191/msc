@@ -756,7 +756,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   private _subscribesToDns(): void {
-    this.dns$ = this._apiService.getNetworkDns().pipe(
+    this.dns$ = this._apiService.getNetworkDnsServices().pipe(
       map((response) => {
         let dns = getSafeProperty(response, (obj) => obj.collection);
         return dns.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
