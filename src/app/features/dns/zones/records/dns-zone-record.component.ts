@@ -15,7 +15,6 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  McsNetworkDnsSummary,
   McsNetworkDnsZone,
   McsNetworkDnsZoneTtlRequest,
   McsStateNotification
@@ -26,25 +25,26 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 
-import { DnsDetailsService } from '../dns-details.service';
+
 import { DialogService2 } from '@app/shared';
 import { DnsZoneTtlEditDialogComponent } from '@app/features-shared';
 import { McsEvent } from '@app/events';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { TranslateService } from '@ngx-translate/core';
+import { DnsZoneDetailsService } from '../dns-zone.service';
 
 @Component({
-  selector: 'mcs-dns-zones',
-  templateUrl: './dns-zones.component.html',
+  selector: 'mcs-dns-zone-record',
+  templateUrl: './dns-zone-record.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DnsZonesComponent implements OnInit, OnDestroy {
-  public dns$: Observable<McsNetworkDnsSummary>;
+export class DnsZoneRecordComponent implements OnInit, OnDestroy {
+  public zone$: Observable<McsNetworkDnsZone>;
 
   private _destroySubject = new Subject<void>();
 
   public constructor(
-    private _dnsDetailsService: DnsDetailsService,
+    private _dnsZoneDetailsService: DnsZoneDetailsService,
     private _apiService: McsApiService,
     private _dialogService: DialogService2,
     private _eventDispatcher: EventBusDispatcherService,
@@ -61,8 +61,8 @@ export class DnsZonesComponent implements OnInit, OnDestroy {
   }
 
   public onUpdateRequest(): void {
-    this._apiService.getNetworkDnsById(this._dnsDetailsService.getDnsDetailsId()).pipe(
-      tap(details => this._dnsDetailsService.setDnsDetails(details))
+    this._apiService.getNetworkDnsZoneById(this._dnsZoneDetailsService.getDnsZoneDetailsId()).pipe(
+      tap(details => this._dnsZoneDetailsService.setDnsZoneDetails(details))
     ).subscribe();
   }
 
@@ -88,8 +88,8 @@ export class DnsZonesComponent implements OnInit, OnDestroy {
   }
 
   private _saveTTLChanges(payload: McsNetworkDnsZoneTtlRequest, zone: McsNetworkDnsZone): void {
-    let dnsId = this._dnsDetailsService.getDnsDetailsId();
-    this._apiService.updateNetworkDnsZoneTTL(dnsId, zone.id, payload).pipe(
+    let dnsId = this._dnsZoneDetailsService.getDnsZoneDetailsId();
+    this._apiService.updateNetworkDnsZoneTTL(zone.id, payload).pipe(
       tap(() => {
         this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
           new McsStateNotification('success', 'message.successfullyUpdated')
@@ -100,7 +100,7 @@ export class DnsZonesComponent implements OnInit, OnDestroy {
   }
 
   private _subscribeToDnsDetails(): void {
-    this.dns$ = this._dnsDetailsService.getDnsDetails().pipe(
+    this.zone$ = this._dnsZoneDetailsService.getDnsZoneDetails().pipe(
       takeUntil(this._destroySubject),
       shareReplay(1)
     );

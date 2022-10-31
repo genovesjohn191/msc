@@ -2924,40 +2924,30 @@
     "raiseTicket": "Raise a Ticket",
     "retry": "Try again shortly"
   },
-  "dnsListing": {
-    "header": "DNS Services",
-    "leftPanelHeader": "DNS Service Filter",
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of resources.",
-    "noRecordsFoundMessage": "There are no DNS services to display. ",
+  "dns": {
+    "header": "DNS Zones",
+    "leftPanelHeader": "DNS Zone Filter",
+    "zoneErrorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of zones.",
+    "serviceErrorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of DNS services.",
+    "noRecordsFoundMessage": "There are no DNS zones to display.",
+    "loading": "Loading DNS zones list",
     "columnFilter": "Column Filter",
-    "dataSingular": "service",
-    "dataPlural": "services",
-    "requestChange": "Request Record Changes",
-    "raiseTicket": "Raise a Ticket",
-    "retry": "Try again shortly",
-    "unavailable": "Unavailable",
+    "dataSingular": "DNS Zone",
+    "dataPlural": "DNS Zones",
     "details": {
-      "management": {
-        "tabName": "Management",
-        "dnsProperties": {
-            "label": "DNS Properties",
-            "type": "Type: ",
-            "zoneCount": "Number of Zones: "
-        },
-        "serviceInformation": {
-          "label": "Service Information",
-          "serviceId": "Service ID: "
-        }
+      "properties": {
+        "label": "Basic Properties",
+        "recordCount": "Number of Records: ",
+        "type": "Type: ",
+        "zoneCount": "Number of Zones: "
       },
-      "zones": {
-        "tabName": "Zones"
+      "info": {
+        "label": "Service Information",
+        "serviceId": "Service ID: "
+      },
+      "records": {
+        "label": "Manage Records"
       }
-    },
-    "shared": {
-      "loading": "Loading DNS services list",
-      "noDns": "No DNS services to display.",
-      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of DNS services."
-
     }
   },
   "dashboardProjects": {
@@ -3421,7 +3411,10 @@
     "acknowledgeNotice": "Something went wrong while acknowledging your notice.",
     "getInternetPorts": "Something went wrong while retrieving your internet services.",
     "getInternetPort": "Something went wrong while retrieving your internet service.",
-    "getNetworkDns": "Something went wrong while retrieving your DNS services.",
+    "getNetworkDnsServices": "Something went wrong while retrieving your DNS services.",
+    "getNetworkDnsService": "Something went wrong while retrieving your DNS service information.",
+    "getNetworkDnsZones": "Something went wrong while retrieving your DNS zones.",
+    "getNetworkDnsZone": "Something went wrong while retrieving your DNS zone information.",
     "getResources": "Something went wrong while retrieving your services.",
     "getResource": "Something went wrong while retrieving your service information.",
     "getResourceCompute": "Something went wrong while retrieving your service information.",
@@ -3543,7 +3536,6 @@
     "getAzureManagementServiceChildren": "Something went wrong while retrieving the children for your Public Cloud Management service. Please try again.",
     "getExtenders": "Something went wrong while retrieving your Extenders. Please try again.",
     "getApplicationRecovery": "Something went wrong while retrieving your Application Recovery services. Please try again.",
-    "getNetworkDnsById": "Something went wrong while retrieving this DNS service. Please try again.",
     "getSubscriptions": "Something went wrong while retrieving your subscription information. Please try again.",
     "getManagementServices": "Something went wrong while retrieving your management services. Please try again.",
     "getServicesCostOverviewReport": "Something went wrong while retrieving your cost overview. Please try again.",
@@ -3770,6 +3762,7 @@
     "productType": "Product Type",
     "projectManager": "Project Manager",
     "ram": "RAM",
+    "records": "Records",
     "referenceId": "Reference ID",
     "region": "Region",
     "reservationOrderId": "Reservation Order ID",
@@ -3936,7 +3929,7 @@
     "zones": "Zones",
     "zoneType": "Zone Type",
     "recordType": "Record Type",
-    "manageZones": "Manage Zones",
+    "manageRecords": "Manage Records",
     "host": "Host",
     "records": "Records",
     "target": "Target",
@@ -3950,6 +3943,7 @@
     "activity": "Activity",
     "addAntiVirus": "Add Anti-Virus",
     "addHids": "Add HIDS",
+    "addRecord": "Add Record",
     "addServerBackup": "Add Server Backup",
     "addVmBackup": "Add VM Backup",
     "additionalNotesOptional": "Additional Notes (optional)",
@@ -4085,6 +4079,7 @@
     "raiseTicket": "Raise a Ticket",
     "remove": "Remove",
     "retry": "Retry",
+    "requestRecordChange": "Request Record Changes",
     "tryAgainShortly": "Try again shortly",
     "undo": "Undo",
     "update": "Update",
@@ -4140,7 +4135,7 @@
     "recordExists": "Cannot save record. A record with a conflicting name and/or target already exists.",
     "discardChanges": "This will discard your changes. Do you want to proceed?",
     "deleteZoneRecord": "This will delete the <strong>{{dnsTarget}}</strong> record. Do you want to proceed?",
-    "dnsDescription": "Select a zone below to manage its DNS records. Please note, record changes can take up to 72 hours to propagate.",
+    "dnsDescription": "Please note, record changes can take up to 72 hours to propagate.",
     "ttlDescription": "The TTL for this zone is {{ttlSeconds}} seconds.",
     "zoneDescription": "If a TTL is not specified when creating or editing a record below, this TTL will be used instead. When adding or editing a record, all existing records of the same type will inherit that record's TTL.\r\n\n If a domain name or value is specified with a trailing period, it will be interpreted as fully-qualified.",
     "reservedDnsRecord": "This record is reserved and cannot be modified.",

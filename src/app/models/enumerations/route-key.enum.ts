@@ -115,10 +115,12 @@ export enum RouteKey {
   CatalogSolution,
   CatalogSolutions,
 
-  DnsListing,
-  DnsDetails,
-  DnsManagement,
-  DnsZones,
+  DnsZoneListing,
+  DnsZoneDetails,
+  DnsZoneOverview,
+  DnsZoneRecords,
+  DnsServiceDetails,
+  DnsServiceOverview,
 
   Orders,
   OrdersHistory,

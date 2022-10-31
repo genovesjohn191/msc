@@ -13,26 +13,27 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { McsNetworkDnsSummary } from '@app/models';
+import { McsNetworkDnsZone } from '@app/models';
 import { unsubscribeSafely } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
+import { DnsZoneDetailsService } from '../dns-zone.service';
 
-import { DnsDetailsService } from '../dns-details.service';
+
 
 @Component({
-  selector: 'mcs-dns-management',
-  templateUrl: './dns-management.component.html',
+  selector: 'mcs-dns-zone-overview',
+  templateUrl: './dns-zone-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class DnsManagementComponent implements OnInit, OnDestroy {
-  public selectedDns$: Observable<McsNetworkDnsSummary>;
+export class DnsZoneOverviewComponent implements OnInit, OnDestroy {
+  public selectedDnsZone$: Observable<McsNetworkDnsZone>;
 
   private _destroySubject = new Subject<void>();
 
   public constructor(
     private _translate: TranslateService,
-    private _dnsDetailsService: DnsDetailsService
+    private _dnsZoneDetailsService: DnsZoneDetailsService
   ) {
   }
 
@@ -44,14 +45,8 @@ export class DnsManagementComponent implements OnInit, OnDestroy {
     unsubscribeSafely(this._destroySubject);
   }
 
-  public isPrimary(dns: McsNetworkDnsSummary): string {
-    return dns?.isPrimary ?
-      this._translate.instant('label.primary') :
-      this._translate.instant('label.secondary');
-  }
-
   private _subscribeToDnsDetails(): void {
-    this.selectedDns$ = this._dnsDetailsService.getDnsDetails().pipe(
+    this.selectedDnsZone$ = this._dnsZoneDetailsService.getDnsZoneDetails().pipe(
       takeUntil(this._destroySubject),
       shareReplay(1)
     );

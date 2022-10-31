@@ -55,10 +55,10 @@ import {
   RouteKey,
   DnsRecordType,
   McsOrderHostedDnsChange,
-  McsNetworkDnsSummary,
   DeliveryType,
-  McsAzureServiceQueryParams,
-  HttpStatusCode
+  HttpStatusCode,
+  McsNetworkDnsService,
+  McsDnsRequestParams
 } from '@app/models';
 import {
   OrderDetails,
@@ -97,7 +97,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   public networkDnsOptions: Array<McsOption> = new Array<McsOption>();
   public networkDnsZoneOptions: Array<McsOption> = new Array<McsOption>();
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
-  public selectedDnsNetwork$: Observable<McsAzureServiceQueryParams>;
+  public selectedDnsNetwork$: Observable<McsDnsRequestParams>;
   public get loadingText(): string {
     return LOADING_TEXT;
   }
@@ -149,7 +149,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   public ngOnInit(): void {
-    this._getNetworkDns();
+    this._getNetworkDnsService();
     this._getPreSelectedNetworkDns();
     this._initializeSmacSharedForm();
   }
@@ -219,29 +219,20 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     this.faChangeToApply.updateValueAndValidity();
   }
 
-  /**
-   * Event listener when there is a change in the Change To Apply array forms
-   */
   public onChangeToApplyFormDataChange(): void {
     this.faChangeToApply.updateValueAndValidity();
   }
 
-  /**
-   * Event listener when there is a change in Shared SMAC Form
-   */
   public onChangeSharedForm(formDetails: SmacSharedDetails): void {
     this._smacSharedDetails = formDetails;
   }
 
-  public onDnsServiceChange(networkDNS: McsNetworkDnsSummary): void {
+  public onDnsServiceChange(networkDNS: McsNetworkDnsService): void {
     if (isNullOrUndefined(networkDNS)) { return; }
     this._getNetworkDnsZones(networkDNS.id);
     this._changeDetectionRef.detectChanges();
   }
 
-  /**
-   * Event listener when there is a change in Order Details
-   */
   public onOrderDetailsDataChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
 
@@ -260,9 +251,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     this._hostedDnsChangeService.submitOrderRequest();
   }
 
-  /**
-   * Event listener when Order is Submitted
-   */
   public onSubmitOrder(submitDetails: OrderDetails, serviceID: string): void {
     if (isNullOrEmpty(submitDetails)) { return; }
 
@@ -275,9 +263,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     this.submitOrderWorkflow(workflow);
   }
 
-  /**
-   * Register all form groups
-   */
   private _registerFormGroups() {
     this.fcDnsService = new FormControl<any>('', [CoreValidators.required]);
     this.faChangeToApply = new FormArray<any>([this._createChangeToApplyForm()]);
@@ -289,9 +274,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     });
   }
 
-  /**
-   * Subscribe to form changes
-   */
   private _subscribeToValueChanges(): void {
     this._formGroupSubject.next();
     zip(
@@ -304,9 +286,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     ).subscribe();
   }
 
-  /**
-   * Event listener whenever there is a change in the form
-   */
   private _onDnsFormDetailsChange(): void {
     this._hostedDnsChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
@@ -368,12 +347,9 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     return changesToApply;
   }
 
-  /**
-   * Get network dns services
-   */
-  private _getNetworkDns(): void {
+  private _getNetworkDnsService(): void {
     this.loadingDNSServices = true;
-    this._apiService.getNetworkDns()
+    this._apiService.getNetworkDnsServices()
       .pipe(
         catchError((error) => {
           this._errorStatus = error?.details?.status;
@@ -390,6 +366,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
         }
         else {
           dnsList.forEach((dns) => {
+            if (!dns.isPrimary) { return; }
             optionList.push(createObject(McsOption, { text: dns.serviceId, value: dns }));
           });
           this.networkDnsOptions = optionList;
@@ -400,9 +377,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
       );
   }
 
-  /**
-   * Get network dns zones
-   */
   private _getNetworkDnsZones(id: string): void {
     if(isNullOrEmpty(id)) {
       this.loadingDNSZones = false;
@@ -410,8 +384,8 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     }
 
     this.loadingDNSZones = true;
-    this._apiService.getNetworkDnsById(id).subscribe(response => {
-        let zonesList = getSafeProperty(response, (obj) => obj.zones) || [];
+    this._apiService.getNetworkDnsZones().subscribe(response => {
+        let zonesList = getSafeProperty(response, (obj) => obj.collection) || [];
         let optionList = new Array<McsOption>();
         if(zonesList.length === 0) {
           this.networkDnsZoneOptions = [];
@@ -428,9 +402,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     );
   }
 
-  /**
-   * Initialize to Smac Shared Form Config
-   */
   private _initializeSmacSharedForm(): void {
     let testCaseConfig = { isIncluded: false };
     let notesConfig = { isIncluded: true, label: this.notesLabel };
@@ -441,15 +412,15 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
 
   private _getPreSelectedNetworkDns(): void {
     this.selectedDnsNetwork$ = this._activatedRoute.queryParams.pipe(
-      map((params) => {
-        if (params) {
-          return getSafeProperty(params, (obj) => new McsAzureServiceQueryParams(obj.serviceId)) || undefined;
+      tap((params: McsDnsRequestParams) => {
+        if (isNullOrEmpty(params)) { return; }
+        let param = getSafeProperty(params, (obj) => obj);
+        let selectedService: McsOption = this.networkDnsOptions.find(_dnsNetwork => _dnsNetwork.value.serviceId === param.serviceId);
+        this.fcDnsService.setValue(selectedService.value);
+        this._getNetworkDnsZones(selectedService.value.id);
+        if (!isNullOrEmpty(params.zoneName)) {
+          this.fcZone.setValue(param.zoneName);
         }
-      }),
-      tap((params) => {
-          let preSelectedOption: McsOption = this.networkDnsOptions.find(_dnsNetwork => _dnsNetwork.value.serviceId === params.serviceId);
-          this.fcDnsService.setValue(preSelectedOption.value);
-          this._getNetworkDnsZones(preSelectedOption.value.id);
       }),
       shareReplay(1)
     );

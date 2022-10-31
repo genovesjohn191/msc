@@ -69,9 +69,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   public readonly processOnGoing$: BehaviorSubject<boolean>;
 
   @Input()
-  public dnsId: string;
-
-  @Input()
   public zone: McsNetworkDnsZone;
 
   @Output()
@@ -157,7 +154,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     let zoneRecord = this._createRequestPayloadByViewModel(this.addViewModel);
     this.processOnGoing$.next(true);
     this._apiService.createNetworkDnsZoneRecord(
-      this.dnsId,
       this.zone.id,
       zoneRecord
     ).pipe(
@@ -181,7 +177,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     let zoneRecord = this._createRequestPayloadByViewModel(record);
     record.setProgressState(true);
     this._apiService.updateNetworkDnsZoneRecord(
-      this.dnsId,
       this.zone.id,
       record.recordInfo?.id,
       zoneRecord
@@ -211,7 +206,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
 
         record.setProgressState(true);
         return this._apiService.deleteNetworkDnsZoneRecord(
-          this.dnsId,
           this.zone.id,
           record.recordInfo?.id
         ).pipe(
@@ -260,10 +254,6 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _validateInputs(): void {
-    if (isNullOrUndefined(this.dnsId)) {
-      throw new Error('Unable to manage dns-zone without DNS Id.');
-    }
-
     if (isNullOrUndefined(this.zone)) {
       throw new Error('Unable to manage dns-zone without target zone.');
     }

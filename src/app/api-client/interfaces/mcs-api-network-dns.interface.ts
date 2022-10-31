@@ -4,8 +4,9 @@ import {
   McsApiSuccessResponse,
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
-  McsNetworkDnsSummary,
+  McsNetworkDnsService,
   McsNetworkDnsZone,
+  McsNetworkDnsZoneBase,
   McsNetworkDnsZoneTtlRequest,
   McsQueryParam
 } from '@app/models';
@@ -13,38 +14,46 @@ import {
 export interface IMcsApiNetworkDnsService {
 
   /**
-   * Get all the network dns
+   * Get all the network dns services
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getNetworkDns(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsSummary[]>>;
+  getNetworkDnsServices(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsService[]>>;
 
   /**
-   * Gets a network dns by id
-   * @param id id of the network dns
+   * Gets a network dns service by id
+   * @param id id of the network dns service
    */
-  getNetworkDnsById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsSummary>>;
+  getNetworkDnsServiceById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsService>>;
+
+  /**
+   * Get all the network dns zones
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getNetworkDnsZones(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsZoneBase[]>>;
+
+  /**
+   * Gets a network dns zone by id
+   * @param id id of the network dns zone
+   */
+  getNetworkDnsZoneById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsZone>>;
 
   createNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     request: McsNetworkDnsRecordRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>>;
 
   updateNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     recordId: string,
     request: McsNetworkDnsRecordRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsRrSetsRecord>>;
 
   deleteNetworkDnsZoneRecord(
-    dnsId: string,
     zoneId: string,
     recordId: string
   ): Observable<McsApiSuccessResponse<boolean>>;
 
   updateNetworkDnsZoneTTL(
-    dnsId: string,
     zoneId: string,
     request: McsNetworkDnsZoneTtlRequest
   ): Observable<McsApiSuccessResponse<McsNetworkDnsZone>>

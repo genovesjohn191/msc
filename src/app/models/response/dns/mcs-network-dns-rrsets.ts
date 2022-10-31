@@ -1,6 +1,6 @@
 import { JsonProperty } from '@app/utilities';
 
-import { McsNetworkDnsRrSetsRecord } from './mcs-network-dns-rrsets-record';
+import { McsNetworkDnsRrSetsRecord } from '../mcs-network-dns-rrsets-record';
 
 export class McsNetworkDnsRrSets {
   @JsonProperty()

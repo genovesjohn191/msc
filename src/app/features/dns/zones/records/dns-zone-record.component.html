@@ -1,0 +1,31 @@
+<mcs-presentation-panel mcsId="dns-zone" *ngIf="zone$ | async as zone">
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ 'label.manageRecords' | translate }}</h2>
+  </ng-container>
+
+  <mcs-section>
+    <!-- Zones -->
+    <mcs-section>
+      <mcs-section>
+        <p>
+          <span>{{ 'message.ttlDescription' | translate: { ttlSeconds: zone.ttlSeconds } }} </span>
+          <a (click)="editZoneTtl(zone)"
+            mcsId="edit-dns-zone-ttl"
+            mcsEventTracker="edit-dns-zone-ttl"
+            mcsEventCategory="dns"
+            mcsEventLabel="edit-dns-zone-ttl-page">
+            {{ 'action.edit' | translate }}
+          </a>
+          <br/><br/>
+          <span>{{ 'message.zoneDescription' | translate }} </span>
+          <br/><br/>
+          <span [innerHTML]="'message.dnsDescription' | translate"></span>
+        </p>
+        <strong>{{ 'label.addRecord' | translate }}</strong>
+        <mcs-dns-zone-manage [zone]="zone"
+          (requestUpdate)="onUpdateRequest($event)">
+        </mcs-dns-zone-manage>
+      </mcs-section>
+    </mcs-section>
+  </mcs-section>
+</mcs-presentation-panel>

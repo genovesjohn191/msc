@@ -581,7 +581,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
    * Subscribe to DNS services
    */
   private _subscribeToDnsServices(): void {
-    this.dns$ = this._apiService.getNetworkDns().pipe(
+    this.dns$ = this._apiService.getNetworkDnsServices().pipe(
       map((response) => {
         let dnsService = getSafeProperty(response, (obj) => obj.collection);
         return dnsService.filter((dns) => getSafeProperty(dns, (obj) => obj.serviceId && obj.serviceChangeAvailable))
