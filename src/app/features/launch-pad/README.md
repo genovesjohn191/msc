@@ -17,6 +17,7 @@ Create new `LaunchPadForm` under `/core/workflows/forms`
 - `/core/workflows/workflow-group.map.ts` --- create and assign a `WorkflowGroupId` to the newly created `WorkflowGroup`.
 - `/core/workflows/product-workflow-group.map.ts` --- assign `WorkflowGroupId` to all `ProductType` that we want to workflow to be attached.
 - `/core/layout/workflow-options.map.ts` --- provide desciption for the new workflow group. This will appear on the workflow selection option
+- `/workflows/core/workflow-permission.map.ts` --- assign `permission` to all `WorkflowGroupId`. This will control user access for each workflow.
 
 ### 4. Test
 - Global Search Results --- ensure all `productType` that is supported by the new workflow should show the option in the workflow selector

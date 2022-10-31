@@ -8,7 +8,7 @@
     "enumKey": "LaunchPad",
     "navigationPath": "launch-pad",
     "documentTitle": "LaunchPad",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadSearch": {
@@ -16,7 +16,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/search",
     "documentTitle": "LaunchPad - Search",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadWorkflowLaunch": {
@@ -24,7 +24,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/workflows/launch",
     "documentTitle": "LaunchPad - Launch",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadAzureDeployments": {
@@ -32,7 +32,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments",
     "documentTitle": "LaunchPad - Azure Deployments",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -41,7 +41,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments/create",
     "documentTitle": "LaunchPad - Create Azure Deployment",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -50,7 +50,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/azure-deployments",
     "documentTitle": "LaunchPad - Azure Deployment Details",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -59,7 +59,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "overview",
     "documentTitle": "LaunchPad - Azure Deployment Overview",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -68,7 +68,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "history",
     "documentTitle": "LaunchPad - Azure Deployment History",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableAzureDeployments"],
     "requireAllFeatures": true
   },
@@ -77,7 +77,7 @@
     "enumCategory": "LaunchPadNetworkDb",
     "navigationPath": "launch-pad/network-db/sites",
     "documentTitle": "LaunchPad - Network DB Sites",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -86,7 +86,7 @@
     "enumCategory": "LaunchPadNetworkDb",
     "navigationPath": "launch-pad/network-db/pods",
     "documentTitle": "LaunchPad - Network DB PODs",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -95,7 +95,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/vlans",
     "documentTitle": "LaunchPad - VLAN DB VLANs",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -104,7 +104,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/vlans",
     "documentTitle": "LaunchPad - VLAN DB VLAN Details",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -113,7 +113,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "overview",
     "documentTitle": "LaunchPad - VLAN DB VLAN Overview",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -122,7 +122,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "events",
     "documentTitle": "LaunchPad - VLAN DB VLAN Events",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -131,7 +131,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/vnis",
     "documentTitle": "LaunchPad - VLAN DB VNIs",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -140,7 +140,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/use-cases",
     "documentTitle": "LaunchPad - VLAN DB Use Cases",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -149,7 +149,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/multicast-ips",
     "documentTitle": "LaunchPad - VLAN DB Multicast IPs",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -158,7 +158,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/networks",
     "documentTitle": "LaunchPad - VLAN DB Networks",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -167,7 +167,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/networks",
     "documentTitle": "LaunchPad - Network Details",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -176,7 +176,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "overview",
     "documentTitle": "LaunchPad - Network Overview",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -185,7 +185,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "events",
     "documentTitle": "LaunchPad - Network Events",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -194,7 +194,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "vlans",
     "documentTitle": "LaunchPad - Network VLANs",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -203,7 +203,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "edit",
     "documentTitle": "LaunchPad - Edit Network",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -212,7 +212,7 @@
     "enumCategory": "LaunchPadVlanDb",
     "navigationPath": "launch-pad/network-db/vlan-db/networks/create",
     "documentTitle": "LaunchPad - Create a Network",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableNetworkDb"],
     "requireAllFeatures": true
   },
@@ -221,7 +221,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/vcenter/baselines",
     "documentTitle": "LaunchPad - vCenter Baselines",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableVcenterBaselineRemediation"],
     "requireAllFeatures": true
   },
@@ -230,7 +230,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/vcenter/baselines/remediate",
     "documentTitle": "LaunchPad - Remediate ESXi Hosts",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableVcenterBaselineRemediation"],
     "requireAllFeatures": true
   },
@@ -239,7 +239,7 @@
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "launch-pad/dashboard/projects",
     "documentTitle": "Dashboard - My Projects",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableLaunchPadDashboardProjects"],
     "requireAllFeatures": true
   },
@@ -248,7 +248,7 @@
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "launch-pad/dashboard/projects",
     "documentTitle": "Dashboard - My Projects Details",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions":["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableLaunchPadDashboardProjects"],
     "requireAllFeatures": true
   },
@@ -257,7 +257,7 @@
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "tasks",
     "documentTitle": "Dashboard - Project Tasks",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableLaunchPadDashboardProjects"],
     "requireAllFeatures": true
   },
@@ -266,7 +266,7 @@
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "launch-pad/dashboard/orders",
     "documentTitle": "Dashboard - My Orders",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
   },
@@ -275,7 +275,7 @@
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "launch-pad/dashboard/orders",
     "documentTitle": "Order Details",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
   },
@@ -284,7 +284,7 @@
     "enumCategory": "LaunchPadDashboard",
     "navigationPath": "elements",
     "documentTitle": "Order Elements",
-    "requiredPermissions": ["InternalEngineerAccess"],
+    "requiredPermissions": ["InternalPrivateCloudEngineerAccess", "InternalPublicCloudEngineerAccess"],
     "requiredFeatureFlag": ["EnableLaunchPad", "EnableCrisp"],
     "requireAllFeatures": true
   },

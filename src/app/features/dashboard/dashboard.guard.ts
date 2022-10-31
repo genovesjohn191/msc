@@ -37,10 +37,13 @@ export class DashboardGuard implements CanActivate {
     // Try Navigate to LaunchPad Projects - Default Page for Engineers
     let activeCompanyId = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT) ||
       this._authenticationIdentity.user?.companyId;
-    let hasLaunchpadProjectsAccess =
-      this._accessControlService.hasPermission([McsPermission.InternalEngineerAccess]) &&
-      this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad, McsFeatureFlag.DashboardProjects], true) &&
-      activeCompanyId === engineeringAccount;
+    let hasRequiredPermission = this._accessControlService.hasPermission([
+      McsPermission.InternalPrivateCloudEngineerAccess,
+      McsPermission.InternalPublicCloudEngineerAccess
+    ]);
+    let hasLaunchpadProjectsAccess = hasRequiredPermission && activeCompanyId === engineeringAccount
+      this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad, McsFeatureFlag.DashboardProjects], true);
+
     if (hasLaunchpadProjectsAccess) {
       this._navigationService.navigateTo(RouteKey.LaunchPadDashboardProjects);
       return false;

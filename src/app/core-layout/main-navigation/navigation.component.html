@@ -15,7 +15,7 @@
 
       <!-- LaunchPad -->
       <ng-container *ngIf="!isImpersonating">
-        <li *mcsAccessControl="['InternalEngineerAccess']; feature: ['EnableLaunchPad']" hidden-small>
+        <li *mcsAccessControl="['InternalPrivateCloudEngineerAccess', 'InternalPublicCloudEngineerAccess']; feature: ['EnableLaunchPad']" hidden-small>
           <a (click)="toggleThis('showLaunchPadMenu')"
             [class.active]="selectedCategory === routerCategoryEnum.LaunchPad
             || selectedCategory === routerCategoryEnum.LaunchPadNetworkDb
@@ -61,7 +61,7 @@
               </ul>
             </li>
             <!-- Deployments -->
-            <li>
+            <li *mcsAccessControl="['InternalPublicCloudEngineerAccess'];">
               <a [mcsRouterLink]="routeKeyEnum.LaunchPadAzureDeployments"
                 mcsId="launch-pad-azure-deployments-link"
                 mcsEventTracker="navigate-to-launch-pad-azure-deployments"
@@ -72,7 +72,7 @@
               </a>
             </li>
             <!-- VCenter Baselines -->
-            <li>
+            <li *mcsAccessControl="['InternalPrivateCloudEngineerAccess'];">
               <a [mcsRouterLink]="routeKeyEnum.LaunchPadVCenterBaselines"
                 mcsId="launch-pad-vcenter-baselines-link"
                 mcsEventTracker="navigate-to-launch-pad-vcenter-baselines"
@@ -94,7 +94,7 @@
               </a>
             </li>
             <!-- Network DB -->
-            <li *mcsAccessControl="[]; feature: ['EnableNetworkDb']">
+            <li *mcsAccessControl="['InternalPrivateCloudEngineerAccess']; feature: ['EnableNetworkDb']">
               <a (click)="toggleThis('showLaunchPadNetworkDbSubmenu')"
                 [class.active]="selectedCategory === routerCategoryEnum.LaunchPadNetworkDb || selectedCategory === routerCategoryEnum.LaunchPadVlanDb"
                 mcsId="launch-pad-network-db-link">
