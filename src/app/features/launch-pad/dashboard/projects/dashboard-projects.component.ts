@@ -51,7 +51,7 @@ export class DashboardProjectsComponent extends McsPageBase implements OnDestroy
   public readonly defaultColumnFilters = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'number' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'temperature' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyName' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'shortDescription' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'primaryCrispOrder' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),

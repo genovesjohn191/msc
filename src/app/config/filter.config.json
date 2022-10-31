@@ -78,11 +78,11 @@
       "value": true
     },
     "companyName": {
-      "text": "Customer Name",
+      "text": "Company Name",
       "value": true
     },
     "companyId": {
-      "text": "Customer ID",
+      "text": "Company ID",
       "value": true
     },
     "createdOn": {
@@ -110,11 +110,11 @@
       "value": true
     },
     "companyName": {
-      "text": "Customer Name",
+      "text": "Company Name",
       "value": true
     },
     "companyId": {
-      "text": "Customer ID",
+      "text": "Company ID",
       "value": true
     }
   },
@@ -133,16 +133,12 @@
       "text": "Description",
       "value": true
     },
-    "installedBaseState": {
-      "text": "Installed Base State",
-      "value": true
-    },
     "companyName": {
-      "text": "Customer Name",
+      "text": "Company Name",
       "value": true
     },
     "companyId": {
-      "text": "Customer ID",
+      "text": "Company ID",
       "value": true
     }
   },
@@ -153,11 +149,11 @@
       "exclude": true
     },
     "companyName": {
-      "text": "Customer Name",
+      "text": "Company Name",
       "value": true
     },
     "companyId": {
-      "text": "Customer ID",
+      "text": "Company ID",
       "value": true
     }
   }
