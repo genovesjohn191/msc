@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ProductType } from '@app/models';
+import {
+  McsPermission,
+  ProductType
+} from '@app/models';
 import {
   isNullOrEmpty,
   isNullOrUndefined
@@ -18,6 +21,7 @@ import {
   productWorkflowGroupMap,
   WorkflowGroupIdInfo
 } from './product-workflow-group.map';
+import { workflowPermissionMap } from './workflow-permission.map';
 
 @Injectable()
 export class WorkflowService {
@@ -48,8 +52,29 @@ export class WorkflowService {
     return this._accessControlService.hasAccessToFeature(workflowGroup.parent.featureFlag);
   }
 
+  public hasRequiredPermission(workflowGroupId: number): boolean {
+    let permission = this._getWorkflowPermission(workflowGroupId);
+    if (isNullOrUndefined(permission)) { return true; }
+
+    return this._accessControlService.hasPermission([permission]);
+  }
+
   private _getWorkflowGroupById(id: WorkflowGroupId): WorkflowGroup {
     let workflowGroupType = workflowGroupMap.get(id);
     return new workflowGroupType();
+  }
+
+  private _getWorkflowPermission(workflowId: WorkflowGroupId): McsPermission {
+    let isWorkflowPrivateCloud = workflowPermissionMap.get(McsPermission.InternalPrivateCloudEngineerAccess)
+      .find((workflow) => workflow === workflowId)
+    if (isWorkflowPrivateCloud) {
+      return McsPermission.InternalPrivateCloudEngineerAccess;
+    }
+
+    let isWorkflowPublicCloud = workflowPermissionMap.get(McsPermission.InternalPublicCloudEngineerAccess)
+      .find((workflow) => workflow === workflowId);
+    if (isWorkflowPublicCloud) {
+      return McsPermission.InternalPublicCloudEngineerAccess;
+    }
   }
 }

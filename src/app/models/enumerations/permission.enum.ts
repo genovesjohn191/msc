@@ -1,6 +1,7 @@
 export enum McsPermission {
   // Engineer
-  InternalEngineerAccess = 'InternalEngineerAccess',
+  InternalPrivateCloudEngineerAccess = 'InternalPrivateCloudEngineerAccess',
+  InternalPublicCloudEngineerAccess = 'InternalPublicCloudEngineerAccess',
 
   // Self-Managed VM
   SelfManagedCloudVmAccess = 'SelfManagedCloudVmAccess',

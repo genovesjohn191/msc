@@ -28,7 +28,11 @@ export class LaunchPadWorkflowSelectorService {
 
     ids.forEach(id => {
       let description = workflowOptions.get(id);
-      if (this._workflowService.hasAccessToFeature(id) && !isNullOrEmpty(description)) {
+      let isWorkflowValid = this._workflowService.hasAccessToFeature(id) &&
+        !isNullOrEmpty(description) &&
+        this._workflowService.hasRequiredPermission(id);
+
+      if (isWorkflowValid) {
         items.push({
           id,
           name: workflowGroupIdText[id],
@@ -47,10 +51,18 @@ export class LaunchPadWorkflowSelectorService {
     let allowedWorkflowGroupIdsBasedOnStatus: WorkflowGroupId[] = [];
 
     workflowGroups.forEach((group) => {
+      let isWorkflowValid = this._workflowService.hasAccessToFeature(group.workflowId) &&
+        this._workflowService.hasRequiredPermission(group.workflowId);
+
+      if (!isWorkflowValid) {
+        return false;
+      }
+
       if (isNullOrEmpty(group?.allowedElementStatuses) || data.source === 'installed-services') { 
         return allowedWorkflowGroupIdsBasedOnStatus.push(group.workflowId);
       }
       let statusFound = group.allowedElementStatuses.find((status) => status === data.status);
+
       if (statusFound) {
         return allowedWorkflowGroupIdsBasedOnStatus.push(group.workflowId);
       }

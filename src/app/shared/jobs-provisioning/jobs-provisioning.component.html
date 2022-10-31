@@ -105,7 +105,7 @@
               <small>{{ log.message }}</small>
             </mcs-cta-list-action>
           </mcs-cta-list-panel>
-          <div *mcsAccessControl="['InternalEngineerAccess'];">
+          <div *mcsAccessControl="['InternalPrivateCloudEngineerAccess', 'InternalPublicCloudEngineerAccess'];">
             <div *ngIf="validReferenceObject(task.referenceObject)">
               <h3>Response</h3>
               <mcs-json-viewer [obj]="clone(task.referenceObject)"></mcs-json-viewer>

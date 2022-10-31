@@ -187,7 +187,11 @@ public set noticesColumnFilter(value: ColumnFilter) {
 
   private _isInLPContext(): boolean {
     let _isImpersonating = !!this._authenticationIdentity.activeAccountStatus;
-    if (this._accessControlService.hasPermission(['InternalEngineerAccess']) && !_isImpersonating) {
+    let hasRequiredPermission = this._accessControlService.hasPermission([
+      'InternalPrivateCloudEngineerAccess',
+      'InternalPublicCloudEngineerAccess'
+    ])
+    if (hasRequiredPermission && !_isImpersonating) {
       return true;
     }
     return false;

@@ -267,6 +267,11 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if(!this._workflowService.hasRequiredPermission(this.context.workflowGroupId)){
+      this._navigationService.navigateTo(RouteKey.HttpErrorPage);
+      return;
+    }
+
     let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
 
     let requiresCrispData = !isNullOrEmpty(workflowGroup.parent.form?.mapCrispElementAttributes);
