@@ -47,7 +47,7 @@
       <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="billingDescription" disableClear>
+          <th mat-header-cell *matHeaderCellDef disableClear>
             {{ 'columnHeader.name' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
@@ -80,27 +80,35 @@
 
         <!-- Journal Size Column -->
         <ng-container matColumnDef="journalSize">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="journalSizeGb" hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.journalSize' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.journalSizeGB }} GB
+            <ng-container *ngIf="row.journalSizeGB; else noJournalSizeGBTemplate">
+              <span>{{ row.journalSizeGB }} GB</span>
+            </ng-container>
+            <ng-template #noJournalSizeGBTemplate>
+              <span *ngIf="row.isAzureRecover" read-only>N/A</span>
+              <span *ngIf="!row.isAzureRecover" read-only>Unknown</span>
+            </ng-template>
           </td>
         </ng-container>
 
         <!-- Virtual Machines Column -->
         <ng-container matColumnDef="virtualMachines">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="virtualMachineQuantity" hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.virtualMachines' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.virtualMachineQuantity }}
+            <!-- Cast to string so 0 and null are distinct (0 is a valid use case) -->
+            <span [innerHTML]="row.virtualMachineQuantity?.toString() | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 
         <!-- Service ID Column -->
         <ng-container matColumnDef="serviceId">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="serviceId" hidden-small>
+          <th mat-header-cell *matHeaderCellDef hidden-small>
             {{ 'columnHeader.serviceId' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>

@@ -51,6 +51,13 @@ export class McsApplicationRecovery extends McsEntityBase {
   }
 
   /**
+   * Returns true if the service type is Azure Recover
+   */
+   public get isAzureRecover(): boolean {
+     return this.productType === ApplicationRecoveryType.AzureApplicationRecovery;
+   }
+
+  /**
    * Returns the journal history label
    */
   public get ApplicationRecoveryJournalHistoryLabel(): string {
