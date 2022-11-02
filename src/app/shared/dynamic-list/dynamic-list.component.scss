@@ -3,6 +3,8 @@
 $list-item-min-height: 40px;
 $list-item-border: 1px solid $border-color-dark;
 $none: 0;
+$textarea-margin: 10px 0;
+$textarea-min-height: 20px;
 
 .dynamic-list-wrapper {
   display: block;
@@ -30,12 +32,21 @@ $none: 0;
           margin-bottom: $none;
         }
 
-        &:hover{
-         background-color: $hover-bg-color
+        &:hover {
+         background-color: $hover-bg-color;
         }
 
         &.content {
           padding-right: $space-xxlarge;
+        }
+
+        textarea {
+          padding: 0;
+          margin: $textarea-margin;
+          min-height: $textarea-min-height;
+          overflow: hidden;
+          background-color: inherit;
+          resize: none;
         }
 
         div.action-icons {

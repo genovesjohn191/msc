@@ -9,6 +9,7 @@ import { FormFieldModule } from '../form-field/form-field.module';
 import { ItemModule } from '../item/item.module';
 import { ButtonModule } from '../button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     InputModule,
     ItemModule,
     ButtonModule,
-    FormFieldModule
+    FormFieldModule,
+    TextFieldModule
   ],
   exports: [
     DynamicListComponent

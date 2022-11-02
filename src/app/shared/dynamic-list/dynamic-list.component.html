@@ -26,9 +26,18 @@
       <mcs-item orientation="separated"
         *ngFor="let listItem of list; index as i; first as first; last as last"
         class="list-item" padding-left-small>
-
-        <div text-wrap class="content" text-break-word>{{ listItem?.value }}</div>
-
+        <ng-container *ngIf="!allowInlineEdit; else inlineEditTemplate">
+          <div text-wrap class="content" text-break-word>{{ listItem?.value }}</div>
+        </ng-container>
+        <ng-template #inlineEditTemplate>
+          <textarea matInput
+            cdkTextareaAutosize
+            #autoSize="cdkTextareaAutosize"
+            (input)="listItem.value = $event.currentTarget.value"
+            [(ngModel)]="listItem.value"
+            (blur)="editItem(list)"
+            [maxlength]="maxLength">{{ listItem.value }}</textarea>
+        </ng-template>
         <div class="action-icons">
           <button *ngIf="enableOrdering" mcsButton="icon" theme="light" padding="none">
             <mcs-icon #upcion

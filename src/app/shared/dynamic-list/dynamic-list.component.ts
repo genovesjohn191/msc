@@ -29,6 +29,7 @@ import {
   ValidationErrors,
   Validator
 } from '@angular/forms';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   CoreValidators,
   McsFormFieldControlBase,
@@ -80,6 +81,9 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
   private _validators: Map<string, Function>;
   private _listCache: any[] = [];
 
+  @ViewChild('autoSize', { read: CdkTextareaAutosize })
+  private _autoSize: CdkTextareaAutosize;
+
   @Output()
   public listChange = new EventEmitter<string[]>();
 
@@ -91,6 +95,9 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
 
   @Input()
   public errorStateMatcher: ErrorStateMatcher;
+
+  @Input()
+  public allowInlineEdit: boolean;
 
   @Input()
   public get value(): string[] { return this._value; }
@@ -218,6 +225,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
 
   public ngOnInit(): void {
     this._subscribeToListChange();
+    this._triggerTextAreaResize();
   }
 
   public ngDoCheck(): void {
@@ -325,6 +333,10 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
     this._updateListValues(updatedList);
   }
 
+  public editItem(list: DynamicListItem[]): void {
+    this._updateListValues(list);
+  }
+
   /**
    * Move an item up the list
    * @param index index of the current item
@@ -361,6 +373,12 @@ export class DynamicListComponent extends McsFormFieldControlBase<any>
     if (isNullOrEmpty(event)) { return; }
     event.stopPropagation();
     this.addListItem(value, list);
+  }
+
+  private _triggerTextAreaResize(): void {
+    setTimeout(() => {
+      this._autoSize?.resizeToFitContent(true);
+    });
   }
 
   private _resetInput(list: DynamicListItem[]): void {
