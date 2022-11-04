@@ -62,6 +62,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _showDashboardSubmenu: boolean;
   private _showAzureSubMenu: boolean;
   private _showOrdersMenu: boolean;
+  private _showBillSummarySubMenu: boolean;
 
   public get isImpersonating(): boolean {
     return this._authenticationIdentity.isImpersonating;
@@ -121,6 +122,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get showAzureSubMenu(): boolean {
     return this._showAzureSubMenu;
+  }
+
+  public get showBillSummarySubMenu(): boolean {
+    return this._showBillSummarySubMenu;
   }
 
   public get caretUpIconKey(): string {
@@ -219,8 +224,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get hasHybridCloudAccess(): boolean {
     return ((this._authenticationIdentity.platformSettings.hasHybridCloud) &&
-            (this._accessControlService.hasAccessToFeature([McsFeatureFlag.HybridCloud])) &&
-            (this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.ApplicationRecoveryListing])));
+      (this._accessControlService.hasAccessToFeature([McsFeatureFlag.HybridCloud])) &&
+      (this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing, McsFeatureFlag.ApplicationRecoveryListing])));
   }
 
   public get workflowReportingLink(): string {
@@ -287,7 +292,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._showOrdersMenu = (this._navInitialized && this._showOrdersMenu)
       ? this._showOrdersMenu
       : this._accessControlService.hasPermission([McsPermission.OrderView])
-        && (this.selectedCategory === RouteCategory.Orders || this.selectedCategory === RouteCategory.MakeAChange);
+      && (this.selectedCategory === RouteCategory.Orders || this.selectedCategory === RouteCategory.MakeAChange);
 
     this._navInitialized = true;
   }
@@ -318,20 +323,20 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   private _initPrivateCloudNav(): void {
     this._showPrivateCloudMenu = (this._navInitialized && this._showPrivateCloudMenu)
-    ? this._showPrivateCloudMenu
-    : this.hasPrivateCloudAccess && this.isPrivateCloudRoute;
+      ? this._showPrivateCloudMenu
+      : this.hasPrivateCloudAccess && this.isPrivateCloudRoute;
 
-  this._showComputeSubmenu = (this._navInitialized && this._showComputeSubmenu)
-    ? this._showComputeSubmenu
-    : this.selectedCategory === RouteCategory.Compute;
+    this._showComputeSubmenu = (this._navInitialized && this._showComputeSubmenu)
+      ? this._showComputeSubmenu
+      : this.selectedCategory === RouteCategory.Compute;
 
-  this._showNetworkSubmenu = (this._navInitialized && this._showNetworkSubmenu)
-    ? this._showNetworkSubmenu
-    : this.selectedCategory === RouteCategory.Network;
+    this._showNetworkSubmenu = (this._navInitialized && this._showNetworkSubmenu)
+      ? this._showNetworkSubmenu
+      : this.selectedCategory === RouteCategory.Network;
 
-  this._showStorageSubmenu = (this._navInitialized && this._showStorageSubmenu)
-    ? this._showStorageSubmenu
-    : this.selectedCategory === RouteCategory.Storage;
+    this._showStorageSubmenu = (this._navInitialized && this._showStorageSubmenu)
+      ? this._showStorageSubmenu
+      : this.selectedCategory === RouteCategory.Storage;
   }
 
   private _initPublicCloudNav(): void {
@@ -346,6 +351,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._showAzureSubMenu = (this._navInitialized && this._showAzureSubMenu)
       ? this._showAzureSubMenu
       : this.selectedCategory === RouteCategory.Azure;
+
+    this._showBillSummarySubMenu = !this._navInitialized ?
+      this.selectedCategory === RouteCategory.Billing :
+      this._showBillSummarySubMenu;
   }
 
   private _initHybridCloudNav(): void {

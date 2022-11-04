@@ -11,7 +11,11 @@ import { AzureResourcesWidgetComponent } from './azure-resources/azure-resources
 import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widget.component';
 import { BackupSecurityWidgetComponent } from './backup-security/backup-security-widget.component';
 import {
+  AvdDailyConnectionsWidgetComponent,
+  AvdDailyUsersAverageWidgetComponent,
+  AvdDailyUsersServiceWidgetComponent,
   BillingOperationService,
+  BillingServiceCostWidgetComponent,
   BillingServiceWidgetComponent,
   BillingSummaryWidgetComponent
 } from './billing';
@@ -46,8 +50,6 @@ const exports: any[] | Type<any> = [
   AzureResourcesWidgetComponent,
   AzureTicketsWidgetComponent,
   BackupSecurityWidgetComponent,
-  BillingServiceWidgetComponent,
-  BillingSummaryWidgetComponent,
   ChangeRequestWidgetComponent,
   ComplianceWidgetComponent,
   ContactUsWidgetComponent,
@@ -72,7 +74,14 @@ const exports: any[] | Type<any> = [
   TopVmsByCostWidgetComponent,
   UpdateManagementWidgetComponent,
   VirtualMachineUsageBreakdownWidgetComponent,
-  VmRightsizingWidgetComponent
+  VmRightsizingWidgetComponent,
+
+  BillingServiceWidgetComponent,
+  BillingSummaryWidgetComponent,
+  BillingServiceCostWidgetComponent,
+  AvdDailyConnectionsWidgetComponent,
+  AvdDailyUsersAverageWidgetComponent,
+  AvdDailyUsersServiceWidgetComponent
 ];
 
 @NgModule({

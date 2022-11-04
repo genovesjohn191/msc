@@ -1,0 +1,16 @@
+<div class="widget flat">
+  <ng-container *ngIf="dataProcess.completed$ | async">
+    <mcs-vertical-bar-chart
+      class="custom-chart"
+      [config]="chartConfig"
+      [data]="chartItems$ | async"
+      [noDataMessage]="'message.noAvdDailyConnectionsService' | translate"
+      (chartChange)="updateChartUri($event)">
+    </mcs-vertical-bar-chart>
+  </ng-container>
+
+  <mcs-report-widget-data-status type="info"
+    [dataStatus]="dataProcess"
+    (retry)="initializeDataRecords()">
+  </mcs-report-widget-data-status>
+</div>

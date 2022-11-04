@@ -165,6 +165,12 @@ export enum RouteKey {
   BillingSummary,
   BillingService,
 
+  Avd,
+  AvdDailyUserService,
+  AvdDailyUserAverage,
+  AvdServiceCost,
+  AvdDailyConnection,
+
   PrivateCloudDashboard,
   PrivateCloudDashboardOverview,
 

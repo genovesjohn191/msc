@@ -9,6 +9,7 @@ import { isNullOrEmpty } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
 import { SelectMediaExtensionDatasource } from './datasources/factories/select-media-extension.datasource';
+import { SelectMonthDatasource } from './datasources/factories/select-month.datasource';
 import { SelectResourceCatalogDatasource } from './datasources/factories/select-resource-catalog.datasource';
 import { SelectResourceDatasource } from './datasources/factories/select-resource.datasource';
 import { SelectServerConsoleDatasource } from './datasources/factories/select-server-console.datasource';
@@ -28,7 +29,8 @@ export enum SelectDatasourceType {
   ServerConsole,
   VCenterInstance,
   VCenterBaseline,
-  VCenterDatacentre
+  VCenterDatacentre,
+  Month
 }
 
 @Injectable({ providedIn: 'root' })
@@ -66,6 +68,9 @@ export class FieldSelectService implements IFieldSelectService {
 
     this._selectDatasourceMap.set(SelectDatasourceType.VCenterDatacentre,
       new SelectVCenterDataCentreDatasource(_apiService));
+
+    this._selectDatasourceMap.set(SelectDatasourceType.Month,
+      new SelectMonthDatasource());
   }
 
   public get(type: string, data?: any): FieldSelectDatasource {

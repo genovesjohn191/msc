@@ -3,21 +3,26 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsQueryParam,
-  McsReportDefenderCloudAlerts,
   McsReportAuditAlerts,
-  McsReportRecentServiceRequestSlt,
+  McsReportBillingAvdDailyAverageUser,
+  McsReportBillingAvdDailyAverageUsersParam,
+  McsReportBillingAvdDailyUser,
+  McsReportBillingAvdDailyUsersParam,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
   McsReportComputeResourceTotals,
   McsReportCostRecommendations,
+  McsReportDefenderCloudAlerts,
   McsReportGenericItem,
   McsReportInefficientVms,
+  McsReportInefficientVmParams,
   McsReportIntegerData,
   McsReportManagementService,
   McsReportMonitoringAndAlerting,
   McsReportOperationalSavings,
   McsReportParams,
   McsReportPlatformSecurityAdvisories,
+  McsReportRecentServiceRequestSlt,
   McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
@@ -26,11 +31,9 @@ import {
   McsReportSubscription,
   McsReportTopVmsByCost,
   McsReportUpdateManagement,
+  McsReportUpdateManagementParams,
   McsReportVMRightsizing,
-  McsReportVMRightsizingSummary,
-  McsRightSizingQueryParams,
-  McsReportInefficientVmParams,
-  McsReportUpdateManagementParams
+  McsReportVMRightsizingSummary
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -95,12 +98,6 @@ export interface IMcsApiReportsService {
 
   getTopVmsByCost(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportTopVmsByCost[]>>;
 
-  getBillingSummaries(query?: McsReportBillingSummaryParams): Observable<McsApiSuccessResponse<McsReportBillingServiceGroup[]>>;
-
-  getBillingSummariesCsv(
-    query?: McsReportBillingSummaryParams,
-    optionalHeaders?: Map<string, any>): Observable<any>;
-
   getPlatformSecurityAdvisories(query?: McsReportParams): Observable<McsApiSuccessResponse<McsReportPlatformSecurityAdvisories[]>>;
 
   getRecentServiceRequestSlt(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportRecentServiceRequestSlt[]>>;
@@ -108,4 +105,25 @@ export interface IMcsApiReportsService {
   getComputeResourceTotals(): Observable<McsApiSuccessResponse<McsReportComputeResourceTotals>>;
 
   getResourcesStorages(): Observable<McsApiSuccessResponse<McsReportStorageResourceUtilisation[]>>;
+
+  getBillingSummaries(
+    query?: McsReportBillingSummaryParams
+  ): Observable<McsApiSuccessResponse<McsReportBillingServiceGroup[]>>;
+
+  getBillingSummariesCsv(
+    query?: McsReportBillingSummaryParams,
+    optionalHeaders?: Map<string, any>
+  ): Observable<any>;
+
+  getAvdDailyUsersService(
+    query?: McsReportBillingAvdDailyUsersParam
+  ): Observable<McsApiSuccessResponse<McsReportBillingAvdDailyUser[]>>;
+
+  getAvdDailyUsersServiceCsv(query?: McsReportBillingAvdDailyUsersParam): Observable<Blob>;
+
+  getAvdDailyUsersAverage(
+    query?: McsReportBillingAvdDailyAverageUsersParam
+  ): Observable<McsApiSuccessResponse<McsReportBillingAvdDailyAverageUser[]>>;
+
+  getAvdDailyUsersAverageCsv(query?: McsReportBillingAvdDailyAverageUsersParam): Observable<Blob>;
 }

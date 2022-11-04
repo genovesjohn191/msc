@@ -6,21 +6,26 @@ import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
   McsQueryParam,
-  McsReportDefenderCloudAlerts,
   McsReportAuditAlerts,
-  McsReportRecentServiceRequestSlt,
+  McsReportBillingAvdDailyAverageUser,
+  McsReportBillingAvdDailyAverageUsersParam,
+  McsReportBillingAvdDailyUser,
+  McsReportBillingAvdDailyUsersParam,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
   McsReportComputeResourceTotals,
   McsReportCostRecommendations,
+  McsReportDefenderCloudAlerts,
   McsReportGenericItem,
   McsReportInefficientVms,
+  McsReportInefficientVmParams,
   McsReportIntegerData,
   McsReportManagementService,
   McsReportMonitoringAndAlerting,
   McsReportOperationalSavings,
   McsReportParams,
   McsReportPlatformSecurityAdvisories,
+  McsReportRecentServiceRequestSlt,
   McsReportResourceCompliance,
   McsReportResourceHealth,
   McsReportSecurityScore,
@@ -29,13 +34,14 @@ import {
   McsReportSubscription,
   McsReportTopVmsByCost,
   McsReportUpdateManagement,
+  McsReportUpdateManagementParams,
   McsReportVMRightsizing,
-  McsReportVMRightsizingSummary,
-  McsRightSizingQueryParams,
-  McsReportInefficientVmParams,
-  McsReportUpdateManagementParams
+  McsReportVMRightsizingSummary
 } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -534,5 +540,75 @@ export class McsApiReportsService implements IMcsApiReportsService {
           return apiResponse;
         })
       );
+  }
+
+  public getAvdDailyUsersService(
+    query?: McsReportBillingAvdDailyUsersParam
+  ): Observable<McsApiSuccessResponse<McsReportBillingAvdDailyUser[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/billing/azure-virtual-desktop/daily-users';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => {
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsReportBillingAvdDailyUser[]>(McsReportBillingAvdDailyUser, response);
+        return apiResponse;
+      })
+    );
+  }
+
+  public getAvdDailyUsersServiceCsv(query?: McsReportBillingAvdDailyUsersParam): Observable<Blob> {
+    if (isNullOrEmpty(query)) { query = new McsReportBillingAvdDailyUsersParam(); }
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_ACCEPT, 'text/csv'],
+    ]);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/billing/azure-virtual-desktop/daily-users';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
+    mcsApiRequestParameter.responseType = 'blob';
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => response)
+    );
+  }
+
+  public getAvdDailyUsersAverage(
+    query?: McsReportBillingAvdDailyAverageUsersParam
+  ): Observable<McsApiSuccessResponse<McsReportBillingAvdDailyAverageUser[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/billing/azure-virtual-desktop/daily-average-users';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => {
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsReportBillingAvdDailyAverageUser[]>(McsReportBillingAvdDailyAverageUser, response);
+        return apiResponse;
+      })
+    );
+  }
+
+  public getAvdDailyUsersAverageCsv(query?: McsReportBillingAvdDailyAverageUsersParam): Observable<Blob> {
+    if (isNullOrEmpty(query)) { query = new McsReportBillingAvdDailyAverageUsersParam(); }
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_ACCEPT, 'text/csv'],
+    ]);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/billing/azure-virtual-desktop/daily-average-users';
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
+    mcsApiRequestParameter.responseType = 'blob';
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => response)
+    );
   }
 }

@@ -395,13 +395,32 @@
           <!-- Bill Summary -->
           <li *mcsAccessControl="['BillingView']; feature: 'EnableAzureConsolidatedBilling'">
             <a [mcsRouterLink]="routeKeyEnum.Billing"
+              mcsStopPropagation
               mcsId="bill-summary-link"
               mcsEventTracker="navigate-to-bill-summary"
               mcsEventCategory="navigation"
               mcsEventLabel="main-nav"
-              mcsRouterLinkActive="active">
+              mcsRouterLinkActive="active"
+              (click)="toggleThis('showBillSummarySubMenu')"
+              [class.active]="selectedCategory === routerCategoryEnum.Billing">
               {{ 'navigation.billSummary' | translate }}
+              <mcs-icon *mcsAccessControl="['BillingView']; feature: 'EnableAzureVirtualDesktopBillSummary'"
+                [key]="showBillSummarySubMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small">
+              </mcs-icon>
             </a>
+
+            <ul [class.hidden]="!showBillSummarySubMenu" *mcsAccessControl="['BillingView']; feature: 'EnableAzureVirtualDesktopBillSummary'">
+              <li>
+                <a [mcsRouterLink]="routeKeyEnum.Avd"
+                  mcsId="bill-avd-link"
+                  mcsEventTracker="navigate-to-bill-avd"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav"
+                  mcsRouterLinkActive="active">
+                  {{ 'navigation.azureVirtualDesktop' | translate }}
+                </a>
+              </li>
+            </ul>
           </li>
 
           <!-- Azure -->

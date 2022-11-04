@@ -18,10 +18,10 @@ import {
   compareDates,
   getDateOnly,
   getTimestamp,
+  hashString,
   isNullOrEmpty,
   isNullOrUndefined,
   removeSpaces,
-  hashString,
   Guid
 } from '@app/utilities';
 
@@ -30,14 +30,14 @@ import {
   KEY_SEPARATOR
 } from '../abstractions/billing-operation.base';
 import { IBillingOperation } from '../abstractions/billing-operation.interface';
+import { billingColors } from '../models/bill-summary-colors';
+import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingSummaryItem } from '../models/billing-summary-item';
-import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
-import { billingColors } from '../models/bill-summary-colors';
 
 export class BillingSummaryOperation
-  extends BillingOperationBase
+  extends BillingOperationBase<BillingSummaryItem>
   implements IBillingOperation<McsReportBillingServiceGroup, BillingSummaryItem> {
 
   private _dataChange = new BehaviorSubject<BillingOperationData<BillingSummaryItem>>(null);
@@ -73,6 +73,18 @@ export class BillingSummaryOperation
 
   public reset(): void {
     this._initializeDataByDataGroup();
+  }
+
+  protected mapToChartItem(item: BillingSummaryItem): ChartItem {
+    let billingViewModel = this._getBillingViewModelByItem(item);
+    let billingTitle = this._generateBillingTitle(billingViewModel);
+    let chartItem = {
+      id: item.id,
+      name: billingTitle,
+      xValue: item.microsoftChargeMonth,
+      yValue: item.gstExclusiveChargeDollars
+    } as ChartItem;
+    return chartItem;
   }
 
   private _initializeDataByDataGroup(filterPred?: (item: BillingSummaryItem) => boolean): void {
@@ -173,15 +185,8 @@ export class BillingSummaryOperation
     // Convert to chart items
     let chartItems = new Array<ChartItem>();
     series?.forEach(billingSummary => {
-      let billingViewModel = this._getBillingViewModelByItem(billingSummary);
-      let billingTitle = this._generateBillingTitle(billingViewModel);
-
-      chartItems.push({
-        id: billingSummary.id,
-        name: billingTitle,
-        xValue: billingSummary.microsoftChargeMonth,
-        yValue: billingSummary.gstExclusiveChargeDollars
-      } as ChartItem);
+      if (isNullOrEmpty(billingSummary)) { return; }
+      chartItems.push(this.mapToChartItem(billingSummary));
     });
     return this.reportingService.fillMissingChartItems(chartItems);
   }

@@ -11,4 +11,7 @@ export class McsReportBillingServiceTenant extends McsEntityBase {
 
   @JsonProperty()
   public primaryDomain: string = undefined;
+
+  @JsonProperty()
+  public microsoftId: string = undefined;
 }

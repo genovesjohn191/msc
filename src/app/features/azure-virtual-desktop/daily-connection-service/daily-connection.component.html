@@ -1,0 +1,30 @@
+<section>
+  <mcs-item orientation="separated">
+    <mcs-note>
+      <p [innerHTML]="'message.avdDailyConnectionNote' | translate"></p>
+    </mcs-note>
+
+    <div></div>
+
+    <mcs-item>
+      <button mcsButton="icon" mcsId="export-csv"
+        (click)="onExportCsv()"
+        [disabled]="exportProcess.inProgress$ | async"
+        [mcsTooltip]="'tooltip.exportCsv' | translate">
+        <mcs-icon key="csv" size="large" mcsCursor="pointer"></mcs-icon>
+      </button>
+
+      <mcs-field-select size="medium" auto-width
+        mcsId="select-month"
+        [label]="'label.month' | translate"
+        [dataSource]="'Month' | mcsFieldSelect"
+        [formControl]="fcMonth">
+      </mcs-field-select>
+    </mcs-item>
+  </mcs-item>
+
+  <mcs-avd-daily-connections-widget
+    [dataProcess]="dataProcess"
+    [dataRecords]="dailyUsers$ | async">
+  </mcs-avd-daily-connections-widget>
+</section>

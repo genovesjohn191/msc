@@ -701,6 +701,7 @@
     "enumPlatform": "Public",
     "enumKey": "Billing",
     "navigationPath": "billing",
+    "requiredFeatureFlag": "EnableAzureConsolidatedBilling",
     "documentTitle": "Billing - Macquarie Cloud Services"
   },
   "billingSummary": {
@@ -723,6 +724,42 @@
     "enumKey": "BillingTabular",
     "navigationPath": "tabular",
     "documentTitle": "Billing Tabular - Macquarie Cloud Services"
+  },
+  "avd": {
+    "enumPlatform": "Public",
+    "enumCategory": "Billing",
+    "enumKey": "Avd",
+    "navigationPath": "azure-virtual-desktop",
+    "requiredFeatureFlag": "EnableAzureVirtualDesktopBillSummary",
+    "documentTitle": "Azure Virtual Desktop - Macquarie Cloud Services"
+  },
+  "avdDailyUserService": {
+    "enumPlatform": "Public",
+    "enumCategory": "Avd",
+    "enumKey": "AvdDailyUserService",
+    "navigationPath": "daily-user-service",
+    "documentTitle": "AVD Daily User Service - Macquarie Cloud Services"
+  },
+  "avdDailyUserAverage": {
+    "enumPlatform": "Public",
+    "enumCategory": "Avd",
+    "enumKey": "AvdDailyUserAverage",
+    "navigationPath": "daily-user-average",
+    "documentTitle": "AVD Daily Average Users - Macquarie Cloud Services"
+  },
+  "avdServiceCost": {
+    "enumPlatform": "Public",
+    "enumCategory": "Avd",
+    "enumKey": "AvdServiceCost",
+    "navigationPath": "service-cost",
+    "documentTitle": "AVD Cost by Service - Macquarie Cloud Services"
+  },
+  "avdDailyConnection": {
+    "enumPlatform": "Public",
+    "enumCategory": "Avd",
+    "enumKey": "AvdDailyConnection",
+    "navigationPath": "daily-connection-service",
+    "documentTitle": "AVD Daily Connection by Service - Macquarie Cloud Services"
   },
   "systemMessages": {
     "enumCategory": "SystemMessages",

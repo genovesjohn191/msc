@@ -5,7 +5,7 @@ import { McsOption } from '@app/models';
 let nextUniqueId = 0;
 
 export class FieldSelectConfig {
-  constructor(public name: string) { }
+  constructor(public name: string, public noGutter?: boolean) { }
 }
 
 export abstract class FieldSelectDatasource {
