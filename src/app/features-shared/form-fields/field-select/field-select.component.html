@@ -1,4 +1,6 @@
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline"
+  [class.mcs-select-no-padding]="dataSource?.config?.noGutter">
+
   <mat-label>{{ displayedLabel }}</mat-label>
 
   <mat-select [formControl]="ngControl?.control" [multiple]="multiple">

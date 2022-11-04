@@ -17,23 +17,23 @@ import {
   createObject,
   getDateOnly,
   getTimestamp,
+  hashString,
   isNullOrEmpty,
   isNullOrUndefined,
   removeSpaces,
-  hashString,
   Guid
 } from '@app/utilities';
 
 import { BillingOperationBase } from '../abstractions/billing-operation.base';
 import { IBillingOperation } from '../abstractions/billing-operation.interface';
+import { billingColors } from '../models/bill-summary-colors';
+import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
 import { BillingOperationData } from '../models/billing-operation-data';
 import { BillingOperationViewModel } from '../models/billing-operation-viewmodel';
 import { BillingServiceItem } from '../models/billing-service-item';
-import { billingKnownProductTypes } from '../models/bill-summary-known-product-type';
-import { billingColors } from '../models/bill-summary-colors';
 
 export class BillingServiceOperation
-  extends BillingOperationBase
+  extends BillingOperationBase<BillingServiceItem>
   implements IBillingOperation<McsReportBillingServiceGroup, BillingServiceItem> {
 
   private _dataChange = new BehaviorSubject<BillingOperationData<BillingServiceItem>>(null);
@@ -72,6 +72,19 @@ export class BillingServiceOperation
     this._initializeDataByDataGroup();
   }
 
+  protected mapToChartItem(billingService: BillingServiceItem): ChartItem {
+    let billingViewModel = this._getBillingViewModelByItem(billingService);
+    let billingTitle = this._generateBillingTitle(billingViewModel);
+    let chartItem = {
+      id: billingService.id,
+      name: billingTitle,
+      xValue: billingService.microsoftChargeMonth,
+      yValue: billingService.gstExclusiveChargeDollars
+    } as ChartItem;
+
+    return chartItem;
+  }
+
   private _initializeDataByDataGroup(filterPred?: (item: BillingServiceItem) => boolean): void {
     this._generateBillingOperationData(filterPred);
   }
@@ -81,7 +94,7 @@ export class BillingServiceOperation
     dataOperation.summaryItems = this._createBillingSummaries(filterPred);
     dataOperation.chartItems = this._createChartItems(dataOperation.summaryItems);
     dataOperation.seriesItems = this._createSeriesItems(dataOperation.chartItems, dataOperation.summaryItems);
-    dataOperation.chartColors = this._createChartColors(dataOperation.chartItems, dataOperation.seriesItems);
+    dataOperation.chartColors = this._createChartColors(dataOperation.chartItems);
     dataOperation.getViewModelFunc = this._getBillingViewModelByItem.bind(this);
     dataOperation.getTitleFunc = this._generateBillingTitle.bind(this);
     dataOperation.getNameFunc = this._generateBillingName.bind(this);
@@ -113,8 +126,12 @@ export class BillingServiceOperation
           initialDomain: parentService.tenant?.initialDomain,
           installedQuantity: parentService.installedQuantity,
           isProjection: billingGroup.isProjection,
-          macquarieBillMonth: this.datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
-          microsoftChargeMonth: this.datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
+          macquarieBillMonth: this.datePipe.transform(
+            getDateOnly(billingGroup.macquarieBillMonth),
+            'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
+          microsoftChargeMonth: this.datePipe.transform(
+            getDateOnly(billingGroup.microsoftChargeMonth),
+            'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
           markupPercent: parentService.markupPercent,
           microsoftIdentifier: parentService.microsoftId,
           minimumCommitmentDollars: parentService.minimumCommitmentDollars,
@@ -155,8 +172,12 @@ export class BillingServiceOperation
             initialDomain: childService.tenant?.initialDomain,
             installedQuantity: childService.installedQuantity,
             isProjection: billingGroup.isProjection,
-            macquarieBillMonth: this.datePipe.transform(getDateOnly(billingGroup.macquarieBillMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
-            microsoftChargeMonth: this.datePipe.transform(getDateOnly(billingGroup.microsoftChargeMonth), 'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
+            macquarieBillMonth: this.datePipe.transform(
+              getDateOnly(billingGroup.macquarieBillMonth),
+              'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
+            microsoftChargeMonth: this.datePipe.transform(
+              getDateOnly(billingGroup.microsoftChargeMonth),
+              'shortMonthYear') + (billingGroup.isProjection ? '*' : ''),
             markupPercent: childService.markupPercent,
             microsoftIdentifier: childService.microsoftId,
             minimumCommitmentDollars: childService.minimumCommitmentDollars,
@@ -196,25 +217,12 @@ export class BillingServiceOperation
     let chartItems = new Array<ChartItem>();
     services.forEach(billingService => {
       if (isNullOrEmpty(billingService)) { return; }
-
-      let billingViewModel = this._getBillingViewModelByItem(billingService);
-      let billingTitle = this._generateBillingTitle(billingViewModel);
-      let chartItem = {
-        id: billingService.id,
-        name: billingTitle,
-        xValue: billingService.microsoftChargeMonth,
-        yValue: billingService.gstExclusiveChargeDollars
-      } as ChartItem;
-
-      chartItems.push(chartItem);
+      chartItems.push(this.mapToChartItem(billingService));
     });
     return this.reportingService.fillMissingChartItems(chartItems);
   }
 
-  private _createSeriesItems(
-    chartItems: ChartItem[],
-    services: BillingServiceItem[]
-  ): BillingServiceItem[][] {
+  private _createSeriesItems(chartItems: ChartItem[], services: BillingServiceItem[]): BillingServiceItem[][] {
     // Group them first by their service names
     let billingSeriesItems: BillingServiceItem[][] = [];
 
@@ -250,10 +258,7 @@ export class BillingServiceOperation
     return billingSeriesItems;
   }
 
-  private _createChartColors(
-    chartItems: ChartItem[],
-    seriesItems: BillingServiceItem[][]
-  ): ChartColorFuncType<BillingServiceItem>[] {
+  private _createChartColors(chartItems: ChartItem[]): ChartColorFuncType<BillingServiceItem>[] {
     if (isNullOrEmpty(chartItems)) { return; }
 
     let chartNames = chartItems?.map(item => item.name) || [];
@@ -265,10 +270,9 @@ export class BillingServiceOperation
     // Use predefined colours for each item
     // If predefined colours run out, hashes each distinct name and uses it as seed for hex colour generation
     let createdColors = uniqueNames?.map((name, nameIndex) => {
-      return (nameIndex < billingColors.length)? billingColors[nameIndex++] : hashString(name).toHex();
+      return (nameIndex < billingColors.length) ? billingColors[nameIndex++] : hashString(name).toHex();
     });
-    return createdColors.map((color, index) =>
-      itemFunc => color);
+    return createdColors.map((color, index) => itemFunc => color);
   }
 
   private _getBillingViewModelByItem(service: BillingServiceItem): BillingOperationViewModel {
@@ -462,10 +466,10 @@ export class BillingServiceOperation
     billingKnownProductTypes.forEach((billingKnownProductType) => {
       this._billingStructMap.set(billingKnownProductType.key,
         item => new BillingOperationViewModel(
-          ((billingKnownProductType.detailUseAzureDescription)? item.azureDescription : item.billingDescription) + ` - ` + item.serviceId,
-          this._getTooltipOptionsInfo(item,...billingKnownProductType.detailCustomTooltipFields),
+          ((billingKnownProductType.detailUseAzureDescription) ? item.azureDescription : item.billingDescription) + ` - ` + item.serviceId,
+          this._getTooltipOptionsInfo(item, ...billingKnownProductType.detailCustomTooltipFields),
           billingKnownProductType.detailIncludeMinimumCommentNote,
-          (item.isProjection)? item.isProjection : false
+          (item.isProjection) ? item.isProjection : false
         )
       );
     });
@@ -473,7 +477,7 @@ export class BillingServiceOperation
 
   private _registerBillingNameMap(): void {
     billingKnownProductTypes.forEach((billingKnownProductType) => {
-      this._billingNameMap.set(billingKnownProductType.key,billingKnownProductType.friendlyName);
+      this._billingNameMap.set(billingKnownProductType.key, billingKnownProductType.friendlyName);
     });
   }
 

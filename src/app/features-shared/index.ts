@@ -80,3 +80,6 @@ export * from './form-fields/field-select/field-select.datasource';
 export * from './form-fields/field-select/field-select.component';
 export * from './form-fields/field-select/field-select.pipe';
 export * from './form-fields/field-select/services/field-select.service';
+
+// Document Export
+export * from './export-document-factory';

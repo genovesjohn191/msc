@@ -21,7 +21,9 @@ import { McsDataStatusFactory } from '@app/core';
 import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  DataProcess,
+  DataProcessStatus
 } from '@app/utilities';
 
 @Component({
@@ -42,7 +44,7 @@ export class ReportWidgetDataStatusComponent implements OnInit, OnChanges, OnDes
   public processing: boolean = true;
 
   @Input()
-  public dataStatus: McsDataStatusFactory<any>;
+  public dataStatus: McsDataStatusFactory<any> | DataProcess<any>;
 
   @Output()
   public retry = new EventEmitter<void>();
@@ -72,28 +74,55 @@ export class ReportWidgetDataStatusComponent implements OnInit, OnChanges, OnDes
   private _subscribeToDataStatusChange(): void {
     if (isNullOrEmpty(this.dataStatus)) { return; }
 
-    this.dataStatus.statusChanged.pipe(
-      takeUntil(this._destroySubject),
-      tap(status => {
-        this._resetStatus();
+    if (this.dataStatus instanceof McsDataStatusFactory) {
+      this.dataStatus.statusChanged.pipe(
+        takeUntil(this._destroySubject),
+        tap(status => {
+          this._resetStatus();
 
-        switch (status) {
-          case DataStatus.PreActive:
-          case DataStatus.Active:
-            this.processing = true;
-            break;
+          switch (status) {
+            case DataStatus.PreActive:
+            case DataStatus.Active:
+              this.processing = true;
+              break;
 
-          case DataStatus.Empty:
-            this.processing = false;
-            break;
+            case DataStatus.Empty:
+              this.processing = false;
+              break;
 
-          case DataStatus.Error:
-            this.hasError = true;
-            break;
-        }
-        this._changeDetectorRef.markForCheck();
-      })
-    ).subscribe();
+            case DataStatus.Error:
+              this.hasError = true;
+              break;
+          }
+          this._changeDetectorRef.markForCheck();
+        })
+      ).subscribe();
+
+    } else {
+      this.dataStatus.change.pipe(
+        takeUntil(this._destroySubject),
+        tap(status => {
+          this._resetStatus();
+
+          switch (status) {
+            case DataProcessStatus.InProgress:
+            case DataProcessStatus.NotYetStarted:
+              this.processing = true;
+              break;
+
+            case DataProcessStatus.Success:
+              this.processing = false;
+              this.hasError = false;
+              break;
+
+            case DataProcessStatus.Failed:
+              this.hasError = true;
+              break;
+          }
+          this._changeDetectorRef.markForCheck();
+        })
+      ).subscribe();
+    }
   }
 
   private _resetStatus(): void {

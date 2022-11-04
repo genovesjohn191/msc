@@ -142,6 +142,12 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () => import('../../features/billing/billing.module').then(m => m.BillingModule)
       },
       {
+        path: 'azure-virtual-desktop',
+        data: { routeId: RouteKey.Avd },
+        loadChildren: () => import('../../features/azure-virtual-desktop/azure-virtual-desktop.module')
+          .then(m => m.AzureVirtualDesktopModule)
+      },
+      {
         path: 'private-cloud/dashboard',
         data: { routeId: RouteKey.PrivateCloudDashboard },
         loadChildren: () => import('../../features/private-cloud-dashboard/private-cloud-dashboard.module')

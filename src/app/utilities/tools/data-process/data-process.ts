@@ -21,6 +21,7 @@ export class DataProcess<TError> implements IDataProcess<TError> {
   public inProgress$: Observable<boolean>;
   public onError$: Observable<TError[]>;
   public onSuccess$: Observable<boolean>;
+  public completed$: Observable<boolean>;
 
   private _errors: TError[];
   private _destroySubject = new Subject<void>();
@@ -57,6 +58,10 @@ export class DataProcess<TError> implements IDataProcess<TError> {
 
   public get failed(): boolean {
     return this.status === DataProcessStatus.Failed;
+  }
+
+  public get change(): Observable<DataProcessStatus> {
+    return this._progressChange.asObservable();
   }
 
   public updateProcessSource(targetStatus: DataProcessStatus, errors?: TError[]): DataProcess<TError> {
@@ -115,6 +120,13 @@ export class DataProcess<TError> implements IDataProcess<TError> {
     this.onSuccess$ = this._progressChange.pipe(
       takeUntil(this._destroySubject),
       map(status => status === DataProcessStatus.Success),
+      shareReplay(1)
+    );
+
+    this.completed$ = this._progressChange.pipe(
+      takeUntil(this._destroySubject),
+      map(status => status === DataProcessStatus.Failed ||
+        status === DataProcessStatus.Success),
       shareReplay(1)
     );
   }

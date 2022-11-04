@@ -85,6 +85,7 @@
     "licenses": "Licenses",
     "billing": "Billing",
     "billSummary": "Bill Summary",
+    "azureVirtualDesktop": "Azure Virtual Desktop",
     "privateCloudDashboardOverview": "Dashboard",
     "macquarieView": "MacquarieView",
     "makeAChange": "Make a Change",
@@ -3848,6 +3849,11 @@
     "enabled": "Enabled"
   },
   "label": {
+    "azureVirtualDesktop": "Azure Virtual Desktop",
+    "dailyUsersByService": "Daily Users by Service",
+    "dailyAverageUsers": "Daily Average Users",
+    "costByService": "Cost by Service",
+    "dailyConnectionsByService": "Daily Connections by Service",
     "dataCentre": "Data Centre",
     "hosts": "Hosts",
     "vCenter": "vCenter",
@@ -4095,6 +4101,15 @@
     "rollback": "Rollback"
   },
   "message": {
+    "noAvdDailyUsersService": "No Azure Virtual Desktop daily users service to display.",
+    "noAvdDailyConnectionsService": "No Azure Virtual Desktop daily connections service to display.",
+    "noServiceCost": "No Azure Virtual Desktop cost by service to display.",
+    "avdDailyUserNote": "<b>Daily Users by Service</b> is a count of users that used Azure Virtual Desktop each day over a given month.<br/>Please note: A Daily User is defined as a user logging into their virtual desktop at least once in a given day (Sydney time), per service.",
+    "avdDailyAverageNote": "<b>Daily Average Users</b> is an average count of users that used Azure Virtual Desktop per month, over the last 12 months.<br/>Please note: Daily Average Users is defined as the average number of users who logged into their virtual desktop each day (Sydney time), for a given month, per service.",
+    "avdServiceCostNote": "<b>Cost by Service</b> is the total Azure Virtual Desktop management plan charge. It does not include charges for Azure Virtual Desktop itself.<br/>These charges can be found against Azure Product Consumption service IDs.<br/>Please note: Dollar values shown are GST-exclusive.",
+    "avdDailyConnectionNote": "<b>Daily Connections by Service</b> is the total number of AVD connections each day over a given month.<br/>Please note: Daily Connections is defined as the total number of virtual desktop logins in a given day (Sydney time), per service.",
+    "avdOverview": "View the composition of your AVD management bill, by aggregated spend or individual service charges.",
+    "avdNote": "Please note:<br/>Values shown are GST-exclusive.<br/>A Daily Active User is defined as a user logging into their virtual desktop at least once a day measured over an AEST 24 hour period.",
     "remediateJobError": "Sorry, something's not right. Unable to remediate the selected hosts.",
     "remediateBaselineInProgress": "This baseline is being remediated.",
     "remediateJobInProgress": "Preparing to remediate Baseline. This may take a moment.",

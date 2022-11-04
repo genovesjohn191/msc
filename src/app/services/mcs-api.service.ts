@@ -93,7 +93,7 @@ import {
   McsApiToolsFactory,
   McsApiVmSizesFactory,
   McsApiVCenterFactory,
-  McsApiWorkflowsFactory,
+  McsApiWorkflowsFactory
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -176,7 +176,9 @@ import {
   McsNetworkDbVni,
   McsNetworkDnsRecordRequest,
   McsNetworkDnsRrSetsRecord,
+  McsNetworkDnsService,
   McsNetworkDnsZone,
+  McsNetworkDnsZoneBase,
   McsNetworkDnsZoneTtlRequest,
   McsNetworkVdcPrecheckVlan,
   McsNotice,
@@ -198,6 +200,7 @@ import {
   McsOrderItem,
   McsOrderItemType,
   McsOrderWorkflow,
+  McsPhysicalServer,
   McsPlannedWork,
   McsPlannedWorkAffectedService,
   McsPlannedWorkQueryParams,
@@ -205,6 +208,10 @@ import {
   McsPortal,
   McsQueryParam,
   McsReportAuditAlerts,
+  McsReportBillingAvdDailyAverageUser,
+  McsReportBillingAvdDailyAverageUsersParam,
+  McsReportBillingAvdDailyUser,
+  McsReportBillingAvdDailyUsersParam,
   McsReportBillingServiceGroup,
   McsReportBillingSummaryParams,
   McsReportComputeResourceTotals,
@@ -308,10 +315,7 @@ import {
   McsVCenterBaselineRemediate,
   McsVCenterDatacentreQueryParam,
   McsVCenterInstance,
-  McsWorkflowCreate,
-  McsPhysicalServer,
-  McsNetworkDnsService,
-  McsNetworkDnsZoneBase
+  McsWorkflowCreate
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -837,7 +841,7 @@ export class McsApiService {
       map((response) => this._mapToCollection(response))
     );
   }
-  
+
   public getPhysicalServers(id: string, query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsPhysicalServer>> {
     return this._resourcesApi.getPhysicalServers(id, query, optionalHeaders).pipe(
       catchError((error) =>
@@ -2963,6 +2967,52 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVCenterHosts'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+  //#endregion
+
+  //#region Reports Billing AVD
+  public getAvdDailyUsers(
+    query?: McsReportBillingAvdDailyUsersParam
+  ): Observable<McsApiCollection<McsReportBillingAvdDailyUser>> {
+    return this._reportsApi.getAvdDailyUsersService(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAvdDailyUsers'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getAvdDailyUsersCsv(
+    query?: McsReportBillingAvdDailyUsersParam
+  ): Observable<Blob> {
+    return this._reportsApi.getAvdDailyUsersServiceCsv(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAvdDailyUsersCsv'))
+      ),
+      map((response) => response)
+    );
+  }
+
+  public getAvdDailyAverageUsers(
+    query?: McsReportBillingAvdDailyAverageUsersParam
+  ): Observable<McsApiCollection<McsReportBillingAvdDailyAverageUser>> {
+    return this._reportsApi.getAvdDailyUsersAverage(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAvdDailyAverageUsers'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getAvdDailyAverageUsersCsv(
+    query?: McsReportBillingAvdDailyAverageUsersParam
+  ): Observable<Blob> {
+    return this._reportsApi.getAvdDailyUsersAverageCsv(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAvdDailyAverageUsersCsv'))
+      ),
+      map((response) => response)
     );
   }
   //#endregion

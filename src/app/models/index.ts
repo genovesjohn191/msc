@@ -183,6 +183,8 @@ export * from './request/vcenter/mcs-vcenter-host-query-param';
 export * from './request/vcenter/mcs-vcenter-baseline-query-param';
 export * from './request/vcenter/mcs-vcenter-baseline-remediate';
 export * from './request/vcenter/mcs-vcenter-datacentre-query-param';
+export * from './request/report/mcs-report-billing-avd-daily-average-users-param';
+export * from './request/report/mcs-report-billing-avd-daily-users-param';
 
 /** Response */
 export * from './response/mcs-availability-zone';
@@ -386,6 +388,11 @@ export * from './response/vcenter/mcs-vcenter-host-cluster';
 export * from './response/vcenter/mcs-vcenter-instance';
 export * from './response/mcs-physical-server';
 export * from './response/mcs-compute';
+export * from './response/report/mcs-report-billing-avd-daily-average-user';
+export * from './response/report/mcs-report-billing-avd-daily-average-user-service';
+export * from './response/report/mcs-report-billing-avd-daily-user';
+export * from './response/report/mcs-report-billing-avd-daily-user-service';
+export * from './response/report/mcs-report-billing-avd-service-tenant';
 
 /** Common */
 export * from './common/mcs-api-search-key';

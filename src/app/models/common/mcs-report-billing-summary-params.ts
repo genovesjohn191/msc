@@ -9,11 +9,8 @@ export class McsReportBillingSummaryParams extends McsQueryParam {
   @JsonProperty({ name: 'name' })
   public name: string = undefined;
 
-  @JsonProperty({ name: 'active' })
-  public active: boolean = undefined;
-
-  @JsonProperty({ name: 'gst_exclusive_charge_dollars' })
-  public gstExclusiveChargeDollars: number = undefined;
+  @JsonProperty({ name: 'final_charge_dollars' })
+  public finalChargeDollars: number = undefined;
 
   @JsonProperty({ name: 'has_met_minimum_commitment' })
   public hasMetMininumCommitment: boolean = undefined;
@@ -29,6 +26,9 @@ export class McsReportBillingSummaryParams extends McsQueryParam {
 
   @JsonProperty({ name: 'product_type' })
   public productType: string = undefined;
+
+  @JsonProperty({ name: 'product_types' })
+  public productTypes: string = undefined;
 
   @JsonProperty({ name: 'minimum_commitment_dollars' })
   public minmumCommitmentDollars: number = undefined;

@@ -1,0 +1,45 @@
+<mcs-page [header]="'label.azureVirtualDesktop' | translate">
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <!-- <mcs-action-item mcsResponsivePanelItem hidden-small
+        [disabled]="exportProcess.inProgress$ | async"
+        [mcsTooltip]="'tooltip.exportCsv' | translate"
+        (click)="onClickExportCsv($event)">
+        <mcs-icon key="csv" size="large" mcsCursor="pointer"></mcs-icon>
+      </mcs-action-item>
+
+      <ng-container *ngIf="exportProcess.inProgress$ | async">
+        <mcs-loader size="small"
+          [mcsTooltip]="'tooltip.tooltipText' | translate"
+          mcsTooltipPosition="right"></mcs-loader>
+      </ng-container> -->
+
+      <div mcsAlign="end" padding-right-xlarge>
+        <mcs-field-select-billing-account
+          [selectedAllByDefault]="true"
+          [formControl]="fcBillingAccount">
+        </mcs-field-select-billing-account>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-item orientation="inline-block" padding-bottom-xlarge style="align-items: center">
+      <div padding-right-medium><mcs-icon key="info-svg" size="large"></mcs-icon></div>
+      <div>
+        <span>{{ 'message.avdOverview' | translate }}</span>
+      </div>
+    </mcs-item>
+
+    <mcs-tab-group [selectedTabId]="tabEvents?.selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+      <mcs-tab [label]="'label.dailyUsersByService' | translate" id="daily-user-service"></mcs-tab>
+      <mcs-tab [label]="'label.dailyAverageUsers' | translate" id="daily-user-average"></mcs-tab>
+      <mcs-tab [label]="'label.costByService' | translate" id="service-cost"></mcs-tab>
+      <mcs-tab [label]="'label.dailyConnectionsByService' | translate" id="daily-connection-service"></mcs-tab>
+    </mcs-tab-group>
+
+    <div class="routing-tab-content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </mcs-content-panel>
+</mcs-page>
