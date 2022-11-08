@@ -113,6 +113,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public softwareSubscriptions$: Observable<TicketService[]>;
   public extenders$: Observable<TicketService[]>;
   public applicationRecovery$: Observable<TicketService[]>;
+  public veeamBackups$: Observable<TicketService[]>;
+  public veeamDrs$: Observable<TicketService[]>;
+  public saasBackups$: Observable<TicketService[]>;
 
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
@@ -179,6 +182,11 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToAzureSoftwareSubscriptions();
     this._subscribesToExtenders();
     this._subscribesToApplicationRecovery();
+    
+    //To do: uncomment once API is ready
+    // this._subscribesToVeeamBackups();
+    // this._subscribesToVeeamDrs();
+    // this._subscribesToSaasBackups();
   }
 
   public ngOnDestroy() {
@@ -504,7 +512,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let azureServices = getSafeProperty(response, (obj) => obj.collection);
         return azureServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-           `${service.friendlyName} (${service.serviceId})`,
+            `${service.friendlyName} (${service.serviceId})`,
             service.serviceId,
             TicketServiceType.MicrosoftSubscriptions
           ));
@@ -596,7 +604,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
                 `${storage.name} - for ${resource.serviceId} (${storage.serviceId})`,
                 storage.serviceId,
                 TicketServiceType.VdcStorage
-                )
+              )
               );
             });
           })
@@ -800,8 +808,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   private _subscribesToExtenders(): void {
     if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.HybridCloud], true)) ||
        (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
-         return;
-       }
+      return;
+    }
 
     this.extenders$ = this._apiService.getExtenders().pipe(
       map((response) => {
@@ -819,8 +827,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   private _subscribesToApplicationRecovery(): void {
     if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) ||
        (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
-         return;
-       }
+      return;
+    }
 
     if (!this._accessControlService.hasAccessToFeature(
       [McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) { return; }
@@ -833,6 +841,60 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             `${applicationRecoveryItem.billingDescription} (${applicationRecoveryItem.serviceId})`,
             applicationRecoveryItem.serviceId,
             TicketServiceType.ApplicationRecovery
+          ));
+      })
+    );
+  }
+
+  private _subscribesToVeeamBackups(): void {
+    this.veeamBackups$ = this._apiService.getVeeamBackups().pipe(
+      map((response) => {
+        let veeamBackups = getSafeProperty(response, (obj) => obj.collection);
+        return veeamBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.VeeamBackup
+          ));
+      })
+    );
+  }
+
+  private _subscribesToSaasBackups(): void {
+
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.SaasBackup], true)) {
+      return;
+    }
+
+    if (!this._accessControlService.hasPermission([
+      McsPermission.SaasBackupView,
+      McsPermission.SaasBackupEdit
+    ])) {
+      return;
+    }
+
+    this.saasBackups$ = this._apiService.getSaasBackups().pipe(
+      map((response) => {
+        let saasBackups = getSafeProperty(response, (obj) => obj.collection);
+        return saasBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.SaasBackup
+          ));
+      })
+    );
+  }
+
+  private _subscribesToVeeamDrs(): void {
+    this.veeamDrs$ = this._apiService.getVeeamCloudDrs().pipe(
+      map((response) => {
+        let veeamDrs = getSafeProperty(response, (obj) => obj.collection);
+        return veeamDrs.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.VeeamDr
           ));
       })
     );

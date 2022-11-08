@@ -393,6 +393,9 @@ export * from './response/report/mcs-report-billing-avd-daily-average-user-servi
 export * from './response/report/mcs-report-billing-avd-daily-user';
 export * from './response/report/mcs-report-billing-avd-daily-user-service';
 export * from './response/report/mcs-report-billing-avd-service-tenant';
+export * from './response/dr/mcs-dr-veeam-cloud';
+export * from './response/storage/mcs-storage-veeam-backup';
+export * from './response/storage/mcs-storage-saas-backup';
 
 /** Common */
 export * from './common/mcs-api-search-key';

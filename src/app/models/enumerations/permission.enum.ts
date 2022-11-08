@@ -67,5 +67,9 @@ export enum McsPermission {
   AzureView = 'AzureView',
 
   // Storage Profile Utilisation
-  OrganizationVdcView = 'OrganizationVdcView'
+  OrganizationVdcView = 'OrganizationVdcView',
+
+  // SaaS Backup
+  SaasBackupView = 'SaasBackupView',
+  SaasBackupEdit = 'SaasBackupEdit'
 }
