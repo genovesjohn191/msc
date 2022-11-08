@@ -29,6 +29,7 @@ import {
   IMcsApiColocationsService,
   IMcsApiCompaniesService,
   IMcsApiConsoleService,
+  IMcsApiDrService,
   IMcsApiExtendersService,
   IMcsApiFirewallsService,
   IMcsApiIdentityService,
@@ -46,6 +47,7 @@ import {
   IMcsApiReportsService,
   IMcsApiResourcesService,
   IMcsApiServersService,
+  IMcsApiStorageService,
   IMcsApiSystemService,
   IMcsApiTenantsService,
   IMcsApiTerraformService,
@@ -69,6 +71,7 @@ import {
   McsApiColocationsFactory,
   McsApiCompaniesFactory,
   McsApiConsoleFactory,
+  McsApiDrFactory,
   McsApiExtendersFactory,
   McsApiFirewallsFactory,
   McsApiIdentityFactory,
@@ -85,6 +88,7 @@ import {
   McsApiPlatformFactory,
   McsApiReportsFactory,
   McsApiResourcesFactory,
+  McsApiStorageFactory,
   McsApiServersFactory,
   McsApiSystemFactory,
   McsApiTenantsFactory,
@@ -141,6 +145,7 @@ import {
   McsColocationStandardSqm,
   McsCompany,
   McsConsole,
+  McsDrVeeamCloud,
   McsEntityRequester,
   McsExtendersQueryParams,
   McsExtenderService,
@@ -289,6 +294,8 @@ import {
   McsServerUpdate,
   McsSoftwareSubscriptionProductType,
   McsSoftwareSubscriptionProductTypeQueryParams,
+  McsStorageSaasBackup,
+  McsStorageVeeamBackup,
   McsSystemMessage,
   McsSystemMessageCreate,
   McsSystemMessageEdit,
@@ -402,6 +409,7 @@ export class McsApiService {
   private readonly _colocationServicesApi: IMcsApiColocationsService;
   private readonly _companyActiveUser: IMcsApiCompaniesService;
   private readonly _consoleApi: IMcsApiConsoleService;
+  private readonly _drApi: IMcsApiDrService;
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _firewallsApi: IMcsApiFirewallsService;
   private readonly _identityApi: IMcsApiIdentityService;
@@ -420,6 +428,7 @@ export class McsApiService {
   private readonly _resourcesApi: IMcsApiResourcesService;
   private readonly _serversApi: IMcsApiServersService;
   private readonly _systemMessageApi: IMcsApiSystemService;
+  private readonly _storageApi: IMcsApiStorageService;
   private readonly _tenantsApi: IMcsApiTenantsService;
   private readonly _terraformApi: IMcsApiTerraformService;
   private readonly _ticketsApi: IMcsApiTicketsService;
@@ -477,6 +486,7 @@ export class McsApiService {
     this._colocationServicesApi = apiClientFactory.getService(new McsApiColocationsFactory());
     this._companyActiveUser = apiClientFactory.getService(new McsApiCompaniesFactory());
     this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
+    this._drApi = apiClientFactory.getService(new McsApiDrFactory());
     this._serversApi = apiClientFactory.getService(new McsApiServersFactory());
     this._firewallsApi = apiClientFactory.getService(new McsApiFirewallsFactory());
     this._jobsApi = apiClientFactory.getService(new McsApiJobsFactory());
@@ -494,6 +504,7 @@ export class McsApiService {
     this._platformApi = apiClientFactory.getService(new McsApiPlatformFactory());
     this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
     this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
+    this._storageApi = apiClientFactory.getService(new McsApiStorageFactory());
     this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
     this._tenantsApi = apiClientFactory.getService(new McsApiTenantsFactory());
     this._terraformApi = apiClientFactory.getService(new McsApiTerraformFactory());
@@ -3013,6 +3024,31 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAvdDailyAverageUsersCsv'))
       ),
       map((response) => response)
+    );
+  }
+  //#endregion
+  
+  //#region Storage services
+  public getVeeamBackups(): Observable<McsApiCollection<McsStorageVeeamBackup>> {
+    return this._storageApi.getVeeamBackups().pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVeeamBackups'))),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+  
+  public getSaasBackups(): Observable<McsApiCollection<McsStorageSaasBackup>> {
+    return this._storageApi.getSaasBackups().pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackups'))),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+  //#endregion
+
+  //#region Private Cloud Disaster Recovery Services
+  public getVeeamCloudDrs(): Observable<McsApiCollection<McsDrVeeamCloud>> {
+    return this._drApi.getVeeamCloudDrs().pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVeeamCloudDrs'))),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
   //#endregion

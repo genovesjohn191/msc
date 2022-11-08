@@ -59,7 +59,8 @@ import {
   DeliveryType,
   McsServer,
   McsResource,
-  McsFeatureFlag
+  McsFeatureFlag,
+  McsPermission
 } from '@app/models';
 import {
   OrderDetails,
@@ -105,6 +106,9 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public hids$: Observable<CustomChangeService[]>;
   public extenders$: Observable<CustomChangeService[]>;
   public applicationRecoveryServices$: Observable<CustomChangeService[]>;
+  public veeamBackups$: Observable<CustomChangeService[]>;
+  public veeamDrs$: Observable<CustomChangeService[]>;
+  public saasBackups$: Observable<CustomChangeService[]>;
 
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
@@ -178,6 +182,11 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToExtenderServices();
     this._subscribeToApplicationRecoveryServices();
     this._subscribeToSmacSharedFormConfig();
+
+    //To do: uncomment once API is ready
+    // this._subscribesToVeeamBackupServices();
+    // this._subscribesToVeeamDrServices();
+    // this._subscribesToSaasBackupServices();
   }
 
   public ngOnDestroy() {
@@ -318,15 +327,15 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
    * Subscribes to servers list
    */
   private _subscribesToServersList(): void {
-      this.serversList$ = this._apiService.getServers().pipe(
-        map((response) => {
-          let resources = getSafeProperty(response, (obj) => obj.collection);
-          return resources
-            .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
-            .map((resource) => resource);
-        }),
-        shareReplay(1)
-      );
+    this.serversList$ = this._apiService.getServers().pipe(
+      map((response) => {
+        let resources = getSafeProperty(response, (obj) => obj.collection);
+        return resources
+          .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
+          .map((resource) => resource);
+      }),
+      shareReplay(1)
+    );
   }
 
   /**
@@ -351,11 +360,11 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this.vdcServices$ = this.vdcList$.pipe(
       map((resources) => {
         return resources.map((resource) => {
-            return {
-              name: `${serviceTypeText[resource.serviceType]} VDC (${resource.name})`,
-              serviceId: resource.name
-            } as CustomChangeService;
-          });
+          return {
+            name: `${serviceTypeText[resource.serviceType]} VDC (${resource.name})`,
+            serviceId: resource.name
+          } as CustomChangeService;
+        });
       })
     );
   }
@@ -601,8 +610,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   private _subscribeToExtenderServices(): void {
     if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.HybridCloud], true)) ||
        (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
-         return;
-       }
+      return;
+    }
 
     if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing,McsFeatureFlag.HybridCloud], true)) { return; }
     this.extenders$ = this._apiService.getExtenders().pipe(
@@ -625,8 +634,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   private _subscribeToApplicationRecoveryServices(): void {
     if ((!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)) ||
        (!this._authenticationIdentity.platformSettings.hasHybridCloud))  {
-         return;
-       }
+      return;
+    }
 
     if (!this._accessControlService.hasAccessToFeature(
       [McsFeatureFlag.ApplicationRecoveryListing,McsFeatureFlag.HybridCloud], true)
@@ -640,6 +649,68 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             return {
               name: `${applicationRecoveryService.billingDescription} (${applicationRecoveryService.serviceId})`,
               serviceId: applicationRecoveryService.serviceId
+            } as CustomChangeService;
+          });
+      })
+    );
+  }
+
+  /**
+   * Subscribe to Storage services
+   */
+  private _subscribesToVeeamBackupServices(): void {
+    this.veeamBackups$ = this._apiService.getVeeamBackups().pipe(
+      map((response) => {
+        let veeamBackups = getSafeProperty(response, (obj) => obj.collection);
+        return veeamBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => {
+            return {
+              name: `${service.billingDescription} (${service.serviceId})`,
+              serviceId: service.serviceId
+            } as CustomChangeService;
+          });
+      })
+    );
+  }
+
+  private _subscribesToSaasBackupServices(): void {
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.SaasBackup], true)) {
+      return;
+    }
+
+    if (!this._accessControlService.hasPermission([
+      McsPermission.SaasBackupView,
+      McsPermission.SaasBackupEdit
+    ])) {
+      return;
+    }
+
+    this.saasBackups$ = this._apiService.getSaasBackups().pipe(
+      map((response) => {
+        let saasBackups = getSafeProperty(response, (obj) => obj.collection);
+        return saasBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId && obj.serviceChangeAvailable))
+          .map((service) => {
+            return {
+              name: `${service.billingDescription} (${service.serviceId})`,
+              serviceId: service.serviceId
+            } as CustomChangeService;
+          });
+      })
+    );
+  }
+
+  /**
+   * Subscribe to Disaster Recovery Veeam services
+   */
+  private _subscribesToVeeamDrServices(): void {
+    this.veeamDrs$ = this._apiService.getVeeamCloudDrs().pipe(
+      map((response) => {
+        let veeamDrs = getSafeProperty(response, (obj) => obj.collection);
+        return veeamDrs.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => {
+            return {
+              name: `${service.billingDescription} (${service.serviceId})`,
+              serviceId: service.serviceId
             } as CustomChangeService;
           });
       })

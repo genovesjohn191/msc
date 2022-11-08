@@ -19,6 +19,7 @@ import { McsApiCloudHealthAlertService } from './services/mcs-api-cloudhealth-al
 import { McsApiColocationsService } from './services/mcs-api-colocations.service';
 import { McsApiCompaniesService } from './services/mcs-api-companies.service';
 import { McsApiConsoleService } from './services/mcs-api-console.service';
+import { McsApiDrService } from './services/mcs-api-dr.service';
 import { McsApiExtendersService } from './services/mcs-api-extenders.service';
 import { McsApiFirewallsService } from './services/mcs-api-firewalls.service';
 import { McsApiIdentityService } from './services/mcs-api-identity.service';
@@ -38,6 +39,7 @@ import { McsApiPlatformService } from './services/mcs-api-platform.service';
 import { McsApiReportsService } from './services/mcs-api-reports.service';
 import { McsApiResourcesService } from './services/mcs-api-resources.service';
 import { McsApiServersService } from './services/mcs-api-servers.service';
+import { McsApiStorageService } from './services/mcs-api-storage.service';
 import { McsApiSystemService } from './services/mcs-api-system.service';
 import { McsApiTenantsService } from './services/mcs-api-tenants.service';
 import { McsApiTerraformService } from './services/mcs-api-terraform.service';
@@ -67,6 +69,7 @@ export const apiClientProviders: Provider[] = [
   McsApiColocationsService,
   McsApiCompaniesService,
   McsApiConsoleService,
+  McsApiDrService,
   McsApiFirewallsService,
   McsApiIdentityService,
   McsApiInternetService,
@@ -84,6 +87,7 @@ export const apiClientProviders: Provider[] = [
   McsApiReportsService,
   McsApiResourcesService,
   McsApiServersService,
+  McsApiStorageService,
   McsApiSystemService,
   McsApiTenantsService,
   McsApiTerraformService,
