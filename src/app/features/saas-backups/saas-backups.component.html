@@ -1,0 +1,165 @@
+<mcs-page [storageKey]="featureName"
+  [defaultFilters]="defaultColumnFilters"
+  [header]="'saasBackup.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <ng-container *ngIf="dataSource?.isSorting$ | async; else totalCountTemplate">
+          <div class="sorting-label">
+            <span padding-right-small>{{ 'label.sorting' | translate }}</span><mcs-loader size="medium"></mcs-loader>
+          </div>
+        </ng-container>
+        <ng-template #totalCountTemplate>
+          <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>
+              {{ totalCount | mcsPlural: ('saasBackup.dataSingular' | translate) : ('saasBackup.dataPlural' | translate) }}
+            </span>
+          </div>
+        </ng-template>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'saasBackup.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="saas-backups-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'saasBackup.columnFilter' | translate" offset="medium">
+      <mcs-column-selector #columnFilter
+        [storageKey]="featureName"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="saas-backups-mobile-search"></mcs-search>
+
+      <!-- Table -->
+      <table mat-table [dataSource]="dataSource" matSort #sort="matSort">
+        <!-- Billing Description Column -->
+        <ng-container matColumnDef="billingDescription">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="billingDescription" disableClear>
+            {{ 'columnHeader.service' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <span [innerHTML]="row.billingDescription | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Backed Up in Last Attempt Column -->
+        <ng-container matColumnDef="backedUpInLastAttempt">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.backedUpInLastAttempt' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            {{ row.lastBackupAttempt.successfulUsers || 0 }}
+            <span> / </span>
+            {{ row.lastBackupAttempt.failedUsers || 0 }}
+          </td>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container matColumnDef="serviceId">
+          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="serviceId" disableClear>
+            {{ 'columnHeader.serviceId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <ng-container *ngIf="row.serviceId; else noServiceIdTemplate">
+              <span>{{ row.serviceId }}</span>
+            </ng-container>
+            <ng-template #noServiceIdTemplate>
+              <mcs-data-status-empty
+                [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
+                [mcsTooltipShow]="!row.serviceId">
+                {{ 'label.unknown' | translate }}
+              </mcs-data-status-empty>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef hidden-small></th>
+          <td mat-cell *matCellDef="let row" hidden-small text-center>
+            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
+              mcsPopover placement="bottom" orientation="left" theme="light"
+              padding="none" [content]="actionContent" mcsCursor="pointer"
+              *ngIf="validToShowContextMenuItems(row)">
+            </mcs-icon>
+            <ng-template #actionContent>
+              <div class="cog-actions-wrapper">
+                <!-- Open in Restore Portal -->
+                <a *ngIf="row.portalUrl"
+                  mcsButton="basic" color="white" labelPlacement="left"
+                  target="_blank"
+                  href="{{ row.portalUrl }}"
+                  mcsId
+                  mcsEventTracker="navigate-to-restore-portal"
+                  mcsEventCategory="storage"
+                  mcsEventLabel="saas-backup-listing-page">
+                  {{ 'action.openInRestorePortal' | translate }}
+                </a>
+
+                <!-- Raise Ticket and Custom Change -->
+                <mcs-context-menu-link mcsStopPropagation
+                  [serviceId]="row.serviceId"
+                  [serviceChangeAvailable]="row.serviceChangeAvailable"
+                  [hasMenuButton]="false"
+                  [eventCategory]="'storage'"
+                  [eventLabel]="'saas-backup-listing-page'">
+                </mcs-context-menu-link>
+              </div>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
+          [disabled]="dataSource?.isInProgress$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          [mcsTriggerCursorIf]="true"
+          (click)="navigateToSaasBackupDetails(row)"
+          mcsId="saas-backups-row"
+          mcsEventTracker="saas-backups-table-item"
+          mcsEventCategory="storage"
+          mcsEventLabel="saas-backups-details-page"></tr>
+      </table>
+
+      <!-- Table Status -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          <span>{{ 'saasBackup.noData' | translate }}</span>
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'saasBackup.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="saas-backups-retry-loading-list"
+              mcsEventCategory="storage"
+              mcsEventLabel="saas-backup-listing-page">{{ 'action.tryAgainShortly' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

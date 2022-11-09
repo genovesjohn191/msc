@@ -90,6 +90,11 @@ export enum RouteKey {
   BackupAggregationTargetsDetailsManagement,
   BackupAggregationTargetsDetailsLinkedServices,
 
+  SaasBackups,
+  SaasBackupDetails,
+  SaasBackupDetailsOverview,
+  SaasBackupDetailsManagement,
+
   Tickets,
   TicketDetails,
   TicketCreate,

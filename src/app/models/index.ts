@@ -396,6 +396,7 @@ export * from './response/report/mcs-report-billing-avd-service-tenant';
 export * from './response/dr/mcs-dr-veeam-cloud';
 export * from './response/storage/mcs-storage-veeam-backup';
 export * from './response/storage/mcs-storage-saas-backup';
+export * from './response/storage/mcs-storage-saas-backup-attempt';
 
 /** Common */
 export * from './common/mcs-api-search-key';

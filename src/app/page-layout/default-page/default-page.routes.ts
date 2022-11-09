@@ -89,6 +89,11 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () => import('../../features/aggregation-targets/aggregation-targets.module').then(m => m.AggregationTargetsModule)
       },
       {
+        path: 'storage/saas-backups',
+        data: { routeId: RouteKey.SaasBackups },
+        loadChildren: () => import('../../features/saas-backups/saas-backups.module').then(m => m.SaasBackupsModule)
+      },
+      {
         path: 'tools',
         data: { routeId: RouteKey.OtherTools },
         loadChildren: () => import('../../features/tools/tools.module').then(m => m.ToolsModule)
