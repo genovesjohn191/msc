@@ -21,6 +21,7 @@ import { DataChangeNoticesEvent } from './items/data-change-notices.event';
 import { DataChangeOrdersEvent } from './items/data-change-orders.event';
 import { DataChangePlannedWorkDetailsEvent } from './items/data-change-planned-work-details.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
+import { DataChangeSaasBackupEvent } from './items/data-change-saas-backup.event';
 import { DataChangeServersEvent } from './items/data-change-servers.event';
 import { DataChangeSystemMessagesEvent } from './items/data-change-system-messages.event';
 import { DataChangeTerraformDeploymentsEvent } from './items/data-change-terraform-deployments.event';
@@ -167,6 +168,7 @@ export class McsEvent {
   public static dataChangeCreateNetworkPanelsEvent = new DataChangeCreateNetworkPanelsEvent();
   public static dataChangePlannedWorkDetailsEvent = new DataChangePlannedWorkDetailsEvent();
   public static dataChangeVCenterBaselineEvent = new DataChangeVCenterBaselineEvent();
+  public static dataChangeSaasBackup = new DataChangeSaasBackupEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();

@@ -3036,8 +3036,8 @@ export class McsApiService {
     );
   }
   
-  public getSaasBackups(): Observable<McsApiCollection<McsStorageSaasBackup>> {
-    return this._storageApi.getSaasBackups().pipe(
+  public getSaasBackups(query?: McsQueryParam): Observable<McsApiCollection<McsStorageSaasBackup>> {
+    return this._storageApi.getSaasBackups(query).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackups'))),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );

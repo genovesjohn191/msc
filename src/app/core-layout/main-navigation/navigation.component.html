@@ -330,7 +330,7 @@
               <mcs-icon [key]="showStorageSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
             </a>
             <ul [class.hidden]="!showStorageSubmenu">
-              <!-- Backup -->
+              <!-- BAT Backup -->
               <li>
                 <a [mcsRouterLink]="routeKeyEnum.BackupAggregationTargets"
                   mcsRouterLinkActive="active"
@@ -340,6 +340,18 @@
                   mcsEventCategory="navigation"
                   mcsEventLabel="sub-nav">
                   {{ 'navigation.privateCloud.storage.backup' | translate }}
+                </a>
+              </li>
+              <!-- Saas Backup -->
+              <li *mcsAccessControl="['SaasBackupView']; feature: 'EnableSaasBackup'">
+                <a [mcsRouterLink]="routeKeyEnum.SaasBackups"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="saas-backup-link"
+                  mcsEventTracker="navigate-to-backup-saas"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="sub-nav">
+                  {{ 'navigation.privateCloud.storage.saas' | translate }}
                 </a>
               </li>
             </ul>

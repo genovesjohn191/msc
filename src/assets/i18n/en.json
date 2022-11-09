@@ -36,7 +36,8 @@
       },
       "storage": {
         "label": "Storage",
-        "backup": "Backup"
+        "backup": "Backup",
+        "saas": "SaaS Backup"
       }
     },
     "publicCloud": {
@@ -2826,6 +2827,17 @@
       "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the linked services for this Backup Aggregation Target."
     }
   },
+  "saasBackup": {
+    "header": "SaaS Backup",
+    "leftPanelHeader": "SaaS Backup Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of SaaS Backup services.",
+    "loading": "Loading SaaS Backup services.",
+    "noData": "No SaaS Backup services to display.",
+    "retry": "Try again shortly.",
+    "columnFilter": "Column Filter",
+    "dataSingular": "SaaS Backup Service",
+    "dataPlural": "SaaS Backup Services"
+  },
   "azureManagementServices": {
     "header": "Management Services",
     "leftPanelHeader": "Management Services Filter",
@@ -3466,6 +3478,8 @@
     "getBackupAggregationTargets": "Something went wrong while retrieving your Backup Aggregation Targets. Please try again.",
     "getBackupAggregationTarget": "Something went wrong while retrieving the details for this Backup Aggregation Target.",
     "getBackupAggregationTargetLinkedServices": "Something went wrong while retrieving the linked services for this Backup Aggregation Target.",
+    "getSaasBackups": "Something went wrong while retrieving your Backup SaaS services. Please try again.",
+    "getSaasBackup": "Something went wrong while retrieving the details for this Backup SaaS service.",
     "getColocationRacks": "Something went wrong while retrieving your Colocation Racks.",
     "getColocationAntennas": "Something went wrong while retrieving your Colocation Antennas.",
     "getColocationCustomDevices": "Something went wrong while retrieving your Custom Colocation Devices.",
@@ -3667,6 +3681,7 @@
     "assignee": "Assignee",
     "assignmentTarget": "Assignment Target",
     "attachedTo": "Attached To",
+    "backedUpInLastAttempt": "Backed Up in Last Attempt",
     "billingDescription": "Billing Description",
     "billingFrequency": "Billing Frequency",
     "billingTerm": "Billing Term",
@@ -4072,6 +4087,7 @@
     "ok": "OK",
     "open": "Open",
     "openInCrisp": "Open in CRISP",
+    "openInRestorePortal": "Open in Restore Portal",
     "openInTracks": "Open in TRACKS",
     "openInVendorPortal": "Open in Vendor Portal",
     "openInVcloud": "Open in vCloud",
@@ -4085,6 +4101,7 @@
     "raiseTicket": "Raise a Ticket",
     "remove": "Remove",
     "retry": "Retry",
+    "requestCustomChange": "Request a Custom Change",
     "requestRecordChange": "Request Record Changes",
     "tryAgainShortly": "Try again shortly",
     "undo": "Undo",

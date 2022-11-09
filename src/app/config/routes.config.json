@@ -691,6 +691,15 @@
     "navigationPath": "linked-services",
     "documentTitle": "Linked Services - Macquarie Cloud Services"
   },
+  "saasBackup": {
+    "enumPlatform": "Private",
+    "enumCategory": "Storage",
+    "enumKey": "SaasBackups",
+    "navigationPath": "storage/saas-backups",
+    "requiredPermissions": ["SaasBackupView"],
+    "requiredFeatureFlag": ["EnableSaasBackup"],
+    "documentTitle": "Saas Backup - Macquarie Cloud Services"
+  },
   "licenses": {
     "enumPlatform": "Public",
     "enumKey": "Licenses",
