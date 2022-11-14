@@ -26,7 +26,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
 
 @Component({
   selector: 'mcs-dff-select-tenant-field',
-  templateUrl: '../shared-template/select.component.html',
+  templateUrl: './select-tenant.component.html',
   styleUrls: [ '../dynamic-form-field.scss' ],
   providers: [
     {
@@ -104,8 +104,7 @@ export class DynamicSelectTenantComponent extends DynamicSelectFieldComponentBas
       }
 
       let key = this.config.useTenantIdAsKey ? item.tenantId : item.id;
-
-      options.push({ type: 'flat', key, value: item.name });
+      options.push({ type: 'flat', key, value: item.name, hint: item.primaryDomain });
     });
 
     let initialValueIsValidServiceId = this._serviceIdMapping.has(this.config.initialValue);
