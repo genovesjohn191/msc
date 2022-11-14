@@ -158,7 +158,8 @@
       </mcs-item>
 
       <!-- Paginator -->
-      <mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
+      <mcs-paginator #paginator
+        [totalCount]="dataSource?.totalCount$ | async">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

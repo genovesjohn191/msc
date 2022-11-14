@@ -1,6 +1,12 @@
+import {
+  SaasBackupType,
+  SaasBackupTypeSerialization,
+  saasBackupTypeText
+} from "@app/models";
 import { McsEntityBase } from "@app/models/common/mcs-entity.base";
 import { JsonProperty } from "@app/utilities";
 import { McsStorageSaasBackupAttempt } from "./mcs-storage-saas-backup-attempt";
+import { McsStorageSaasBackupComponentOnlineStatus } from "./mcs-storage-saas-backup-component-online-status";
 
 export class McsStorageSaasBackup extends McsEntityBase {
   @JsonProperty()
@@ -9,8 +15,11 @@ export class McsStorageSaasBackup extends McsEntityBase {
   @JsonProperty()
   public billingDescription: string = undefined;
 
-  @JsonProperty()
-  public type: string = undefined;
+  @JsonProperty({
+    serializer: SaasBackupTypeSerialization,
+    deserializer: SaasBackupTypeSerialization
+  })
+  public type: SaasBackupType = undefined;
 
   @JsonProperty()
   public seatQuantity: number = undefined;
@@ -30,7 +39,7 @@ export class McsStorageSaasBackup extends McsEntityBase {
   @JsonProperty()
   public portalUrl: string = undefined;
 
-  @JsonProperty()
+  @JsonProperty({ target: McsStorageSaasBackupAttempt })
   public lastBackupAttempt: McsStorageSaasBackupAttempt = undefined;
 
   @JsonProperty()
@@ -38,4 +47,15 @@ export class McsStorageSaasBackup extends McsEntityBase {
 
   @JsonProperty()
   public serviceChangeAvailable: boolean = undefined;
+
+  @JsonProperty({ target: McsStorageSaasBackupComponentOnlineStatus })
+  public componentOnlineStatus: McsStorageSaasBackupComponentOnlineStatus = undefined;
+
+  /**
+   * Returns the saas type text content
+   */
+  public get typeLabel(): string {
+    let isTypeMicrosoft365 = this.type === SaasBackupType.M365;
+    return isTypeMicrosoft365 ? saasBackupTypeText[SaasBackupType.M365] : 'Other';
+  }
 }

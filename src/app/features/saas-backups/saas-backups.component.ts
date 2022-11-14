@@ -65,8 +65,7 @@ export class SaasBackupsComponent extends McsPageBase {
     private _navigationService: McsNavigationService
   ) {
     super(_injector);
-    this.dataSource = new McsTableDataSource2<McsStorageSaasBackup>(this._getSaasBackups.bind(this))
-      .registerConfiguration(new McsMatTableConfig(true));
+    this.dataSource = new McsTableDataSource2(this._getSaasBackups.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeSaasBackup
     });

@@ -51,4 +51,19 @@ export class McsApiStorageService implements IMcsApiStorageService {
         })
       );
   }
+
+  public getSaasBackup(id: string): Observable<McsApiSuccessResponse<McsStorageSaasBackup>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/storage/backup/saas/${id}`;
+
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsStorageSaasBackup>(McsStorageSaasBackup, response);
+          return apiResponse;
+        })
+      );
+  }
 }

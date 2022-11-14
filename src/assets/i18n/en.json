@@ -2838,7 +2838,28 @@
     "retry": "Try again shortly.",
     "columnFilter": "Column Filter",
     "dataSingular": "SaaS Backup Service",
-    "dataPlural": "SaaS Backup Services"
+    "dataPlural": "SaaS Backup Services",
+    "overview": {
+      "description": "Description",
+      "serviceId": "Service ID",
+      "tenant": "Tenant",
+      "domain": "Domain",
+      "type": "Type",
+      "totalLicensedUsers": "Total Licensed Users",
+      "totalUnlicensedUsers": "Total Unlicensed Users"
+    },
+    "backupStatistics": {
+      "firstBackupTime": "First Backup Time",
+      "lastBackupTime": "Last Backup Time",
+      "failedToBackupInLastAttempt": "Failed to Back Up in Last Attempt",
+      "succesfullyBackupInLastAttempt": "Successfully Back Up in Last Attempt"
+    },
+    "backupComponents": {
+      "exchange": "Exchange",
+      "sharePoint": "SharePoint/OneDrive",
+      "teams": "Teams",
+      "teamsChats": "Teams Chats"
+    }
   },
   "azureManagementServices": {
     "header": "Management Services",
@@ -3975,7 +3996,9 @@
     "azureResources": "Azure Resources",
     "azureResponseSlg": "Azure Response SLG",
     "backup": "Backup",
+    "backupComponents": "Backup Components",
     "backupAndSecurity": "Backup and Security",
+    "backupStatistics": "Backup Statistics",
     "billingAccounts": "Billing Accounts",
     "billingFrequency": "Billing Frequency",
     "category": "Category",
@@ -4002,6 +4025,7 @@
     "lastDeployment": "Last Deployment",
     "lastUpdated": "Last Updated",
     "learnMore": "Learn More",
+    "management": "Management",
     "minutes": "Minutes",
     "moduleType": "Module Type",
     "month": "Month",

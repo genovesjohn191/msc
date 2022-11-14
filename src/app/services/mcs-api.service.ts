@@ -356,6 +356,7 @@ import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-ne
 import { McsNoticesRepository } from './repositories/mcs-notices.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
+import { McsSaasBackupRepository } from './repositories/mcs-saas-backup.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsTerraformDeploymentsRepository } from './repositories/mcs-terraform-deployments.repository';
@@ -386,6 +387,7 @@ export class McsApiService {
   private readonly _noticesRepository: McsNoticesRepository;
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _resourcesRepository: McsResourcesRepository;
+  private readonly _saasBackupRepository: McsSaasBackupRepository;
   private readonly _serversRepository: McsServersRepository;
   private readonly _systemMessagesRepository: McsSystemMessagesRepository;
   private readonly _ticketsRepository: McsTicketsRepository;
@@ -460,6 +462,7 @@ export class McsApiService {
     this._noticesRepository = _injector.get(McsNoticesRepository);
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._resourcesRepository = _injector.get(McsResourcesRepository);
+    this._saasBackupRepository = _injector.get(McsSaasBackupRepository);
     this._serversRepository = _injector.get(McsServersRepository);
     this._systemMessagesRepository = _injector.get(McsSystemMessagesRepository);
     this._ticketsRepository = _injector.get(McsTicketsRepository);
@@ -3037,9 +3040,23 @@ export class McsApiService {
   }
   
   public getSaasBackups(query?: McsQueryParam): Observable<McsApiCollection<McsStorageSaasBackup>> {
-    return this._storageApi.getSaasBackups(query).pipe(
-      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackups'))),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+    let dataCollection = isNullOrEmpty(query) ?
+      this._saasBackupRepository.getAll() :
+      this._saasBackupRepository.filterBy(query);
+
+    return dataCollection.pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackups'))
+      ),
+      map((response) => this._mapToCollection(response, this._saasBackupRepository.getTotalRecordsCount()))
+    );
+  }
+
+  public getSaasBackup(id: string): Observable<McsStorageSaasBackup> {
+    return this._saasBackupRepository.getById(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackup'))
+      )
     );
   }
   //#endregion

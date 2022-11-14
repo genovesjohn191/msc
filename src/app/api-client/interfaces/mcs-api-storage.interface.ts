@@ -19,4 +19,9 @@ export interface IMcsApiStorageService {
    */
   getSaasBackups(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsStorageSaasBackup[]>>;
 
+  /**
+   * Get saas backup by Id
+   * @param id saas backup identification
+   */
+  getSaasBackup(id: string): Observable<McsApiSuccessResponse<McsStorageSaasBackup>>;
 }

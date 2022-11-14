@@ -31,35 +31,37 @@ import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsVCenterBaselinesRepository } from './repositories/mcs-vcenter-baselines.repository';
 import { McsStateManagerClient } from './state-manager/mcs-state-manager.client';
 import { McsNoticesRepository } from './repositories/mcs-notices.repository';
+import { McsSaasBackupRepository } from './repositories/mcs-saas-backup.repository';
 
 export const repositoryProviders: any[] = [
-  McsFirewallsRepository,
-  McsJobsRepository,
-  McsMediaRepository,
-  McsOrdersRepository,
-  McsResourcesRepository,
-  McsServersOsRepository,
-  McsServersRepository,
-  McsBatsRepository,
-  McsTicketsRepository,
-  McsConsoleRepository,
-  McsCompaniesRepository,
-  McsInternetRepository,
-  McsSystemMessagesRepository,
-  McsLicensesRepository,
   McsAccountRepository,
-  McsAzureResourcesRepository,
-  McsAzureServicesRepository,
-  McsAzureManagementServicesRepository,
-  McsExtendersRepository,
+  McsApiService,
   McsApplicationRecoveryRepository,
+  McsAzureResourcesRepository,
+  McsAzureManagementServicesRepository,
   McsAzureReservationsRepository,
+  McsAzureServicesRepository,
   McsAzureSoftwareSubscriptionsRepository,
-  McsTerraformDeploymentsRepository,
-  McsVCenterBaselinesRepository,
+  McsBatsRepository,
+  McsCompaniesRepository,
+  McsConsoleRepository,
+  McsExtendersRepository,
+  McsFirewallsRepository,
+  McsInternetRepository,
+  McsJobsRepository,
+  McsLicensesRepository,
+  McsMediaRepository,
   McsNetworkDbNetworksRepository,
   McsNoticesRepository,
-  McsApiService
+  McsOrdersRepository,
+  McsResourcesRepository,
+  McsSaasBackupRepository,
+  McsServersOsRepository,
+  McsServersRepository,
+  McsSystemMessagesRepository,
+  McsTerraformDeploymentsRepository,
+  McsTicketsRepository,
+  McsVCenterBaselinesRepository,
 ];
 
 export const stateManagers: Provider[] = [

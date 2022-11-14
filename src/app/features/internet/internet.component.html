@@ -14,8 +14,8 @@
           </div>
         </ng-container>
         <ng-template #totalCountTemplate>
-          <div class="total-record-count">
-            <span>{{ totalRecordsCount | mcsPlural:
+          <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+            <span>{{ totalCount | mcsPlural:
                     ('internet.dataSingular' | translate) :
                     ('internet.dataPlural' | translate) }}
             </span>

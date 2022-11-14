@@ -118,6 +118,8 @@ export * from './enumerations/extender-type.enum';
 export * from './enumerations/sort-direction.enum';
 export * from './enumerations/crisp-object-status.enum';
 export * from './enumerations/cloudhealth-alert-type.enum';
+export * from './enumerations/storage/saas-backup-type.enum';
+export * from './enumerations/storage/saas-backup-status.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -397,6 +399,7 @@ export * from './response/dr/mcs-dr-veeam-cloud';
 export * from './response/storage/mcs-storage-veeam-backup';
 export * from './response/storage/mcs-storage-saas-backup';
 export * from './response/storage/mcs-storage-saas-backup-attempt';
+export * from './response/storage/mcs-storage-saas-backup-component-online-status';
 
 /** Common */
 export * from './common/mcs-api-search-key';

@@ -5,11 +5,20 @@ import { SharedModule } from '@app/shared';
 
 /** SaaS Backup */
 import { SaasBackupsComponent } from './saas-backups.component';
-import { saasBackupsRoutes } from './saas-backups.constants';
+import {
+  saasBackupsProviders,
+  saasBackupsRoutes
+} from './saas-backups.constants';
+import {
+  SaasBackupComponent,
+  SaasBackupOverviewComponent
+} from './saas-backup';
 
 @NgModule({
   declarations: [
-    SaasBackupsComponent
+    SaasBackupsComponent,
+    SaasBackupComponent,
+    SaasBackupOverviewComponent
   ],
   imports: [
     SharedModule,
@@ -17,6 +26,7 @@ import { saasBackupsRoutes } from './saas-backups.constants';
     RouterModule.forChild(saasBackupsRoutes)
   ],
   providers: [
+    ...saasBackupsProviders
   ]
 })
 

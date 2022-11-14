@@ -78,6 +78,7 @@ export * from './factory/mcs-api-orders.factory';
 export * from './factory/mcs-api-platform.factory';
 export * from './factory/mcs-api-reports.factory';
 export * from './factory/mcs-api-resources.factory';
+export * from './factory/mcs-api-saas-backup.factory';
 export * from './factory/mcs-api-servers.factory';
 export * from './factory/mcs-api-storage.factory';
 export * from './factory/mcs-api-system.factory';
