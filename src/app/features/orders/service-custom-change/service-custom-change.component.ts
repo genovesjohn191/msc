@@ -185,8 +185,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
 
     //To do: uncomment once API is ready
     // this._subscribesToVeeamBackupServices();
-    // this._subscribesToVeeamDrServices();
-    // this._subscribesToSaasBackupServices();
+    this._subscribesToVeeamDrServices();
+    this._subscribesToSaasBackupServices();
   }
 
   public ngOnDestroy() {

@@ -185,8 +185,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     
     //To do: uncomment once API is ready
     // this._subscribesToVeeamBackups();
-    // this._subscribesToVeeamDrs();
-    // this._subscribesToSaasBackups();
+    this._subscribesToVeeamDrs();
+    this._subscribesToSaasBackups();
   }
 
   public ngOnDestroy() {
