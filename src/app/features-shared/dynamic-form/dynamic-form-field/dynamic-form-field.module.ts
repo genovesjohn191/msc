@@ -62,6 +62,7 @@ import { DynamicSelectNetworkInterfaceComponent } from './select-network-interfa
 import { DynamicSelectPhysicalServerComponent } from './select-physical-server/select-physical-server.component';
 import { DynamicSelectLunsComponent } from './select-luns/select-luns.component';
 import { DynamicInputComputeComponent } from './input-compute/input-compute.component';
+import { DynamicSelectUcsComponent } from './select-ucs/select-ucs.component';
 import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
 
 const exports: any[] | Type<any> = [
@@ -120,7 +121,8 @@ const exports: any[] | Type<any> = [
   DynamicSelectNetworkInterfaceComponent,
   DynamicSelectPhysicalServerComponent,
   DynamicSelectLunsComponent,
-  DynamicInputComputeComponent
+  DynamicInputComputeComponent,
+  DynamicSelectUcsComponent
 ];
 
 @NgModule({

@@ -48,6 +48,7 @@ import { McsApiToolsService } from './services/mcs-api-tools.service';
 import { McsApiVCenterService } from './services/mcs-api-vcenter.service';
 import { McsApiVMSizesService } from './services/mcs-api-vm-sizes.service';
 import { McsApiWorkflowsService } from './services/mcs-api-workflows.services';
+import { McsApiUcsService } from './services/mcs-api-ucs.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
@@ -96,7 +97,8 @@ export const apiClientProviders: Provider[] = [
   McsApiVMSizesService,
   McsApiWorkflowsService,
   McsApiPlannedWorkService,
-  McsApiVCenterService
+  McsApiVCenterService,
+  McsApiUcsService
 ];
 
 export const apiClientInterceptors: Provider[] = [

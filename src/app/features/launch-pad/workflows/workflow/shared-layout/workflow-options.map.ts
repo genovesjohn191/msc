@@ -47,4 +47,6 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.FirewallDeprovision, 'Deprovision Physical Firewall'],
   [WorkflowGroupId.FirewallUpgrade, 'Upgrade Firewall'],
   [WorkflowGroupId.FirewallAssessUpgradeReadiness, 'Assess Firewall Upgrade Readiness'],
+
+  [WorkflowGroupId.UcsOrgCreate, 'Create UCS Organisation'],
 ]);

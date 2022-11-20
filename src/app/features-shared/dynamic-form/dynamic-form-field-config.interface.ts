@@ -116,6 +116,7 @@ export type DynamicFormFieldType =
   | 'select-tenant'
   | 'select-terraform-module-type'
   | 'select-pods'
+  | 'select-ucs'
   | 'select-vdc'
   | 'select-physical-server'
   | 'select-vm'
@@ -177,6 +178,7 @@ export type DynamicFormFieldTemplate =
   | 'select-tenant'
   | 'select-terraform-module-type'
   | 'select-pods'
+  | 'select-ucs'
   | 'select-physical-server'
   | 'select-vdc'
   | 'select-vm'
@@ -214,7 +216,8 @@ export type DynamicFormFieldOnChangeEvent =
   | 'tenant-change'
   | 'terraform-module-type-change'
   | 'terraform-module-change'
-  | 'terraform-tag-change';
+  | 'terraform-tag-change'
+  | 'ucs-change';
 
 export type DynamicFormFieldInputType =
   ''

@@ -42,3 +42,5 @@ export * from './firewall-assess-upgrade-readiness.workflow';
 
 export * from './dedicated-blade-deprovision.workflow';
 export * from './dedicated-blade-provision.workflow';
+
+export * from './ucs-org-create.workflow';

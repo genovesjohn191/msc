@@ -65,3 +65,4 @@ export * from './select-resource/select-resource';
 export * from './select-physical-server/select-physical-server';
 export * from './select-luns/select-luns';
 export * from './input-compute/input-compute';
+export * from './select-ucs/select-ucs';

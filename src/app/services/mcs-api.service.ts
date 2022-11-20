@@ -56,6 +56,7 @@ import {
   IMcsApiVmSizesService,
   IMcsApiVCenterService,
   IMcsApiWorkflowsService,
+  IMcsApiUcsService,
   McsApiAccountFactory,
   McsApiApplicationRecoveryFactory,
   McsApiAuthFactory,
@@ -97,7 +98,8 @@ import {
   McsApiToolsFactory,
   McsApiVmSizesFactory,
   McsApiVCenterFactory,
-  McsApiWorkflowsFactory
+  McsApiWorkflowsFactory,
+  McsApiUcsFactory,
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -322,7 +324,11 @@ import {
   McsVCenterBaselineRemediate,
   McsVCenterDatacentreQueryParam,
   McsVCenterInstance,
-  McsWorkflowCreate
+  McsWorkflowCreate,
+  McsUcsDomain,
+  McsUcsCentralInstance,
+  McsUcsQueryParams,
+  McsUcsObject
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -439,6 +445,7 @@ export class McsApiService {
   private readonly _vmSizesApi: IMcsApiVmSizesService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
   private readonly _vCenterApi: IMcsApiVCenterService;
+  private readonly _ucsApi: IMcsApiUcsService;
 
   constructor(_injector: Injector) {
     this._translate = _injector.get(TranslateService);
@@ -516,6 +523,7 @@ export class McsApiService {
     this._vmSizesApi = apiClientFactory.getService(new McsApiVmSizesFactory());
     this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
     this._vCenterApi = apiClientFactory.getService(new McsApiVCenterFactory());
+    this._ucsApi = apiClientFactory.getService(new McsApiUcsFactory());
 
     // Register events
     this._eventDispatcher = _injector.get(EventBusDispatcherService);
@@ -2983,6 +2991,34 @@ export class McsApiService {
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
+
+  public getUcsDomains(query?: McsUcsQueryParams): Observable<McsApiCollection<McsUcsDomain>> {
+    return this._ucsApi.getUcsDomains(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getUcsDomains'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getUcsCentralInstances(query?: McsUcsQueryParams): Observable<McsApiCollection<McsUcsCentralInstance>> {
+    return this._ucsApi.getUcsCentralInstances(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getUcsCentral'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getUcsObjects(query?: McsUcsQueryParams): Observable<McsApiCollection<McsUcsObject>> {
+    return this._ucsApi.getUcsObjects(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getUcsObjects'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
   //#endregion
 
   //#region Reports Billing AVD

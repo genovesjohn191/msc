@@ -234,6 +234,10 @@
         <mcs-dff-select-luns-field *ngSwitchCase="'select-luns'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-luns-field>
+
+        <mcs-dff-select-ucs-field *ngSwitchCase="'select-ucs'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-ucs-field>
         <mat-error *ngIf="!isValidField(input.key)" [innerHTML]="getErrorMessage(input.key)">
         </mat-error>
       </div>

@@ -91,6 +91,9 @@ export class DynamicFormValidationService {
     if (control.hasError('networkName')) {
       return 'Invalid network name format';
     }
+    if (control.hasError('ucsDomainGroup')) {
+      return 'Domain Group is a required field';
+    }
   }
 
   public getValidators(controlData: DynamicFormFieldConfig): ValidatorFn[] {

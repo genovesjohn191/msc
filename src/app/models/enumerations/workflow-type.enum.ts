@@ -21,6 +21,7 @@ export enum WorkflowType {
   StretchedDedicatedStorageCreateAttachVolume = 'launchpad.dedicatedstorage.createattachvolume',
 
   DedicatedBladeDeprovision = 'launchpad.dedicatedBlade.deprovision',
+  DedicatedBladeProvision = 'launchpad.dedicatedBlade.provision',
 
   HostSecurityProvisionAntiVirus = 'launchpad.hostsecurity.provisionantivirus',
   HostSecurityProvisionHids = 'launchpad.hostsecurity.provisionhids',
@@ -45,7 +46,7 @@ export enum WorkflowType {
   FirewallUpgrade = 'launchpad.firewall.upgrade',
   FirewallAssessUpgradeReadiness = 'launchpad.firewall.assessUpgradeReadiness',
 
-  DedicatedBladeProvision = 'launchpad.dedicatedBlade.provision',
+  UcsOrgCreate = 'launchpad.ucsOrganisation.create'
 }
 
 /**

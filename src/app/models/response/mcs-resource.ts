@@ -69,6 +69,9 @@ export class McsResource extends McsEntityBase {
   })
   public platform: PlatformType = undefined;
 
+  @JsonProperty()
+  public podName: string = undefined;
+
   /**
    * Returns true when the resource has networks
    */

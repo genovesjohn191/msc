@@ -38,3 +38,5 @@ export * from './firewall-provision.form';
 
 export * from './dedicated-blade-deprovision.form';
 export * from './dedicated-blade-provision.form';
+
+export * from './ucs-org-create.form';

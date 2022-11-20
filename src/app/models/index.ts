@@ -120,6 +120,7 @@ export * from './enumerations/crisp-object-status.enum';
 export * from './enumerations/cloudhealth-alert-type.enum';
 export * from './enumerations/storage/saas-backup-type.enum';
 export * from './enumerations/storage/saas-backup-status.enum';
+export * from './enumerations/ucs-object-type.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -400,6 +401,10 @@ export * from './response/storage/mcs-storage-veeam-backup';
 export * from './response/storage/mcs-storage-saas-backup';
 export * from './response/storage/mcs-storage-saas-backup-attempt';
 export * from './response/storage/mcs-storage-saas-backup-component-online-status';
+export * from './response/mcs-ucs-central-instance';
+export * from './response/mcs-ucs-domain';
+export * from './response/mcs-ucs-domain-group';
+export * from './response/mcs-ucs-object';
 
 /** Common */
 export * from './common/mcs-api-search-key';
@@ -461,6 +466,7 @@ export * from './common/mcs-report-update-management-params';
 export * from './common/mcs-multi-job-form-config';
 export * from './common/mcs-extenders-query-params';
 export * from './common/mcs-dns-query-params';
+export * from './common/mcs-ucs-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

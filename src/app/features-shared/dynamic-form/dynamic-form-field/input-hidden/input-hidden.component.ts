@@ -41,6 +41,18 @@ export class DynamicInputHiddenComponent extends DynamicFieldComponentBase {
         }
         this.valueChange(this.config.value);
         break;
+      case 'ucs-change':
+        switch(this.config.key){
+          case 'domainGroupId':
+            this.config.value = params.value?.domainGroupId?? null;
+            this.valueChange(this.config.value);
+            break;
+          case 'platform':
+            this.config.value = params.value?.platformType;
+            this.valueChange(this.config.value);
+            break;
+        }
+        break;
     }
   }
 }

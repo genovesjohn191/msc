@@ -1,0 +1,49 @@
+<mat-form-field *ngIf="visible" appearance="outline" [matBadge]="hasError ? '!' : ''" matBadgePosition="before"
+  matBadgeColor="warn" matBadgeSize="small" [matTooltip]="hasError ? 'Failed to load options' : ''"
+  matTooltipPosition="above" [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ isLoading ? 'Loading...' : label }}</mat-label>
+  <mat-select [mcsId]="id" [required]="required" [disabled]="disabled" [(value)]="config.value"
+    (selectionChange)="valueChange($event)">
+    <mat-option *ngIf="!required && !hasError">-- None --</mat-option>
+    <mat-optgroup *ngFor="let group of config.options" [label]="group.name" [disabled]="group.disabled">
+      <mat-option *ngFor="let opt of group.options" [disabled]="opt.disabled" [value]="opt.key">
+        {{opt.value}}
+        <span *ngIf="config.disableStretched && opt.disabled"> - {{opt.hint}}</span>
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+  <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+  <button mat-icon-button matSuffix (click)="retrieveOptions()" *ngIf="hasError" matTooltip="Retry"
+    matTooltipPosition="above">
+    <mat-icon color="primary">refresh</mat-icon>
+  </button>
+</mat-form-field>
+
+<mat-form-field *ngIf="isDomainGroupVisible && domainGroupOptions.length > 1" appearance="outline" [matBadge]="hasError ? '!' : ''"
+  matBadgePosition="before" matBadgeColor="warn" matBadgeSize="small"
+  [matTooltip]="hasError ? 'Failed to load options' : ''" matTooltipPosition="above" [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ isLoading ? 'Loading...' : 'Domain Group' }}</mat-label>
+  <mat-select [mcsId]="id" [required]="required" [disabled]="disabled" [(value)]="selectedDomainGroupId"
+    (selectionChange)="onDomainGroupChange($event)">
+    <mat-option *ngFor="let opt of domainGroupOptions" [disabled]="opt.disabled" [value]="opt.key" [matTooltip]="opt.hint" [ngStyle]="{'pointer-events': 'auto'}">
+      {{opt.value}}
+    </mat-option>
+  </mat-select>
+  <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+  <button mat-icon-button matSuffix (click)="retrieveOptions()" *ngIf="hasError" matTooltip="Retry"
+    matTooltipPosition="above">
+    <mat-icon color="primary">refresh</mat-icon>
+  </button>
+</mat-form-field>
+
+<div *ngIf="isDomainGroupVisible && domainGroupOptions.length < 1" style="margin-bottom: 20px;">
+  <span>
+    The selected UCS Central instance has no domain groups to display.
+  </span>
+</div>
+
+<div *ngIf="isWarningVisible">
+  <mcs-alert type="info">
+    A UCS organization ({{selectedUcs.managementName}}) already exists on this UCS domain/instance for the target company.
+  </mcs-alert>
+</div>

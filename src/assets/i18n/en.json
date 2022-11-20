@@ -3654,7 +3654,10 @@
     "getVmSize": "Something went wrong while retrieving your VM Size. Please try again.",
     "downloadPlannedWorkIcs": "Something went wrong while downloading this Planned Work's ICS. Please try again.",
     "getPlannedWork": "Something went wrong while retrieving Planned Work. Please try again.",
-    "getPlannedWorkAffectedServices": "Something went wrong while retrieving this Planned Work's affected services. Please try again."
+    "getPlannedWorkAffectedServices": "Something went wrong while retrieving this Planned Work's affected services. Please try again.",
+    "getUcsDomains": "Something went wrong while retrieving your UCS domains.",
+    "getUcsCentral": "Something went wrong while retrieving your UCS central instances.",
+    "getUcsObjects": "Something went wrong while retrieving your UCS objects."
   },
   "entityState": {
     "inProgress": "Processing request..."
