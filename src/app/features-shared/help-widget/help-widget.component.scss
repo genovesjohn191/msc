@@ -14,14 +14,13 @@ $help-widget-panel-padding: $space-medium;
   overflow: hidden;
   right: $help-widget-offset;
   bottom: $help-widget-offset;
-  max-width: $help-widget-max-width;
-  width: 100%;
 
   .help-widget-panel {
     @include display-flex(column);
     color: $help-widget-color;
     background-color: $help-widget-panel-bg-color;
     margin-bottom: $space-small;
+    width: $help-widget-max-width;
 
     .help-widget-header {
       padding: $help-widget-panel-padding;
