@@ -5,8 +5,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <ng-container *ngIf="order$ | async as selectedOrder">
         <mcs-responsive-panel>
-          <ng-container *ngIf="orderDetailsView === orderDetailsViewEnum.OrderDetails"
-          [disabled]="selectedOrder.isProcessing">
+          <ng-container *ngIf="orderDetailsView === orderDetailsViewEnum.OrderDetails">
 
             <!-- Submit order -->
             <ng-container *mcsAccessControl="['OrderApprove']; else requiresApprovalTemplate">

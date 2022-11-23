@@ -32,6 +32,7 @@ import {
 } from '@angular/router';
 import {
   McsAuthenticationIdentity,
+  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -145,7 +146,9 @@ export class OrderComponent implements OnInit, OnDestroy {
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'schedule' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'deliveryType' })
     ];
-    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters, this.filterPredicate);
+    this.dataSource
+      .registerConfiguration(new McsMatTableConfig(false, true))
+      .registerColumnsFilterInfo(this.defaultColumnFilters, this.filterPredicate);
 
     this._updateOnCompanySwitch();
     this.orderDetailsView = OrderDetailsView.OrderDetails;
@@ -162,6 +165,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
+    this.dataSource?.dispose();
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._orderDataChangeHandler);
   }
@@ -313,6 +317,7 @@ export class OrderComponent implements OnInit, OnDestroy {
           })
         ).pipe(
           switchMap(() => this._apiService.getOrder(order.id)),
+          tap(orderDetails => this._updateOrderDetails(orderDetails)),
           finalize(() => this.orderDetailsView = OrderDetailsView.OrderDetails)
         );
       })
@@ -342,7 +347,8 @@ export class OrderComponent implements OnInit, OnDestroy {
             state: OrderWorkflowAction.Cancelled
           })
         ).pipe(
-          switchMap(() => this._apiService.getOrder(order.id))
+          switchMap(() => this._apiService.getOrder(order.id)),
+          tap(orderDetails => this._updateOrderDetails(orderDetails))
         );
       })
     ).subscribe();
@@ -370,7 +376,8 @@ export class OrderComponent implements OnInit, OnDestroy {
             state: OrderWorkflowAction.Rejected
           })
         ).pipe(
-          switchMap(() => this._apiService.getOrder(order.id))
+          switchMap(() => this._apiService.getOrder(order.id)),
+          tap(orderDetails => this._updateOrderDetails(orderDetails))
         );
       })
     ).subscribe();
@@ -447,12 +454,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   private _subscribeToOrderResolver(): void {
     this.order$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.order)),
-      tap((order: McsOrder) => {
-        this._setChargesState(order);
-        this._orderItemsChange.next(order?.items || []);
-        let workflowState = getSafeProperty(order, (obj) => obj.workflowState);
-        this.isInAwaitingApprovalState = (workflowState === WorkflowStatus.AwaitingApproval);
-      }),
+      tap((order: McsOrder) => this._updateOrderDetails(order)),
       shareReplay(1)
     );
 
@@ -469,6 +471,13 @@ export class OrderComponent implements OnInit, OnDestroy {
       }),
       shareReplay(1)
     );
+  }
+
+  private _updateOrderDetails(order: McsOrder): void {
+    this._setChargesState(order);
+    this._orderItemsChange.next(order?.items || []);
+    let workflowState = getSafeProperty(order, (obj) => obj.workflowState);
+    this.isInAwaitingApprovalState = (workflowState === WorkflowStatus.AwaitingApproval);
   }
 
   private _subscribeToOrderItemType(): void {
