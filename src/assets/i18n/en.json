@@ -2973,13 +2973,25 @@
     "details": {
       "properties": {
         "label": "Basic Properties",
-        "recordCount": "Number of Records: ",
+        "recordCount": "Total Records: ",
+        "ttl":"TTL: ",
+        "ttlSeconds": "{{ttlSeconds}} Seconds",
+        "refresh":"Refresh: ",
+        "refreshSeconds": "{{refreshSeconds}} Seconds",
+        "retry":"Retry: ",
+        "retrySeconds": "{{retrySeconds}} Seconds",
+        "expire":"Expire: ",
+        "expireSeconds": "{{expireSeconds}} Seconds",
+        "minimum":"Minimum: ",
+        "minimumSeconds": "{{minimumSeconds}} Seconds",
+        "responsiblePerson":"Responsible Person: ",
         "type": "Type: ",
         "zoneCount": "Number of Zones: "
       },
       "info": {
         "label": "Service Information",
-        "serviceId": "Service ID: "
+        "serviceId": "Service ID: ",
+        "parentService": "Parent Service: "
       },
       "records": {
         "label": "Manage Records"
@@ -3964,6 +3976,11 @@
     "protocol": "Protocol",
     "weight": "Weight",
     "port": "Port",
+    "responsiblePerson": "Responsible Person",
+    "refreshSeconds": "Refresh (Seconds)",
+    "retrySeconds": "Retry (Seconds)",
+    "expireSeconds": "Expire (Seconds)",
+    "minimumSeconds": "Minimum (Seconds)",
     "a": "A",
     "aaaa": "AAAA",
     "cname": "CNAME",
@@ -3981,7 +3998,7 @@
     "records": "Records",
     "target": "Target",
     "termDuration": "Term",
-    "ttlSeconds": "TTL (Seconds) - 600",
+    "ttlSeconds": "TTL (Seconds)",
     "ttl": "TTL (Seconds)",
     "elements": "Elements",
     "events": "Events",
@@ -4228,6 +4245,7 @@
     "inputInvalidDnsFlags": "Invalid flags provided.",
     "inputInvalidDnsRegex": "Invalid regular expression provided.",
     "inputInvalidDnsReplacement": "Invalid replacement provided.",
+    "inputInvalidDnsResponsiblePerson": "Invalid responsible person provided.",
     "inputTextareaRequired": "This field is required.",
     "selectRequired": "This field is required",
     "noCloudHealthAlertsDisplay": "No CloudHealth Alerts to be displayed.",

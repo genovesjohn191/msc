@@ -7,5 +7,6 @@ export enum DnsRecordType {
   NS = 'NS',
   PTR = 'PTR',
   SRV = 'SRV',
-  TXT = 'TXT'
+  TXT = 'TXT',
+  SOA = 'SOA'
 }

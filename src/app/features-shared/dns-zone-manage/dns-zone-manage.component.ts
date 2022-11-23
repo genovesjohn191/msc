@@ -263,10 +263,16 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     _param: McsMatTableQueryParam
   ): Observable<McsMatTableContext<DnsZoneViewModel>> {
 
+    this.zone?.rrsets.sort((a,b) => a.type.localeCompare(b.type));
+    this.zone?.rrsets.sort(function(a, b) { return a.type === DnsRecordType.MX ? -1 : b.type === DnsRecordType.MX ? 1 : 0; });
+    this.zone?.rrsets.sort(function(a, b) { return a.type === DnsRecordType.NS ? -1 : b.type === DnsRecordType.NS ? 1 : 0; });
+    this.zone?.rrsets.sort(function(a, b) { return a.type === DnsRecordType.SOA ? -1 : b.type === DnsRecordType.SOA ? 1 : 0; });
+
     let dataModels = new Array<DnsZoneViewModel>();
     this.zone?.rrsets.forEach(rrset => {
       if (isNullOrEmpty(rrset?.records)) { return; }
 
+      rrset?.records.sort((a, b) => a.name.localeCompare(b.name));
       rrset.records.forEach(record => {
         let dnsViewModel = new DnsZoneViewModel(this.zone, rrset, record);
         dataModels.push(dnsViewModel);
@@ -279,12 +285,19 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     viewModel: DnsZoneViewModel
   ): McsNetworkDnsRecordRequest {
     let zoneRecord = new McsNetworkDnsRecordRequest();
-    zoneRecord.name = getSafeFormValue(viewModel.fcHostName);
+
+    zoneRecord.name = (getSafeFormValue<DnsRecordType>(viewModel.fcZoneType) === DnsRecordType.SOA) ?
+    (getSafeFormValue(viewModel.fcHostNameSoa) || null) : (getSafeFormValue(viewModel.fcHostName) || null);
+
+    zoneRecord.data = (getSafeFormValue<DnsRecordType>(viewModel.fcZoneType) === DnsRecordType.SOA) ?
+    (getSafeFormValue(viewModel.fcDataSoa) || null) : (getSafeFormValue(viewModel.fcData) || null);
+
+    zoneRecord.ttlSeconds = (getSafeFormValue<DnsRecordType>(viewModel.fcZoneType) === DnsRecordType.SOA) ?
+    (+getSafeFormValue(viewModel.fcTtlSecondsSoa) || null) : (+getSafeFormValue(viewModel.fcTtlSeconds) || null);
+
     zoneRecord.type = getSafeFormValue<DnsRecordType>(viewModel.fcZoneType);
-    zoneRecord.data = getSafeFormValue(viewModel.fcData);
     zoneRecord.target = getSafeFormValue(viewModel.fcTarget);
     zoneRecord.service = getSafeFormValue(viewModel.fcService);
-    zoneRecord.ttlSeconds = +getSafeFormValue(viewModel.fcTtlSeconds) || null;
     zoneRecord.protocol = getSafeFormValue(viewModel.fcProtocol);
     zoneRecord.priority = +getSafeFormValue(viewModel.fcPriority) || null;
     zoneRecord.weight = +getSafeFormValue(viewModel.fcWeight) || null;
@@ -294,6 +307,11 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     zoneRecord.flags = getSafeFormValue(viewModel.fcFlags);
     zoneRecord.regexp = getSafeFormValue(viewModel.fcRegex);
     zoneRecord.replacement = getSafeFormValue(viewModel.fcReplacement);
+    zoneRecord.respPerson = getSafeFormValue(viewModel.fcResponsiblePerson);
+    zoneRecord.refresh = getSafeFormValue(viewModel.fcRefreshSeconds);
+    zoneRecord.retry = getSafeFormValue(viewModel.fcRetrySeconds);
+    zoneRecord.expire = getSafeFormValue(viewModel.fcExpireSeconds);
+    zoneRecord.minimum = getSafeFormValue(viewModel.fcMinimumSeconds);
     return zoneRecord;
   }
 }

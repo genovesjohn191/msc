@@ -52,6 +52,11 @@ interface DnsZoneModel {
   flags: string;
   regex: string;
   replacement: string;
+  respPerson: string;
+  refresh: number;
+  retry: number;
+  expire: number;
+  minimum: number;
 }
 
 export class DnsZoneViewModel {
@@ -62,19 +67,27 @@ export class DnsZoneViewModel {
   public readonly fgDnsZone: FormGroup<any>;
   public readonly fcZoneType: FormControl<any>;
   public readonly fcHostName: FormControl<any>;
+  public readonly fcHostNameSoa: FormControl<any>;
   public readonly fcTarget: FormControl<any>;
   public readonly fcTtlSeconds: FormControl<any>;
+  public readonly fcTtlSecondsSoa: FormControl<any>;
   public readonly fcService: FormControl<any>;
   public readonly fcProtocol: FormControl<any>;
   public readonly fcPriority: FormControl<any>;
   public readonly fcWeight: FormControl<any>;
   public readonly fcPort: FormControl<any>;
   public readonly fcData: FormControl<any>;
+  public readonly fcDataSoa: FormControl<any>;
   public readonly fcOrder: FormControl<any>;
   public readonly fcPreference: FormControl<any>;
   public readonly fcFlags: FormControl<any>;
   public readonly fcRegex: FormControl<any>;
   public readonly fcReplacement: FormControl<any>;
+  public readonly fcResponsiblePerson: FormControl<any>;
+  public readonly fcRefreshSeconds: FormControl<any>;
+  public readonly fcRetrySeconds: FormControl<any>;
+  public readonly fcExpireSeconds: FormControl<any>;
+  public readonly fcMinimumSeconds: FormControl<any>;
 
   private readonly _destroySubject = new Subject<void>();
 
@@ -97,6 +110,10 @@ export class DnsZoneViewModel {
       CoreValidators.custom(this._onValidateHostName.bind(this), 'invalidDnsHostName')
     ]);
 
+    this.fcHostNameSoa = new FormControl<any>('', [
+      CoreValidators.custom(this._onValidateHostName.bind(this), 'invalidDnsHostName')
+    ]);
+
     this.fcTarget = new FormControl<any>('', [
       CoreValidators.required,
       CoreValidators.custom(this._onValidateTarget.bind(this), 'invalidDnsTarget')
@@ -108,10 +125,21 @@ export class DnsZoneViewModel {
       (control) => CoreValidators.max(this.ttlMaxValue)(control)
     ]);
 
+    this.fcTtlSecondsSoa = new FormControl<any>('', [
+      CoreValidators.numeric,
+      (control) => CoreValidators.min(this.ttlMinValue)(control),
+      (control) => CoreValidators.max(this.ttlMaxValue)(control)
+    ]);
+
     // TODO(apascual): Set the maximum based on zonetype
     // For A: 15, for AAAA: 39, Others: 255
     this.fcData = new FormControl<any>('', [
       CoreValidators.required,
+      (control) => CoreValidators.maxLength(this.stringMaxLength)(control),
+      CoreValidators.custom(this._onValidateData.bind(this), 'invalidDnsData')
+    ]);
+
+    this.fcDataSoa = new FormControl<any>('', [
       (control) => CoreValidators.maxLength(this.stringMaxLength)(control),
       CoreValidators.custom(this._onValidateData.bind(this), 'invalidDnsData')
     ]);
@@ -181,12 +209,41 @@ export class DnsZoneViewModel {
       CoreValidators.custom(this._onValidateReplacement.bind(this), 'invalidDnsReplacement')
     ]);
 
+    this.fcResponsiblePerson = new FormControl<any>('', [
+      CoreValidators.required,
+      (control) => CoreValidators.maxLength(this.stringMaxLength)(control),
+      CoreValidators.custom(this._onValidateReplacement.bind(this), 'invalidDnsResponsiblePerson')
+    ]);
+
+    this.fcRefreshSeconds = new FormControl<any>('', [
+      CoreValidators.required,
+      CoreValidators.numeric
+    ]);
+
+    this.fcRetrySeconds = new FormControl<any>('', [
+      CoreValidators.required,
+      CoreValidators.numeric
+    ]);
+
+    this.fcExpireSeconds = new FormControl<any>('', [
+      CoreValidators.required,
+      CoreValidators.numeric
+    ]);
+
+    this.fcMinimumSeconds = new FormControl<any>('', [
+      CoreValidators.required,
+      CoreValidators.numeric
+    ]);
+
     this.fgDnsZone = new FormGroup<any>({
       fcZoneType: this.fcZoneType,
       fcHostName: this.fcHostName,
+      fcHostNameSoa: this.fcHostNameSoa,
       fcTarget: this.fcTarget,
       fcTtlSeconds: this.fcTtlSeconds,
+      fcTtlSecondsSoa: this.fcTtlSecondsSoa,
       fcData: this.fcData,
+      fcDataSoa: this.fcDataSoa,
       fcService: this.fcService,
       fcProtocol: this.fcProtocol,
       fcPriority: this.fcPriority,
@@ -196,7 +253,12 @@ export class DnsZoneViewModel {
       fcPreference: this.fcPreference,
       fcFlags: this.fcFlags,
       fcRegex: this.fcRegex,
-      fcReplacement: this.fcReplacement
+      fcReplacement: this.fcReplacement,
+      fcResponsiblePerson: this.fcResponsiblePerson,
+      fcRefreshSeconds: this.fcRefreshSeconds,
+      fcRetrySeconds: this.fcRetrySeconds,
+      fcExpireSeconds: this.fcExpireSeconds,
+      fcMinimumSeconds: this.fcMinimumSeconds
     });
 
     this._registerRegexMap();
@@ -233,8 +295,8 @@ export class DnsZoneViewModel {
     return getSafeFormValue<DnsRecordType>(this.fcZoneType) === DnsRecordType.NAPTR;
   }
 
-  public get isTtlSecondsFromZone(): boolean {
-    return isNullOrUndefined(this._mainRrSet?.ttlSeconds);
+  public get zoneTtlSeconds(): number {
+    return this._zone?.ttlSeconds;
   }
 
   public get dataFieldIsArray(): boolean {
@@ -272,6 +334,13 @@ export class DnsZoneViewModel {
     return false;
   }
 
+  public get isSoaRecord(): boolean {
+    if (this.recordInfo?.zoneType === DnsRecordType.SOA) {
+      return true;
+    }
+    return false;
+  }
+
   public setDefaultValues(): DnsZoneViewModel {
     if (this.targetForCreate) {
       setTimeout(() => { this.fcZoneType.setValue(DnsRecordType.A); });
@@ -284,7 +353,7 @@ export class DnsZoneViewModel {
       id: this._subRecord.id,
       zoneType: this._mainRrSet.type,
       hostName: this._subRecord.name,
-      ttlSeconds: this._mainRrSet.ttlSeconds || this._zone.ttlSeconds,
+      ttlSeconds: this._mainRrSet.ttlSeconds,
       target: this._subRecord.target,
       data: this._subRecord.data,
       service: this._subRecord.service,
@@ -295,15 +364,23 @@ export class DnsZoneViewModel {
       preference: this._subRecord.preference,
       flags: this._subRecord.flags,
       regex: this._subRecord.regexp,
-      replacement: this._subRecord.replacement
+      replacement: this._subRecord.replacement,
+      respPerson: this._subRecord.respPerson,
+      refresh: this._subRecord.refresh,
+      retry: this._subRecord.retry,
+      expire: this._subRecord.expire,
+      minimum: this._subRecord.minimum
     } as DnsZoneModel;
 
     setTimeout(() => {
       this.fcZoneType.setValue(this.recordInfo.zoneType);
       this.fcHostName.setValue(this.recordInfo.hostName);
+      this.fcHostNameSoa.setValue(this.recordInfo.hostName);
       this.fcTtlSeconds.setValue(this.recordInfo.ttlSeconds);
+      this.fcTtlSecondsSoa.setValue(this.recordInfo.ttlSeconds);
       this.fcTarget.setValue(this.recordInfo.target);
       this.fcData.setValue(this.recordInfo.data);
+      this.fcDataSoa.setValue(this.recordInfo.data);
       this.fcService.setValue(this.recordInfo.service);
       this.fcProtocol.setValue(this.recordInfo.protocol);
       this.fcPriority.setValue(this.recordInfo.priority);
@@ -313,6 +390,11 @@ export class DnsZoneViewModel {
       this.fcFlags.setValue(this.recordInfo.flags);
       this.fcRegex.setValue(this.recordInfo.regex);
       this.fcReplacement.setValue(this.recordInfo.replacement);
+      this.fcResponsiblePerson.setValue(this.recordInfo.respPerson);
+      this.fcRefreshSeconds.setValue(this.recordInfo.refresh);
+      this.fcRetrySeconds.setValue(this.recordInfo.retry);
+      this.fcExpireSeconds.setValue(this.recordInfo.expire);
+      this.fcMinimumSeconds.setValue(this.recordInfo.minimum);
     });
     return this;
   }
@@ -375,6 +457,7 @@ export class DnsZoneViewModel {
     this._dataFieldRegexMap.set(DnsRecordType.MX, CommonDefinition.REGEX_DNS_DATA_DEFAULT);
     this._dataFieldRegexMap.set(DnsRecordType.NS, CommonDefinition.REGEX_DNS_DATA_DEFAULT);
     this._dataFieldRegexMap.set(DnsRecordType.PTR, CommonDefinition.REGEX_DNS_DATA_GENERIC);
+    this._dataFieldRegexMap.set(DnsRecordType.SOA, CommonDefinition.REGEX_DNS_DATA_DEFAULT);
     this._dataFieldRegexMap.set(DnsRecordType.TXT, CommonDefinition.REGEX_DNS_DATA_GENERIC);
   }
 
@@ -400,6 +483,11 @@ export class DnsZoneViewModel {
 
     this._formFieldsStateMap.set(DnsRecordType.PTR, this._updateFormFieldsState.bind(this,
       'fcZoneType', 'fcHostName', 'fcTtlSeconds', 'fcData'));
+
+    this._formFieldsStateMap.set(DnsRecordType.SOA, this._updateFormFieldsState.bind(this,
+      'fcZoneType', 'fcHostNameSoa', 'fcDataSoa', 'fcResponsiblePerson',
+      'fcRefreshSeconds', 'fcRetrySeconds', 'fcExpireSeconds',
+      'fcTtlSecondsSoa', 'fcMinimumSeconds'));
 
     this._formFieldsStateMap.set(DnsRecordType.SRV, this._updateFormFieldsState.bind(this,
       'fcZoneType', 'fcHostName', 'fcTtlSeconds', 'fcPriority', 'fcService',

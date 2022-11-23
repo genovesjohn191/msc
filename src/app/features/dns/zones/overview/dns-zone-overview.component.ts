@@ -13,7 +13,11 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { McsNetworkDnsZone } from '@app/models';
+import {
+  McsNetworkDnsZone,
+  McsNetworkDnsRrSetsRecord,
+  DnsRecordType
+} from '@app/models';
 import { unsubscribeSafely } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 import { DnsZoneDetailsService } from '../dns-zone.service';
@@ -43,6 +47,13 @@ export class DnsZoneOverviewComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  public getSoa(selectedDnsZone: McsNetworkDnsZone): McsNetworkDnsRrSetsRecord  {
+    let soaRRSET = selectedDnsZone.rrsets.find(rrset => rrset.type === DnsRecordType.SOA);
+    if (soaRRSET.records.length !== 1) { return; }
+
+    return soaRRSET.records[0];
   }
 
   private _subscribeToDnsDetails(): void {

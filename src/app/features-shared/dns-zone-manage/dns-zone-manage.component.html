@@ -11,6 +11,17 @@
           </mcs-field-input>
         </mcs-grid-column>
 
+        <!-- Host (SOA) -->
+        <!-- TODO: Remove this field and have it use the generic Host field (will require viewmodel refactor) -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcHostNameSoa?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.name' | translate"
+            [formControl]="viewmodel.fcHostNameSoa"
+            [disabled]="true">
+          </mcs-field-input>
+        </mcs-grid-column>
+
         <!-- TTL -->
         <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcTtlSeconds?.enabled">
           <mcs-field-input
@@ -18,6 +29,17 @@
             [label]="'label.ttlSeconds' | translate"
             [interpolations]="{ min_value: viewmodel.ttlMinValue, max_value: viewmodel.ttlMaxValue }"
             [formControl]="viewmodel.fcTtlSeconds">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- TTL (SOA) -->
+        <!-- TODO: Remove this field and have it use the generic TTL field (will require viewmodel refactor) -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcTtlSecondsSoa?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.ttlSeconds' | translate"
+            [formControl]="viewmodel.fcTtlSecondsSoa"
+            [disabled]="true">
           </mcs-field-input>
         </mcs-grid-column>
 
@@ -55,6 +77,17 @@
               </mcs-error>
             </mcs-form-field>
           </ng-template>
+        </mcs-grid-column>
+
+        <!-- Data (SOA) -->
+        <!-- TODO: Remove this field and have it use the generic Data field (will require viewmodel refactor) -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcDataSoa?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.data' | translate"
+            [formControl]="viewmodel.fcDataSoa"
+            [disabled]="true">
+          </mcs-field-input>
         </mcs-grid-column>
 
         <!-- Priority -->
@@ -160,6 +193,55 @@
             [formControl]="viewmodel.fcReplacement">
           </mcs-field-input>
         </mcs-grid-column>
+
+        <!-- Responsible Person -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcResponsiblePerson?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.responsiblePerson' | translate"
+            [formControl]="viewmodel.fcResponsiblePerson">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Refresh -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcRefreshSeconds?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.refreshSeconds' | translate"
+            [formControl]="viewmodel.fcRefreshSeconds"
+            [disabled]="true">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Retry -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcRetrySeconds?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.retrySeconds' | translate"
+            [formControl]="viewmodel.fcRetrySeconds"
+            [disabled]="true">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Expire -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcExpireSeconds?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.expireSeconds' | translate"
+            [formControl]="viewmodel.fcExpireSeconds"
+            [disabled]="true">
+          </mcs-field-input>
+        </mcs-grid-column>
+
+        <!-- Minimum -->
+        <mcs-grid-column sizeWd="6" sizeMd="12" *ngIf="viewmodel.fcMinimumSeconds?.enabled">
+          <mcs-field-input
+            size="full"
+            [label]="'label.minimumSeconds' | translate"
+            [formControl]="viewmodel.fcMinimumSeconds"
+            [disabled]="true">
+          </mcs-field-input>
+        </mcs-grid-column>
       </mcs-grid-row>
     </mcs-grid>
   </form>
@@ -228,9 +310,14 @@
         {{ 'columnHeader.ttlSeconds' | translate }}
       </th>
       <td mat-cell *matCellDef="let row" text-top>
-        <span [mcsGreyedOut]="row.isTtlSecondsFromZone">
+        <span *ngIf="row.recordInfo?.ttlSeconds; else zoneTtlSecondsTemplate">
           {{ row.recordInfo?.ttlSeconds }}
         </span>
+        <ng-template #zoneTtlSecondsTemplate>
+          <span [mcsGreyedOut]="true">
+            {{ row.zoneTtlSeconds }}
+          </span>
+        </ng-template>
       </td>
     </ng-container>
 
@@ -268,7 +355,7 @@
               {{ 'action.edit' | translate }}
             </a>
             <a (click)="onClickDeleteDnsZoneRecord(row)"
-              [disabled]="(row.inProgress$ | async) || row.isReservedRecord"
+              [disabled]="(row.inProgress$ | async) || row.isReservedRecord || row.isSoaRecord"
               mcsId
               mcsEventTracker="delete-dns-zone-record"
               mcsEventCategory="dns"

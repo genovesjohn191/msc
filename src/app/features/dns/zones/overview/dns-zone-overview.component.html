@@ -11,6 +11,45 @@
             <span>{{ 'dns.details.properties.recordCount' | translate }}</span>
             <span>{{ selectedDnsZone.recordCount }}</span>
           </mcs-item>
+          <mcs-item>
+            <span>{{ 'dns.details.properties.ttl' | translate }}</span>
+            <span>{{ 'dns.details.properties.ttlSeconds' | translate: { ttlSeconds: selectedDnsZone.ttlSeconds } }}</span>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'dns.details.properties.refresh' | translate }}</span>
+            <span *ngIf="this.getSoa(selectedDnsZone).refresh; else unknownRefreshTemplate">{{ 'dns.details.properties.refreshSeconds' | translate: { refreshSeconds: this.getSoa(selectedDnsZone).refresh } }}</span>
+            <ng-template #unknownRefreshTemplate>
+              <span read-only>Unknown</span>
+            </ng-template>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'dns.details.properties.retry' | translate }}</span>
+            <span *ngIf="this.getSoa(selectedDnsZone).retry; else unknownRetryTemplate">{{ 'dns.details.properties.retrySeconds' | translate: { retrySeconds: this.getSoa(selectedDnsZone).retry } }}</span>
+            <ng-template #unknownRetryTemplate>
+              <span read-only>Unknown</span>
+            </ng-template>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'dns.details.properties.expire' | translate }}</span>
+            <span *ngIf="this.getSoa(selectedDnsZone).expire; else unknownExpireTemplate">{{ 'dns.details.properties.expireSeconds' | translate: { expireSeconds: this.getSoa(selectedDnsZone).expire } }}</span>
+            <ng-template #unknownExpireTemplate>
+              <span read-only>Unknown</span>
+            </ng-template>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'dns.details.properties.minimum' | translate }}</span>
+            <span *ngIf="this.getSoa(selectedDnsZone).minimum; else unknownMinimumTemplate">{{ 'dns.details.properties.minimumSeconds' | translate: { minimumSeconds: this.getSoa(selectedDnsZone).minimum } }}</span>
+            <ng-template #unknownMinimumTemplate>
+              <span read-only>Unknown</span>
+            </ng-template>
+          </mcs-item>
+          <mcs-item>
+            <span>{{ 'dns.details.properties.responsiblePerson' | translate }}</span>
+            <span *ngIf="this.getSoa(selectedDnsZone).respPerson; else unknownResponsiblePersonTemplate">{{ this.getSoa(selectedDnsZone).respPerson }}</span>
+            <ng-template #unknownResponsiblePersonTemplate>
+              <span read-only>Unknown</span>
+            </ng-template>
+          </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
 
@@ -21,10 +60,14 @@
           <h2>{{ 'dns.details.info.label' | translate }}</h2>
         </ng-container>
 
-        <div>
+        <mcs-item>
           <span>{{ 'dns.details.info.serviceId' | translate }}</span>
           <span>{{ selectedDnsZone?.parentServiceId }}</span>
-        </div>
+        </mcs-item>
+        <mcs-item>
+          <span>{{ 'dns.details.info.parentService' | translate }}</span>
+          <span>{{ selectedDnsZone?.parentBillingDescription }}</span>
+        </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
   </mcs-grid-row>

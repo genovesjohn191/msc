@@ -45,4 +45,19 @@ export class McsNetworkDnsRecordRequest {
 
   @JsonProperty()
   public replacement: string = undefined;
+
+  @JsonProperty()
+  public respPerson: string = undefined;
+
+  @JsonProperty()
+  public refresh: number = undefined;
+
+  @JsonProperty()
+  public retry: number = undefined;
+
+  @JsonProperty()
+  public expire: number = undefined;
+
+  @JsonProperty()
+  public minimum: number = undefined;
 }
