@@ -54,7 +54,10 @@
         <mcs-suffix mcsSuffix>{{ 'serverShared.manageScale.ramUnit' | translate }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
-          <div >
+          <div *ngIf="isSelfManaged">
+            {{ 'serverShared.manageScale.allocationRam' | translate: {ram_value: (resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
+          </div>
+          <div *ngIf="!isSelfManaged">
             {{ 'serverShared.manageScale.availableRam' | translate: {ram_value: (resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
           </div>
         </mcs-hint>
@@ -85,7 +88,7 @@
 
         <mcs-hint mcsHint align="start">
           <div>
-            {{ 'serverShared.manageScale.availableCpu' | translate: {cpu_value:resourceAvailableCpu} }}
+            {{ 'serverShared.manageScale.allocationCpu' | translate: {cpu_value: resourceAvailableCpu} }}
           </div>
         </mcs-hint>
         <mcs-error mcsError errorState="required">

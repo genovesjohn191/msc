@@ -33,7 +33,8 @@ import {
   InputManageType,
   McsResource,
   McsServerCompute,
-  Os
+  Os,
+  ServiceType
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -54,7 +55,7 @@ const DEFAULT_CPU_STEP = 2;
 const DEFAULT_MIN_MEMORY = 2;
 const DEFAULT_MIN_MEMORY_WIN_MANAGED = 4;
 const DEFAULT_MIN_CPU = 2;
-const DEFAULT_MAX_CPU = 24;
+const DEFAULT_MAX_CPU = 16;
 
 @Component({
   selector: 'mcs-server-manage-scale',
@@ -183,6 +184,13 @@ export class ServerManageScaleComponent
   }
 
   /**
+   * Returns the service type
+   */
+   public get isSelfManaged(): boolean {
+    return getSafeProperty(this.resource, (obj) => obj.isSelfManaged, false);
+  }
+
+  /**
    * Returns the server input managetype enumeration instance
    */
   public get inputManageTypeEnum(): any {
@@ -221,7 +229,9 @@ export class ServerManageScaleComponent
    * Returns the resource available memory in GB
    */
   public get resourceAvailableMemoryGB(): number {
-    let resourceMemory = getSafeProperty(this.resource, (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
+    let resourceMemory = this.isSelfManaged ?
+      getSafeProperty(this.resource, (obj) => convertMbToGb(obj.compute.memoryLimitMB), 0) :
+      getSafeProperty(this.resource, (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
     return isNullOrEmpty(this.serverCompute) ? resourceMemory : resourceMemory + this.serverMemoryUsedGB;
   }
 
@@ -229,7 +239,7 @@ export class ServerManageScaleComponent
    * Returns the resource available CPU
    */
   public get resourceAvailableCpu(): number {
-    let resourceCpu = getSafeProperty(this.resource, (obj) => obj.compute.cpuAvailable, 0);
+    let resourceCpu = getSafeProperty(this.resource, (obj) => obj.compute.cpuLimit, 0);
     let calculatedCpu = isNullOrEmpty(this.serverCompute) ? resourceCpu : resourceCpu + this.serverCpuUsed;
     return Math.min(calculatedCpu, DEFAULT_MAX_CPU);
   }
@@ -377,7 +387,7 @@ export class ServerManageScaleComponent
       (control) => CoreValidators.max(this.resourceAvailableCpu)(control),
       CoreValidators.custom(this._cpuStepIsValid.bind(this), 'cpuStep')
     ]);
-
+    
     this.fcRestartServer = new FormControl<any>(null);
 
     // Create form group and bind the form controls

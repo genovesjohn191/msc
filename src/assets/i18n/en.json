@@ -2303,6 +2303,8 @@
       "customMessage": "Manually enter the size of RAM and CPU for this server.",
       "availableRam": "Available RAM: {{ram_value}}",
       "availableCpu": "Available CPU: {{cpu_value}} vCPU",
+      "allocationRam": "VDC Allocation: {{ram_value}}",
+      "allocationCpu": "VDC Allocation: {{cpu_value}} vCPU",
       "minimumRam": "Minimum RAM: {{ram_value}}",
       "minimumCpu": "Minimum CPU: {{cpu_value}} vCPU",
       "sliderSelectedRamCpu": "{{ram_value}} RAM / {{cpu_value}} vCPU",
