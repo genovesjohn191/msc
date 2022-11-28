@@ -7,7 +7,8 @@ export enum HaMode {
   Elbc,
   Dual,
   Enabled,
-  ColdStandby
+  ColdStandby,
+  Primary
 }
 
 export const haModeText = {
@@ -17,7 +18,8 @@ export const haModeText = {
   [HaMode.Elbc]: 'ELBC',
   [HaMode.Dual]: 'Dual',
   [HaMode.Enabled]: 'Enabled',
-  [HaMode.ColdStandby]: 'Cold Standby'
+  [HaMode.ColdStandby]: 'Cold Standby',
+  [HaMode.Primary]: 'Primary'
 };
 
 /**
