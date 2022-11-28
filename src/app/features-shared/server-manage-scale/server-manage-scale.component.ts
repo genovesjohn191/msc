@@ -147,6 +147,7 @@ export class ServerManageScaleComponent
       this._createSliderTable();
       this._reset();
       this._previousResourceAvailable = this.resourceAvailableMemoryGB;
+      this._markAsTouchedAutoPopulatedControls();
     }
   }
 
@@ -316,6 +317,15 @@ export class ServerManageScaleComponent
     this.fcCustomCpu.setValue(this.serverCpuUsed);
     this.fcCustomMemory.setValue(this.serverMemoryUsedGB);
     this.fcRestartServer.setValue(false);
+  }
+
+  /**
+   * Touches all auto-populated form controls
+   */
+   private _markAsTouchedAutoPopulatedControls(): void {
+    if (isNullOrEmpty(this.resource)) { return; }
+    if (!isNullOrEmpty(this.fcCustomCpu)) { this.fcCustomCpu.markAsTouched(); }
+    if (!isNullOrEmpty(this.fcCustomMemory)) { this.fcCustomMemory.markAsTouched(); }
   }
 
   /**
