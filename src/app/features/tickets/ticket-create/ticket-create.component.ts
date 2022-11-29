@@ -183,8 +183,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToExtenders();
     this._subscribesToApplicationRecovery();
     
-    //To do: uncomment once API is ready
-    // this._subscribesToVeeamBackups();
+    this._subscribesToVeeamBackups();
     this._subscribesToVeeamDrs();
     this._subscribesToSaasBackups();
   }
