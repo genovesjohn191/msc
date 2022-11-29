@@ -95,6 +95,10 @@
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (applicationRecovery$ | async), serviceTitle: 'Application Recovery'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (batServices$ | async), serviceTitle: 'Backup Aggregation Targets'}">
               </ng-container>
 
@@ -108,6 +112,10 @@
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (dns$ | async), serviceTitle: 'DNS'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (extenders$ | async), serviceTitle: 'Extenders'}">
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
@@ -186,13 +194,8 @@
                 context: { $implicit: (vmBackup$ | async), serviceTitle: 'VM Backup'}">
               </ng-container>
 
-              <ng-container *ngTemplateOutlet="servicesTemplate;
-                context: { $implicit: (extenders$ | async), serviceTitle: 'Extenders'}">
-              </ng-container>
-
-              <ng-container *ngTemplateOutlet="servicesTemplate;
-                context: { $implicit: (applicationRecovery$ | async), serviceTitle: 'Application Recovery'}">
-              </ng-container>
+              
+              
             </mcs-select>
           </mcs-form-field>
         </mcs-section>

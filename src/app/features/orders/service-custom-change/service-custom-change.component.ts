@@ -183,8 +183,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToApplicationRecoveryServices();
     this._subscribeToSmacSharedFormConfig();
 
-    //To do: uncomment once API is ready
-    // this._subscribesToVeeamBackupServices();
+    this._subscribesToVeeamBackupServices();
     this._subscribesToVeeamDrServices();
     this._subscribesToSaasBackupServices();
   }
