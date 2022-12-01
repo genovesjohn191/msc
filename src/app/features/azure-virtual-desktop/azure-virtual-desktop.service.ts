@@ -1,22 +1,29 @@
 import {
+  catchError,
   combineLatest,
   distinctUntilChanged,
   exhaustMap,
-  filter,
   finalize,
   forkJoin,
   map,
+  of,
   startWith,
   tap,
   BehaviorSubject,
+  EMPTY,
   Observable
 } from 'rxjs';
 
 import {
   EventEmitter,
-  Injectable
+  Injectable,
+  Injector
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import {
+  DashboardExportDocumentManager,
+  DashboardExportDocumentType
+} from '@app/features-shared';
 import {
   McsReportBillingAvdDailyAverageUser,
   McsReportBillingAvdDailyAverageUsersParam,
@@ -36,8 +43,12 @@ import {
   compareJsons,
   isNullOrEmpty,
   isNullOrUndefined,
+  CommonDefinition,
   DataProcess
 } from '@app/utilities';
+
+// Note: this should match the routing path under constants def.
+export type TabGroupType = 'daily-user-service' | 'daily-user-average' | 'service-cost' | 'daily-connection-service';
 
 @Injectable()
 export class AzureVirtualDesktopService {
@@ -51,6 +62,7 @@ export class AzureVirtualDesktopService {
   private _dailyUsersAverageChange = new BehaviorSubject<McsReportBillingAvdDailyAverageUser[]>(null);
 
   constructor(
+    private _injector: Injector,
     private _apiService: McsApiService,
     private _datePipe: StdDateFormatPipe
   ) {
@@ -105,6 +117,78 @@ export class AzureVirtualDesktopService {
     };
   }
 
+  public exportCsvByTab(tab: TabGroupType): Observable<any> {
+    let tabGroupMap = new Map<TabGroupType, () => Observable<any>>();
+
+    tabGroupMap.set('service-cost', this._exportBillingSummariesCsv.bind(this));
+    tabGroupMap.set('daily-user-service', this._exportDailyUsersCsv.bind(this));
+    tabGroupMap.set('daily-user-average', this._exportDailyAverageCsv.bind(this));
+    tabGroupMap.set('daily-connection-service', this._exportDailyUsersCsv.bind(this));
+
+    let targetFunc = tabGroupMap.get(tab);
+    if (isNullOrEmpty(targetFunc)) { return of(null); }
+
+    return targetFunc();
+  }
+
+  private _exportBillingSummariesCsv(): Observable<any> {
+    let dateParams = this.getAssociatedDates();
+
+    let query = new McsReportBillingSummaryParams();
+    query.microsoftChargeMonthRangeBefore = dateParams.before;
+    query.microsoftChargeMonthRangeAfter = dateParams.after;
+
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_ACCEPT, 'text/csv'],
+    ]);
+
+    return this._apiService.getBillingSummariesCsv(query, optionalHeaders).pipe(
+      tap((response: Blob) => {
+        if (isNullOrEmpty(response)) { return; }
+
+        DashboardExportDocumentManager.initializeFactories()
+          .getCreationFactory(DashboardExportDocumentType.CsvDocument)
+          .exportDocument(response, DashboardExportDocumentType.CsvDocument, this._injector);
+      })
+    );
+  }
+
+  public _exportDailyUsersCsv(): Observable<any> {
+    let dateParams = this.getAssociatedDates();
+
+    let query = new McsReportBillingAvdDailyUsersParam();
+    query.dateRangeBefore = dateParams.before;
+    query.dateRangeAfter = dateParams.after;
+
+    return this._apiService.getAvdDailyUsersCsv(query).pipe(
+      tap((response: Blob) => {
+        if (isNullOrEmpty(response)) { return; }
+
+        DashboardExportDocumentManager.initializeFactories()
+          .getCreationFactory(DashboardExportDocumentType.CsvDocument)
+          .exportDocument(response, DashboardExportDocumentType.CsvDocument, this._injector);
+      })
+    );
+  }
+
+  public _exportDailyAverageCsv(): Observable<any> {
+    let dateParams = this.getAssociatedDates();
+
+    let query = new McsReportBillingAvdDailyAverageUsersParam();
+    query.microsoftChargeMonthRangeBefore = dateParams.before;
+    query.microsoftChargeMonthRangeAfter = dateParams.after;
+
+    return this._apiService.getAvdDailyAverageUsersCsv(query).pipe(
+      tap((response: Blob) => {
+        if (isNullOrEmpty(response)) { return; }
+
+        DashboardExportDocumentManager.initializeFactories()
+          .getCreationFactory(DashboardExportDocumentType.CsvDocument)
+          .exportDocument(response, DashboardExportDocumentType.CsvDocument, this._injector);
+      })
+    );
+  }
+
   private _subscribeToBillingAccountChange(): void {
     this.dataProcess.setInProgress();
 
@@ -112,7 +196,6 @@ export class AzureVirtualDesktopService {
       this._billingAccountIdChange,
       this.fcMonth.valueChanges.pipe(startWith(null))
     ]).pipe(
-      filter(([accountId, monthIndex]) => !isNullOrEmpty(accountId)),
       distinctUntilChanged((prev, next) => compareJsons(prev, next) === 0),
       exhaustMap(([accountId, monthIndex]) => {
         this.dataProcess.setInProgress();
@@ -136,11 +219,13 @@ export class AzureVirtualDesktopService {
     query.dateRangeAfter = dateParams.after;
 
     return this._apiService.getAvdDailyUsers(query).pipe(
-      map(response => {
-        return response?.collection;
+      catchError(error => {
+        this._dailyUsersServiceChange.next([]);
+        return EMPTY;
       }),
+      map(response => response?.collection),
       tap(records => {
-        this._dailyUsersServiceChange.next(records);
+        this._dailyUsersServiceChange.next(records || []);
       })
     );
   }
@@ -154,11 +239,13 @@ export class AzureVirtualDesktopService {
     query.microsoftChargeMonthRangeAfter = dateParams.after;
 
     return this._apiService.getAvdDailyAverageUsers(query).pipe(
-      map(response => {
-        return response?.collection;
+      catchError(error => {
+        this._dailyUsersAverageChange.next([]);
+        return EMPTY;
       }),
+      map(response => response?.collection),
       tap(records => {
-        this._dailyUsersAverageChange.next(records);
+        this._dailyUsersAverageChange.next(records || []);
       })
     );
   }
@@ -168,16 +255,21 @@ export class AzureVirtualDesktopService {
 
     let query = new McsReportBillingSummaryParams();
     query.billingAccountId = accountId;
+    query.productTypes = 'AzureVirtualDesktop';
     query.microsoftChargeMonthRangeBefore = dateParams.before;
     query.microsoftChargeMonthRangeAfter = dateParams.after;
 
     return this._apiService.getBillingSummaries(query).pipe(
+      catchError(error => {
+        this._billingServicesChange.next([]);
+        return EMPTY;
+      }),
       map(response => {
         if (isNullOrEmpty(response?.collection)) { return []; }
         return this._filterBillingServicesRecords(response?.collection, [accountId]);
       }),
       tap(filteredRecords => {
-        this._billingServicesChange.next(filteredRecords);
+        this._billingServicesChange.next(filteredRecords || []);
       })
     );
   }

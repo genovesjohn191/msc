@@ -3,15 +3,6 @@
     <mcs-note>
       <p [innerHTML]="'message.avdServiceCostNote' | translate"></p>
     </mcs-note>
-
-    <div></div>
-
-    <button mcsButton="icon" mcsId="export-csv"
-      (click)="onExportCsv()"
-      [disabled]="exportProcess.inProgress$ | async"
-      [mcsTooltip]="'tooltip.exportCsv' | translate">
-      <mcs-icon key="csv" size="large" mcsCursor="pointer"></mcs-icon>
-    </button>
   </mcs-item>
 
   <mcs-billing-service-cost-widget

@@ -771,28 +771,28 @@
   },
   "avdDailyUserService": {
     "enumPlatform": "Public",
-    "enumCategory": "Avd",
+    "enumCategory": "Billing",
     "enumKey": "AvdDailyUserService",
     "navigationPath": "daily-user-service",
     "documentTitle": "AVD Daily User Service - Macquarie Cloud Services"
   },
   "avdDailyUserAverage": {
     "enumPlatform": "Public",
-    "enumCategory": "Avd",
+    "enumCategory": "Billing",
     "enumKey": "AvdDailyUserAverage",
     "navigationPath": "daily-user-average",
     "documentTitle": "AVD Daily Average Users - Macquarie Cloud Services"
   },
   "avdServiceCost": {
     "enumPlatform": "Public",
-    "enumCategory": "Avd",
+    "enumCategory": "Billing",
     "enumKey": "AvdServiceCost",
     "navigationPath": "service-cost",
     "documentTitle": "AVD Cost by Service - Macquarie Cloud Services"
   },
   "avdDailyConnection": {
     "enumPlatform": "Public",
-    "enumCategory": "Avd",
+    "enumCategory": "Billing",
     "enumKey": "AvdDailyConnection",
     "navigationPath": "daily-connection-service",
     "documentTitle": "AVD Daily Connection by Service - Macquarie Cloud Services"

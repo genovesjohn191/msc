@@ -1,9 +1,9 @@
 <mcs-page [header]="'label.azureVirtualDesktop' | translate">
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <!-- <mcs-action-item mcsResponsivePanelItem hidden-small
+      <mcs-action-item mcsResponsivePanelItem hidden-small
         [disabled]="exportProcess.inProgress$ | async"
-        [mcsTooltip]="'tooltip.exportCsv' | translate"
+        [mcsTooltip]="'tooltip.exportCsvFile' | translate"
         (click)="onClickExportCsv($event)">
         <mcs-icon key="csv" size="large" mcsCursor="pointer"></mcs-icon>
       </mcs-action-item>
@@ -12,10 +12,10 @@
         <mcs-loader size="small"
           [mcsTooltip]="'tooltip.tooltipText' | translate"
           mcsTooltipPosition="right"></mcs-loader>
-      </ng-container> -->
+      </ng-container>
 
       <div mcsAlign="end" padding-right-xlarge>
-        <mcs-field-select-billing-account
+        <mcs-field-select-billing-account #selectBillingRef
           [selectedAllByDefault]="true"
           [formControl]="fcBillingAccount">
         </mcs-field-select-billing-account>

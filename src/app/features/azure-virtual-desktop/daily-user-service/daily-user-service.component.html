@@ -7,13 +7,6 @@
     <div></div>
 
     <mcs-item>
-      <button mcsButton="icon" mcsId="export-csv"
-        (click)="onExportCsv()"
-        [disabled]="exportProcess.inProgress$ | async"
-        [mcsTooltip]="'tooltip.exportCsv' | translate">
-        <mcs-icon key="csv" size="large" mcsCursor="pointer"></mcs-icon>
-      </button>
-
       <mcs-field-select size="medium" auto-width
         mcsId="select-month"
         [label]="'label.month' | translate"
