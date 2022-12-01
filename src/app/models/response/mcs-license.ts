@@ -96,4 +96,7 @@ export class McsLicense extends McsEntityBase {
 
   @JsonProperty()
   public autoRenewEnabled: boolean = undefined;
+
+  @JsonProperty()
+  public tenantPrimaryDomain: string = undefined;
 }

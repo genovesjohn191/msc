@@ -111,6 +111,19 @@
                     {{ 'orderMsLicenseCountChange.detailsStep.msSubscriptionId' |  translate:  {msSubscriptionId:fcLicenses?.value?.subscriptionId} }}
                   </span>
                 </mcs-item>
+                <mcs-item orientation="block">
+                  <ng-container *ngIf="fcLicenses?.value?.tenantPrimaryDomain; else noTenantPrimaryDomainTemplate">
+                    <span align-self-start>
+                      {{ 'orderMsLicenseCountChange.detailsStep.tenant' |  translate:  {tenant:fcLicenses.value.tenantPrimaryDomain} }}
+                    </span>
+                  </ng-container>
+                  <ng-template #noTenantPrimaryDomainTemplate>
+                    <span align-self-start>
+                      {{ 'orderMsLicenseCountChange.detailsStep.tenant' |  translate:  {tenant:''} }}
+                      <span read-only>{{'label.unknown' | translate}}</span>
+                    </span>
+                  </ng-template>
+                </mcs-item>
                 <!-- TODO: Orch side finding a way to add this field -->
                 <!-- <mcs-item orientation="block">
                   <span align-self-start>
@@ -193,6 +206,19 @@
                           <span align-self-start>
                             {{ 'orderMsLicenseCountChange.detailsStep.msSubscriptionId' |  translate:  { msSubscriptionId: childLicensesFcItem?.license?.subscriptionId } }}
                           </span>
+                        </mcs-item>
+                        <mcs-item orientation="block">
+                          <ng-container *ngIf="childLicensesFcItem?.license?.tenantPrimaryDomain; else noChildLicenseTenantPrimaryDomainTemplate">
+                            <span align-self-start>
+                              {{ 'orderMsLicenseCountChange.detailsStep.tenant' |  translate:  {tenant:childLicensesFcItem.license.tenantPrimaryDomain} }}
+                            </span>
+                          </ng-container>
+                          <ng-template #noChildLicenseTenantPrimaryDomainTemplate>
+                            <span align-self-start>
+                              {{ 'orderMsLicenseCountChange.detailsStep.tenant' |  translate:  {tenant:''} }}
+                              <span read-only>{{'label.unknown' | translate}}</span>
+                            </span>
+                          </ng-template>
                         </mcs-item>
                         <!-- TODO: Orch side finding a way to add this field -->
                         <!-- <mcs-item orientation="block">

@@ -159,6 +159,17 @@
           </td>
         </ng-container>
 
+        <!-- Tenant Column -->
+        <ng-container matColumnDef="tenant">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.tenant' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <span [innerHTML]="row.tenantPrimaryDomain | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
         <!-- Billing Frequency Column -->
         <ng-container matColumnDef="billingFrequency">
           <th mat-header-cell *matHeaderCellDef>
