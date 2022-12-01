@@ -4185,6 +4185,7 @@
   "message": {
     "noAvdDailyUsersService": "No Azure Virtual Desktop daily users service to display.",
     "noAvdDailyConnectionsService": "No Azure Virtual Desktop daily connections service to display.",
+    "noAvdDailyUsersAverage": "No Azure Virtual Desktop daily users average to display.",
     "noServiceCost": "No Azure Virtual Desktop cost by service to display.",
     "avdDailyUserNote": "<b>Daily Users by Service</b> is a count of users that used Azure Virtual Desktop each day over a given month.<br/>Please note: A Daily User is defined as a user logging into their virtual desktop at least once in a given day (Sydney time), per service.",
     "avdDailyAverageNote": "<b>Daily Average Users</b> is an average count of users that used Azure Virtual Desktop per month, over the last 12 months.<br/>Please note: Daily Average Users is defined as the average number of users who logged into their virtual desktop each day (Sydney time), for a given month, per service.",
@@ -4312,6 +4313,7 @@
     "exportWord": "Export Word Document",
     "exportPdf": "Export PDF Document",
     "exportCsv": "Export CSV Document",
+    "exportCsvFile": "Export CSV File",
     "tooltipText": "Downloading...",
     "insufficientStorageSpace": "Insufficient storage space"
   },

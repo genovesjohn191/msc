@@ -62,6 +62,11 @@ export class FieldSelectBillingAccountComponent
     return this._billingAccountCount > 1;
   }
 
+  public get allAccountsAreSelected(): boolean {
+    let formValues = this.ngControl.control.value;
+    return formValues?.length === this._billingAccountCount;
+  }
+
   public ngOnInit(): void {
     this._getBillingAccounts();
   }

@@ -3,7 +3,10 @@ import {
   Subject
 } from 'rxjs';
 import {
+  finalize,
   startWith,
+  switchMap,
+  take,
   takeUntil,
   tap
 } from 'rxjs/operators';
@@ -13,27 +16,28 @@ import {
   Component,
   Injector,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   McsPageBase,
   McsTabEvents
 } from '@app/core';
+import { FieldSelectBillingAccountComponent } from '@app/features-shared';
 import {
   McsReportBillingServiceGroup,
   RouteKey
 } from '@app/models';
-import { StdDateFormatPipe } from '@app/shared';
 import {
   isNullOrEmpty,
   DataProcess
 } from '@app/utilities';
 
-import { AzureVirtualDesktopService } from './azure-virtual-desktop.service';
-
-// Note: this should match the routing path under constants def.
-type tabGroupType = 'daily-user-service' | 'daily-user-average' | 'service-cost' | 'daily-connection-service';
+import {
+  AzureVirtualDesktopService,
+  TabGroupType
+} from './azure-virtual-desktop.service';
 
 @Component({
   selector: 'mcs-avd',
@@ -48,13 +52,15 @@ export class AzureVirtualDesktopComponent extends McsPageBase implements OnInit,
   private _destroySubject = new Subject<void>();
   private _billingServicesCache = new BehaviorSubject<Array<McsReportBillingServiceGroup>>(null);
 
+  @ViewChild('selectBillingRef', { static: false })
+  private _selectBillingRef: FieldSelectBillingAccountComponent
+
   public constructor(
-    private _injector: Injector,
-    private _avdService: AzureVirtualDesktopService,
-    private _datePipe: StdDateFormatPipe,
+    injector: Injector,
+    private _avdService: AzureVirtualDesktopService
   ) {
-    super(_injector);
-    this.tabEvents = new McsTabEvents(_injector);
+    super(injector);
+    this.tabEvents = new McsTabEvents(injector);
   }
 
   public get featureName(): string {
@@ -73,7 +79,19 @@ export class AzureVirtualDesktopComponent extends McsPageBase implements OnInit,
   }
 
   public onTabChanged(tab: any) {
-    this.navigation.navigateTo(RouteKey.Avd, [tab.id as tabGroupType]);
+    this.navigation.navigateTo(RouteKey.Avd, [tab.id as TabGroupType]);
+  }
+
+  public onClickExportCsv(): void {
+    this.tabEvents?.selectedTabId$.pipe(
+      take(1),
+      switchMap(selectedTab => {
+        this.exportProcess.setInProgress();
+        return this._avdService.exportCsvByTab(selectedTab as TabGroupType).pipe(
+          finalize(() => this.exportProcess.setCompleted())
+        );
+      })
+    ).subscribe();
   }
 
   private _subscribeToBillingAccountChange(): void {
@@ -81,7 +99,9 @@ export class AzureVirtualDesktopComponent extends McsPageBase implements OnInit,
       takeUntil(this._destroySubject),
       startWith([null]),
       tap(accountIds => {
-        this._avdService.setBillingAccountId(isNullOrEmpty(accountIds) ? null : accountIds[0]);
+        let targetAccountId = this._selectBillingRef?.allAccountsAreSelected ? null :
+          isNullOrEmpty(accountIds) ? null : accountIds[0];
+        this._avdService.setBillingAccountId(targetAccountId);
       })
     ).subscribe();
   }

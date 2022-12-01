@@ -81,5 +81,7 @@ export * from './form-fields/field-select/field-select.component';
 export * from './form-fields/field-select/field-select.pipe';
 export * from './form-fields/field-select/services/field-select.service';
 
+export * from './form-fields/field-select-billing-account/field-select-billing-account.component';
+
 // Document Export
 export * from './export-document-factory';
