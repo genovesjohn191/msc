@@ -2,8 +2,11 @@ import { Injectable } from "@angular/core";
 import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
+  McsJob,
   McsQueryParam,
   McsStorageSaasBackup,
+  McsStorageSaasBackupBackupAttempt,
+  McsStorageSaasBackupBackupAttemptDetails,
   McsStorageVeeamBackup
 } from "@app/models";
 import { isNullOrEmpty } from "@app/utilities";
@@ -62,6 +65,54 @@ export class McsApiStorageService implements IMcsApiStorageService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsStorageSaasBackup>(McsStorageSaasBackup, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getSaasBackupBackupAttempt(id: string): Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttempt>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/storage/backup/saas/${id}/backup-attempts`;
+
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsStorageSaasBackupBackupAttempt>(McsStorageSaasBackupBackupAttempt, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getSaasBackupBackupAttemptDetails(
+    saasId: string, 
+    backupAttemptId: string
+  ): Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttemptDetails>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/storage/backup/saas/${saasId}/backup-attempts/${backupAttemptId}`;
+
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsStorageSaasBackupBackupAttemptDetails>(McsStorageSaasBackupBackupAttemptDetails, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public attemptSaasBackup(id: string): Observable<McsApiSuccessResponse<McsJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/storage/backup/saas/${id}/backup-attempts`;
+
+    return this._mcsApiHttpService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
           return apiResponse;
         })
       );

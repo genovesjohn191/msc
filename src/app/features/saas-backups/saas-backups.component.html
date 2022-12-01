@@ -63,9 +63,7 @@
             {{ 'columnHeader.backedUpInLastAttempt' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.lastBackupAttempt.successfulUsers || 0 }}
-            <span> / </span>
-            {{ row.lastBackupAttempt.failedUsers || 0 }}
+            {{ row.lastBackupAttempt.successfulUsers || 0 }}/{{ row.lastBackupAttempt.failedUsers }}            
           </td>
         </ng-container>
 

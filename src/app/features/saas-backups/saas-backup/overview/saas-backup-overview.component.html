@@ -9,7 +9,7 @@
 
         <mcs-item>
           <span>{{ 'saasBackup.overview.description' | translate }}:</span>
-          <span>{{ selectedSaasBackup.billingDescription }}</span>
+          <span [innerHTML]="selectedSaasBackup.billingDescription | mcsDataLabel: 'Unknown'"></span>
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.overview.serviceId' | translate }}:</span>
@@ -26,11 +26,11 @@
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.overview.tenant' | translate }}:</span>
-          <span>{{ selectedSaasBackup.tenantName }}</span>
+          <span [innerHTML]="selectedSaasBackup.tenantName | mcsDataLabel: 'Unknown'"></span>
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.overview.domain' | translate }}:</span>
-          <span>{{ selectedSaasBackup.tenantDomain }}</span>
+          <span [innerHTML]="selectedSaasBackup.tenantDomain | mcsDataLabel: 'Unknown'"></span>
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.overview.type' | translate }}:</span>
@@ -38,11 +38,11 @@
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.overview.totalLicensedUsers' | translate }}:</span>
-          <span>{{ selectedSaasBackup.licensedUserQuantity }}</span>
+          <span>{{ selectedSaasBackup.licensedUserQuantity || 0 }}</span>
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.overview.totalUnlicensedUsers' | translate }}:</span>
-          <span>{{ selectedSaasBackup.unlicensedUserQuantity }}</span>
+          <span>{{ selectedSaasBackup.unlicensedUserQuantity || 0 }}</span>
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
@@ -57,27 +57,27 @@
 
         <mcs-item>
           <mcs-icon [key]="selectedSaasBackup.lastBackupAttempt.backupStatusStateIconKey" size="small"></mcs-icon>
-          <span>{{ selectedSaasBackup.lastBackupAttempt.getStatusLabel }}</span>
+          <span>{{ selectedSaasBackup.lastBackupAttempt.statusLabel }}</span>
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.backupStatistics.firstBackupTime' | translate }}:</span>
-          <ng-container *ngIf="selectedSaasBackup.lastBackupAttempt.startTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
-            <span [innerHTML]="selectedSaasBackup.lastBackupAttempt.startTime | mcsStdDateFormat"></span>
+          <ng-container *ngIf="selectedSaasBackup.firstBackupAttempt.runTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
+            <span [innerHTML]="selectedSaasBackup.firstBackupAttempt.runTime | mcsStdDateFormat"></span>
           </ng-container>
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.backupStatistics.lastBackupTime' | translate }}:</span>
-          <ng-container *ngIf="selectedSaasBackup.lastBackupAttempt.endTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
-            <span [innerHTML]="selectedSaasBackup.lastBackupAttempt.endTime | mcsStdDateFormat"></span>
+          <ng-container *ngIf="selectedSaasBackup.lastBackupAttempt.runTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
+            <span [innerHTML]="selectedSaasBackup.lastBackupAttempt.runTime | mcsStdDateFormat"></span>
           </ng-container>
-        </mcs-item>
-        <mcs-item>
-          <span>{{ 'saasBackup.backupStatistics.failedToBackupInLastAttempt' | translate }}:</span>
-          <span>{{ selectedSaasBackup.lastBackupAttempt.failedUsers || 0 }}</span>
         </mcs-item>
         <mcs-item>
           <span>{{ 'saasBackup.backupStatistics.succesfullyBackupInLastAttempt' | translate }}:</span>
           <span>{{ selectedSaasBackup.lastBackupAttempt.successfulUsers || 0 }}</span>
+        </mcs-item>
+        <mcs-item>
+          <span>{{ 'saasBackup.backupStatistics.failedToBackupInLastAttempt' | translate }}:</span>
+          <span>{{ selectedSaasBackup.lastBackupAttempt.failedUsers || 0 }}</span>
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
@@ -92,7 +92,7 @@
       sizeSm="12" hidden-small>
       <mcs-presentation-panel mcsId="saas-backup-backup-statistics">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'label.backupStatistics' | translate }}</h2>
+          <h2>{{ 'label.backupComponents' | translate }}</h2>
         </ng-container>
 
         <mcs-item>

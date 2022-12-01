@@ -328,7 +328,9 @@ import {
   McsUcsDomain,
   McsUcsCentralInstance,
   McsUcsQueryParams,
-  McsUcsObject
+  McsUcsObject,
+  McsStorageSaasBackupBackupAttempt,
+  McsStorageSaasBackupBackupAttemptDetails
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -3095,6 +3097,38 @@ export class McsApiService {
       )
     );
   }
+
+  public getSaasBackupBackupAttempt(id: string): Observable<McsStorageSaasBackupBackupAttempt> {
+    return this._storageApi.getSaasBackupBackupAttempt(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackupBackupAttempt'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getSaasBackupBackupAttemptDetails(saasId: string, backupAttemptId: string): Observable<McsStorageSaasBackupBackupAttemptDetails> {
+    return this._storageApi.getSaasBackupBackupAttemptDetails(saasId, backupAttemptId).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackupBackupAttemptDetails'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public attemptSaasBackup(id: string): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.SaasBackup, id);
+
+    return this._storageApi.attemptSaasBackup(id).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.SaasBackup, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.attemptSaasBackup'))
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.SaasBackup, id)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   //#endregion
 
   //#region Private Cloud Disaster Recovery Services

@@ -49,6 +49,7 @@ import { JobNetworkDbNetworkDeleteEvent } from './items/job-network-db-network-d
 import { JobPrivateCloudExtenderSpeedChangeEvent } from './items/job-private-cloud-extender-speed-change.event';
 import { JobReceiveEvent } from './items/job-receive.event';
 import { JobResourceCatalogItemCreateEvent } from './items/job-resource-catalog-item-create.event';
+import { JobSaasBackupAttemptEvent } from './items/storage/job-saas-backup-attempt.event';
 import { JobServerAvAddEvent } from './items/job-server-av-add.event';
 import { JobServerBackupServerAddEvent } from './items/job-server-backup-server-add.event';
 import { JobServerBackupVmAddEvent } from './items/job-server-backup-vm-add.event';
@@ -228,4 +229,6 @@ export class McsEvent {
   public static launchPadWorkflowInitEvent = new LaunchPadWorkflowInitEvent();
 
   public static jobVCenterBaselineRemediate = new JobVCenterBaselineRemediateEvent();
+
+  public static jobSaasBackupAttempt = new JobSaasBackupAttemptEvent();
 }

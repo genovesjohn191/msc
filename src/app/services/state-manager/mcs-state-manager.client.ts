@@ -23,6 +23,7 @@ import { McsBackupAggregationTargetStateManager } from './entities/mcs-backup-ag
 import { McsMediaStateManager } from './entities/mcs-media.state-manager';
 import { McsNetworkDbNetworkStateManager } from './entities/mcs-network-db-network.state-manager';
 import { McsOrderStateManager } from './entities/mcs-order.state-manager';
+import { McsSaasBackupStateManager } from './entities/mcs-saas-backup.state-manager';
 import { McsServerStateManager } from './entities/mcs-server.state-manager';
 import { McsSystemMessageStateManager } from './entities/mcs-system-message.state-manager';
 import { McsTerraformDeploymentStateManager } from './entities/mcs-terraform-deployment.state-manager';
@@ -162,5 +163,6 @@ export class McsStateManagerClient implements McsDisposable {
     this._entityFactoryTable.set(EntityRequester.TerraformDeployment, new McsTerraformDeploymentStateManager(this._injector));
     this._entityFactoryTable.set(EntityRequester.NetworkDbNetwork, new McsNetworkDbNetworkStateManager(this._injector));
     this._entityFactoryTable.set(EntityRequester.VCenterBaseline, new McsVCenterBaselineStateManager(this._injector));
+    this._entityFactoryTable.set(EntityRequester.SaasBackup, new McsSaasBackupStateManager(this._injector));
   }
 }

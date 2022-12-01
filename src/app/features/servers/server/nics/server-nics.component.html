@@ -9,10 +9,10 @@
       <table mat-table [dataSource]="nicsDataSource" matSort #sort="matSort">
         <!-- NIC Column -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef hidden-small mat-sort-header="name" disableClear>
+          <th mat-header-cell *matHeaderCellDef>
             {{ 'columnHeader.name' | translate }}
           </th>
-          <td mat-cell *matCellDef="let row" hidden-small>
+          <td mat-cell *matCellDef="let row">
             <ng-container *ngIf="nicIsInProgress(row); else nicIndexTemplate">
               <mcs-loader size="small"
                 [mcsTooltip]="server.processingText"
@@ -26,7 +26,7 @@
 
         <!-- Network Column -->
         <ng-container matColumnDef="network">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="networkName" disableClear>
+          <th mat-header-cell *matHeaderCellDef>
             {{ 'columnHeader.network' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" text-wrap>

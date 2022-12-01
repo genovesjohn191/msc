@@ -66,6 +66,9 @@ export enum JobType {
   // Internet
   InternetPortPlanChange = 1000701,
 
+  // Storage
+  SaasBackupAttempt = 1000801,
+
   // Backup Delete
   ManagedServerDeleteServerBackup = 101001,
   ManagedServerDeleteVmBackup = 101002,

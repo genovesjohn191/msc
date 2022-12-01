@@ -1,5 +1,7 @@
-import { CommonDefinition, JsonProperty } from "@app/utilities";
-import { McsStorageSaasBackup } from "./mcs-storage-saas-backup";
+import {
+  CommonDefinition,
+  JsonProperty
+} from "@app/utilities";
 
 export class McsStorageSaasBackupComponentOnlineStatus {
   @JsonProperty()

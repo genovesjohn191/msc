@@ -2851,14 +2851,28 @@
     "backupStatistics": {
       "firstBackupTime": "First Backup Time",
       "lastBackupTime": "Last Backup Time",
-      "failedToBackupInLastAttempt": "Failed to Back Up in Last Attempt",
-      "succesfullyBackupInLastAttempt": "Successfully Back Up in Last Attempt"
+      "failedToBackupInLastAttempt": "Failed to Backed Up in Last Attempt",
+      "succesfullyBackupInLastAttempt": "Successfully Backed Up in Last Attempt"
     },
     "backupComponents": {
       "exchange": "Exchange",
       "sharePoint": "SharePoint/OneDrive",
       "teams": "Teams",
       "teamsChats": "Teams Chats"
+    },
+    "schedule": {
+      "description": "Schedule",
+      "dailySchedule": "Daily Schedule"
+    },
+    "backupAttempts": {
+      "description": "Backup Attempts",
+      "lastAttempt": "Last Attempt",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of backups for this service.",
+      "noData": "No backups have been attempted for this service."
+    },
+    "users": {
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of users for this backup service.",
+      "noData": "No users have attempted a backup for this service."
     }
   },
   "azureManagementServices": {
@@ -3515,6 +3529,9 @@
     "getBackupAggregationTargetLinkedServices": "Something went wrong while retrieving the linked services for this Backup Aggregation Target.",
     "getSaasBackups": "Something went wrong while retrieving your Backup SaaS services. Please try again.",
     "getSaasBackup": "Something went wrong while retrieving the details for this Backup SaaS service.",
+    "getSaasBackupBackupAttempt": "Something went wrong while retrieving the backups for this Backup SaaS service.",
+    "getSaasBackupBackupAttemptDetails": "Something went wrong while retrieving the backups for this Backup SaaS service.",
+    "attemptSaasBackup": "Something went wrong while creating a backup for this Backup SaaS service.",
     "getColocationRacks": "Something went wrong while retrieving your Colocation Racks.",
     "getColocationAntennas": "Something went wrong while retrieving your Colocation Antennas.",
     "getColocationCustomDevices": "Something went wrong while retrieving your Custom Colocation Devices.",
@@ -3735,8 +3752,6 @@
     "createdBy": "Created By",
     "createdOn": "Created On",
     "cpuScore": "CPU Score",
-    "companyId": "Company ID",
-    "companyName": "Company Name",
     "customerReference": "Customer Reference",
     "datastore": "Datastore",
     "deployment": "Deployment",
@@ -3815,6 +3830,7 @@
     "possibleSavings": "Possible Savings",
     "productType": "Product Type",
     "projectManager": "Project Manager",
+    "usersBackedUpSuccessfully": "Users Backed Up Successfully",
     "ram": "RAM",
     "records": "Records",
     "referenceId": "Reference ID",
@@ -4116,6 +4132,7 @@
   "action": {
     "add": "Add",
     "apply": "Apply",
+    "attemptBackup": "Attempt Backup",
     "back": "Back",
     "cancel": "Cancel",
     "changeSpeed": "Change Speed",
@@ -4145,6 +4162,7 @@
     "plan": "Plan",
     "planAndApply": "Plan & Apply",
     "raiseTicket": "Raise a Ticket",
+    "reattemptBackup": "Reattempt Backup",
     "remove": "Remove",
     "retry": "Retry",
     "requestCustomChange": "Request a Custom Change",
@@ -4225,6 +4243,7 @@
     "pleaseTryAgain": "Please try again.",
     "requestSubmitted": "Request successfully submitted.",
     "thankyouRequest": "Thanks for your request. We'll be in touch soon.",
+    "saasBackupInitiated": "SaaS Backup has been initiated.",
     "selectContactRequired": "Contact is required.",
     "selectDnsZoneTypeRequired": "Zone Type is required.",
     "inputNoteRequired": "Note is required.",

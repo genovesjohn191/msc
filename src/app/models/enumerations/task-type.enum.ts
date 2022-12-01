@@ -35,6 +35,7 @@ export enum TaskType {
   ResourceScaleCompute = 3023,
   ResourceUpdateStorage = 3024,
   ResourceDeleteCatalogItem = 3025,
+  SaasBackupAttempt = 3026,
 
   // Orchestration Ordering (Range 5000-6999)
   // Private Cloud 5000-5999

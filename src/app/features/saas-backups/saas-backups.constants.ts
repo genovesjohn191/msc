@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteKey } from '@app/models';
 import {
   SaasBackupComponent,
+  SaasBackupManagementComponent,
   SaasBackupOverviewComponent,
   SaasBackupResolver,
   SaasBackupService
@@ -45,7 +46,7 @@ export const saasBackupsRoutes: Routes = [
       },
       {
         path: 'management',
-        component: SaasBackupComponent,
+        component: SaasBackupManagementComponent,
         data: { routeId: RouteKey.SaasBackupDetailsManagement }
       }
     ]
