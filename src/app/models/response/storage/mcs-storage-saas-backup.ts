@@ -1,12 +1,14 @@
 import {
+  McsEntityBase,
+  McsStorageSaasBackupComponentOnlineStatus,
+  McsStorageSaasBackupFirstBackupAttempt,
+  McsStorageSaasBackupLastBackupAttempt,
   SaasBackupType,
   SaasBackupTypeSerialization,
   saasBackupTypeText
 } from "@app/models";
-import { McsEntityBase } from "@app/models/common/mcs-entity.base";
+
 import { JsonProperty } from "@app/utilities";
-import { McsStorageSaasBackupAttempt } from "./mcs-storage-saas-backup-attempt";
-import { McsStorageSaasBackupComponentOnlineStatus } from "./mcs-storage-saas-backup-component-online-status";
 
 export class McsStorageSaasBackup extends McsEntityBase {
   @JsonProperty()
@@ -39,8 +41,8 @@ export class McsStorageSaasBackup extends McsEntityBase {
   @JsonProperty()
   public portalUrl: string = undefined;
 
-  @JsonProperty({ target: McsStorageSaasBackupAttempt })
-  public lastBackupAttempt: McsStorageSaasBackupAttempt = undefined;
+  @JsonProperty({ target: McsStorageSaasBackupLastBackupAttempt })
+  public lastBackupAttempt: McsStorageSaasBackupLastBackupAttempt = undefined;
 
   @JsonProperty()
   public dailySchedule: string[] = undefined;
@@ -50,6 +52,9 @@ export class McsStorageSaasBackup extends McsEntityBase {
 
   @JsonProperty({ target: McsStorageSaasBackupComponentOnlineStatus })
   public componentOnlineStatus: McsStorageSaasBackupComponentOnlineStatus = undefined;
+
+  @JsonProperty({ target: McsStorageSaasBackupFirstBackupAttempt })
+  public firstBackupAttempt: McsStorageSaasBackupFirstBackupAttempt = undefined;
 
   /**
    * Returns the saas type text content

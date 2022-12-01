@@ -1,5 +1,3 @@
-
-
 import {
   McsEntityBase,
   SaasBackupGeneralStatus,
@@ -9,12 +7,13 @@ import {
   SaasBackupStatusSerialization,
   saasBackupStatusText
 } from "@app/models";
+
 import {
   CommonDefinition,
   JsonProperty
 } from "@app/utilities";
 
-export class McsStorageSaasBackupAttempt extends McsEntityBase {
+export class McsStorageSaasBackupLastBackupAttempt extends McsEntityBase {
   @JsonProperty({
     serializer: SaasBackupStatusSerialization,
     deserializer: SaasBackupStatusSerialization
@@ -28,10 +27,7 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
   public failedUsers: number = undefined;
 
   @JsonProperty()
-  public startTime: Date = undefined;
-
-  @JsonProperty()
-  public endTime: Date = undefined;
+  public runTime: Date = undefined;
 
   @JsonProperty({
     serializer: SaasBackupGeneralStatusSerialization,
@@ -44,7 +40,7 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
   }
 
   /**
-   * Return the status icon key based on the general status of the backup attempt
+   * Return the status icon key based on the general status of the last backup attempt
    */
   public get backupGeneralStatusStateIconKey(): string {
     let statusIconKey: string = '';
@@ -69,11 +65,11 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
     }
     return statusIconKey;
   }
-  
+
   /**
-   * Return the status icon key based on the status of the backup attempt
+   * Return the status icon key based on the status of the last backup attempt
    */
-   public get backupStatusStateIconKey(): string {
+  public get backupStatusStateIconKey(): string {
     let statusIconKey: string = '';
 
     switch (this.status) {

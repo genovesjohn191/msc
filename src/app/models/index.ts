@@ -120,6 +120,8 @@ export * from './enumerations/crisp-object-status.enum';
 export * from './enumerations/cloudhealth-alert-type.enum';
 export * from './enumerations/storage/saas-backup-type.enum';
 export * from './enumerations/storage/saas-backup-status.enum';
+export * from './enumerations/storage/saas-backup-user-status.enum';
+export * from './enumerations/storage/saas-backup-general-status.enum';
 export * from './enumerations/ucs-object-type.enum';
 
 /** Job References */
@@ -400,6 +402,11 @@ export * from './response/dr/mcs-dr-veeam-cloud';
 export * from './response/storage/mcs-storage-veeam-backup';
 export * from './response/storage/mcs-storage-saas-backup';
 export * from './response/storage/mcs-storage-saas-backup-attempt';
+export * from './response/storage/mcs-storage-saas-backup-backup-attempt';
+export * from './response/storage/mcs-storage-saas-backup-backup-attempt-details';
+export * from './response/storage/mcs-storage-saas-backup-first-backup-attempt';
+export * from './response/storage/mcs-storage-saas-backup-last-backup-attempt';
+export * from './response/storage/mcs-storage-saas-backup-users';
 export * from './response/storage/mcs-storage-saas-backup-component-online-status';
 export * from './response/mcs-ucs-central-instance';
 export * from './response/mcs-ucs-domain';

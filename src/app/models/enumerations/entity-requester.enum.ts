@@ -15,5 +15,6 @@ export enum EntityRequester {
   NetworkDbNetwork,
   NetworkDbVlan,
   Extender,
+  SaasBackup,
   VCenterBaseline
 }

@@ -11,14 +11,18 @@ import {
 } from './saas-backups.constants';
 import {
   SaasBackupComponent,
-  SaasBackupOverviewComponent
+  SaasBackupManagementComponent,
+  SaasBackupOverviewComponent,
+  SaasBackupUsersComponent
 } from './saas-backup';
 
 @NgModule({
   declarations: [
     SaasBackupsComponent,
     SaasBackupComponent,
-    SaasBackupOverviewComponent
+    SaasBackupOverviewComponent,
+    SaasBackupManagementComponent,
+    SaasBackupUsersComponent
   ],
   imports: [
     SharedModule,

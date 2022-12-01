@@ -43,6 +43,7 @@ import { McsJobLicenseManager } from './entities/mcs-job-license.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
 import { McsJobNetworkDbNetworkManager } from './entities/mcs-job-network-db-network.manager';
 import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
+import { McsJobSaasBackupManager } from './entities/mcs-job-saas-backup.manager';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobTerraformDeploymentManager } from './entities/mcs-job-terraform-deployment.manager';
 import { McsJobVCenterBaselineManager } from './entities/mcs-job-vcenter-baseline-deployment.manager';
@@ -323,6 +324,11 @@ export class McsJobManagerClient implements McsDisposable {
     // Internet
     this._jobEntitiesFactory.set(JobType.InternetPortPlanChange,
       new McsJobInternetManager(ActionStatus.Update, this._injector)
+    );
+
+    // Saas Backup
+    this._jobEntitiesFactory.set(JobType.SaasBackupAttempt,
+      new McsJobSaasBackupManager(ActionStatus.Add, this._injector)
     );
 
     // Extenders

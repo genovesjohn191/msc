@@ -5,7 +5,7 @@ export enum SaasBackupType {
 }
 
 export const saasBackupTypeText = {
-  [SaasBackupType.M365]: 'Microsoft 356'
+  [SaasBackupType.M365]: 'Microsoft 365'
 };
 
 /**
