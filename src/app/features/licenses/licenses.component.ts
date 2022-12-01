@@ -79,6 +79,7 @@ export class LicensesComponent extends McsPageBase implements OnInit, OnDestroy 
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscriptionId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'tenant' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingFrequency' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'term' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'parent' }),

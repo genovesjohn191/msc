@@ -962,7 +962,8 @@
       "serviceId": "Service ID: {{serviceId}}",
       "msSubscriptionId": "Microsoft Subscription ID: {{msSubscriptionId}}",
       "provisioningId": "Provisioning ID: {{provisioningId}}",
-      "note": "Please note that prorated charges for the month apply and take effect immediately."
+      "note": "Please note that prorated charges for the month apply and take effect immediately.",
+      "tenant": "Tenant: {{tenant}}"
     },
     "provisioningStep": {
       "description": "License Count is being changed and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
