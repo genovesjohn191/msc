@@ -1,13 +1,13 @@
 import { McsEnumSerializationBase } from "@app/models/serialization/mcs-enum-serialization-base";
 
 export enum SaasBackupUserStatus {
-  Failure = 'Failure',
-  Success = 'Success'
+  Protected = 'Protected',
+  Unprotected = 'Unprotected'
 }
 
 export const saasBackupUserStatusText = {
-  [SaasBackupUserStatus.Failure]: 'Failure',
-  [SaasBackupUserStatus.Success]: 'Success'
+  [SaasBackupUserStatus.Protected]: 'Protected',
+  [SaasBackupUserStatus.Unprotected]: 'Unprotected'
 };
 
 /**
