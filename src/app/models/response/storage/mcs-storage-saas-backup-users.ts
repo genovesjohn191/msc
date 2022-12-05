@@ -30,11 +30,11 @@ export class McsStorageSaasBackupUsers {
     let statusIconKey: string = '';
 
     switch (this.status) {
-      case SaasBackupUserStatus.Failure:   // Red
+      case SaasBackupUserStatus.Unprotected:   // Red
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
-      case SaasBackupUserStatus.Success:    
+      case SaasBackupUserStatus.Protected:    
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
 
