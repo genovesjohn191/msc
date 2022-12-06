@@ -67,6 +67,13 @@
               [title]="'label.openAzureTickets' | translate"
               [serviceId]="'AZ'"></mcs-azure-tickets-widget>
           </li>
+          <li>
+            <mcs-planned-work-widget 
+              [category]="'currentfuture'"
+              [isPrivateCloud]="false"
+              (dataChange)="plannedWorkDataChange($event)">
+            </mcs-planned-work-widget>
+          </li>
           <li *mcsAccessControl="['OrderEdit', 'OrderView']; feature: ['EnableAzureServiceRequestSltReport']">
             <mcs-recent-service-request-slt-widget (dataChange)="recentServiceRequestSltDataChange($event)"></mcs-recent-service-request-slt-widget>
           </li>

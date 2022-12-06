@@ -69,6 +69,13 @@
               [serviceId]="'!AZ'"></mcs-azure-tickets-widget>
           </li>
           <li>
+            <mcs-planned-work-widget 
+              [category]="'currentfuture'"
+              [isPrivateCloud]="true"
+              (dataChange)="plannedWorkDataChange($event)">
+            </mcs-planned-work-widget>
+          </li>
+          <li>
             <mcs-contact-us-widget (dataChange)="contactUsDataChange($event)"></mcs-contact-us-widget>
           </li>
         </ul>

@@ -22,7 +22,8 @@ import {
   McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
   McsTicket,
-  RouteKey
+  RouteKey,
+  McsPlannedWork
 } from '@app/models';
 import { CommonDefinition } from '@app/utilities';
 
@@ -141,6 +142,10 @@ export class ReportOverviewComponent {
   public recentServiceRequestSltDataChange(data: McsReportRecentServiceRequestSlt[]): void {
     this._exportDocumentDetails.recentServiceRequestSlt = data;
   }
+  
+  public plannedWorkDataChange(plannedWorks: McsPlannedWork[]): void {
+    this._exportDocumentDetails.plannedWorks = plannedWorks;
+  }
 
   public widgetsLoading(): boolean {
     let platformSecurity = this.hasAccessToPlatformSecurity ? this._exportDocumentDetails.platformSecurity : [];
@@ -156,7 +161,8 @@ export class ReportOverviewComponent {
       this._exportDocumentDetails.azureTickets === undefined ||
       this._exportDocumentDetails.topVms === undefined ||
       platformSecurity === undefined ||
-      recentServiceRequest === undefined;
+      recentServiceRequest === undefined ||
+      this._exportDocumentDetails.plannedWorks === undefined;
   }
 
   private _registerEvents(): void {

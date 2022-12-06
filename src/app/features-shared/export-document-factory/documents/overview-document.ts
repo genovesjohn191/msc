@@ -13,7 +13,8 @@ import {
   McsReportCostRecommendations,
   McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
-  McsTicket
+  McsTicket,
+  McsPlannedWork
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -87,6 +88,7 @@ export class OverviewDocument implements IDashboardExportDocument {
           ${this._createContactUsHtml(overviewDetails.contactUs)}
           ${this._createResourceChangesHtml(overviewDetails)}
           ${this._createAzureTicketsHtml(overviewDetails.azureTickets)}
+          ${this._createPlannedWorkHtml(overviewDetails.plannedWorks)}
           ${this._createRecentServiceRequestSltHtml(overviewDetails.recentServiceRequestSlt)}
           ${this._createTopVmsByCostHtml(overviewDetails.topVms)}
           ${this._createPlatformSecurityHtml(overviewDetails.platformSecurity)}
@@ -312,6 +314,37 @@ export class OverviewDocument implements IDashboardExportDocument {
             ${this._translate('reports.overview.platformSecurityAdvisoriesWidget.noDataFound')}`;
         }
     let actualResponse = this._widgetHtml(platformSecurityTable, false, title, subTitle);
+    return actualResponse;
+  }
+
+  private _createPlannedWorkHtml(data: McsPlannedWork[]): string {
+    let title = `${this._translate('reports.overview.plannedWorkWidget.title')}`;
+    let plannedWorksTable = '';
+    plannedWorksTable += `
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
+        <tr style="background-color: #000; color: #FFF;">
+          <th style="text-align: left">${this._translate('columnHeader.status')}</th>
+          <th style="text-align: left">${this._translate('columnHeader.type')}</th>
+          <th style="text-align: left">${this._translate('columnHeader.summary')}</th>
+          <th style="text-align: left">${this._translate('columnHeader.plannedStart')}</th>
+        </tr>`;
+    if (data?.length > 0) {
+      data.forEach(row => {
+        plannedWorksTable += `
+          <tr style="text-align: left;">
+            <td>${row.statusLabel}</td>
+            <td>${row.typeLabel}</td>
+            <td style="white-space: pre-wrap;">${row.summary}</td>
+            <td>${this._formatDate(row.plannedStart, 'friendly')}</td>
+          </tr>
+        `;
+      });
+    }
+    plannedWorksTable += `</table>`;
+    if (data?.length === 0) {
+      plannedWorksTable += `<p>${this._translate('reports.overview.plannedWorkWidget.noDataFound')}</p>`;
+    }
+    let actualResponse = this._widgetHtml(plannedWorksTable, false, title);
     return actualResponse;
   }
 

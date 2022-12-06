@@ -27,6 +27,7 @@ import {
   McsContactUs,
   McsOrderItemType,
   McsPermission,
+  McsPlannedWork,
   McsReportComputeResourceTotals,
   McsReportStorageResourceUtilisation,
   McsResource,
@@ -136,7 +137,8 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
     return serviceOverview === undefined ||
       storageUtilisation === undefined ||
       this._exportDocumentDetails.tickets === undefined ||
-      this._exportDocumentDetails.contactUs === undefined;
+      this._exportDocumentDetails.contactUs === undefined ||
+      this._exportDocumentDetails.plannedWorks === undefined;
   }
 
   public onClickPublicCloud(): void {
@@ -161,6 +163,10 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
 
   public azureTicketsDataChange(tickets: McsTicket[]): void {
     this._exportDocumentDetails.tickets = tickets;
+  }
+
+  public plannedWorkDataChange(plannedWorks: McsPlannedWork[]): void {
+    this._exportDocumentDetails.plannedWorks = plannedWorks;
   }
 
   private getOrderItemTypes(): void {
