@@ -1,6 +1,6 @@
 .widget-wrapper {
   max-width: 1863px;
-  margin: 0 auto $space-xlarge auto;
+  margin: 0 auto $space-xlarge 0;
 
   @include print() {
     mcs-grid-row, mcs-grid-column {
