@@ -5,7 +5,7 @@ import { ActionType } from './change-to-apply';
 
 const MIN_PRIORITY_VALUE = 1;
 const MAX_PRIORITY_VALUE = 9999;
-const MIN_TTL_VALUE = 600;
+const MIN_TTL_VALUE = 300;
 const MAX_TTL_VALUE = 86400;
 
 export class ChangeToApplyFactory {
