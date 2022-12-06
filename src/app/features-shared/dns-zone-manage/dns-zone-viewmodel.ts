@@ -28,7 +28,7 @@ import {
   CommonDefinition
 } from '@app/utilities';
 
-const DNS_TTLSECONDS_MIN_VALUE = 600;
+const DNS_TTLSECONDS_MIN_VALUE = 300;
 const DNS_TTLSECONDS_MAX_VALUE = 2147483647;
 const DNS_INT_MIN_VALUE = 0;
 const DNS_INT_MAX_VALUE = 65535;
