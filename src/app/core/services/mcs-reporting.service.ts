@@ -30,7 +30,9 @@ import {
   McsReportVMRightsizingSummary,
   McsRightSizingQueryParams,
   McsReportUpdateManagementParams,
-  McsReportInefficientVmParams
+  McsReportInefficientVmParams,
+  McsPlannedWork,
+  McsPlannedWorkQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -208,6 +210,13 @@ export class McsReportingService {
 
   public getResourcesStorages(): Observable<McsReportStorageResourceUtilisation[]> {
     return this._apiService.getResourcesStorages();
+  }
+
+  public getPlannedWorks(query?: McsPlannedWorkQueryParams): Observable<McsPlannedWork[]> {
+    return this._apiService.getPlannedWork(query)
+      .pipe(map((resources) => {
+        return resources.collection;
+      }));
   }
 
   public _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {

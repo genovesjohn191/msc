@@ -257,6 +257,10 @@
         "title": "Recent Service Requests",
         "description": "For Custom and CloudHealth service requests on subscriptions that have a Comprehensive service level, we offer a best-efforts target of &#60;4 business hours - from the time of submission, to engineer assignment (fully supported services only). Newly submitted requests may take a few minutes to display here.",
         "noDataFound": "No azure service request slt to display."
+      },
+      "plannedWorkWidget": {
+        "title": "Current and Future Planned Work",
+        "noDataFound": "No current and future planned work to display."
       }
     },
     "insights": {

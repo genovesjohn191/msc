@@ -4,7 +4,8 @@ import {
   McsReportCostRecommendations,
   McsReportPlatformSecurityAdvisories,
   McsReportTopVmsByCost,
-  McsTicket
+  McsTicket,
+  McsPlannedWork
 } from '@app/models';
 
 export class OverviewDocumentDetails {
@@ -18,4 +19,5 @@ export class OverviewDocumentDetails {
   public topVms: McsReportTopVmsByCost[];
   public platformSecurity: McsReportPlatformSecurityAdvisories[];
   public recentServiceRequestSlt: McsReportRecentServiceRequestSlt[];
+  public plannedWorks: McsPlannedWork[];
 }

@@ -29,6 +29,7 @@ import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/
 import { OperationalMonthlySavingsWidgetComponent } from './operational-monthly-savings/operational-monthly-savings-widget.component';
 import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly-savings/subitems/operational-savings-subitems-viewer.component';
 import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
+import { PlannedWorkWidgetComponent } from './planned-work-widget/planned-work-widget.component';
 import { PlatformSecurityAdvisoriesWidgetComponent } from './platform-security-advisories/platform-security-advisories-widget.component';
 import { PrivateCloudServicesOverviewWidgetComponent } from './private-cloud-services-overview/private-cloud-services-overview-widget.component';
 import { RecentServiceRequestSltWidgetComponent } from './recent-service-request-slt/recent-service-request-slt-widget.component';
@@ -60,6 +61,7 @@ const exports: any[] | Type<any> = [
   OperationalMonthlySavingsWidgetComponent,
   OperationalSavingsSubitemsViewerComponent,
   PerformanceAndScalabilityWidgetComponent,
+  PlannedWorkWidgetComponent,
   PlatformSecurityAdvisoriesWidgetComponent,
   PrivateCloudServicesOverviewWidgetComponent,
   RecentServiceRequestSltWidgetComponent,

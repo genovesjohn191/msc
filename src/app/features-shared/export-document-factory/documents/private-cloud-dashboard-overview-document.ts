@@ -8,6 +8,7 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsContactUs,
   McsPermission,
+  McsPlannedWork,
   McsReportComputeResourceTotals,
   McsReportStorageResourceUtilisation,
   McsTicket
@@ -90,6 +91,7 @@ export class PrivateCloudDashboardOverviewDocument implements IDashboardExportDo
           ${this._createServiceCostOverviewHtml(overviewDetails.servicesOverview)}
           ${this._createStorageUtilisationHtml(overviewDetails.resourceStorageUtilisation)}
           ${this._createAzureTicketsHtml(overviewDetails.tickets)}
+          ${this._createPlannedWorkHtml(overviewDetails.plannedWorks)}
           ${this._createContactUsHtml(overviewDetails.contactUs)}
         </div>
       </div>`;
@@ -213,6 +215,37 @@ export class PrivateCloudDashboardOverviewDocument implements IDashboardExportDo
     })
 
     let actualResponse = this._widgetHtml(widgetHtml, false, title);
+    return actualResponse;
+  }
+
+  private _createPlannedWorkHtml(data: McsPlannedWork[]): string {
+    let title = `${this._translate('reports.overview.plannedWorkWidget.title')}`;
+    let plannedWorksTable = '';
+    plannedWorksTable += `
+      <table style="width: 100%" data-pdfmake="{'headerRows':1}">
+        <tr style="background-color: #000; color: #FFF;">
+          <th style="text-align: left">${this._translate('columnHeader.status')}</th>
+          <th style="text-align: left">${this._translate('columnHeader.type')}</th>
+          <th style="text-align: left">${this._translate('columnHeader.summary')}</th>
+          <th style="text-align: left">${this._translate('columnHeader.plannedStart')}</th>
+        </tr>`;
+    if (data?.length > 0) {
+      data.forEach(row => {
+        plannedWorksTable += `
+          <tr style="text-align: left;">
+            <td>${row.statusLabel}</td>
+            <td>${row.typeLabel}</td>
+            <td style="white-space: pre-wrap;">${row.summary}</td>
+            <td>${this._formatDate(row.plannedStart, 'friendly')}</td>
+          </tr>
+        `;
+      });
+    }
+    plannedWorksTable += `</table>`;
+    if (data?.length === 0) {
+      plannedWorksTable += `<p>${this._translate('reports.overview.plannedWorkWidget.noDataFound')}</p>`;
+    }
+    let actualResponse = this._widgetHtml(plannedWorksTable, false, title);
     return actualResponse;
   }
 
