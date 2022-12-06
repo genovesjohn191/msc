@@ -29,7 +29,7 @@ export interface DnsZoneTtlEditDialogData {
   styleUrls: [ './dns-zone-dialogs.scss' ],
 })
 export class DnsZoneTtlEditDialogComponent implements OnInit {
-  public minValue: number = 600;
+  public minValue: number = 300;
   public maxValue: number = 2147483647;
   public form: FormGroup<any>;
   public fcTtlSecondsInput: FormControl<any>;
