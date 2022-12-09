@@ -3691,7 +3691,10 @@
     "getPlannedWorkAffectedServices": "Something went wrong while retrieving this Planned Work's affected services. Please try again.",
     "getUcsDomains": "Something went wrong while retrieving your UCS domains.",
     "getUcsCentral": "Something went wrong while retrieving your UCS central instances.",
-    "getUcsObjects": "Something went wrong while retrieving your UCS objects."
+    "getUcsObjects": "Something went wrong while retrieving your UCS objects.",
+    "getVeeamBackups": "Something went wrong while retrieving your Veeam Cloud Backup services. Please try again.",
+    "getVeeamCloudDrs": "Something went wrong while retrieving your Veeam Disaster Recovery services. Please try again."
+    
   },
   "entityState": {
     "inProgress": "Processing request..."
