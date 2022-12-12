@@ -7,6 +7,7 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsContactUs,
+  McsFeatureFlag,
   McsPermission,
   McsPlannedWork,
   McsReportComputeResourceTotals,
@@ -47,6 +48,10 @@ export class PrivateCloudDashboardOverviewDocument implements IDashboardExportDo
 
   public get hasAccessToFirewall(): boolean {
     return this._accessControlService.hasPermission([McsPermission.FirewallConfigurationView]);
+  }
+
+  public get hasAccessToPlannedWork(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlannedWork]);
   }
 
   public setInjector(injector: Injector): void {
@@ -219,8 +224,12 @@ export class PrivateCloudDashboardOverviewDocument implements IDashboardExportDo
   }
 
   private _createPlannedWorkHtml(data: McsPlannedWork[]): string {
+    if (!this.hasAccessToPlannedWork) 
+      return '';
+
     let title = `${this._translate('reports.overview.plannedWorkWidget.title')}`;
     let plannedWorksTable = '';
+    
     plannedWorksTable += `
       <table style="width: 100%" data-pdfmake="{'headerRows':1}">
         <tr style="background-color: #000; color: #FFF;">

@@ -23,7 +23,8 @@ import {
   McsReportTopVmsByCost,
   McsTicket,
   RouteKey,
-  McsPlannedWork
+  McsPlannedWork,
+  McsPermission
 } from '@app/models';
 import { CommonDefinition } from '@app/utilities';
 
@@ -78,6 +79,14 @@ export class ReportOverviewComponent {
     return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AzureServiceRequestSltReport]) &&
       hasOrderAccess;
   }
+  
+  public get hasAccessToPlannedWork(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlannedWork]);
+  }
+
+  public get plannedWorkAccess(): [McsPermission[], McsFeatureFlag[]] {
+    return [[], [McsFeatureFlag.PlannedWork]];
+  } 
 
   public onClickPublicCloud(): void {
     this._navigationService.navigateTo(RouteKey.ReportOverview);
@@ -151,6 +160,8 @@ export class ReportOverviewComponent {
     let platformSecurity = this.hasAccessToPlatformSecurity ? this._exportDocumentDetails.platformSecurity : [];
     let recentServiceRequest = this.hasAccessToRecentServiceRequestSlt ?
       this._exportDocumentDetails.recentServiceRequestSlt : [];
+    let plannedWorks = this.hasAccessToPlannedWork ? 
+      this._exportDocumentDetails.plannedWorks : [];
 
     return this._exportDocumentDetails.azureSubscription === undefined ||
       this._exportDocumentDetails.licenseSubscription === undefined ||
@@ -162,7 +173,7 @@ export class ReportOverviewComponent {
       this._exportDocumentDetails.topVms === undefined ||
       platformSecurity === undefined ||
       recentServiceRequest === undefined ||
-      this._exportDocumentDetails.plannedWorks === undefined;
+      plannedWorks === undefined;
   }
 
   private _registerEvents(): void {
