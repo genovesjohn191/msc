@@ -47,6 +47,10 @@ export class OverviewDocument implements IDashboardExportDocument {
       this._accessControlService.hasPermission(['OrderEdit', 'OrderApprove']);
   }
 
+  public get hasAccessToPlannedWork(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlannedWork]);
+  }
+
   public setInjector(injector: Injector): void {
     this._translateService = injector.get(TranslateService);
     this._dateTimeService = injector.get(McsDateTimeService);
@@ -318,6 +322,9 @@ export class OverviewDocument implements IDashboardExportDocument {
   }
 
   private _createPlannedWorkHtml(data: McsPlannedWork[]): string {
+    if (!this.hasAccessToPlannedWork) 
+      return '';
+     
     let title = `${this._translate('reports.overview.plannedWorkWidget.title')}`;
     let plannedWorksTable = '';
     plannedWorksTable += `

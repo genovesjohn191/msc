@@ -55,5 +55,6 @@ export enum McsFeatureFlag {
   NewOAuth = 'EnableOAuthV2',
 
   KnowledgeBaseLink = 'EnableKnowledgeBaseLink',
-  SaasBackup = 'EnableSaasBackup'
+  SaasBackup = 'EnableSaasBackup',
+  PlannedWork = 'EnablePlannedWork'
 }

@@ -68,7 +68,7 @@
               [title]="'label.openPrivateCloudTickets' | translate"
               [serviceId]="'!AZ'"></mcs-azure-tickets-widget>
           </li>
-          <li>
+          <li *mcsAccessControl="plannedWorkAccess[0]; feature: plannedWorkAccess[1]">
             <mcs-planned-work-widget 
               [category]="'currentfuture'"
               [isPrivateCloud]="true"

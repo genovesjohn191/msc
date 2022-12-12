@@ -25,6 +25,7 @@ import {
 import {
   McsApiCollection,
   McsContactUs,
+  McsFeatureFlag,
   McsOrderItemType,
   McsPermission,
   McsPlannedWork,
@@ -102,6 +103,14 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
     return this._accessControlService.hasPermission([McsPermission.OrganizationVdcView]);
   }
 
+  public get hasAccessToPlannedWork(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.PlannedWork]);
+  }
+
+  public get plannedWorkAccess(): [McsPermission[], McsFeatureFlag[]] {
+    return [[], [McsFeatureFlag.PlannedWork]];
+  } 
+
   public showBackupSecurity(): boolean {
     return this.hasCloudVmAccess &&
       this._accessControlService.hasPermission([McsPermission.OrderEdit]);
@@ -134,11 +143,13 @@ export class PrivateCloudDashboardOverviewComponent implements OnInit {
   public widgetsLoading(): boolean {
     let serviceOverview = this.showServiceOverview ? this._exportDocumentDetails.servicesOverview : null;
     let storageUtilisation = this.hasOrganizationVdcViewAccess ? this._exportDocumentDetails.resourceStorageUtilisation : null;
+    let plannedWorks = this.hasAccessToPlannedWork ? this._exportDocumentDetails.plannedWorks : null;
+
     return serviceOverview === undefined ||
       storageUtilisation === undefined ||
       this._exportDocumentDetails.tickets === undefined ||
       this._exportDocumentDetails.contactUs === undefined ||
-      this._exportDocumentDetails.plannedWorks === undefined;
+      plannedWorks === undefined;
   }
 
   public onClickPublicCloud(): void {
