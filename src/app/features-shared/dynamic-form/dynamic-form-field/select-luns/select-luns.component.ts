@@ -19,7 +19,7 @@ import { DynamicSelectLunsField } from './select-luns';
 import { CrispAttributeNames, findCrispElementAttribute } from '@app/features/launch-pad/workflows/workflow/core/forms/mapping-helper';
 import { CoreValidators } from '@app/core';
 
-export interface Luns {
+export interface Lun {
   serviceId: string;
   sizeGb: number;
   tier: string;
@@ -46,13 +46,14 @@ export interface Luns {
 })
 export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<McsObjectCrispElementService>{
   public config: DynamicSelectLunsField;
-  public multipleBootError: boolean = true;
+  public noBootError: boolean = true;
   public lunSizeError: boolean = true;
   public fcLunSize: FormControl<number>;
   public minLunSize: number = 8;
   public maxLunSize: number = 65000;
+  public lunDetails = [];
 
-  public luns: Luns = {
+  public lun: Lun = {
     serviceId: null,
     sizeGb: null,
     tier: null,
@@ -85,8 +86,9 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
   }
 
   public onLunsChange(): void {
-    this.config.value = [this.luns];
+    this.config.value = [this.lun];
     this.valueChange(this.config.value);
+    this._setDependentLunValues(this.lun.serviceId);
   }
 
   public get serviceIdErrorMessage(): string {
@@ -133,32 +135,51 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
                 value: isNullOrEmpty(item.description) ? item.serviceId : `${item.description} - ${item.serviceId}`
               }
               options.push(option);
-
-              if(options.length === 1){
-                this._setInitialLunValues(crispElement);
-              }
-              else{
-                this._showNoBootLunError();
-              }
+              this.lunDetails.push(crispElement);
+              this._validateBootLunQuantity(options);
             }
           })).subscribe();
       });
-
-      if(options.length === 0){
-        this._showNoBootLunError();
-      }
+    this._validateBootLunQuantity(options);
     return options;
   }
 
+  private _validateBootLunQuantity(luns)  {
+    switch(luns.length) {
+     case 0: {
+       this._showNoBootLunError();
+       this._clearLunsValues();
+       this.fcLunSize.markAsTouched();
+       break;
+     }
+     case 1: {
+       this._hideNoBootLunError();
+       this._setDependentLunValues(this.lunDetails[0].serviceId);
+       this.onLunsChange();
+       break;
+     }
+     default: {
+       this._hideNoBootLunError();
+       this._clearLunsValues();
+       break;
+     }
+   }
+  }
+
   private _showNoBootLunError(){
-    this._clearLunsValues();
     this.hasError = true;
-    this.multipleBootError = true;
-    this._serviceIdErrorMessage = 'Exactly one boot LUN must be associated with this element in CRISP.';
+    this.noBootError = true;
+    this._serviceIdErrorMessage = 'At least one boot LUN must be associated with this element in CRISP.';
+  }
+
+  private _hideNoBootLunError(){
+    this.hasError = false;
+    this.noBootError = false;
+    this._serviceIdErrorMessage = '';
   }
 
   private _clearLunsValues(){
-    this.luns = {
+    this.lun = {
       serviceId: null,
       sizeGb: null,
       tier: null,
@@ -166,12 +187,14 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
     }
     this.config.value = null;
     this.valueChange(this.config.value);
+    this._setLunSize();
   }
 
-  private _setInitialLunValues(service: McsObjectCrispElement){
+  private _setDependentLunValues(serviceId){
+    let service = this.lunDetails.find(lun => lun.serviceId == serviceId);
     let sizeGbValue: number = null;
     let tierValue: string = '';
-    switch(service.productType.toString()){
+    switch(service?.productType.toString()){
       case ProductType[ProductType.PrimaryDedicatedStorage]: {
           let tierMap: Map<string, string> = new Map([
             ['PERFORMANCE-700', 'SPR'],
@@ -200,16 +223,17 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
         }
     }
 
-    this.luns = {
-      serviceId: service.serviceId,
+    this.lun = {
+      serviceId: service?.serviceId,
       sizeGb: sizeGbValue,
       tier: tierValue,
       bootLun: true
     }
     this._setLunSize();
-    this.onLunsChange();
+    this.config.value = [this.lun];
+    this.valueChange(this.config.value);
     this.hasError = false;
-    this.multipleBootError = false;
+    this.noBootError = false;
   }
 
   private _exluded(item: McsObjectCrispElementService): boolean {
@@ -220,7 +244,7 @@ export class DynamicSelectLunsComponent extends DynamicSelectFieldComponentBase<
   }
 
   private _setLunSize(): void{
-    this.fcLunSize.setValue(this.luns.sizeGb);
+    this.fcLunSize.setValue(this.lun.sizeGb);
     this.fcLunSize.markAsTouched();
   }
 }

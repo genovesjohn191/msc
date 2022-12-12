@@ -7,7 +7,8 @@ import {
 import {
   McsMultiJobFormConfig,
   McsNetworkDbPod,
-  McsResourceNetwork
+  McsResourceNetwork,
+  McsQueryParam
 } from "@app/models";
 import { McsApiService } from "@app/services";
 import {
@@ -32,7 +33,7 @@ export class DynamicSelectNetworkInterfaceService {
 
   private _networks$: Observable<FlatOption[]>;
   private _networks: McsResourceNetwork[];
- 
+
   public get networkList(): McsResourceNetwork[] {
     return this._networks;
   }
@@ -46,7 +47,11 @@ export class DynamicSelectNetworkInterfaceService {
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, companyId]
     ]);
-    this._networks$ = this._apiService.getResourceNetworks(id, optionalHeaders).pipe(
+
+    let param = new McsQueryParam();
+    param.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+
+    this._networks$ = this._apiService.getResourceNetworks(id, optionalHeaders, param).pipe(
       map((response) => {
         if (isNullOrEmpty(response)) { return []; }
         this._networks = response && response.collection;

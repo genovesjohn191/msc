@@ -7,10 +7,10 @@
     matBadgePosition="before"
     matBadgeColor="warn"
     matBadgeSize="small"
-    [matTooltip]="hasError && !multipleBootError ? 'Failed to load options' : ''"
+    [matTooltip]="hasError && !noBootError ? 'Failed to load options' : ''"
     matTooltipPosition="above">
     <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : 'Boot LUN' }}</mat-label>
-    <mat-select disabled [(value)]="luns.serviceId" (selectionChange)="onLunsChange()" [required]="required">
+    <mat-select [(value)]="lun.serviceId" (selectionChange)="onLunsChange()" [required]="required">
       <mat-option *ngFor="let opt of config.options" [value]="opt.key"
         [disabled]="opt.disabled" [matTooltip]="opt.hint">
         {{ opt.value }}
@@ -19,13 +19,13 @@
     <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
     <button mat-icon-button matSuffix
       (click)="retrieveOptions()"
-      *ngIf="hasError && !multipleBootError"
+      *ngIf="hasError && !noBootError"
       matTooltip="Retry"
       matTooltipPosition="above">
       <mat-icon color="primary">refresh</mat-icon>
     </button>
   </mat-form-field>
-  <mat-error *ngIf="hasError || multipleBootError">{{ serviceIdErrorMessage }}</mat-error>
+  <mat-error *ngIf="hasError || noBootError">{{ serviceIdErrorMessage }}</mat-error>
 
   <!-- Storage Tier -->
   <mat-form-field
@@ -36,21 +36,21 @@
     matBadgeSize="small"
     matTooltipPosition="above">
     <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : 'Storage Tier' }}</mat-label>
-    <mat-select disabled [(value)]="luns.tier" (selectionChange)="onLunsChange()">
+    <mat-select disabled [(value)]="lun.tier" (selectionChange)="onLunsChange()">
       <mat-option *ngFor="let opt of tierOptions" [value]="opt.key"
         [disabled]="opt.disabled" [matTooltip]="opt.hint">
         {{ opt.value }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  
+
   <!-- Disk Size -->
   <mat-form-field
     *ngIf="visible"
     appearance="outline"
     style="max-width: 200px;">
     <mat-label [attr.for]="id">Disk Size</mat-label>
-  
+
     <input matInput type="number" class="number" readonly
       [formControl]="fcLunSize"
       step="1"/>
@@ -63,4 +63,3 @@
     LUN size must not exceed {{ maxLunSize | number }} GB.
   </mat-error>
 </div>
-  

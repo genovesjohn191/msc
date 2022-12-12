@@ -780,7 +780,10 @@ export class McsApiService {
     );
   }
 
-  public getResourceNetworks(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResourceNetwork>> {
+  public getResourceNetworks(
+    id: string,
+    optionalHeaders?: Map<string, any>,
+    query?: McsQueryParam): Observable<McsApiCollection<McsResourceNetwork>> {
     return this._resourcesApi.getResourceNetworks(id, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceNetworks'))
@@ -3068,7 +3071,7 @@ export class McsApiService {
     );
   }
   //#endregion
-  
+
   //#region Storage services
   public getVeeamBackups(): Observable<McsApiCollection<McsStorageVeeamBackup>> {
     return this._storageApi.getVeeamBackups().pipe(
