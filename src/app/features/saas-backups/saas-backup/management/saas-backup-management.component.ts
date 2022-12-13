@@ -133,11 +133,9 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     this._apiService.attemptSaasBackup(saasId).pipe(
       tap(job => {
         this.jobEvents.setJobs(job).setStatus(DataStatus.Success);
-        this._showSuccessfulMessage('message.saasBackupInitiated');
       }),
       catchError(error => {
         this.jobEvents.setStatus(DataStatus.Error);
-        this._showErrorMessage('message.commandFailed');
         return throwError(() => error);
       })
     ).subscribe();
@@ -150,17 +148,6 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
       selectedBackupAttemptId: backupAttempt?.id,
       selectedSaasBackupId: saasId };
     return expandedRow === backupAttempt ? null : backupAttempt;
-  }
-
-  private _showSuccessfulMessage(message: string): void {
-    this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
-      new McsStateNotification('success', message)
-    );
-  }
-
-  private _showErrorMessage(message: string, tryAgainFunc?: () => void): void {
-    this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
-      new McsStateNotification('error', message, tryAgainFunc));
   }
 
   private _subscribeToSaasBackupDetails(): void {
