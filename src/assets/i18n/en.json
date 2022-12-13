@@ -2856,7 +2856,7 @@
     "backupStatistics": {
       "firstBackupTime": "First Backup Time",
       "lastBackupTime": "Last Backup Time",
-      "failedToBackupInLastAttempt": "Failed to Backed Up in Last Attempt",
+      "failedToBackupInLastAttempt": "Failed to Back Up in Last Attempt",
       "succesfullyBackupInLastAttempt": "Successfully Backed Up in Last Attempt"
     },
     "backupComponents": {
@@ -2872,12 +2872,12 @@
     "backupAttempts": {
       "description": "Backup Attempts",
       "lastAttempt": "Last Attempt",
-      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of backups for this service.",
+      "errorMessage": "Sorry, something's not right. We weren't able to retrieve the list of backup attempts for this service.",
       "noData": "No backups have been attempted for this service."
     },
     "users": {
-      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of users for this backup service.",
-      "noData": "No users have attempted a backup for this service."
+      "errorMessage": "Sorry, something's not right. We weren't able to retrieve the list of users for this backup attempt.",
+      "noData": "No users to display for this backup attempt."
     }
   },
   "azureManagementServices": {
@@ -3694,7 +3694,7 @@
     "getUcsObjects": "Something went wrong while retrieving your UCS objects.",
     "getVeeamBackups": "Something went wrong while retrieving your Veeam Cloud Backup services. Please try again.",
     "getVeeamCloudDrs": "Something went wrong while retrieving your Veeam Disaster Recovery services. Please try again."
-    
+
   },
   "entityState": {
     "inProgress": "Processing request..."
