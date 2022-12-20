@@ -2870,10 +2870,15 @@
       "dailySchedule": "Daily Schedule"
     },
     "backupAttempts": {
-      "description": "Backup Attempts",
+      "description": "Backup Management",
       "lastAttempt": "Last Attempt",
+      "emailBackupAttempt": "A full backup report has been emailed to you.",
       "errorMessage": "Sorry, something's not right. We weren't able to retrieve the list of backup attempts for this service.",
       "noData": "No backups have been attempted for this service."
+    },
+    "userProtectionHistory": {
+      "description": "User Protection History",
+      "label": "A 7-day history of users protected by SaaS Backup. This data is refreshed daily."
     },
     "users": {
       "errorMessage": "Sorry, something's not right. We weren't able to retrieve the list of users for this backup attempt.",
@@ -3833,6 +3838,7 @@
     "productId": "Product ID",
     "productName": "Product Name",
     "projectedComputeCost": "Projected Compute Cost",
+    "protectedUsers": "Protected Users",
     "quantity": "Quantity",
     "recommendation": "Recommendation",
     "possibleSavings": "Possible Savings",

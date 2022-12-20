@@ -71,14 +71,6 @@
             <span [innerHTML]="selectedSaasBackup.lastBackupAttempt.runTime | mcsStdDateFormat"></span>
           </ng-container>
         </mcs-item>
-        <mcs-item>
-          <span>{{ 'saasBackup.backupStatistics.succesfullyBackupInLastAttempt' | translate }}:</span>
-          <span>{{ selectedSaasBackup.lastBackupAttempt.successfulUsers || 0 }}</span>
-        </mcs-item>
-        <mcs-item>
-          <span>{{ 'saasBackup.backupStatistics.failedToBackupInLastAttempt' | translate }}:</span>
-          <span>{{ selectedSaasBackup.lastBackupAttempt.failedUsers || 0 }}</span>
-        </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
   </mcs-grid-row>
