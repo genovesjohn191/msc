@@ -99,7 +99,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'date' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'usersBackedUpSuccessfully' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'protectedUsers' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' })
     ];
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
