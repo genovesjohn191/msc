@@ -18,6 +18,7 @@ import { IsExperimentalDirective } from './is-experimental.directive';
 import { DisabledDirective } from './overriden-directives/disabled.directive';
 import { HiddenDirective } from './overriden-directives/hidden.directive';
 import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
+import { ResizableColumnDirective } from './resizable-column.directive';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     IdDirective,
     NavigateBackwardDirective,
     AlignContentDirective,
-    AlignDirective
+    AlignDirective,
+    ResizableColumnDirective
   ],
   exports: [
     IsExperimentalDirective,
@@ -58,7 +60,8 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     IdDirective,
     NavigateBackwardDirective,
     AlignContentDirective,
-    AlignDirective
+    AlignDirective,
+    ResizableColumnDirective
   ]
 })
 

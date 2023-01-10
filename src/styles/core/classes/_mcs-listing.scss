@@ -110,3 +110,36 @@ $listing-table-widget-max-height: 350px;
   @include set-items-interval($space-xsmall, horizontal);
   justify-content: center;
 }
+
+.resizable-table-wrapper {
+  .mat-table {
+    &.resizing {
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: col-resize;
+    }
+    .mat-cell {
+      span {       
+        display: block; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    .mat-header-cell {
+      position: relative;      
+      &:not(:last-child) {
+        .resize-holder {
+          cursor: col-resize;
+          width: 20px;
+          height: 100%;
+          position: absolute;
+          right: -10px;
+          top: 0;
+          z-index: 1;
+        }
+      }
+    }
+    
+  }
+}
