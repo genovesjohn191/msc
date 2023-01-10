@@ -1,14 +1,14 @@
 # Macquarie Fusion Angular Portal
 
 
-> [Angular 2](https://angular.io), [Angular 4](https://github.com/angular/angular/tree/4.0.0-beta.0) ([Ahead of Time Compile](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html), [Router](https://angular.io/docs/ts/latest/guide/router.html), [Forms](https://angular.io/docs/ts/latest/guide/forms.html),
+> [Angular 14](https://angular.io), [Ahead of Time Compile](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html), [Router](https://angular.io/docs/ts/latest/guide/router.html), [Forms](https://angular.io/docs/ts/latest/guide/forms.html),
 [Http](https://angular.io/docs/ts/latest/guide/server-communication.html),
 [Services](https://gist.github.com/gdi2290/634101fec1671ee12b3e#_follow_@AngularClass_on_twitter),
 [Tests](https://angular.io/docs/ts/latest/guide/testing.html), [E2E](https://angular.github.io/protractor/#/faq#what-s-the-difference-between-karma-and-protractor-when-do-i-use-which-)), [Karma](https://karma-runner.github.io/), [Protractor](https://angular.github.io/protractor/), [Jasmine](https://github.com/jasmine/jasmine), [Istanbul](https://github.com/gotwarlost/istanbul), [TypeScript](http://www.typescriptlang.org/), [@types](https://www.npmjs.com/~types), [TsLint](http://palantir.github.io/tslint/), [Codelyzer](https://github.com/mgechev/codelyzer), [Hot Module Replacement](https://webpack.github.io/docs/hot-module-replacement-with-webpack.html), and [Webpack 2](http://webpack.github.io/).
 
 ## Quick start
 
-> Make sure you have Node version >= 5.0 and NPM >= 3, also you have your own self signed certificate, follow this [guide](https://confluence.macquarietelecom.com/display/Hosting/Creating+Self+Signed+Certificate+for+Local+Development) to create one.
+> Make sure you have Node version >= 14, NPM >= 6 and Angular CLI.
 
 1.  Clone repo `git@bitbucket.org:macquariecloudservices/mcs.portal.frontend.git`
 
@@ -16,31 +16,33 @@
 
 3. Install the dependencies with `npm install`
 
-4. Start the server `npm start`
+4. Configure the environment settings in `env.config.js` file
+
+5. You will need the `dev-portal.key` in order to run the project. Place this file inside `ssl` folder under the root directory.
+
+6. Start the server `npm start`
 
 	**Use Hot Module Replacement `npm run server:dev:hmr`
 
-5. Go to [https://dev-portal.macquariecloudservices.com/](https://dev-portal.macquariecloudservices.com/) in your browser
+7. Go to [https://dev-portal.macquariecloudservices.com:4200/](https://dev-portal.macquariecloudservices.com:4200/) in your browser
 
 ## Getting Started
 ### Dependencies
 What you need to run this app:
 
-*  `node` and `npm`
-*  Ensure you're running the latest versions Node `v4.x.x`+ (or `v5.x.x`) and NPM `3.x.x`+
+*  `Node.js` Javascript runtime and `npm` package manager
+*  npm is included with Node.js which you can install from [Node.js downloads](https://nodejs.org/en/download/) 
 
-Once you have those, you should install these globals with `npm install --global`:
+    Note: Installing Node.js requires Administrator access, so ensure that you have the right permission before installing.
 
-*  `webpack` (`npm install --global webpack`)
-* `webpack-dev-server` (`npm install --global webpack-dev-server`)
-* `karma` (`npm install --global karma-cli`)
-* `protractor` (`npm install --global protractor`)
-* `typescript` (`npm install --global typescript`)
+    To test that you have Node.js and npm correctly installed on your machine, you can type `node --version` and `npm --version`.
+* Install the Angular CLI with `npm install -g @angular/cli`.
+
+    Once installation is completed run `ng --version`, to check the Angular CLI version.
 
 ### Installing
 * `fork` this to your feature branch
 * `clone` your branch
-* `npm install webpack-dev-server rimraf webpack -g` to install required global dependencies
 * `npm install` to install all dependencies
 * `npm run server` to start the dev server in another tab
 
@@ -160,7 +162,7 @@ Extensions: [TSLint](https://marketplace.visualstudio.com/items?itemName=eg2.tsl
 - Run `npm test` (Note: all unit test must be passing)
 - Feature branch should follow this format:
 >
-	{feature/fix}/{JIRA-#}-{Branch-Title}
+	{feature/update/fix/hotfix}/{JIRA-#}-{Branch-Title}
 e.g.
 >
 	feature/FUSION-99-Added-Custom-Module
