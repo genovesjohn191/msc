@@ -168,7 +168,8 @@
           [targetDisk]="selectedDisk"
           [detailsTemplate]="diskDetailsTemplate"
           (dataChange)="onStorageChanged($event)"
-          [serverIsDedicated]="server.isDedicated">
+          [serverIsDedicated]="server.isDedicated"
+          [maxValueGB]="maximumStorageValueInGB">
 
           <ng-container mcsManageStorageHeader>
             <h2>{{ 'serverStorage.expandStorageHeading' | translate }}</h2>

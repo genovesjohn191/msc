@@ -92,6 +92,13 @@ export class ServerManageStorageComponent
   private _minValueGB: number = 0;
 
   @Input()
+  public get maxValueGB(): number {
+    return this._maxValueGB;
+  }
+  public set maxValueGB(value: number) { this._maxValueGB = coerceNumber(value); }
+  private _maxValueGB: number = 0;
+
+  @Input()
   public get deductValueGB(): number { return this._deductValueGB; }
   public set deductValueGB(value: number) { this._deductValueGB = coerceNumber(value); }
   private _deductValueGB: number = 0;
@@ -114,6 +121,16 @@ export class ServerManageStorageComponent
     let stepExcessCapacity = totalAvailableCapacity % DEFAULT_STORAGE_STEPS_MB;
 
     return convertMbToGb(totalAvailableCapacity - stepExcessCapacity);
+  }
+
+  /**
+   * Available capacity should not exceed the maximum allowed
+   */
+  public get allowableCapacity(): number {
+    const available = this.availableCapacity;
+    return this._maxValueGB > 0 ? 
+      Math.min(available, this._maxValueGB) : 
+      available;
   }
 
   /**
@@ -144,6 +161,13 @@ export class ServerManageStorageComponent
    */
   public get hasAvailableCapacity(): boolean {
     return (this.availableCapacity - this.minValueGB) > 0;
+  }
+
+  /**
+   * Returns true when max limit is set and available capacity is over this value
+   */
+  public get isExceededMaxCapacity(): boolean {
+    return (this._maxValueGB > 0 && this.availableCapacity > this.maxValueGB);
   }
 
   public constructor(
@@ -447,7 +471,7 @@ export class ServerManageStorageComponent
    * @param inputValue Input value to be checked
    */
   private _customStorageValidator(inputValue: any) {
-    return inputValue <= this.availableCapacity;
+    return inputValue <= this.allowableCapacity;
   }
 
   /**
