@@ -76,6 +76,7 @@ export enum ServerDiskMethodType {
 // Constants
 const SERVER_MAXIMUM_DISKS = 14;
 const SERVER_DISK_NEW_ID = Guid.newGuid().toString();
+const SERVER_STATEON_STORAGE_MAX_GB = 2038; //1.99TB
 
 @Component({
   selector: 'mcs-server-storage',
@@ -109,6 +110,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _sortDef: MatSort;
   private _sortSubject = new Subject<void>();
   private _serverIsDedicated: boolean;
+  private _serverIsPoweredOn: boolean;
 
   private _createDiskHandler: Subscription;
   private _updateDiskHandler: Subscription;
@@ -194,7 +196,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   public ngOnInit() {
-    this.server$.subscribe(server => this._serverIsDedicated = server.isDedicated);
+    this.server$.subscribe(server => {
+      this._serverIsDedicated = server.isDedicated;
+      this._serverIsPoweredOn = server.isPoweredOn;
+    });
     this._registerEvents();
   }
 
@@ -421,6 +426,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         map(datastores => !datastores?.find(datastore => datastore.name === disk.datastoreName)?.enabled) :
         map(storageProfiles => !storageProfiles?.find(storageProfile => storageProfile.name === disk.storageProfile)?.enabled)
     );
+  }
+
+  /**
+   * Returns the maximum disk size. 0 will have a limit based on the storage capacity.
+   * If the server is powered on, use the maximum limit constant value.
+   */
+  public get maximumStorageValueInGB(): number {
+    return (this._serverIsPoweredOn ? SERVER_STATEON_STORAGE_MAX_GB : 0);
   }
 
   /**

@@ -59,9 +59,14 @@
           This storage profile has {{ availableCapacity | mcsDataSize: 'GB' }} of usable capacity.
         </span>
       </div>
+      <div>
+        <span *ngIf="isExceededMaxCapacity">
+          This server must be powered off first if you wish to expand this disk to {{ maxValueGB | mcsDataSize: 'GB' }} or above.
+        </span>
+      </div>
 
       <div>
-        <mcs-slider [min]="minValueGB" [max]="availableCapacity" [step]="10"
+        <mcs-slider [min]="minValueGB" [max]="allowableCapacity" [step]="10"
           mcsId="slider-capacity"
           [ngModel]="storageValue" [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onSliderChanged($event)">
@@ -81,7 +86,7 @@
 
         <mcs-hint mcsHint align="start">
             {{ 'serverShared.manageStorage.maximumStorage' | translate }}:
-            {{ availableCapacity | mcsDataSize: 'GB' }}
+            {{ allowableCapacity | mcsDataSize: 'GB' }}
         </mcs-hint>
         <mcs-error mcsError errorState="required">
             {{ 'serverShared.manageStorage.errors.storageRequired' | translate }}
@@ -95,7 +100,7 @@
         </mcs-error>
         <mcs-error mcsError errorState="storageAvailable">
           {{ 'serverShared.manageStorage.errors.storageAvailable' |
-            translate: { available_storage: (availableCapacity | mcsDataSize: 'GB') } }}
+            translate: { available_storage: (allowableCapacity | mcsDataSize: 'GB') } }}
         </mcs-error>
       </mcs-form-field>
     </mcs-section>
