@@ -3,6 +3,7 @@ import {
   McsJob,
   McsQueryParam,
   McsStorageSaasBackup,
+  McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
   McsStorageSaasBackupBackupAttemptDetails,
   McsStorageVeeamBackup
@@ -32,7 +33,9 @@ export interface IMcsApiStorageService {
    * Get saas backup backup attempts
    * @param id saas backup identification
    */
-  getSaasBackupBackupAttempt(id: string):
+  getSaasBackupBackupAttempt(
+    id: string,
+    query?: McsStorageSaasBackupAttemptQueryParams):
     Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttempt>>;
 
   /**

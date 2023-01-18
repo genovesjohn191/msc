@@ -1,10 +1,10 @@
 import * as moment from 'moment-timezone';
 
-import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
 import {
   containsString,
   convertDateTimezoneToUTC,
+  getFriendlyDay,
   isDateFormatValid,
   isNullOrEmpty
 } from '@app/utilities';
@@ -13,7 +13,7 @@ export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full'
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
   'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly' |
   'noYearDateShortTime' | 'longDateShortTime' | 'shortMonthYear' | 'fullMonthYear' |
-  'shortDateTime' | 'tracksDateTime' | '24hourTime' | 'mediumNoMs' | 'dayMonth';
+  'shortDateTime' | 'tracksDateTime' | '24hourTime' | 'mediumNoMs' | 'dayMonth' | 'weekFriendly';
 
 @Injectable()
 export class McsDateTimeService {
@@ -42,7 +42,11 @@ export class McsDateTimeService {
     if (actualFormat === 'friendly') {
       return moment(date).fromNow().replace('a day ago', 'yesterday');
     }
-
+    
+    if (actualFormat === 'weekFriendly') {
+      return getFriendlyDay(date, timeZone);
+    }
+    
     let formatFound = this._dateTimeMapTable.has(formatType as McsDateTimeFormat);
     if (formatFound) {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);

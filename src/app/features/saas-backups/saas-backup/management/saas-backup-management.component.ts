@@ -30,12 +30,15 @@ import {
   McsStateNotification,
   McsStorageSaasBackup,
   McsStorageSaasBackupAttempt,
+  McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
   McsStorageSaasBackupLastBackupAttempt
 } from '@app/models';
 import {
+  addDaysToDate,
   animateFactory,
   createObject,
+  getCurrentDate,
   getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely
@@ -52,6 +55,7 @@ import { ColumnFilter } from '@app/shared';
 import { McsEvent } from '@app/events';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { SaasBackupService } from '../saas-backup.service';
+import moment from 'moment';
 
 export interface SaasUsersConfig {
   selectedBackupAttemptId: string,
@@ -79,7 +83,6 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
   public selectedSaasBackup$: Observable<McsStorageSaasBackup>;
 
   public lastBackupAttempt: McsStorageSaasBackupLastBackupAttempt;
-  public expandedElement: McsStorageSaasBackupAttempt;
   public saasUsersConfig: SaasUsersConfig;
   public hasActiveJob: boolean = false;
 
@@ -97,7 +100,6 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     this.jobEvents = new McsJobEvents(injector);
     this.dataSource = new McsTableDataSource2(this._getSaasBackupBackupAttempt.bind(this));
     this.defaultColumnFilters = [
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'date' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'protectedUsers' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' })
@@ -192,7 +194,11 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
 
     return this.selectedSaasBackup$.pipe(
       switchMap((selectedSaasBackup: McsStorageSaasBackup) => {
-        return this._apiService.getSaasBackupBackupAttempt(selectedSaasBackup.id).pipe(
+
+        let query = new McsStorageSaasBackupAttemptQueryParams();
+        query.periodStart = this._getPeriodStartRange();
+
+        return this._apiService.getSaasBackupBackupAttempt(selectedSaasBackup.id, query).pipe(
           map((response: McsStorageSaasBackupBackupAttempt) => {
             this.lastBackupAttempt = getSafeProperty(response, obj => obj.lastBackupAttempt);
             this._changeDetectorRef.markForCheck();
@@ -201,5 +207,10 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
             return new McsMatTableContext(backupAttempts, backupAttempts?.length)
         }))
       }));
+  }
+
+  private _getPeriodStartRange(): string {
+    let utcDateTime = moment.utc(addDaysToDate(getCurrentDate(), -7));
+    return utcDateTime.format('YYYY-MM-DDThh:mm:ssZ');
   }
 }

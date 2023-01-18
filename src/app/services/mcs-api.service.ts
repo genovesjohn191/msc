@@ -330,7 +330,8 @@ import {
   McsUcsQueryParams,
   McsUcsObject,
   McsStorageSaasBackupBackupAttempt,
-  McsStorageSaasBackupBackupAttemptDetails
+  McsStorageSaasBackupBackupAttemptDetails,
+  McsStorageSaasBackupAttemptQueryParams
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -3101,8 +3102,11 @@ export class McsApiService {
     );
   }
 
-  public getSaasBackupBackupAttempt(id: string): Observable<McsStorageSaasBackupBackupAttempt> {
-    return this._storageApi.getSaasBackupBackupAttempt(id).pipe(
+  public getSaasBackupBackupAttempt(
+    id: string, 
+    query?: McsStorageSaasBackupAttemptQueryParams
+  ): Observable<McsStorageSaasBackupBackupAttempt> {
+    return this._storageApi.getSaasBackupBackupAttempt(id, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackupBackupAttempt'))
       ),

@@ -63,19 +63,11 @@
   <mcs-presentation-panel mcsId="saas-backup-user-protection-history">
     <!-- Schedule -->
     <ng-container mcsPresentationPanelHeader>
-      <h2>{{ 'saasBackup.userProtectionHistory.description' | translate }}</h2>
+      <h2>{{ 'saasBackup.backupHistory.description' | translate }}</h2>
     </ng-container>
-    <span>{{ 'saasBackup.userProtectionHistory.label' | translate }}</span>
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="nested-table">
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let row" class="toggle-arrow">
-          <div [ngClass]="expandedRow === row ? 'expanded' : 'collapsed'" class="arrow-container">
-            <mat-icon class="arrow">arrow_drop_down</mat-icon>
-          </div>
-        </td>
-      </ng-container>
-
+    <span>{{ 'saasBackup.backupHistory.label' | translate }}</span>
+    <table mat-table [dataSource]="dataSource">
+      
       <!-- Date Column -->
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef>
@@ -83,7 +75,7 @@
         </th>
         <td mat-cell *matCellDef="let row">
           <ng-container *ngIf="row.startTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
-            {{ row.startTime | mcsStdDateFormat }}
+            {{ row.startTime | mcsStdDateFormat: 'weekFriendly'  }}
           </ng-container>
           <ng-template #emptyDateTemplate>
             <span>{{ 'label.none' | translate }}</span>
@@ -97,7 +89,7 @@
           {{ 'columnHeader.protectedUsers' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.successfulUsers }}
+          {{ row.protectedUsers }}
         </td>
       </ng-container>
 
@@ -112,25 +104,8 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="expansionVertical">
-        <td mat-cell *matCellDef="let row"
-          [attr.colspan]="(dataSource?.dataColumns$ | async)?.length">
-          <div class="nested-table-container"
-            [@expansionVertical]="expandedRow === row ? 'expanded' : 'collapsed'"
-            [class.active]="expandedRow === row">
-            <ng-container *ngIf="expandedRow === row">
-              <mcs-saas-backup-users [config]="saasUsersConfig"></mcs-saas-backup-users>
-            </ng-container>
-          </div>
-        </td>
-      </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
-        [ngStyle]="{'cursor': 'pointer' }"
-        (click)="expandedRow = setExpandedRow(expandedRow, row, selectedSaasBackup.id)"
-        [class.expanded-row]="expandedRow === row"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['expansionVertical']" class="expanded-detail-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
     </table>
 
     <!-- Table Statuses -->

@@ -22,10 +22,7 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
   public status: string = undefined;
 
   @JsonProperty()
-  public successfulUsers: number = undefined;
-
-  @JsonProperty()
-  public failedUsers: number = undefined;
+  public protectedUsers: number = undefined;
 
   @JsonProperty()
   public startTime: Date = undefined;
@@ -105,9 +102,4 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
     return saasBackupStatusText[this.status] || 'Unknown';
 }
 
-  public get totalBackupAttempts(): number {
-    let successfulAttempts = this.successfulUsers || 0;
-    let failedAttempts = this.failedUsers || 0; 
-    return successfulAttempts + failedAttempts;
-  }
 }

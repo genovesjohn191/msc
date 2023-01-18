@@ -474,6 +474,7 @@ export * from './common/mcs-multi-job-form-config';
 export * from './common/mcs-extenders-query-params';
 export * from './common/mcs-dns-query-params';
 export * from './common/mcs-ucs-query-params';
+export * from './common/mcs-storage-saas-backupattempt-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

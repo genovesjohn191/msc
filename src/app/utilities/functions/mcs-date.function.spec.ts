@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   addDaysToDate,
   addHoursToDate,
@@ -24,7 +25,8 @@ import {
   setDateToFirstDayOftheMonth,
   setDateToLastDayOftheMonth,
   addYearsToDate,
-  getLastDateOfThePreviousYear
+  getLastDateOfThePreviousYear,
+  getFriendlyDay
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -109,6 +111,41 @@ describe('DATE Functions', () => {
       expect(timespan).toEqual('');
     });
   });
+
+  describe('getFriendlyDay()', () => {
+    it(`should return empty for empty or null parameter`, () => {
+      let day = getFriendlyDay(null);
+      expect(day).toEqual('');
+    });
+
+    it(`should return 'Today' if date is today`, () => {
+      let currentDate = new Date();
+      let day = getFriendlyDay(currentDate);
+      expect(day).toEqual('Today');
+    });
+
+    it(`should return 'Yesterday' if date is a day before`, () => {
+      let date = new Date();
+      date.setDate(date.getDate() - 1);
+      let day = getFriendlyDay(date);
+      expect(day).toEqual('Yesterday');
+    });
+
+    it(`should return the day if date is more than 2 days but less than 7 days`, () => {
+      let date = new Date();
+      date.setDate(date.getDate() - 3);
+      let day = getFriendlyDay(date);
+      expect(day).toEqual(moment(date).format('dddd'));
+    });
+
+    
+    it(`should return the date if equal or more than 7 days`, () => {
+      let date = new Date();
+      date.setDate(date.getDate() - 7);
+      let day = getFriendlyDay(date);
+      expect(day).toEqual(moment(date).format('ddd, DD MMM YYYY'));
+    });
+  })
 
   describe('getDayDifference()', () => {
     it(`should get the correct day difference of 2 dates`, () => {

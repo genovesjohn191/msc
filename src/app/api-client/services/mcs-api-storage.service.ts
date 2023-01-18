@@ -5,6 +5,7 @@ import {
   McsJob,
   McsQueryParam,
   McsStorageSaasBackup,
+  McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
   McsStorageSaasBackupBackupAttemptDetails,
   McsStorageVeeamBackup
@@ -70,10 +71,15 @@ export class McsApiStorageService implements IMcsApiStorageService {
       );
   }
 
-  public getSaasBackupBackupAttempt(id: string): Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttempt>> {
+  public getSaasBackupBackupAttempt(id: string, 
+    query?: McsStorageSaasBackupAttemptQueryParams
+  ): Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttempt>> {
+
+    if (isNullOrEmpty(query)) { query = new McsStorageSaasBackupAttemptQueryParams(); }
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/storage/backup/saas/${id}/backup-attempts`;
-
+    mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
     return this._mcsApiHttpService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
