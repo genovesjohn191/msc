@@ -24,5 +24,11 @@ export class McsServerCreateNic extends McsApiJobRequestBase<IMcsServerCreateNic
   public ipAllocationMode: IpAllocationMode = undefined;
 
   @JsonProperty()
-  public ipAddress: string = undefined;
+  public ipAddress?: string = undefined;
+
+  @JsonProperty()
+  public ipAddresses?: string[] = undefined;
+
+  @JsonProperty()
+  public vlanNumberRanges?: string[] = undefined;
 }

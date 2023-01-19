@@ -331,7 +331,8 @@ import {
   McsUcsObject,
   McsStorageSaasBackupBackupAttempt,
   McsStorageSaasBackupBackupAttemptDetails,
-  McsStorageSaasBackupAttemptQueryParams
+  McsStorageSaasBackupAttemptQueryParams,
+  McsNetworkDbVlanQueryParams
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -2702,7 +2703,7 @@ export class McsApiService {
     );
   }
 
-  public getNetworkDbVlans(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbVlan>> {
+  public getNetworkDbVlans(query?: McsNetworkDbVlanQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsNetworkDbVlan>> {
     return this._networkDbApi.getVlans(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDbVlans'))

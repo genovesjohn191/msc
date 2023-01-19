@@ -4,7 +4,8 @@ import {
   BehaviorSubject,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  forkJoin
 } from 'rxjs';
 import {
   catchError,
@@ -30,6 +31,8 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  McsAccessControlService,
+  McsAuthenticationIdentity,
   McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -37,18 +40,23 @@ import {
   McsTableDataSource2
 } from '@app/core';
 import { McsEvent } from '@app/events';
-import { ServerManageNetwork } from '@app/features-shared';
+import { FlatOption, ServerManageNetwork } from '@app/features-shared';
 import {
+  IpAllocationMode,
   McsApiCollection,
   McsFeatureFlag,
   McsFilterInfo,
   McsJob,
+  McsNetworkDbVlanQueryParams,
+  McsPermission,
   McsQueryParam,
+  McsResource,
   McsResourceNetwork,
   McsServer,
   McsServerCreateNic,
   McsServerNic,
-  McsServerSnapshot
+  McsServerSnapshot,
+  PlatformType
 } from '@app/models';
 import {
   ComponentHandlerDirective,
@@ -65,18 +73,24 @@ import {
   isNullOrUndefined,
   unsubscribeSafely,
   CommonDefinition,
-  Guid
+  Guid,
+  TreeDatasource,
+  TreeItem,
+  TreeUtility,
+  TreeGroup
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ServerDetailsBase } from '../server-details.base';
+import { FormControl } from '@angular/forms';
 
 // Enumeration
 export enum ServerNicMethodType {
   None = 0,
   AddNic = 1,
   EditNic = 2,
-  DeleteNic = 3
+  DeleteNic = 3,
+  ViewNic = 4
 }
 
 // Constants
@@ -106,12 +120,18 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public readonly nicsDataSource: McsTableDataSource2<McsServerNic>;
   public readonly nicsColumns: McsFilterInfo[];
+  public readonly nicsBladeDataSource: McsTableDataSource2<McsServerNic>;
+  public readonly nicsBladeColumns: McsFilterInfo[];
   public readonly filterPredicate: (filter) => boolean;
 
+  public fcVlan = new FormControl<any>(null);
+  public datasourceVlan: TreeDatasource<FlatOption>;
   public isSnapshotProcessing: boolean;
   public dialogRef: DialogRef<any>;
   public isVMWareToolsInstalled: boolean;
   public isVMWareToolsRunning: boolean;
+  public serverIsBlade: boolean = false;
+  public isNetworkVlansLoading: boolean = false;
 
   @ViewChild('submitDialogTemplate')
   private _submitDialogTemplate: TemplateRef<any>;
@@ -124,6 +144,11 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _sortDef: MatSort;
   private _sortSubject = new Subject<void>();
   private _serverIsDedicated: boolean;
+  private _selectedServer: McsServer = null;
+  private _selectedServerResource: McsResource = null;
+  private _hasInternalPrivateCloudEngineerAccess: boolean = false;
+  private _currentUserCompanyId: string = '';
+  private _vlanOptions = new BehaviorSubject<FlatOption[]>(null);
 
   private _createNicHandler: Subscription;
   private _updateNicHandler: Subscription;
@@ -138,6 +163,13 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public get errorIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ERROR;
+  }
+
+  public get title(): string {
+    if (this.serverIsBlade && !this._hasInternalPrivateCloudEngineerAccess) {
+      return this._translateService.instant('serverNics.titleView');
+    }
+    return this._translateService.instant('serverNics.titleManage');
   }
 
   /**
@@ -171,13 +203,16 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
-    private _dialogService: DialogService
+    private _dialogService: DialogService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _accessControlService: McsAccessControlService
   ) {
     super(_injector, _changeDetectorRef);
     this.dataSourceInProgress$ = new BehaviorSubject(false);
     this.manageNetwork = new ServerManageNetwork();
     this.nicMethodType = ServerNicMethodType.AddNic;
     this.nicsDataSource = new McsTableDataSource2(this._getServerNics.bind(this));
+    this.nicsBladeDataSource = new McsTableDataSource2(this._getServerNics.bind(this));
     this.filterPredicate = this._isColumnIncluded.bind(this);
     this.nicsColumns = [
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'name' }),
@@ -188,9 +223,19 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'ipAddresses' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
     ];
+    this.nicsBladeColumns = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'name' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'network' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'ipAddresses' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' })
+    ];
     this.nicsDataSource
       .registerConfiguration(new McsMatTableConfig(false, true))
       .registerColumnsFilterInfo(this.nicsColumns, this.filterPredicate);
+    this.nicsBladeDataSource
+      .registerConfiguration(new McsMatTableConfig(false, true))
+      .registerColumnsFilterInfo(this.nicsBladeColumns, this.filterPredicate);
+    this.datasourceVlan = new TreeDatasource<FlatOption>(this._convertVlanOptionsToTreeItems.bind(this));
   }
 
   @ViewChild('sort')
@@ -214,8 +259,19 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   public ngOnInit() {
-    this.server$.subscribe(server => this._serverIsDedicated = server.isDedicated);
+    this._hasInternalPrivateCloudEngineerAccess = this._accessControlService.hasPermission([McsPermission.InternalPrivateCloudEngineerAccess]);
+    this._currentUserCompanyId = this._authenticationIdentity.user.companyId;
+    this.server$.subscribe(server => {
+      this._serverIsDedicated = server.isDedicated;
+      this._selectedServer = server;
+    });
     this._registerEvents();
+  }
+
+  private _getSelectedServerResource(resourceId: string) {
+    this.apiService.getResource(resourceId).subscribe(resource => {
+      this._selectedServerResource = resource;
+    });
   }
 
   public ngOnDestroy() {
@@ -274,6 +330,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     if (!isNullOrEmpty(nic.ipAddresses)) {
       this.currentIpAddress = nic.ipAddresses[0];
     }
+    if (this.serverIsBlade) {
+      this._setVlanOptions(nic);
+      return;
+    }
     this._selectNetworkByName(nic.networkName);
   }
 
@@ -281,6 +341,34 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Closes the edit nic window
    */
   public closeEditNicWindow(networks: McsResourceNetwork[]): void {
+    this._resetNetworkValues(networks);
+  }
+
+  /**
+   * Closes the edit nic window for blade servers
+   */
+  public closeEditBladeNicWindow(): void {
+    this._resetNetworkVlanValues();
+  }
+
+  /**
+   * Opens the view nic window
+   * @param nic NIC to be viewed
+   */
+  public openViewNicWindow(nic: McsServerNic): void {
+    if (isNullOrEmpty(nic)) { return; }
+    this.selectedNic = nic;
+    this.nicMethodType = ServerNicMethodType.ViewNic;
+    if (!isNullOrEmpty(nic.ipAddresses)) {
+      this.currentIpAddress = nic.ipAddresses[0];
+    }
+    this._setVlanOptions(nic);
+  }
+
+  /**
+   * Closes the view nic window
+   */
+  public closeViewNicWindow(networks: McsResourceNetwork[]): void {
     this._resetNetworkValues(networks);
   }
 
@@ -341,6 +429,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
+   * Checks whether Blade nic update button should be disabled in Edit mode
+   */
+  public isNetworkVlanDisabled(): boolean {
+    return (!this.fcVlan.valid)
+      || JSON.stringify(this.selectedNic.unpackedVlanNumberRanges) === JSON.stringify(this.fcVlan.value);
+  }
+
+  /**
    * Updates the NIC data based on the selected NIC
    */
   public updateNic(server: McsServer, networks: McsResourceNetwork[]): void {
@@ -358,6 +454,23 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
+   * Updates the Blade NIC data based on the selected NIC
+   */
+  public updateNicBlade(server: McsServer): void {
+    let nicValues = new McsServerCreateNic();
+    nicValues.name = this.selectedNic.name;
+    nicValues.ipAllocationMode = IpAllocationMode.Manual;
+    nicValues.ipAddresses = this.selectedNic.ipAddresses;
+    nicValues.vlanNumberRanges = this.fcVlan.value;
+    nicValues.clientReferenceObject = {
+      serverId: server.id,
+      nicId: this.selectedNic.id
+    };
+    this.closeEditNicWindow([]);
+    this.apiService.updateServerNic(server.id, this.selectedNic.id, nicValues).subscribe();
+  }
+
+  /**
    * Returns true when inputted nic is currently in-progress
    * @param nic NIC to be checked
    */
@@ -365,6 +478,29 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     if (isNullOrEmpty(nic)) { return false; }
     let newNicId = getSafeProperty(this._newNic, (obj) => obj.id);
     return nic.id === newNicId || nic.id === this._inProgressNicId;
+  }
+
+  /**
+   * Returns true when the edit nic link is visible for blade server
+   * @param nic Nic to be checked
+   */
+  public isEditNicBladeVisible(nic: McsServerNic): boolean {
+    if (isNullOrEmpty(nic) || !this._hasInternalPrivateCloudEngineerAccess) {
+      return false;
+    }
+    return this.serverIsBlade && !nic.isEsxVmkInterface;
+  }
+
+  /**
+   * Returns true when the view nic link is visible for blade server
+   * @param nic Nic to be checked
+   */
+  public isViewNicBladeVisible(nic: McsServerNic): boolean {
+    if (isNullOrEmpty(nic) || this._hasInternalPrivateCloudEngineerAccess) {
+      return false;
+    }
+
+    return this.serverIsBlade && !nic.isEsxVmkInterface;
   }
 
   /**
@@ -385,13 +521,19 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * @param server Server details of the selected record
    */
   protected serverChange(server: McsServer): void {
+    this.serverIsBlade = server.platform?.type === PlatformType.UcsCentral || server.platform?.type === PlatformType.UcsDomain;
+    if (this.serverIsBlade) {
+      this._getSelectedServerResource(server?.platform?.resourceId);
+      this._resetNetworkVlanValues();
+    }
+    else {
+      let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
+      // if(!this.serverIsBlade){this._getResourceNetworks(resourceId);}
+      this._getResourceNetworks(resourceId);
+      this._resetNetworkValues([]);
+    }
     this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmNicView);
-    this._resetNetworkValues([]);
     this._updateTableDataSource(server);
-
-    let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
-    this._getResourceNetworks(resourceId);
-
     this.isVMWareToolsInstalled = server.isVMWareToolsInstalled;
     this.isVMWareToolsRunning = server.isVMWareToolsRunning;
   }
@@ -441,6 +583,18 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.manageNetwork = new ServerManageNetwork();
     this.currentIpAddress = undefined;
     this.selectedNetwork = isNullOrEmpty(networks) ? null : networks[0];
+    if (!isNullOrEmpty(this._componentHandler)) {
+      this._componentHandler.recreateComponent();
+    }
+  }
+
+  /**
+   * Reset network vlan form values to initial
+   */
+  private _resetNetworkVlanValues(): void {
+    this.nicMethodType = ServerNicMethodType.AddNic;
+    this._serverNicsCache = null;
+    this.fcVlan.reset();
     if (!isNullOrEmpty(this._componentHandler)) {
       this._componentHandler.recreateComponent();
     }
@@ -587,5 +741,86 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         return new McsMatTableContext(response, response?.length)
       })
     );
+  }
+
+  /**
+   * Converts vlan options into tree items for the select tree view field
+   */
+  private _convertVlanOptionsToTreeItems(): Observable<TreeItem<string>[]> {
+    return this._vlanOptions.pipe(
+      map(records => {
+        let groupNames = isNullOrEmpty(records) ? ['No networks to display.'] : ['Available Networks'];
+        return TreeUtility.convertEntityToTreemItems(groupNames,
+          record => new TreeGroup(record, record, records),
+          child => new TreeGroup(child.value, child.key, null, {
+            selectable: true
+          }))
+      }),
+      tap(() => this._changeDetectorRef.markForCheck())
+    );
+  }
+
+  /**
+   * Sets the initially selected network Vlans
+   */
+  private _setSelectedNetworks(nic: McsServerNic): void {
+    this.fcVlan.setValue(nic.unpackedVlanNumberRanges);
+    this.fcVlan.updateValueAndValidity();
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Arranges and sets the vlan options for the network vlan select field
+   */
+  private _setVlanOptions(selectedNic: McsServerNic): void {
+    this.isNetworkVlansLoading = true;
+    this._getNetworkDbVlanOptions().subscribe(records => {
+      let availableVlanIds = records.map(opt => opt.key);
+      selectedNic.unpackedVlanNumberRanges.filter(id => {
+        // Add Vlans not found in returned list into Network Vlan field options
+        if (!availableVlanIds.includes(id)) {
+          let option: FlatOption = {
+            key: id,
+            value: `Unknown (VLAN ${id})`
+          };
+          records.push(option);
+        }
+      });
+
+      this._vlanOptions.next(records);
+      this._setSelectedNetworks(selectedNic);
+      this.isNetworkVlansLoading = false;
+    });
+  }
+
+  /**
+   * Gets the network vlan options available from getNetworkDbVlans
+   */
+  private _getNetworkDbVlanOptions(): Observable<FlatOption[]> {
+    let queryParam = new McsNetworkDbVlanQueryParams();
+    queryParam.pageSize = 9999;
+    queryParam.podSiteName = this._selectedServer?.availabilityZone;
+    queryParam.podName = this._selectedServerResource?.podName;
+    queryParam.networkCompanyId = this._currentUserCompanyId;
+
+    if (isNullOrUndefined(this._selectedServerResource) || isNullOrUndefined(this._currentUserCompanyId)) { return of([]); }
+    return this.apiService.getNetworkDbVlans(queryParam).pipe((
+      map((vlans) => {
+        let options: FlatOption[] = [];
+        vlans.collection.forEach(vlan => {
+          // Map network name of resource network to vlan
+          let networkVlan = this._selectedServerResource?.networks?.find(network => network.vlanId === vlan.number);
+          let optionValue = isNullOrUndefined(networkVlan?.networkName) ? 'Unknown' : networkVlan.networkName;
+
+          // Create option item
+          let option: FlatOption = {
+            key: vlan.number,
+            value: `${optionValue} (VLAN ${vlan.number})`
+          };
+          options.push(option);
+        });
+        return options;
+      })
+    ));
   }
 }

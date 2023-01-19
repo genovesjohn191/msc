@@ -21,7 +21,7 @@
         {{ node.name }}
       </mat-chip>
 
-      <input matInput
+      <input matInput *ngIf="!readOnly"
         [disabled]="disabled"
         [placeholder]="displayedLabel"
         (blur)="onBlurInput()"

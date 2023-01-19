@@ -100,6 +100,9 @@ export class FieldSelectTreeViewComponent<TEntity>
   public disabled: boolean = false;
 
   @Input()
+  public readOnly: boolean = false;
+
+  @Input()
   public hideChips: boolean = false;
 
   @Input()
@@ -218,7 +221,9 @@ export class FieldSelectTreeViewComponent<TEntity>
   }
 
   public onTogglePanel(): void {
-    this.panelOpen ? this._closePanel() : this._openPanel();
+    if(!this.readOnly){
+      this.panelOpen ? this._closePanel() : this._openPanel();
+    }
   }
 
   public onToggleNode(event: MouseEvent, node: MatTreeViewModel<TEntity>): void {

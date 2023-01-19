@@ -19,6 +19,7 @@ import {
   McsNetworkDbVlan,
   McsNetworkDbVlanAction,
   McsNetworkDbVlanEvent,
+  McsNetworkDbVlanQueryParams,
   McsNetworkDbVni,
   McsQueryParam
 } from '@app/models';
@@ -41,7 +42,7 @@ export interface IMcsApiNetworkDbService {
    * Get all the VLANs
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getVlans(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbVlan[]>>;
+  getVlans(query?: McsNetworkDbVlanQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbVlan[]>>;
 
   /**
    * Get the details of the VLAN
