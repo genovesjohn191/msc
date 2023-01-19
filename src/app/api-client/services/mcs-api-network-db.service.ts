@@ -22,6 +22,7 @@ import {
   McsNetworkDbVlan,
   McsNetworkDbVlanAction,
   McsNetworkDbVlanEvent,
+  McsNetworkDbVlanQueryParams,
   McsNetworkDbVni,
   McsQueryParam
 } from '@app/models';
@@ -76,7 +77,7 @@ export class McsApiNetworkDbService implements IMcsApiNetworkDbService {
       );
   }
 
-  public getVlans(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbVlan[]>> {
+  public getVlans(query?: McsNetworkDbVlanQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsNetworkDbVlan[]>> {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();

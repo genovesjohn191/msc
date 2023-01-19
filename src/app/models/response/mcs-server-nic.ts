@@ -76,6 +76,12 @@ export class McsServerNic extends McsEntityBase {
   })
   public ipAllocationMode: IpAllocationMode = undefined;
 
+  @JsonProperty()
+  public vlanNumberRanges: string[] = undefined;
+
+  @JsonProperty()
+  public isEsxVmkInterface: boolean = undefined;
+
   /**
    * Returns the ip allocation mode label
    */
@@ -97,5 +103,26 @@ export class McsServerNic extends McsEntityBase {
     let noIpAddress = isNullOrEmpty(this.ipAddresses) && isNullOrEmpty(this.vCloudIpAddress);
     if (noIpAddress) { return undefined; }
     return isNullOrEmpty(this.ipAddresses) ? [this.vCloudIpAddress] : this.ipAddresses;
+  }
+
+  public get unpackedVlanNumberRanges(): number[] {
+    if(isNullOrEmpty(this.vlanNumberRanges)) { return []; }
+    let vlanIds: number[] = [];
+    this.vlanNumberRanges.forEach(vlanNumberRange => {
+      let dashIndex = vlanNumberRange.indexOf('-');
+      if(dashIndex !== -1){
+        let startingNumber = +vlanNumberRange.slice(0, dashIndex);
+        let endingNumber = +vlanNumberRange.slice(dashIndex+1, vlanNumberRange.length);
+        if(endingNumber > startingNumber){
+          for (let currentVlanNumber = startingNumber; currentVlanNumber <= endingNumber; currentVlanNumber++) {
+            vlanIds.push(currentVlanNumber);
+          }
+        }
+      }
+      else{
+        vlanIds.push(+vlanNumberRange);
+      }
+    });
+    return vlanIds;
   }
 }
