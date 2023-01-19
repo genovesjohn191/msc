@@ -15,10 +15,7 @@ export class McsStorageSaasBackupBackupAttemptDetails extends McsEntityBase {
   public generalStatus: string = undefined;
 
   @JsonProperty()
-  public successfulUsers: number = undefined;
-
-  @JsonProperty()
-  public failedUsers: number = undefined;
+  public protectedUsers: number = undefined;
 
   @JsonProperty()
   public startTime: Date = undefined;

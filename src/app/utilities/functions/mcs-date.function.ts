@@ -125,13 +125,40 @@ export function getFriendlyTimespan(milleseconds: number): string {
 }
 
 /**
+ * Returns a friendly day format of the date e.g. Today, Yesterday or 'day of the week'
+ * Returns the actual date (without the time), if more than a week
+ * @param date Date to be formatted
+ * @param timeZone Timezone to be followed, if more than a week
+ */
+export function getFriendlyDay(date: Date, timeZone?: string): string {
+  
+  if (isNullOrEmpty(date)) { return ''; }
+
+  timeZone = isNullOrEmpty(timeZone) ? moment.tz.guess() : timeZone;
+
+  let format = "dddd";
+  let daysFromNow = getDayDifference(getCurrentDate(), new Date(date));
+
+  if (daysFromNow == 0) 
+    return 'Today';
+  else if (daysFromNow == 1) 
+    return 'Yesterday';
+  else if (daysFromNow >= 7) 
+    format = "ddd, DD MMM YYYY";
+  
+  let utcDateTime = moment.utc(date);
+  let convertedDate = utcDateTime.clone().tz(timeZone);
+  return convertedDate.format(format);
+}
+
+/**
  * Get or calculate day difference using the give dates
  * @param firstDate First date
  * @param secondDate Second date to be compare in first date
  */
 export function getDayDifference(firstDate: Date, secondDate: Date): number {
   // Calculate time difference using milliseconds, hours, minutes, seconds
-  return (Math.ceil(getTimeDifference(firstDate, secondDate) / (1000 * 24 * 60 * 60)));
+  return (Math.floor(getTimeDifference(firstDate, secondDate) / (1000 * 24 * 60 * 60)));
 }
 
 /**

@@ -13,7 +13,7 @@ import {
   JsonProperty
 } from "@app/utilities";
 
-export class McsStorageSaasBackupLastBackupAttempt extends McsEntityBase {
+export class McsStorageSaasBackupLastBackupAttempt {
   @JsonProperty({
     serializer: SaasBackupStatusSerialization,
     deserializer: SaasBackupStatusSerialization
@@ -21,11 +21,8 @@ export class McsStorageSaasBackupLastBackupAttempt extends McsEntityBase {
   public status: string = undefined;
 
   @JsonProperty()
-  public successfulUsers: number = undefined;
-
-  @JsonProperty()
-  public failedUsers: number = undefined;
-
+  public protectedUsers: number = undefined;
+  
   @JsonProperty()
   public runTime: Date = undefined;
 
@@ -101,9 +98,4 @@ export class McsStorageSaasBackupLastBackupAttempt extends McsEntityBase {
     return saasBackupStatusText[this.status] || 'Unknown';
 }
 
-  public get totalBackupAttempts(): number {
-    let successfulAttempts = this.successfulUsers || 0;
-    let failedAttempts = this.failedUsers || 0; 
-    return successfulAttempts + failedAttempts;
-  }
 }
