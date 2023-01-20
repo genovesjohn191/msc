@@ -218,7 +218,7 @@
           <td mat-cell *matCellDef="let row">
             <ng-container *mcsAccessControl="getPowerStatePermission(server).vmNicEdit">
               <mcs-item>
-                <span *ngIf="isEditNicBladeVisible(server, row)">
+                <span *ngIf="isEditNicBladeVisible(row)">
                   <a [disabled]="!server.executable || isSnapshotProcessing"
                       (click)="openEditNicWindow(row)"
                       mcsId="edit-nic"
@@ -229,7 +229,7 @@
                   </a>
                 </span>
                 <span>
-                  <a *ngIf="isViewNicBladeVisible(server, row)"
+                  <a *ngIf="isViewNicBladeVisible(row)"
                     [disabled]="!server.executable || isSnapshotProcessing"
                     (click)="openViewNicWindow(row)"
                     mcsId="view-nic"

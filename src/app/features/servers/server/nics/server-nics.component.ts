@@ -488,7 +488,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     if (isNullOrEmpty(nic) || !this._hasInternalPrivateCloudEngineerAccess) {
       return false;
     }
-    return this.serverIsBlade && !nic.isEsxVmkInterface;
+    return this.serverIsBlade && !nic.isESXVirtualKernelInterface;
   }
 
   /**
@@ -500,7 +500,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       return false;
     }
 
-    return this.serverIsBlade && !nic.isEsxVmkInterface;
+    return this.serverIsBlade && !nic.isESXVirtualKernelInterface;
   }
 
   /**
