@@ -202,11 +202,39 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
           map((response: McsStorageSaasBackupBackupAttempt) => {
             this.lastBackupAttempt = getSafeProperty(response, obj => obj.lastBackupAttempt);
             this._changeDetectorRef.markForCheck();
-            let backupAttempts = getSafeProperty(response, obj => obj.backupAttempts);
+            let backupAttempts = this._getLatestDailyBackupAttempts(
+              getSafeProperty(response, obj => obj.backupAttempts));
 
             return new McsMatTableContext(backupAttempts, backupAttempts?.length)
         }))
       }));
+  }
+
+  private _getLatestDailyBackupAttempts(backAttempts: McsStorageSaasBackupAttempt[])
+    : McsStorageSaasBackupAttempt[] {
+
+    if (!backAttempts) return [];
+
+    let groupedDaily: {[key: string]: McsStorageSaasBackupAttempt[]};
+    groupedDaily = backAttempts.reduce(function (groupedItems, currentItem) {
+        let key = new Date(currentItem.startTime).toLocaleDateString();
+        groupedItems[key] = groupedItems[key] || [];
+        groupedItems[key].push(currentItem);
+        return groupedItems;
+    }, Object.create(null));
+
+    let latestDaily: McsStorageSaasBackupAttempt[] = [];
+    Object.entries(groupedDaily).forEach(
+      ([_, backupAttemptsPerDay]) => {
+        if (backupAttemptsPerDay.length > 1) {
+          backupAttemptsPerDay.sort((recA, recB) => 
+            new Date(recB.startTime).getTime() - new Date(recA.startTime).getTime());
+        }
+        latestDaily.push(backupAttemptsPerDay[0])
+      }
+    );
+
+    return latestDaily;
   }
 
   private _getPeriodStartRange(): string {
