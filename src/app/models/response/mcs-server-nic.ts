@@ -80,7 +80,7 @@ export class McsServerNic extends McsEntityBase {
   public vlanNumberRanges: string[] = undefined;
 
   @JsonProperty()
-  public isEsxVmkInterface: boolean = undefined;
+  public isESXVirtualKernelInterface: boolean = undefined;
 
   /**
    * Returns the ip allocation mode label
