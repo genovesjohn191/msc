@@ -147,6 +147,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _selectedServer: McsServer = null;
   private _selectedServerResource: McsResource = null;
   private _hasInternalPrivateCloudEngineerAccess: boolean = false;
+  private _isUcsBladeNicEditFeatureEnabled = false;
   private _currentUserCompanyId: string = '';
   private _vlanOptions = new BehaviorSubject<FlatOption[]>(null);
 
@@ -166,7 +167,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   public get title(): string {
-    if (this.serverIsBlade && !this._hasInternalPrivateCloudEngineerAccess) {
+    if (!this._isUcsBladeNicEditFeatureEnabled || (this.serverIsBlade && !this._hasInternalPrivateCloudEngineerAccess)) {
       return this._translateService.instant('serverNics.titleView');
     }
     return this._translateService.instant('serverNics.titleManage');
@@ -260,6 +261,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public ngOnInit() {
     this._hasInternalPrivateCloudEngineerAccess = this._accessControlService.hasPermission([McsPermission.InternalPrivateCloudEngineerAccess]);
+    this._isUcsBladeNicEditFeatureEnabled = this._accessControlService.hasAccessToFeature(McsFeatureFlag.DedicatedBladeNicEdit);
     this._currentUserCompanyId = this._authenticationIdentity.user.companyId;
     this.server$.subscribe(server => {
       this._serverIsDedicated = server.isDedicated;
@@ -485,10 +487,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * @param nic Nic to be checked
    */
   public isEditNicBladeVisible(nic: McsServerNic): boolean {
-    if (isNullOrEmpty(nic) || !this._hasInternalPrivateCloudEngineerAccess) {
+    if ((isNullOrEmpty(nic) || !this._hasInternalPrivateCloudEngineerAccess)) {
       return false;
     }
-    return this.serverIsBlade && !nic.isESXVirtualKernelInterface;
+    return this.serverIsBlade && !nic.isESXVirtualKernelInterface && this._isUcsBladeNicEditFeatureEnabled;
   }
 
   /**
@@ -496,10 +498,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * @param nic Nic to be checked
    */
   public isViewNicBladeVisible(nic: McsServerNic): boolean {
+    if(!this._isUcsBladeNicEditFeatureEnabled) { return true; }
     if (isNullOrEmpty(nic) || this._hasInternalPrivateCloudEngineerAccess) {
       return false;
     }
-
     return this.serverIsBlade && !nic.isESXVirtualKernelInterface;
   }
 
