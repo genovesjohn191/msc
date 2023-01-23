@@ -57,7 +57,7 @@ export class McsStorageSaasBackup extends McsEntityBase {
   public firstBackupAttempt: McsStorageSaasBackupFirstBackupAttempt = undefined;
 
   /**
-   * Returns the saas type text content
+   * Returns the SaaS type text content
    */
   public get typeLabel(): string {
     let isTypeMicrosoft365 = this.type === SaasBackupType.M365;
