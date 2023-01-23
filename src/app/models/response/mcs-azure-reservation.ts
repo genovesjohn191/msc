@@ -54,4 +54,10 @@ export class McsAzureReservation extends McsEntityBase {
 
   @JsonProperty()
   public autoRenewEnabled: boolean = undefined;
+
+  @JsonProperty()
+  public regionName: string = undefined;
+  
+  @JsonProperty()
+  public utilisationPercent: number = undefined;
 }

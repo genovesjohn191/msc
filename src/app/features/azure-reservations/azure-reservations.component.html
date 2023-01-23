@@ -77,6 +77,17 @@
           </td>
         </ng-container>
 
+        <!-- Utilisation Column -->
+        <ng-container matColumnDef="utilisation">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header="utilisation" disableClear>
+           {{ 'columnHeader.utilisation' | translate }}
+         </th>
+         <td mat-cell *matCellDef="let row">
+           <span [innerHTML]="row.utilisationPercent | mcsDataLabel: 'Unknown'"></span>
+           <span *ngIf="row.utilisationPercent">%</span>
+         </td>
+       </ng-container>
+
         <!-- Type Column -->
         <ng-container matColumnDef="type">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="reservationType" disableClear>
@@ -95,6 +106,17 @@
           </th>
           <td mat-cell *matCellDef="let row">
             <span [innerHTML]="row.status | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Region Column -->
+        <ng-container matColumnDef="region">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="region" disableClear>
+            {{ 'columnHeader.region' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <span [innerHTML]="row.regionName | mcsDataLabel: 'Unknown'">
             </span>
           </td>
         </ng-container>
