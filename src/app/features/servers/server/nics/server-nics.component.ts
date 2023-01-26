@@ -498,7 +498,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * @param nic Nic to be checked
    */
   public isViewNicBladeVisible(nic: McsServerNic): boolean {
-    if(!this._isUcsBladeNicEditFeatureEnabled) { return true; }
+    if (!this._isUcsBladeNicEditFeatureEnabled) { return true; }
     if (isNullOrEmpty(nic) || this._hasInternalPrivateCloudEngineerAccess) {
       return false;
     }
@@ -776,14 +776,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _setVlanOptions(selectedNic: McsServerNic): void {
     this.isNetworkVlansLoading = true;
-    this._getNetworkDbVlanOptions().subscribe(records => {
+    this._getNetworkDbVlanOptions(selectedNic).subscribe(records => {
       let availableVlanIds = records.map(opt => opt.key);
       selectedNic.unpackedVlanNumberRanges.filter(id => {
         // Add Vlans not found in returned list into Network Vlan field options
         if (!availableVlanIds.includes(id)) {
           let option: FlatOption = {
             key: id,
-            value: `Unknown (VLAN ${id})`
+            value: this._getMappedNetworkName(id)
           };
           records.push(option);
         }
@@ -798,31 +798,37 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Gets the network vlan options available from getNetworkDbVlans
    */
-  private _getNetworkDbVlanOptions(): Observable<FlatOption[]> {
+  private _getNetworkDbVlanOptions(selectedNic: McsServerNic): Observable<FlatOption[]> {
     let queryParam = new McsNetworkDbVlanQueryParams();
     queryParam.pageSize = 9999;
     queryParam.podSiteName = this._selectedServer?.availabilityZone;
     queryParam.podName = this._selectedServerResource?.podName;
     queryParam.networkCompanyId = this._currentUserCompanyId;
 
-    if (isNullOrUndefined(this._selectedServerResource) || isNullOrUndefined(this._currentUserCompanyId)) { return of([]); }
+    if (isNullOrUndefined(this._selectedServerResource) || isNullOrUndefined(this._currentUserCompanyId) || this.isViewNicBladeVisible(selectedNic)) { return of([]); }
+
     return this.apiService.getNetworkDbVlans(queryParam).pipe((
       map((vlans) => {
         let options: FlatOption[] = [];
         vlans.collection.forEach(vlan => {
-          // Map network name of resource network to vlan
-          let networkVlan = this._selectedServerResource?.networks?.find(network => network.vlanId === vlan.number);
-          let optionValue = isNullOrUndefined(networkVlan?.networkName) ? 'Unknown' : networkVlan.networkName;
-
           // Create option item
           let option: FlatOption = {
             key: vlan.number,
-            value: `${optionValue} (VLAN ${vlan.number})`
+            value: this._getMappedNetworkName(vlan.number)
           };
           options.push(option);
         });
         return options;
       })
     ));
+  }
+
+  /**
+   * Returns the network name of the resource network that matches the given vlan id
+   */
+  private _getMappedNetworkName(vlanId: number): string {
+    let networkVlan = this._selectedServerResource?.networks?.find(network => network.vlanId === vlanId);
+    let networkName = isNullOrUndefined(networkVlan?.networkName) ? 'Unknown' : networkVlan.networkName;
+    return `${networkName} (VLAN ${vlanId})`;
   }
 }
