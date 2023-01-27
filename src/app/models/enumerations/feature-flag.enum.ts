@@ -39,6 +39,8 @@ export enum McsFeatureFlag {
   DedicatedVmNicView = 'EnableDedicatedVmNicView',
   DedicatedVmStorageView = 'EnableDedicatedVmStorageView',
 
+  DedicatedBladeNicEdit = "EnableUcsBladeNicEdit", 
+
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingStretchedVdcStorageExpand = 'EnableOrderingStretchedVdcStorageExpand',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',

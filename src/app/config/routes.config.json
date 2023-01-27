@@ -698,7 +698,7 @@
     "navigationPath": "storage/saas-backups",
     "requiredPermissions": ["SaasBackupView"],
     "requiredFeatureFlag": ["EnableSaasBackup"],
-    "documentTitle": "Saas Backup - Macquarie Cloud Services"
+    "documentTitle": "SaaS Backup - Macquarie Cloud Services"
   },
   "saasBackupDetails": {
     "enumPlatform": "Private",
@@ -707,7 +707,7 @@
     "navigationPath": "storage/saas-backups",
     "requiredPermissions": ["SaasBackupView"],
     "requiredFeatureFlag": ["EnableSaasBackup"],
-    "documentTitle": "Saas Backup - Macquarie Cloud Services"
+    "documentTitle": "SaaS Backup - Macquarie Cloud Services"
   },
   "saasBackupDetailsOverview": {
     "enumPlatform": "Private",
@@ -716,7 +716,7 @@
     "navigationPath": "overview",
     "requiredPermissions": ["SaasBackupView"],
     "requiredFeatureFlag": ["EnableSaasBackup"],
-    "documentTitle": "Saas Backup Overview - Macquarie Cloud Services"
+    "documentTitle": "SaaS Backup Overview - Macquarie Cloud Services"
   },
   "saasBackupDetailsManagement": {
     "enumPlatform": "Private",
@@ -725,7 +725,7 @@
     "navigationPath": "management",
     "requiredPermissions": ["SaasBackupView"],
     "requiredFeatureFlag": ["EnableSaasBackup"],
-    "documentTitle": "Saas Backup Management - Macquarie Cloud Services"
+    "documentTitle": "SaaS Backup Management - Macquarie Cloud Services"
   },
   "licenses": {
     "enumPlatform": "Public",

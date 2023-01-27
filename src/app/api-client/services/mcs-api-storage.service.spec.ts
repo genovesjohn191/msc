@@ -70,7 +70,7 @@ describe('McsApiStorageService', () => {
   });
 
   describe('getSaasBackups()', () => {
-    it('should get all Saas Backups from API calls', () => {
+    it('should get all SaaS Backups from API calls', () => {
       let query = new McsQueryParam();
       query.pageIndex = requestOptions.page;
       query.pageSize = requestOptions.perPage;
