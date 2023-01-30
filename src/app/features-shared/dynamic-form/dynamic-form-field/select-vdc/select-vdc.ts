@@ -15,6 +15,8 @@ export class DynamicSelectVdcField extends DynamicFormFieldConfigBase {
   public hideManaged?: boolean = false;
   public useServiceIdAsKey: boolean = false;
   public disableStretched: boolean = false;
+  public matchServiceIdInOptions: boolean = false;
+  public noVdcForServiceFallback?: string;
 
   public constructor(options: {
     key: string;
@@ -31,6 +33,8 @@ export class DynamicSelectVdcField extends DynamicFormFieldConfigBase {
     hideManaged?: boolean;
     useServiceIdAsKey?: boolean;
     disableStretched?: boolean;
+    matchServiceIdInOptions?: boolean;
+    noVdcForServiceFallback?: string;
   }) {
     super(options);
 
@@ -38,5 +42,7 @@ export class DynamicSelectVdcField extends DynamicFormFieldConfigBase {
     this.hideManaged = options.hideManaged || false;
     this.useServiceIdAsKey = options.useServiceIdAsKey || false;
     this.disableStretched = options.disableStretched || false;
+    this.matchServiceIdInOptions = options.matchServiceIdInOptions || false;
+    this.noVdcForServiceFallback = options.noVdcForServiceFallback;
   }
 }
