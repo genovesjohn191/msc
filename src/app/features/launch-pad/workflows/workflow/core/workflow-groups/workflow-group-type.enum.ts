@@ -53,7 +53,9 @@ export enum WorkflowGroupId {
   FirewallUpgrade = 900007,
   FirewallAssessUpgradeReadiness = 900008,
 
-  UcsOrgCreate = 1000001
+  UcsOrgCreate = 1000001,
+
+  VirtualDataCentreDeprovision = 1100001
 }
 
 export const workflowGroupIdText = {
@@ -105,5 +107,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.DedicatedBladeProvision]: 'Provision Dedicated Blade',
 
   [WorkflowGroupId.UcsOrgCreate]: 'Create UCS Organisation',
+
+  [WorkflowGroupId.VirtualDataCentreDeprovision]: 'Deprovision Virtual Data Center'
 }
 

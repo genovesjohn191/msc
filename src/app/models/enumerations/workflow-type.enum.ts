@@ -46,7 +46,9 @@ export enum WorkflowType {
   FirewallUpgrade = 'launchpad.firewall.upgrade',
   FirewallAssessUpgradeReadiness = 'launchpad.firewall.assessUpgradeReadiness',
 
-  UcsOrgCreate = 'launchpad.ucsOrganisation.create'
+  UcsOrgCreate = 'launchpad.ucsOrganisation.create',
+
+  VirtualDataCenterDeprovision = 'launchpad.virtualdatacenter.deprovision'
 }
 
 /**

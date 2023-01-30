@@ -37,6 +37,7 @@ export const workflowPermissionMap: Map<McsPermission, WorkflowGroupId[]> = new 
         WorkflowGroupId.FirewallProvisionAdom,
         WorkflowGroupId.FirewallUpgrade,
         WorkflowGroupId.FirewallAssessUpgradeReadiness,
+        WorkflowGroupId.VirtualDataCentreDeprovision
       ]
     ],
     [ McsPermission.InternalPublicCloudEngineerAccess,

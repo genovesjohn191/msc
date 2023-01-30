@@ -49,9 +49,12 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
 export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<McsResource> {
   public config: DynamicSelectVdcField;
 
+  public noVdcForServiceFound: boolean = false;
+
   // Filter variables
   private _az: string = '';
   private _companyId: string = '';
+  private _serviceId: string = '';
 
   constructor(
     private _apiService: McsApiService,
@@ -70,6 +73,11 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
 
       case 'az-change':
         this._az = params.value;
+        this.retrieveOptions();
+        break;
+        
+      case 'service-id-change':
+        this._serviceId = params.value;
         this.retrieveOptions();
         break;
     }
@@ -124,6 +132,8 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
   protected filter(collection: McsResource[]): GroupedOption[] {
     let groupedOptions: GroupedOption[] = [];
 
+    this._setFieldState(collection);
+
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
 
@@ -131,7 +141,11 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
       let name = `${item.availabilityZone} (${item.name})`;
       let id = this.config.useServiceIdAsKey ? item.serviceId : item.id;
-      let option = { key: id, value: name, disabled: false } as FlatOption;
+      let option = { key: id, value: name, 
+        disabled: (isNullOrEmpty(this._serviceId) || !this.config.matchServiceIdInOptions ? 
+          false : 
+          item.serviceId != this._serviceId) 
+        } as FlatOption;
 
       if(this.config.disableStretched && item.isStretched) {
         option.disabled = true;
@@ -161,5 +175,32 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     }
 
     return false;
+  }
+
+  private _setFieldState(collection: McsResource[]) {
+
+    if (this.config.matchServiceIdInOptions &&
+      !isNullOrEmpty(this._serviceId)) {
+      let matchedResources = collection.filter((item) => item.serviceId === this._serviceId)
+      
+      if (!matchedResources || matchedResources.length == 0) {
+        this._setNoVdcForServiceError();
+      }
+      else {
+        if (matchedResources.length == 1) {
+          this.config.initialValue = this.config.useServiceIdAsKey
+          ? matchedResources[0].serviceId
+          : matchedResources[0].id;
+  
+          this.disabled = true;
+          this._changeDetectorRef.markForCheck();
+        }
+      }
+    }
+  }
+
+  private _setNoVdcForServiceError(): void {
+    this.noVdcForServiceFound = true;
+    this._changeDetectorRef.markForCheck();
   }
 }

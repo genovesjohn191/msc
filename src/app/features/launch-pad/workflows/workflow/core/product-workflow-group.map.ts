@@ -1151,5 +1151,32 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
         }
       ]
     ],
+
+    [ ProductType.VirtualDataCentre,
+      [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreDeprovision,
+          allowedElementStatuses: [ ]
+        }
+      ]
+    ],
+
+    [ ProductType.SelfManagedVdc,
+      [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreDeprovision,
+          allowedElementStatuses: [ ]
+        }
+      ]
+    ],
+
+    [ ProductType.FlexVirtualDataCenter,
+      [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCentreDeprovision,
+          allowedElementStatuses: [ ]
+        }
+      ]
+    ],
   ]
 );

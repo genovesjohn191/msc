@@ -38,7 +38,8 @@ import {
   StretchedDedicatedStorageCreateAndAttachVolumeWorkflowGroup,
   DedicatedBladeDeprovisionWorkflowGroup,
   DedicatedBladeProvisionWorkflowGroup,
-  UcsOrgCreateWorkflowGroup
+  UcsOrgCreateWorkflowGroup,
+  VirtualDataCenterDeprovisionWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 
@@ -91,4 +92,6 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.FirewallAssessUpgradeReadiness, FirewallAssessUpgradeReadinessWorkflowGroup],
 
   [ WorkflowGroupId.UcsOrgCreate, UcsOrgCreateWorkflowGroup ],
+
+  [ WorkflowGroupId.VirtualDataCentreDeprovision, VirtualDataCenterDeprovisionWorkflowGroup ]
 ]);

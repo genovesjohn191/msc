@@ -49,4 +49,6 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.FirewallAssessUpgradeReadiness, 'Assess Firewall Upgrade Readiness'],
 
   [WorkflowGroupId.UcsOrgCreate, 'Create UCS Organisation'],
+
+  [WorkflowGroupId.VirtualDataCentreDeprovision, 'Deprovision Virtual Data Center']
 ]);

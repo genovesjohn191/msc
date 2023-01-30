@@ -111,6 +111,7 @@ export enum ProductType {
   FirewallVa,
   FirewallVlan,
   FirewallVxlan,
+  FlexVirtualDataCenter,
   FrontpagePerUser,
   FrameAccessToCoLocation,
   GatewayFullRack,
