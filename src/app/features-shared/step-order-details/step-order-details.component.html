@@ -12,6 +12,7 @@
           <mcs-form-field [mcsContextualHelp]="'orderDetailsStep.orderDescription.contextualHelp' | translate">
             <input type="text" mcsInput [formControl]="fcDescription" #orderDescription
               [placeholder]="'orderDetailsStep.orderDescription.header' | translate"
+              [maxLength]="128"
               (focus)="onDescriptionFocus(orderDescription)">
           </mcs-form-field>
         </section>
