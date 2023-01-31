@@ -55,14 +55,13 @@ export class AzureSoftwareSubscriptionsComponent extends McsPageBase {
   public readonly dataEvents: McsTableEvents<McsAzureSoftwareSubscription>;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'quantity' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingTerm' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'id' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentStartDate' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'commitmentEndDate' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'id' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'billingTerm' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];
 
