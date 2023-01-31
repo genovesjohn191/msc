@@ -30,7 +30,8 @@ export const virtualDataCenterDeprovisionForm: LaunchPadForm = {
     new DynamicSlideToggleField({
       key: `preserveMedia`,
       label: 'Preserve Media',
-      value: true
+      value: true,
+      contextualHelp: "If disabled, any media stored in this VDC will be deleted."
     })
   ],
 
