@@ -132,7 +132,8 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
   protected filter(collection: McsResource[]): GroupedOption[] {
     let groupedOptions: GroupedOption[] = [];
 
-    this._setFieldState(collection);
+    if (!this._setFieldStateIfValid(collection))
+      return groupedOptions;
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
@@ -177,7 +178,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     return false;
   }
 
-  private _setFieldState(collection: McsResource[]) {
+  private _setFieldStateIfValid(collection: McsResource[]): boolean {
 
     if (this.config.matchServiceIdInOptions &&
       !isNullOrEmpty(this._serviceId)) {
@@ -185,6 +186,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
       
       if (!matchedResources || matchedResources.length == 0) {
         this._setNoVdcForServiceError();
+        return false;
       }
       else {
         if (matchedResources.length == 1) {
@@ -192,15 +194,21 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
           ? matchedResources[0].serviceId
           : matchedResources[0].id;
   
-          this.disabled = true;
-          this._changeDetectorRef.markForCheck();
+          this._disableControl();
         }
       }
     }
+
+    return true;
+  }
+
+  private _disableControl() {
+    this.disabled = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   private _setNoVdcForServiceError(): void {
     this.noVdcForServiceFound = true;
-    this._changeDetectorRef.markForCheck();
+    this._disableControl();
   }
 }
