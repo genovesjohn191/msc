@@ -231,7 +231,7 @@ export class CommonDefinition {
   public static REGEX_ACCOUNT_UPN_PATTERN = /^.*[^-_.]$/;
   public static REGEX_OU_PATH = /^((CN=([^,]*)),)?((((?:CN|OU)=[^,]+,?)+),)?((DC=[^,]+,?)+)$/;
   public static REGEX_NETWORK_NAME = /^[a-zA-Z_\-0-9]+$/;
-  public static REGEX_ADOM_NAME_PATTERN = /^[a-zA-Z0-9_]+_[0-9]+$/;
+  public static REGEX_ADOM_NAME_PATTERN = /^[a-zA-Z0-9_\-]+_[0-9]+$/;
   public static REGEX_SHORT_CUSTOMER_NAME_PATTERN = /^[a-zA-Z0-9]{1,16}$/;
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
   public static REGEX_NUMERIC_PATTERN = /^-?\d*?$/;
