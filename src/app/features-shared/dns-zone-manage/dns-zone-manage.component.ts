@@ -6,7 +6,8 @@ import {
 import {
   finalize,
   switchMap,
-  tap
+  tap,
+  map
 } from 'rxjs/operators';
 
 import {
@@ -49,7 +50,8 @@ import {
   getSafeFormValue,
   isNullOrEmpty,
   isNullOrUndefined,
-  unsubscribeSafely
+  unsubscribeSafely,
+  compareStrings
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -114,25 +116,26 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
   public validateRecordConflict(isExistingRecord: boolean,existingRecord?: DnsZoneViewModel): boolean {
     let thisRecord = {
       zoneType: (isExistingRecord) ? existingRecord.recordInfo?.zoneType : this.addViewModel.fcZoneType?.value,
-      hostName: (isExistingRecord) ? existingRecord.recordInfo?.hostName : this.addViewModel.fcHostName?.value,
-      data: (isExistingRecord) ? existingRecord.recordInfo?.data : this.addViewModel.fcData?.value,
+      hostName: (isExistingRecord) ? existingRecord.fgDnsZone?.get('fcHostName')?.value : this.addViewModel.fcHostName?.value,
+      data: (isExistingRecord) ? existingRecord.fgDnsZone?.get('fcData')?.value : this.addViewModel.fcData?.value,
       id: (isExistingRecord) ? existingRecord.recordInfo?.id : null
     }
 
     // Validate first if a conflicting record exists, otherwise display error message
     // Also check for CNAME record that has a conflicting name with any other record (special case)
-    let recordFound = this.dataSource.findRecord(item =>
+    let conflictingRecordFound = this.dataSource.findRecord(item =>
           thisRecord.zoneType === DnsRecordType.CNAME &&
           thisRecord.hostName === item.fcHostName?.value &&
-          thisRecord.id !== item.recordInfo.id)
+          thisRecord.id !== item.recordInfo?.id)
       ||
+        //String cast required for handling TXT data
         this.dataSource.findRecord(item =>
           thisRecord.zoneType === item.fcZoneType?.value &&
-          thisRecord.hostName === item.fcHostName?.value &&
-          thisRecord.data === item.fcData?.value &&
+          !compareStrings(thisRecord.hostName, item.fcHostName?.value) &&
+          (thisRecord.data? !compareStrings(thisRecord.data?.toString(), item.fcData?.value?.toString()) : false) &&
           thisRecord.id !== item.recordInfo.id);
 
-    if (recordFound) {
+    if (!conflictingRecordFound) { return true; }
       this._dialogService.openMessage({
         type: DialogActionType.Error,
         title: this._translateService.instant('label.saveDnsRecord'),
@@ -140,56 +143,109 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
           name: this.addViewModel.fcTarget?.value
         })
       });
-      return false;
-    }
-    return true;
+    return false;
+  }
+
+  public validateCnameFqdn(isExistingRecord: boolean, existingRecord?: DnsZoneViewModel): boolean {
+    let fullyQualifiedZoneName = `${this.zone.name.toLowerCase()}.`;
+
+    let recordType = isExistingRecord?
+      existingRecord.recordInfo?.zoneType
+      : this.addViewModel.fcZoneType?.value;
+
+    let hostName = isExistingRecord?
+      existingRecord.fgDnsZone?.get('fcHostName')?.value.toLowerCase()
+      : this.addViewModel.fcHostName?.value.toLowerCase();
+
+      if (recordType !== DnsRecordType.CNAME || !['@', fullyQualifiedZoneName].includes(hostName)) {
+        return true;
+      }
+
+    this._dialogService.openMessage({
+      type: DialogActionType.Error,
+      title: this._translateService.instant('label.invalidCnameRecord'),
+      message: this._translateService.instant('message.cnameNameMatchesRoot', {
+        name: this.addViewModel.fcTarget?.value
+      })
+    });
+    return false;
+  }
+
+  public validateHostnameMatchingZoneFqdn(isExistingRecord: boolean, existingRecord?: DnsZoneViewModel): Observable<boolean> {
+    let zoneName = this.zone.name;
+
+    let hostName = (isExistingRecord)?
+    existingRecord.fgDnsZone?.get('fcHostName')?.value
+    : this.addViewModel.fcHostName?.value;
+
+    if (compareStrings(zoneName,hostName)) { return of(true); }
+
+    let dialogRef = this._dialogService.openConfirmation({
+      type: DialogActionType.Warning,
+      title: this._translateService.instant('label.confirmRecordName'),
+      message: this._translateService.instant('message.recordNameMatchesZoneName'),
+      confirmText: this._translateService.instant('action.confirm'),
+      cancelText: this._translateService.instant('action.cancel')
+    });
+
+    return dialogRef.afterClosed().pipe(
+      map((result: DialogResult<boolean>) => {
+        return (result?.action == DialogResultAction.Confirm);
+      })
+    );
   }
 
   public onClickAddDnsZoneRecord(): void {
     this._formGroupService.touchAllFormFields(this.addViewModel?.fgDnsZone);
     let allAreValid = this._formGroupService.allFormFieldsValid(this.addViewModel?.fgDnsZone);
     if (!allAreValid) { return; }
+    if (!this.validateCnameFqdn(false)) { return; }
     if (!this.validateRecordConflict(false)) { return; }
-
-    let zoneRecord = this._createRequestPayloadByViewModel(this.addViewModel);
-    this.processOnGoing$.next(true);
-    this._apiService.createNetworkDnsZoneRecord(
-      this.zone.id,
-      zoneRecord
-    ).pipe(
-      tap(() => {
-        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
-          new McsStateNotification('success', 'message.successfullyCreated')
-        );
-        this._formGroupService.resetAllControls(this.addViewModel?.fgDnsZone);
-        this.requestUpdate.next();
-      }),
-      finalize(() => this.processOnGoing$.next(false))
-    ).subscribe();
+    this.validateHostnameMatchingZoneFqdn(false).subscribe(confirmation=>{
+      if (!confirmation) { return; }
+      let zoneRecord = this._createRequestPayloadByViewModel(this.addViewModel);
+      this.processOnGoing$.next(true);
+      this._apiService.createNetworkDnsZoneRecord(
+        this.zone.id,
+        zoneRecord
+      ).pipe(
+        tap(() => {
+          this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+            new McsStateNotification('success', 'message.successfullyCreated')
+          );
+          this._formGroupService.resetAllControls(this.addViewModel?.fgDnsZone);
+          this.requestUpdate.next();
+        }),
+        finalize(() => this.processOnGoing$.next(false))
+      ).subscribe();
+    });
   }
 
   public onClickSaveDnsZoneRecord(record: DnsZoneViewModel): void {
     this._formGroupService.touchAllFormFields(record.fgDnsZone);
     let allAreValid = this._formGroupService.allFormFieldsValid(record.fgDnsZone);
     if (!allAreValid) { return; }
+    if (!this.validateCnameFqdn(true,record)) { return; }
     if (!this.validateRecordConflict(true,record)) { return; }
-
-    let zoneRecord = this._createRequestPayloadByViewModel(record);
-    record.setProgressState(true);
-    this._apiService.updateNetworkDnsZoneRecord(
-      this.zone.id,
-      record.recordInfo?.id,
-      zoneRecord
-    ).pipe(
-      tap(() => {
-        this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
-          new McsStateNotification('success', 'message.successfullyUpdated')
-        );
-        this.requestUpdate.next();
-        record.updating = false;
-      }),
-      finalize(() => record.setProgressState(false))
-    ).subscribe();
+    this.validateHostnameMatchingZoneFqdn(true,record).subscribe(confirmation=>{
+      if (!confirmation) { return; }
+      let zoneRecord = this._createRequestPayloadByViewModel(record);
+      record.setProgressState(true);
+      this._apiService.updateNetworkDnsZoneRecord(
+        this.zone.id,
+        record.recordInfo?.id,
+        zoneRecord
+      ).pipe(
+        tap(() => {
+          this._eventDispatcher.dispatch(McsEvent.stateNotificationShow,
+            new McsStateNotification('success', 'message.successfullyUpdated')
+          );
+          this.requestUpdate.next();
+          record.updating = false;
+        }),
+        finalize(() => record.setProgressState(false))
+      ).subscribe();
+    });
   }
 
   public onClickDeleteDnsZoneRecord(record: DnsZoneViewModel): void {

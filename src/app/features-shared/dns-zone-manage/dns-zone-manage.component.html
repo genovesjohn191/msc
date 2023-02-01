@@ -57,6 +57,7 @@
           <mcs-field-input *ngIf="!viewmodel.dataFieldIsArray; else dataFieldArrayTemplate"
             size="full"
             [label]="'label.data' | translate"
+            [interpolations]="{ max_length: viewmodel.stringMaxLength }"
             [formControl]="viewmodel.fcData">
           </mcs-field-input>
 
@@ -115,7 +116,7 @@
           <mcs-field-input
             size="full"
             [label]="'label.protocol' | translate"
-            [interpolations]="{ max_length: viewmodel.protocolMaxLength }"
+            [interpolations]="{ max_length: viewmodel.stringMaxLength }"
             [formControl]="viewmodel.fcProtocol">
           </mcs-field-input>
         </mcs-grid-column>
@@ -154,6 +155,7 @@
           <mcs-field-input
             size="full"
             [label]="'label.order' | translate"
+            [interpolations]="{ min_value: viewmodel.intMinValue, max_value: viewmodel.intMaxValue }"
             [formControl]="viewmodel.fcOrder">
           </mcs-field-input>
         </mcs-grid-column>
@@ -172,6 +174,7 @@
           <mcs-field-input
             size="full"
             [label]="'label.flags' | translate"
+            [interpolations]="{ max_length: viewmodel.flagsMaxLength }"
             [formControl]="viewmodel.fcFlags">
           </mcs-field-input>
         </mcs-grid-column>
@@ -181,6 +184,7 @@
           <mcs-field-input
             size="full"
             [label]="'label.regularExpression' | translate"
+            [interpolations]="{ max_length: viewmodel.stringMaxLength }"
             [formControl]="viewmodel.fcRegex">
           </mcs-field-input>
         </mcs-grid-column>
@@ -190,6 +194,7 @@
           <mcs-field-input
             size="full"
             [label]="'label.replacement' | translate"
+            [interpolations]="{ max_length: viewmodel.stringMaxLength }"
             [formControl]="viewmodel.fcReplacement">
           </mcs-field-input>
         </mcs-grid-column>
@@ -199,6 +204,7 @@
           <mcs-field-input
             size="full"
             [label]="'label.responsiblePerson' | translate"
+            [interpolations]="{ max_length: viewmodel.stringMaxLength }"
             [formControl]="viewmodel.fcResponsiblePerson">
           </mcs-field-input>
         </mcs-grid-column>

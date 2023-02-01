@@ -33,6 +33,7 @@ const DNS_TTLSECONDS_MAX_VALUE = 2147483647;
 const DNS_INT_MIN_VALUE = 0;
 const DNS_INT_MAX_VALUE = 65535;
 const DNS_SERVICE_MAX_LENGTH = 25;
+const DNS_FLAGS_MAX_LENGTH = 1;
 const DNS_STRING_MAX_LENGTH = 255;
 
 interface DnsZoneModel {
@@ -48,6 +49,7 @@ interface DnsZoneModel {
   priority: number;
   weight: number;
   port: number;
+  order: number;
   preference: number;
   flags: string;
   regex: string;
@@ -287,6 +289,10 @@ export class DnsZoneViewModel {
     return DNS_SERVICE_MAX_LENGTH;
   }
 
+  public get flagsMaxLength(): number {
+    return DNS_FLAGS_MAX_LENGTH;
+  }
+
   public get stringMaxLength(): number {
     return DNS_STRING_MAX_LENGTH;
   }
@@ -361,6 +367,7 @@ export class DnsZoneViewModel {
       priority: this._subRecord.priority,
       weight: this._subRecord.weight,
       port: this._subRecord.port,
+      order: this._subRecord.order,
       preference: this._subRecord.preference,
       flags: this._subRecord.flags,
       regex: this._subRecord.regexp,
@@ -386,6 +393,7 @@ export class DnsZoneViewModel {
       this.fcPriority.setValue(this.recordInfo.priority);
       this.fcWeight.setValue(this.recordInfo.weight);
       this.fcPort.setValue(this.recordInfo.port);
+      this.fcOrder.setValue(this.recordInfo.order);
       this.fcPreference.setValue(this.recordInfo.preference);
       this.fcFlags.setValue(this.recordInfo.flags);
       this.fcRegex.setValue(this.recordInfo.regex);
