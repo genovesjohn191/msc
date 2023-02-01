@@ -31,8 +31,7 @@
                   mcsId="select-vdc"
                   mcsEventTracker="select-vdc"
                   mcsEventCategory="vdc"
-                  mcsEventLabel="server-list-panel"
-                  matTooltip="{{ getResourceBillingDescription(entity.group?.resourceId) }}">
+                  mcsEventLabel="server-list-panel">
                   {{ entity.group?.resourceName }}
                 </a>
                 <ng-template #noResourceTemplate>
@@ -46,8 +45,7 @@
                 mcsId="select-server"
                 mcsEventTracker="select-server"
                 mcsEventCategory="server"
-                mcsEventLabel="server-list-panel"
-                matTooltip="{{ server.billingDescription }}">
+                mcsEventLabel="server-list-panel">
 
                 <mcs-option [value]="server"
                   [disabled]="server.isDisabled"
