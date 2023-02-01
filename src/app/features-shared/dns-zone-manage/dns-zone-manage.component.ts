@@ -125,20 +125,22 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     // Also check for CNAME record that has a conflicting name with any other record (special case)
     let conflictingRecordFound = this.dataSource.findRecord(item =>
           thisRecord.zoneType === DnsRecordType.CNAME &&
-          thisRecord.hostName === item.fcHostName?.value &&
-          thisRecord.id !== item.recordInfo?.id)
+          !compareStrings(thisRecord.hostName,item.fcHostName?.value) &&
+          !!compareStrings(thisRecord.id, item.recordInfo.id)
+        )
       ||
         //String cast required for handling TXT data
         this.dataSource.findRecord(item =>
           thisRecord.zoneType === item.fcZoneType?.value &&
           !compareStrings(thisRecord.hostName, item.fcHostName?.value) &&
           (thisRecord.data? !compareStrings(thisRecord.data?.toString(), item.fcData?.value?.toString()) : false) &&
-          thisRecord.id !== item.recordInfo.id);
+          !!compareStrings(thisRecord.id, item.recordInfo.id)
+        );
 
     if (!conflictingRecordFound) { return true; }
       this._dialogService.openMessage({
         type: DialogActionType.Error,
-        title: this._translateService.instant('label.saveDnsRecord'),
+        title: this._translateService.instant('label.conflictingRecord'),
         message: this._translateService.instant('message.recordExists', {
           name: this.addViewModel.fcTarget?.value
         })
@@ -154,7 +156,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
       : this.addViewModel.fcZoneType?.value;
 
     let hostName = isExistingRecord?
-      existingRecord.fgDnsZone?.get('fcHostName')?.value.toLowerCase()
+      existingRecord.fgDnsZone?.get('fcHostName')?.value?.toLowerCase()
       : this.addViewModel.fcHostName?.value.toLowerCase();
 
       if (recordType !== DnsRecordType.CNAME || !['@', fullyQualifiedZoneName].includes(hostName)) {
