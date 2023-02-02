@@ -148,7 +148,9 @@ export class BillingServiceOperation
           plan: parentService.plan,
           linkedConsumptionService: parentService.linkedConsumptionService,
           billingFrequency: parentService.billingFrequency,
-          termDuration: parentService.termDuration
+          termDuration: parentService.termDuration,
+          markupFeeDollars: parentService.markupFeeDollars,
+          rrpCostDollars: parentService.rrpCostDollars
         });
         if (!filterPred || filterPred(parentBillingServiceItem)) {
           billingServiceItems.push(parentBillingServiceItem);
@@ -196,7 +198,9 @@ export class BillingServiceOperation
             plan: childService.plan,
             linkedConsumptionService: childService.linkedConsumptionService,
             billingFrequency: parentService.billingFrequency,
-            termDuration: parentService.termDuration
+            termDuration: parentService.termDuration,
+            markupFeeDollars: childService.markupFeeDollars,
+            rrpCostDollars: childService.rrpCostDollars
           });
           if (!filterPred || filterPred(childBillingServiceItem)) {
             billingServiceItems.push(childBillingServiceItem);
@@ -456,6 +460,27 @@ export class BillingServiceOperation
       new McsOption(
         item.linkedConsumptionService,
         this.translate.instant('label.linkedConsumptionService')
+      )
+    );
+
+    this._billingSettingsMap.set('rrp', item =>
+      new McsOption(
+        this.currencyPipe.transform(item.rrpCostDollars),
+        this.translate.instant('label.rrpCostDollars')
+      )
+    );
+
+    this._billingSettingsMap.set('serviceSpecificManagementCharges', item =>
+      new McsOption(
+        item.markupPercent && this.translate.instant('label.percentage', { value: item.markupPercent }),
+        this.translate.instant('label.serviceSpecificManagementCharges')
+      )
+    );
+
+    this._billingSettingsMap.set('actualServiceSpecificManagementFee', item =>
+      new McsOption(
+        this.currencyPipe.transform(item.markupFeeDollars),
+        this.translate.instant('label.actualServiceSpecificManagementFee')
       )
     );
   }

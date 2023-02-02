@@ -3938,6 +3938,9 @@
     "enabled": "Enabled"
   },
   "label": {
+    "rrpCostDollars": "RRP",
+    "serviceSpecificManagementCharges": "Service-Specific Management Charges",
+    "actualServiceSpecificManagementFee": "Actual Service-Specific Management Fee",
     "azureVirtualDesktop": "Azure Virtual Desktop",
     "dailyUsersByService": "Daily Users by Service",
     "dailyAverageUsers": "Daily Average Users",
