@@ -12,7 +12,6 @@ export class BillingServiceItem {
   public discountPercent: number;
   public hasMetMinimumCommitment: boolean;
   public minimumCommitmentDollars: number;
-  public markupPercent: number;
   public microsoftIdentifier: string;
   public billingDescription: string;
   public tenantName: string;
@@ -33,4 +32,8 @@ export class BillingServiceItem {
 
   public billingFrequency: string;
   public termDuration:string;
+
+  public markupPercent: number;
+  public markupFeeDollars: number;
+  public rrpCostDollars: number;
 }

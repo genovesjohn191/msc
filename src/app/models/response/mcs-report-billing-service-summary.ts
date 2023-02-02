@@ -50,6 +50,12 @@ export class McsReportBillingServiceSummary extends McsEntityBase {
   public markupPercent: number = undefined;
 
   @JsonProperty()
+  public markupFeeDollars: number = undefined;
+
+  @JsonProperty()
+  public rrpCostDollars: number = undefined;
+
+  @JsonProperty()
   public hasMetMinimumCommitment: boolean = undefined;
 
   @JsonProperty()
