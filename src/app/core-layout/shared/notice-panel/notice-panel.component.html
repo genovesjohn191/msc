@@ -40,7 +40,12 @@
         <small read-only>{{ notice.referenceId }}</small>
         <mcs-icon [key]="bulletIconKey" color="grey-02" size="xxsmall"></mcs-icon>
         <!-- Notice date -->
-        <small read-only>{{ notice.createdOn | mcsStdDateFormat: 'shortTime' }}</small>
+        <ng-container *ngIf="isCreatedOnMoreThanADay(notice.createdOn); else lessThan24hrsTemplate">
+          <small read-only>{{ notice.createdOn | mcsStdDateFormat: 'friendly' }}</small>
+        </ng-container>
+        <ng-template #lessThan24hrsTemplate>
+          <small read-only>{{ notice.createdOn | mcsStdDateFormat: 'shortTime' }}</small>
+        </ng-template>
       </div>
     </div>
   </div>
