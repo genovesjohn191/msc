@@ -3492,7 +3492,7 @@
     "getNetworkDnsService": "Something went wrong while retrieving your DNS service information.",
     "getNetworkDnsZones": "Something went wrong while retrieving your DNS zones.",
     "getNetworkDnsZone": "Something went wrong while retrieving your DNS zone information.",
-    "getResources": "Something went wrong while retrieving your services.",
+    "getResources": "Something went wrong while retrieving your resources.",
     "getResource": "Something went wrong while retrieving your service information.",
     "getResourceCompute": "Something went wrong while retrieving your service information.",
     "getResourceStorages": "Something went wrong while retrieving your storage information.",
