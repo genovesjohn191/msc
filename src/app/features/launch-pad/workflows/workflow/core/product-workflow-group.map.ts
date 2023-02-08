@@ -949,6 +949,24 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
       ]
     ],
 
+    [ ProductType.StretchedSelfManagedVdc,
+      [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCenterProvision,
+          allowedElementStatuses: [ ]
+        }
+      ]
+    ],
+
+    [ ProductType.StretchedVirtualDataCentre,
+      [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCenterProvision,
+          allowedElementStatuses: [ ]
+        }
+      ]
+    ],
+
     [ ProductType.TwentyFourPortSwitch,
       [
         {
@@ -1155,6 +1173,10 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
     [ ProductType.VirtualDataCentre,
       [
         {
+          workflowId: WorkflowGroupId.VirtualDataCenterProvision,
+          allowedElementStatuses: [ ]
+        },
+        {
           workflowId: WorkflowGroupId.VirtualDataCentreDeprovision,
           allowedElementStatuses: [ ]
         }
@@ -1164,6 +1186,10 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
     [ ProductType.SelfManagedVdc,
       [
         {
+          workflowId: WorkflowGroupId.VirtualDataCenterProvision,
+          allowedElementStatuses: [ ]
+        },
+        {
           workflowId: WorkflowGroupId.VirtualDataCentreDeprovision,
           allowedElementStatuses: [ ]
         }
@@ -1172,6 +1198,10 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
 
     [ ProductType.FlexVirtualDataCenter,
       [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCenterProvision,
+          allowedElementStatuses: [ ]
+        },
         {
           workflowId: WorkflowGroupId.VirtualDataCentreDeprovision,
           allowedElementStatuses: [ ]

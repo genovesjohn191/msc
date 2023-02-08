@@ -123,6 +123,9 @@ export * from './enumerations/storage/saas-backup-status.enum';
 export * from './enumerations/storage/saas-backup-user-status.enum';
 export * from './enumerations/storage/saas-backup-general-status.enum';
 export * from './enumerations/ucs-object-type.enum';
+export * from './enumerations/vcloud-instance/dedicated-provider.enum';
+export * from './enumerations/vcloud-instance/pod-availability-zone.enum';
+export * from './enumerations/vcloud-instance/storage-profile-iops.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -412,6 +415,11 @@ export * from './response/mcs-ucs-central-instance';
 export * from './response/mcs-ucs-domain';
 export * from './response/mcs-ucs-domain-group';
 export * from './response/mcs-ucs-object';
+export * from './response/vcloud-instance/mcs-vcloud-compute-allocation';
+export * from './response/vcloud-instance/mcs-vcloud-instance';
+export * from './response/vcloud-instance/mcs-vcloud-instance-pods';
+export * from './response/vcloud-instance/mcs-vcloud-instance-provider-vdc';
+export * from './response/vcloud-instance/mcs-vcloud-storage-profile';
 
 /** Common */
 export * from './common/mcs-api-search-key';

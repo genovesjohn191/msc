@@ -1,0 +1,53 @@
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [matBadge]="hasError ? '!' : ''"
+  matBadgePosition="before"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  [matTooltip]="hasError ? 'Failed to load options' : ''"
+  matTooltipPosition="above"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : label }}</mat-label>
+  <mat-select
+    [mcsId]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [(value)]="config.value"
+    (selectionChange)="valueChange($event)">
+    <mat-option *ngIf="!required && !hasError">-- None --</mat-option>
+    <mat-optgroup *ngFor="let group of config.options" [label]="group.name" [disabled]="group.disabled">
+      <mat-option *ngFor="let opt of group.options"
+        [value]="opt.key">
+          {{opt.value}}
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+  <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+  <button mat-icon-button matSuffix
+    (click)="retrieveOptions()"
+    *ngIf="hasError"
+    matTooltip="Retry"
+    matTooltipPosition="above">
+    <mat-icon color="primary">refresh</mat-icon>
+  </button>
+</mat-form-field>
+
+<ng-container *ngIf="serviceIdExistSameVcloud !== null">
+  <ng-container *ngIf="serviceIdExistSameVcloud; else differentCompanyTemplate">
+    <ng-container *ngIf="!noMatchingServiceId">
+      <div style="max-width: 400px" padding-bottom-large>
+        <mcs-alert type="info">
+          {{ config.vdcAlreadyExistInSameVcloud }}
+        </mcs-alert>
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-template #differentCompanyTemplate>
+    <div style="max-width: 400px" padding-bottom-large>
+      <mcs-alert type="warning">
+        {{ config.vdcAlreadyExistInDifferentVcloud }}
+      </mcs-alert>
+    </div>
+  </ng-template>
+</ng-container>

@@ -16,6 +16,16 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <div *ngIf="label" class="workflow-label">{{ label }}</div>
-  <mcs-dynamic-form #form [config]="fieldData"></mcs-dynamic-form>
 
+  <ng-container *ngIf="validUser">
+    <div style="max-width: 400px" padding-bottom-large>
+      <mcs-alert type="warning">
+        {{ singleUserWarningText }}
+      </mcs-alert>
+    </div>
+  </ng-container>
+ 
+  <ng-container *ngIf="validUser || !getAccountUser">
+    <mcs-dynamic-form #form [config]="fieldData"></mcs-dynamic-form>
+  </ng-container>
 </mat-expansion-panel>

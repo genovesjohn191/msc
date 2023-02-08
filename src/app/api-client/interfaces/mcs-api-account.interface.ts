@@ -2,7 +2,8 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsQueryParam,
-  McsAccount
+  McsAccount,
+  HttpStatusCode
 } from '@app/models';
 
 export interface IMcsApiAccountService {
@@ -23,4 +24,6 @@ export interface IMcsApiAccountService {
    * @param username username to search
    */
   getUser(username: string): Observable<McsApiSuccessResponse<McsAccount>>;
+
+  getUsersByHead(query?: McsQueryParam): Observable<HttpStatusCode>;
 }

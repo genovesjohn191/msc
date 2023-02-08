@@ -26,6 +26,7 @@ import { Workflow } from '../../core/workflow.interface';
 })
 
 export class LaunchPadWorkflowComponent {
+
   @ViewChild('panel')
   public panel: MatExpansionPanel;
 
@@ -37,6 +38,15 @@ export class LaunchPadWorkflowComponent {
 
   @Input()
   public label: string;
+
+  @Input()
+  public getAccountUser: boolean;
+
+  @Input()
+  public singleUserWarningText: string;
+
+  @Input()
+  public validUser: boolean;
 
   @Input()
   public type: WorkflowType;
@@ -144,5 +154,9 @@ export class LaunchPadWorkflowComponent {
     this.serviceId = workflow.serviceId;
     this.productId = workflow.productId;
     this.label = workflow.label;
-    this.fieldData = workflow.properties;  }
+    this.getAccountUser = workflow.getAccountUser;
+    this.validUser = workflow.validUser;
+    this.singleUserWarningText = workflow.singleUserWarningText;
+    this.fieldData = workflow.properties;
+  }
 }

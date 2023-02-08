@@ -1,0 +1,23 @@
+<ng-container *ngIf="showField">
+  <!-- vCPU Allocation -->
+  <mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
+    <mat-label [attr.for]="id">vCPU Allocation</mat-label>
+
+    <input matInput disabled [(ngModel)]="compute.cpuAllocation" (change)="onComputeChange()" required
+      step="1" />
+    <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Memory MB -->
+  <div>
+    <mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
+      <mat-label [attr.for]="id">RAM Allocation</mat-label>
+
+      <input matInput disabled [(ngModel)]="compute.memoryAllocationMB" (change)="onComputeChange()" required/>
+      <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
+      </mat-error>
+      <span matSuffix class="suffix">GB</span>
+    </mat-form-field>
+  </div>
+</ng-container>

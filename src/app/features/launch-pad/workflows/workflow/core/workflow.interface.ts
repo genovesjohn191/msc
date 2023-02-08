@@ -12,6 +12,8 @@ export interface WorkflowConfig {
   required?: boolean;
   featureFlag?: string;
   label?: string;
+  getAccountUser?: boolean;
+  singleUserWarningText?: string;
 }
 
 export interface WorkflowData {
@@ -19,6 +21,7 @@ export interface WorkflowData {
   serviceId?: string;
   productId?: string;
   referenceId?: string;
+  validUser?: boolean;
   propertyOverrides?: { key: string, value: any }[];
 }
 

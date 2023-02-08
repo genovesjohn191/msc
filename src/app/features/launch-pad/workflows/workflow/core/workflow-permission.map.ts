@@ -10,6 +10,7 @@ export const workflowPermissionMap: Map<McsPermission, WorkflowGroupId[]> = new 
         WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex,
         WorkflowGroupId.VirtualDataCentreNetworkCreate,
         WorkflowGroupId.VirtualDataCentreNetworkCreateCustom,
+        WorkflowGroupId.VirtualDataCenterProvision,
         WorkflowGroupId.DedicatedStorageAttachVolume,
         WorkflowGroupId.DedicatedStorageAttachVolumeCluster,
         WorkflowGroupId.DedicatedStorageCreateAttachVolume,

@@ -53,6 +53,14 @@ export class DynamicInputHiddenComponent extends DynamicFieldComponentBase {
             break;
         }
         break;
+      case 'vcloud-instance-change':
+        this.config.value = params.value?.name;
+        this.valueChange(this.config.value);
+        break;
+      case 'provider-vdc-change':
+        this.config.value = params.value?.name;
+        this.valueChange(this.config.value);
+        break;
     }
   }
 }

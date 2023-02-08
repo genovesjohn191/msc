@@ -121,6 +121,23 @@ export class McsApiClientHttpService {
   }
 
   /**
+   * The method is identical to GET except that it returns an empty message-body
+   * @param apiRequest MCS Api request consist of endpoint/url, data, headers, params, etc...
+   */
+  public head(apiRequest: McsApiRequestParameter): Observable<any> {
+    return this._httpClient.head(
+      this.getFullUrl(apiRequest.endPoint),
+      {
+        headers: this._getHeaders(apiRequest.optionalHeaders),
+        params: this._getParams(apiRequest.searchParameters),
+        responseType: apiRequest.responseType,
+        withCredentials: true,
+        observe: 'response'
+      })
+      .pipe(catchError((error) => this._handleServerError(error)));
+  }
+
+  /**
    * Get full url
    * @param url Full Url / Endpoint
    */
