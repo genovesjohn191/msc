@@ -727,20 +727,9 @@ export class McsApiService {
   public getResources(optionalHeaders?: Map<string, any>, query?: McsQueryParam): Observable<McsApiCollection<McsResource>> {
     return this._resourcesApi.getResources(optionalHeaders, query).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcesWithCustomHeaders'))
-      ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
-    );
-
-    let dataCollection = isNullOrEmpty(query) ?
-      this._resourcesRepository.getAll() :
-      this._resourcesRepository.filterBy(query);
-
-    return dataCollection.pipe(
-      catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResources'))
       ),
-      map((response) => this._mapToCollection(response, this._resourcesRepository.getTotalRecordsCount()))
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
