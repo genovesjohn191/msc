@@ -1,5 +1,7 @@
 @import "shared/index";
 
+$dynamic-form-field-table-width: 449px;
+
 .mat-form-field {
   width: 400px;
 
@@ -47,6 +49,11 @@
     height: 0;
     width: 0;
   }
+}
+
+.dynamic-form-field-table {
+  width: $dynamic-form-field-table-width;
+  overflow-x: scroll;
 }
 
 span.note {

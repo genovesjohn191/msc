@@ -4,7 +4,8 @@ import { map } from 'rxjs/operators';
 import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsAccount
+  McsAccount,
+  HttpStatusCode
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiAccountService } from '../interfaces/mcs-api-account.interface';
@@ -53,6 +54,16 @@ export class McsApiAccountService implements IMcsApiAccountService {
             McsAccount, response
           );
       })
+    );
+  }
+
+  public getUsersByHead(): Observable<HttpStatusCode> {
+    let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    requestParameter.endPoint = `/account/users`;
+
+    return this._mcsApiHttpService.head(requestParameter)
+      .pipe(
+        map((response) => response?.status)
     );
   }
 }

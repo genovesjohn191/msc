@@ -14,6 +14,7 @@ import { DynamicInputRandomComponent } from './input-random/input-random.compone
 import { DynamicInputShortCustomerNameComponent } from './input-short-customer-name/input-short-customer-name.component';
 import { DynamicInputTerraformDeploymentNameComponent } from './input-terraform-deployment-name/input-terraform-deployment-name.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
+import { DynamicInputVcloudAllocationComponent } from './input-vcloud-allocation/input-vcloud-allocation.component';
 import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zone/select-availability-zone.component';
 import { DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent } from './select-chips-azure-software-subscription-product-type/select-chips-azure-software-subscription-product-type.component';
 import { DynamicSelectAzureSubscriptionComponent } from './select-azure-subscription/select-azure-subscription.component';
@@ -63,6 +64,11 @@ import { DynamicSelectPhysicalServerComponent } from './select-physical-server/s
 import { DynamicSelectLunsComponent } from './select-luns/select-luns.component';
 import { DynamicInputComputeComponent } from './input-compute/input-compute.component';
 import { DynamicSelectUcsComponent } from './select-ucs/select-ucs.component';
+import { DynamicSelectVcloudInstanceComponent } from './select-vcloud-instance/select-vcloud-instance.component';
+import { DynamicSelectVcloudTypeComponent } from './select-vcloud-type/select-vcloud-type.component';
+import { DynamicSelectProviderVdcComponent } from './select-provider-vdc/select-provider-vdc.component';
+import { DynamicTableStorageProfileComponent } from './table-storage-profile/table-storage-profile.component';
+import { DynamicExpansionSlideToggleComponent } from './expansion-slide-toggle/expansion-slide-toggle.component';
 import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
 
 const exports: any[] | Type<any> = [
@@ -78,6 +84,7 @@ const exports: any[] | Type<any> = [
   DynamicInputShortCustomerNameComponent,
   DynamicInputSizeComponent,
   DynamicInputSubscriptionIdComponent,
+  DynamicInputVcloudAllocationComponent,
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
   DynamicSelectBatComponent,
@@ -103,6 +110,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectNetworkVlanComponent,
   DynamicSelectNetworkDbUseCaseComponent,
   DynamicSelectOsComponent,
+  DynamicSelectProviderVdcComponent,
   DynamicSelectRetentionPeriodComponent,
   DynamicSelectChipsServiceComponent,
   DynamicSelectServiceComponent,
@@ -120,9 +128,13 @@ const exports: any[] | Type<any> = [
   DynamicSelectResourceComponent,
   DynamicSelectNetworkInterfaceComponent,
   DynamicSelectPhysicalServerComponent,
+  DynamicSelectVcloudTypeComponent,
+  DynamicSelectVcloudInstanceComponent,
   DynamicSelectLunsComponent,
   DynamicInputComputeComponent,
-  DynamicSelectUcsComponent
+  DynamicSelectUcsComponent,
+  DynamicTableStorageProfileComponent,
+  DynamicExpansionSlideToggleComponent
 ];
 
 @NgModule({

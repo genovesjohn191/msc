@@ -73,8 +73,13 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   public set context(value: WorkflowGroupSaveState) {
     if (isNullOrEmpty(value)) { return; }
     this._context = value;
-
-    this._initWorkflowGroup();
+    let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
+    let requiresAccountUser = workflowGroup.parent.getAccountUser;
+    if (requiresAccountUser) {
+      this._getUsersByHead();
+    } else {
+      this._initWorkflowGroup();
+    }
   }
 
   public get context(): WorkflowGroupSaveState {
@@ -137,6 +142,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   public componentRef: ComponentRef<any>;
   public ongoingServiceIdRetrieval: boolean = false;
   public hasServiceIdRetrievalError: boolean = false;
+  private _validUser: boolean = false;
   private _context: WorkflowGroupSaveState;
   private _dialogSubject = new Subject<void>();
   private _parentServiceRetrieved: EventEmitter<McsObjectCrispElementService[]>;
@@ -345,7 +351,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         serviceId: this.context.serviceId,
         productId: this.context.productId,
         crispElementServiceAttributes: response.serviceAttributes,
-        associatedServices: response.associatedServices
+        associatedServices: response.associatedServices,
+        crispProductType: response.productType
       });
 
       this._context.config = {
@@ -415,13 +422,22 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     serviceId?: string;
     productId?: string;
     crispElementServiceAttributes?: McsObjectCrispElementServiceAttribute[],
-    associatedServices?: McsObjectCrispElementService[]
+    associatedServices?: McsObjectCrispElementService[],
+    crispProductType?: ProductType
   }): WorkflowData {
+
+    options.form?.config?.map((config) => {
+      config.productId = options?.productId;
+      config.associatedServices = options?.associatedServices;
+      config.crispElementServiceAttributes = options?.crispElementServiceAttributes;
+      config.crispProductType = options?.crispProductType;
+    });
 
     return {
       id : options.id,
       serviceId: options.serviceId,
       productId: options.productId,
+      validUser: this._validUser,
       propertyOverrides: this._buildPropertyOverrides(options.form, options.crispElementServiceAttributes, options.associatedServices),
     };
   }
@@ -560,5 +576,18 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   private _getWorkflowGroupById(id: WorkflowGroupId): WorkflowGroup {
     let workflowGroupType = workflowGroupMap.get(id);
     return new workflowGroupType();
+  }
+
+  private _getUsersByHead(): void {
+    this._apiService.getUsersByHead().pipe(
+      catchError(error => {
+        this._validUser = false;
+        this._initWorkflowGroup();
+        return throwError(() => error.message);
+      }),
+    ).subscribe((response) => {
+      this._validUser = response === 200;
+      this._initWorkflowGroup();
+    });
   }
 }

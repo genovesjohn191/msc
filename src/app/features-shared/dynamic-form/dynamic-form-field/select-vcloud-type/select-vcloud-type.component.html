@@ -1,0 +1,18 @@
+<mat-form-field
+  *ngIf="showField"
+  appearance="outline"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
+
+  <mat-select
+    [mcsId]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [(value)]="config.value"
+    (selectionChange)="valueChange($event)">
+    <mat-option *ngIf="!required">-- None --</mat-option>
+    <mat-option *ngFor="let opt of config.options" [value]="opt.key" [disabled]="opt.disabled">
+      {{ opt.value }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
