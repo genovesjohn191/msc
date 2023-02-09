@@ -13,7 +13,7 @@ export class LaunchPadWorkflow implements Workflow {
   public required: boolean = false;
   public label?: string;
   public getAccountUser?: boolean = false;
-  public validUser?: boolean;
+  public invalidUser?: boolean;
   public singleUserWarningText?: string;
   public properties: DynamicFormFieldConfigBase[];
   public hasValueOverride: boolean = false;
@@ -28,7 +28,7 @@ export class LaunchPadWorkflow implements Workflow {
     parentReferenceId?: string,
     label?: string,
     getAccountUser?: boolean,
-    validUser?: boolean,
+    invalidUser?: boolean,
     singleUserWarningText?: string,
     properties: DynamicFormFieldConfigBase[],
     data?: { key: string, value: any }[]
@@ -43,7 +43,7 @@ export class LaunchPadWorkflow implements Workflow {
     this.label = options.label,
     this.getAccountUser = options.getAccountUser,
     this.singleUserWarningText = options.singleUserWarningText,
-    this.validUser = options.validUser,
+    this.invalidUser = options.invalidUser,
     this.properties = options.properties;
 
     this._setDefaultValues(options.data);

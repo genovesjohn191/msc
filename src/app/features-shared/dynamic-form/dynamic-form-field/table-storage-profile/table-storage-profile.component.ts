@@ -215,8 +215,11 @@ export class DynamicTableStorageProfileComponent extends DynamicFieldComponentBa
   }
 
   private _updateDataSource(): void {
-    let configNotInitialized = isNullOrEmpty(this.config?.productId) || this.config?.associatedServices.length === 0;
-    if (configNotInitialized) { return; }
+    let configNotInitialized = isNullOrEmpty(this.config?.productId) || this.config?.associatedServices?.length === 0;
+    if (configNotInitialized) {
+      this._storageItemsChange.next([]);
+      return;
+    }
     
     let validProductTypes = this.config?.associatedServices?.filter((service) => {
       let serviceProductType = service.productType as ProductType;
@@ -224,7 +227,10 @@ export class DynamicTableStorageProfileComponent extends DynamicFieldComponentBa
         serviceProductType.toString() === ProductType[ProductType.StretchedVirtualDataCentreStorage];
     });
     
-    if (isNullOrEmpty(validProductTypes)) { return; }
+    if (isNullOrEmpty(validProductTypes)) {
+      this._storageItemsChange.next([]);
+      return;
+    }
 
     let storageProfiles: McsVcloudStorageProfile[] = [];
 

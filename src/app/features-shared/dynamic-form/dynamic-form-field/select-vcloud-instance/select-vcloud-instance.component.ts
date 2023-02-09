@@ -111,11 +111,13 @@ export class DynamicSelectVcloudInstanceComponent extends DynamicSelectFieldComp
 
   private _validateServiceIdExistence(selectedVCloud: McsVcloudInstance): boolean {
     let serviceIdExistSameVcloud = this._resources?.find((resource) => {
-      return resource.serviceId === this._serviceId && compareStrings(resource.portalUrl, selectedVCloud?.name) === 0;
+      let vcloudNameMatched = resource?.portalUrl?.match(selectedVCloud?.name);
+      return resource.serviceId === this._serviceId && !isNullOrEmpty(vcloudNameMatched);
     });
     if (isNullOrEmpty(serviceIdExistSameVcloud)) {
       let noMatchingServiceId = this._resources?.find((resource) => {
-        return (resource.serviceId === this._serviceId) && (resource.portalUrl.toString() !== selectedVCloud?.name.toString());
+        let vcloudNameMisMatched = resource?.portalUrl?.match(selectedVCloud?.name);
+        return (resource.serviceId === this._serviceId) && isNullOrEmpty(vcloudNameMisMatched);
       });
       if (isNullOrEmpty(noMatchingServiceId)) {
         this.noMatchingServiceId = true;

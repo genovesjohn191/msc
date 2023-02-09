@@ -142,7 +142,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   public componentRef: ComponentRef<any>;
   public ongoingServiceIdRetrieval: boolean = false;
   public hasServiceIdRetrievalError: boolean = false;
-  private _validUser: boolean = false;
+  private _invalidUser: boolean = false;
   private _context: WorkflowGroupSaveState;
   private _dialogSubject = new Subject<void>();
   private _parentServiceRetrieved: EventEmitter<McsObjectCrispElementService[]>;
@@ -437,7 +437,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       id : options.id,
       serviceId: options.serviceId,
       productId: options.productId,
-      validUser: this._validUser,
+      invalidUser: this._invalidUser,
       propertyOverrides: this._buildPropertyOverrides(options.form, options.crispElementServiceAttributes, options.associatedServices),
     };
   }
@@ -581,12 +581,12 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   private _getUsersByHead(): void {
     this._apiService.getUsersByHead().pipe(
       catchError(error => {
-        this._validUser = false;
+        this._invalidUser = true;
         this._initWorkflowGroup();
         return throwError(() => error.message);
       }),
     ).subscribe((response) => {
-      this._validUser = response === 200;
+      this._invalidUser = response !== 200;
       this._initWorkflowGroup();
     });
   }

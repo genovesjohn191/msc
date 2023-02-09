@@ -21,7 +21,7 @@ export interface WorkflowData {
   serviceId?: string;
   productId?: string;
   referenceId?: string;
-  validUser?: boolean;
+  invalidUser?: boolean;
   propertyOverrides?: { key: string, value: any }[];
 }
 

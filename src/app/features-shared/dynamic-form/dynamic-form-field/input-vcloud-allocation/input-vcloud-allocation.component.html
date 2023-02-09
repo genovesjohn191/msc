@@ -14,7 +14,7 @@
     <mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
       <mat-label [attr.for]="id">RAM Allocation</mat-label>
 
-      <input matInput disabled [(ngModel)]="compute.memoryAllocationMB" (change)="onComputeChange()" required/>
+      <input matInput disabled [(ngModel)]="convertedTotalMemoryValue" (change)="onComputeChange()" required/>
       <mat-error *ngIf="!valid" [innerHTML]="errorMessage">
       </mat-error>
       <span matSuffix class="suffix">GB</span>
