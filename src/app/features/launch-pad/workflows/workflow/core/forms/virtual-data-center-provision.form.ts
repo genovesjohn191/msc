@@ -58,7 +58,6 @@ export const virtualDataCenterProvisionForm: LaunchPadForm = {
     new DynamicSelectProviderVdcField({
       key: 'providerVdc',
       label: 'Provider VDC',
-      validators: { required: true },
       eventName: 'provider-vdc-change',
       dependents: ['providerVdcName']
     }),

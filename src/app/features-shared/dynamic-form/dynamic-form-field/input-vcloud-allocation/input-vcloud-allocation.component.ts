@@ -60,7 +60,7 @@ export class DynamicInputVcloudAllocationComponent extends DynamicFieldComponent
         this.showField = true;
         this.compute = {
           cpuAllocation: this.mapVcpuAllocationCrispElementAttributes() || 0,
-          memoryAllocationMB: this.mapMemoryAllocationMBCrispElementAttributes() || 0,
+          memoryAllocationMB: (this.mapMemoryAllocationMBCrispElementAttributes() * 1024)  || 0,
         } as McsVcloudComputeAllocation;
         this.config.value = this.compute;
         this.valueChange(this.config.value);

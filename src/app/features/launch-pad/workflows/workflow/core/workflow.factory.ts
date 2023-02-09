@@ -48,7 +48,7 @@ export class WorkflowFactory {
       getAccountUser: options.workflowGroup.parent.getAccountUser || false,
       singleUserWarningText: options.workflowGroup.parent.singleUserWarningText || '',
       required: true,
-      validUser: options.config.parent.validUser || false,
+      invalidUser: options.config.parent.invalidUser || false,
       // Clone the form to ensure data is not persisted
       properties: cloneDeep(options.workflowGroup.parent.form.config),
       data: options.config.parent.propertyOverrides

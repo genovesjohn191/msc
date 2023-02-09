@@ -46,7 +46,7 @@ export class LaunchPadWorkflowComponent {
   public singleUserWarningText: string;
 
   @Input()
-  public validUser: boolean;
+  public invalidUser: boolean;
 
   @Input()
   public type: WorkflowType;
@@ -155,7 +155,7 @@ export class LaunchPadWorkflowComponent {
     this.productId = workflow.productId;
     this.label = workflow.label;
     this.getAccountUser = workflow.getAccountUser;
-    this.validUser = workflow.validUser;
+    this.invalidUser = workflow.invalidUser;
     this.singleUserWarningText = workflow.singleUserWarningText;
     this.fieldData = workflow.properties;
   }
