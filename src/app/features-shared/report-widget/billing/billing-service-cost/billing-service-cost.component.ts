@@ -125,7 +125,6 @@ export class BillingServiceCostWidgetComponent extends ReportWidgetBase implemen
 
   public initializeDataRecords(): void {
     this.updateChartUri(undefined);
-    if (isNullOrEmpty(this.dataRecords)) { return; }
     this._serviceDestroyer.next();
 
     this._serviceOperation = BillingOperationFactory

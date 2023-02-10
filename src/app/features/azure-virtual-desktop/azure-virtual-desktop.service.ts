@@ -194,7 +194,7 @@ export class AzureVirtualDesktopService {
 
     combineLatest([
       this._billingAccountIdChange,
-      this.fcMonth.valueChanges.pipe(startWith(null))
+      this.fcMonth.valueChanges.pipe(startWith(new Date().getMonth()))
     ]).pipe(
       distinctUntilChanged((prev, next) => compareJsons(prev, next) === 0),
       exhaustMap(([accountId, monthIndex]) => {
