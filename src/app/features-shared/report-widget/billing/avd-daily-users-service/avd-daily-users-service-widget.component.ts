@@ -117,7 +117,6 @@ export class AvdDailyUsersServiceWidgetComponent extends ReportWidgetBase implem
 
   public initializeDataRecords(): void {
     this.updateChartUri(undefined);
-    if (isNullOrEmpty(this.dataRecords)) { return; }
     this._serviceDestroyer.next();
 
     this._serviceOperation = BillingOperationFactory

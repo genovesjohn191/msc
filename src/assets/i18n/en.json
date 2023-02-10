@@ -4212,6 +4212,7 @@
     "rollback": "Rollback"
   },
   "message": {
+    "noInformationToDisplay": "No information to display.",
     "noAvdDailyUsersService": "No Azure Virtual Desktop daily users service to display.",
     "noAvdDailyConnectionsService": "No Azure Virtual Desktop daily connections service to display.",
     "noAvdDailyUsersAverage": "No Azure Virtual Desktop daily users average to display.",
