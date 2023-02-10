@@ -46,3 +46,4 @@ export * from './dedicated-blade-provision.workflow';
 export * from './ucs-org-create.workflow';
 
 export * from './virtual-data-center-deprovision.workflow';
+export * from './virtual-data-center-provision.workflow';

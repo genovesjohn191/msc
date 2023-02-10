@@ -38,6 +38,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-size-field>
 
+        <mcs-dff-input-vcloud-allocation-field *ngSwitchCase="'input-vcloud-allocation'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-vcloud-allocation-field>
+
         <mcs-dff-input-compute-field *ngSwitchCase="'input-compute'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-compute-field>
@@ -215,6 +219,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-slide-toggle-field>
 
+        <mcs-dff-expansion-slide-toggle-field *ngSwitchCase="'expansion-slide-toggle'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-expansion-slide-toggle-field>
+
         <mcs-dff-select-forti-manager *ngSwitchCase="'select-forti-manager'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-forti-manager>
@@ -231,6 +239,18 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-physical-server-field>
 
+        <mcs-dff-select-provider-vdc-field *ngSwitchCase="'select-provider-vdc'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-provider-vdc-field>
+
+        <mcs-dff-select-vcloud-instance-field *ngSwitchCase="'select-vcloud-instance'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-vcloud-instance-field>
+
+        <mcs-dff-select-vcloud-type-field *ngSwitchCase="'select-vcloud-type'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-vcloud-type-field>
+
         <mcs-dff-select-luns-field *ngSwitchCase="'select-luns'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-luns-field>
@@ -238,6 +258,10 @@
         <mcs-dff-select-ucs-field *ngSwitchCase="'select-ucs'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-ucs-field>
+
+        <mcs-dff-table-storage-profile-field *ngSwitchCase="'table-storage-profile'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-table-storage-profile-field>
         <mat-error *ngIf="!isValidField(input.key)" [innerHTML]="getErrorMessage(input.key)">
         </mat-error>
       </div>

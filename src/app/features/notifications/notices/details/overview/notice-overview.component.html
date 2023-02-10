@@ -8,7 +8,7 @@
         </ng-container>
           <mcs-item *mcsAccessControl="['NoticeInternalView']; feature: []">
             <span>{{ 'label.parentReferenceId' | translate }}:</span>
-            <span [innerHTML]="selectedNotice.parentReferenceId | mcsDataLabel: 'Unknown'"></span>
+            <span [innerHTML]="selectedNotice.parentReferenceId | mcsDataLabel: 'None'"></span>
           </mcs-item>
           <mcs-item>
             <span>{{ 'label.referenceId' | translate }}:</span>

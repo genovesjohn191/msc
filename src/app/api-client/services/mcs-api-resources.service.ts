@@ -20,8 +20,6 @@ import {
 import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiResourcesService } from '../interfaces/mcs-api-resources.interface';
-import { McsApiClientDefinition } from '../mcs-api-client.definition';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class McsApiResourcesService implements IMcsApiResourcesService {

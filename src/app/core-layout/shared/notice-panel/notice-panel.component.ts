@@ -3,6 +3,7 @@ import {
   map,
   throwError
 } from 'rxjs';
+import * as moment from 'moment';
 
 import {
   Component,
@@ -70,6 +71,14 @@ export class NoticePanelComponent {
     this.acknowledgeInProgress = true;
     this._changeDetectorRef.markForCheck();
     this._acknowledgeNotice(notice);
+  }
+
+  public isCreatedOnMoreThanADay(createdOn: Date): boolean {
+    let hours = moment().diff(moment(createdOn), 'hours');
+    if (hours > 24) {
+      return true;
+    }
+    return false;
   }
 
   /**

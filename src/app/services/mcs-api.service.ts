@@ -100,6 +100,8 @@ import {
   McsApiVCenterFactory,
   McsApiWorkflowsFactory,
   McsApiUcsFactory,
+  McsApiVcloudInstanceFactory,
+  IMcsApiVcloudInstanceService,
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -332,7 +334,10 @@ import {
   McsStorageSaasBackupBackupAttempt,
   McsStorageSaasBackupBackupAttemptDetails,
   McsStorageSaasBackupAttemptQueryParams,
-  McsNetworkDbVlanQueryParams
+  McsNetworkDbVlanQueryParams,
+  HttpStatusCode,
+  McsVcloudInstance,
+  McsVcloudInstanceProviderVdc
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -447,6 +452,7 @@ export class McsApiService {
   private readonly _plannedWorkApi: IMcsApiPlannedWorkService;
   private readonly _toolsService: IMcsApiToolsService;
   private readonly _vmSizesApi: IMcsApiVmSizesService;
+  private readonly _vcloudInstancesApi: IMcsApiVcloudInstanceService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
   private readonly _vCenterApi: IMcsApiVCenterService;
   private readonly _ucsApi: IMcsApiUcsService;
@@ -525,6 +531,7 @@ export class McsApiService {
     this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
     this._vmSizesApi = apiClientFactory.getService(new McsApiVmSizesFactory());
+    this._vcloudInstancesApi = apiClientFactory.getService(new McsApiVcloudInstanceFactory());
     this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
     this._vCenterApi = apiClientFactory.getService(new McsApiVCenterFactory());
     this._ucsApi = apiClientFactory.getService(new McsApiUcsFactory());
@@ -539,6 +546,15 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getIdentity'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getUsersByHead(query?: McsQueryParam): Observable<HttpStatusCode> {
+    return this._accountApi.getUsersByHead(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getUsersByHead'))
+      ),
+      map((response) => response),
     );
   }
 
@@ -727,20 +743,9 @@ export class McsApiService {
   public getResources(optionalHeaders?: Map<string, any>, query?: McsQueryParam): Observable<McsApiCollection<McsResource>> {
     return this._resourcesApi.getResources(optionalHeaders, query).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcesWithCustomHeaders'))
-      ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
-    );
-
-    let dataCollection = isNullOrEmpty(query) ?
-      this._resourcesRepository.getAll() :
-      this._resourcesRepository.filterBy(query);
-
-    return dataCollection.pipe(
-      catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResources'))
       ),
-      map((response) => this._mapToCollection(response, this._resourcesRepository.getTotalRecordsCount()))
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
@@ -2558,6 +2563,27 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVmSize'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getVcloudInstances(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVcloudInstance>> {
+    return this._vcloudInstancesApi.getVcloudInstances(query, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVcloudInstances'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getVcloudInstanceProviderVdc(
+    id: string,
+    isDedicated: boolean,
+    optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsVcloudInstanceProviderVdc>> {
+    return this._vcloudInstancesApi.getVcloudInstanceProviderVdc(id, isDedicated, optionalHeaders).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVcloudInstanceProviderVdc'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

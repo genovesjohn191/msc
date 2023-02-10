@@ -1,4 +1,9 @@
 import { ValidatorFn } from '@angular/forms';
+import {
+  McsObjectCrispElementService,
+  McsObjectCrispElementServiceAttribute,
+  ProductType
+} from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   DynamicFormFieldConfig,
@@ -30,6 +35,10 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
   public settings?: DynamicFormControlSettings;
   public prefix?: string;
   public suffix?: string;
+  public crispProductType?: ProductType;
+  public productId?: string;
+  public associatedServices?: McsObjectCrispElementService[];
+  public crispElementServiceAttributes?: McsObjectCrispElementServiceAttribute[];
 
   constructor(options: {
     key: string;
@@ -47,6 +56,10 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
     settings?: DynamicFormControlSettings;
     prefix?: string;
     suffix?: string;
+    crispProductType?: ProductType;
+    productId?: string;
+    associatedServices?: McsObjectCrispElementService[];
+    crispElementServiceAttributes?: McsObjectCrispElementServiceAttribute[];
   }) {
     this.key = options.key || '';
     this.label = options.label || '';
@@ -63,6 +76,10 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
     this.settings = options.settings;
     this.prefix = options.prefix || '';
     this.suffix = options.suffix || '';
+    this.crispProductType = options.crispProductType || null;
+    this.productId = options.productId || '';
+    this.associatedServices = options.associatedServices || [];
+    this.crispElementServiceAttributes = options.crispElementServiceAttributes || [];
 
     // Ensure minlength is lessthan or equal than maxlength
     if (this.validators && this.validators.minlength && this.validators.maxlength) {

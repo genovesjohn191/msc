@@ -1,0 +1,8 @@
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: $color-primary-01; 
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle {
+  color: $color-primary-01;
+  background-color: $color-primary-01;
+}

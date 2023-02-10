@@ -76,6 +76,7 @@ export type DynamicFormFieldType =
   | 'textbox-short-customer-name'
   | 'textbox-size'
   | 'textbox-subscription-id'
+  | 'textbox-vcloud-allocation'
   | 'textbox-vrf-name'
   | 'select-availability-zone'
   | 'select-bat'
@@ -119,10 +120,15 @@ export type DynamicFormFieldType =
   | 'select-ucs'
   | 'select-vdc'
   | 'select-physical-server'
+  | 'select-provider-vdc'
+  | 'select-vcloud-instance'
+  | 'select-vcloud-type'
   | 'select-vm'
   | 'select-vm-size'
   | 'slide-toggle'
-  | 'input-compute';
+  | 'input-compute'
+  | 'table-storage-profile'
+  | 'expansion-slide-toggle';
 
 export type DynamicFormFieldTemplate =
   'input-text'
@@ -139,6 +145,7 @@ export type DynamicFormFieldTemplate =
   | 'input-size'
   | 'input-compute'
   | 'input-subscription-id'
+  | 'input-vcloud-allocation'
   | 'select-availability-zone'
   | 'select-bat'
   | 'select-chip-single-company'
@@ -180,10 +187,15 @@ export type DynamicFormFieldTemplate =
   | 'select-pods'
   | 'select-ucs'
   | 'select-physical-server'
+  | 'select-provider-vdc'
+  | 'select-vcloud-instance'
+  | 'select-vcloud-type'
   | 'select-vdc'
   | 'select-vm'
   | 'select-vm-size'
-  | 'slide-toggle';
+  | 'slide-toggle'
+  | 'table-storage-profile'
+  | 'expansion-slide-toggle';
 
 export type DynamicFormFieldOnChangeEvent =
   ''
@@ -209,6 +221,7 @@ export type DynamicFormFieldOnChangeEvent =
   | 'vnet-change'
   | 'domain-controller-resource-group-change'
   | 'linked-subscription-id-change'
+  | 'provider-vdc-change'
   | 'service-id-change'
   | 'subscription-change'
   | 'sku-id-change'
@@ -217,7 +230,9 @@ export type DynamicFormFieldOnChangeEvent =
   | 'terraform-module-type-change'
   | 'terraform-module-change'
   | 'terraform-tag-change'
-  | 'ucs-change';
+  | 'type-change'
+  | 'ucs-change'
+  | 'vcloud-instance-change';
 
 export type DynamicFormFieldInputType =
   ''
