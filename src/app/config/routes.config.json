@@ -1157,6 +1157,14 @@
     "requiredFeatureFlag": "EnableOrderingBackupRestore",
     "documentTitle": "Request a Backup Restore - Macquarie Cloud Services"
   },
+  "OrderChangeApplicationRecoveryQuota": {
+    "enumKey": "OrderChangeApplicationRecoveryQuota",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/application-recovery-quota",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableChangeApplicationRecoveryQuota",
+    "documentTitle": "Change Application Recovery Quota - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

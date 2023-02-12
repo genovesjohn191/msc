@@ -30,6 +30,8 @@ export enum OrderIdType {
   AzureProfessionalServiceRequest = 'publicCloud.professionalServices',
   PrivateChangeLaunchExtenderSpeed = 'privateCloud.launchExtender.changeSpeed',
   ChangeAzureExtendSpeed = 'publicCloud.launchExtender.changeSpeed',
+  PrivateApplicationRecoveryChange = "privateCloud.applicationRecovery.change",
+  PublicApplicationRecoveryChange = "publicCloud.applicationRecovery.change",
 }
 
 /**

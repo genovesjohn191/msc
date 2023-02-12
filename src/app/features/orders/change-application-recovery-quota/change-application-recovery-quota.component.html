@@ -1,0 +1,167 @@
+<mcs-page [header]="'orderChangeApplicationRecoveryQuota.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to previous URL -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end" mcsNavigateBackward mcsId="navigate-back" mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders" mcsEventLabel="change-app-recovery-quota-page">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'orderChangeApplicationRecoveryQuota.detailsStep.previous' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-wizard>
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Details Step-->
+      <mcs-wizard-step id="change-app-recovery-quota-details-step"
+        [stepTitle]="'orderChangeApplicationRecoveryQuota.detailsStep.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="fgChangeApplicationRecoveryQuota" mcsFormGroup>
+          <mcs-item>
+            <p [innerHTML]="'orderChangeApplicationRecoveryQuota.detailsStep.description' | translate"></p>
+          </mcs-item>
+          <mcs-item-order-lead-time [orderItemType]="orderItemType$ | async"></mcs-item-order-lead-time>
+
+          <!-- Services -->
+          <mcs-item orientation="block">
+            <ng-container *ngIf="loadingInProgress; else serviceTemplate">
+              <mcs-loader size="small" [mcsTooltip]="loadingText" mcsTooltipPosition="right"></mcs-loader>
+            </ng-container>
+
+            <ng-template #serviceTemplate>
+                <mcs-form-field *ngIf="services && !noServicesToDisplay">
+                  <mcs-select mcsId="select-box-location" mcsEventTracker="select-service" mcsEventCategory="order"
+                    mcsEventLabel="change-app-recovery-quota-page" [formControl]="fcService"
+                    [disabled]="noServicesToDisplay"
+                    [placeholder]="'orderChangeApplicationRecoveryQuota.detailsStep.service.placeholder' | translate"
+                    [mcsContextualHelp]="'orderChangeApplicationRecoveryQuota.detailsStep.service.helpText' | translate" required
+                    [autoSelect]="false">
+                    <div *ngFor="let service of services"
+                        [matTooltip]="'orderChangeApplicationRecoveryQuota.detailsStep.service.optionHelpText' | translate"
+                        [matTooltipDisabled]="!service.disabled">
+                        <mcs-option [value]="service" [disabled]="service.disabled">
+                            {{ service.text }}
+                        </mcs-option>
+                      </div>
+                  </mcs-select>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderChangeApplicationRecoveryQuota.errors.serviceRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+
+                <container *ngIf="noServicesToDisplay">
+                  <span *ngIf="showPermissionErrorFallbackText" read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
+                  <span *ngIf="!showPermissionErrorFallbackText" read-only>
+                    <span> {{ 'orderChangeApplicationRecoveryQuota.errors.serviceFallbackLabel' | translate }}</span>
+                    <span *mcsAccessControl="['TicketCreate']">
+                      <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>
+                      <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
+                        mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
+                        mcsEventLabel="change-app-recovery-quota-page">{{ 'orderHostedDnsChange.requestDetails.zones.raiseTicketLink' | translate }}</a>
+                      <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketSuffix' | translate }}</span>
+                    </span>.
+                  </span>
+                </container>
+            </ng-template>
+          </mcs-item>
+          <ng-container *ngIf="fcService?.value">
+            <!-- Journal Size -->
+            <mcs-item orientation="block">
+              <mcs-section>
+                <div>
+                  {{ 'orderChangeApplicationRecoveryQuota.detailsStep.journalSize.placeholder' | translate }}
+                </div>
+                <div>
+                  <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
+                    [mcsContextualHelp]="'orderChangeApplicationRecoveryQuota.detailsStep.journalSize.helpText' | translate"
+                    mcsId="slider-storage"
+                    [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
+                    (ngModelChange)="onSliderChanged($event)"></mcs-slider>
+                  <strong display-block text-center>
+                    {{ sliderValue?.size }} {{ sliderValue?.unit}}
+                  </strong>
+                  <span display-block text-center>
+                    {{ 'orderChangeApplicationRecoveryQuota.detailsStep.journalSize.sliderCurrent' | translate:  {current_value: (currentJournalSize.size | mcsDataSize: currentJournalSize.unit)} }}
+                  </span>
+                </div>
+              </mcs-section>
+            </mcs-item>
+            
+            <!-- Journal History -->
+            <mcs-item orientation="block">
+              <mcs-section>
+                <div>
+                  {{ 'orderChangeApplicationRecoveryQuota.detailsStep.journalHistory.label' | translate }}
+                </div>
+                <mcs-form-field>
+                  <mcs-select mcsId="select-journal-history"
+                    mcsEventTracker="select-journal-history" mcsEventCategory="order"
+                    mcsEventLabel="change-app-recovery-quota-page" [formControl]="fcJournalHistory"
+                    [placeholder]="'orderChangeApplicationRecoveryQuota.detailsStep.journalHistory.placeholder' | translate"
+                    [mcsContextualHelp]="'orderChangeApplicationRecoveryQuota.detailsStep.journalHistory.helpText' | translate" required
+                    [autoSelect]="true">
+                      <mcs-option *ngFor="let option of journalHistoryOptions" [value]="option">
+                          {{ option }}
+                      </mcs-option>
+                  </mcs-select>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderChangeApplicationRecoveryQuota.detailsStep.errors.journalHistoryRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-section>
+            </mcs-item>
+
+            <!-- Number of Virtual Machines -->
+            <mcs-item orientation="block">
+              <div>
+                {{ 'orderChangeApplicationRecoveryQuota.detailsStep.numberOfVMs.placeholder' | translate }}
+              </div>
+              <mcs-field-input-number-arrow
+                [formControl]="fcNumberOfVMs"
+                [placeholder]="'orderChangeApplicationRecoveryQuota.detailsStep.numberOfVMs.placeholder' | translate"
+                [mcsContextualHelp]="'orderChangeApplicationRecoveryQuota.detailsStep.numberOfVMs.helpText' | translate"
+                [minValue]="numberOfVmsMin"
+                [maxValue]="numberOfVmsMax"
+                [errorMessage]="numberOfVMsErrorMessages()"
+                [mcsId]="'input-ms-license-count'">
+              </mcs-field-input-number-arrow>
+            </mcs-item>
+          </ng-container>
+
+          <div class="action-items">
+            <button mcsButton arrow="right" mcsWizardStepNext [disabled]="!(formIsValid)" mcsId="step-1-next"
+              mcsEventTracker="step-1-next" mcsEventCategory="orders" mcsEventLabel="change-app-recovery-quota-page">{{
+              'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step" [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <mcs-step-order-details [order]="order$ | async" [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async" [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onOrderDetailsDataChange($event)" (submitOrder)="onSubmitOrder($event, fcService?.value)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step" [stepTitle]="'shared.wizard.completed' | translate" customClass="limited-view">
+        <mcs-step-manual-order-completed [order]="order$ | async"
+          [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+        </mcs-step-manual-order-completed>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

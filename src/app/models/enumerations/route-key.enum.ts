@@ -158,6 +158,7 @@ export enum RouteKey {
   OrderAzureProfessionalServiceRequest,
   OrderPrivateCloudChangeLaunchExtenderSpeed,
   OrderChangeAzureExtendSpeed,
+  OrderChangeApplicationRecoveryQuota,
 
   Internet,
   InternetDetails,

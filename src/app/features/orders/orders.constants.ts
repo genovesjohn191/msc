@@ -49,6 +49,7 @@ import {
 } from './change-extender-speed/azure-extend-speed/azure-extend-speed.component';
 import { ChangeExtenderSpeedComponent } from './change-extender-speed/shared/change-extender-speed.component';
 import { LicenseService } from '../licenses/licenses.service';
+import { ChangeApplicationRecoveryQuotaComponent } from './change-application-recovery-quota/change-application-recovery-quota.component';
 
 /**
  * List of services for the main module
@@ -99,7 +100,8 @@ export const ordersComponents: any[] = [
   BackupRestoreRequestComponent,
   PrivateChangeExtenderSpeedComponent,
   ChangeExtenderSpeedComponent,
-  AzureExtendSpeedComponent
+  AzureExtendSpeedComponent,
+  ChangeApplicationRecoveryQuotaComponent
 ];
 
 /**
@@ -292,6 +294,12 @@ export const ordersRoutes: Routes = [
     path: 'change/restore-backup-request',
     component: BackupRestoreRequestComponent,
     data: { routeId: RouteKey.OrderRestoreBackupRequest },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+  {
+    path: 'change/application-recovery-quota',
+    component: ChangeApplicationRecoveryQuotaComponent,
+    data: { routeId: RouteKey.OrderChangeApplicationRecoveryQuota },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
 
