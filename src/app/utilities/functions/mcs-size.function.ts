@@ -3,6 +3,7 @@
 let gbToMbMultiplier = 1024;
 let kbToMbMultiplier = 1024;
 let gbitToMbitMultiplier = 1000;
+let gbToTbMultiplier = 1000;
 
 /**
  * This will return the value converted from MB to GB
@@ -52,4 +53,24 @@ export function convertMbitToGbit(value: number): number {
   if (!value) { return 0; }
 
   return (value * gbitToMbitMultiplier);
+}
+
+/**
+ * This will return the value converted from GB to TB
+ * @param value Value in GB
+ */
+export function convertGbToTb(value: number): number {
+  if (!value) { return 0; }
+
+  return (value / gbToTbMultiplier);
+}
+
+/**
+ * This will return the value converted from TB to GB
+ * @param value Value in TB
+ */
+ export function convertTbToGb(value: number): number {
+  if (!value) { return 0; }
+
+  return (value * gbToTbMultiplier);
 }

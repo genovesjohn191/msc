@@ -26,6 +26,7 @@ import { BackupRestoreRequestEvent } from './events/backup-restore-request.event
 import { ComplexFirewallChangeEvent } from './events/complex-firewall-change.event';
 import { PrivateCloudChangeLaunchExtenderSpeedEvent } from './events/private-cloud-change-launch-extender-speed.event';
 import { ChangeAzureExtendSpeedEvent } from './events/change-azure-extend-speed.event';
+import { ChangeApplicationRecoveryQuotaEvent } from './events/change-application-recovery-quota.event';
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
 export const orderEventMap: OrderEventRecord = {
@@ -56,4 +57,6 @@ export const orderEventMap: OrderEventRecord = {
   'backup.requestRestore': new BackupRestoreRequestEvent(),
   'privateCloud.launchExtender.changeSpeed': new PrivateCloudChangeLaunchExtenderSpeedEvent(),
   'publicCloud.launchExtender.changeSpeed': new ChangeAzureExtendSpeedEvent(),
+  'privateCloud.applicationRecovery.change': new ChangeApplicationRecoveryQuotaEvent(),
+  'publicCloud.applicationRecovery.change': new ChangeApplicationRecoveryQuotaEvent()
 };

@@ -1433,6 +1433,45 @@
       "modules": "Module is required",
       "requestDetails": "Request details is required"
     }
+  }, 
+  "orderChangeApplicationRecoveryQuota": {
+    "title": "Change Application Recovery Quota",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "previous": "Back",
+      "description": "Please select the Application Recovery service you wish to change.",
+      "service": {
+        "helpText": "Please select the service you wish to change.",
+        "placeholder": "Select a service to change",
+        "optionHelpText": "This service cannot be modified because it is currently being provisioned."
+      },
+      "journalSize": {
+        "helpText": "Select your desired journal size. As a general guide, it is recommended to set this to approximately 20% of the linked VDC's storage.",
+        "placeholder": "Journal Size",
+        "sliderCurrent": "(Current: {{current_value}})"
+      },
+      "journalHistory": {
+        "helpText": "The period of time that data will be kept for rollback purposes.",
+        "label": "Journal History",
+        "placeholder": "Select a time period"
+      },
+      "numberOfVMs": {
+        "helpText": "Maximum number of individual virtual machines that will be protected by your Application Recovery service.",
+        "placeholder": "Number of Virtual Machines"
+      },
+      "numberOfVMsNumeric": "Please enter a valid number.",
+      "numberOfVMsMinimum": "The minimum quantity for this license is {{min_value}}.",
+      "numberOfVMsMaximum": "The maximum quantity for this license is {{max_value}}.",
+      "errors": {
+        "serviceFallbackLabel": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+        "raiseTicketPrefix": " or ",
+        "raiseTicketLink": "raise a ticket",
+        "raiseTicketSuffix": " if this is unexpected",
+        "serviceRequired": "Service is required.",
+        "journalHistoryRequired": "Journal history is required.",
+        "numberOfVMsRequired": "Number of Virtual Machines is required."
+      }
+    }
   },
   "orderBackupRestoreRequest": {
     "title": "Request a Backup Restore",
