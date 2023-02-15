@@ -49,7 +49,8 @@ export enum WorkflowType {
   UcsOrgCreate = 'launchpad.ucsOrganisation.create',
 
   VirtualDataCenterProvision = 'launchpad.virtualdatacenter.provision',
-  VirtualDataCenterDeprovision = 'launchpad.virtualdatacenter.deprovision'
+  VirtualDataCenterDeprovision = 'launchpad.virtualdatacenter.deprovision',
+  VirtualDataCenterStorageProvision = 'launchpad.virtualdatacenterstorage.provision',
 }
 
 /**

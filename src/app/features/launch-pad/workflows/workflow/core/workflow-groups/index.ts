@@ -47,3 +47,5 @@ export * from './ucs-org-create.workflow';
 
 export * from './virtual-data-center-deprovision.workflow';
 export * from './virtual-data-center-provision.workflow';
+
+export * from './virtual-data-center-storage-provision.workflow';

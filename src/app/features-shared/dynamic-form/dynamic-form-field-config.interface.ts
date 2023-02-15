@@ -75,6 +75,7 @@ export type DynamicFormFieldType =
   | 'textbox-server-panel'
   | 'textbox-short-customer-name'
   | 'textbox-size'
+  | 'textbox-storage-size'
   | 'textbox-subscription-id'
   | 'textbox-vcloud-allocation'
   | 'textbox-vrf-name'
@@ -114,11 +115,13 @@ export type DynamicFormFieldType =
   | 'select-chips-service'
   | 'select-service'
   | 'select-storage-profile'
+  | 'select-storage-tier'
   | 'select-tenant'
   | 'select-terraform-module-type'
   | 'select-pods'
   | 'select-ucs'
   | 'select-vdc'
+  | 'select-vdc-storage'
   | 'select-physical-server'
   | 'select-provider-vdc'
   | 'select-vcloud-instance'
@@ -128,7 +131,8 @@ export type DynamicFormFieldType =
   | 'slide-toggle'
   | 'input-compute'
   | 'table-storage-profile'
-  | 'expansion-slide-toggle';
+  | 'expansion-slide-toggle'
+  | 'storage-slide-toggle';
 
 export type DynamicFormFieldTemplate =
   'input-text'
@@ -143,6 +147,7 @@ export type DynamicFormFieldTemplate =
   | 'input-server-panel'
   | 'input-short-customer-name'
   | 'input-size'
+  | 'input-storage-size'
   | 'input-compute'
   | 'input-subscription-id'
   | 'input-vcloud-allocation'
@@ -182,6 +187,7 @@ export type DynamicFormFieldTemplate =
   | 'select-resource'
   | 'select-service'
   | 'select-storage-profile'
+  | 'select-storage-tier'
   | 'select-tenant'
   | 'select-terraform-module-type'
   | 'select-pods'
@@ -191,11 +197,13 @@ export type DynamicFormFieldTemplate =
   | 'select-vcloud-instance'
   | 'select-vcloud-type'
   | 'select-vdc'
+  | 'select-vdc-storage'
   | 'select-vm'
   | 'select-vm-size'
   | 'slide-toggle'
   | 'table-storage-profile'
-  | 'expansion-slide-toggle';
+  | 'expansion-slide-toggle'
+  | 'storage-slide-toggle';
 
 export type DynamicFormFieldOnChangeEvent =
   ''
@@ -232,7 +240,8 @@ export type DynamicFormFieldOnChangeEvent =
   | 'terraform-tag-change'
   | 'type-change'
   | 'ucs-change'
-  | 'vcloud-instance-change';
+  | 'vcloud-instance-change'
+  | 'storage-toggle-change';
 
 export type DynamicFormFieldInputType =
   ''

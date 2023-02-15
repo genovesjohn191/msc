@@ -1208,5 +1208,23 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
         }
       ]
     ],
+
+    [ ProductType.VdcStorage,
+      [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCenterStorageProvision,
+          allowedElementStatuses: [ ]
+        }
+      ]
+    ],
+
+    [ ProductType.StretchedVirtualDataCentreStorage,
+      [
+        {
+          workflowId: WorkflowGroupId.VirtualDataCenterStorageProvision,
+          allowedElementStatuses: [ ]
+        }
+      ]
+    ]
   ]
 );

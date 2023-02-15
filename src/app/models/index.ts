@@ -415,6 +415,7 @@ export * from './response/mcs-ucs-central-instance';
 export * from './response/mcs-ucs-domain';
 export * from './response/mcs-ucs-domain-group';
 export * from './response/mcs-ucs-object';
+export * from './response/mcs-storage-size';
 export * from './response/vcloud-instance/mcs-vcloud-compute-allocation';
 export * from './response/vcloud-instance/mcs-vcloud-instance';
 export * from './response/vcloud-instance/mcs-vcloud-instance-pods';
@@ -484,6 +485,7 @@ export * from './common/mcs-dns-query-params';
 export * from './common/mcs-ucs-query-params';
 export * from './common/mcs-storage-saas-backupattempt-query-params';
 export * from './common/mcs-network-db-vlan-query-params';
+export * from './common/mcs-resource-query-param';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

@@ -41,6 +41,7 @@ import {
   UcsOrgCreateWorkflowGroup,
   VirtualDataCenterDeprovisionWorkflowGroup,
   VirtualDataCenterProvisionWorkflowGroup,
+  VirtualDataCenterStorageProvisionWorkflowGroup,
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 
@@ -80,6 +81,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.VirtualDataCentreNetworkCreate, VdcNetworkCreateWorkflowGroup ],
   [ WorkflowGroupId.VirtualDataCentreNetworkCreateCustom, VdcNetworkCreateCustomWorkflowGroup ],
   [ WorkflowGroupId.VirtualDataCenterProvision, VirtualDataCenterProvisionWorkflowGroup ],
+  [ WorkflowGroupId.VirtualDataCenterStorageProvision, VirtualDataCenterStorageProvisionWorkflowGroup ],
 
   [ WorkflowGroupId.VmBackupProvision,  VmBackupProvisionWorkflowGroup ],
 
