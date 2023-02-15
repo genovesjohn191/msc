@@ -61,10 +61,8 @@
             {{ 'columnHeader.ipMode' | translate }}
           </th>
             <td mat-cell *matCellDef="let row" hidden-small>
-              <ng-container *ngIf="isVMWareToolsInstalled; else notInstalled">
-                <ng-container *ngIf="isVMWareToolsRunning; else notRunning">
-                  <span [innerHTML]="row.ipAllocationModeLabel | mcsDataLabel"></span>
-                </ng-container>
+              <ng-container *ngIf="isVMWareToolsRunning; else notRunning">
+                <span [innerHTML]="row.ipAllocationModeLabel | mcsDataLabel"></span>
               </ng-container>
             </td>
         </ng-container>
@@ -75,11 +73,16 @@
             {{ 'columnHeader.ipAddresses' | translate }}
           </th>
           <td mat-cell *matCellDef="let row"  hidden-small>
-            <ng-container *ngIf="isVMWareToolsInstalled; else notInstalled">
-              <ng-container *ngIf="isVMWareToolsRunning; else notRunning">
+            <ng-container *ngIf="isVMwareToolsRunningOrNotApplicable(server); else notRunning">
+              <ng-container *ngIf="row.logicalIpAddresses; else noIpAddresses">
                 <mcs-list spacing="none">
-                  <mcs-list-item *ngFor="let ipAddress of row.logicalIpAddresses">
-                    <span [innerHTML]="ipAddress | mcsDataLabel"></span>
+                  <mcs-list-item *ngFor="let ipAddress of row.logicalIpAddresses; let i = index">
+                    <ng-container *ngIf="i < 3">
+                      <span [innerHTML]="ipAddress | mcsDataLabel"></span>
+                    </ng-container>
+                    <ng-container *ngIf="(i == 3) && (row.logicalIpAddresses.length > 3)">
+                      <span read-only>{{ 'serverManagement.nics.andMore' | translate:{remainingQuantity: row.logicalIpAddresses.length - 3} }}</span>
+                    </ng-container>
                   </mcs-list-item>
                 </mcs-list>
               </ng-container>
@@ -93,10 +96,10 @@
           </mcs-data-status-empty>
         </ng-template>
 
-        <ng-template #notInstalled>
-          <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotInstalledTooltip' | translate">
-            {{ 'serverManagement.nics.nicsUnavailableNotInstalled' | translate }}
-          </mcs-data-status-empty>
+        <ng-template #noIpAddresses>
+          <span read-only>
+            {{ 'label.none' | translate }}
+          </span>
         </ng-template>
 
         <!-- Action Column -->
@@ -187,11 +190,16 @@
             {{ 'columnHeader.ipAddresses' | translate }}
           </th>
           <td mat-cell *matCellDef="let row"  hidden-small>
-            <ng-container *ngIf="isVMWareToolsInstalled; else notInstalled">
-              <ng-container *ngIf="isVMWareToolsRunning; else notRunning">
+            <ng-container *ngIf="isVMwareToolsRunningOrNotApplicable(server); else notRunning">
+              <ng-container *ngIf="row.logicalIpAddresses; else noIpAddresses">
                 <mcs-list spacing="none">
-                  <mcs-list-item *ngFor="let ipAddress of row.logicalIpAddresses">
-                    <span [innerHTML]="ipAddress | mcsDataLabel"></span>
+                  <mcs-list-item *ngFor="let ipAddress of row.logicalIpAddresses; let i = index">
+                    <ng-container *ngIf="i < 3">
+                      <span [innerHTML]="ipAddress | mcsDataLabel"></span>
+                    </ng-container>
+                    <ng-container *ngIf="(i == 3) && (row.logicalIpAddresses.length > 3)">
+                      <span read-only>{{ 'serverManagement.nics.andMore' | translate:{remainingQuantity: row.logicalIpAddresses.length - 3} }}</span>
+                    </ng-container>
                   </mcs-list-item>
                 </mcs-list>
               </ng-container>
@@ -205,10 +213,10 @@
           </mcs-data-status-empty>
         </ng-template>
 
-        <ng-template #notInstalled>
-          <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotInstalledTooltip' | translate">
-            {{ 'serverManagement.nics.nicsUnavailableNotInstalled' | translate }}
-          </mcs-data-status-empty>
+        <ng-template #noIpAddresses>
+          <span read-only>
+            {{ 'label.none' | translate }}
+          </span>
         </ng-template>
 
         <!-- Action Column -->

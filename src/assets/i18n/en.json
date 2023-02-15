@@ -1702,13 +1702,14 @@
       "primary": "Primary",
       "ipAllocationMode": "IP Mode",
       "ipAddresses": "IP Addresses",
+      "andMore": "and {{remainingQuantity}} more...",
       "dhcpLabel": "Automatically assigned",
-      "staticLabel": "Unable to obtain",
+      "staticLabel": "None",
       "noContentMessage": "There are no NICs for this server.",
-      "nicsUnavailableNotInstalledTooltip": "Unavailable because VMWare Tools is not installed on the server.",
-      "nicsUnavailableNotRunningTooltip": "Unavailable because VMWare Tools is not running on the server.",
-      "nicsUnavailableNotInstalled": "VMWare Tools Not Installed.",
-      "nicsUnavailableNotRunning": "VMWare Tools Not Running."
+      "nicsUnavailableNotInstalledTooltip": "Unavailable because VMware Tools is not installed on the server.",
+      "nicsUnavailableNotRunningTooltip": "Unavailable because VMware Tools is not running on the server.",
+      "nicsUnavailableNotInstalled": "VMware Tools Not Installed",
+      "nicsUnavailableNotRunning": "VMware Tools Not Running"
     },
     "storage": {
       "title": "Storage",

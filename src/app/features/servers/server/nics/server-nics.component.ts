@@ -148,7 +148,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _selectedServerResource: McsResource = null;
   private _hasInternalPrivateCloudEngineerAccess: boolean = false;
   private _isUcsBladeNicEditFeatureEnabled = false;
-  private _currentUserCompanyId: string = '';
+  private _currentUserActiveCompanyId: string = '';
   private _vlanOptions = new BehaviorSubject<FlatOption[]>(null);
 
   private _createNicHandler: Subscription;
@@ -262,7 +262,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public ngOnInit() {
     this._hasInternalPrivateCloudEngineerAccess = this._accessControlService.hasPermission([McsPermission.InternalPrivateCloudEngineerAccess]);
     this._isUcsBladeNicEditFeatureEnabled = this._accessControlService.hasAccessToFeature(McsFeatureFlag.DedicatedBladeNicEdit);
-    this._currentUserCompanyId = this._authenticationIdentity.user.companyId;
+    this._currentUserActiveCompanyId = this._authenticationIdentity.activeAccount.id;
     this.server$.subscribe(server => {
       this._serverIsDedicated = server.isDedicated;
       this._selectedServer = server;
@@ -516,6 +516,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public getPowerStatePermission(server: McsServer): McsServerPermission {
     return new McsServerPermission(server);
+  }
+
+  public isVMwareToolsRunningOrNotApplicable(server: McsServer): boolean  {
+    return !(server.isVMware && server.isVM) || server.isVMWareToolsRunning;
   }
 
   /**
@@ -803,9 +807,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     queryParam.pageSize = 9999;
     queryParam.podSiteName = this._selectedServer?.availabilityZone;
     queryParam.podName = this._selectedServerResource?.podName;
-    queryParam.networkCompanyId = this._currentUserCompanyId;
+    queryParam.networkCompanyId = this._currentUserActiveCompanyId;
 
-    if (isNullOrUndefined(this._selectedServerResource) || isNullOrUndefined(this._currentUserCompanyId) || this.isViewNicBladeVisible(selectedNic)) { return of([]); }
+    if (isNullOrUndefined(this._selectedServerResource) || isNullOrUndefined(this._currentUserActiveCompanyId) || this.isViewNicBladeVisible(selectedNic)) { return of([]); }
 
     return this.apiService.getNetworkDbVlans(queryParam).pipe((
       map((vlans) => {

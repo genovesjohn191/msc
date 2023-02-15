@@ -192,6 +192,13 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   }
 
   /**
+   * Returns true when the server's hardware type is VM
+   */
+   public get isVM(): boolean {
+      return this.hardware.type === HardwareType.VM;
+    }
+
+  /**
    * Returns true when the server is powered on
    */
   public get isPoweredOn(): boolean {
@@ -376,10 +383,34 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
   }
 
   /**
-   * Returns true when the current server is dedicated
+   * Returns true when the current server's platform is vCloud
    */
    public get isVCloud(): boolean {
     return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCloud;
+  }
+
+  /**
+   * Returns true when the current server's platform is vCenter
+   */
+   public get isVCenter(): boolean {
+    return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCenter;
+  }
+
+  /**
+   * Returns true when the current server has a VMware platform (any type)
+   */
+   public get isVMware(): boolean {
+     return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCloud ||
+       getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCenter;
+  }
+
+  /**
+   * Returns true when the current server has a UCS platform (any type)
+   */
+   public get isUcs(): boolean {
+     return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.Ucs ||
+       getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.UcsCentral ||
+       getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.UcsDomain;
   }
 
   /**
