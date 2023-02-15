@@ -12,7 +12,7 @@ export class DynamicInputHiddenField extends DynamicFormFieldConfigBase {
 
   public constructor(options: {
     key: string;
-    value?: string;
+    value?: any;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
   }) {

@@ -1,0 +1,41 @@
+<mat-accordion>
+  <mat-expansion-panel hideToggle class="mat-elevation-z0">
+    <mat-expansion-panel-header padding-none>
+      <mat-panel-title>
+        <mat-icon>arrow_drop_down</mat-icon> {{ config.storagePanelTitle }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-form-field
+      *ngIf="visible"
+      appearance="none"
+      floatLabel="always">
+
+      <mat-slide-toggle
+        color="primary"
+        [(ngModel)]="config.defaultValue"
+        (change)="defaultToggleChange($event)">
+        {{ config.defaultLabel }}
+      </mat-slide-toggle>
+      <textarea matInput hidden></textarea>
+
+    </mat-form-field>
+
+    <mat-form-field
+      *ngIf="visible"
+      appearance="none"
+      floatLabel="always">
+
+      <mat-slide-toggle
+        color="primary"
+        [(ngModel)]="config.previewValue"
+        (change)="previewToggleChange($event)">
+        {{ config.previewLabel }}
+      </mat-slide-toggle>
+      <textarea matInput hidden></textarea>
+
+    </mat-form-field>
+
+  </mat-expansion-panel>
+</mat-accordion>
+

@@ -27,6 +27,7 @@ export enum CrispAttributeNames {
   LinkedServiceId = 'LINKED_SERVICEID',
   LinkedMsTenant = 'LINKED_MS_TENANT',
   LinkSrvIdVav = 'LINK_SRV_ID_VAV',
+  LinkSrvMaza = 'LINK_SRV_MAZA',
   MazaDiskSpace2 = 'MAZA_DISK_SPACE2',
   MazaLocation = 'MAZA_LOCATION',
   MazaStorageTier = 'MAZA_STORAGE_TIER',

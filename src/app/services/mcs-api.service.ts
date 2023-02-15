@@ -337,7 +337,8 @@ import {
   McsNetworkDbVlanQueryParams,
   HttpStatusCode,
   McsVcloudInstance,
-  McsVcloudInstanceProviderVdc
+  McsVcloudInstanceProviderVdc,
+  McsResourceQueryParam
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -740,7 +741,7 @@ export class McsApiService {
     );
   }
 
-  public getResources(optionalHeaders?: Map<string, any>, query?: McsQueryParam): Observable<McsApiCollection<McsResource>> {
+  public getResources(optionalHeaders?: Map<string, any>, query?: McsResourceQueryParam): Observable<McsApiCollection<McsResource>> {
     return this._resourcesApi.getResources(optionalHeaders, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResources'))

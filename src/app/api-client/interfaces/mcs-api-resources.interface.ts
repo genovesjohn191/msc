@@ -12,7 +12,8 @@ import {
   McsValidation,
   McsResourceCatalog,
   McsQueryParam,
-  McsPhysicalServer
+  McsPhysicalServer,
+  McsResourceQueryParam
 } from '@app/models';
 
 export interface IMcsApiResourcesService {
@@ -22,7 +23,7 @@ export interface IMcsApiResourcesService {
    */
   getResources(
     optionalHeaders?: Map<string, any>,
-    query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResource[]>>;
+    query?: McsResourceQueryParam): Observable<McsApiSuccessResponse<McsResource[]>>;
 
   /**
    * Get resource by ID (MCS API Response)

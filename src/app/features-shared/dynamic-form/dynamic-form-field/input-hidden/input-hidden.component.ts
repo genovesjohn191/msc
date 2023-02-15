@@ -61,6 +61,10 @@ export class DynamicInputHiddenComponent extends DynamicFieldComponentBase {
         this.config.value = params.value?.name;
         this.valueChange(this.config.value);
         break;
+      case 'storage-toggle-change':
+        this.config.value = params.value?.preview;
+        this.valueChange(this.config.value);
+        break;
     }
   }
 }

@@ -38,6 +38,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-size-field>
 
+        <mcs-dff-input-storage-size-field *ngSwitchCase="'input-storage-size'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-storage-size-field>
+
         <mcs-dff-input-vcloud-allocation-field *ngSwitchCase="'input-vcloud-allocation'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-vcloud-allocation-field>
@@ -77,6 +81,10 @@
         <mcs-dff-select-bat-field *ngSwitchCase="'select-bat'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-bat-field>
+
+        <mcs-dff-select-storage-tier-field *ngSwitchCase="'select-storage-tier'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-storage-tier-field>
 
         <mcs-dff-select-chip-single-company-field *ngSwitchCase="'select-chip-single-company'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
@@ -207,6 +215,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-vdc-field>
 
+        <mcs-dff-select-vdc-storage-field *ngSwitchCase="'select-vdc-storage'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-vdc-storage-field>
+
         <mcs-dff-select-vm-field *ngSwitchCase="'select-vm'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-vm-field>
@@ -222,6 +234,10 @@
         <mcs-dff-expansion-slide-toggle-field *ngSwitchCase="'expansion-slide-toggle'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-expansion-slide-toggle-field>
+
+        <mcs-dff-storage-slide-toggle-field *ngSwitchCase="'storage-slide-toggle'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-storage-slide-toggle-field>
 
         <mcs-dff-select-forti-manager *ngSwitchCase="'select-forti-manager'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">

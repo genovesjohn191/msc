@@ -43,3 +43,5 @@ export * from './ucs-org-create.form';
 
 export * from './virtual-data-center-deprovision.form';
 export * from './virtual-data-center-provision.form';
+
+export * from './virtual-data-center-storage-provision.form';

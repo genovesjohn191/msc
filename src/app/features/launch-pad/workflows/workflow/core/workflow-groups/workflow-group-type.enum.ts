@@ -12,6 +12,7 @@ export enum WorkflowGroupId {
   VirtualDataCentreNetworkCreate = 100003,
   VirtualDataCentreNetworkCreateCustom = 100004,
   VirtualDataCenterProvision = 100005,
+  VirtualDataCenterStorageProvision = 100006,
 
   DedicatedStorageAttachVolume = 200001,
   DedicatedStorageAttachVolumeCluster  = 200002,
@@ -65,6 +66,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.VirtualDataCentreNetworkCreate]: 'Create VDC Network',
   [WorkflowGroupId.VirtualDataCentreNetworkCreateCustom]: 'Create VDC Network',
   [WorkflowGroupId.VirtualDataCenterProvision]: 'Provision Virtual Data Center',
+  [WorkflowGroupId.VirtualDataCenterStorageProvision]: 'Provision Virtual Data Center Storage',
 
   [WorkflowGroupId.DedicatedStorageAttachVolume]: 'Attach Existing Volume',
   [WorkflowGroupId.DedicatedStorageAttachVolumeCluster]: 'Attach Volume Cluster',

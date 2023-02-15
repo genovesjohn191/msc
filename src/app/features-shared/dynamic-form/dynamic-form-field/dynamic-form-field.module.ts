@@ -69,6 +69,10 @@ import { DynamicSelectVcloudTypeComponent } from './select-vcloud-type/select-vc
 import { DynamicSelectProviderVdcComponent } from './select-provider-vdc/select-provider-vdc.component';
 import { DynamicTableStorageProfileComponent } from './table-storage-profile/table-storage-profile.component';
 import { DynamicExpansionSlideToggleComponent } from './expansion-slide-toggle/expansion-slide-toggle.component';
+import { DynamicSelectVdcStorageComponent } from './select-vdc-storage/select-vdc-storage.component';
+import { DynamicInputStorageSizeComponent } from './input-storage-size/input-storage-size.component';
+import { DynamicStorageSlideToggleComponent } from './storage-slide-toggle/storage-slide-toggle.component';
+import { DynamicSelectStorageTierComponent } from './select-storage-tier/select-storage-tier.component';
 import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
 
 const exports: any[] | Type<any> = [
@@ -84,6 +88,7 @@ const exports: any[] | Type<any> = [
   DynamicInputShortCustomerNameComponent,
   DynamicInputSizeComponent,
   DynamicInputSubscriptionIdComponent,
+  DynamicInputStorageSizeComponent,
   DynamicInputVcloudAllocationComponent,
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
@@ -117,11 +122,13 @@ const exports: any[] | Type<any> = [
   DynamicSelectSoftwareSubscriptionProductTypeComponent,
   DynamicSelectReservationProductTypeComponent,
   DynamicSelectResourceGroupComponent,
+  DynamicSelectStorageTierComponent,
   DynamicSelectStorageProfileComponent,
   DynamicSelectTenantComponent,
   DynamicSelectTerraformModuleTypeComponent,
   DynamicSelectPodsComponent,
   DynamicSelectVdcComponent,
+  DynamicSelectVdcStorageComponent,
   DynamicSelectVmComponent,
   DynamicSelectVmSizeComponent,
   DynamicSlideToggleComponent,
@@ -134,7 +141,8 @@ const exports: any[] | Type<any> = [
   DynamicInputComputeComponent,
   DynamicSelectUcsComponent,
   DynamicTableStorageProfileComponent,
-  DynamicExpansionSlideToggleComponent
+  DynamicExpansionSlideToggleComponent,
+  DynamicStorageSlideToggleComponent
 ];
 
 @NgModule({

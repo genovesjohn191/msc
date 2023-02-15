@@ -15,7 +15,8 @@ import {
   McsValidation,
   McsResourceCatalog,
   McsQueryParam,
-  McsPhysicalServer
+  McsPhysicalServer,
+  McsResourceQueryParam
 } from '@app/models';
 import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -26,7 +27,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getResources(optionalHeaders?: Map<string, any>, query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResource[]>> {
+  public getResources(optionalHeaders?: Map<string, any>, query?: McsResourceQueryParam): Observable<McsApiSuccessResponse<McsResource[]>> {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();

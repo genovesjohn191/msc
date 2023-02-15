@@ -1,0 +1,8 @@
+<mat-form-field *ngIf="visible" appearance="outline" style="max-width: 200px;">
+  <mat-label [attr.for]="id"> {{ config.label }}</mat-label>
+
+  <input matInput disabled
+    [(ngModel)]="limitMB" required/>
+  <span matPrefix class="prefix" *ngIf="config.prefix">{{config.prefix}}</span>
+  <span matSuffix class="suffix" *ngIf="config.suffix">{{config.suffix}}</span>
+</mat-form-field>
