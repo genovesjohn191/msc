@@ -21,17 +21,17 @@
                 [mcsTooltip]="server.processingText"
                 mcsTooltipPosition="right"></mcs-loader>
 
-              <span [innerHTML]="server.statusLabel | mcsDataLabel"></span>
+              <span [innerHTML]="server.statusLabel | mcsDataLabel: 'Unknown'"></span>
             </mcs-item>
 
             <mcs-item>
               <span>{{ 'serverManagement.vmProperties.edition' | translate }}:</span>
-              <span [innerHTML]="server.operatingSystem?.edition | mcsDataLabel"></span>
+              <span [innerHTML]="server.operatingSystem?.edition | mcsDataLabel: 'Unknown'"></span>
             </mcs-item>
 
             <mcs-item>
               <span>{{ 'serverManagement.vmProperties.zone' | translate }}:</span>
-              <span [innerHTML]="server.availabilityZone | mcsDataLabel"></span>
+              <span [innerHTML]="server.availabilityZone | mcsDataLabel: 'Unknown'"></span>
             </mcs-item>
 
             <mcs-item>
@@ -55,7 +55,7 @@
               </ng-container>
             </mcs-item>
 
-            <mcs-item>
+            <mcs-item *ngIf="server.isVMware && server.isVM">
               <span>{{ 'serverManagement.vmProperties.vmwareTools' | translate }}:</span>
               <ng-container *ngIf="server.vmwareTools?.hasTools; else vmwareTemplate">
                 <span>{{ server.vmwareTools?.version }}</span>
@@ -158,7 +158,7 @@
                 <mcs-list-item *ngFor="let storage of server?.storageDevices">
                   <mcs-item>
                     <span>{{ storage.name }}:</span>
-                    <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
+                    <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel: 'Unknown'"></span>
                   </mcs-item>
                 </mcs-list-item>
               </mcs-list>
@@ -192,15 +192,14 @@
               </mcs-item>
             </ng-container>
 
-            <ng-container *ngIf="(server.isVMWareToolsInstalled); else warningMessage">
-              <ng-container *ngIf="(server.isVMWareToolsRunning); else notRunning">
+              <ng-container *ngIf="isVMwareToolsRunningOrNotApplicable(server); else notRunning">
                 <ng-container *ngIf="server?.nics | mcsIsNotNullOrEmpty; else noContentMessage">
                   <mcs-accordion [multi]="true">
                     <mcs-accordion-panel *ngFor="let nic of server?.nics; let i = index"
                       [expanded]="i === 0">
                       <mcs-accordion-panel-header mcsPanelHeaderDef>
                         <span>{{ nic.name }}</span>
-                        <span *ngIf="nic.isPrimary">({{ 'serverManagement.nics.primary' | translate }})</span>
+                        <span *ngIf="nic.isPrimary"> ({{ 'serverManagement.nics.primary' | translate }})</span>
                       </mcs-accordion-panel-header>
                       <mcs-item>
                         <span>{{ 'serverManagement.nics.ipAllocationMode' | translate }}:</span>
@@ -208,12 +207,13 @@
                       </mcs-item>
                       <mcs-item>
                         <span>{{ 'serverManagement.nics.ipAddresses' | translate }}:</span>
-                        <ng-container *ngIf="nic.logicalIpAddresses; else noIpAddressTemplate">
-                          <mcs-list spacing="auto">
-                            <mcs-list-item *ngFor="let item of nic.logicalIpAddresses">
-                              {{ item }}
-                            </mcs-list-item>
-                          </mcs-list>
+                        <ng-container *ngIf="nic?.logicalIpAddresses; else noIpAddressTemplate">
+                          <ng-container *ngIf="nic?.logicalIpAddresses?.length === 1">
+                            <span [innerHTML]="nic?.logicalIpAddresses[0] | mcsDataLabel: 'Unknown'"></span>
+                          </ng-container>
+                          <ng-container *ngIf="nic?.logicalIpAddresses?.length > 1">
+                            <span read-only>{{ nic?.logicalIpAddresses?.length }}</span>
+                          </ng-container>
                         </ng-container>
                         <ng-template #noIpAddressTemplate>
                           <span read-only [ngSwitch]="nic?.ipAllocationMode">
@@ -234,19 +234,11 @@
                     {{ 'serverManagement.nics.noContentMessage' | translate }}
                   </mcs-data-status-empty>
                 </ng-template>
-              </ng-container>
-              <ng-template #notRunning>
-                <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotRunningTooltip' | translate">
-                  {{ 'serverManagement.nics.nicsUnavailableNotRunning' | translate }}
-                </mcs-data-status-empty>
-              </ng-template>
             </ng-container>
-            <ng-template #warningMessage>
-              <ng-container>
-                <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotInstalledTooltip' | translate">
-                  {{ 'serverManagement.nics.nicsUnavailableNotInstalled' | translate }}
-                </mcs-data-status-empty>
-              </ng-container>
+            <ng-template #notRunning>
+              <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotRunningTooltip' | translate">
+                {{ 'serverManagement.nics.nicsUnavailableNotRunning' | translate }}
+              </mcs-data-status-empty>
             </ng-template>
           </mcs-presentation-panel>
         </mcs-grid-column>
@@ -254,9 +246,8 @@
 
       <mcs-grid-row>
 
-        <!-- VM Media -->
-        <mcs-grid-column sizeSm="12" sizeLg="6" *ngIf="hassPermissionToViewMediaPanel(server.isDedicated)">
-
+      <!-- VM Media -->
+        <mcs-grid-column sizeSm="12" sizeLg="6" *ngIf="(server.isVMware && server.isVM) && hasPermissionToViewMediaPanel(server.isDedicated)">
           <mcs-presentation-panel mcsId="vm-media">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
@@ -315,17 +306,17 @@
 
             <mcs-item>
               <span>{{ 'serverManagement.serviceInformation.vdc' | translate }}:</span>
-              <span [innerHTML]="server.platform?.resourceName | mcsDataLabel"></span>
+              <span [innerHTML]="server.platform?.resourceName | mcsDataLabel: 'Unknown'"></span>
             </mcs-item>
 
-            <mcs-item *ngIf="server.serviceId">
+            <mcs-item *ngIf="!server.isSelfManaged">
               <span>{{ 'serverManagement.serviceInformation.serviceId' | translate }}:</span>
-              <span>{{ server.serviceId }}</span>
+              <span [innerHTML]="server.serviceId | mcsDataLabel: 'Unknown'"></span>
             </mcs-item>
 
-            <mcs-item>
+            <mcs-item *ngIf="server.isVMware && server.isVM">
               <span>{{ 'serverManagement.serviceInformation.vmWareId' | translate }}:</span>
-              <span [innerHTML]="server.instanceId | mcsDataLabel"></span>
+              <span [innerHTML]="server.instanceId | mcsDataLabel: 'Unknown'"></span>
             </mcs-item>
 
             <mcs-item>
@@ -333,6 +324,9 @@
               <span>{{ server.inviewLevelLabel }}</span>
             </mcs-item>
           </mcs-presentation-panel>
+        </mcs-grid-column>
+        <mcs-grid-column sizeSm="12" sizeLg="6" *ngIf="!(server.isVMware && server.isVM && hasPermissionToViewMediaPanel(server.isDedicated))">
+          <!-- Fix for conditionally stretched panel -->
         </mcs-grid-column>
       </mcs-grid-row>
     </mcs-grid>

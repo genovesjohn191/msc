@@ -223,6 +223,10 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
     return !someServersCannotExecute;
   }
 
+  public isVMwareToolsInstalledOrNotApplicable(server: McsServer): boolean  {
+    return !(server.isVMware && server.isVM) || server.isVMWareToolsInstalled;
+  }
+
   public getPowerStatePermission(server: McsServer): McsServerPermission {
     return new McsServerPermission(server);
   }

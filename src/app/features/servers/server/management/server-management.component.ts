@@ -158,12 +158,16 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     return getSafeProperty(server as McsServer, (obj) => obj.compute.cpuCount, 2);
   }
 
-  public hassPermissionToViewMediaPanel(isServerDedicated: boolean): boolean {
+  public hasPermissionToViewMediaPanel(isServerDedicated: boolean): boolean {
     let hasAccessToMediaCatalog = this._accessControlService.hasAccessToFeature([McsFeatureFlag.MediaCatalog]);
     if (!hasAccessToMediaCatalog) { return; }
     let hasAccessToDedicatedVmMediaView = this._accessControlService.hasAccessToFeature([McsFeatureFlag.DedicatedVmMediaView]);
     if (!hasAccessToDedicatedVmMediaView && isServerDedicated) { return; }
     return true;
+  }
+
+  public isVMwareToolsRunningOrNotApplicable(server: McsServer): boolean  {
+    return !(server.isVMware && server.isVM) || server.isVMWareToolsRunning;
   }
 
   /**

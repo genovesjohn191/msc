@@ -249,8 +249,11 @@
             {{ 'columnHeader.toolsVersion' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
-            <ng-container *ngIf="row.vmwareTools?.hasTools; else toolsNotInstalled">
-              <span>{{ row.vmwareTools?.version }}</span>
+            <ng-container *ngIf="isVMwareToolsInstalledOrNotApplicable(row); else toolsNotInstalled">
+              <ng-container *ngIf="row.isVMWareToolsInstalled; else toolsNotApplicable">
+                <span [innerHTML]="row.vmwareTools?.version | mcsDataLabel: 'Unknown'">
+                </span>
+              </ng-container>
             </ng-container>
             <ng-template #toolsNotInstalled>
               <mcs-data-status-empty
@@ -258,6 +261,9 @@
                 [mcsTooltipShow]="!row.vmwareTools?.hasTools">
                 {{ 'servers.toolsNotInstalled' | translate }}
               </mcs-data-status-empty>
+            </ng-template>
+            <ng-template #toolsNotApplicable>
+              <span read-only>{{ 'label.na' | translate }}</span>
             </ng-template>
           </td>
         </ng-container>
@@ -268,7 +274,13 @@
             {{ 'columnHeader.managementIp' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            {{ row.ipAddress }}
+            <ng-container *ngIf="row.ipAddress; else noManagementIpTemplate">
+              <span>{{ row.ipAddress }}</span>
+            </ng-container>
+            <ng-template #noManagementIpTemplate>
+              <span read-only *ngIf="row.isSelfManaged">{{ 'label.na' | translate }}</span>
+              <span read-only *ngIf="!row.isSelfManaged">{{ 'label.unknown' | translate }}</span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -292,9 +304,7 @@
                 <span>{{ row.serviceId }}</span>
               </ng-container>
               <ng-template #noServiceIdTemplate>
-                <span *ngIf="row.isSelfManaged"
-                [innerHTML]="row.serviceId | mcsDataLabel: 'N/A'">
-                </span>
+                <span read-only *ngIf="row.isSelfManaged">{{ 'label.na' | translate }}</span>
                 <mcs-data-status-empty
                   *ngIf="!row.isSelfManaged"
                   [mcsTooltip]="'label.ticketingOrderingUnavailable' | translate"
@@ -327,8 +337,13 @@
             {{ 'columnHeader.vApp' | translate }}
           </th>
           <td mat-cell *matCellDef="let row" hidden-small>
-            <span [innerHTML]="row.vApp | mcsDataLabel: 'None'">
-            </span>
+            <ng-container *ngIf="row.vApp; else noVappTemplate">
+              <span>{{ row.vApp }}</span>
+            </ng-container>
+            <ng-template #noVappTemplate>
+              <span read-only *ngIf="row.isVM">{{ 'label.none' | translate }}</span>
+              <span read-only *ngIf="!row.isVM">{{ 'label.na' | translate }}</span>
+            </ng-template>
           </td>
         </ng-container>
 
