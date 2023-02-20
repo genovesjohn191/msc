@@ -54,14 +54,14 @@
                       </div>
                   </mcs-select>
                   <mcs-error mcsError errorState="required">
-                    {{ 'orderChangeApplicationRecoveryQuota.errors.serviceRequired' | translate }}
+                    {{ 'orderChangeApplicationRecoveryQuota.detailsStep.errors.serviceRequired' | translate }}
                   </mcs-error>
                 </mcs-form-field>
 
                 <container *ngIf="noServicesToDisplay">
                   <span *ngIf="showPermissionErrorFallbackText" read-only>{{ 'message.noPermissionFallbackText' | translate }}</span>
                   <span *ngIf="!showPermissionErrorFallbackText" read-only>
-                    <span> {{ 'orderChangeApplicationRecoveryQuota.errors.serviceFallbackLabel' | translate }}</span>
+                    <span> {{ 'orderChangeApplicationRecoveryQuota.detailsStep.errors.serviceFallbackLabel' | translate }}</span>
                     <span *mcsAccessControl="['TicketCreate']">
                       <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>
                       <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"

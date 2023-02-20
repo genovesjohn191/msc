@@ -1460,8 +1460,8 @@
         "placeholder": "Number of Virtual Machines"
       },
       "numberOfVMsNumeric": "Please enter a valid number.",
-      "numberOfVMsMinimum": "The minimum quantity for this license is {{min_value}}.",
-      "numberOfVMsMaximum": "The maximum quantity for this license is {{max_value}}.",
+      "numberOfVMsMinimum": "The minimum number of Virtual Machines is {{min_value}}.",
+      "numberOfVMsMaximum": "The maximum number of Virtual Machines is {{max_value}}.",
       "errors": {
         "serviceFallbackLabel": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
         "raiseTicketPrefix": " or ",
