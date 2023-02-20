@@ -416,7 +416,6 @@ export class ChangeApplicationRecoveryQuotaComponent extends McsOrderWizardBase 
       return this.sliderTable.findIndex(item => item.size === roundedValue && item.unit === 'TB');
     }
 
-    currentSize = convertTbToGb(currentSize);
     if (currentSize < this.sliderTable[0].size) {
       // Snap to lowest scale value when current value is lower than min value
       this.sliderValue = firstScaleValue;
