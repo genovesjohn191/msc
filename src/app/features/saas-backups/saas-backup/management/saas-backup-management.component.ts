@@ -27,12 +27,12 @@ import {
   DataStatus,
   McsFilterInfo,
   McsJob,
-  McsStateNotification,
+  McsSaasBackupAttempt,
   McsStorageSaasBackup,
   McsStorageSaasBackupAttempt,
   McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
-  McsStorageSaasBackupLastBackupAttempt
+  McsStorageSaasBackupJobType
 } from '@app/models';
 import {
   addDaysToDate,
@@ -57,11 +57,6 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { SaasBackupService } from '../saas-backup.service';
 import moment from 'moment';
 
-export interface SaasUsersConfig {
-  selectedBackupAttemptId: string,
-  selectedSaasBackupId: string
-}
-
 @Component({
   selector: 'mcs-saas-backup-management',
   templateUrl: './saas-backup-management.component.html',
@@ -82,9 +77,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
 
   public selectedSaasBackup$: Observable<McsStorageSaasBackup>;
 
-  public lastBackupAttempt: McsStorageSaasBackupLastBackupAttempt;
-  public saasUsersConfig: SaasUsersConfig;
-  public hasActiveJob: boolean = false;
+  public jobTypes: McsStorageSaasBackupJobType[];
 
   private _destroySubject = new Subject<void>();
   private _currentUserJobHandler: Subscription;
@@ -101,6 +94,8 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     this.dataSource = new McsTableDataSource2(this._getSaasBackupBackupAttempt.bind(this));
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'date' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'jobName' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'protectedUsers' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' })
     ];
@@ -126,13 +121,30 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
-  public attemptSaasBackup(saasId: string): void {
-    this.hasActiveJob = true;
+  public convertArrayToString(dailySchedule: string[]): string {
+    let convertedArray = dailySchedule.toString().replace(/,/g, ', ');
+    return convertedArray;
+  }
+
+  public isRunTimeMoreThanADay(runTime: Date): boolean {
+    let hours = moment().diff(moment(runTime), 'hours');
+    if (hours > 24) {
+      return true;
+    }
+    return false;
+  }
+
+  public onClickAttemptSaasBackup(saasId: string, type: string): void {
+    this._updateJobTypeWithActiveJob(saasId, type);
+
+    let queryParam = new McsSaasBackupAttempt();
+    queryParam.type = type;
+
     this._changeDetectorRef.markForCheck();
 
     this.jobEvents.setStatus(DataStatus.Active);
 
-    this._apiService.attemptSaasBackup(saasId).pipe(
+    this._apiService.attemptSaasBackup(saasId, queryParam).pipe(
       tap(job => {
         this.jobEvents.setJobs(job).setStatus(DataStatus.Success);
       }),
@@ -143,19 +155,17 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  public setExpandedRow(expandedRow: McsStorageSaasBackupAttempt,
-    backupAttempt: McsStorageSaasBackupAttempt,
-    saasId: string): any {
-    this.saasUsersConfig = { 
-      selectedBackupAttemptId: backupAttempt?.id,
-      selectedSaasBackupId: saasId };
-    return expandedRow === backupAttempt ? null : backupAttempt;
-  }
-
-  private _subscribeToSaasBackupDetails(): void {
-    this.selectedSaasBackup$ = this._saasBackupService.getSaasBackup().pipe(
-      takeUntil(this._destroySubject),
-      shareReplay(1));
+  private _updateJobTypeWithActiveJob(saasId: string, type: string): void {
+    let jobTypeHasActiveJob = this.jobTypes?.find((jobType) => jobType?.type === type &&
+      this._saasBackupService.getSaasBackupId() === saasId);
+    
+    if (isNullOrEmpty(jobTypeHasActiveJob)) { return; }
+    this.jobTypes.map((job) => {
+      if (job.type === jobTypeHasActiveJob.type && saasId === this._saasBackupService.getSaasBackupId()) {
+        job.hasActiveJob = true;
+      }
+    })
+    this._changeDetectorRef.markForCheck();
   }
 
   private _registerEvents(): void {
@@ -166,27 +176,33 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
   }
 
   private _onBackupAttemptJob(job: McsJob): void {
-    let saasHasActiveJob = this._hasActiveJob(job);
+    this.jobTypes.map((jobType) => {
+      let activeJobFound = this.jobTypes?.find((jobType) => jobType?.type === job?.clientReferenceObject?.type &&
+      this._saasBackupService.getSaasBackupId() ===  job?.clientReferenceObject?.saasId);
 
-    if (saasHasActiveJob && job?.inProgress) {
-      this.hasActiveJob = true;
+      if (isNullOrEmpty(activeJobFound)) { return; }
+
+      if (activeJobFound && job?.inProgress) {
+        jobType.hasActiveJob = true;
+        this._changeDetectorRef.markForCheck();
+        return;
+      }
+  
+      jobType.hasActiveJob = false;
       this._changeDetectorRef.markForCheck();
-      return;
-    }
-
-    this.hasActiveJob = false;
-    this._changeDetectorRef.markForCheck();
-    if (!saasHasActiveJob) { return; }
-
-    if (!job.inProgress) {
-      this.retryDatasource();
-      return;
-    }
+      if (!activeJobFound) { return; }
+  
+      if (!job.inProgress) {
+        this.retryDatasource();
+        return;
+      }
+    });
   }
 
-  private _hasActiveJob(job: McsJob): boolean {
-    if (isNullOrEmpty(job) || isNullOrEmpty(this._saasBackupService.getSaasBackupId())) { return false; }
-    return getSafeProperty(job, (obj) => obj.clientReferenceObject.saasId) === this._saasBackupService.getSaasBackupId();
+  private _subscribeToSaasBackupDetails(): void {
+    this.selectedSaasBackup$ = this._saasBackupService.getSaasBackup().pipe(
+      takeUntil(this._destroySubject),
+      shareReplay(1));
   }
 
   private _getSaasBackupBackupAttempt(param?: McsMatTableQueryParam):
@@ -200,7 +216,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
 
         return this._apiService.getSaasBackupBackupAttempt(selectedSaasBackup.id, query).pipe(
           map((response: McsStorageSaasBackupBackupAttempt) => {
-            this.lastBackupAttempt = getSafeProperty(response, obj => obj.lastBackupAttempt);
+            this.jobTypes = this._sortJobTypeByFriendlyName(getSafeProperty(response, obj => obj.jobTypes));
             this._changeDetectorRef.markForCheck();
             let backupAttempts = this._getLatestDailyBackupAttempts(
               getSafeProperty(response, obj => obj.backupAttempts));
@@ -210,6 +226,16 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
       }));
   }
 
+  private _sortJobTypeByFriendlyName(jobTypes: McsStorageSaasBackupJobType[]): McsStorageSaasBackupJobType[] {
+    if (jobTypes?.length === 0) { return []; }
+    return jobTypes.sort((a, b) => {
+      if (a.typeFriendlyName === b.typeFriendlyName) { return 0; }
+      if (isNullOrEmpty(a.typeFriendlyName)) { return 1; }
+      if (isNullOrEmpty(b.typeFriendlyName)) { return -1; }
+      return a.typeFriendlyName < b.typeFriendlyName ? -1 : 1;
+    });
+  }
+
   private _getLatestDailyBackupAttempts(backAttempts: McsStorageSaasBackupAttempt[])
     : McsStorageSaasBackupAttempt[] {
 
@@ -217,7 +243,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
 
     let groupedDaily: {[key: string]: McsStorageSaasBackupAttempt[]};
     groupedDaily = backAttempts.reduce(function (groupedItems, currentItem) {
-        let key = new Date(currentItem.startTime).toLocaleDateString();
+        let key = new Date(currentItem.runTime).toLocaleDateString();
         groupedItems[key] = groupedItems[key] || [];
         groupedItems[key].push(currentItem);
         return groupedItems;
@@ -228,7 +254,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
       ([_, backupAttemptsPerDay]) => {
         if (backupAttemptsPerDay.length > 1) {
           backupAttemptsPerDay.sort((recA, recB) => 
-            new Date(recB.startTime).getTime() - new Date(recA.startTime).getTime());
+            new Date(recB.runTime).getTime() - new Date(recA.runTime).getTime());
         }
         latestDaily.push(backupAttemptsPerDay[0])
       }

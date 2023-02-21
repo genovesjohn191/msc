@@ -18,7 +18,6 @@
                 <mcs-option [value]="saasBackup"
                   [selected]="selectedSaasBackup.id === saasBackup.id">
                   <mcs-item>
-                    <mcs-icon [key]="saasBackup.lastBackupAttempt.backupStatusStateIconKey" size="small"></mcs-icon>
                     <span [innerHTML]="saasBackup.billingDescription | mcsDataLabel"></span>
                   </mcs-item>
                 </mcs-option>

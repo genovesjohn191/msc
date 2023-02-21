@@ -1,42 +1,28 @@
-
-
 import {
-  McsEntityBase,
   SaasBackupStatus,
   SaasBackupStatusSerialization,
   saasBackupStatusText
 } from "@app/models";
+
 import {
   CommonDefinition,
   JsonProperty
 } from "@app/utilities";
 
-export class McsStorageSaasBackupAttempt extends McsEntityBase {
+export class McsStorageSaasBackupJobTypeLastBackupAttempt {
   @JsonProperty({
     serializer: SaasBackupStatusSerialization,
     deserializer: SaasBackupStatusSerialization
   })
   public status: string = undefined;
-
-  @JsonProperty()
-  public protectedUsers: number = undefined;
-
+  
   @JsonProperty()
   public runTime: Date = undefined;
-
-  @JsonProperty()
-  public type: string = undefined;
-
-  @JsonProperty()
-  public typeFriendlyName: string = undefined;
-
-  @JsonProperty()
-  public jobName: string = undefined;
 
   /**
    * Return the status icon key based on the status of the backup attempt
    */
-   public get backupStatusStateIconKey(): string {
+  public get backupStatusStateIconKey(): string {
     let statusIconKey: string = '';
 
     switch (this.status) {

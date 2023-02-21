@@ -47,38 +47,6 @@
       </mcs-presentation-panel>
     </mcs-grid-column>
 
-    <!-- Backup Statistics -->
-    <mcs-grid-column *ngIf="selectedSaasBackup?.lastBackupAttempt | mcsIsNotNullOrEmpty"
-      sizeSm="12" hidden-small>
-      <mcs-presentation-panel mcsId="saas-backup-backup-statistics">
-        <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'label.backupStatistics' | translate }}</h2>
-        </ng-container>
-
-        <mcs-item>
-          <mcs-icon [key]="selectedSaasBackup.lastBackupAttempt.backupStatusStateIconKey" size="small"></mcs-icon>
-          <span>{{ selectedSaasBackup.lastBackupAttempt.statusLabel }}</span>
-        </mcs-item>
-        <mcs-item>
-          <span>{{ 'saasBackup.backupStatistics.firstBackupTime' | translate }}:</span>
-          <ng-container *ngIf="selectedSaasBackup.firstBackupAttempt.runTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
-            <span [innerHTML]="selectedSaasBackup.firstBackupAttempt.runTime | mcsStdDateFormat"></span>
-          </ng-container>
-        </mcs-item>
-        <mcs-item>
-          <span>{{ 'saasBackup.backupStatistics.lastBackupTime' | translate }}:</span>
-          <ng-container *ngIf="selectedSaasBackup.lastBackupAttempt.runTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
-            <span [innerHTML]="selectedSaasBackup.lastBackupAttempt.runTime | mcsStdDateFormat"></span>
-          </ng-container>
-        </mcs-item>
-      </mcs-presentation-panel>
-    </mcs-grid-column>
-  </mcs-grid-row>
-  <ng-template #emptyDateTemplate>
-    <span> {{ 'label.none' | translate }}</span>
-  </ng-template>
-
-  <mcs-grid-row>
     <!-- Backup Components -->
     <mcs-grid-column *ngIf="selectedSaasBackup?.componentOnlineStatus | mcsIsNotNullOrEmpty"
       sizeSm="12" hidden-small>
@@ -104,8 +72,6 @@
           <span>{{ 'saasBackup.backupComponents.teamsChats' | translate }}</span>
         </mcs-item>
       </mcs-presentation-panel>
-    </mcs-grid-column>
-    <mcs-grid-column sizeSm="12" hidden-small>
     </mcs-grid-column>
   </mcs-grid-row>
 </ng-container>

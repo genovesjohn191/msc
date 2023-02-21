@@ -11,7 +11,6 @@ import {
 import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
-  McsMatTableConfig,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsNavigationService,
@@ -52,7 +51,6 @@ export class SaasBackupsComponent extends McsPageBase {
   public readonly dataEvents: McsTableEvents<McsStorageSaasBackup>;
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'billingDescription' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'protectedUsers' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
   ];

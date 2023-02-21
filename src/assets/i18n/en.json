@@ -2916,14 +2916,17 @@
     },
     "backupAttempts": {
       "description": "Backup Management",
-      "lastAttempt": "Last Attempt",
-      "emailBackupAttempt": "A full backup report has been emailed to you.",
+      "label": "All backup attempts include a full job report, sent via email.",
+      "dailySchedule": "Daily Schedule:",
+      "noDailySchedule": "No schedule set",
+      "noBackupTypes": "There are no backup types configured for this service.",
       "errorMessage": "Sorry, something's not right. We weren't able to retrieve the list of backup attempts for this service.",
-      "noData": "No backups have been attempted for this service."
+      "noData": "No backups have been attempted for this service.",
+      "emptyJobType": "Manual attempts are not currently supported for this backup type."
     },
     "backupHistory": {
       "description": "Backup History",
-      "label": "A 7-day history of backup activity. This data is refreshed daily."
+      "label": "A 7-day history of backup activity. Detail below may take upto 24 hours to display here."
     },
     "users": {
       "errorMessage": "Sorry, something's not right. We weren't able to retrieve the list of users for this backup attempt.",
@@ -3841,6 +3844,7 @@
     "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
     "isPrimary": "Type",
+    "jobName": "Job Name",
     "journalHistory": "Journal History",
     "journalSize": "Journal Size",
     "label": "Label",
