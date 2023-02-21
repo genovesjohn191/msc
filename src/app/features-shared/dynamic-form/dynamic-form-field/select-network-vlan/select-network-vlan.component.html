@@ -26,7 +26,7 @@
       <mat-autocomplete #auto="matAutocomplete"
         [displayWith]="getOptionValue.bind(this)"
         (optionSelected)="selected($event)">
-        <mat-option *ngFor="let opt of config.options" [value]="opt"
+        <mat-option *ngFor="let opt of filteredOptions | async" [value]="opt"
           [matTooltip]="opt.hint" matTooltipPosition="right"
           style="font-size: 14px !important;">
           {{ opt.value }}
