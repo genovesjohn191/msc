@@ -73,6 +73,7 @@ import { DynamicSelectVdcStorageComponent } from './select-vdc-storage/select-vd
 import { DynamicInputStorageSizeComponent } from './input-storage-size/input-storage-size.component';
 import { DynamicStorageSlideToggleComponent } from './storage-slide-toggle/storage-slide-toggle.component';
 import { DynamicSelectStorageTierComponent } from './select-storage-tier/select-storage-tier.component';
+import { DynamicSelectPublicCloudResourceComponent } from './select-public-cloud-resource/select-public-cloud-resource.component'
 import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
 
 const exports: any[] | Type<any> = [
@@ -142,7 +143,8 @@ const exports: any[] | Type<any> = [
   DynamicSelectUcsComponent,
   DynamicTableStorageProfileComponent,
   DynamicExpansionSlideToggleComponent,
-  DynamicStorageSlideToggleComponent
+  DynamicStorageSlideToggleComponent,
+  DynamicSelectPublicCloudResourceComponent
 ];
 
 @NgModule({
