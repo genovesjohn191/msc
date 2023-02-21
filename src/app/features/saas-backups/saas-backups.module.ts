@@ -12,8 +12,7 @@ import {
 import {
   SaasBackupComponent,
   SaasBackupManagementComponent,
-  SaasBackupOverviewComponent,
-  SaasBackupUsersComponent
+  SaasBackupOverviewComponent
 } from './saas-backup';
 
 @NgModule({
@@ -21,8 +20,7 @@ import {
     SaasBackupsComponent,
     SaasBackupComponent,
     SaasBackupOverviewComponent,
-    SaasBackupManagementComponent,
-    SaasBackupUsersComponent
+    SaasBackupManagementComponent
   ],
   imports: [
     SharedModule,

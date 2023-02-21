@@ -4,13 +4,16 @@ import {
   McsApiSuccessResponse,
   McsJob,
   McsQueryParam,
+  McsSaasBackupAttempt,
   McsStorageSaasBackup,
   McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
-  McsStorageSaasBackupBackupAttemptDetails,
   McsStorageVeeamBackup
 } from "@app/models";
-import { isNullOrEmpty } from "@app/utilities";
+import {
+  isNullOrEmpty,
+  serializeObjectToJson
+} from "@app/utilities";
 import { map, Observable, of } from "rxjs";
 import { IMcsApiStorageService } from "../interfaces/mcs-api-storage.interface";
 import { McsApiClientHttpService } from "../mcs-api-client-http.service";
@@ -91,27 +94,10 @@ export class McsApiStorageService implements IMcsApiStorageService {
       );
   }
 
-  public getSaasBackupBackupAttemptDetails(
-    saasId: string, 
-    backupAttemptId: string
-  ): Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttemptDetails>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/storage/backup/saas/${saasId}/backup-attempts/${backupAttemptId}`;
-
-    return this._mcsApiHttpService.get(mcsApiRequestParameter)
-      .pipe(
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsStorageSaasBackupBackupAttemptDetails>(McsStorageSaasBackupBackupAttemptDetails, response);
-          return apiResponse;
-        })
-      );
-  }
-
-  public attemptSaasBackup(id: string): Observable<McsApiSuccessResponse<McsJob>> {
+  public attemptSaasBackup(id: string, request?: McsSaasBackupAttempt): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/storage/backup/saas/${id}/backup-attempts`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(request);
 
     return this._mcsApiHttpService.post(mcsApiRequestParameter)
       .pipe(

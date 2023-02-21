@@ -1,63 +1,80 @@
 <ng-container *ngIf="selectedSaasBackup$ | async as selectedSaasBackup">
-  <mcs-presentation-panel mcsId="saas-backup-schedule">
-    <!-- Schedule -->
-    <ng-container mcsPresentationPanelHeader>
-      <h2>{{ 'saasBackup.schedule.description' | translate }}</h2>
-    </ng-container>
-
-    <mcs-item>
-      <span>{{ 'saasBackup.schedule.dailySchedule' | translate }}:</span>
-      <span [innerHTML]="selectedSaasBackup.dailySchedule | mcsDataLabel: 'Unknown'"></span>
-    </mcs-item>
-    <br/>
-  </mcs-presentation-panel>
-
   <mcs-presentation-panel mcsId="saas-backup-backup-attempts">
     <!-- Backup Attempts -->
     <ng-container mcsPresentationPanelHeader>
       <h2>{{ 'saasBackup.backupAttempts.description' | translate }}</h2>
     </ng-container>
 
-    <mcs-item class="item-wrapper item-inline">
-      <span padding-right-xsmall>{{ 'saasBackup.backupAttempts.lastAttempt' | translate }}:</span>
-      <ng-container *ngIf="lastBackupAttempt; else loadingTemplate">
-        <ng-container *ngIf="!hasActiveJob; else runningTemplate">
-          <mcs-item>
-            <mcs-icon
-              [key]="lastBackupAttempt.backupGeneralStatusStateIconKey" size="small"></mcs-icon>
-            <div>
-              <span [innerHTML]="lastBackupAttempt?.generalStatusLabel"></span>
-              <span *ngIf="lastBackupAttempt.runTime"> ({{ lastBackupAttempt.runTime | mcsStdDateFormat: 'DD/MM/YYYY, h:mm A' }})</span>
-              <small>
-                <mcs-item>
-                  <span>{{ 'saasBackup.backupAttempts.emailBackupAttempt' | translate }}</span>
-                </mcs-item>
-              </small>
-            </div>
-          </mcs-item>
-        </ng-container>
-        <ng-template #runningTemplate>
-          Running  <mat-spinner class="spinner" diameter="20" matSuffix></mat-spinner>
-        </ng-template>
-      </ng-container>
-      <ng-template #loadingTemplate>
-        <mcs-loader size="small"></mcs-loader>
-      </ng-template>
-    </mcs-item>
-    <br/>
-    <ng-container *mcsAccessControl="['SaasBackupEdit']">
-      <!-- Attempt Backup -->
-      <a *ngIf="lastBackupAttempt"
-        (click)="attemptSaasBackup(selectedSaasBackup.id)"
-        [disabled]="hasActiveJob">
-        <ng-container *ngIf="lastBackupAttempt?.generalStatus; else reattemptTemplate">
-          {{ 'action.reattemptBackup' | translate }}
-        </ng-container>
-        <ng-template #reattemptTemplate>
-          {{ 'action.attemptBackup' | translate }}
-        </ng-template>
-      </a>
+    <ng-container *ngIf="jobTypes | mcsIsNotNullOrEmpty; else noBackupTypeTemplate">
+      <p>{{ 'saasBackup.backupAttempts.label' | translate }}</p>
+
+      <mcs-grid>
+        <mcs-grid-row *ngFor="let jobType of jobTypes">
+          <mcs-grid-column sizeLg="3">
+            <ng-container *ngIf="jobType.typeFriendlyName; else emptyFriendlyNameTemplate">
+              {{ jobType.typeFriendlyName }}
+            </ng-container>
+            <ng-template #emptyFriendlyNameTemplate>
+              Other
+            </ng-template>
+          </mcs-grid-column>
+          <mcs-grid-column sizeLg="6">
+            <mcs-item>
+              <mcs-icon
+                [key]="jobType.lastBackupAttempt.backupStatusStateIconKey" size="small"></mcs-icon>
+              <div>
+                <ng-container *ngIf="!jobType.hasActiveJob; else runningTemplate">
+                  <span>{{ jobType.lastBackupAttempt.statusLabel }}</span>
+                  <ng-container *ngIf="jobType.lastBackupAttempt.runTime; else emptyRunTimeTemplate">
+                    <span> ({{ jobType.lastBackupAttempt.runTime | mcsStdDateFormat: 'short' }})</span>
+                  </ng-container>
+                  <ng-template #emptyRunTimeTemplate>
+                    <span> (None)</span>
+                  </ng-template>
+                </ng-container>
+                <ng-template #runningTemplate>
+                  Running  <mat-spinner margin-left-small style="display: inline" class="spinner" diameter="20" matSuffix></mat-spinner>
+                </ng-template>
+
+                <small>
+                  <mcs-item read-only>
+                    <span>{{ 'saasBackup.backupAttempts.dailySchedule' | translate }}</span>
+                    <ng-container *ngIf="jobType.dailySchedule | mcsIsNotNullOrEmpty; else noDailyScheduleTemplate">
+                      <span>{{ convertArrayToString(jobType.dailySchedule) }}</span>
+                    </ng-container>
+                    <ng-template #noDailyScheduleTemplate>
+                      <span>{{ 'saasBackup.backupAttempts.noDailySchedule' | translate }}</span>
+                    </ng-template>
+                  </mcs-item>
+                </small>
+              </div>
+            </mcs-item>
+          </mcs-grid-column>
+          <mcs-grid-column>
+            <ng-container *mcsAccessControl="['SaasBackupEdit']">
+              <!-- Attempt Backup -->
+              <div [mcsTooltip]="'saasBackup.backupAttempts.emptyJobType' | translate"
+                [mcsTooltipShow]="!jobType.type | mcsIsNotNullOrEmpty"
+                mcsTooltipPosition="bottom">
+                <a *ngIf="jobType.lastBackupAttempt"
+                  (click)="onClickAttemptSaasBackup(selectedSaasBackup.id, jobType.type)"
+                  [disabled]="jobType.hasActiveJob || (!jobType.type | mcsIsNotNullOrEmpty)">
+                  <ng-container *ngIf="jobType.lastBackupAttempt?.status; else reattemptTemplate">
+                    {{ 'action.reattemptBackup' | translate }}
+                  </ng-container>
+                  <ng-template #reattemptTemplate>
+                    {{ 'action.attemptBackup' | translate }}
+                  </ng-template>
+                </a>
+              </div>
+            </ng-container>
+          </mcs-grid-column>
+        </mcs-grid-row>
+      </mcs-grid>
     </ng-container>
+    <ng-template #noBackupTypeTemplate>
+      {{ 'saasBackup.backupAttempts.noBackupTypes' | translate }}
+    </ng-template>
   </mcs-presentation-panel>
 
   <mcs-presentation-panel mcsId="saas-backup-user-protection-history">
@@ -66,6 +83,7 @@
       <h2>{{ 'saasBackup.backupHistory.description' | translate }}</h2>
     </ng-container>
     <span>{{ 'saasBackup.backupHistory.label' | translate }}</span>
+
     <table mat-table [dataSource]="dataSource">
       
       <!-- Date Column -->
@@ -74,12 +92,41 @@
           {{ 'columnHeader.date' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          <ng-container *ngIf="row.startTime | mcsIsNotNullOrEmpty; else emptyDateTemplate">
-            {{ row.startTime | mcsStdDateFormat: 'weekFriendly'  }}
+          <ng-container *ngIf="row.runTime | mcsIsNotNullOrEmpty; else unknownTemplate">
+            <ng-container *ngIf="isRunTimeMoreThanADay(row.runTime); else lessThan24hrsTemplate">
+              <span>{{ row.runTime | mcsStdDateFormat: 'weekFriendly' }}</span>
+            </ng-container>
+            <ng-template #lessThan24hrsTemplate>
+              <span>{{ row.runTime | mcsStdDateFormat: 'shortTime' }}</span>
+            </ng-template>
           </ng-container>
-          <ng-template #emptyDateTemplate>
-            <span>{{ 'label.none' | translate }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.type' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="row.typeFriendlyName | mcsIsNotNullOrEmpty; else emptyRowFriendlyNameTemplate">
+            {{ row.typeFriendlyName }}
+          </ng-container>
+          <ng-template #emptyRowFriendlyNameTemplate>
+            <span>Other</span>
           </ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Job Name Column -->
+      <ng-container matColumnDef="jobName">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.jobName' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="row.jobName | mcsIsNotNullOrEmpty; else unknownTemplate">
+            {{ row.jobName }}
+          </ng-container>
         </td>
       </ng-container>
 
@@ -89,7 +136,9 @@
           {{ 'columnHeader.protectedUsers' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.protectedUsers }}
+          <ng-container *ngIf="row.protectedUsers | mcsIsNotNullOrEmpty; else unknownTemplate">
+            {{ row.protectedUsers }}
+          </ng-container>
         </td>
       </ng-container>
 
@@ -99,14 +148,18 @@
           {{ 'columnHeader.status' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          <mcs-icon [key]="row.backupGeneralStatusStateIconKey" size="small"></mcs-icon>
-          {{ row.generalStatusLabel }}
+          <mcs-icon [key]="row.backupStatusStateIconKey" size="small"></mcs-icon>
+          {{ row.statusLabel }}
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
       <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
     </table>
+
+    <ng-template #unknownTemplate>
+      <span>{{ 'label.unknown' | translate }}</span>
+    </ng-template>
 
     <!-- Table Statuses -->
     <mcs-item orientation="block">

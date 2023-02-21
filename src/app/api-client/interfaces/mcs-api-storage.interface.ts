@@ -2,10 +2,10 @@ import {
   McsApiSuccessResponse,
   McsJob,
   McsQueryParam,
+  McsSaasBackupAttempt,
   McsStorageSaasBackup,
   McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
-  McsStorageSaasBackupBackupAttemptDetails,
   McsStorageVeeamBackup
 } from "@app/models";
 import { Observable } from "rxjs";
@@ -39,16 +39,9 @@ export interface IMcsApiStorageService {
     Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttempt>>;
 
   /**
-   * Get SaaS backup backup attempt details
-   * @param id SaaS backup identification
-   */
-  getSaasBackupBackupAttemptDetails(saasId: string, backupAttemptId: string):
-    Observable<McsApiSuccessResponse<McsStorageSaasBackupBackupAttemptDetails>>;
-
-  /**
    * Attempt/Reattempt SaaS backup
    * *Note: This will send a job (notification)
    * @param id SaaS backup identification
    */
-  attemptSaasBackup(id: string): Observable<McsApiSuccessResponse<McsJob>>;
+  attemptSaasBackup(id: string, request?: McsSaasBackupAttempt): Observable<McsApiSuccessResponse<McsJob>>;
 }

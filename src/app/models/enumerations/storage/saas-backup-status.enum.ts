@@ -1,25 +1,17 @@
 import { McsEnumSerializationBase } from "@app/models/serialization/mcs-enum-serialization-base";
 
 export enum SaasBackupStatus {
-  Stopped = 'Stopped',
-  Failed = 'Failed',
-  Disconnected = 'Disconnected',
-  Warning = 'Warning',
-  NotConfigured = 'NotConfigured',
+  PartialSuccess = 'PartialSuccess',
+  Failure = 'Failure',
   Success = 'Success',
   Running = 'Running',
-  Queued = 'Queued',
 }
 
 export const saasBackupStatusText = {
-  [SaasBackupStatus.Stopped]: 'Stopped',
-  [SaasBackupStatus.Failed]: 'Failed',
-  [SaasBackupStatus.Disconnected]: 'Disconnected from client',
-  [SaasBackupStatus.Warning]: 'Warning',
-  [SaasBackupStatus.NotConfigured]: 'Not configured',
-  [SaasBackupStatus.Success]: 'Everything is backed up',
-  [SaasBackupStatus.Running]: 'In Progress',
-  [SaasBackupStatus.Queued]: 'Queued',
+  [SaasBackupStatus.PartialSuccess]: 'Completed with Warnings',
+  [SaasBackupStatus.Failure]: 'Failure',
+  [SaasBackupStatus.Success]: 'Success',
+  [SaasBackupStatus.Running]: 'Running'
 };
 
 /**

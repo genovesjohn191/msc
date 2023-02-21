@@ -332,13 +332,13 @@ import {
   McsUcsQueryParams,
   McsUcsObject,
   McsStorageSaasBackupBackupAttempt,
-  McsStorageSaasBackupBackupAttemptDetails,
   McsStorageSaasBackupAttemptQueryParams,
   McsNetworkDbVlanQueryParams,
   HttpStatusCode,
   McsVcloudInstance,
   McsVcloudInstanceProviderVdc,
-  McsResourceQueryParam
+  McsResourceQueryParam,
+  McsSaasBackupAttempt
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -3142,19 +3142,10 @@ export class McsApiService {
     );
   }
 
-  public getSaasBackupBackupAttemptDetails(saasId: string, backupAttemptId: string): Observable<McsStorageSaasBackupBackupAttemptDetails> {
-    return this._storageApi.getSaasBackupBackupAttemptDetails(saasId, backupAttemptId).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSaasBackupBackupAttemptDetails'))
-      ),
-      map((response) => getSafeProperty(response, (obj) => obj.content))
-    );
-  }
-
-  public attemptSaasBackup(id: string): Observable<McsJob> {
+  public attemptSaasBackup(id: string, request?: McsSaasBackupAttempt): Observable<McsJob> {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.SaasBackup, id);
 
-    return this._storageApi.attemptSaasBackup(id).pipe(
+    return this._storageApi.attemptSaasBackup(id, request).pipe(
       catchError((error) => {
         this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.SaasBackup, id);
         return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.attemptSaasBackup'))
