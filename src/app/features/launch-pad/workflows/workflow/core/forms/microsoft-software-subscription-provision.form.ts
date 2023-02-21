@@ -3,9 +3,8 @@ import {
   DynamicInputNumberField,
   DynamicInputTextField,
   DynamicSelectAzureSubscriptionField,
-  DynamicSelectChipsSoftwareSubscriptionProductTypeField,
   DynamicSelectSoftwareSubscriptionProductTypeField,
-  DynamicSelectTenantField
+  DynamicSelectPublicCloudResourceField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
@@ -46,7 +45,7 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       key: 'linkedService',
       value: '',
       eventName: 'linked-service-id-change',
-      dependents: ['subscription'],
+      dependents: ['subscription','resourceId'],
     }),
     new DynamicSelectAzureSubscriptionField({
       key: 'subscription',
@@ -68,7 +67,15 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       label: 'Product',
       validators: { required: true },
       settings: { readonly: true },
-    })
+    }),
+    new DynamicSelectPublicCloudResourceField({
+      key: 'resourceId',
+      label: 'Resource',
+      contextualHelp: 'Specify an Azure resource if AHB is desired for this Software Subscription.',
+      validators: { required: false },
+      resourceTypes: ['microsoft.sqlvirtualmachine/sqlvirtualmachines', 'microsoft.compute/virtualmachines'],
+      useAzureIdAsKey: true
+    }),
   ],
 
   mapContext: standardContextMapper,

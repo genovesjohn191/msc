@@ -76,3 +76,4 @@ export * from './select-ucs/select-ucs';
 export * from './table-storage-profile/table-storage-profile';
 export * from './expansion-slide-toggle/expansion-slide-toggle';
 export * from './storage-slide-toggle/storage-slide-toggle';
+export * from './select-public-cloud-resource/select-public-cloud-resource';

@@ -275,6 +275,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-select-ucs-field>
 
+        <mcs-dff-select-public-cloud-resource-field *ngSwitchCase="'select-public-cloud-resource'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-public-cloud-resource-field>
+
         <mcs-dff-table-storage-profile-field *ngSwitchCase="'table-storage-profile'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-table-storage-profile-field>
