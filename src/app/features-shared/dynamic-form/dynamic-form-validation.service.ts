@@ -37,6 +37,9 @@ export class DynamicFormValidationService {
     if (control.hasError('privateIpAddress')) {
       return 'Please enter a valid private IP address.';
     }
+    if (control.hasError('gatewayIpAddress')) {
+      return `Please enter a valid private IP. It must not match the network's base IP or broadcast IP.`;
+    }
     if (control.hasError('ipRange')) {
       return 'IP address must be in range';
     }

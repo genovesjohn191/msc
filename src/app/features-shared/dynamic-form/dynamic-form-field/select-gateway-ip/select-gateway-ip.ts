@@ -39,7 +39,7 @@ export class DynamicSelectGatewayIpField extends DynamicFormFieldConfigBase {
   public configureValidators(validators: ValidatorFn[]) {
     validators.push(CoreValidators.custom(
       this.gatewayValidator.bind(this),
-      'privateIpAddress'
+      'gatewayIpAddress'
     ));
   }
 }

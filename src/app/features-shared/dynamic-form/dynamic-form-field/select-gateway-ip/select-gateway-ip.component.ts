@@ -36,6 +36,7 @@ const defaultPrefixLength = 27;
 const prefixMinSelfManaged = 16;
 const prefixMinManaged = 16;
 const reserveNewSubnetValue = 'Reserve a new subnet';
+const Netmask = require('netmask').Netmask;
 
 @Component({
   selector: 'mcs-dff-select-gateway-ip-field',
@@ -169,14 +170,27 @@ export class DynamicSelectGatewayIpComponent extends DynamicInputAutocompleteFie
     return this._translateService.instant('action.reserveNewSubnet')
   }
 
-  private _gatewayValidator(inputValue: any): boolean {
-    switch(inputValue){
-      case this.reserveNewSubnetOptionText:
-        return !this.isResourceSelfManaged;
-      default:
-        if(!this.isInputVisible) { return true; }
-        return CommonDefinition.REGEX_IP_PATTERN.test(inputValue)
-          && CommonDefinition.REGEX_PRIVATE_IP_PATTERN.test(inputValue);
+  private _gatewayValidator(gatewayIp: any): boolean {
+    // Don't allow Self Managed VDCs to reserve a new Subnet
+    if (gatewayIp == this.reserveNewSubnetOptionText) {
+      return !this.isResourceSelfManaged;
+    }
+    // If the gateway IP field isn't visble it's valid
+    if (!this.isInputVisible) {
+      return true;
+    }
+    try {
+      let subnet = new Netmask(`${gatewayIp}/${this.prefixLength}`);
+
+      // Gateway IP should not be base or broadcast
+      if (gatewayIp === subnet.base || gatewayIp === subnet.broadcast) {
+        return false;
+      }
+      // Otherwise the IP is valid
+      return true;
+    } catch (error) {
+      // If the gateway_IP + prefix_length do not form a valid network, then it's invalid
+      return false;
     }
   }
 
