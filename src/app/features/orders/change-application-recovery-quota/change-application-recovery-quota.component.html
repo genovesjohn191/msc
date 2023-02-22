@@ -75,7 +75,7 @@
           </mcs-item>
           <ng-container *ngIf="fcService?.value">
             <!-- Journal Size -->
-            <mcs-item orientation="block">
+            <mcs-item orientation="block" *ngIf="journalSizeApplicable">
               <mcs-section>
                 <div>
                   {{ 'orderChangeApplicationRecoveryQuota.detailsStep.journalSize.placeholder' | translate }}

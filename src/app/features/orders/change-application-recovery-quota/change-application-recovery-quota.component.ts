@@ -124,6 +124,7 @@ export class ChangeApplicationRecoveryQuotaComponent extends McsOrderWizardBase 
   private _errorStatus: number;
   private _servicesCount: number;
   private _itemOrderType: OrderIdType.PrivateApplicationRecoveryChange | OrderIdType.PublicApplicationRecoveryChange;
+  private _journalSizeApplicable: boolean = true;
 
   public sliderValueIndex: number;
   public sliderValue: JournalSizeScale;
@@ -140,6 +141,10 @@ export class ChangeApplicationRecoveryQuotaComponent extends McsOrderWizardBase 
 
   public get noServicesToDisplay(): boolean {
     return !isNullOrEmpty(this._errorStatus) || this._servicesCount === 0;
+  }
+
+  public get journalSizeApplicable(): boolean {
+    return this._journalSizeApplicable;
   }
 
   public get formIsValid(): boolean {
@@ -262,8 +267,8 @@ export class ChangeApplicationRecoveryQuotaComponent extends McsOrderWizardBase 
             serviceId: this.fcService.value.value,
             deliveryType: DeliveryType.Standard,
             properties: {
-              journalSize: this.fcJournalSize.value,
-              journalHistory: formatStringToText(this.fcJournalHistory.value),
+              journalSize: this.journalSizeApplicable? this.fcJournalSize.value : null,
+              journalHistory: formatStringToText(this.fcJournalHistory.value).toLowerCase(),
               numberOfVMs: this.fcNumberOfVMs.value
             } as ChangeApplicationRecoveryQuotaProperties
           })
@@ -309,10 +314,12 @@ export class ChangeApplicationRecoveryQuotaComponent extends McsOrderWizardBase 
         switch (selectedService?.productType) {
           case ApplicationRecoveryType.ApplicationRecovery:
             this.journalHistoryOptions = JOURNAL_HISTORY_OPTIONS_COMMON;
+            this._journalSizeApplicable = true;
             this._itemOrderType = OrderIdType.PrivateApplicationRecoveryChange;
             break;
           case ApplicationRecoveryType.AzureApplicationRecovery:
             this.journalHistoryOptions = JOURNAL_HISTORY_OPTIONS_AZURE;
+            this._journalSizeApplicable = false;
             this._itemOrderType = OrderIdType.PublicApplicationRecoveryChange;
             break;
           default:
