@@ -2,6 +2,7 @@ import { McsEnumSerializationBase } from "@app/models/serialization/mcs-enum-ser
 
 export enum SaasBackupStatus {
   PartialSuccess = 'PartialSuccess',
+  Warning = 'Warning',
   Failure = 'Failure',
   Success = 'Success',
   Running = 'Running',
@@ -9,6 +10,7 @@ export enum SaasBackupStatus {
 
 export const saasBackupStatusText = {
   [SaasBackupStatus.PartialSuccess]: 'Completed with Warnings',
+  [SaasBackupStatus.Warning]: 'Completed with Warnings',
   [SaasBackupStatus.Failure]: 'Failure',
   [SaasBackupStatus.Success]: 'Success',
   [SaasBackupStatus.Running]: 'Running'

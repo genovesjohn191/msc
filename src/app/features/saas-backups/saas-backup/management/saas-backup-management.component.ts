@@ -32,7 +32,8 @@ import {
   McsStorageSaasBackupAttempt,
   McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
-  McsStorageSaasBackupJobType
+  McsStorageSaasBackupJobType,
+  saasBackupStatusText
 } from '@app/models';
 import {
   addDaysToDate,
@@ -78,6 +79,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
   public selectedSaasBackup$: Observable<McsStorageSaasBackup>;
 
   public jobTypes: McsStorageSaasBackupJobType[];
+  public saasServiceHasActiveJob: boolean = false;
 
   private _destroySubject = new Subject<void>();
   private _currentUserJobHandler: Subscription;
@@ -93,7 +95,8 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     this.jobEvents = new McsJobEvents(injector);
     this.dataSource = new McsTableDataSource2(this._getSaasBackupBackupAttempt.bind(this));
     this.defaultColumnFilters = [
-      createObject(McsFilterInfo, { value: true, exclude: true, id: 'date' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'startedOn' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'completedOn' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'jobName' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'protectedUsers' }),
@@ -121,13 +124,17 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
+  public hasStatusLabel(status: string): boolean {
+    return !isNullOrEmpty(saasBackupStatusText[status]);
+  }
+
   public convertArrayToString(dailySchedule: string[]): string {
     let convertedArray = dailySchedule.toString().replace(/,/g, ', ');
     return convertedArray;
   }
 
-  public isRunTimeMoreThanADay(runTime: Date): boolean {
-    let hours = moment().diff(moment(runTime), 'hours');
+  public isDateTimeMoreThanADay(dateTime: Date): boolean {
+    let hours = moment().diff(moment(dateTime), 'hours');
     if (hours > 24) {
       return true;
     }
@@ -136,6 +143,8 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
 
   public onClickAttemptSaasBackup(saasId: string, type: string): void {
     this._updateJobTypeWithActiveJob(saasId, type);
+    this.saasServiceHasActiveJob = true;
+    this._changeDetectorRef.markForCheck();
 
     let queryParam = new McsSaasBackupAttempt();
     queryParam.type = type;
@@ -160,9 +169,9 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
       this._saasBackupService.getSaasBackupId() === saasId);
     
     if (isNullOrEmpty(jobTypeHasActiveJob)) { return; }
-    this.jobTypes.map((job) => {
-      if (job.type === jobTypeHasActiveJob.type && saasId === this._saasBackupService.getSaasBackupId()) {
-        job.hasActiveJob = true;
+    this.jobTypes.map((jobType) => {
+      if (jobType.type === jobTypeHasActiveJob.type && saasId === this._saasBackupService.getSaasBackupId()) {
+        jobType.hasActiveJob = true;
       }
     })
     this._changeDetectorRef.markForCheck();
@@ -176,19 +185,23 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
   }
 
   private _onBackupAttemptJob(job: McsJob): void {
-    this.jobTypes.map((jobType) => {
-      let activeJobFound = this.jobTypes?.find((jobType) => jobType?.type === job?.clientReferenceObject?.type &&
-      this._saasBackupService.getSaasBackupId() ===  job?.clientReferenceObject?.saasId);
+    this.jobTypes?.map((jobType) => {
+      let activeJobFound = jobType?.type === job?.clientReferenceObject?.type &&
+      this._saasBackupService.getSaasBackupId() ===  job?.clientReferenceObject?.saasId;
 
-      if (isNullOrEmpty(activeJobFound)) { return; }
+      if (!activeJobFound) {
+        return;
+      }
 
       if (activeJobFound && job?.inProgress) {
         jobType.hasActiveJob = true;
+        this.saasServiceHasActiveJob = true;
         this._changeDetectorRef.markForCheck();
         return;
       }
   
       jobType.hasActiveJob = false;
+      this.saasServiceHasActiveJob = false;
       this._changeDetectorRef.markForCheck();
       if (!activeJobFound) { return; }
   
@@ -218,8 +231,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
           map((response: McsStorageSaasBackupBackupAttempt) => {
             this.jobTypes = this._sortJobTypeByFriendlyName(getSafeProperty(response, obj => obj.jobTypes));
             this._changeDetectorRef.markForCheck();
-            let backupAttempts = this._getLatestDailyBackupAttempts(
-              getSafeProperty(response, obj => obj.backupAttempts));
+            let backupAttempts = getSafeProperty(response, obj => obj.backupAttempts);
 
             return new McsMatTableContext(backupAttempts, backupAttempts?.length)
         }))
@@ -234,33 +246,6 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
       if (isNullOrEmpty(b.typeFriendlyName)) { return -1; }
       return a.typeFriendlyName < b.typeFriendlyName ? -1 : 1;
     });
-  }
-
-  private _getLatestDailyBackupAttempts(backAttempts: McsStorageSaasBackupAttempt[])
-    : McsStorageSaasBackupAttempt[] {
-
-    if (!backAttempts) return [];
-
-    let groupedDaily: {[key: string]: McsStorageSaasBackupAttempt[]};
-    groupedDaily = backAttempts.reduce(function (groupedItems, currentItem) {
-        let key = new Date(currentItem.runTime).toLocaleDateString();
-        groupedItems[key] = groupedItems[key] || [];
-        groupedItems[key].push(currentItem);
-        return groupedItems;
-    }, Object.create(null));
-
-    let latestDaily: McsStorageSaasBackupAttempt[] = [];
-    Object.entries(groupedDaily).forEach(
-      ([_, backupAttemptsPerDay]) => {
-        if (backupAttemptsPerDay.length > 1) {
-          backupAttemptsPerDay.sort((recA, recB) => 
-            new Date(recB.runTime).getTime() - new Date(recA.runTime).getTime());
-        }
-        latestDaily.push(backupAttemptsPerDay[0])
-      }
-    );
-
-    return latestDaily;
   }
 
   private _getPeriodStartRange(): string {

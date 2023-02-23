@@ -16,13 +16,16 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
     serializer: SaasBackupStatusSerialization,
     deserializer: SaasBackupStatusSerialization
   })
-  public status: string = undefined;
+  public generalStatus: string = undefined;
 
   @JsonProperty()
   public protectedUsers: number = undefined;
 
   @JsonProperty()
-  public runTime: Date = undefined;
+  public startTime: Date = undefined;
+
+  @JsonProperty()
+  public endTime: Date = undefined;
 
   @JsonProperty()
   public type: string = undefined;
@@ -34,17 +37,18 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
   public jobName: string = undefined;
 
   /**
-   * Return the status icon key based on the status of the backup attempt
+   * Return the general status icon key based on the status of the backup attempt
    */
-   public get backupStatusStateIconKey(): string {
+   public get backupGeneralStatusStateIconKey(): string {
     let statusIconKey: string = '';
 
-    switch (this.status) {
+    switch (this.generalStatus) {
       case SaasBackupStatus.Failure:   // Red
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
-      case SaasBackupStatus.PartialSuccess:     // Amber
+      case SaasBackupStatus.PartialSuccess:
+      case SaasBackupStatus.Warning:     // Amber
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
@@ -60,8 +64,8 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
     return statusIconKey;
   }
 
-  public get statusLabel(): string {
-    return saasBackupStatusText[this.status] || 'Never';
+  public get generalStatusLabel(): string {
+    return saasBackupStatusText[this.generalStatus] || 'Unknown';
 }
 
 }
