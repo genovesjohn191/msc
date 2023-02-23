@@ -125,7 +125,7 @@ export function getFriendlyTimespan(milleseconds: number): string {
 }
 
 /**
- * Returns a friendly day format of the date e.g. Today, Yesterday or 'day of the week'
+ * Returns a friendly day format of the date e.g. Today, Yesterday or 'day of the week', (with time)
  * Returns the actual date (without the time), if more than a week
  * @param date Date to be formatted
  * @param timeZone Timezone to be followed, if more than a week
@@ -136,18 +136,19 @@ export function getFriendlyDay(date: Date, timeZone?: string): string {
 
   timeZone = isNullOrEmpty(timeZone) ? moment.tz.guess() : timeZone;
 
-  let format = "dddd";
+  let format = "dddd, h:mm A";
   let daysFromNow = getDayDifference(getCurrentDate(), new Date(date));
-
-  if (daysFromNow == 0) 
-    return 'Today';
-  else if (daysFromNow == 1) 
-    return 'Yesterday';
-  else if (daysFromNow >= 7) 
-    format = "ddd, DD MMM YYYY";
-  
   let utcDateTime = moment.utc(date);
   let convertedDate = utcDateTime.clone().tz(timeZone);
+
+  if (daysFromNow == 0) {
+    return 'Today';
+  } else if (daysFromNow == 1) { 
+    let timeFormat = convertedDate.format('h:mm A');
+    return `Yesterday, ${timeFormat}`;
+  } else if (daysFromNow >= 7) {
+    format = "ddd, DD MMM YYYY";
+  }
   return convertedDate.format(format);
 }
 

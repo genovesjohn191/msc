@@ -30,7 +30,8 @@ export class McsStorageSaasBackupJobTypeLastBackupAttempt {
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
-      case SaasBackupStatus.PartialSuccess:     // Amber
+      case SaasBackupStatus.PartialSuccess:
+      case SaasBackupStatus.Warning:     // Amber
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
@@ -47,7 +48,7 @@ export class McsStorageSaasBackupJobTypeLastBackupAttempt {
   }
 
   public get statusLabel(): string {
-    return saasBackupStatusText[this.status] || 'Never';
+    return saasBackupStatusText[this.status] || 'Never Attempted';
 }
 
 }
