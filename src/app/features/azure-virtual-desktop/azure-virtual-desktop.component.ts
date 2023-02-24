@@ -69,6 +69,7 @@ export class AzureVirtualDesktopComponent extends McsPageBase implements OnInit,
 
   public ngOnInit(): void {
     this._subscribeToBillingAccountChange();
+    this.tabEvents.initialize();
   }
 
   public ngOnDestroy(): void {

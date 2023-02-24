@@ -47,6 +47,7 @@ export class NetworkVlanComponent extends McsPageBase implements OnInit, OnDestr
 
   public ngOnInit(): void {
     this._subscribeToVlanResolve();
+    this.tabEvents.initialize();
   }
 
   public ngOnDestroy(): void {

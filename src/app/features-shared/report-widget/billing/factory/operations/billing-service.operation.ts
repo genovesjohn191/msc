@@ -73,7 +73,7 @@ export class BillingServiceOperation
   }
 
   protected mapToChartItem(billingService: BillingServiceItem): ChartItem {
-    let billingViewModel = this._getBillingViewModelByItem(billingService);
+    let billingViewModel = this.viewModelFunc(billingService);
     let billingTitle = this._generateBillingTitle(billingViewModel);
     let chartItem = {
       id: billingService.id,
@@ -83,6 +83,16 @@ export class BillingServiceOperation
     } as ChartItem;
 
     return chartItem;
+  }
+
+  protected viewModelFunc(service: BillingServiceItem): BillingOperationViewModel {
+    if (isNullOrEmpty(service)) { return null; }
+
+    let billingKey = removeSpaces(service?.productType)?.toUpperCase();
+    let billingFuncFound = this._billingStructMap?.get(billingKey);
+    if (isNullOrEmpty(billingFuncFound)) { return null; }
+
+    return billingFuncFound(service);
   }
 
   private _initializeDataByDataGroup(filterPred?: (item: BillingServiceItem) => boolean): void {
@@ -95,7 +105,7 @@ export class BillingServiceOperation
     dataOperation.chartItems = this._createChartItems(dataOperation.summaryItems);
     dataOperation.seriesItems = this._createSeriesItems(dataOperation.chartItems, dataOperation.summaryItems);
     dataOperation.chartColors = this._createChartColors(dataOperation.chartItems);
-    dataOperation.getViewModelFunc = this._getBillingViewModelByItem.bind(this);
+    dataOperation.getViewModelFunc = this.viewModelFunc.bind(this);
     dataOperation.getTitleFunc = this._generateBillingTitle.bind(this);
     dataOperation.getNameFunc = this._generateBillingName.bind(this);
 
@@ -277,16 +287,6 @@ export class BillingServiceOperation
       return (nameIndex < billingColors.length) ? billingColors[nameIndex++] : hashString(name).toHex();
     });
     return createdColors.map((color, index) => itemFunc => color);
-  }
-
-  private _getBillingViewModelByItem(service: BillingServiceItem): BillingOperationViewModel {
-    if (isNullOrEmpty(service)) { return null; }
-
-    let billingKey = removeSpaces(service?.productType)?.toUpperCase();
-    let billingFuncFound = this._billingStructMap?.get(billingKey);
-    if (isNullOrEmpty(billingFuncFound)) { return null; }
-
-    return billingFuncFound(service);
   }
 
   private _generateBillingTitle(billingViewModel: BillingOperationViewModel): string {
