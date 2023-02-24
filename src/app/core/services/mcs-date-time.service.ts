@@ -13,7 +13,8 @@ export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full'
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
   'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly' |
   'noYearDateShortTime' | 'longDateShortTime' | 'shortMonthYear' | 'fullMonthYear' |
-  'shortDateTime' | 'tracksDateTime' | '24hourTime' | 'mediumNoMs' | 'dayMonth' | 'weekFriendly';
+  'shortDateTime' | 'tracksDateTime' | '24hourTime' | 'mediumNoMs' | 'dayMonth' | 'weekFriendly' |
+  'shortMonth' | 'fullMonth';
 
 @Injectable()
 export class McsDateTimeService {
@@ -42,11 +43,11 @@ export class McsDateTimeService {
     if (actualFormat === 'friendly') {
       return moment(date).fromNow().replace('a day ago', 'yesterday');
     }
-    
+
     if (actualFormat === 'weekFriendly') {
       return getFriendlyDay(date, timeZone);
     }
-    
+
     let formatFound = this._dateTimeMapTable.has(formatType as McsDateTimeFormat);
     if (formatFound) {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);
@@ -144,5 +145,7 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('tracksDateTime', 'YYYY-MM-DD HH:mm:ss');
     this._dateTimeMapTable.set('mediumNoMs', 'D MMM, y, h:mm A');
     this._dateTimeMapTable.set('dayMonth', 'D-MMM');
+    this._dateTimeMapTable.set('shortMonth', 'MMM');
+    this._dateTimeMapTable.set('fullMonth', 'MMMM');
   }
 }

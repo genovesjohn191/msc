@@ -4,6 +4,7 @@ import {
 } from 'rxjs';
 
 import { Injector } from '@angular/core';
+import { McsDateTimeFormat } from '@app/core';
 import {
   McsOption,
   McsReportBillingAvdDailyAverageUser
@@ -74,10 +75,13 @@ export class BillingAvdDailyUserAverageOperation
   }
 
   protected mapToChartItem(item: BillingAvdDailyUserAverageItem): ChartItem {
+    let currentYear = new Date().getFullYear();
+    let dateFormat = item.microsoftChargeMonth.getFullYear() === currentYear ? 'fullMonth' : 'shortMonthYear';
+
     let chartItem = {
       id: item.id,
       name: item.serviceId,
-      xValue: this.datePipe.transform(getDateOnly(item.microsoftChargeMonth), 'shortMonthYear'),
+      xValue: this.datePipe.transform(getDateOnly(item.microsoftChargeMonth), dateFormat as McsDateTimeFormat),
       yValue: item.averageConnections
     } as ChartItem;
     return chartItem;

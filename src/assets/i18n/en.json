@@ -3989,10 +3989,11 @@
     "enabled": "Enabled"
   },
   "label": {
+    "totalCost": "Total Cost",
     "rrpCostDollars": "RRP",
     "serviceSpecificManagementCharges": "Service-Specific Management Charges",
     "actualServiceSpecificManagementFee": "Actual Service-Specific Management Fee",
-    "azureVirtualDesktop": "Azure Virtual Desktop",
+    "azureVirtualDesktop": "Bill Summary - Azure Virtual Desktop",
     "dailyUsersByService": "Daily Users by Service",
     "dailyAverageUsers": "Daily Average Users",
     "costByService": "Cost by Service",

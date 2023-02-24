@@ -766,6 +766,7 @@
     "enumCategory": "Billing",
     "enumKey": "Avd",
     "navigationPath": "azure-virtual-desktop",
+    "requiredPermissions": ["BillingView"],
     "requiredFeatureFlag": "EnableAzureVirtualDesktopBillSummary",
     "documentTitle": "Azure Virtual Desktop - Macquarie Cloud Services"
   },
@@ -774,6 +775,7 @@
     "enumCategory": "Billing",
     "enumKey": "AvdDailyUserService",
     "navigationPath": "daily-user-service",
+    "requiredPermissions": ["BillingView"],
     "documentTitle": "AVD Daily User Service - Macquarie Cloud Services"
   },
   "avdDailyUserAverage": {
@@ -781,6 +783,7 @@
     "enumCategory": "Billing",
     "enumKey": "AvdDailyUserAverage",
     "navigationPath": "daily-user-average",
+    "requiredPermissions": ["BillingView"],
     "documentTitle": "AVD Daily Average Users - Macquarie Cloud Services"
   },
   "avdServiceCost": {
@@ -788,6 +791,7 @@
     "enumCategory": "Billing",
     "enumKey": "AvdServiceCost",
     "navigationPath": "service-cost",
+    "requiredPermissions": ["BillingView"],
     "documentTitle": "AVD Cost by Service - Macquarie Cloud Services"
   },
   "avdDailyConnection": {
@@ -795,6 +799,7 @@
     "enumCategory": "Billing",
     "enumKey": "AvdDailyConnection",
     "navigationPath": "daily-connection-service",
+    "requiredPermissions": ["BillingView"],
     "documentTitle": "AVD Daily Connection by Service - Macquarie Cloud Services"
   },
   "systemMessages": {
