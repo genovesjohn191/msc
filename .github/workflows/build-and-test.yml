@@ -1,0 +1,68 @@
+name: build-and-test
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        description: "Environment to run the workflow."
+        default: "staging"
+      is_run_test:
+        type: boolean
+        description: "Run test?"
+        default: true
+      is_upload_artifacts:
+        type: boolean
+        description: "Upload artifacts?"
+        default: false
+    
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: "Environment to run the workflow."
+        default: "staging"
+      is_run_test:
+        type: boolean
+        description: "Run test?"
+        default: true
+      is_upload_artifacts:
+        type: boolean
+        description: "Upload artifacts?"
+        default: false
+
+jobs:
+  build-and-test: 
+    name: Build and test
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+
+    - uses: actions/checkout@v3
+    
+    - run: echo ${GITHUB_REF#refs/*/}
+
+    - name: Use Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build
+      run: npm run build:prod
+
+    - name: Test
+      if: ${{ inputs.is_run_test }}
+      run: npm test
+    
+    - name: Upload artifacts
+      if: ${{ inputs.is_upload_artifacts }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: portal_workspace
+        path: dist
+

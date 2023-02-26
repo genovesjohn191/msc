@@ -1,0 +1,76 @@
+name: Prod release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+jobs:
+
+  init:
+    name: init vars
+    runs-on: ubuntu-latest
+    environment: prod
+
+    outputs:
+      IMAGE_VERSION: ${{ steps.vars.outputs.image_version}}
+      
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Prep tag
+      uses: dawidd6/action-get-tag@v1
+  
+    - name: vars
+      id: vars
+      run: |
+        build_target=${GITHUB_REF#refs/*/}
+        version=${build_target////-}
+        short_sha=$(git rev-parse --short HEAD)
+        now=$(date +'%Y%m%dT%H%M%S')
+        ver=${version}-${short_sha}-${now}
+        
+        echo $ver
+        echo "image_version=${ver}" >> $GITHUB_OUTPUT
+
+  call-build-and-test:
+    uses: ./.github/workflows/build-and-test.yml
+    with:
+      environment: prod
+      is_run_test: false
+      is_upload_artifacts: true
+  
+  merge-branch:
+    name: Merge branch
+    runs-on: ubuntu-latest
+    needs: call-build-and-test
+    environment: prod
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Merge branch to master
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        target_branch: master
+        message: Merge tag into master
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  call-publish:
+    uses: ./.github/workflows/publish.yml
+    needs: [init, call-build-and-test]
+    
+    with:
+      environment: prod
+      image_version: ${{ needs.init.outputs.IMAGE_VERSION }}
+      is_image_latest: false
+    secrets: inherit
+  
+  call-deploy:
+    uses: ./.github/workflows/deploy.yml
+    needs: [init, call-publish]
+    with:
+      environment: prod
+      image_version: ${{ needs.init.outputs.IMAGE_VERSION }}
+    secrets: inherit
+    

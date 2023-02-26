@@ -1,0 +1,16 @@
+
+name: Develop
+
+on:
+  push:
+    branches: [ "develop" ]
+  workflow_dispatch:
+
+jobs:
+  call-build-and-test:
+    uses: ./.github/workflows/build-and-test.yml
+    with:
+      is_run_test: true
+      is_upload_artifacts: false
+    secrets: inherit
+ 

@@ -1,0 +1,163 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "portal"
+  namespace: ${PORTAL_NAMESPACE}
+spec:
+  replicas: 2
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: "portal"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: "portal"
+    spec:
+      containers:
+        - name: "portal"
+          image: "${AZURE_CONTAINER_REGISTRY}.azurecr.io/${IMAGE_NAME}:latest" 
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 2
+            failureThreshold: 5
+          env:
+            - name: MCS_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_ENVIRONMENT
+            - name: MCS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_HOST
+            - name: MCS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_PORT
+            - name: MCS_GTM_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_GTM_ID
+            - name: MCS_API_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_API_HOST
+            - name: MCS_SENTRY_DSN
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_SENTRY_DSN
+            - name: MCS_MACVIEW_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_MACVIEW_URL
+            - name: MCS_MACVIEW_ORDERS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_MACVIEW_ORDERS_URL
+            - name: MCS_MACVIEW_CHANGE_PASSWORD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_MACVIEW_CHANGE_PASSWORD_URL
+            - name: MCS_LOGIN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_LOGIN_URL
+            - name: MCS_LOGOUT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_LOGOUT_URL
+            - name: MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS
+            - name: MCS_IMAGE_ROOT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_IMAGE_ROOT
+            - name: MCS_ICON_ROOT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_ICON_ROOT
+            - name: MCS_EK
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_EK
+            - name: MCS_TERMS_AND_CONDITIONS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_TERMS_AND_CONDITIONS_URL
+            - name: MCS_INVIEW_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_INVIEW_URL
+            - name: MCS_TREND_DSM_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_TREND_DSM_URL
+            - name: MCS_KNOWLEDGE_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_KNOWLEDGE_BASE_URL
+            - name: MCS_MACVIEW_MANAGE_USERS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-envvars
+                  key: MCS_MACVIEW_MANAGE_USERS_URL
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - portal
+            topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-np
+  namespace: ${PORTAL_NAMESPACE}
+  labels:
+    app: portal
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: portal

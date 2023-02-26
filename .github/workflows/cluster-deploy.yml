@@ -1,0 +1,62 @@
+
+name: K8s Cluster Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: "Environment to run the workflow."
+        default: "staging"
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout source code 
+        uses: actions/checkout@v3
+
+      - name: "Azure login"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Acr login"
+        run: az acr login --name ${{ vars.AZURE_CONTAINER_REGISTRY }}
+
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: '${{ vars.AKS_RESOURCE_GROUP }}' 
+          cluster-name: '${{ vars.AKS_CLUSTER_NAME }}'
+
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
+      
+      - name: Prepare environment from github secrets
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+
+      - name: Prepare environment from github variables
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(vars) }}
+
+      - name: Deploy to AKS
+        uses: swdotcom/update-and-apply-kubernetes-configs@v1
+        with:
+          k8-config-file-paths: |
+            manifest/env-configmap.yaml
+            manifest/deployment.yaml
+            manifest/ingress.yaml
+          replacement-method: defined
+        
+      - name: Rollout
+        run: |
+          kubectl rollout status deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }}

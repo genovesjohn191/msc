@@ -1,0 +1,62 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        description: "Environment to run the workflow."
+        default: 'staging'
+      image_version:
+        type: string
+        description: "Version of the Docker image."
+        required: true
+  
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: "Environment to run the workflow."
+        default: "staging"
+      image_version:
+        type: string
+        description: "Version of the Docker image."
+        required: true
+    
+jobs:
+  
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+   
+    steps:
+    - name: Checkout source code 
+      uses: actions/checkout@v3
+
+    - run: echo ${GITHUB_REF_NAME}
+
+    - name: "Azure login"
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: "Acr login"
+      run: az acr login --name ${{ vars.AZURE_CONTAINER_REGISTRY }}
+
+    - name: Set AKS context
+      id: set-context
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: '${{ vars.AKS_RESOURCE_GROUP }}' 
+        cluster-name: '${{ vars.AKS_CLUSTER_NAME }}'
+
+    - name: Setup kubectl
+      id: install-kubectl
+      uses: azure/setup-kubectl@v3
+    
+    - name: Rollout
+      run: |
+        kubectl set image deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }} portal=${{ vars.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ vars.IMAGE_NAME }}:${{ inputs.image_version }} --record
+        kubectl rollout status deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }}
+          

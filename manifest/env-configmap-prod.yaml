@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portal-envvars
+  namespace: ${PORTAL_NAMESPACE}
+data:
+  MCS_ENVIRONMENT: "Production"
+  MCS_HOST: "portal.fusionsystem.tech"
+  MCS_PORT: "443"
+  MCS_GTM_ID: "GTM-KLL4SS4"
+  MCS_API_HOST: "https://portalapi.fusionsystem.tech"
+  MCS_SENTRY_DSN: "https://a957064f4c484ff590ed53273e141e13@sentry.io/203816"
+  MCS_MACVIEW_URL: "https://www.macquarieview.com"
+  MCS_LOGIN_URL: "https://portal-sp.macquariecloudservices.com/?returnurl="
+  MCS_LOGOUT_URL: "https://portal-sp.macquariecloudservices.com/vdesk/hangup.php3"
+  MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS: "900"
+  MCS_ENABLE_PASSING_JWT_IN_URL: "false"
+  MCS_JWT_COOKIE_NAME: "JWTBearer"
+  MCS_JWT_REFRESH_TOKEN_COOKIE_NAME: "JWTRefresh"
+  MCS_IMAGE_ROOT: "assets/img"
+  MCS_ICON_ROOT: "assets/icon"
+  MCS_EK: "U2FsdGVkX19Z4ZQ1ppBipMuzVgNTWXqyrUqM4VK9JAIF3D"
+  MCS_MACVIEW_ORDERS_URL: "https://www.macquarieview.com/New/CustomerOrder/ViewOrders.aspx"
+  MCS_MACVIEW_CHANGE_PASSWORD_URL: "https://www.macquarieview.com/Admin/UserAdmin/ChangePassword.aspx"
+  MCS_TERMS_AND_CONDITIONS_URL: "https://macquarietelecomgroup.com/service-agreements"
+  MCS_INVIEW_URL: "https://inview.macquarieview.com"
+  MCS_TREND_DSM_URL: "https://hostsecuritymanager.macquarieview.com/"
+  MCS_KNOWLEDGE_BASE_URL: "https://macquariecloudservices.com/kb"
+  MCS_MACVIEW_MANAGE_USERS_URL: "https://www.macquarieview.com/UserManagement/SearchUser.aspx"
