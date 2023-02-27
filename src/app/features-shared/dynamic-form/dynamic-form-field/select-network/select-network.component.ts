@@ -87,7 +87,13 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
     let options: FlatOption[] = [];
 
     collection.forEach((item) => {
-      options.push({ type: 'flat', key: item.name, value: item.networkName });
+      let vlanNumber = !isNullOrEmpty(item.vlanNumber) ? `(${item.vlanNumber})` : '';
+      options.push({
+        type: 'flat',
+        key: item.name,
+        value: item.networkName,
+        addtlText: vlanNumber
+      });
     });
 
     return options;

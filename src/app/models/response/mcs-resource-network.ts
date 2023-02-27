@@ -18,6 +18,9 @@ export class McsResourceNetwork extends McsEntityBase {
   @JsonProperty()
   public vlanId: number = undefined;
 
+  @JsonProperty()
+  public vlanNumber: number = undefined;
+
   @JsonProperty({ target: McsResourceNetworkIpAddress })
   public ipAddresses: McsResourceNetworkIpAddress[] = undefined;
 

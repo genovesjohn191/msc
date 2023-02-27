@@ -24,6 +24,7 @@ export interface FlatOption {
   value: string;
   disabled?: boolean;
   hint?: string;
+  addtlText?: string;
 }
 
 export interface GroupedOption {
