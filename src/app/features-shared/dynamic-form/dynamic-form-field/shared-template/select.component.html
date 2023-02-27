@@ -20,6 +20,7 @@
     <mat-option *ngFor="let opt of config.options" [value]="opt.key"
       [disabled]="opt.disabled" [matTooltip]="opt.hint">
       {{ opt.value }}
+      <span read-only> {{ opt.addtlText }}</span>
     </mat-option>
   </mat-select>
 
