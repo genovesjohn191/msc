@@ -133,6 +133,7 @@ export enum JobType {
   // License
   PublicCloudLicenseChangeCount = 2000001, // TODO: change number
   AzureExtendChangeSpeed = 200002,
+  PublicCloudApplicationRecoveryQuotaChange = 200003,
 
   // vCenter
   VCenterBaselineRemediate = 300001
@@ -208,7 +209,9 @@ export const jobTypeText = {
   [JobType.PrivateCloudLaunchExtenderChangeSpeed]: 'Change LAUNCH™ Extender Speed',
   [JobType.AzureExtendChangeSpeed]: 'Change Azure Extend Speed',
 
-  [JobType.VCenterBaselineRemediate]: 'Remediate Baseline ESXI Host'
+  [JobType.VCenterBaselineRemediate]: 'Remediate Baseline ESXI Host',
+
+  [JobType.PublicCloudApplicationRecoveryQuotaChange]: 'Change Application Recovery Quota'
 };
 
 /**

@@ -1471,6 +1471,11 @@
         "journalHistoryRequired": "Journal history is required.",
         "numberOfVMsRequired": "Number of Virtual Machines is required."
       }
+    },
+    "provisioning": {
+      "description": "Your application recovery quota is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+      "dataInProgress": "Preparing to change your Application Recovery Quota. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
   "orderBackupRestoreRequest": {

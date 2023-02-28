@@ -155,6 +155,7 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.AzureExtendChangeSpeed, McsEvent.jobAzureExtendSpeedChangeEvent);
     this._jobTypeEventMap.set(JobType.VCenterBaselineRemediate, McsEvent.jobVCenterBaselineRemediate);
     this._jobTypeEventMap.set(JobType.SaasBackupAttempt, McsEvent.jobSaasBackupAttempt);
+    this._jobTypeEventMap.set(JobType.PublicCloudApplicationRecoveryQuotaChange, McsEvent.jobApplicationRecoveryQuotaChange);
   }
 
   /**
