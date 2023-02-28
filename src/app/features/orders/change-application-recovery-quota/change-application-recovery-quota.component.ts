@@ -283,8 +283,7 @@ export class ChangeApplicationRecoveryQuotaComponent extends McsOrderWizardBase 
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourceDescription: this.progressDescription,
-      serviceId: serviceID
+      resourceDescription: this.progressDescription
     };
     this.submitOrderWorkflow(workflow);
   }

@@ -156,11 +156,20 @@
       </mcs-wizard-step>
 
       <!-- Go! Step  -->
-      <mcs-wizard-step id="go-step" [stepTitle]="'shared.wizard.completed' | translate" customClass="limited-view">
-        <mcs-step-manual-order-completed [order]="order$ | async"
-          [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
-        </mcs-step-manual-order-completed>
-      </mcs-wizard-step>
+      <mcs-wizard-step id="go-step"
+      [stepTitle]="'shared.wizard.completed' | translate"
+      customClass="limited-view">
+      <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+        <ng-container mcsProvisioningStepDescription>
+          {{ 'orderChangeApplicationRecoveryQuota.provisioning.description' | translate }}
+        </ng-container>
+
+        <ng-container mcsProvisioningStepInProgress>
+          <span *ngIf="orderIsToBeSubmitted">{{ 'orderChangeApplicationRecoveryQuota.provisioning.dataInProgress' | translate }}</span>
+          <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
+        </ng-container>
+      </mcs-step-provisioning>
+    </mcs-wizard-step>
     </mcs-wizard>
 
   </mcs-content-panel>

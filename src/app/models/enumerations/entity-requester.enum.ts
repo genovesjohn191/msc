@@ -8,6 +8,7 @@ export enum EntityRequester {
   Firewall,
   SystemMessage,
   BackupAggregationTarget,
+  ApplicationRecovery,
   Resource,
   License,
   Internet,

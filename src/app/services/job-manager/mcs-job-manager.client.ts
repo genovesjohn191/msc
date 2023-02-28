@@ -47,6 +47,7 @@ import { McsJobSaasBackupManager } from './entities/mcs-job-saas-backup.manager'
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobTerraformDeploymentManager } from './entities/mcs-job-terraform-deployment.manager';
 import { McsJobVCenterBaselineManager } from './entities/mcs-job-vcenter-baseline-deployment.manager';
+import { McsJobApplicationRecoveryQuotaManager } from './entities/mcs-job-application-recovery-quota.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -324,6 +325,11 @@ export class McsJobManagerClient implements McsDisposable {
     // Internet
     this._jobEntitiesFactory.set(JobType.InternetPortPlanChange,
       new McsJobInternetManager(ActionStatus.Update, this._injector)
+    );
+
+    // Application Recovery Quota
+    this._jobEntitiesFactory.set(JobType.PublicCloudApplicationRecoveryQuotaChange,
+      new McsJobApplicationRecoveryQuotaManager(ActionStatus.Update, this._injector)
     );
 
     // SaaS Backup

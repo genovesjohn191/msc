@@ -108,6 +108,7 @@ import { DataClearVCenterBaselineEvent } from './items/vcenter/data-clear-vcente
 import { JobVCenterBaselineRemediateEvent } from './items/vcenter/job-vcenter-baseline-remediate.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
+import { JobApplicationRecoveryQuotaChangeEvent } from './items/application-recovery-quota/job-application-recovery-quota-change.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -231,4 +232,6 @@ export class McsEvent {
   public static jobVCenterBaselineRemediate = new JobVCenterBaselineRemediateEvent();
 
   public static jobSaasBackupAttempt = new JobSaasBackupAttemptEvent();
+
+  public static jobApplicationRecoveryQuotaChange = new JobApplicationRecoveryQuotaChangeEvent();
 }
