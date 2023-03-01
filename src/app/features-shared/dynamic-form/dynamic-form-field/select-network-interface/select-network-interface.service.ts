@@ -66,7 +66,7 @@ export class DynamicSelectNetworkInterfaceService {
     let options: FlatOption[] = [];
 
     items.forEach((item) => {
-      let vlanNumber = isNullOrUndefined(item.vlanId) ? '' : ` (${item.vlanId})`;
+      let vlanNumber = isNullOrUndefined(item.vlanNumber) ? '' : ` (${item.vlanNumber})`;
       let option = {
         key: item.id,
         value: item.name + vlanNumber

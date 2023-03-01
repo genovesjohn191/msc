@@ -830,9 +830,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Returns the network name of the resource network that matches the given vlan id
    */
-  private _getMappedNetworkName(vlanId: number): string {
-    let networkVlan = this._selectedServerResource?.networks?.find(network => network.vlanId === vlanId);
+  private _getMappedNetworkName(vlanNumber: number): string {
+    let networkVlan = this._selectedServerResource?.networks?.find(network => network.vlanNumber === vlanNumber);
     let networkName = isNullOrUndefined(networkVlan?.networkName) ? 'Unknown' : networkVlan.networkName;
-    return `${networkName} (VLAN ${vlanId})`;
+    return `${networkName} (VLAN ${vlanNumber})`;
   }
 }
