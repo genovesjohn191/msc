@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import {
-  Router
-} from '@angular/router';
 import { Subject } from 'rxjs';
+
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import {
-  McsDisposable,
-  unsubscribeSafely
+  unsubscribeSafely,
+  McsDisposable
 } from '@app/utilities';
 import { LogClass } from '@peerlancers/ngx-logger';
 
@@ -28,12 +27,14 @@ export class McsErrorHandlerService implements McsDisposable {
    * @param errorCode Error code of the corresponding request
    */
   public redirectToErrorPage(errorCode: number): void {
-    this._router.navigate(['**'], {
-      skipLocationChange: true,
-      queryParams: {
-        code: errorCode,
-        preservedUrl: location.pathname
-      }
-    });
+    setTimeout(() => {
+      this._router.navigate(['**'], {
+        skipLocationChange: true,
+        queryParams: {
+          code: errorCode,
+          preservedUrl: location.pathname
+        }
+      });
+    }, 500);
   }
 }

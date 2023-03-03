@@ -11,6 +11,9 @@ export class McsReportBillingAvdDailyUserService extends McsEntityBase {
   public billingDescription: string = undefined;
 
   @JsonProperty()
+  public billingAccountId: string = undefined;
+
+  @JsonProperty()
   public azureDescription: string = undefined;
 
   @JsonProperty()

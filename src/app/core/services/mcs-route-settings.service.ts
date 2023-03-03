@@ -153,8 +153,8 @@ export class McsRouteSettingsService implements McsDisposable {
       activeRouteDetails.enumPlatform === RoutePlatform.Hybrid && this._identity.platformSettings.hasHybridCloud;
 
     let hasAccessToTargetPlatform = hasAccessToActivePublicCloudRoute ||
-        hasAccessToActivePrivateCloudRoute ||
-        hasAccessToActiveHybridCloudRoute;
+      hasAccessToActivePrivateCloudRoute ||
+      hasAccessToActiveHybridCloudRoute;
 
     if (hasAccessToTargetPlatform) {
       return true;
