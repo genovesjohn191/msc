@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import {
   map,
-  switchMap,
   tap
 } from 'rxjs/operators';
 
@@ -11,8 +10,10 @@ import {
   Component,
   Injector,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -41,14 +42,20 @@ import { IFieldSelectBillingAccount } from './field-select-billing-account';
 })
 export class FieldSelectBillingAccountComponent
   extends FormFieldBaseComponent2<string[]>
-  implements IFieldSelectBillingAccount, OnInit, OnDestroy {
+  implements IFieldSelectBillingAccount, OnInit, OnChanges, OnDestroy {
 
   @Input()
   public selectedAllByDefault: boolean;
 
-  public billingAccounts$: Observable<McsOption[]>;
+  @Input()
+  public sourceType: 'billing-summaries' | 'daily-user-service'
+    | 'daily-average-service' | 'service-cost'
+    | 'daily-connection-service' = 'billing-summaries';
+
+  public billingOptions$: Observable<McsOption[]>;
 
   private _billingAccountCount: number;
+  private _billingAccountMap = new Map<string, McsBilling>();
 
   constructor(
     _injector: Injector,
@@ -68,55 +75,152 @@ export class FieldSelectBillingAccountComponent
   }
 
   public ngOnInit(): void {
-    this._getBillingAccounts();
+    this._initializeBillingAccounts();
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    let typeChange = changes['sourceType'];
+    if (isNullOrEmpty(typeChange)) { return; }
+
+    this._initializeBillingAccounts();
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this.destroySubject);
   }
 
-  private _getBillingAccounts(): void {
-    this.billingAccounts$ = this._apiService.getBilling().pipe(
-      switchMap((orderBillingCollection) => {
-        return this._apiService.getBillingSummaries().pipe(
-          map((reportBillingCollection) => {
-            let orderBilling = getSafeProperty(orderBillingCollection, (obj) => obj.collection) || [];
-            let reportBilling = getSafeProperty(reportBillingCollection, (obj) => obj.collection) || [];
+  private _initializeBillingAccounts(): void {
+    this._getBillingAccountsAsync().pipe(
+      tap(() => this._updateBillingAccountsDataSource())
+    ).subscribe();
+  }
 
-            let billingAccounts: McsOption[] = [];
+  private _updateBillingAccountsDataSource(): void {
+    let asyncFunc: () => Observable<McsOption[]>;
 
-            reportBilling.forEach((report) => {
-              report.parentServices.forEach((parentService) => {
-                let isParentUnique = this._checkDuplicate(billingAccounts, parentService.billingAccountId);
-                if (!isParentUnique) { return; }
-                let parentOptionName = this.setOptionName(orderBilling, parentService.billingAccountId);
-                billingAccounts.push(createObject(McsOption, {
-                  text: `${parentOptionName} (${parentService.billingAccountId})`,
-                  value: parentService.billingAccountId
-                }))
-                parentService.childBillingServices.forEach((childService) => {
-                  let isChildUnique = this._checkDuplicate(billingAccounts, childService.billingAccountId);
-                  if (!isChildUnique) { return; }
-                  let childOptionName = this.setOptionName(orderBilling, childService.billingAccountId);
-                  billingAccounts.push(createObject(McsOption, {
-                    text: `${childOptionName} (${childService.billingAccountId})`,
-                    value: childService.billingAccountId
-                  }))
-                });
-              })
-            })
+    switch (this.sourceType) {
+      case 'daily-user-service':
+        asyncFunc = this._getBillingAccountsByDailyUsersAsync.bind(this);
+        break;
 
-            this._billingAccountCount = billingAccounts?.length;
-            this._changeDetectorRef.markForCheck();
-            return billingAccounts
-          }),
-          tap(billingAccounts => {
-            if (isNullOrEmpty(billingAccounts)) { return; }
-            this.selectedAllByDefault && this._selectRecords(...billingAccounts);
-          })
-        )
+      case 'daily-average-service':
+        asyncFunc = this._getBillingAccountsByDailyAverageAsync.bind(this);
+        break;
+
+      case 'billing-summaries':
+      case 'daily-connection-service':
+      case 'service-cost':
+      default:
+        asyncFunc = this._getBillingSummariesAsync.bind(this);
+        break;
+    }
+
+    console.log('get again', this.sourceType);
+
+    this.billingOptions$ = asyncFunc().pipe(
+      tap(options => {
+        this._billingAccountCount = options?.length;
+        this._changeDetectorRef.markForCheck();
+
+        if (isNullOrEmpty(options)) { return; }
+        this.selectedAllByDefault && this._selectRecords(...options);
       })
-    )
+    );
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _getBillingAccountsByDailyUsersAsync(): Observable<McsOption[]> {
+    return this._apiService.getAvdDailyUsers().pipe(
+      map((response) => {
+        let dailyUsers = response?.collection || [];
+        let filteredOptions = new Array<McsOption>();
+
+        dailyUsers?.forEach(user => {
+          if (isNullOrEmpty(user)) { return; }
+
+          user.services?.forEach(service => {
+            let billingAccount = this._billingAccountMap.get(service.billingAccountId);
+            if (isNullOrEmpty(billingAccount) || !!filteredOptions?.find(option => option.value === billingAccount.id)) { return; }
+
+            filteredOptions.push(createObject(McsOption, {
+              text: `${billingAccount.name} (${billingAccount.id})`,
+              value: billingAccount.id
+            }));
+          });
+        });
+        return filteredOptions;
+      })
+    );
+  }
+
+  private _getBillingAccountsByDailyAverageAsync(): Observable<McsOption[]> {
+    return this._apiService.getAvdDailyAverageUsers().pipe(
+      map((response) => {
+        let averageUsers = response?.collection || [];
+        let filteredOptions = new Array<McsOption>();
+
+        averageUsers?.forEach(user => {
+          if (isNullOrEmpty(user)) { return; }
+
+          user.services?.forEach(service => {
+            let billingAccount = this._billingAccountMap.get(service.billingAccountId);
+            if (isNullOrEmpty(billingAccount) || !!filteredOptions?.find(option => option.value === billingAccount.id)) { return; }
+
+            filteredOptions.push(createObject(McsOption, {
+              text: `${billingAccount.name} (${billingAccount.id})`,
+              value: billingAccount.id
+            }));
+          });
+        });
+        return filteredOptions;
+      })
+    );
+  }
+
+  private _getBillingSummariesAsync(): Observable<McsOption[]> {
+    return this._apiService.getBillingSummaries().pipe(
+      map((reportBillingCollection) => {
+        let orderBilling = Array.from(this._billingAccountMap.values()) || [];
+        let reportBilling = getSafeProperty(reportBillingCollection, (obj) => obj.collection) || [];
+
+        let billingAccounts: McsOption[] = [];
+
+        reportBilling.forEach((report) => {
+          report.parentServices.forEach((parentService) => {
+            let isParentUnique = this._checkDuplicate(billingAccounts, parentService.billingAccountId);
+            if (!isParentUnique) { return; }
+            let parentOptionName = this.setOptionName(orderBilling, parentService.billingAccountId);
+            billingAccounts.push(createObject(McsOption, {
+              text: `${parentOptionName} (${parentService.billingAccountId})`,
+              value: parentService.billingAccountId
+            }))
+            parentService.childBillingServices.forEach((childService) => {
+              let isChildUnique = this._checkDuplicate(billingAccounts, childService.billingAccountId);
+              if (!isChildUnique) { return; }
+              let childOptionName = this.setOptionName(orderBilling, childService.billingAccountId);
+              billingAccounts.push(createObject(McsOption, {
+                text: `${childOptionName} (${childService.billingAccountId})`,
+                value: childService.billingAccountId
+              }))
+            });
+          })
+        })
+        return billingAccounts
+      })
+    );
+  }
+
+  private _getBillingAccountsAsync(): Observable<McsBilling[]> {
+    return this._apiService.getBilling().pipe(
+      tap(billings => {
+        this._billingAccountMap.clear();
+        let billingAccounts = billings?.collection || [];
+        billingAccounts.forEach(billingAccount => {
+          this._billingAccountMap.set(billingAccount.id, billingAccount);
+        });
+      }),
+      map(billingRef => billingRef?.collection)
+    );
   }
 
   private setOptionName(orderBilling: McsBilling[], accountId: string): string {

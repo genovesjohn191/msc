@@ -8,7 +8,7 @@
     mcsTooltipPosition="bottom"
     [mcsTooltip]="'reports.billing.billingAccountDropdownTooltip' | translate">
 
-    <mat-option *ngFor="let billingAccount of (billingAccounts$ | async)"
+    <mat-option *ngFor="let billingAccount of (billingOptions$ | async)"
       [value]="billingAccount.value">
       {{ billingAccount.text }}
     </mat-option>
