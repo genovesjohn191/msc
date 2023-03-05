@@ -148,7 +148,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _selectedServerResource: McsResource = null;
   private _hasInternalPrivateCloudEngineerAccess: boolean = false;
   private _isUcsBladeNicEditFeatureEnabled = false;
-  private _currentUserActiveCompanyId: string = '';
   private _vlanOptions = new BehaviorSubject<FlatOption[]>(null);
 
   private _createNicHandler: Subscription;
@@ -262,7 +261,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public ngOnInit() {
     this._hasInternalPrivateCloudEngineerAccess = this._accessControlService.hasPermission([McsPermission.InternalPrivateCloudEngineerAccess]);
     this._isUcsBladeNicEditFeatureEnabled = this._accessControlService.hasAccessToFeature(McsFeatureFlag.DedicatedBladeNicEdit);
-    this._currentUserActiveCompanyId = this._authenticationIdentity.activeAccount.id;
     this.server$.subscribe(server => {
       this._serverIsDedicated = server.isDedicated;
       this._selectedServer = server;
@@ -803,13 +801,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Gets the network vlan options available from getNetworkDbVlans
    */
   private _getNetworkDbVlanOptions(selectedNic: McsServerNic): Observable<FlatOption[]> {
+    let currentUserActiveCompanyId = this._authenticationIdentity.activeAccount.id;
     let queryParam = new McsNetworkDbVlanQueryParams();
     queryParam.pageSize = 9999;
     queryParam.podSiteName = this._selectedServer?.availabilityZone;
     queryParam.podName = this._selectedServerResource?.podName;
-    queryParam.networkCompanyId = this._currentUserActiveCompanyId;
+    queryParam.networkCompanyId = currentUserActiveCompanyId;
 
-    if (isNullOrUndefined(this._selectedServerResource) || isNullOrUndefined(this._currentUserActiveCompanyId) || this.isViewNicBladeVisible(selectedNic)) { return of([]); }
+    if (isNullOrUndefined(this._selectedServerResource) || isNullOrUndefined(currentUserActiveCompanyId) || this.isViewNicBladeVisible(selectedNic)) { return of([]); }
 
     return this.apiService.getNetworkDbVlans(queryParam).pipe((
       map((vlans) => {
