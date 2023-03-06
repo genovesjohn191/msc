@@ -102,6 +102,8 @@ import {
   McsApiUcsFactory,
   McsApiVcloudInstanceFactory,
   IMcsApiVcloudInstanceService,
+  IMcsApiNonStandardBundlesService,
+  McsApiNonStandardBundleFactory,
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -338,7 +340,8 @@ import {
   McsVcloudInstance,
   McsVcloudInstanceProviderVdc,
   McsResourceQueryParam,
-  McsSaasBackupAttempt
+  McsSaasBackupAttempt,
+  McsNonStandardBundle
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -369,6 +372,7 @@ import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 import { McsMediaRepository } from './repositories/mcs-media.repository';
 import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-networks.repository';
+import { McsNonStandardBundlesRepository } from './repositories/mcs-non-standard-bundles.repository';
 import { McsNoticesRepository } from './repositories/mcs-notices.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
@@ -400,6 +404,7 @@ export class McsApiService {
   private readonly _jobsRepository: McsJobsRepository;
   private readonly _licensesRepository: McsLicensesRepository;
   private readonly _mediaRepository: McsMediaRepository;
+  private readonly _nonStandardBundlesRepository: McsNonStandardBundlesRepository;
   private readonly _noticesRepository: McsNoticesRepository;
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _resourcesRepository: McsResourcesRepository;
@@ -438,6 +443,7 @@ export class McsApiService {
   private readonly _metadataApi: IMcsApiMetadataService;
   private readonly _networkDbApi: IMcsApiNetworkDbService;
   private readonly _networkDnsApi: IMcsApiNetworkDnsService;
+  private readonly _nonStandardBundlesApi: IMcsApiNonStandardBundlesService;
   private readonly _noticesApi: IMcsApiNoticesService;
   private readonly _objectsApi: IMcsApiObjectsService;
   private readonly _ordersApi: IMcsApiOrdersService;
@@ -477,6 +483,7 @@ export class McsApiService {
     this._internetRepository = _injector.get(McsInternetRepository);
     this._licensesRepository = _injector.get(McsLicensesRepository);
     this._mediaRepository = _injector.get(McsMediaRepository);
+    this._nonStandardBundlesRepository = _injector.get(McsNonStandardBundlesRepository);
     this._noticesRepository = _injector.get(McsNoticesRepository);
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._resourcesRepository = _injector.get(McsResourcesRepository);
@@ -518,6 +525,7 @@ export class McsApiService {
     this._metadataApi = apiClientFactory.getService(new McsApiMetadataFactory());
     this._networkDbApi = apiClientFactory.getService(new McsApiNetworkDbFactory());
     this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
+    this._nonStandardBundlesApi = apiClientFactory.getService(new McsApiNonStandardBundleFactory());
     this._noticesApi = apiClientFactory.getService(new McsApiNoticesFactory());
     this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
@@ -2130,6 +2138,14 @@ export class McsApiService {
     return this._mapToEntityRecords(this._azureSoftwareSubscriptionsRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureSoftwareSubscriptions'))
+      )
+    );
+  }
+
+  public getAzureNonStandardBundles(query?: McsQueryParam): Observable<McsApiCollection<McsNonStandardBundle>> {
+    return this._mapToEntityRecords(this._nonStandardBundlesRepository, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureNonStandardBundles'))
       )
     );
   }

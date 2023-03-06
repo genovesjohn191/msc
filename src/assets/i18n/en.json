@@ -53,7 +53,8 @@
         "subscriptions": "Subscriptions",
         "reservations": "Reservations",
         "softwareSubscriptions": "Software Subscriptions",
-        "managementServices": "Management"
+        "managementServices": "Management",
+        "nonStandardBundles": "Non-Standard Bundles"
       },
       "licenses": "Licenses"
     },
@@ -3015,6 +3016,13 @@
     "noCommitmentDateLabel": "Unknown",
     "subscriptionExpiring": "This Software Subscription will expire in 7 days or less."
   },
+  "azureNonStandardBundles": {
+    "leftPanelHeader": "Non-Standard Bundle Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of non-standard bundles.",
+    "dataSingular": "Non-Standard Bundle",
+    "dataPlural": "Non-Standard Bundles",
+    "noazureNonStandardBundles": "There are no Non-Standard Bundles to display."
+  },
   "extenders": {
     "header": "Extenders",
     "leftPanelHeader": "Extenders Filter",
@@ -3738,6 +3746,7 @@
     "createNetworkDbNetwork": "Something went wrong while creating this network. Please try again.",
     "getAzureReservations": "Something went wrong while retrieving your list of Reservations. Please try again.",
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving your list of Software Subscriptions. Please try again.",
+    "getAzureNonStandardBundles": "Something went wrong while retrieving your list of Azure Non-Standard Bundles. Please try again.",
     "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again.",
     "getBillingSummariesCsv": "Something went wrong while exporting your bill summary. Please try again.",
     "updateGeneric": "Something went wrong while saving. Please try again.",
@@ -4151,6 +4160,7 @@
     "new": "New",
     "newActivity": "New Comment/Attachment",
     "none": "None",
+    "nonStandardBundles": "Non-Standard Bundles",
     "notes": "Notes",
     "notices": "Notices",
     "ongoing": "Ongoing",
@@ -4242,6 +4252,7 @@
     "reset": "Reset",
     "save": "Save",
     "submit": "Submit",
+    "placeServiceRequest": "Place a Service Request",
     "plan": "Plan",
     "planAndApply": "Plan & Apply",
     "raiseTicket": "Raise a Ticket",

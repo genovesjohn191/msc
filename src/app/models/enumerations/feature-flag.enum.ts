@@ -61,5 +61,7 @@ export enum McsFeatureFlag {
 
   KnowledgeBaseLink = 'EnableKnowledgeBaseLink',
   SaasBackup = 'EnableSaasBackup',
-  PlannedWork = 'EnablePlannedWork'
+  PlannedWork = 'EnablePlannedWork',
+
+  NonStandardBundlesListing = 'EnableAzureNonStandardBundles'
 }

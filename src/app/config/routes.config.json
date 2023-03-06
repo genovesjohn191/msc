@@ -346,6 +346,14 @@
     "documentTitle": "Reservations - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnableAzureReservations"
   },
+  "azureNonStandardBundles": {
+    "enumKey": "AzureNonStandardBundles",
+    "enumCategory": "Azure",
+    "navigationPath": "azure/non-standard-bundles",
+    "enumPlatform": "Public",
+    "documentTitle": "Azure Non-Standard Bundles - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnableAzureNonStandardBundles"
+  },
   "azureManagementServices": {
     "enumKey": "AzureManagementServices",
     "enumCategory": "PublicCloud",

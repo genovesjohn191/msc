@@ -109,6 +109,7 @@ import { JobVCenterBaselineRemediateEvent } from './items/vcenter/job-vcenter-ba
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
 import { JobApplicationRecoveryQuotaChangeEvent } from './items/application-recovery-quota/job-application-recovery-quota-change.event';
+import { DataChangeNonStandardBundlesEvent } from './items/data-change-non-standard-bundles.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -171,6 +172,7 @@ export class McsEvent {
   public static dataChangePlannedWorkDetailsEvent = new DataChangePlannedWorkDetailsEvent();
   public static dataChangeVCenterBaselineEvent = new DataChangeVCenterBaselineEvent();
   public static dataChangeSaasBackup = new DataChangeSaasBackupEvent();
+  public static dataChangeNonStandardBundles = new DataChangeNonStandardBundlesEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();

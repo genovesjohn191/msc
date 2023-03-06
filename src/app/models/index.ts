@@ -419,6 +419,7 @@ export * from './response/vcloud-instance/mcs-vcloud-instance';
 export * from './response/vcloud-instance/mcs-vcloud-instance-pods';
 export * from './response/vcloud-instance/mcs-vcloud-instance-provider-vdc';
 export * from './response/vcloud-instance/mcs-vcloud-storage-profile';
+export * from './response/mcs-non-standard-bundle';
 
 /** Common */
 export * from './common/mcs-api-search-key';

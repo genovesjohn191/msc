@@ -491,6 +491,18 @@
                   {{ 'navigation.publicCloud.azure.softwareSubscriptions' | translate }}
                 </a>
               </li>
+              <!-- Non-Standard Bundles -->
+              <li *mcsAccessControl="[]; feature: 'EnableAzureNonStandardBundles'">
+                <a [mcsRouterLink]="routeKeyEnum.AzureNonStandardBundles"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="non-standard-bundle-link"
+                  mcsEventTracker="navigate-to-azure-non-standard-bundles"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.publicCloud.azure.nonStandardBundles' | translate }}
+                </a>
+              </li>
             </ul>
           </li>
           <!-- Management Services -->
