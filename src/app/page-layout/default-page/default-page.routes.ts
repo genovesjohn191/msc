@@ -137,6 +137,12 @@ export const defaultPageRoutes: Routes = [
           .then(m => m.AzureSoftwareSubscriptionsModule)
       },
       {
+        path: 'azure/non-standard-bundles',
+        data: { routeId: RouteKey.AzureNonStandardBundles },
+        loadChildren: () => import('../../features/azure-non-standard-bundles/azure-non-standard-bundles.module')
+          .then(m => m.AzureNonStandardBundlesModule)
+      },
+      {
         path: 'licenses',
         data: { routeId: RouteKey.Licenses },
         loadChildren: () => import('../../features/licenses/licenses.module').then(m => m.LicensesModule)

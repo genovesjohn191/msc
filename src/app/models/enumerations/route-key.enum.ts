@@ -51,6 +51,7 @@ export enum RouteKey {
   AzureManagementServicesDetailsChildren,
   AzureResources,
   AzureReservations,
+  AzureNonStandardBundles,
 
   Console,
   Maintenance,
@@ -183,7 +184,7 @@ export enum RouteKey {
   HybridCloud,
   Extenders,
   ApplicationRecovery,
-
+  
   KnowledgeBaseInterstitial,
 
   HttpErrorPage

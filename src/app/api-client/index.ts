@@ -48,6 +48,7 @@ export * from './interfaces/mcs-api-workflows.interface';
 export * from './interfaces/mcs-api-vcenter.interface';
 export * from './interfaces/mcs-api-vcloud-instance.interface';
 export * from './interfaces/mcs-api-ucs.interface';
+export * from './interfaces/mcs-api-non-standard-bundles.interface';
 
 export * from './factory/mcs-api-account.factory';
 export * from './factory/mcs-api-availability-zones.factory';
@@ -93,4 +94,5 @@ export * from './factory/mcs-api-workflows.factory';
 export * from './factory/mcs-api-planned-work.factory';
 export * from './factory/mcs-api-vcenter.factory';
 export * from './factory/mcs-api-vcloud-instance.factory';
+export * from './factory/mcs-api-non-standard-bundle.factory';
 export * from './factory/mcs-api-ucs.factory';
