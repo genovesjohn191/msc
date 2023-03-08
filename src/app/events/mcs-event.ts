@@ -17,8 +17,10 @@ import { DataChangeJobsEvent } from './items/data-change-jobs.event';
 import { DataChangeLicensesEvent } from './items/data-change-licenses.event';
 import { DataChangeMediaEvent } from './items/data-change-media.event';
 import { DataChangeNetworkDbNetworksEvent } from './items/data-change-networks.event';
+import { DataChangeNonStandardBundlesEvent } from './items/data-change-non-standard-bundles.event';
 import { DataChangeNoticesEvent } from './items/data-change-notices.event';
 import { DataChangeOrdersEvent } from './items/data-change-orders.event';
+import { DataChangePerpetualSoftwareEvent } from './items/data-change-perpetual-software.event';
 import { DataChangePlannedWorkDetailsEvent } from './items/data-change-planned-work-details.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
 import { DataChangeSaasBackupEvent } from './items/data-change-saas-backup.event';
@@ -109,7 +111,6 @@ import { JobVCenterBaselineRemediateEvent } from './items/vcenter/job-vcenter-ba
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
 import { JobApplicationRecoveryQuotaChangeEvent } from './items/application-recovery-quota/job-application-recovery-quota-change.event';
-import { DataChangeNonStandardBundlesEvent } from './items/data-change-non-standard-bundles.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -173,6 +174,7 @@ export class McsEvent {
   public static dataChangeVCenterBaselineEvent = new DataChangeVCenterBaselineEvent();
   public static dataChangeSaasBackup = new DataChangeSaasBackupEvent();
   public static dataChangeNonStandardBundles = new DataChangeNonStandardBundlesEvent();
+  public static dataChangePerpetualSoftware = new DataChangePerpetualSoftwareEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();

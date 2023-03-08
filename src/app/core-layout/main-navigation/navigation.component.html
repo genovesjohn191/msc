@@ -491,6 +491,18 @@
                   {{ 'navigation.publicCloud.azure.softwareSubscriptions' | translate }}
                 </a>
               </li>
+              <!-- Perpetual Software -->
+              <li *mcsAccessControl="[]; feature: 'EnableAzurePerpetualSoftware'">
+                <a [mcsRouterLink]="routeKeyEnum.AzurePerpetualSoftware"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="perpetual-software-link"
+                  mcsEventTracker="navigate-to-azure-perpetual-software"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.publicCloud.azure.perpetualSoftware' | translate }}
+                </a>
+              </li>
               <!-- Non-Standard Bundles -->
               <li *mcsAccessControl="[]; feature: 'EnableAzureNonStandardBundles'">
                 <a [mcsRouterLink]="routeKeyEnum.AzureNonStandardBundles"

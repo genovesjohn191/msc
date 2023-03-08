@@ -104,6 +104,8 @@ import {
   IMcsApiVcloudInstanceService,
   IMcsApiNonStandardBundlesService,
   McsApiNonStandardBundleFactory,
+  IMcsApiPerpetualSoftwareService,
+  McsApiPerpetualSoftwareFactory,
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -341,7 +343,8 @@ import {
   McsVcloudInstanceProviderVdc,
   McsResourceQueryParam,
   McsSaasBackupAttempt,
-  McsNonStandardBundle
+  McsNonStandardBundle,
+  McsPerpetualSoftware
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -375,6 +378,7 @@ import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-ne
 import { McsNonStandardBundlesRepository } from './repositories/mcs-non-standard-bundles.repository';
 import { McsNoticesRepository } from './repositories/mcs-notices.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
+import { McsPerpetualSoftwareRepository } from './repositories/mcs-perpetual-software.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsSaasBackupRepository } from './repositories/mcs-saas-backup.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
@@ -407,6 +411,7 @@ export class McsApiService {
   private readonly _nonStandardBundlesRepository: McsNonStandardBundlesRepository;
   private readonly _noticesRepository: McsNoticesRepository;
   private readonly _ordersRepository: McsOrdersRepository;
+  private readonly _perpetualSoftwareRepository: McsPerpetualSoftwareRepository;
   private readonly _resourcesRepository: McsResourcesRepository;
   private readonly _saasBackupRepository: McsSaasBackupRepository;
   private readonly _serversRepository: McsServersRepository;
@@ -447,6 +452,7 @@ export class McsApiService {
   private readonly _noticesApi: IMcsApiNoticesService;
   private readonly _objectsApi: IMcsApiObjectsService;
   private readonly _ordersApi: IMcsApiOrdersService;
+  private readonly _perpetualSoftwareApi: IMcsApiPerpetualSoftwareService;
   private readonly _platformApi: IMcsApiPlatformService;
   private readonly _reportsApi: IMcsApiReportsService;
   private readonly _resourcesApi: IMcsApiResourcesService;
@@ -486,6 +492,7 @@ export class McsApiService {
     this._nonStandardBundlesRepository = _injector.get(McsNonStandardBundlesRepository);
     this._noticesRepository = _injector.get(McsNoticesRepository);
     this._ordersRepository = _injector.get(McsOrdersRepository);
+    this._perpetualSoftwareRepository = _injector.get(McsPerpetualSoftwareRepository);
     this._resourcesRepository = _injector.get(McsResourcesRepository);
     this._saasBackupRepository = _injector.get(McsSaasBackupRepository);
     this._serversRepository = _injector.get(McsServersRepository);
@@ -529,6 +536,7 @@ export class McsApiService {
     this._noticesApi = apiClientFactory.getService(new McsApiNoticesFactory());
     this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
+    this._perpetualSoftwareApi = apiClientFactory.getService(new McsApiPerpetualSoftwareFactory());
     this._plannedWorkApi = apiClientFactory.getService(new McsApiPlannedWorkFactory());
     this._platformApi = apiClientFactory.getService(new McsApiPlatformFactory());
     this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
@@ -2146,6 +2154,14 @@ export class McsApiService {
     return this._mapToEntityRecords(this._nonStandardBundlesRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureNonStandardBundles'))
+      )
+    );
+  }
+
+  public getAzurePerpetualSoftware(query?: McsQueryParam): Observable<McsApiCollection<McsPerpetualSoftware>> {
+    return this._mapToEntityRecords(this._perpetualSoftwareRepository, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzurePerpetualSoftware'))
       )
     );
   }

@@ -54,7 +54,8 @@
         "reservations": "Reservations",
         "softwareSubscriptions": "Software Subscriptions",
         "managementServices": "Management",
-        "nonStandardBundles": "Non-Standard Bundles"
+        "nonStandardBundles": "Non-Standard Bundles",
+        "perpetualSoftware": "Perpetual Software"
       },
       "licenses": "Licenses"
     },
@@ -343,7 +344,7 @@
         },
         "auditAlerts": {
           "title": "Audit Alerts",
-          "subTitle": "A list of alerts which detail security events that have occurred in your environment.",
+          "subTitle": "A list of Activity Log alerts that have occurred in your environment.",
           "viewInAzurePortal": "View in Azure Portal"
         },
         "updateManagement": {
@@ -3023,6 +3024,13 @@
     "dataPlural": "Non-Standard Bundles",
     "noazureNonStandardBundles": "There are no Non-Standard Bundles to display."
   },
+  "azurePerpetualSoftware": {
+    "leftPanelHeader": "Perpetual Software Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of perpetual software services.",
+    "dataSingular": "Perpetual Software Service",
+    "dataPlural": "Perpetual Software Services",
+    "noazurePerpetualSoftware": "There are no Perpetual Software services to display."
+  },
   "extenders": {
     "header": "Extenders",
     "leftPanelHeader": "Extenders Filter",
@@ -3747,6 +3755,7 @@
     "getAzureReservations": "Something went wrong while retrieving your list of Reservations. Please try again.",
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving your list of Software Subscriptions. Please try again.",
     "getAzureNonStandardBundles": "Something went wrong while retrieving your list of Azure Non-Standard Bundles. Please try again.",
+    "getAzurePerpetualSoftware": "Something went wrong while retrieving your list of Azure Perpetual Software. Please try again.",
     "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again.",
     "getBillingSummariesCsv": "Something went wrong while exporting your bill summary. Please try again.",
     "updateGeneric": "Something went wrong while saving. Please try again.",
@@ -4170,6 +4179,7 @@
     "openPrivateCloudTickets": "Open Private Cloud Tickets",
     "ownership": "Ownership",
     "parentReferenceId": "Parent Reference ID",
+    "perpetualSoftware": "Perpetual Software",
     "phone": "Phone",
     "ram": "RAM",
     "referenceId":"Reference ID",
