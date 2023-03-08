@@ -143,6 +143,12 @@ export const defaultPageRoutes: Routes = [
           .then(m => m.AzureNonStandardBundlesModule)
       },
       {
+        path: 'azure/perpetual-software',
+        data: { routeId: RouteKey.AzurePerpetualSoftware },
+        loadChildren: () => import('../../features/azure-perpetual-software/azure-perpetual-software.module')
+          .then(m => m.AzurePerpetualSoftwareModule)
+      },
+      {
         path: 'licenses',
         data: { routeId: RouteKey.Licenses },
         loadChildren: () => import('../../features/licenses/licenses.module').then(m => m.LicensesModule)

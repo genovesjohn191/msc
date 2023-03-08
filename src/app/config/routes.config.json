@@ -354,6 +354,14 @@
     "documentTitle": "Azure Non-Standard Bundles - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnableAzureNonStandardBundles"
   },
+  "azurePerpetualSoftware": {
+    "enumKey": "AzurePerpetualSoftware",
+    "enumCategory": "Azure",
+    "navigationPath": "azure/perpetual-software",
+    "enumPlatform": "Public",
+    "documentTitle": "Azure Perpetual Software - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnableAzurePerpetualSoftware"
+  },
   "azureManagementServices": {
     "enumKey": "AzureManagementServices",
     "enumCategory": "PublicCloud",
