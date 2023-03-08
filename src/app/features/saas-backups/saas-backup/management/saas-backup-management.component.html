@@ -22,8 +22,14 @@
         <!-- Last Backup Attempt Status, Run Time, Daily Schedule -->
         <mat-grid-tile colspan="5">
           <mcs-item>
-            <mcs-icon
-              [key]="jobType.lastBackupAttempt.backupStatusStateIconKey" size="small"></mcs-icon>
+            <ng-container *ngIf="!jobType.hasActiveJob; else showSpinnerTemplate">
+              <mcs-icon
+                [key]="jobType.lastBackupAttempt.backupStatusStateIconKey" size="small"></mcs-icon>
+            </ng-container>
+            <ng-template #showSpinnerTemplate>
+              <mat-spinner class="spinner" diameter="18" matSuffix></mat-spinner>
+            </ng-template>
+            
             <div>
               <ng-container *ngIf="!jobType.hasActiveJob; else runningTemplate">
                 <!-- Status -->
@@ -34,15 +40,11 @@
                   <span read-only>{{ jobType.lastBackupAttempt.statusLabel }}</span>
                 </ng-template>
                 <!-- Run Time -->
-                <ng-container *ngIf="jobType.lastBackupAttempt.runTime; else emptyRunTimeTemplate">
-                  <span> ({{ jobType.lastBackupAttempt.runTime | mcsStdDateFormat: 'short' }})</span>
-                </ng-container>
-                <ng-template #emptyRunTimeTemplate>
-                  <span *ngIf="hasStatusLabel(jobType.lastBackupAttempt?.status)"> (None)</span>
-                </ng-template>
+                <span *ngIf="jobType.lastBackupAttempt.runTime && lastBackupAttemptStatusNotRunning(jobType.lastBackupAttempt.status)">
+                  ({{ jobType.lastBackupAttempt.runTime | mcsStdDateFormat: 'short' }})</span>
               </ng-container>
               <ng-template #runningTemplate>
-                Running  <mat-spinner margin-left-small style="display: inline" class="spinner" diameter="20" matSuffix></mat-spinner>
+                {{ 'label.running' | translate }}
               </ng-template>
 
               <!-- Daily Schedule -->
@@ -50,7 +52,8 @@
                 <mcs-item read-only>
                   <span>{{ 'saasBackup.backupAttempts.dailySchedule' | translate }}</span>
                   <ng-container *ngIf="jobType.dailySchedule | mcsIsNotNullOrEmpty; else noDailyScheduleTemplate">
-                    <span>{{ convertArrayToString(jobType.dailySchedule) }}</span>
+                    <span>{{ convertDailyScheduleToLocalTime(jobType.dailySchedule) }}
+                    </span>
                   </ng-container>
                   <ng-template #noDailyScheduleTemplate>
                     <span>{{ 'saasBackup.backupAttempts.noDailySchedule' | translate }}</span>
@@ -157,18 +160,6 @@
           <td mat-cell *matCellDef="let row">
             <ng-container *ngIf="row.jobName | mcsIsNotNullOrEmpty; else unknownTemplate">
               {{ row.jobName }}
-            </ng-container>
-          </td>
-        </ng-container>
-
-        <!-- Protected Users Column -->
-        <ng-container matColumnDef="protectedUsers">
-          <th mat-header-cell *matHeaderCellDef>
-            {{ 'columnHeader.protectedUsers' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let row">
-            <ng-container *ngIf="row.protectedUsers | mcsIsNotNullOrEmpty; else unknownTemplate">
-              {{ row.protectedUsers }}
             </ng-container>
           </td>
         </ng-container>

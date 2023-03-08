@@ -19,9 +19,6 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
   public generalStatus: string = undefined;
 
   @JsonProperty()
-  public protectedUsers: number = undefined;
-
-  @JsonProperty()
   public startTime: Date = undefined;
 
   @JsonProperty()
@@ -52,8 +49,7 @@ export class McsStorageSaasBackupAttempt extends McsEntityBase {
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
-      case SaasBackupStatus.Running:    // Green
-      case SaasBackupStatus.Success:
+      case SaasBackupStatus.Success:    // Green
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
 
