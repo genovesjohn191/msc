@@ -32,7 +32,6 @@ import { FieldSelectPrerequisite } from '../field-select.prerequisite';
 interface VCenterBaselineQuery {
   vcenterName: Observable<string>;
   companyId: Observable<string>;
-  activeIds: Observable<string[]>;
 }
 
 export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
@@ -50,12 +49,11 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
 
     combineLatest([
       prerequisite?.data.vcenterName,
-      prerequisite?.data.companyId,
-      prerequisite?.data.activeIds
+      prerequisite?.data.companyId
     ]).pipe(
       startWith([null, null, null]),
       takeUntil(this._destroySubject),
-      switchMap(([vcenterName, companyId, activeIds]) => {
+      switchMap(([vcenterName, companyId]) => {
         let query = new McsVCenterBaselineQueryParam();
         query.vcenter = vcenterName || null;
         query.approved = true;
@@ -65,7 +63,6 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
           optionalHeaders.set('company-id', companyId);
           query.optionalHeaders = optionalHeaders;
         }
-        let activeBaselineIds = activeIds || new Array<string>();
 
         return this._apiService.getVCenterBaselines(query, false).pipe(
           map(result => result?.collection
@@ -74,8 +71,8 @@ export class SelectVCenterBaselineDatasource extends FieldSelectDatasource {
               new McsOption(
                 resultItem.id,
                 resultItem.name,
-                `${this._translate.instant('message.remediateBaselineInProgress')}`,
-                activeBaselineIds.find(baselineId => baselineId === resultItem.id),
+                null,
+                false,
                 resultItem
               )
             )

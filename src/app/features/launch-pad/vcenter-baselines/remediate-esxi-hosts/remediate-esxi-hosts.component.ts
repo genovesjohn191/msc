@@ -50,6 +50,10 @@ import {
 } from '@app/utilities';
 
 import { RemediateEsxiHostsViewModel } from './remediate-esxi-hosts.viewmodel';
+export interface OptionDisablingData {
+  isDisabled: boolean;
+  helptext: string
+}
 
 @Component({
   selector: 'mcs-vcenter-remediate-esxi-hosts',
@@ -64,6 +68,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   public companyId$: Observable<string>;
   public vcenterName$: Observable<string>;
   public activeBaselineIds$: Observable<string[]>;
+  public activeHostIds$: Observable<string[]>;
 
   private _remediateHandler: Subscription;
   private _hostGroupChange = new BehaviorSubject<McsOptionGroup[]>(null);
@@ -71,6 +76,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   private _vcenterOptionsChange = new BehaviorSubject<McsOption[]>(null);
   private _dataCentreOptionsChange = new BehaviorSubject<McsOption[]>(null);
   private _activeBaselineIdsChange = new BehaviorSubject<string[]>(null);
+  private _activeHostIdsChange = new BehaviorSubject<string[]>(null);
 
   public constructor(injector: Injector) {
     super(injector);
@@ -93,6 +99,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
     this._registerEventHandlers();
 
     this._subscribeToActiveBaselines();
+    this._subscribeToActiveHosts();
     this._subscribeToCompanyChange();
     this._subscribeToVCenterChange();
     this._subscribeToHostGroups();
@@ -159,6 +166,13 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
 
   private _subscribeToActiveBaselines(): void {
     this.activeBaselineIds$ = this._activeBaselineIdsChange.pipe(
+      takeUntil(this.destroySubject),
+      shareReplay(1)
+    );
+  }
+
+  private _subscribeToActiveHosts(): void {
+    this.activeHostIds$ = this._activeHostIdsChange.pipe(
       takeUntil(this.destroySubject),
       shareReplay(1)
     );
@@ -237,29 +251,45 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
           option => new TreeGroup(option.text, option.value, null, {
             selectable: !option.disabled,
             subscript: option.subscript,
-            disableWhen: (dataId) => this._disableHostFunc(dataId),
-            tooltipFunc: (dataId) => this._disableHostFunc(dataId) ? option.helpText : null
+            disableWhen: (dataId) => this._disableHostFunc(dataId)?.isDisabled,
+            tooltipFunc: (dataId) => this._disableHostFunc(dataId)?.helptext,
           })
         )
       )
     );
   }
 
-  private _disableHostFunc(hostId: string): boolean {
+  private _disableHostFunc(hostId: string): OptionDisablingData {
+    let activeHostIds = this._activeHostIdsChange.getValue() || [];
+    if (activeHostIds.includes(hostId)) {
+      return {
+        isDisabled: true,
+        helptext: this.translate.instant('message.remediateHostInProgress')
+      } as OptionDisablingData;
+    }
+
+    let data: OptionDisablingData = {
+      isDisabled: false,
+      helptext: null
+    };
+
     let baselineId = getSafeFormValue<string>(this.viewModel.fcBaseline);
-    if (isNullOrUndefined(baselineId)) { return false; }
+    if (isNullOrUndefined(baselineId)) { return data; }
 
     let baselines = this._baselineOptionsChange.getValue()?.map(b => b.data) ?? [];
     let baselineFound = (baselines as Array<McsVCenterBaseline>).find(baseline => baseline.id === baselineId);
 
-    if (isNullOrEmpty(baselineFound)) { return false; }
+    if (isNullOrEmpty(baselineFound)) { return data; }
 
     // Check if host is not in the baseline complianceset
     let hostCannotBeRemediate = baselineFound.complianceSet
       ?.filter(cs => cs.status === 'Compliant')
       ?.find(cs => cs.host === hostId);
 
-    return !isNullOrEmpty(hostCannotBeRemediate);
+    return !isNullOrEmpty(hostCannotBeRemediate) ? {
+      isDisabled: true,
+      helptext: this.translate.instant('message.hostNotCompliant')
+    } as OptionDisablingData : data;
   }
 
   private _disableClusterFunc(options: McsOption[]): boolean {
@@ -270,7 +300,7 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
     let hasEnabledItem = false;
 
     for (const host of hosts) {
-      hasEnabledItem = !this._disableHostFunc(host.id);
+      hasEnabledItem = !this._disableHostFunc(host.id)?.isDisabled;
       if (hasEnabledItem) {
         break;
       }
@@ -316,16 +346,19 @@ export class VCenterRemediateEsxiHostsComponent extends McsPageBase implements O
   }
 
   private _onSetRemediateFlag(job: McsJob): void {
-    let baselineId = job?.clientReferenceObject?.baselineId;
-    if (isNullOrEmpty(baselineId)) { return; }
+    let hostIds = job?.clientReferenceObject?.hostIds;
+    let activeHostIds = this._activeHostIdsChange.getValue() || [];
 
-    if (job.inProgress) {
-      this._activeBaselineIdsChange.next([baselineId]);
-      return;
-    }
+    if (isNullOrEmpty(hostIds)) { return; }
 
-    let baselineIds = this._activeBaselineIdsChange.getValue() || [];
-    baselineIds = deleteArrayRecord(baselineIds, existingId => existingId === baselineId);
-    this._activeBaselineIdsChange.next(baselineIds);
+    hostIds.forEach((hostId) => {
+      if(job.inProgress){
+        if(!activeHostIds.includes(hostId)) activeHostIds.push(hostId);
+      }
+      else {
+        deleteArrayRecord(activeHostIds, existingId => existingId === hostId);
+      }
+    });
+    this._activeHostIdsChange.next(activeHostIds);
   }
 }
