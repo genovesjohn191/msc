@@ -35,8 +35,7 @@ export class McsStorageSaasBackupJobTypeLastBackupAttempt {
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
-      case SaasBackupStatus.Running:    // Green
-      case SaasBackupStatus.Success:
+      case SaasBackupStatus.Success:    // Green
         statusIconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
 

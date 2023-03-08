@@ -9,22 +9,19 @@ import {
   map,
   shareReplay,
   switchMap,
-  takeUntil,
-  tap
+  takeUntil
 } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Injector,
   OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 
 import {
-  DataStatus,
   McsFilterInfo,
   McsJob,
   McsSaasBackupAttempt,
@@ -33,6 +30,7 @@ import {
   McsStorageSaasBackupAttemptQueryParams,
   McsStorageSaasBackupBackupAttempt,
   McsStorageSaasBackupJobType,
+  SaasBackupStatus,
   saasBackupStatusText
 } from '@app/models';
 import {
@@ -45,7 +43,7 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import {
-  McsJobEvents,
+  McsDateTimeService,
   McsMatTableContext,
   McsMatTableQueryParam,
   McsTableDataSource2,
@@ -71,7 +69,6 @@ import moment from 'moment';
 })
 
 export class SaasBackupManagementComponent implements OnInit, OnDestroy {
-  public readonly jobEvents: McsJobEvents;
   public readonly dataSource: McsTableDataSource2<McsStorageSaasBackupAttempt>;
   public readonly dataEvents: McsTableEvents<McsStorageSaasBackupAttempt>;
   public readonly defaultColumnFilters: McsFilterInfo[];
@@ -85,21 +82,19 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
   private _currentUserJobHandler: Subscription;
 
   public constructor(
-    injector: Injector,
     private _apiService: McsApiService,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _dateTimeService: McsDateTimeService,
     private _eventDispatcher: EventBusDispatcherService,
     private _saasBackupService: SaasBackupService
   ) {
     this._subscribeToSaasBackupDetails();
-    this.jobEvents = new McsJobEvents(injector);
     this.dataSource = new McsTableDataSource2(this._getSaasBackupBackupAttempt.bind(this));
     this.defaultColumnFilters = [
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'startedOn' }),
       createObject(McsFilterInfo, { value: true, exclude: true, id: 'completedOn' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'jobName' }),
-      createObject(McsFilterInfo, { value: true, exclude: false, id: 'protectedUsers' }),
       createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' })
     ];
     this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
@@ -110,6 +105,10 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     if (!isNullOrEmpty(value)) {
       this.dataSource.registerColumnFilter(value);
     }
+  }
+
+  public get lastBackupAttemptStatusEnum(): typeof SaasBackupStatus {
+    return SaasBackupStatus;
   }
 
   public ngOnInit(): void {
@@ -128,9 +127,13 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     return !isNullOrEmpty(saasBackupStatusText[status]);
   }
 
-  public convertArrayToString(dailySchedule: string[]): string {
-    let convertedArray = dailySchedule.toString().replace(/,/g, ', ');
-    return convertedArray;
+  public lastBackupAttemptStatusNotRunning(status: string): boolean {
+    return status !== SaasBackupStatus.Running;
+  }
+
+  public convertDailyScheduleToLocalTime(dailySchedule: string): string {
+    let formattedDate = this._dateTimeService.formatTimeToLocalTimeSettings(dailySchedule, 'HH:mmA', 'hh:mm A');
+    return formattedDate;
   }
 
   public isDateTimeMoreThanADay(dateTime: Date): boolean {
@@ -149,16 +152,8 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
     let queryParam = new McsSaasBackupAttempt();
     queryParam.type = type;
 
-    this._changeDetectorRef.markForCheck();
-
-    this.jobEvents.setStatus(DataStatus.Active);
-
     this._apiService.attemptSaasBackup(saasId, queryParam).pipe(
-      tap(job => {
-        this.jobEvents.setJobs(job).setStatus(DataStatus.Success);
-      }),
       catchError(error => {
-        this.jobEvents.setStatus(DataStatus.Error);
         return throwError(() => error);
       })
     ).subscribe();
@@ -189,9 +184,7 @@ export class SaasBackupManagementComponent implements OnInit, OnDestroy {
       let activeJobFound = jobType?.type === job?.clientReferenceObject?.type &&
       this._saasBackupService.getSaasBackupId() ===  job?.clientReferenceObject?.saasId;
 
-      if (!activeJobFound) {
-        return;
-      }
+      if (!activeJobFound) { return; }
 
       if (activeJobFound && job?.inProgress) {
         jobType.hasActiveJob = true;

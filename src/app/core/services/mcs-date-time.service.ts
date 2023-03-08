@@ -76,6 +76,13 @@ export class McsDateTimeService {
     return dateTimetoTimezone.toString();
   }
 
+  public formatTimeToLocalTimeSettings(time: string, currentTimeFormat: string, formatType: string): string {
+    if (isNullOrEmpty(time)) { return ''; }
+
+    let localTime = moment.utc(time, currentTimeFormat).local().format(formatType);
+    return localTime;
+  }
+
   /**
    * Validates the date time format based on the given date format
    * @param date date to validate
