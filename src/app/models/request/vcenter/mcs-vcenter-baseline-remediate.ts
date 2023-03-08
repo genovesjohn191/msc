@@ -4,6 +4,7 @@ import { McsApiJobRequestBase } from '../../common/mcs-api-job-request-base';
 
 export interface IMcsVCenterBaselineRemediateRef {
   baselineId: string;
+  hostIds: string[];
 }
 
 export class McsVCenterBaselineRemediate extends McsApiJobRequestBase<IMcsVCenterBaselineRemediateRef> {

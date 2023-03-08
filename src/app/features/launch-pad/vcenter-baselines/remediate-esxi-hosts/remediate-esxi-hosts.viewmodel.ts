@@ -53,7 +53,6 @@ export class RemediateEsxiHostsViewModel extends McsViewModelBase {
     this.fcCompany.setValue(baseline.vCenter?.companyId);
     this.fcVCenter.setValue(baseline.vCenter?.id);
     this.fcBaseline.setValue(baseline.id);
-    this.fcHosts.setValue(baseline.hosts);
   }
 
   public generateApiModel(): McsVCenterBaselineRemediate {
@@ -63,7 +62,8 @@ export class RemediateEsxiHostsViewModel extends McsViewModelBase {
 
     if (this.forUpdate) {
       request.clientReferenceObject = {
-        baselineId: this.baselineId
+        baselineId: this.baselineId,
+        hostIds: hostIds
       }
     }
     return request;
