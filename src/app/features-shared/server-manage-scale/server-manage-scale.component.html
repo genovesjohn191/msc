@@ -79,6 +79,9 @@
         <mcs-error mcsError errorState="memoryStep">
             {{ 'serverShared.manageScale.errors.ramInvalid' | translate: {step: memoryStep} }}
         </mcs-error>
+        <mcs-error mcsError errorState="minumumRamGb">
+          {{ 'serverShared.manageScale.errors.minumumRamGb' | translate: {minumum_ram_gb: minumumRamGb} }}
+        </mcs-error>
       </mcs-form-field>
 
       <mcs-form-field class="form-field-size-small">

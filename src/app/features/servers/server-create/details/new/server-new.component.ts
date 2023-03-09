@@ -205,6 +205,13 @@ export class ServerNewComponent
   }
 
   /**
+   * Returns true when the form is valid
+   */
+   public get minimumOsMemoryMb(): number {
+    return this.fcImage?.value?.minimumMemoryMB;
+  }
+
+  /**
    * Event that emits when the performance scale component has changed
    * @param serverScale Server Scale Result
    */
