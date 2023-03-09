@@ -39,7 +39,7 @@
     <!-- Selection zone -->
     <button mcsButton size="small" (click)="chooFileElement.click()" mcsId="choose-attachment">
       <input #chooFileElement type="file" [accept]="allowedMimeType"
-        ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
+        ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile($event)"/>
       {{ 'shared.fileAttachment.chooseFile' | translate }}
     </button>
   </div>

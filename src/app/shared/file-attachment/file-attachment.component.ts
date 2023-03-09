@@ -110,7 +110,8 @@ export class FileAttachmentComponent implements OnInit {
   /**
    * Notify output parameter when the selection of file is changes
    */
-  public onSelectFile() {
+  public onSelectFile(event: any) {
+    event.target.value = '';
     this._notifyOutputParameter();
   }
 
