@@ -2383,7 +2383,8 @@
         "cpuMin": "The minimum value that can be entered is {{min_value}} vCPUs.",
         "cpuMax": "The number of vCPUs should not exceed {{max_value}}.",
         "cpuInvalid": "vCPU must be a multiple of {{step}}.",
-        "scaledownInvalid": "{{service_type}} Server may not be scaled down."
+        "scaledownInvalid": "{{service_type}} Server may not be scaled down.",
+        "minumumRamGb": "The OS you have selected requires at least {{minumum_ram_gb}} GB of RAM."
       }
     },
     "manageStorage": {

@@ -90,6 +90,7 @@
   <!-- Server RAM -->
   <div class="action-box">
     <mcs-server-manage-scale #fgManageScale
+      [minimumOsMemoryMb]="this.fcImage?.value?.minimumMemoryMB"
       [osType]="fcImage?.value?.type"
       [resource]="resource"
       (dataChange)="onScaleChanged($event)"

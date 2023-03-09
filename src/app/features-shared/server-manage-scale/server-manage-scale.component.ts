@@ -93,6 +93,13 @@ export class ServerManageScaleComponent
   public cpuHotPlugEnabled?: boolean;
 
   @Input()
+  public get minimumOsMemoryMb(): number { return this._minOsMemoryMb; }
+  public set minimumOsMemoryMb(value: number) {
+    this._minOsMemoryMb = value;
+    this._resetFormGroup();
+  }
+
+  @Input()
   public get osType(): Os { return this._osType; }
   public set osType(value: Os) {
     if (this._osType !== value) {
@@ -127,6 +134,7 @@ export class ServerManageScaleComponent
   private _minimumMemoryGB: number;
   private _minimumMemoryByServerType: number = DEFAULT_MIN_MEMORY;
   private _osType: Os = Os.Linux;
+  private _minOsMemoryMb: number = null;
   private _restartServer: boolean;
 
   constructor(
@@ -317,6 +325,7 @@ export class ServerManageScaleComponent
     this.fcCustomCpu.setValue(this.serverCpuUsed);
     this.fcCustomMemory.setValue(this.serverMemoryUsedGB);
     this.fcRestartServer.setValue(false);
+    this._markAsTouchedAutoPopulatedControls();
   }
 
   /**
@@ -385,7 +394,8 @@ export class ServerManageScaleComponent
       CoreValidators.custom(this._memoryCanScaleDown.bind(this), 'scaleDown'),
       (control) => CoreValidators.min(this._minimumMemoryByServerType)(control),
       (control) => CoreValidators.max(this.resourceAvailableMemoryGB)(control),
-      CoreValidators.custom(this._memoryStepIsValid.bind(this), 'memoryStep')
+      CoreValidators.custom(this._memoryStepIsValid.bind(this), 'memoryStep'),
+      CoreValidators.custom(this._minumumRamGb.bind(this), 'minumumRamGb')
     ]);
 
     // Register custom CPU
@@ -493,6 +503,20 @@ export class ServerManageScaleComponent
   private _memoryCanScaleDown(inputValue: any) {
     let minimumSameAsDefaultMinimum = this._minimumMemoryByServerType === this.minimumMemoryGB;
     return minimumSameAsDefaultMinimum ? minimumSameAsDefaultMinimum : inputValue >= this.minimumMemoryGB;
+  }
+
+  /**
+   * Returns true if new value is allowed to be lower than the current memory value.
+   * @param inputValue Value to be checked
+   */
+   private _minumumRamGb(inputValue: any) {
+    if(isNullOrUndefined(this.minimumOsMemoryMb)) { return true }
+    return inputValue >= this.minumumRamGb;
+  }
+
+  public get minumumRamGb() {
+    return isNullOrUndefined(this.minimumOsMemoryMb) ?
+      null : Math.round(convertMbToGb(this.minimumOsMemoryMb) * 100) / 100;
   }
 
   /**
