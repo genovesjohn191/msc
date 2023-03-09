@@ -1,4 +1,7 @@
-import { Observable } from 'rxjs';
+import {
+  forkJoin,
+  Observable
+} from 'rxjs';
 import {
   map,
   tap
@@ -82,7 +85,10 @@ export class FieldSelectBillingAccountComponent
     let typeChange = changes['sourceType'];
     if (isNullOrEmpty(typeChange)) { return; }
 
-    this._initializeBillingAccounts();
+    // Note: We wont be enabling this for now, since the
+    // obtainment of billing is always being refreshed after chaing the sourceType
+    // we want it to detect that the changes only happens in the Input()
+    // this._initializeBillingAccounts();
   }
 
   public ngOnDestroy(): void {
@@ -100,33 +106,46 @@ export class FieldSelectBillingAccountComponent
 
     switch (this.sourceType) {
       case 'daily-user-service':
-        asyncFunc = this._getBillingAccountsByDailyUsersAsync.bind(this);
-        break;
-
-      case 'daily-average-service':
-        asyncFunc = this._getBillingAccountsByDailyAverageAsync.bind(this);
-        break;
-
-      case 'billing-summaries':
       case 'daily-connection-service':
       case 'service-cost':
+      case 'daily-average-service':
+        asyncFunc = this._getBillingAvdSummariesAsync.bind(this);
+        break;
+      case 'billing-summaries':
       default:
         asyncFunc = this._getBillingSummariesAsync.bind(this);
         break;
     }
-
-    console.log('get again', this.sourceType);
 
     this.billingOptions$ = asyncFunc().pipe(
       tap(options => {
         this._billingAccountCount = options?.length;
         this._changeDetectorRef.markForCheck();
 
-        if (isNullOrEmpty(options)) { return; }
-        this.selectedAllByDefault && this._selectRecords(...options);
+        if (isNullOrEmpty(options) || !this.selectedAllByDefault) { return; }
+        this._selectRecords(...options);
       })
     );
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _getBillingAvdSummariesAsync(): Observable<McsOption[]> {
+    return forkJoin([
+      this._getBillingSummariesAsync(),
+      this._getBillingAccountsByDailyUsersAsync(),
+      this._getBillingAccountsByDailyAverageAsync()
+    ]).pipe(
+      map(([summaryOptions, dailyUsersOptions, dailyAverageOptions]) => {
+        let consolidatedOptions = new Array<McsOption>();
+
+        [...(summaryOptions || []), ...(dailyUsersOptions || []), ...(dailyAverageOptions || [])]?.forEach(option => {
+          let optionFound = consolidatedOptions.find(item => item.value === option.value);
+          if (!isNullOrEmpty(optionFound)) { return; }
+          consolidatedOptions.push(option);
+        });
+        return consolidatedOptions;
+      })
+    );
   }
 
   private _getBillingAccountsByDailyUsersAsync(): Observable<McsOption[]> {
