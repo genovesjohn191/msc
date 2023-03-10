@@ -251,9 +251,9 @@
         "noDataFound": "No VMs or no cost data to display."
       },
       "platformSecurityAdvisoriesWidget": {
-        "title": "Platform Security Advisories",
-        "subTitle": "A list of alerts which detail security events that have occurred in your Azure tenancy.",
-        "noDataFound": "No platform security advisories to display."
+        "title": "Platform Advisories",
+        "subTitle": "Azure changes that require your attention or security related notifications that may affect availability.",
+        "noDataFound": "No platform advisories to display."
       },
       "recentServiceWidget": {
         "title": "Recent Service Requests",
