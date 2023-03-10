@@ -64,6 +64,7 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdates[]>;
   public selectedNodes: Array<TreeNode<McsServerOsUpdates>>;
   public snapshot: boolean = false;
+  public restart: boolean = false;
 
   /**
    * Returns true if there are no selected updates, false otherwise
@@ -157,6 +158,7 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
     let request = new McsServerOsUpdatesRequest();
     request.clientReferenceObject = { serverId: this.selectedServer.id };
     request.snapshot = snapshot;
+    request.restart = this.restart;
     request.deleteExistingSnapshot = deleteExistingSnapshot;
     request.updates = [];
     this.selectedNodes.forEach((node) => request.updates.push(node.value.id));

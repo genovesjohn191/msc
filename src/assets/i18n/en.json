@@ -1435,7 +1435,7 @@
       "modules": "Module is required",
       "requestDetails": "Request details is required"
     }
-  }, 
+  },
   "orderChangeApplicationRecoveryQuota": {
     "title": "Change Application Recovery Quota",
     "detailsStep": {
@@ -1903,6 +1903,12 @@
       "updateWithoutSnapshot": "Update without snapshot",
       "updateWithSnapshot": "Snapshot my server before updating"
     },
+    "restartOptionsLabel": "Restart:",
+    "restartOptionsDescription": "Some OS updates may require your server to be restarted before they can be completed.",
+    "restartOptions": {
+      "updateWithoutRestart": "Update without restarting",
+      "updateWithRestart": "Restart my server after updating"
+    },
     "deleteSnapshotConfirmText": "Delete Existing Snapshots",
     "deleteSnapshotDialogTitle": "Existing Snapshot(s) Found",
     "deleteSnapshotDialogMessage": "One or more snapshots already exist for this server. Would you like to delete these snapshots and proceed?",
@@ -1936,6 +1942,12 @@
     "snapshotOptions": {
       "updateWithoutSnapshot": "Update without snapshot",
       "updateWithSnapshot": "Snapshot my server before updating"
+    },
+    "restartOptionsLabel": "Restart:",
+    "restartOptionsDescription": "Some OS updates may require your server to be restarted before they can be completed.",
+    "restartOptions": {
+      "updateWithoutRestart": "Update without restarting",
+      "updateWithRestart": "Restart my server after updating"
     },
     "listLabel": "Which updates should we apply?",
     "listAllSelection": "All Updates",

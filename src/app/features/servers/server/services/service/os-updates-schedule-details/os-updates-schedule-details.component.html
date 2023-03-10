@@ -47,7 +47,7 @@
                 </mcs-grid-row>
 
                 <!-- Schedule Type Recurring -->
-                <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.Recurring">
+                <mcs-grid-row margin-top-small [@fadeIn] *ngSwitchCase="scheduleTypeOption.Recurring">
                   <mcs-grid-column>
 
                     <mcs-item orientation="block">
@@ -91,7 +91,7 @@
                 </mcs-grid-row>
 
                 <!-- Schedule Type Later/RunOnce -->
-                <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.RunOnce">
+                <mcs-grid-row margin-top-small [@fadeIn] *ngSwitchCase="scheduleTypeOption.RunOnce">
                   <mcs-grid-column>
 
                     <mcs-item orientation="block">
@@ -132,7 +132,7 @@
                 </mcs-grid-row>
 
                 <!-- Snapshot Options -->
-                <mcs-grid-row *mcsAccessControl="[]; feature: 'EnableServerOsUpdatesSnapshot'">
+                <mcs-grid-row margin-top-small *mcsAccessControl="[]; feature: 'EnableServerOsUpdatesSnapshot'">
                   <mcs-grid-column>
                     <mcs-item orientation="block" [disabled]="!validToUpdateOs">
                       <strong>{{ 'serverServicesOsUpdatesSchedule.snapshotOptionsLabel' | translate }}</strong>
@@ -144,6 +144,25 @@
                         </mcs-radio-button>
                         <mcs-radio-button [value]="true">
                           {{ 'serverServicesOsUpdatesSchedule.snapshotOptions.updateWithSnapshot' | translate }}
+                        </mcs-radio-button>
+                      </mcs-radio-button-group>
+                    </mcs-item>
+                  </mcs-grid-column>
+                </mcs-grid-row>
+
+                <!-- Restart Option -->
+                <mcs-grid-row margin-top-small>
+                  <mcs-grid-column>
+                    <mcs-item orientation="block" [disabled]="!validToUpdateOs">
+                      <strong>{{ 'serverServicesOsUpdatesSchedule.restartOptionsLabel' | translate }}</strong>
+                      <p>{{ 'serverServicesOsUpdatesSchedule.restartOptionsDescription' | translate }}</p>
+                      <mcs-radio-button-group [(ngModel)]="restart" [ngModelOptions]="{standalone: true}"
+                        mcsId="schedule-restart" >
+                        <mcs-radio-button [value]="false">
+                          {{ 'serverServicesOsUpdatesSchedule.restartOptions.updateWithoutRestart' | translate }}
+                        </mcs-radio-button>
+                        <mcs-radio-button [value]="true">
+                          {{ 'serverServicesOsUpdatesSchedule.restartOptions.updateWithRestart' | translate }}
                         </mcs-radio-button>
                       </mcs-radio-button-group>
                     </mcs-item>

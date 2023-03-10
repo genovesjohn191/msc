@@ -31,6 +31,22 @@
       </mcs-radio-button-group>
     </mcs-item>
 
+    <!-- Restart Options -->
+    <mcs-item orientation="block">
+      <strong>{{ 'serverServicesOsUpdatesApplyNow.restartOptionsLabel' | translate }}</strong>
+      <p>{{ 'serverServicesOsUpdatesApplyNow.restartOptionsDescription' | translate }}</p>
+      <mcs-radio-button-group [(ngModel)]="restart" [ngModelOptions]="{standalone: true}"
+        mcsId="schedule-restart"
+        [disabled]="!validToUpdateOs">
+        <mcs-radio-button [value]="false">
+          {{ 'serverServicesOsUpdatesApplyNow.restartOptions.updateWithoutRestart' | translate }}
+        </mcs-radio-button>
+        <mcs-radio-button [value]="true">
+          {{ 'serverServicesOsUpdatesApplyNow.restartOptions.updateWithRestart' | translate }}
+        </mcs-radio-button>
+      </mcs-radio-button-group>
+    </mcs-item>
+    
     <!-- Action Buttons -->
     <mcs-item>
       <strong>
