@@ -111,12 +111,8 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   private _optionsEth2Eth3 = new BehaviorSubject<FlatOption[]>(null);
   private _destroySubject = new Subject<void>();
 
-  private get _interfaceList(): string[] {
-    if (this.isEsxi) {
-      return ['eth0', 'eth1', 'eth2', 'eth3'];
-    }
-    return ['eth0', 'eth1'];
-  }
+  private _initialInterfaceList: string[] = ['eth0', 'eth1'];
+  private _secondaryInterfaceList: string[] = ['eth2', 'eth3'];
 
   @ViewChild('treeViewSelect')
   public treeViewSelect: FieldSelectTreeViewComponent<any>;
@@ -283,6 +279,17 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   }
 
   private _onNetworkEth2Eth3Change(selectedNetworks: string[]): void {
+    let secondaryFields = this._networkInterfaceValue.filter(i => this._secondaryInterfaceList.includes(i.networkInterface));
+    if(isNullOrEmpty(secondaryFields)) { 
+      this._secondaryInterfaceList.forEach(item => {
+        let networkInterface: NetworkInterface = {
+          networkInterface: item,
+          uuids: []
+        };
+        this._networkInterfaceValue.push(networkInterface);
+      });
+    }
+    
     this._networkInterfaceValue.forEach(networkInterface => {
       if (networkInterface.networkInterface === 'eth2' || networkInterface.networkInterface === 'eth3') {
         networkInterface.uuids = selectedNetworks;
@@ -292,6 +299,9 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   }
 
   private _updateValue() {
+    if(isNullOrEmpty(this.inputCtrlEth2Eth3.value)){
+      this._networkInterfaceValue.splice(2, 2);
+    }
     this.config.value = this._networkInterfaceValue;
     this.valueChange(this.config.value);
     this._eventDispatcher.dispatch(McsEvent.dataChangeCreateNetworkPanelsEvent);
@@ -334,7 +344,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
 
   private _initializeNetworkValue(): void {
     this._networkInterfaceValue = [];
-    this._interfaceList.forEach(item => {
+    this._initialInterfaceList.forEach(item => {
       let networkInterface: NetworkInterface = {
         networkInterface: item,
         uuids: []
