@@ -406,16 +406,17 @@
 
           <!-- Bill Summary -->
           <li *mcsAccessControl="['BillingView']; feature: 'EnableAzureConsolidatedBilling'">
-            <a [mcsRouterLink]="routeKeyEnum.Billing"
-              mcsStopPropagation
-              mcsId="bill-summary-link"
-              mcsEventTracker="navigate-to-bill-summary"
-              mcsEventCategory="navigation"
-              mcsEventLabel="main-nav"
-              (click)="toggleThis('showBillSummarySubMenu')"
-              [class.active]="selectedCategory === routerCategoryEnum.Billing">
-              {{ 'navigation.billSummary' | translate }}
+            <a [class.active]="selectedCategory === routerCategoryEnum.Billing">
+              <span mcsId="bill-summary-link"
+                mcsEventTracker="navigate-to-bill-summary"
+                mcsEventCategory="navigation"
+                mcsEventLabel="main-nav"
+                [mcsRouterLink]="routeKeyEnum.Billing" mcsStopPropagation>
+                {{ 'navigation.billSummary' | translate }}
+              </span>
+
               <mcs-icon *mcsAccessControl="['BillingView']; feature: 'EnableAzureVirtualDesktopBillSummary'"
+                (click)="toggleThis('showBillSummarySubMenu')"
                 [key]="showBillSummarySubMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small">
               </mcs-icon>
             </a>
