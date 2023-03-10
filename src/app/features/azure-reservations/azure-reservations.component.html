@@ -32,7 +32,8 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureReservations.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         [storageKey]="featureName"
-        [defaultFilters]="defaultColumnFilters">
+        [defaultFilters]="defaultColumnFilters"
+        [filterPredicate]="filterPredicate">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>

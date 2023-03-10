@@ -53,6 +53,7 @@ export class AzureReservationsComponent extends McsPageBase {
 
   public readonly dataSource: McsTableDataSource2<McsAzureReservation>;
   public readonly dataEvents: McsTableEvents<McsAzureReservation>;
+  public readonly filterPredicate = this._isColumnIncluded.bind(this);
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'productName' }),
@@ -137,6 +138,15 @@ export class AzureReservationsComponent extends McsPageBase {
     return (compareDates(reservation.commitmentEndDate, addDaysToDate(getCurrentDate(), 7)) < 1
       && compareDates(reservation.commitmentEndDate, getCurrentDate()) === 1
       && !reservation.autoRenewEnabled);
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    // temporarily hide this column as per FUSION-9717
+    if (filter.id === 'utilisation') {
+      return false;
+    }
+
+    return true;
   }
 
   private _getAzureReservations(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureReservation>> {
