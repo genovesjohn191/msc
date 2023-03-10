@@ -19,5 +19,8 @@ export class McsServerOsUpdatesSchedule extends McsEntityBase {
   public runOnce: boolean = undefined;
 
   @JsonProperty()
+  public restart: boolean = undefined;
+
+  @JsonProperty()
   public snapshot: boolean = undefined;
 }

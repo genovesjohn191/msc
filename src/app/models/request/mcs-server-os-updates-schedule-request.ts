@@ -8,6 +8,9 @@ export class McsServerOsUpdatesScheduleRequest {
   public snapshot: boolean = undefined;
 
   @JsonProperty()
+  public restart: boolean = undefined;
+
+  @JsonProperty()
   public crontab: string = undefined;
 
   @JsonProperty()

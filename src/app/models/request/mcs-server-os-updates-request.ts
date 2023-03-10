@@ -16,5 +16,8 @@ export class McsServerOsUpdatesRequest extends McsApiJobRequestBase<IMcsServerOs
   public snapshot: boolean = undefined;
 
   @JsonProperty()
+  public restart: boolean = undefined;
+
+  @JsonProperty()
   public deleteExistingSnapshot?: boolean = undefined;
 }
