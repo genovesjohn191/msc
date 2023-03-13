@@ -19,6 +19,9 @@ export class McsNotice extends McsEntityBase {
   @JsonProperty()
   public description: string = undefined;
 
+  @JsonProperty()
+  public htmlDescription: string = undefined;
+
   @JsonProperty({
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization

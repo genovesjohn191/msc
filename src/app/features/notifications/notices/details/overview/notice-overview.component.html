@@ -44,13 +44,13 @@
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'label.description' | translate }}</h2>
         </ng-container>
-
         <div>
-          <ng-container *ngIf="(selectedNotice.description); else NoDescription">
-            <span [innerHTML]="selectedNotice.description"></span>
+          <ng-container *ngIf="selectedNotice.htmlDescription; else plainTextDescription">
+            <div [innerHTML]="cleanUpCustomHtml(selectedNotice.htmlDescription)"></div>
           </ng-container>
-          <ng-template #NoDescription>
-            <span [mcsGreyedOut]="true">{{ 'message.noDescription' | translate }}</span>
+          <ng-template #plainTextDescription>
+            <div *ngIf="selectedNotice.description">{{ selectedNotice.description }}</div>
+            <span read-only *ngIf="!selectedNotice.description">{{ 'message.noDescription' | translate }}</span>
           </ng-template>
         </div>
       </mcs-presentation-panel>

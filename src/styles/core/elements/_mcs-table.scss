@@ -302,3 +302,11 @@ table.nested-table {
     }
   }
 }
+
+table.custom-html {
+  overflow-wrap: anywhere;
+
+  td {
+     white-space: pre-wrap;
+  }
+}

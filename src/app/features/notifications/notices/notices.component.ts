@@ -109,9 +109,12 @@ export class NoticesComponent implements OnDestroy {
     this._navigationService.navigateTo(RouteKey.Notice, [notice.id]);
   }
 
-  public removeHTMLTag(description: string): string {
+  public removeHTMLTagAndFormat(description: string): string {
     if (isNullOrEmpty(description)) { return; }
-    return description.replace(/(<([^>]+)>)/gi, '');
+    description = description.replace(/<\/p>/gi, '\r\n\r\n');
+    description = description.replace(/<br ? \/?>/gi, '\r\n');
+    description = description.replace(/(<([^>]+)>)/gi, '');
+    return description;
   }
 
   private _getNotices(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNotice>> {
