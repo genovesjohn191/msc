@@ -43,14 +43,21 @@
       {{ 'columnHeader.description' | translate }}
     </th>
     <td mat-cell *matCellDef="let row" hidden-small>
-      <ng-container *ngIf="(row.description); else NoDesc">
-        <span [matTooltipDisabled]="(row.description.length <= 60)"
-          [matTooltip]="removeHTMLTag(row.description)"
-          [innerHTML]="(row.description.length > 60)? (removeHTMLTag(row.description) | slice:0:60)+'..':(row.description)">
+      <ng-container *ngIf="(row.htmlDescription); else plainTextDescription">
+        <span [matTooltipDisabled]="(row.htmlDescription.length <= 60)"
+          [matTooltip]="removeHTMLTagAndFormat(row.htmlDescription)"
+          [innerHTML]="(row.htmlDescription.length > 60)? (removeHTMLTagAndFormat(row.htmlDescription) | slice:0:60)+'..':(row.htmlDescription)">
         </span>
       </ng-container>
-      <ng-template #NoDesc>
-        <span [mcsGreyedOut]="true">None</span>
+      <ng-template #plainTextDescription>
+        <ng-container>
+          <span *ngIf="row.description"
+            [matTooltipDisabled]="(row.description.length <= 60)"
+            [matTooltip]="removeHTMLTagAndFormat(row.description)"
+            [innerHTML]="(row.description.length > 60)? (removeHTMLTagAndFormat(row.description) | slice:0:60)+'..':(row.description)">
+          </span>
+          <span *ngIf="!row.description" read-only>None</span>
+        </ng-container>
       </ng-template>
     </td>
   </ng-container>
