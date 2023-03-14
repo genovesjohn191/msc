@@ -44,17 +44,12 @@
     </th>
     <td mat-cell *matCellDef="let row" hidden-small>
       <ng-container *ngIf="(row.htmlDescription); else plainTextDescription">
-        <span [matTooltipDisabled]="(row.htmlDescription.length <= 60)"
-          [matTooltip]="removeHTMLTagAndFormat(row.htmlDescription)"
-          [innerHTML]="(row.htmlDescription.length > 60)? (removeHTMLTagAndFormat(row.htmlDescription) | slice:0:60)+'..':(row.htmlDescription)">
+        <span [innerHTML]="(row.htmlDescription.length > 60)? (removeHTMLTagAndFormat(row.htmlDescription) | slice:0:60)+'..':(row.htmlDescription)">
         </span>
       </ng-container>
       <ng-template #plainTextDescription>
         <ng-container>
-          <span *ngIf="row.description"
-            [matTooltipDisabled]="(row.description.length <= 60)"
-            [matTooltip]="removeHTMLTagAndFormat(row.description)"
-            [innerHTML]="(row.description.length > 60)? (removeHTMLTagAndFormat(row.description) | slice:0:60)+'..':(row.description)">
+          <span *ngIf="row.description" [innerHTML]="(row.description.length > 60)? (removeHTMLTagAndFormat(row.description) | slice:0:60)+'..':(row.description)">
           </span>
           <span *ngIf="!row.description" read-only>None</span>
         </ng-container>
