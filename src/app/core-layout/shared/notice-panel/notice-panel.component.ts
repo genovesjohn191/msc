@@ -23,7 +23,9 @@ import {
 import { McsApiService } from '@app/services';
 import {
   CommonDefinition,
-  refreshView
+  isNullOrEmpty,
+  refreshView,
+  removeHTMLTagAndFormat
 } from '@app/utilities';
 import { McsNotificationNoticeService } from '@app/core';
 
@@ -71,6 +73,10 @@ export class NoticePanelComponent {
     this.acknowledgeInProgress = true;
     this._changeDetectorRef.markForCheck();
     this._acknowledgeNotice(notice);
+  }
+
+  public removeHTMLTagAndFormat(description: string): string {
+    return removeHTMLTagAndFormat(description);
   }
 
   public isCreatedOnMoreThanADay(createdOn: Date): boolean {

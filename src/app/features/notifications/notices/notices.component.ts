@@ -34,7 +34,8 @@ import {
 import {
   getSafeProperty,
   isNullOrEmpty,
-  isNullOrUndefined
+  isNullOrUndefined,
+  removeHTMLTagAndFormat
 } from '@app/utilities';
 import { NotificationsService } from '../notifications.component.service';
 
@@ -110,11 +111,7 @@ export class NoticesComponent implements OnDestroy {
   }
 
   public removeHTMLTagAndFormat(description: string): string {
-    if (isNullOrEmpty(description)) { return; }
-    description = description.replace(/<\/p>/gi, '\r\n\r\n');
-    description = description.replace(/<br ? \/?>/gi, '\r\n');
-    description = description.replace(/(<([^>]+)>)/gi, '');
-    return description;
+    return removeHTMLTagAndFormat(description);
   }
 
   private _getNotices(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNotice>> {

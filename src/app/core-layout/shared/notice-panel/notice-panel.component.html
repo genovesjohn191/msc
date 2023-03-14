@@ -27,12 +27,18 @@
       </strong>
 
       <small class="notice-panel-message">
-        <ng-container *ngIf="(notice.description); else NoDesc">
-          <span [innerHTML]="(notice.description.length > 70)? (notice.description | slice:0:70)+'..':(notice.description)">
+        <ng-container *ngIf="(notice.htmlDescription); else plainTextDescription">
+          <span [innerHTML]="(notice.htmlDescription.length > 70)? (removeHTMLTagAndFormat(notice.htmlDescription) | slice:0:70)+'..': (notice.htmlDescription)">
           </span>
         </ng-container>
-        <ng-template #NoDesc>
-          <span [mcsGreyedOut]="true">None</span>
+        <ng-template #plainTextDescription>
+          <ng-container *ngIf="(notice.description); else noDescription">
+            <span [innerHTML]="(notice.description.length > 70)? (removeHTMLTagAndFormat(notice.description) | slice:0:70)+'..': (notice.description)">
+            </span>
+          </ng-container>
+          <ng-template #noDescription>
+            <span [mcsGreyedOut]="true">None</span>
+          </ng-template>
         </ng-template>
       </small>
 

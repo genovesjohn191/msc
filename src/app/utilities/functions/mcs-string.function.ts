@@ -1,3 +1,5 @@
+import { isNullOrEmpty } from "./mcs-object.function";
+
 const regex = /\w\S*/g;
 const DEFAULT_PHONENUMBER_FORMAT_REGEX: RegExp = /^(\d{4})(\d{3})(\d{3})$/;
 const FIRST_LETTER_OF_EACH_WORD_TO_UPPERCASE_REGEX: RegExp = /(^\w{1})|(\s+\w{1})/g;
@@ -189,4 +191,12 @@ export function formatStringToPhoneNumber(
 
 export function formatFirstLetterOfEachWordToUpperCase(source: string): string {
   return source.replace(FIRST_LETTER_OF_EACH_WORD_TO_UPPERCASE_REGEX, letter => letter.toUpperCase());
+}
+
+export function removeHTMLTagAndFormat(description: string): string {
+  if (isNullOrEmpty(description)) { return; }
+  description = description.replace(/<\/p>/gi, '\r\n\r\n');
+  description = description.replace(/<br ? \/?>/gi, '\r\n');
+  description = description.replace(/(<([^>]+)>)/gi, '');
+  return description;
 }
