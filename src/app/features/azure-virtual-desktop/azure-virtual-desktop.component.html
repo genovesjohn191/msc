@@ -14,9 +14,9 @@
           mcsTooltipPosition="right"></mcs-loader>
       </ng-container>
 
-      <div mcsAlign="end" padding-right-xlarge *ngIf="tabEvents?.selectedTabId$ | async as selectedSource">
+      <div mcsAlign="end" padding-right-xlarge>
         <mcs-field-select-billing-account #selectBillingRef
-          [sourceType]="selectedSource"
+          sourceType="billing-avd"
           [selectedAllByDefault]="true"
           [formControl]="fcBillingAccount">
         </mcs-field-select-billing-account>
