@@ -51,9 +51,7 @@ export class FieldSelectBillingAccountComponent
   public selectedAllByDefault: boolean;
 
   @Input()
-  public sourceType: 'billing-summaries' | 'daily-user-service'
-    | 'daily-average-service' | 'service-cost'
-    | 'daily-connection-service' = 'billing-summaries';
+  public sourceType: 'billing-summaries' | 'billing-avd' = 'billing-summaries';
 
   public billingOptions$: Observable<McsOption[]>;
 
@@ -85,9 +83,9 @@ export class FieldSelectBillingAccountComponent
     let typeChange = changes['sourceType'];
     if (isNullOrEmpty(typeChange)) { return; }
 
-    // Note: We wont be enabling this for now, since the
-    // obtainment of billing is always being refreshed after chaing the sourceType
-    // we want it to detect that the changes only happens in the Input()
+    // TODO: We want to remove it from now, since the obtainment of billing account
+    // would get twice in api once this one is uncommented.
+    // Otherwise, we can declare a subject pipe and do a exhaustMap instead
     // this._initializeBillingAccounts();
   }
 
@@ -105,10 +103,7 @@ export class FieldSelectBillingAccountComponent
     let asyncFunc: () => Observable<McsOption[]>;
 
     switch (this.sourceType) {
-      case 'daily-user-service':
-      case 'daily-connection-service':
-      case 'service-cost':
-      case 'daily-average-service':
+      case 'billing-avd':
         asyncFunc = this._getBillingAvdSummariesAsync.bind(this);
         break;
       case 'billing-summaries':
