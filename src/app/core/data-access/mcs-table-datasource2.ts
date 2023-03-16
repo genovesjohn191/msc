@@ -335,7 +335,13 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     this._sort.sortChange.pipe(
       takeUntil(this._sortSubject),
       tap(() => {
+        this._paginator?.reset();
         this._requestUpdate.next();
+
+        if (this._configuration?.applyDefaultPagination) { 
+          this._dataRecordsChange.next(null);
+        }
+
         this._sortingChange.next(true);
       })
     ).subscribe();
