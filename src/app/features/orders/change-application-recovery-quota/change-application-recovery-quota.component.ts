@@ -68,7 +68,7 @@ const NUMBER_OF_VMS_MIN = 1;
 const NUMBER_OF_VMS_MAX = 100;
 
 type ChangeApplicationRecoveryQuotaProperties = {
-  journalSize: any,
+  journalSizeGB: any,
   journalHistory: string;
   numberOfVMs: number;
 };
@@ -267,7 +267,7 @@ export class ChangeApplicationRecoveryQuotaComponent extends McsOrderWizardBase 
             serviceId: this.fcService.value.value,
             deliveryType: DeliveryType.Standard,
             properties: {
-              journalSize: this.journalSizeApplicable? this.fcJournalSize.value : null,
+              journalSizeGB: this.journalSizeApplicable? this.fcJournalSize.value : null,
               journalHistory: formatStringToText(this.fcJournalHistory.value).toLowerCase(),
               numberOfVMs: this.fcNumberOfVMs.value
             } as ChangeApplicationRecoveryQuotaProperties
