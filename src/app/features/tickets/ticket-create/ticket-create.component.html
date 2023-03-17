@@ -143,6 +143,14 @@
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (nonStandardBundles$ | async), serviceTitle: 'Non-Standard Bundles'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (perpetualSoftware$ | async), serviceTitle: 'Perpetual Software'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (colocationRacks$ | async), serviceTitle: 'Racks'}">
               </ng-container>
 

@@ -116,6 +116,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public veeamBackups$: Observable<TicketService[]>;
   public veeamDrs$: Observable<TicketService[]>;
   public saasBackups$: Observable<TicketService[]>;
+  public nonStandardBundles$: Observable<TicketService[]>;
+  public perpetualSoftware$: Observable<TicketService[]>;
 
   public serversList$: Observable<McsServer[]>;
   public vdcList$: Observable<McsResource[]>;
@@ -186,6 +188,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToVeeamBackups();
     this._subscribesToVeeamDrs();
     this._subscribesToSaasBackups();
+    this._subscribesToNonStandardBundles();
+    this._subscribesToPerpetualSoftware();
   }
 
   public ngOnDestroy() {
@@ -894,6 +898,42 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             `${service.billingDescription} (${service.serviceId})`,
             service.serviceId,
             TicketServiceType.VeeamDr
+          ));
+      })
+    );
+  }
+
+  private _subscribesToNonStandardBundles(): void {
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.NonStandardBundlesListing])) {
+      return;
+    }
+
+    this.nonStandardBundles$ = this._apiService.getAzureNonStandardBundles().pipe(
+      map((response) => {
+        let nonStandardBundles = getSafeProperty(response, (obj) => obj.collection);
+        return nonStandardBundles.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(
+            `${service.billingDescription} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.NonStandardBundles
+          ));
+      })
+    );
+  }
+
+  private _subscribesToPerpetualSoftware(): void {
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.PerpetualSoftwareListing])) {
+      return;
+    }
+
+    this.perpetualSoftware$ = this._apiService.getAzurePerpetualSoftware().pipe(
+      map((response) => {
+        let perpetualSoftware = getSafeProperty(response, (obj) => obj.collection);
+        return perpetualSoftware.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(
+            `${service.name} (${service.serviceId})`,
+            service.serviceId,
+            TicketServiceType.PerpetualSoftware
           ));
       })
     );
