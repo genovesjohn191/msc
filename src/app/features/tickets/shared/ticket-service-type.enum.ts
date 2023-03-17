@@ -11,6 +11,8 @@ export enum TicketServiceType {
   Licenses = 'Licenses',
   MicrosoftManagementServices = 'Microsoft Management Services',
   MicrosoftSubscriptions = 'Microsoft Subscriptions',
+  NonStandardBundles = 'Non-Standard Bundles',
+  PerpetualSoftware = 'Perpetual Software',
   Racks = 'Racks',
   Reservations = 'Reservations',
   Rooms = 'Rooms',
