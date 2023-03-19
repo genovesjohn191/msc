@@ -329,6 +329,9 @@ export class FieldSelectTreeViewComponent<TEntity>
         const descendants = this.treeControl.getDescendants(node) || [];
         if (!isNullOrEmpty(descendants) && node.expandable) {
           descendants?.forEach(descendant => {
+            if (descendant.disableWhen && descendant.disableWhen(descendant.data)) {
+              return;
+            };
             descendant.checkbox.setValue(nextValue);
             descendant.checkbox.markAsTouched();
           });
