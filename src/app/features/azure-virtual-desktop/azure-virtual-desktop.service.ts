@@ -133,9 +133,10 @@ export class AzureVirtualDesktopService {
   public exportCsvByTab(tab: TabGroupType): Observable<any> {
     let tabGroupMap = new Map<TabGroupType, () => Observable<any>>();
 
-    tabGroupMap.set('service-cost', this._exportBillingSummariesCsv.bind(this));
+    tabGroupMap.set(null, this._exportDailyUsersCsv.bind(this));
     tabGroupMap.set('daily-user-service', this._exportDailyUsersCsv.bind(this));
     tabGroupMap.set('daily-user-average', this._exportDailyAverageCsv.bind(this));
+    tabGroupMap.set('service-cost', this._exportBillingSummariesCsv.bind(this));
     tabGroupMap.set('daily-connection-service', this._exportDailyUsersCsv.bind(this));
 
     let targetFunc = tabGroupMap.get(tab);
