@@ -4,6 +4,7 @@ import {
 } from 'rxjs';
 
 import { Injector } from '@angular/core';
+import { McsDateTimeFormat } from '@app/core';
 import {
   McsOption,
   McsReportBillingAvdDailyUser
@@ -72,10 +73,13 @@ export class BillingAvdDailyUserServiceOperation
   }
 
   protected mapToChartItem(item: BillingAvdDailyUserServiceItem): ChartItem {
+    let currentYear = new Date().getFullYear();
+    let dateFormat = item.date.getFullYear() === currentYear ? 'mediumDateNoYear' : 'mediumDate';
+
     let chartItem = {
       id: item.id,
       name: item.serviceId,
-      xValue: this.datePipe.transform(getDateOnly(item.date), 'dayMonth'),
+      xValue: this.datePipe.transform(getDateOnly(item.date), dateFormat as McsDateTimeFormat),
       yValue: item.users
     } as ChartItem;
     return chartItem;

@@ -11,7 +11,8 @@
         mcsId="select-month"
         [label]="'label.month' | translate"
         [dataSource]="'Month' | mcsFieldSelect"
-        [formControl]="fcMonth">
+        [formControl]="fcMonth"
+        [disabled]="dataProcess.inProgress$ | async">
       </mcs-field-select>
     </mcs-item>
   </mcs-item>
