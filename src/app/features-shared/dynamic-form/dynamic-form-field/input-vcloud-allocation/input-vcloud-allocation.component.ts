@@ -76,28 +76,28 @@ export class DynamicInputVcloudAllocationComponent extends DynamicFieldComponent
   public mapVcpuAllocationCrispElementAttributes(): number {
     if (this.config.crispProductType !== ProductType.FlexVirtualDataCenter) {
       return coerceNumber(this.config.crispElementServiceAttributes?.find(
-        (attrib) => attrib.code === CrispAttributeNames.NoVcores).value);
+        (attrib) => attrib.code === CrispAttributeNames.NoVcores)?.value) || 0;
     }
     let vdcCore = coerceNumber(this.config.crispElementServiceAttributes?.find(
-      (attrib) => attrib.code === CrispAttributeNames.VdcNoVcores).value);
+      (attrib) => attrib.code === CrispAttributeNames.VdcNoVcores)?.value) || 0;
     if (vdcCore !== 0) {
       return vdcCore;
     }
     return coerceNumber(this.config.crispElementServiceAttributes?.find(
-      (attrib) => attrib.code === CrispAttributeNames.VdcAlwysOnVcore).value);
+      (attrib) => attrib.code === CrispAttributeNames.VdcAlwysOnVcore)?.value) || 0;
   }
 
   public mapMemoryAllocationMBCrispElementAttributes(): number {
     if (this.config.crispProductType !== ProductType.FlexVirtualDataCenter) {
       return coerceNumber(this.config.crispElementServiceAttributes?.find(
-        (attrib) => attrib.code === CrispAttributeNames.Ic2Ram).value);
+        (attrib) => attrib.code === CrispAttributeNames.Ic2Ram)?.value) || 0;
     }
     let vdcRam = coerceNumber(this.config.crispElementServiceAttributes?.find(
-      (attrib) => attrib.code === CrispAttributeNames.VdcRam).value);
+      (attrib) => attrib.code === CrispAttributeNames.VdcRam)?.value) || 0;
     if (vdcRam !== 0) {
       return vdcRam;
     }
     return coerceNumber(this.config.crispElementServiceAttributes?.find(
-      (attrib) => attrib.code === CrispAttributeNames.VdcAlwysOnRam).value);
+      (attrib) => attrib.code === CrispAttributeNames.VdcAlwysOnRam)?.value) || 0;
   }
 }

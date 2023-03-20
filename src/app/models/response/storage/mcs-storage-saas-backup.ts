@@ -29,9 +29,6 @@ export class McsStorageSaasBackup extends McsEntityBase {
   public licensedUserQuantity: number = undefined;
 
   @JsonProperty()
-  public unlicensedUserQuantity: number = undefined;
-
-  @JsonProperty()
   public tenantDomain: string = undefined;
 
   @JsonProperty()

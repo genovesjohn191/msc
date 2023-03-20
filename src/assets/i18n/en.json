@@ -2915,8 +2915,7 @@
       "tenant": "Tenant",
       "domain": "Domain",
       "type": "Type",
-      "totalLicensedUsers": "Total Licensed Users",
-      "totalUnlicensedUsers": "Total Unlicensed Users"
+      "totalLicensedUsers": "Total Licensed Users"
     },
     "backupStatistics": {
       "firstBackupTime": "First Backup Time",
