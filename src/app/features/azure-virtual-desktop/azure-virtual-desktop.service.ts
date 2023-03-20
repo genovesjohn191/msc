@@ -55,8 +55,9 @@ export class AzureVirtualDesktopService {
   public dataProcess = new DataProcess();
   public fcMonth = new FormControl(new Date().getMonth(), []);
   public fcMonthConnection = new FormControl(new Date().getMonth(), []);
+  public currentBillingAccountIds: string[];
 
-  private _billingAccountIdChange = new EventEmitter<string>();
+  private _billingAccountIdChange = new EventEmitter<string[]>();
 
   private _billingServicesChange = new BehaviorSubject<McsReportBillingServiceGroup[]>(null);
   private _dailyUsersServiceChange = new BehaviorSubject<McsReportBillingAvdDailyUser[]>(null);
@@ -71,7 +72,7 @@ export class AzureVirtualDesktopService {
     this._subscribeToBillingAccountChange();
   }
 
-  public get billingAccountId$(): Observable<string> {
+  public get billingAccountId$(): Observable<String[]> {
     return this._billingAccountIdChange.pipe(
       distinctUntilChanged()
     );
@@ -101,8 +102,8 @@ export class AzureVirtualDesktopService {
     );
   }
 
-  public setBillingAccountId(accountId: string): void {
-    this._billingAccountIdChange.emit(accountId);
+  public setBillingAccountIds(accountIds: string[]): void {
+    this._billingAccountIdChange.emit(accountIds);
   }
 
   public getAssociatedDates(coverage: 'daily' | 'monthly' = 'monthly', monthIndex?: number): { before: string, after: string } {
@@ -137,7 +138,7 @@ export class AzureVirtualDesktopService {
     tabGroupMap.set('daily-user-service', this._exportDailyUsersCsv.bind(this));
     tabGroupMap.set('daily-user-average', this._exportDailyAverageCsv.bind(this));
     tabGroupMap.set('service-cost', this._exportBillingSummariesCsv.bind(this));
-    tabGroupMap.set('daily-connection-service', this._exportDailyUsersCsv.bind(this));
+    tabGroupMap.set('daily-connection-service', this._exportDailyConnectionsCsv.bind(this));
 
     let targetFunc = tabGroupMap.get(tab);
     if (isNullOrEmpty(targetFunc)) { return of(null); }
@@ -149,6 +150,7 @@ export class AzureVirtualDesktopService {
     let dateParams = this.getAssociatedDates();
 
     let query = new McsReportBillingSummaryParams();
+    query.billingAccountId = this.currentBillingAccountIds.join(',');
     query.microsoftChargeMonthRangeBefore = dateParams.before;
     query.microsoftChargeMonthRangeAfter = dateParams.after;
 
@@ -168,9 +170,29 @@ export class AzureVirtualDesktopService {
   }
 
   public _exportDailyUsersCsv(): Observable<any> {
-    let dateParams = this.getAssociatedDates();
+    let dateParams = this.getAssociatedDates('daily',this.fcMonth.value);
 
     let query = new McsReportBillingAvdDailyUsersParam();
+    query.billingAccountId = this.currentBillingAccountIds.join(',');
+    query.dateRangeBefore = dateParams.before;
+    query.dateRangeAfter = dateParams.after;
+
+    return this._apiService.getAvdDailyUsersCsv(query).pipe(
+      tap((response: Blob) => {
+        if (isNullOrEmpty(response)) { return; }
+
+        DashboardExportDocumentManager.initializeFactories()
+          .getCreationFactory(DashboardExportDocumentType.CsvDocument)
+          .exportDocument(response, DashboardExportDocumentType.CsvDocument, this._injector);
+      })
+    );
+  }
+
+  public _exportDailyConnectionsCsv(): Observable<any> {
+    let dateParams = this.getAssociatedDates('daily',this.fcMonthConnection.value);
+
+    let query = new McsReportBillingAvdDailyUsersParam();
+    query.billingAccountId = this.currentBillingAccountIds.join(',');
     query.dateRangeBefore = dateParams.before;
     query.dateRangeAfter = dateParams.after;
 
@@ -189,6 +211,7 @@ export class AzureVirtualDesktopService {
     let dateParams = this.getAssociatedDates();
 
     let query = new McsReportBillingAvdDailyAverageUsersParam();
+    query.billingAccountId = this.currentBillingAccountIds.join(',');
     query.microsoftChargeMonthRangeBefore = dateParams.before;
     query.microsoftChargeMonthRangeAfter = dateParams.after;
 
@@ -211,12 +234,13 @@ export class AzureVirtualDesktopService {
       this.fcMonth.valueChanges.pipe(startWith(new Date().getMonth()))
     ]).pipe(
       distinctUntilChanged((prev, next) => compareJsons(prev, next) === 0),
-      exhaustMap(([accountId, monthIndex]) => {
+      exhaustMap(([accountIds, monthIndex]) => {
+        this.currentBillingAccountIds = accountIds? accountIds : [];
         this.dataProcess.setInProgress();
         return forkJoin([
-          this._getBillingServices(accountId),
-          this._getBillingAvdDailyUsersService(accountId, +monthIndex),
-          this._getBillingAvdDailyUsersAverage(accountId)
+          this._getBillingServices(this.currentBillingAccountIds),
+          this._getBillingAvdDailyUsersService(this.currentBillingAccountIds, +monthIndex),
+          this._getBillingAvdDailyUsersAverage(this.currentBillingAccountIds)
         ]).pipe(
           finalize(() => this.dataProcess.setCompleted())
         )
@@ -228,10 +252,11 @@ export class AzureVirtualDesktopService {
       this.fcMonthConnection.valueChanges.pipe(startWith(new Date().getMonth()))
     ]).pipe(
       distinctUntilChanged((prev, next) => compareJsons(prev, next) === 0),
-      exhaustMap(([accountId, monthIndex]) => {
+      exhaustMap(([accountIds, monthIndex]) => {
+        this.currentBillingAccountIds = accountIds? accountIds : [];
         this.dataProcess.setInProgress();
         return forkJoin([
-          this._getBillingAvdDailyConnectionsService(accountId, +monthIndex),
+          this._getBillingAvdDailyConnectionsService(this.currentBillingAccountIds, +monthIndex),
         ]).pipe(
           finalize(() => this.dataProcess.setCompleted())
         )
@@ -239,11 +264,11 @@ export class AzureVirtualDesktopService {
     ).subscribe();
   }
 
-  private _getBillingAvdDailyUsersService(accountId: string, monthIndex: number): Observable<McsReportBillingAvdDailyUser[]> {
+  private _getBillingAvdDailyUsersService(accountIds: string[], monthIndex: number): Observable<McsReportBillingAvdDailyUser[]> {
     let dateParams = this.getAssociatedDates('daily', monthIndex);
 
     let query = new McsReportBillingAvdDailyUsersParam();
-    query.billingAccountId = accountId;
+    query.billingAccountId = accountIds.join(',');
     query.dateRangeBefore = dateParams.before;
     query.dateRangeAfter = dateParams.after;
 
@@ -259,11 +284,11 @@ export class AzureVirtualDesktopService {
     );
   }
 
-  private _getBillingAvdDailyConnectionsService(accountId: string, monthIndex: number): Observable<McsReportBillingAvdDailyUser[]> {
+  private _getBillingAvdDailyConnectionsService(accountIds: string[], monthIndex: number): Observable<McsReportBillingAvdDailyUser[]> {
     let dateParams = this.getAssociatedDates('daily', monthIndex);
 
     let query = new McsReportBillingAvdDailyUsersParam();
-    query.billingAccountId = accountId;
+    query.billingAccountId = accountIds.join(',');
     query.dateRangeBefore = dateParams.before;
     query.dateRangeAfter = dateParams.after;
 
@@ -279,11 +304,11 @@ export class AzureVirtualDesktopService {
     );
   }
 
-  private _getBillingAvdDailyUsersAverage(accountId: string): Observable<McsReportBillingAvdDailyAverageUser[]> {
+  private _getBillingAvdDailyUsersAverage(accountIds: string[]): Observable<McsReportBillingAvdDailyAverageUser[]> {
     let dateParams = this.getAssociatedDates('monthly');
 
     let query = new McsReportBillingAvdDailyAverageUsersParam();
-    query.billingAccountId = accountId;
+    query.billingAccountId = accountIds.join(',');
     query.microsoftChargeMonthRangeBefore = dateParams.before;
     query.microsoftChargeMonthRangeAfter = dateParams.after;
 
@@ -299,11 +324,11 @@ export class AzureVirtualDesktopService {
     );
   }
 
-  private _getBillingServices(accountId: string): Observable<McsReportBillingServiceGroup[]> {
+  private _getBillingServices(accountIds: string[]): Observable<McsReportBillingServiceGroup[]> {
     let dateParams = this.getAssociatedDates();
 
     let query = new McsReportBillingSummaryParams();
-    query.billingAccountId = accountId;
+    query.billingAccountId = accountIds.join(',');
     query.productTypes = 'AzureVirtualDesktop';
     query.microsoftChargeMonthRangeBefore = dateParams.before;
     query.microsoftChargeMonthRangeAfter = dateParams.after;
@@ -315,7 +340,7 @@ export class AzureVirtualDesktopService {
       }),
       map(response => {
         if (isNullOrEmpty(response?.collection)) { return []; }
-        return this._filterBillingServicesRecords(response?.collection, [accountId]);
+        return this._filterBillingServicesRecords(response?.collection, accountIds);
       }),
       tap(filteredRecords => {
         this._billingServicesChange.next(filteredRecords || []);
@@ -339,7 +364,7 @@ export class AzureVirtualDesktopService {
 
         // Add child item
         parentService.childBillingServices.forEach(childService => {
-          let childFound = billingAccountIds.find(accountId => accountId === childService.billingAccountId);
+          let childFound = billingAccountIds.some(accountId => accountId === childService.billingAccountId);
           if (isNullOrEmpty(childFound)) { return; }
           tempChildServices.push(childService);
         });
@@ -349,7 +374,7 @@ export class AzureVirtualDesktopService {
         if (!isNullOrEmpty(tempChildServices)) {
           tempParentService.childBillingServices = tempChildServices;
         }
-        let parentServiceFound = !!billingAccountIds.find(
+        let parentServiceFound = !!billingAccountIds.some(
           accountId => parentService.billingAccountId === accountId
         );
 

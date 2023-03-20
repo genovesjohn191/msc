@@ -10,7 +10,7 @@ import {
 } from '@app/utilities';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
-  'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
+  'dashShortDate' | 'shortDate' | 'mediumDate' | 'mediumDateNoYear' | 'longDate' | 'fullDate' |
   'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly' |
   'noYearDateShortTime' | 'longDateShortTime' | 'shortMonthYear' | 'fullMonthYear' |
   'shortDateTime' | 'tracksDateTime' | '24hourTime' | 'mediumNoMs' | 'dayMonth' | 'weekFriendly' |
@@ -136,6 +136,7 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('full', 'dddd, D MMMM, y, h:mm:ss A ZZ');
     this._dateTimeMapTable.set('shortDate', 'D/M/yy');
     this._dateTimeMapTable.set('mediumDate', 'D MMM, y');
+    this._dateTimeMapTable.set('mediumDateNoYear', 'D MMM');
     this._dateTimeMapTable.set('longDate', 'D MMMM, y');
     this._dateTimeMapTable.set('fullDate', 'dddd, D MMMM, y');
     this._dateTimeMapTable.set('shortTime', 'h:mm A');

@@ -106,9 +106,9 @@ export class AzureVirtualDesktopComponent extends McsPageBase implements OnInit,
       takeUntil(this._destroySubject),
       startWith([null]),
       tap(accountIds => {
-        let targetAccountId = this._selectBillingRef?.allAccountsAreSelected ? null :
-          isNullOrEmpty(accountIds) ? null : accountIds[0];
-        this._avdService.setBillingAccountId(targetAccountId);
+        let targetAccountIds = this._selectBillingRef?.allAccountsAreSelected ? null :
+          isNullOrEmpty(accountIds) ? null : accountIds;
+        this._avdService.setBillingAccountIds(targetAccountIds);
       })
     ).subscribe();
   }
