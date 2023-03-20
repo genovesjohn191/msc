@@ -53,6 +53,9 @@ export class FieldSelectBillingAccountComponent
   @Input()
   public sourceType: 'billing-summaries' | 'billing-avd' = 'billing-summaries';
 
+  @Input()
+  public disabled: boolean;
+
   public billingOptions$: Observable<McsOption[]>;
 
   private _billingAccountCount: number;
@@ -64,6 +67,10 @@ export class FieldSelectBillingAccountComponent
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_injector);
+  }
+
+  public get isDisabled(): boolean {
+    return this.disabled;
   }
 
   public get hasMultipleBillingAccount(): boolean {

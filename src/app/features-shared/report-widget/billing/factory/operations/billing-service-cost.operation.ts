@@ -31,7 +31,7 @@ export class BillingServiceCostOperation
 
   protected viewModelFunc(item: BillingServiceItem): BillingOperationViewModel {
     return new BillingOperationViewModel(
-      `${item.billingDescription}-${item.serviceId}`,
+      `${item.billingDescription} - ${item.serviceId}`,
       [
         new McsOption(
           this.currencyPipe.transform(item.gstExclusiveChargeDollars),

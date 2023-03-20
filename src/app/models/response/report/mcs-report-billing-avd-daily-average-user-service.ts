@@ -33,5 +33,7 @@ export class McsReportBillingAvdDailyAverageUserService extends McsEntityBase {
 
   @JsonProperty({ target: McsReportBillingServiceTenant })
   public tenant: McsReportBillingServiceTenant = undefined;
-}
 
+  @JsonProperty()
+  public microsoftId: string = undefined;
+}

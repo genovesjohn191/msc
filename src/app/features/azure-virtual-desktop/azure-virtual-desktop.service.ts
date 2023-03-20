@@ -54,11 +54,13 @@ export type TabGroupType = 'daily-user-service' | 'daily-user-average' | 'servic
 export class AzureVirtualDesktopService {
   public dataProcess = new DataProcess();
   public fcMonth = new FormControl(new Date().getMonth(), []);
+  public fcMonthConnection = new FormControl(new Date().getMonth(), []);
 
   private _billingAccountIdChange = new EventEmitter<string>();
 
   private _billingServicesChange = new BehaviorSubject<McsReportBillingServiceGroup[]>(null);
   private _dailyUsersServiceChange = new BehaviorSubject<McsReportBillingAvdDailyUser[]>(null);
+  private _dailyConnectionsServiceChange = new BehaviorSubject<McsReportBillingAvdDailyUser[]>(null);
   private _dailyUsersAverageChange = new BehaviorSubject<McsReportBillingAvdDailyAverageUser[]>(null);
 
   constructor(
@@ -87,6 +89,12 @@ export class AzureVirtualDesktopService {
     );
   }
 
+  public get dailyConnectionsService$(): Observable<McsReportBillingAvdDailyUser[]> {
+    return this._dailyConnectionsServiceChange.pipe(
+      distinctUntilChanged()
+    );
+  }
+
   public get dailyUsersAverage$(): Observable<McsReportBillingAvdDailyAverageUser[]> {
     return this._dailyUsersAverageChange.pipe(
       distinctUntilChanged()
@@ -101,11 +109,16 @@ export class AzureVirtualDesktopService {
     // Need to cover the settings in which the date after should be greater than and before
     // should be less than equal to.
     let isDailyCoverage = coverage === 'daily';
-    let targetMonth = addMonthsToDate(new Date(), isDailyCoverage ? 0 : 1)
+    let currentDate = new Date();
+    let targetMonth = addMonthsToDate(currentDate, isDailyCoverage ? 0 : 1)
     targetMonth.setDate(1);
 
     if (!isNullOrUndefined(monthIndex)) {
       targetMonth.setMonth(monthIndex);
+
+      if (monthIndex > currentDate.getMonth()) {
+        targetMonth.setFullYear(currentDate.getFullYear() - 1);
+      }
     }
 
     let startDate = isDailyCoverage ? targetMonth : addYearsToDate(targetMonth, -1);
@@ -208,6 +221,21 @@ export class AzureVirtualDesktopService {
         )
       })
     ).subscribe();
+
+    combineLatest([
+      this._billingAccountIdChange,
+      this.fcMonthConnection.valueChanges.pipe(startWith(new Date().getMonth()))
+    ]).pipe(
+      distinctUntilChanged((prev, next) => compareJsons(prev, next) === 0),
+      exhaustMap(([accountId, monthIndex]) => {
+        this.dataProcess.setInProgress();
+        return forkJoin([
+          this._getBillingAvdDailyConnectionsService(accountId, +monthIndex),
+        ]).pipe(
+          finalize(() => this.dataProcess.setCompleted())
+        )
+      })
+    ).subscribe();
   }
 
   private _getBillingAvdDailyUsersService(accountId: string, monthIndex: number): Observable<McsReportBillingAvdDailyUser[]> {
@@ -226,6 +254,26 @@ export class AzureVirtualDesktopService {
       map(response => response?.collection),
       tap(records => {
         this._dailyUsersServiceChange.next(records || []);
+      })
+    );
+  }
+
+  private _getBillingAvdDailyConnectionsService(accountId: string, monthIndex: number): Observable<McsReportBillingAvdDailyUser[]> {
+    let dateParams = this.getAssociatedDates('daily', monthIndex);
+
+    let query = new McsReportBillingAvdDailyUsersParam();
+    query.billingAccountId = accountId;
+    query.dateRangeBefore = dateParams.before;
+    query.dateRangeAfter = dateParams.after;
+
+    return this._apiService.getAvdDailyUsers(query).pipe(
+      catchError(error => {
+        this._dailyConnectionsServiceChange.next([]);
+        return EMPTY;
+      }),
+      map(response => response?.collection),
+      tap(records => {
+        this._dailyConnectionsServiceChange.next(records || []);
       })
     );
   }

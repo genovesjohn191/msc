@@ -357,7 +357,8 @@
       "description": "View the composition of your Microsoft bill, by aggregated spend or individual service charges.<br><br>Please note:",
       "descriptionOuterList": "<li>Values shown are GST-exclusive.<li>Projected (*) figures:</li><ul><li>Are sourced from VMware CloudHealth.</li><li>Do not include CSP License or Software Subscription charges.</li><li>Include Azure Subscriptions or Reservations Orders presently configured in VMware CloudHealth.</li></ul>",
       "learnMoreLink": "http://kb.macquarieview.com/display/CKB/Customer+Guide+-+Macquarie+Managed+Azure+on+CloudHealth#CustomerGuide-MacquarieManagedAzureonCloudHealth-DiscrepanciesbetweenAzurebillsandCloudHealthreports",
-      "billingAccountDropdownTooltip": "Billing accounts with public cloud services will be listed here."
+      "billingAccountDropdownTooltip": "Billing accounts with public cloud services will be listed here.",
+      "avdBillingAccountDropdownTooltip": "Billing accounts with AVD services will be listed here."
     }
   },
   "privateCloudDashboard": {

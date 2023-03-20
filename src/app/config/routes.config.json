@@ -792,7 +792,7 @@
     "enumKey": "AvdDailyUserService",
     "navigationPath": "daily-user-service",
     "requiredPermissions": ["BillingView"],
-    "documentTitle": "AVD Daily User Service - Macquarie Cloud Services"
+    "documentTitle": "AVD Bill Summary - Daily Users by Service - Macquarie Cloud Services"
   },
   "avdDailyUserAverage": {
     "enumPlatform": "Public",
@@ -800,7 +800,7 @@
     "enumKey": "AvdDailyUserAverage",
     "navigationPath": "daily-user-average",
     "requiredPermissions": ["BillingView"],
-    "documentTitle": "AVD Daily Average Users - Macquarie Cloud Services"
+    "documentTitle": "AVD Bill Summary - Daily Average Users - Macquarie Cloud Services"
   },
   "avdServiceCost": {
     "enumPlatform": "Public",
@@ -808,7 +808,7 @@
     "enumKey": "AvdServiceCost",
     "navigationPath": "service-cost",
     "requiredPermissions": ["BillingView"],
-    "documentTitle": "AVD Cost by Service - Macquarie Cloud Services"
+    "documentTitle": "AVD Bill Summary - Cost by Service - Macquarie Cloud Services"
   },
   "avdDailyConnection": {
     "enumPlatform": "Public",
@@ -816,7 +816,7 @@
     "enumKey": "AvdDailyConnection",
     "navigationPath": "daily-connection-service",
     "requiredPermissions": ["BillingView"],
-    "documentTitle": "AVD Daily Connection by Service - Macquarie Cloud Services"
+    "documentTitle": "AVD Bill Summary - Daily Connections by Service - Macquarie Cloud Services"
   },
   "systemMessages": {
     "enumCategory": "SystemMessages",

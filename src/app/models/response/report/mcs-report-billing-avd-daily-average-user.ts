@@ -17,7 +17,8 @@ export class McsReportBillingAvdDailyAverageUser extends McsEntityBase {
   })
   public macquarieBillMonth: Date = undefined;
 
+  public date: Date = undefined;
+
   @JsonProperty({ target: McsReportBillingAvdDailyAverageUserService })
   public services: McsReportBillingAvdDailyAverageUserService[] = undefined;
 }
-

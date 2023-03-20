@@ -39,7 +39,7 @@ export class DailyConnectionServiceComponent implements OnInit, OnDestroy {
   }
 
   public get fcMonth(): FormControl {
-    return this._avdService.fcMonth;
+    return this._avdService.fcMonthConnection;
   }
 
   public ngOnInit(): void {
@@ -59,7 +59,7 @@ export class DailyConnectionServiceComponent implements OnInit, OnDestroy {
   }
 
   private _subscribeToDailyAverage(): void {
-    this.dailyUsers$ = this._avdService.dailyUsersService$.pipe(
+    this.dailyUsers$ = this._avdService.dailyConnectionsService$.pipe(
       takeUntil(this._destroySubject),
       shareReplay(1)
     );

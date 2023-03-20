@@ -83,7 +83,7 @@ export class BillingAvdDailyUserServiceOperation
 
   protected viewModelFunc(item: BillingAvdDailyUserServiceItem): BillingOperationViewModel {
     return new BillingOperationViewModel(
-      `${item.billingDescription}-${item.serviceId}`,
+      `${item.billingDescription} - ${item.serviceId}`,
       [
         new McsOption(item.users, 'Users'),
         new McsOption(item.plan, 'Plan'),
@@ -95,6 +95,7 @@ export class BillingAvdDailyUserServiceOperation
         // TODO: Check this out, microsoft charge month and bill was not in user daily service
         // new McsOption(item.microsoftChargeMonth, 'Microsoft Charge Month'),
         // new McsOption(item.macquarieBillMonth, 'Macquarie Bill Month'),
+        new McsOption(this.datePipe.transform(getDateOnly(item.date), 'dayMonth'), 'Date'),
         new McsOption(item.serviceId, 'Service ID')
       ],
       false
@@ -143,7 +144,7 @@ export class BillingAvdDailyUserServiceOperation
         convertedItem.tenantName = service.tenant?.name;
         convertedItem.tenantInitialDomain = service.tenant?.initialDomain;
         convertedItem.tenantPrimaryDomain = service.tenant?.primaryDomain;
-        convertedItem.microsoftId = service.tenant?.microsoftId;
+        convertedItem.microsoftId = service.microsoftId;
         convertedItems.push(convertedItem);
       });
     });

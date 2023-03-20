@@ -18,6 +18,7 @@
         <mcs-field-select-billing-account #selectBillingRef
           sourceType="billing-avd"
           [selectedAllByDefault]="true"
+          [disabled]="graphDataProcess.inProgress$ | async"
           [formControl]="fcBillingAccount">
         </mcs-field-select-billing-account>
       </div>

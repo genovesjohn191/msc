@@ -8,7 +8,8 @@ import {
   switchMap,
   take,
   takeUntil,
-  tap
+  tap,
+  debounceTime
 } from 'rxjs/operators';
 
 import {
@@ -79,6 +80,10 @@ export class AzureVirtualDesktopComponent extends McsPageBase implements OnInit,
     this._billingServicesCache.next(null);
   }
 
+  public get graphDataProcess(): any  {
+    return this._avdService.dataProcess;
+  }
+
   public onTabChanged(tab: any) {
     this.navigation.navigateTo(RouteKey.Avd, [tab.id as TabGroupType]);
   }
@@ -97,6 +102,7 @@ export class AzureVirtualDesktopComponent extends McsPageBase implements OnInit,
 
   private _subscribeToBillingAccountChange(): void {
     this.fcBillingAccount.valueChanges.pipe(
+      debounceTime(1500),
       takeUntil(this._destroySubject),
       startWith([null]),
       tap(accountIds => {

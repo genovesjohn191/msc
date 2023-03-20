@@ -28,6 +28,7 @@ export class BillingAvdDailyUserAverageItem {
   public id: string;
   public microsoftChargeMonth: Date;
   public macquarieBillMonth: Date;
+  public date: Date;
   public serviceId: string = undefined;
   public billingDescription: string = undefined;
   public azureDescription: string = undefined;
@@ -82,7 +83,7 @@ export class BillingAvdDailyUserAverageOperation
       id: item.id,
       name: item.serviceId,
       xValue: this.datePipe.transform(getDateOnly(item.microsoftChargeMonth), dateFormat as McsDateTimeFormat),
-      yValue: item.averageConnections
+      yValue: item.averageUsers
     } as ChartItem;
     return chartItem;
   }
@@ -125,10 +126,12 @@ export class BillingAvdDailyUserAverageOperation
         convertedItem.id = Guid.newGuid().toString();
         convertedItem.microsoftChargeMonth = record.microsoftChargeMonth;
         convertedItem.macquarieBillMonth = record.macquarieBillMonth;
+        //todo: check the below one before committing
+        convertedItem.date = record.date;
         convertedItem.tenantName = service.tenant?.name;
         convertedItem.tenantInitialDomain = service.tenant?.initialDomain;
         convertedItem.tenantPrimaryDomain = service.tenant?.primaryDomain;
-        convertedItem.microsoftId = service.tenant?.microsoftId;
+        convertedItem.microsoftId = service.microsoftId;
         convertedItems.push(convertedItem);
       });
     });
@@ -137,7 +140,7 @@ export class BillingAvdDailyUserAverageOperation
 
   private _viewModelFunc(item: BillingAvdDailyUserAverageItem): BillingOperationViewModel {
     return new BillingOperationViewModel(
-      `${item.billingDescription}-${item.serviceId}`,
+      `${item.billingDescription} - ${item.serviceId}`,
       [
         new McsOption(item.averageUsers, 'Average Users'),
         new McsOption(item.minimumCommitmentUsers, 'Minimum User Commitment'),
@@ -148,6 +151,8 @@ export class BillingAvdDailyUserAverageOperation
         new McsOption(item.microsoftId, 'Microsoft Identifier'),
         new McsOption(this.datePipe.transform(item.microsoftChargeMonth, 'shortMonthYear'), 'Microsoft Charge Month'),
         new McsOption(this.datePipe.transform(item.macquarieBillMonth, 'shortMonthYear'), 'Macquarie Bill Month'),
+        //todo: check the below one before committing
+        new McsOption(this.datePipe.transform(item.date, 'shortMonthYear'), 'Date'),
         new McsOption(item.serviceId, 'Service ID')
       ],
       false
