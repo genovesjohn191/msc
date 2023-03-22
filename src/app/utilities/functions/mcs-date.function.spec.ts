@@ -127,15 +127,18 @@ describe('DATE Functions', () => {
     it(`should return 'Yesterday' if date is a day before`, () => {
       let date = new Date();
       date.setDate(date.getDate() - 1);
+      let currentTime = moment(date.toLocaleTimeString(), 'h:mm:ss A').format('h:mm A');
       let day = getFriendlyDay(date);
-      expect(day).toEqual('Yesterday');
+
+      expect(day).toEqual(`Yesterday, ${currentTime}`);
     });
 
     it(`should return the day if date is more than 2 days but less than 7 days`, () => {
       let date = new Date();
       date.setDate(date.getDate() - 3);
       let day = getFriendlyDay(date);
-      expect(day).toEqual(moment(date).format('dddd'));
+      let formattedDate = moment(date).format(`dddd, h:mm A`);
+      expect(day).toEqual(formattedDate);
     });
 
     
