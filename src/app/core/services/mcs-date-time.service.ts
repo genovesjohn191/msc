@@ -135,7 +135,7 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('long', 'D MMMM, y, h:mm:ss A Z');
     this._dateTimeMapTable.set('full', 'dddd, D MMMM, y, h:mm:ss A ZZ');
     this._dateTimeMapTable.set('shortDate', 'D/M/yy');
-    this._dateTimeMapTable.set('mediumDate', 'D MMM, y');
+    this._dateTimeMapTable.set('mediumDate', 'D MMM y');
     this._dateTimeMapTable.set('mediumDateNoYear', 'D MMM');
     this._dateTimeMapTable.set('longDate', 'D MMMM, y');
     this._dateTimeMapTable.set('fullDate', 'dddd, D MMMM, y');

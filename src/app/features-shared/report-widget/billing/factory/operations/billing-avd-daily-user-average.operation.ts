@@ -82,7 +82,7 @@ export class BillingAvdDailyUserAverageOperation
     let chartItem = {
       id: item.id,
       name: item.serviceId,
-      xValue: this.datePipe.transform(getDateOnly(item.microsoftChargeMonth), dateFormat as McsDateTimeFormat),
+      xValue: this.datePipe.transform(item.microsoftChargeMonth, this._friendlyFormatDate(item.microsoftChargeMonth)),
       yValue: item.averageUsers
     } as ChartItem;
     return chartItem;
@@ -149,13 +149,18 @@ export class BillingAvdDailyUserAverageOperation
         new McsOption(item.tenantInitialDomain, 'Initial Domain'),
         new McsOption(item.tenantPrimaryDomain, 'Primary Domain'),
         new McsOption(item.microsoftId, 'Microsoft Identifier'),
-        new McsOption(this.datePipe.transform(item.microsoftChargeMonth, 'shortMonthYear'), 'Microsoft Charge Month'),
-        new McsOption(this.datePipe.transform(item.macquarieBillMonth, 'shortMonthYear'), 'Macquarie Bill Month'),
-        //todo: check the below one before committing
-        new McsOption(this.datePipe.transform(item.date, 'shortMonthYear'), 'Date'),
+        new McsOption(this.datePipe.transform(item.microsoftChargeMonth, this._friendlyFormatDate(item.microsoftChargeMonth)), 'Microsoft Charge Month'),
+        new McsOption(this.datePipe.transform(item.macquarieBillMonth, this._friendlyFormatDate(item.macquarieBillMonth)), 'Macquarie Bill Month'),
         new McsOption(item.serviceId, 'Service ID')
       ],
       false
     );
+  }
+
+  private _friendlyFormatDate(date): McsDateTimeFormat  {
+    let currentYear = new Date().getFullYear();
+    let formattedDate = date.getFullYear() === currentYear ? 'fullMonth' : 'shortMonthYear';
+
+    return formattedDate as McsDateTimeFormat;
   }
 }

@@ -63,6 +63,8 @@ export class BillingServiceCostWidgetComponent extends ReportWidgetBase implemen
   public chartConfig: ChartConfig;
   public chartItems$: Observable<ChartItem[]>;
 
+  public chartUpdateProcess: DataProcess<any>;
+
   private _chartItemsChange = new BehaviorSubject<ChartItem[]>(null);
   private _destroySubject = new Subject<void>();
 
@@ -77,6 +79,7 @@ export class BillingServiceCostWidgetComponent extends ReportWidgetBase implemen
     private _currencyPipe: StdCurrencyFormatPipe
   ) {
     super();
+    this.chartUpdateProcess = new DataProcess();
     this.chartConfig = {
       type: 'bar',
       height: '420px',
@@ -124,6 +127,8 @@ export class BillingServiceCostWidgetComponent extends ReportWidgetBase implemen
   }
 
   public initializeDataRecords(): void {
+    this.chartUpdateProcess.setInProgress();
+
     this.updateChartUri(undefined);
     this._serviceDestroyer.next();
 
@@ -140,6 +145,8 @@ export class BillingServiceCostWidgetComponent extends ReportWidgetBase implemen
         this.chartConfig.colors = operationData.chartColors;
         if (operationData.chartItems?.length === 0) { this.updateChartUri(''); }
         this._changeDetectorRef.markForCheck();
+
+        this.chartUpdateProcess.setCompleted();
       })
     ).subscribe();
   }

@@ -73,13 +73,10 @@ export class BillingAvdDailyUserServiceOperation
   }
 
   protected mapToChartItem(item: BillingAvdDailyUserServiceItem): ChartItem {
-    let currentYear = new Date().getFullYear();
-    let dateFormat = item.date.getFullYear() === currentYear ? 'mediumDateNoYear' : 'mediumDate';
-
     let chartItem = {
       id: item.id,
       name: item.serviceId,
-      xValue: this.datePipe.transform(getDateOnly(item.date), dateFormat as McsDateTimeFormat),
+      xValue: this.datePipe.transform(getDateOnly(item.date), this._friendlyFormatDate(item.date)),
       yValue: item.users
     } as ChartItem;
     return chartItem;
@@ -99,11 +96,18 @@ export class BillingAvdDailyUserServiceOperation
         // TODO: Check this out, microsoft charge month and bill was not in user daily service
         // new McsOption(item.microsoftChargeMonth, 'Microsoft Charge Month'),
         // new McsOption(item.macquarieBillMonth, 'Macquarie Bill Month'),
-        new McsOption(this.datePipe.transform(getDateOnly(item.date), 'dayMonth'), 'Date'),
+        new McsOption(this.datePipe.transform(getDateOnly(item.date), this._friendlyFormatDate(item.date)), 'Date'),
         new McsOption(item.serviceId, 'Service ID')
       ],
       false
     );
+  }
+
+  private _friendlyFormatDate(date): McsDateTimeFormat  {
+    let currentYear = new Date().getFullYear();
+    let formattedDate = date.getFullYear() === currentYear ? 'mediumDateNoYear' : 'mediumDate';
+
+    return formattedDate as McsDateTimeFormat;
   }
 
   private _initializeDataByDataGroup(filterPred?: (item: BillingAvdDailyUserServiceItem) => boolean): void {
