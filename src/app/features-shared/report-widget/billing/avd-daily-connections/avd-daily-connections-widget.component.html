@@ -1,5 +1,5 @@
 <div class="widget flat">
-  <ng-container *ngIf="dataProcess.completed$ | async">
+  <ng-container *ngIf="(dataProcess.completed$ | async) && (chartUpdateProcess.completed$ | async)">
     <mcs-vertical-bar-chart
       class="custom-chart"
       [config]="chartConfig"

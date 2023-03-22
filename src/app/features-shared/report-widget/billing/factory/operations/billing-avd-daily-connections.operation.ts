@@ -1,11 +1,11 @@
 import { Injector } from '@angular/core';
+import { McsDateTimeFormat } from '@app/core';
 import {
   McsOption,
   McsReportBillingAvdDailyUser
 } from '@app/models';
 import { ChartItem } from '@app/shared';
 import { getDateOnly } from '@app/utilities';
-
 import { IBillingOperation } from '../abstractions/billing-operation.interface';
 import { BillingOperationViewModel } from '../models';
 import {
@@ -31,6 +31,9 @@ export class BillingAvdDailyConnectionsOperation
   }
 
   protected viewModelFunc(item: BillingAvdDailyUserServiceItem): BillingOperationViewModel {
+    let currentYear = new Date().getFullYear();
+    let dateFormat = item.date.getFullYear() === currentYear ? 'mediumDateNoYear' : 'mediumDate';
+
     return new BillingOperationViewModel(
       `${item.billingDescription} - ${item.serviceId}`,
       [
@@ -44,7 +47,7 @@ export class BillingAvdDailyConnectionsOperation
         // TODO: Check this out, microsoft charge month and bill was not in user daily service
         // new McsOption(item.microsoftChargeMonth, 'Microsoft Charge Month'),
         // new McsOption(item.macquarieBillMonth, 'Macquarie Bill Month'),
-        new McsOption(this.datePipe.transform(getDateOnly(item.date), 'dayMonth'), 'Date'),
+        new McsOption(this.datePipe.transform(getDateOnly(item.date), dateFormat as McsDateTimeFormat), 'Date'),
         new McsOption(item.serviceId, 'Service ID')
       ],
       false
