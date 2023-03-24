@@ -243,12 +243,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._fileAttachments = attachments;
   }
 
-  public hasPermissionToAzureResource(): boolean {
-    let hasAzureViewPermission = this._accessControlService.hasPermission([McsPermission.AzureView]);
-
-    return hasAzureViewPermission;
-  }
-
   public onChangeTicketType(): void {
     this.isValidToSelectAzureResource();
   }

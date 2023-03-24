@@ -412,10 +412,6 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return this._accessControlService.hasAccessToFeature(McsFeatureFlag.ProvisionServiceRequest);
   }
 
-  public hasPermissionToAzureResource(): boolean {
-    return this._accessControlService.hasPermission([McsPermission.AzureView]);
-  }
-
   public onCloudHealthChange(alerts: McsCloudHealthOption[]): void {
     this.cloudHealthService = alerts;
   }

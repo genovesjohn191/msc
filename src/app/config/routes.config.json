@@ -335,8 +335,7 @@
     "enumCategory": "Azure",
     "navigationPath": "azure/resources",
     "enumPlatform": "Public",
-    "documentTitle": "Resources - Macquarie Cloud Services",
-    "requiredPermissions": ["AzureView"]
+    "documentTitle": "Resources - Macquarie Cloud Services"
   },
   "azureReservations": {
     "enumKey": "AzureReservations",

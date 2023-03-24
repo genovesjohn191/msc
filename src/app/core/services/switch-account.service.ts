@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Location } from '@angular/common';
+
 import {
   BehaviorSubject,
   throwError,
@@ -44,7 +46,8 @@ export class SwitchAccountService {
     private _authIdentity: McsAuthenticationIdentity,
     private _accessControlService: McsAccessControlService,
     private _cookieService: McsCookieService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _locationService: Location,
   ) {
     // Initialize member variables
     this.companies = new Array();
@@ -104,7 +107,7 @@ export class SwitchAccountService {
     if (hasCompanyIdQueryParam) {
       location.href = location.pathname;
     } else {
-      location.href = '';
+      this._locationService.replaceState('');
     }
   }
 

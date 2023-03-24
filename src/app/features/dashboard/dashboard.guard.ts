@@ -37,6 +37,7 @@ export class DashboardGuard implements CanActivate {
     // Try Navigate to LaunchPad Projects - Default Page for Engineers
     let activeCompanyId = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT) ||
       this._authenticationIdentity.user?.companyId;
+    let isImpersonating = this._authenticationIdentity.isImpersonating;
     let hasRequiredPermission = this._accessControlService.hasPermission([
       McsPermission.InternalPrivateCloudEngineerAccess,
       McsPermission.InternalPublicCloudEngineerAccess
@@ -44,7 +45,7 @@ export class DashboardGuard implements CanActivate {
     let hasLaunchpadProjectsAccess = hasRequiredPermission && activeCompanyId === engineeringAccount
       this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad, McsFeatureFlag.DashboardProjects], true);
 
-    if (hasLaunchpadProjectsAccess) {
+    if (hasLaunchpadProjectsAccess && !isImpersonating) {
       this._navigationService.navigateTo(RouteKey.LaunchPadDashboardProjects);
       return false;
     }
@@ -53,44 +54,27 @@ export class DashboardGuard implements CanActivate {
     let hasPublicCloudAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
 
     // Try Navigate to Private Cloud Dashboard Default Page
-    let hasPrivateCloudDashboardAccess = hasPrivateCloudAccess && !hasPublicCloudAccess &&
+    let hasPrivateCloudAccessOnly = hasPrivateCloudAccess && !hasPublicCloudAccess &&
       this._accessControlService.hasAccessToFeature([McsFeatureFlag.PrivateCloudDashboard]);
 
-    if (hasPrivateCloudDashboardAccess) {
+    if (hasPrivateCloudAccessOnly) {
       this._navigationService.navigateTo(RouteKey.PrivateCloudDashboardOverview);
       return false;
     }
 
-    // Try Navigate to Private Cloud Default Page
-    if (hasPrivateCloudAccess) {
-      // Try Navigate to Compute
-      let hasVmAccess = this._accessControlService.hasPermission([
-        McsPermission.ManagedCloudVmAccess,
-        McsPermission.SelfManagedCloudVmAccess,
-        McsPermission.DedicatedVmAccess
-      ]);
-      if (hasVmAccess) {
-        this._navigationService.navigateTo(RouteKey.Servers);
-        return false;
-      }
+    let hasPublicCloudAccessOnly = hasPublicCloudAccess && !hasPrivateCloudAccess;
+    let hasBothAccessToPublicAndPrivateCloud = hasPublicCloudAccess && hasPrivateCloudAccess;
 
-      // Try Navigate to Firewalls
-      let hasFirewallAccess = this._accessControlService.hasPermission([
-        McsPermission.FirewallConfigurationView
-      ]);
-      if (hasFirewallAccess) {
-        this._navigationService.navigateTo(RouteKey.Firewalls);
-        return false;
-      }
-    }
-
-    // Try Navigate to Public Cloud Default Page
-    if (hasPublicCloudAccess) {
-      this._navigationService.navigateTo(RouteKey.Licenses);
+    if (hasPublicCloudAccessOnly || hasBothAccessToPublicAndPrivateCloud) {
+      this._navigationService.navigateTo(RouteKey.ReportOverview);
       return false;
     }
 
-    this._navigationService.navigateTo(RouteKey.Catalog);
-    return false;
+    let noAccessToPublicAndPrivateCloud = !hasPublicCloudAccess && !hasPrivateCloudAccess;
+
+    if (noAccessToPublicAndPrivateCloud) {
+      this._navigationService.navigateTo(RouteKey.Catalog);
+      return false;
+    }
   }
 }
