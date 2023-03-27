@@ -10,6 +10,9 @@ export class McsBackUpAggregationTarget extends McsEntityBase {
   public serviceId: string = undefined;
 
   @JsonProperty()
+  public billingDescription: string = undefined;
+
+  @JsonProperty()
   public description: string = undefined;
 
   @JsonProperty()

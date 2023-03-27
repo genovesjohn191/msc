@@ -54,7 +54,8 @@ import {
   McsTicketCreate,
   McsTicketCreateAttachment,
   RouteKey,
-  TicketType
+  TicketType,
+  McsResourceQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -388,7 +389,10 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    * Subscribes to list of vdc resources
    */
   private _subscribesToVdcList(): void {
-    this.vdcList$ = this._apiService.getResources().pipe(
+    let queryParam = new McsResourceQueryParam();
+    queryParam.platform = 'VCloud';
+
+    this.vdcList$ = this._apiService.getResources(null, queryParam).pipe(
       map((response) => {
         let resources = getSafeProperty(response, (obj) => obj.collection);
         return resources
@@ -421,7 +425,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         return resources
           .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
           .map((resource) => new TicketService(
-            `${serviceTypeText[resource.serviceType]} VDC (${resource.name})`,
+            resource.billingDescription,
             resource.name,
             TicketServiceType.Vdcs
           ));
@@ -436,7 +440,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         return servers
           .filter((server) => getSafeProperty(server, (obj) => obj.serviceId))
           .map((server) => new TicketService(
-            `${server.name} (${server.serviceId})`,
+            server.name,
             server.serviceId,
             TicketServiceType.Servers
           ));
@@ -451,7 +455,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         return firewalls
           .filter((firewall) => getSafeProperty(firewall, (obj) => obj.serviceId))
           .map((firewall) => new TicketService(
-            `${firewall.managementName} (${firewall.serviceId})`,
+            firewall.managementName,
             firewall.serviceId,
             TicketServiceType.Firewalls
           ));
@@ -466,7 +470,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         return internetPorts
           .filter((internetPort) => getSafeProperty(internetPort, (obj) => obj.serviceId))
           .map((internetPort) => new TicketService(
-            `${internetPort.description} (${internetPort.serviceId})`,
+            internetPort.billingDescription,
             internetPort.serviceId,
             TicketServiceType.Firewalls
           ));
@@ -480,7 +484,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let bats = getSafeProperty(response, (obj) => obj.collection);
         return bats.filter((bat) => getSafeProperty(bat, (obj) => obj.serviceId))
           .map((bat) => new TicketService(
-            `${bat.description} (${bat.serviceId})`,
+            bat.billingDescription,
             bat.serviceId,
             TicketServiceType.BackupAggregationTargets
           ));
@@ -495,7 +499,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let licenses = getSafeProperty(response, (obj) => obj.collection);
         return licenses.filter((license) => getSafeProperty(license, (obj) => obj.serviceId))
           .map((license) => new TicketService(
-            `${license.name} (${license.serviceId})`,
+            license.name,
             license.serviceId,
             TicketServiceType.Licenses
           ));
@@ -509,7 +513,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let azureServices = getSafeProperty(response, (obj) => obj.collection);
         return azureServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.friendlyName} (${service.serviceId})`,
+            service.friendlyName,
             service.serviceId,
             TicketServiceType.MicrosoftSubscriptions
           ));
@@ -523,7 +527,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let colocationAntennas = getSafeProperty(response, (obj) => obj.collection);
         return colocationAntennas.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.Antennas
           ));
@@ -537,7 +541,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let colocationCustomDervices = getSafeProperty(response, (obj) => obj.collection);
         return colocationCustomDervices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.CustomDevices
           ));
@@ -551,7 +555,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let colocationRooms = getSafeProperty(response, (obj) => obj.collection);
         return colocationRooms.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.Rooms
           ));
@@ -565,7 +569,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let colocationStandardSqms = getSafeProperty(response, (obj) => obj.collection);
         return colocationStandardSqms.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.StandarsSquareMetres
           ));
@@ -579,7 +583,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let colocationRacks = getSafeProperty(response, (obj) => obj.collection);
         return colocationRacks.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.description} (${service.serviceId})`,
+            service.description,
             service.serviceId,
             TicketServiceType.Racks
           ));
@@ -598,7 +602,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             vdcStorage.storage.forEach((storage) => {
               if (isNullOrEmpty(storage?.serviceId)) { return; }
               vdcStorageGroup.push(new TicketService(
-                `${storage.name} - for ${resource.serviceId} (${storage.serviceId})`,
+                `${storage.name} - for ${resource.serviceId}`,
                 storage.serviceId,
                 TicketServiceType.VdcStorage
               )
@@ -617,7 +621,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let servers = getSafeProperty(response, (obj) => obj)
         return servers.filter((server) => server.isDedicated && server.hardware?.type !== HardwareType.VM )
           .map((service) => new TicketService(
-            `${service.name} (${service.serviceId})`,
+            service.name,
             service.serviceId,
             TicketServiceType.DedicatedServers
           ));
@@ -632,7 +636,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let managementServices = getSafeProperty(response, (obj) => obj.collection);
         return managementServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.description} (${service.serviceId})`,
+            service.description,
             service.serviceId,
             TicketServiceType.MicrosoftManagementServices
           ));
@@ -654,7 +658,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               if (serverBackupInvalidToCreateTicket) { return; }
               let serverName = this._getServerName(serverBackup.id, servers);
               serverBackupGroup.push(
-                new TicketService(`Server Backup - ${serverName} (${serverBackup.serviceId})`,
+                new TicketService(
+                  serverBackup.billingDescription,
                   serverBackup.serviceId,
                   TicketServiceType.ServerBackup
                 )
@@ -681,7 +686,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               if (vmBackupInvalidToCreateTicket) { return; }
               let serverName = this._getServerName(vmBackup.id, servers);
               vmBackupGroup.push(
-                new TicketService(`VM Backup - ${serverName} (${vmBackup.serviceId})`,
+                new TicketService(
+                  vmBackup.billingDescription,
                   vmBackup.serviceId,
                   TicketServiceType.VmBackup
                 )
@@ -708,7 +714,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               if (antiVirusInvalidToCreateTicket) { return; }
               let serverName = this._getServerName(av.serverId, servers);
               antiVirusGroup.push(
-                new TicketService(`${av.antiVirus.billingDescription} - ${serverName} (${av.antiVirus.serviceId})`,
+                new TicketService(
+                  av.antiVirus.billingDescription,
                   av.antiVirus.serviceId,
                   TicketServiceType.AntiVirus
                 )
@@ -735,7 +742,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
               if (hidsInvalidToCreateTicket) { return; }
               let serverName = this._getServerName(hidsDetails.serverId, servers);
               hidsGroup.push(
-                new TicketService(`${hidsDetails.hids.billingDescription} - ${serverName} (${hidsDetails.hids.serviceId})`,
+                new TicketService(
+                  hidsDetails.hids.billingDescription,
                   hidsDetails.hids.serviceId,
                   TicketServiceType.Hids
                 )
@@ -761,13 +769,13 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   private _subscribesToDns(): void {
-    this.dns$ = this._apiService.getNetworkDnsServices().pipe(
+    this.dns$ = this._apiService.getNetworkDnsZones().pipe(
       map((response) => {
         let dns = getSafeProperty(response, (obj) => obj.collection);
-        return dns.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
-          .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
-            service.serviceId,
+        return dns.filter((zone) => getSafeProperty(zone, (obj) => obj.parentServiceId))
+          .map((zone) => new TicketService(
+            zone.name,
+            zone.parentServiceId,
             TicketServiceType.Dns
           ));
       })
@@ -780,7 +788,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let reservations = getSafeProperty(response, (obj) => obj.collection);
         return reservations.filter((reservation) => getSafeProperty(reservation, (obj) => obj.serviceId))
           .map((reservation) => new TicketService(
-            `${reservation.name} (${reservation.serviceId})`,
+            reservation.name,
             reservation.serviceId,
             TicketServiceType.Reservations
           ));
@@ -794,7 +802,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let subscriptions = getSafeProperty(response, (obj) => obj.collection);
         return subscriptions.filter((subscription) => getSafeProperty(subscription, (obj) => obj.serviceId))
           .map((subscription) => new TicketService(
-            `${subscription.name} (${subscription.serviceId})`,
+            subscription.name,
             subscription.serviceId,
             TicketServiceType.SoftwareSubscriptions
           ));
@@ -813,7 +821,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let extenders = getSafeProperty(response, (obj) => obj.collection);
         return extenders.filter((extender) => getSafeProperty(extender, (obj) => obj.serviceId))
           .map((extender) => new TicketService(
-            `${extender.billingDescription} (${extender.serviceId})`,
+            extender.billingDescription,
             extender.serviceId,
             TicketServiceType.Extenders
           ));
@@ -835,7 +843,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let applicationRecovery = getSafeProperty(response, (obj) => obj.collection);
         return applicationRecovery.filter((applicationRecoveryItem) => getSafeProperty(applicationRecoveryItem, (obj) => obj.serviceId))
           .map((applicationRecoveryItem) => new TicketService(
-            `${applicationRecoveryItem.billingDescription} (${applicationRecoveryItem.serviceId})`,
+            applicationRecoveryItem.billingDescription,
             applicationRecoveryItem.serviceId,
             TicketServiceType.ApplicationRecovery
           ));
@@ -849,7 +857,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let veeamBackups = getSafeProperty(response, (obj) => obj.collection);
         return veeamBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.VeeamBackup
           ));
@@ -875,7 +883,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let saasBackups = getSafeProperty(response, (obj) => obj.collection);
         return saasBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.SaasBackup
           ));
@@ -889,7 +897,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let veeamDrs = getSafeProperty(response, (obj) => obj.collection);
         return veeamDrs.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.VeeamDr
           ));
@@ -907,7 +915,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let nonStandardBundles = getSafeProperty(response, (obj) => obj.collection);
         return nonStandardBundles.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.billingDescription} (${service.serviceId})`,
+            service.billingDescription,
             service.serviceId,
             TicketServiceType.NonStandardBundles
           ));
@@ -925,7 +933,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let perpetualSoftware = getSafeProperty(response, (obj) => obj.collection);
         return perpetualSoftware.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(
-            `${service.name} (${service.serviceId})`,
+            service.name,
             service.serviceId,
             TicketServiceType.PerpetualSoftware
           ));

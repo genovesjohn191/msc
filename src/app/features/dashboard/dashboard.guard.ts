@@ -50,29 +50,29 @@ export class DashboardGuard implements CanActivate {
       return false;
     }
 
-    let hasPrivateCloudAccess = this._authenticationIdentity.platformSettings.hasPrivateCloud;
-    let hasPublicCloudAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
+    let companyHasPrivateCloudPlatform = this._authenticationIdentity.platformSettings.hasPrivateCloud;
+    let companyHasPublicCloudPlatform = this._authenticationIdentity.platformSettings.hasPublicCloud;
 
     // Try Navigate to Private Cloud Dashboard Default Page
-    let hasPrivateCloudAccessOnly = hasPrivateCloudAccess && !hasPublicCloudAccess &&
+    let companyHasPrivateCloudPlatformOnly = companyHasPrivateCloudPlatform && !companyHasPublicCloudPlatform &&
       this._accessControlService.hasAccessToFeature([McsFeatureFlag.PrivateCloudDashboard]);
 
-    if (hasPrivateCloudAccessOnly) {
+    if (companyHasPrivateCloudPlatformOnly) {
       this._navigationService.navigateTo(RouteKey.PrivateCloudDashboardOverview);
       return false;
     }
 
-    let hasPublicCloudAccessOnly = hasPublicCloudAccess && !hasPrivateCloudAccess;
-    let hasBothAccessToPublicAndPrivateCloud = hasPublicCloudAccess && hasPrivateCloudAccess;
+    let companyHasPublicCloudPlatformOnly = companyHasPublicCloudPlatform && !companyHasPrivateCloudPlatform;
+    let companyHasBothPublicAndPrivateCloudPlatforms = companyHasPublicCloudPlatform && companyHasPrivateCloudPlatform;
 
-    if (hasPublicCloudAccessOnly || hasBothAccessToPublicAndPrivateCloud) {
+    if (companyHasPublicCloudPlatformOnly || companyHasBothPublicAndPrivateCloudPlatforms) {
       this._navigationService.navigateTo(RouteKey.ReportOverview);
       return false;
     }
 
-    let noAccessToPublicAndPrivateCloud = !hasPublicCloudAccess && !hasPrivateCloudAccess;
+    let companyHasNoPublicOrPrivateCloudPlatform = !companyHasPublicCloudPlatform && !companyHasPrivateCloudPlatform;
 
-    if (noAccessToPublicAndPrivateCloud) {
+    if (companyHasNoPublicOrPrivateCloudPlatform) {
       this._navigationService.navigateTo(RouteKey.Catalog);
       return false;
     }

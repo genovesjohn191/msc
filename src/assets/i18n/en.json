@@ -258,11 +258,11 @@
       "recentServiceWidget": {
         "title": "Recent Service Requests",
         "description": "For Custom and CloudHealth service requests on subscriptions that have a Comprehensive service level, we offer a best-efforts target of &#60;4 business hours - from the time of submission, to engineer assignment (fully supported services only). Newly submitted requests may take a few minutes to display here.",
-        "noDataFound": "No azure service request slt to display."
+        "noDataFound": "No recent service requests display."
       },
       "plannedWorkWidget": {
         "title": "Current and Future Planned Work",
-        "noDataFound": "No current and future planned work to display."
+        "noDataFound": "No current or future planned work to display."
       }
     },
     "insights": {
@@ -1554,8 +1554,9 @@
     "dataPlural": "Servers",
     "toolsNotInstalled": "Not Installed",
     "toolsUnavailable": "Some management features may be unavailable.",
-    "tooltip": {
+    "resetPasswordTooltip": {
       "osAutomationUnavailable": "This server's password cannot be reset as OS automation is not available for it.\r\n Please contact your account team for more information.",
+      "unsupportedOs": "Password reset is not supported for this server's operating system.",
       "vmwareToolsNotRunning": "This server's password cannot be reset as VMware Tools is not running."
     },
     "columnHeaders": {
@@ -1688,6 +1689,7 @@
     "vmProperties": {
       "title": "Server Properties",
       "status": "Status",
+      "osType": "OS Type",
       "edition": "OS Edition",
       "zone": "Zone",
       "configuration": "Configuration",
@@ -2035,7 +2037,7 @@
     "vdcDropdownList": {
       "header": "Virtual Data Centres",
       "prefix": "{{service_type}} VDC - {{zone}} ",
-      "helpText": "Virtual Data Center to deploy your server. You can deploy your server to any Virtual Data Center available in this list."
+      "helpText": "Virtual data center to deploy your server in. You can deploy your server to any VDC available in this list."
     }
   },
   "serverCreateDetailsStep": {
@@ -4153,6 +4155,7 @@
     "closureNotes": "Closure Notes",
     "contactMeVia": "Contact me via...",
     "company": "Company",
+    "cpu": "CPU",
     "created": "Created",
     "createdDate": "Created Date",
     "createdBy":"Created By",
@@ -4352,7 +4355,7 @@
     "dataFieldRequired": "Data field is required.",
     "recordExists": "Cannot save record. A record with the same type, name and/or data already exists.",
     "cnameNameMatchesRoot": "Cannot save record. CNAME records cannot be placed at the root level of a zone.",
-    "recordNameMatchesZoneName": "The record name specified matches the current zone's name, but does not include a trailing period.<br>Are you sure you wish to continue?",
+    "recordNameMatchesZoneName": "The record name or value specified refers to the current zone's name, but does not include a trailing period.<br>Are you sure you wish to continue?",
     "discardChanges": "This will discard your changes. Do you want to proceed?",
     "deleteZoneRecord": "This will delete the <strong>{{dnsTarget}}</strong> record. Do you want to proceed?",
     "dnsDescription": "Please note, record changes can take up to 72 hours to propagate.",
@@ -4497,6 +4500,10 @@
       "title": "Resume Server",
       "message": "After you resume a server, you cannot return to the state that it was in when you suspended it. To return to the same state repeatedly, a snapshot is required.\r\n\nAre you sure you wish to continue?"
     },
+    "serverRestartSingleVMWTNotApplicable": {
+      "title": "Restart Server",
+      "message": "This server will be stopped abruptly before restarting.\r\n\nAre you sure you wish to continue?"
+    },
     "serverRestartSingleNoVMWTRunning": {
       "title": "Restart Server",
       "message": "This server does not have VMware Tools running and cannot be shut down gracefully before restarting. It will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
@@ -4504,6 +4511,10 @@
     "serverRestartSingleWithVMWTRunning": {
       "title": "Restart Server",
       "message": "This server will be shut down gracefully before restarting.\r\n\nAre you sure you wish to continue?"
+    },
+    "serverRestartMultipleVMWTNotApplicable": {
+      "title": "Restart Servers",
+      "message": "These servers will be stopped abruptly before restarting.\r\n\nAre you sure you wish to continue?"
     },
     "serverRestartMultipleNoVMWTRunning": {
       "title": "Restart Servers",
@@ -4517,6 +4528,10 @@
       "title": "Restart Servers",
       "message": "One or more of the servers you selected do not have VMware Tools running and cannot be shut down gracefully before restarting. These will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
     },
+    "serverRestartMultipleMixedHardwareType": {
+      "title": "Restart Servers",
+      "message": "One or more of the servers you selected cannot be shut down gracefully before restarting. These will be stopped abruptly first.\r\n\nAre you sure you wish to continue?"
+    },
     "serverStopSingle": {
       "title": "Stop Server",
       "message": "Stopping server {{server_name}}.\r\n\nAre you sure you wish to continue?"
@@ -4529,6 +4544,10 @@
       "title": "Suspend Server",
       "message": "Suspending a server will save its current state and pause any operations that are in progress.\r\n\nAre you sure you wish to continue?"
     },
+    "serverStopSingleVMWTNotApplicable": {
+      "title": "Stop Server",
+      "message": "This server will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
+    },
     "serverStopSingleNoVMWTRunning": {
       "title": "Stop Server",
       "message": "This server does not have VMware Tools running and cannot be shut down gracefully. It will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
@@ -4536,6 +4555,10 @@
     "serverStopSingleWithVMWTRunning": {
       "title": "Stop Server",
       "message": "This server will be shut down gracefully.\r\n\nAre you sure you wish to continue?"
+    },
+    "serverStopMultipleVMWTNotApplicable": {
+      "title": "Stop Servers",
+      "message": "These servers will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },
     "serverStopMultipleNoVMWTRunning": {
       "title": "Stop Servers",
@@ -4548,6 +4571,10 @@
     "serverStopMultipleMixedVMWTRunning": {
       "title": "Stop Servers",
       "message": "One or more of the servers you selected do not have VMware Tools running and cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
+    },
+    "serverStopMultipleMixedHardwareType": {
+      "title": "Stop Servers",
+      "message": "One or more of the servers you selected cannot be shut down gracefully. These will be stopped abruptly.\r\n\nAre you sure you wish to continue?"
     },
     "sessionIdle": {
       "title": "Hey, are you still there?",

@@ -200,3 +200,9 @@ export function removeHTMLTagAndFormat(description: string): string {
   description = description.replace(/(<([^>]+)>)/gi, '');
   return description;
 }
+
+export function escapeRegexCharacters(source: string): string {
+  if (isNullOrEmpty(source)) { return; }
+
+  return source.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}

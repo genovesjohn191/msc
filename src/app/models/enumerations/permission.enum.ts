@@ -3,14 +3,14 @@ export enum McsPermission {
   InternalPrivateCloudEngineerAccess = 'InternalPrivateCloudEngineerAccess',
   InternalPublicCloudEngineerAccess = 'InternalPublicCloudEngineerAccess',
 
-  // Self-Managed VM
+  // Self-Managed vCloud VM
   SelfManagedCloudVmAccess = 'SelfManagedCloudVmAccess',
   SelfManagedCloudVmEdit = 'SelfManagedCloudVmEdit',
   SelfManagedCloudVmNicEdit = 'SelfManagedCloudVmNicEdit',
   SelfManagedCloudVmPowerStateEdit = 'SelfManagedCloudVmPowerStateEdit',
   SelfManagedCloudVmSnapshotAccess = 'SelfManagedCloudVmSnapshotAccess',
 
-  // Managed VM
+  // Managed vCloud VM
   ManagedCloudVmAccess = 'ManagedCloudVmAccess',
   ManagedCloudVmEdit = 'ManagedCloudVmEdit',
   ManagedCloudVmNicEdit = 'ManagedCloudVmNicEdit',
@@ -19,7 +19,7 @@ export enum McsPermission {
   ManagedCloudVmPatchManagement = 'ManagedCloudVmPatchManagement',
   ManagedCloudVmManagementIpView = 'ManagedCloudVmManagementIpView',
 
-  // Dedicated VM
+  // vCenter VM
   DedicatedVmAccess = 'DedicatedVmAccess',
   DedicatedVmEdit = 'DedicatedVmEdit',
   DedicatedVmNicEdit = 'DedicatedVmNicEdit',
@@ -27,6 +27,12 @@ export enum McsPermission {
   DedicatedVmSnapshotAccess = 'DedicatedVmSnapshotAccess',
   DedicatedVmPatchManagement = 'DedicatedVmPatchManagement',
   DedicatedVmManagementIpView = 'DedicatedVmManagementIpView',
+
+  // UCS Blade
+  UcsBladeAccess = 'UcsBladeAccess',
+  UcsBladeNicEdit = 'UcsBladeNicEdit',
+  UcsBladePowerStateEdit = 'UcsBladePowerStateEdit',
+  UcsBladeManagementIpView = 'UcsBladeManagementIpView',
 
   // Firewall
   FirewallConfigurationView = 'FirewallConfigurationView',

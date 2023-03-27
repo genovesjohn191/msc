@@ -56,7 +56,20 @@
                       [mcsTooltip]="resourceToolTipText(resource)"
                       [mcsTooltipShow]="!resourceIsValid(resource)"
                       [mcsTooltipPosition]="'right'">
-                      {{ resource.name }}
+                      <ng-container *ngIf="resource.billingDescription && resource.serviceId; else incompleteLabel">
+                        {{ resource.billingDescription }} <span read-only>({{ resource.serviceId }})</span>
+                      </ng-container>
+                      <ng-template #incompleteLabel>
+                        <ng-container *ngIf="!resource.billingDescription && !resource.serviceId">
+                          <span read-only>Unknown</span>
+                        </ng-container>
+                        <ng-container *ngIf="resource.billingDescription">
+                          {{ resource.billingDescription }}
+                        </ng-container>
+                        <ng-container *ngIf="resource.serviceId">
+                          <span read-only>Unknown ({{ resource.serviceId }})</span>
+                        </ng-container>
+                      </ng-template>
                   </span>
                 </mcs-option>
               </mcs-select>

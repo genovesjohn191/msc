@@ -373,7 +373,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * @param server Server details of the selected record
    */
   protected serverChange(server: McsServer): void {
-    this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmStorageView);
     this._resetStorageValues();
     this._updateTableDataSource(server);
     this._getServerSnapshots(server);

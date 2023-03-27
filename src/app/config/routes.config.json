@@ -433,7 +433,7 @@
     "enumCategory": "Compute",
     "enumKey": "Servers",
     "navigationPath": "compute/servers",
-    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
+    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess","UcsBladeAccess"],
     "documentTitle": "Servers - Macquarie Cloud Services"
   },
   "serverDetails": {
@@ -441,7 +441,7 @@
     "enumCategory": "Compute",
     "enumKey": "ServerDetails",
     "navigationPath": "compute/servers",
-    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
+    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess","UcsBladeAccess"],
     "documentTitle": "Server Details - Macquarie Cloud Services"
   },
   "serverDetailsManagement": {
@@ -449,7 +449,7 @@
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsManagement",
     "navigationPath": "management",
-    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
+    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess","UcsBladeAccess"],
     "documentTitle": "Server Management - Macquarie Cloud Services"
   },
   "serverDetailsServices": {
@@ -480,7 +480,7 @@
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsNics",
     "navigationPath": "nics",
-    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess"],
+    "requiredPermissions": ["SelfManagedCloudVmAccess", "ManagedCloudVmAccess", "DedicatedVmAccess","UcsBladeAccess"],
     "documentTitle": "Server NICs - Macquarie Cloud Services"
   },
   "serverCreate": {
@@ -488,7 +488,7 @@
     "enumCategory": "Compute",
     "enumKey": "ServerCreate",
     "navigationPath": "compute/servers/create",
-    "requiredPermissions": ["ManagedCloudVmEdit", "SelfManagedCloudVmEdit", "DedicatedVmEdit"],
+    "requiredPermissions": ["ManagedCloudVmEdit", "SelfManagedCloudVmEdit"],
     "documentTitle": "Create Server - Macquarie Cloud Services"
   },
   "resources": {
@@ -496,7 +496,7 @@
     "enumCategory": "Compute",
     "enumKey": "Resources",
     "navigationPath": "compute/resources",
-    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess"],
+    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess","UcsBladeAccess"],
     "documentTitle": "Resources - Macquarie Cloud Services"
   },
   "resourceDetails": {
@@ -504,7 +504,7 @@
     "enumCategory": "Compute",
     "enumKey": "ResourceDetails",
     "navigationPath": "compute/resources",
-    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess"],
+    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess","UcsBladeAccess"],
     "documentTitle": "Resource Details - Macquarie Cloud Services"
   },
   "resourceDetailsOverview": {
@@ -512,7 +512,7 @@
     "enumCategory": "Compute",
     "enumKey": "ResourceDetailsOverview",
     "navigationPath": "overview",
-    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess"],
+    "requiredPermissions": ["DedicatedVmAccess", "SelfManagedCloudVmAccess", "ManagedCloudVmAccess","UcsBladeAccess"],
     "documentTitle": "Resource Overview - Macquarie Cloud Services"
   },
   "resourceDetailsStorage": {

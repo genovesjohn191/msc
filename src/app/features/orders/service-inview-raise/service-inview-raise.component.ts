@@ -48,7 +48,8 @@ import {
   McsOrderItemCreate,
   McsOrderWorkflow,
   McsServer,
-  OrderIdType
+  OrderIdType,
+  McsServersQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -279,8 +280,11 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    * Get all the Services
    */
   private _getAllServices(): void {
-    // Managed servers for now, but eventually all Services
-    this.managedServers$ = this._apiService.getServers().pipe(
+    let queryParam = new McsServersQueryParams();
+    queryParam.platformType = 'VCloud';
+
+    // Managed vCloud servers for now, but eventually all Services
+    this.managedServers$ = this._apiService.getServers(queryParam).pipe(
       switchMap((response) => of(this._createServerArray(response && response.collection))),
       catchError((error) => {
         this._errorStatus = error?.details?.status;
@@ -301,7 +305,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     let serversGroupArray: ServiceGroup[] = [];
 
     servers.forEach((server) => {
-      if (server.isSelfManaged || server.isDedicated) { return; }
+      if (server.isSelfManaged) { return; }
       let currentResourceName = server.resourceName || RESOURCE_NAME_OTHER;
       let groupedServer: ServiceGroup;
 

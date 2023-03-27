@@ -51,7 +51,8 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   unsubscribeSafely,
-  compareStrings
+  compareStrings,
+  escapeRegexCharacters
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -173,14 +174,38 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     return false;
   }
 
-  public validateHostnameMatchingZoneFqdn(isExistingRecord: boolean, existingRecord?: DnsZoneViewModel): Observable<boolean> {
+  public validateIncompleteFqdnFormat(isExistingRecord: boolean, existingRecord?: DnsZoneViewModel): Observable<boolean> {
     let zoneName = this.zone.name;
+    let hostNamesToValidate = [];
 
-    let hostName = (isExistingRecord)?
-    existingRecord.fgDnsZone?.get('fcHostName')?.value
-    : this.addViewModel.fcHostName?.value;
+    let recordType = (isExistingRecord)?
+    existingRecord.fgDnsZone?.get('fcZoneType')?.value
+    : this.addViewModel.fcZoneType?.value;
 
-    if (compareStrings(zoneName,hostName)) { return of(true); }
+    hostNamesToValidate.push(
+      (isExistingRecord)?
+      existingRecord.fgDnsZone?.get('fcHostName')?.value
+      : this.addViewModel.fcHostName?.value
+    );
+
+    if (recordType === DnsRecordType.MX)  {
+      hostNamesToValidate.push(this.addViewModel.fcData?.value);
+    }
+
+    if (recordType === DnsRecordType.CNAME)  {
+      hostNamesToValidate.push(this.addViewModel.fcData?.value);
+    }
+
+    function shouldShowWarning(): boolean {
+      let zoneNameRegex = new RegExp(`^(?:(?:.*)\\.)?${escapeRegexCharacters(zoneName)}$`,'gi');
+
+      for (const hostName of hostNamesToValidate) {
+        if (zoneNameRegex.test(hostName)) { return true; }
+      }
+      return false;
+    }
+
+    if (!shouldShowWarning())  { return of(true); }
 
     let dialogRef = this._dialogService.openConfirmation({
       type: DialogActionType.Warning,
@@ -203,7 +228,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     if (!allAreValid) { return; }
     if (!this.validateCnameFqdn(false)) { return; }
     if (!this.validateRecordConflict(false)) { return; }
-    this.validateHostnameMatchingZoneFqdn(false).subscribe(confirmation=>{
+    this.validateIncompleteFqdnFormat(false).subscribe(confirmation=>{
       if (!confirmation) { return; }
       let zoneRecord = this._createRequestPayloadByViewModel(this.addViewModel);
       this.processOnGoing$.next(true);
@@ -229,7 +254,7 @@ export class DnsZoneManageComponent implements OnInit, OnChanges, OnDestroy {
     if (!allAreValid) { return; }
     if (!this.validateCnameFqdn(true,record)) { return; }
     if (!this.validateRecordConflict(true,record)) { return; }
-    this.validateHostnameMatchingZoneFqdn(true,record).subscribe(confirmation=>{
+    this.validateIncompleteFqdnFormat(true,record).subscribe(confirmation=>{
       if (!confirmation) { return; }
       let zoneRecord = this._createRequestPayloadByViewModel(record);
       record.setProgressState(true);

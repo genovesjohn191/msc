@@ -1,4 +1,11 @@
 export enum Os {
   Windows = 'WIN',
-  Linux = 'LIN'
+  Linux = 'LIN',
+  ESX = 'ESX'
 }
+
+export const osText = {
+  [Os.Windows]: 'Windows',
+  [Os.Linux]: 'Linux',
+  [Os.ESX]: 'ESX',
+};

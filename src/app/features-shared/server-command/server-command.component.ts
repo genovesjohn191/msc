@@ -31,6 +31,7 @@ import {
   ServerCommand,
   VmPowerstateCommand
 } from '@app/models';
+import { Os } from '@app/models/enumerations/os.enum';
 import { McsApiService } from '@app/services';
 import {
   DialogActionType,
@@ -134,13 +135,15 @@ export class ServerCommandComponent {
   }
 
   public getResetPasswordTooltipText(): string {
-    if(!this.server.isSelfManaged && !this.server.osAutomationAvailable){
-      return this._translateService.instant('servers.tooltip.osAutomationUnavailable');
+    if (this.server.isSelfManaged && this.server.isVCloud)  {
+      return this._translateService.instant('servers.resetPasswordTooltip.vmwareToolsNotRunning');
     }
-    else if(this.server.isSelfManaged && !this.server.isVMWareToolsRunning){
-      return this._translateService.instant('servers.tooltip.vmwareToolsNotRunning');
+
+    if (this.server.operatingSystem.type === Os.ESX)  {
+      return this._translateService.instant('servers.resetPasswordTooltip.unsupportedOs');
     }
-    return null;
+
+    return this._translateService.instant('servers.resetPasswordTooltip.osAutomationUnavailable');
   }
 
   /**
@@ -412,9 +415,13 @@ export class ServerCommandComponent {
           dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.title');
           dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.message');
         }
-        else {
+        else if (this.server.isVMware && this.server.isVM)  {
           dialogTitle = this._translateService.instant('dialog.serverStopSingleNoVMWTRunning.title');
           dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWTRunning.message');
+        }
+        else {
+          dialogTitle = this._translateService.instant('dialog.serverStopSingleVMWTNotApplicable.title');
+          dialogMessage = this._translateService.instant('dialog.serverStopSingleVMWTNotApplicable.message');
         }
         break;
 
@@ -425,9 +432,13 @@ export class ServerCommandComponent {
           dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.title');
           dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.message');
         }
-        else {
+        else if (this.server.isVMware && this.server.isVM) {
           dialogTitle = this._translateService.instant('dialog.serverRestartSingleNoVMWTRunning.title');
           dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWTRunning.message');
+        }
+        else {
+          dialogTitle = this._translateService.instant('dialog.serverRestartSingleVMWTNotApplicable.title');
+          dialogMessage = this._translateService.instant('dialog.serverRestartSingleVMWTNotApplicable.message');
         }
         break;
     }

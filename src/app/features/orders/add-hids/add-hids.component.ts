@@ -51,7 +51,8 @@ import {
   McsServerHostSecurityHids,
   OrderIdType,
   ServiceOrderState,
-  HttpStatusCode
+  HttpStatusCode,
+  McsServersQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -227,15 +228,17 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   private _subscribeToManagedCloudServers(): void {
     this.serverGroups$ = this._apiService.getServerHostSecurityHids().pipe(
       switchMap((hidsCollection) => {
+        let queryParam = new McsServersQueryParams();
+        queryParam.platformType = 'VCloud';
 
-        return this._apiService.getServers().pipe(
+        return this._apiService.getServers(queryParam).pipe(
           map((serversCollection) => {
             let serverGroups: McsOptionGroup[] = [];
             let hids = getSafeProperty(hidsCollection, (obj) => obj.collection) || [];
             let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
             servers.forEach((server) => {
-              if (!server.isManagedVCloud) { return; }
+              if (server.isSelfManaged) { return; }
 
               let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
               let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);

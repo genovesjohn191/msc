@@ -186,6 +186,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       McsPermission.SelfManagedCloudVmAccess,
       McsPermission.ManagedCloudVmAccess,
       McsPermission.DedicatedVmAccess,
+      McsPermission.UcsBladeAccess,
       McsPermission.FirewallConfigurationView
     ]);
 
@@ -214,15 +215,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._accessControlService.hasAccessToFeature([McsFeatureFlag.Crisp]);
   }
 
-  public get hasPrivateCloudAccess(): boolean {
+  public get companyHasPrivateCloudPlatform(): boolean {
     return this._authenticationIdentity.platformSettings.hasPrivateCloud;
   }
 
-  public get hasPublicCloudAccess(): boolean {
+  public get companyHasPublicCloudPlatform(): boolean {
     return this._authenticationIdentity.platformSettings.hasPublicCloud;
   }
 
-  public get hasHybridCloudAccess(): boolean {
+  public get companyHasHybridCloudPlatform(): boolean {
     return ((this._authenticationIdentity.platformSettings.hasHybridCloud) &&
       (this._accessControlService.hasAccessToFeature([McsFeatureFlag.HybridCloud])) &&
       (this._accessControlService.hasAccessToFeature([McsFeatureFlag.ExtenderListing, McsFeatureFlag.ApplicationRecoveryListing])));
@@ -324,7 +325,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _initPrivateCloudNav(): void {
     this._showPrivateCloudMenu = (this._navInitialized && this._showPrivateCloudMenu)
       ? this._showPrivateCloudMenu
-      : this.hasPrivateCloudAccess && this.isPrivateCloudRoute;
+      : this.companyHasPrivateCloudPlatform && this.isPrivateCloudRoute;
 
     this._showComputeSubmenu = (this._navInitialized && this._showComputeSubmenu)
       ? this._showComputeSubmenu
@@ -342,7 +343,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _initPublicCloudNav(): void {
     this._showPublicCloudMenu = (this._navInitialized && this._showPublicCloudMenu)
       ? this._showPublicCloudMenu
-      : this.hasPrivateCloudAccess && this.isPublicCloudRoute;
+      : this.companyHasPrivateCloudPlatform && this.isPublicCloudRoute;
 
     this._showDashboardSubmenu = (this._navInitialized && this._showDashboardSubmenu)
       ? this._showDashboardSubmenu
@@ -360,7 +361,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _initHybridCloudNav(): void {
     this._showHybridCloudMenu = (this._navInitialized && this._showHybridCloudMenu)
       ? this._showHybridCloudMenu
-      : this.hasHybridCloudAccess && this.isHybridCloudRoute;
+      : this.companyHasHybridCloudPlatform && this.isHybridCloudRoute;
   }
 
   private _updateOnCompanySwitch(): void {

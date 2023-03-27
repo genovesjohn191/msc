@@ -205,7 +205,7 @@
       </ng-container>
 
       <!-- Private Cloud -->
-      <li *ngIf="hasPrivateCloudAccess">
+      <li *ngIf="companyHasPrivateCloudPlatform">
         <a (click)="toggleThis('showPrivateCloudMenu')"
           [class.active]="isPrivateCloudRoute"
           mcsId>
@@ -226,7 +226,7 @@
           </li>
 
           <!-- Compute -->
-          <li *mcsAccessControl="['DedicatedVmAccess','SelfManagedCloudVmAccess', 'ManagedCloudVmAccess']">
+          <li *mcsAccessControl="['DedicatedVmAccess','SelfManagedCloudVmAccess', 'ManagedCloudVmAccess', 'UcsBladeAccess']">
             <a (click)="toggleThis('showComputeSubmenu')"
               [class.active]="selectedCategory === routerCategoryEnum.Compute"
               mcsId="compute-link">
@@ -360,7 +360,7 @@
       </li>
 
       <!-- Public Cloud -->
-      <li *ngIf="hasPublicCloudAccess">
+      <li *ngIf="companyHasPublicCloudPlatform">
         <a (click)="togglePublicCloud('showPublicCloudMenu')"
           [class.active]="isPublicCloudRoute"
           mcsId="public-cloud-access-link">
@@ -544,7 +544,7 @@
         </ul>
       </li>
       <!-- Hybrid Cloud -->
-      <li *ngIf="hasHybridCloudAccess">
+      <li *ngIf="companyHasHybridCloudPlatform">
         <a (click)="toggleThis('showHybridCloudMenu')"
           [class.active]="isHybridCloudRoute"
           mcsId="hybrid-cloud-access-link">

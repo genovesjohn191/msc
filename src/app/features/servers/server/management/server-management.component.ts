@@ -45,7 +45,9 @@ import {
   McsServerMedia,
   McsServerThumbnail,
   McsServerUpdate,
-  RouteKey
+  RouteKey,
+  PlatformType,
+  osText
 } from '@app/models';
 import {
   DialogConfirmation,
@@ -148,6 +150,10 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
   public get ipAllocationModeEnum(): any {
     return IpAllocationMode;
+  }
+
+  public get serverOsTypeText(): any {
+    return osText;
   }
 
   public getMinimumMemoryGB(server: McsServer): number {
@@ -343,8 +349,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this._getServerMedia(server);
 
     let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
-    this._getResourceCompute(resourceId);
-    this._getResourceCatalogs(resourceId);
+    this._getResourceCompute(resourceId, server);
+    this._getResourceCatalogs(resourceId, server);
 
     this._checkScaleParamMode();
 
@@ -381,8 +387,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * Get the server resource compute
    */
-  private _getResourceCompute(resourceId: string): void {
+  private _getResourceCompute(resourceId: string, server: McsServer): void {
     if (isNullOrEmpty(resourceId)) { return; }
+    if (server?.platform.type !== PlatformType.VCloud) { return; }
 
     this.apiService.getResourceCompute(resourceId).subscribe();
   }
@@ -390,8 +397,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * Get the resource media list
    */
-  private _getResourceCatalogs(resourceId: string): void {
+  private _getResourceCatalogs(resourceId: string, server: McsServer): void {
     if (isNullOrEmpty(resourceId)) { return; }
+    if (server?.platform.type !== PlatformType.VCloud) { return; }
 
     this.resourceCatalogs$ = this.apiService.getResourceCatalogs(resourceId).pipe(
       map((response) => {
@@ -424,6 +432,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Check whether server's primary disk resides on a disabled storage profile
    */
   private _validateDisabledStorageProfile(resourceId: string, server: McsServer): void {
+      if (isNullOrEmpty(resourceId)) { return; }
+      if (server?.platform.type !== PlatformType.VCloud) { return; }
+
       this.apiService.getResourceStorages(resourceId).pipe(
         map((response) => getSafeProperty(response, (obj) => obj))
       ).subscribe((_resourceStorage) => {

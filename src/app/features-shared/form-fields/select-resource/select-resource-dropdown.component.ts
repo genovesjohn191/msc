@@ -36,7 +36,8 @@ import {
 import {
   McsPermission,
   McsResource,
-  ServiceType
+  ServiceType,
+  McsResourceQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -68,6 +69,9 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
     this.fcResource.setValue(resource);
     this._value = val;
   }
+
+  @Input()
+  public platform: string = undefined;
 
   public get value(): McsResource {
     return this._value;
@@ -141,16 +145,17 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
   private _subscribeToAllResources(): void {
     this.resources$ = this.getResourcesByAccess().pipe(
       map((resources) => {
-        let result = resources.filter((resource) => !resource.isDedicated);
-        this._resources = result;
-        return result;
+        return resources;
       })
     );
     this._changeDetectorRef.markForCheck();
   }
 
   public getResourcesByAccess(): Observable<McsResource[]> {
-    return this._apiService.getResources().pipe(
+    let queryParam = new McsResourceQueryParam();
+    queryParam.platform = this.platform;
+
+    return this._apiService.getResources(null, queryParam).pipe(
       map((response) => {
         let managedResourceIsOn = this._accessControlService.hasPermission([McsPermission.OrderEdit]);
 

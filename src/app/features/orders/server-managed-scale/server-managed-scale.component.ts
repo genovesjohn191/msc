@@ -59,7 +59,8 @@ import {
   McsServer,
   McsServerCompute,
   OrderIdType,
-  ServiceOrderState
+  ServiceOrderState,
+  McsServersQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -353,13 +354,16 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    * Gets all the server and filters out the manage cloud server
    */
   private _subscribeToManagedCloudServers(): void {
-    this.serverGroups$ = this._apiService.getServers().pipe(
+    let queryParam = new McsServersQueryParams();
+    queryParam.platformType = 'VCloud';
+
+    this.serverGroups$ = this._apiService.getServers(queryParam).pipe(
       map((serversCollection) => {
         let serverGroups: McsOptionGroup[] = [];
         let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
         this._setManagedServerDefaultValue(servers);
         servers.forEach((server) => {
-          if (!server.isManagedVCloud) { return; }
+          if (server.isSelfManaged) { return; }
 
           let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || OTHERS_RESOURCE_NAME;
           let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);

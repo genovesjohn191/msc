@@ -17,22 +17,51 @@
           <span [innerHTML]="resource?.availabilityZone | mcsDataLabel"></span>
         </mcs-item>
 
-        <ng-container *ngIf="resourceDetailLabels.computeConfigurationShown">
-          <mcs-item>
+        <mcs-item>
+          <ng-container *ngIf="(resourceDetailLabels.computeUsageShown && resourceDetailLabels.computeTotalShown); else partialComputeMemory">
             <span>{{ 'label.ram' | translate }}:</span>
             <mcs-capacity-bar full-width
               [(ngModel)]="resource.compute.memoryUsedMB"
               [maxValue]="resource.compute.memoryLimitMB"></mcs-capacity-bar>
-          </mcs-item>
+          </ng-container>
+          <ng-template #partialComputeMemory>
+            <ng-container *ngIf="resourceDetailLabels.computeUsageShown">
+              <span>Used {{ 'label.ram' | translate }}:</span>
+              <span>{{ resource?.compute.memoryUsedMB | mcsDataSize: 'MB' }}</span>
+            </ng-container>
+            <ng-container *ngIf="resourceDetailLabels.computeTotalShown">
+              <span>Total {{ 'label.ram' | translate }}:</span>
+              <ng-container *ngIf="resource?.compute.memoryLimitMB !== null; else unknownValue">
+                <span>{{ resource?.compute.memoryLimitMB.toString() | mcsDataSize: 'MB' }}</span>
+              </ng-container>
+            </ng-container>
+          </ng-template>
+        </mcs-item>
 
-          <mcs-item>
-            <span>{{ 'label.vCpu' | translate }}:</span>
+        <mcs-item>
+          <ng-container *ngIf="(resourceDetailLabels.computeUsageShown && resourceDetailLabels.computeTotalShown); else partialComputeCpu">
+            <span>{{ cpuLabel }}:</span>
             <mcs-capacity-bar full-width [matTooltip]="ghzTooltip(resource?.compute?.cpuLimitGhz)"
               [hideDataSize]="true"
               [(ngModel)]="resource.compute.cpuUsed"
               [maxValue]="resource.compute.cpuLimit"></mcs-capacity-bar>
-          </mcs-item>
-        </ng-container>
+          </ng-container>
+          <ng-template #partialComputeCpu>
+            <ng-container *ngIf="resourceDetailLabels.computeUsageShown">
+              <span>Used {{ cpuLabel }}:</span>
+              <span [innerHTML]="resource?.compute.cpuUsed | mcsDataLabel"></span>
+            </ng-container>
+            <ng-container *ngIf="resourceDetailLabels.computeTotalShown">
+              <span>Total {{ cpuLabel }}:</span>
+              <ng-container *ngIf="resource?.compute.cpuLimit !== null; else unknownValue">
+                <span>{{ resource?.compute.cpuLimit.toString() }}</span>
+              </ng-container>
+            </ng-container>
+          </ng-template>
+          <ng-template #unknownValue>
+            <span read-only>{{ 'label.unknown' | translate }}</span>
+          </ng-template>
+        </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
 
@@ -43,7 +72,7 @@
           <h2>{{ resourceDetailLabels.platformTitle }}</h2>
         </ng-container>
 
-        <ng-container *mcsAccessControl="['DedicatedVmEdit', 'ManagedCloudVmEdit', 'SelfManagedCloudVmEdit']">
+        <ng-container *mcsAccessControl="['OrderEdit', 'SelfManagedCloudVmEdit']">
           <ng-container *ngIf="resourceDetailLabels.newServerButtonShown">
             <mcs-item *ngIf="canCreateNewServer(resource)">
               <button mcsButton size="small" mcsId

@@ -35,14 +35,12 @@ export enum McsFeatureFlag {
   ResourceMediaUpload = 'EnableResourceMediaUpload',
 
   DedicatedVmRename = 'EnableDedicatedVmRename',
-  DedicatedVmPasswordReset = 'EnableDedicatedVmPasswordReset',
   DedicatedVmSnapshotView = 'EnableDedicatedVmSnapshotView',
   DedicatedVmConsole = 'EnableDedicatedVmConsole',
   DedicatedVmMediaView = 'EnableDedicatedVmMediaView',
   DedicatedVmNicView = 'EnableDedicatedVmNicView',
-  DedicatedVmStorageView = 'EnableDedicatedVmStorageView',
 
-  DedicatedBladeNicEdit = "EnableUcsBladeNicEdit", 
+  UcsBladeNicEdit = "EnableUcsBladeNicEdit",
 
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingStretchedVdcStorageExpand = 'EnableOrderingStretchedVdcStorageExpand',

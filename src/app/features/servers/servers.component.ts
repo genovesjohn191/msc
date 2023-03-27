@@ -33,6 +33,7 @@ import {
 import { McsEvent } from '@app/events';
 import {
   serviceTypeText,
+  osText,
   McsFilterInfo,
   McsQueryParam,
   McsResource,
@@ -88,6 +89,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'hardwareType' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'osType' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'osEdition' }),
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'vCPU' }),
     createObject(McsFilterInfo, { value: false, exclude: false, id: 'ram' }),
@@ -140,6 +142,10 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
 
   public get serverServiceTypeText(): any {
     return serviceTypeText;
+  }
+
+  public get serverOsTypeText(): any {
+    return osText;
   }
 
   public get serverCommand() {
@@ -422,6 +428,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
   private _isColumnIncluded(filter: McsFilterInfo): boolean {
     if (filter.id === 'select') {
       return this._accessControlService.hasPermission([
+        'UcsBladePowerStateEdit',
         'DedicatedVmPowerStateEdit',
         'ManagedCloudVmPowerStateEdit',
         'SelfManagedCloudVmPowerStateEdit'
@@ -430,6 +437,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
 
     if (filter.id === 'action') {
       return this._accessControlService.hasPermission([
+        'UcsBladePowerStateEdit',
         'DedicatedVmPowerStateEdit',
         'ManagedCloudVmPowerStateEdit',
         'SelfManagedCloudVmPowerStateEdit'
@@ -438,6 +446,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
 
     if (filter.id === 'managementIp') {
       return this._accessControlService.hasPermission([
+        'UcsBladeManagementIpView',
         'DedicatedVmManagementIpView',
         'ManagedCloudVmManagementIpView'
       ]);
@@ -449,24 +458,39 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
     let dialogTitle = '';
     let dialogMessage = '';
     let dialogConfirmText = '';
+    let selectedServers = this.dataSelection.getSelectedItems();
 
-    let isVMWTRunningValues = this.dataSelection.getSelectedItems().map(item => item.vmwareTools?.hasToolsRunning);
-    let isMixed = false;
+    let isVMWTRunningValues = selectedServers.map(item => item.vmwareTools?.hasToolsRunning);
+    let isMixedVMWTStatus = false;
     if (!isNullOrEmpty(isVMWTRunningValues || isVMWTRunningValues.length > 1)) {
-      isMixed = [...new Set(isVMWTRunningValues)].length > 1;
+      isMixedVMWTStatus = [...new Set(isVMWTRunningValues)].length > 1;
+    };
+
+    let isMixedHWTypeValues = selectedServers.map(item => (item.isVM && item.isVMware));
+    let isMixedHWType = false;
+    if (!isNullOrEmpty(isMixedHWTypeValues || isMixedHWTypeValues.length > 1)) {
+      isMixedHWType = [...new Set(isMixedHWTypeValues)].length > 1;
     };
 
     switch (action) {
       case ServerCommand.Stop:
         dialogConfirmText = this._translateService.instant('action.stop');
 
-        if (this.dataSelection.getSelectedItems().length > 1) {
-          if (isMixed) {
+        if (selectedServers.length > 1) {
+          if (isMixedHWType) {
+            dialogTitle = this._translateService.instant('dialog.serverStopMultipleMixedHardwareType.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopMultipleMixedHardwareType.message');
+          }
+          else if (isMixedVMWTStatus) {
             dialogTitle = this._translateService.instant('dialog.serverStopMultipleMixedVMWTRunning.title');
             dialogMessage = this._translateService.instant('dialog.serverStopMultipleMixedVMWTRunning.message');
           }
           else {
-            if (isVMWTRunningValues[0]) {
+            if (!(selectedServers[0].isVMware && selectedServers[0].isVM)) {
+              dialogTitle = this._translateService.instant('dialog.serverStopMultipleVMWTNotApplicable.title');
+              dialogMessage = this._translateService.instant('dialog.serverStopMultipleVMWTNotApplicable.message');
+            }
+            else if (isVMWTRunningValues[0]) {
               dialogTitle = this._translateService.instant('dialog.serverStopMultipleWithVMWTRunning.title');
               dialogMessage = this._translateService.instant('dialog.serverStopMultipleWithVMWTRunning.message');
             }
@@ -477,7 +501,11 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
           }
         }
         else {
-          if (isVMWTRunningValues[0]) {
+          if (!(selectedServers[0].isVMware && selectedServers[0].isVM)) {
+            dialogTitle = this._translateService.instant('dialog.serverStopSingleVMWTNotApplicable.title');
+            dialogMessage = this._translateService.instant('dialog.serverStopSingleVMWTNotApplicable.message');
+          }
+          else if (isVMWTRunningValues[0]) {
             dialogTitle = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.title');
             dialogMessage = this._translateService.instant('dialog.serverStopSingleWithVMWTRunning.message');
           }
@@ -486,18 +514,26 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
             dialogMessage = this._translateService.instant('dialog.serverStopSingleNoVMWTRunning.message');
           }
         }
-        break;
+      break;
 
       case ServerCommand.Restart:
         dialogConfirmText = this._translateService.instant('action.restart');
 
-        if (this.dataSelection.getSelectedItems().length > 1) {
-          if (isMixed) {
+        if (selectedServers.length > 1) {
+          if (isMixedHWType) {
+            dialogTitle = this._translateService.instant('dialog.serverRestartMultipleMixedHardwareType.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartMultipleMixedHardwareType.message');
+          }
+          else if (isMixedVMWTStatus) {
             dialogTitle = this._translateService.instant('dialog.serverRestartMultipleMixedVMWTRunning.title');
             dialogMessage = this._translateService.instant('dialog.serverRestartMultipleMixedVMWTRunning.message');
           }
           else {
-            if (isVMWTRunningValues[0]) {
+            if (selectedServers[0].isUcs) {
+              dialogTitle = this._translateService.instant('dialog.serverRestartMultipleVMWTNotApplicable.title');
+              dialogMessage = this._translateService.instant('dialog.serverRestartMultipleVMWTNotApplicable.message');
+            }
+            else if (isVMWTRunningValues[0]) {
               dialogTitle = this._translateService.instant('dialog.serverRestartMultipleWithVMWTRunning.title');
               dialogMessage = this._translateService.instant('dialog.serverRestartMultipleWithVMWTRunning.message');
             }
@@ -508,7 +544,11 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
           }
         }
         else {
-          if (isVMWTRunningValues[0]) {
+          if (selectedServers[0].isUcs) {
+            dialogTitle = this._translateService.instant('dialog.serverRestartSingleVMWTNotApplicable.title');
+            dialogMessage = this._translateService.instant('dialog.serverRestartSingleVMWTNotApplicable.message');
+          }
+          else if (isVMWTRunningValues[0]) {
             dialogTitle = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.title');
             dialogMessage = this._translateService.instant('dialog.serverRestartSingleWithVMWTRunning.message');
           }
@@ -517,7 +557,7 @@ export class ServersComponent extends McsPageBase implements OnInit, OnDestroy {
             dialogMessage = this._translateService.instant('dialog.serverRestartSingleNoVMWTRunning.message');
           }
         }
-        break;
+      break;
     }
 
     return {

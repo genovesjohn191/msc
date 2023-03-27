@@ -43,43 +43,49 @@
       </a>
     </ng-container>
 
-    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
-      <a mcsButton="basic" color="white" labelPlacement="left"
-        (click)="onExecuteCommand(serverCommandEnum.Suspend)"
-        [disabled]="!server.suspendable"
-        mcsId
-        mcsEventTracker="suspend-server"
-        mcsEventCategory="server"
-        mcsEventLabel="server-command-tool">
-        {{ 'servers.suspend' | translate }}
-      </a>
+    <ng-container *ngIf="server.isVM">
+      <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
+        <a mcsButton="basic" color="white" labelPlacement="left"
+          (click)="onExecuteCommand(serverCommandEnum.Suspend)"
+          [disabled]="!server.suspendable"
+          mcsId
+          mcsEventTracker="suspend-server"
+          mcsEventCategory="server"
+          mcsEventLabel="server-command-tool">
+          {{ 'servers.suspend' | translate }}
+        </a>
+      </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
-      <a mcsButton="basic" color="white" labelPlacement="left"
-        (click)="onExecuteCommand(serverCommandEnum.Resume)"
-        [disabled]="!server.resumable"
-        mcsId
-        mcsEventTracker="resume-server"
-        mcsEventCategory="server"
-        mcsEventLabel="server-command-tool">
-        {{ 'servers.resume' | translate }}
-      </a>
+    <ng-container *ngIf="server.isVM">
+      <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
+        <a mcsButton="basic" color="white" labelPlacement="left"
+          (click)="onExecuteCommand(serverCommandEnum.Resume)"
+          [disabled]="!server.resumable"
+          mcsId
+          mcsEventTracker="resume-server"
+          mcsEventCategory="server"
+          mcsEventLabel="server-command-tool">
+          {{ 'servers.resume' | translate }}
+        </a>
+      </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
-      <a mcsButton="basic" color="white" labelPlacement="left"
-        (click)="onExecuteCommand(serverCommandEnum.Scale)"
-        [disabled]="!server.scaleable"
-        mcsId
-        mcsEventTracker="scale-server"
-        mcsEventCategory="server"
-        mcsEventLabel="server-command-tool">
-        {{ 'servers.scale' | translate }}
-      </a>
+    <ng-container *ngIf="server.isVCloud">
+      <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
+        <a mcsButton="basic" color="white" labelPlacement="left"
+          (click)="onExecuteCommand(serverCommandEnum.Scale)"
+          [disabled]="!server.scaleable"
+          mcsId
+          mcsEventTracker="scale-server"
+          mcsEventCategory="server"
+          mcsEventLabel="server-command-tool">
+          {{ 'servers.scale' | translate }}
+        </a>
+      </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="server.isSelfManaged">
+    <ng-container *ngIf="server.isVCloud && server.isSelfManaged">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Clone)">
         <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Clone)"
@@ -93,7 +99,7 @@
       </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="server.isSelfManaged">
+    <ng-container *ngIf="server.isVM && server.isSelfManaged">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Rename)"
         [disabled]="!server.renameable"
@@ -102,13 +108,13 @@
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool"
         *mcsAccessControl="[]; feature: 'EnableDedicatedVmRename';
-          validateWhen: server.isDedicated">
+          validateWhen: server.isVCenter">
         {{ 'servers.rename' | translate }}
       </a>
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Delete)">
-      <ng-container *ngIf="server.isSelfManaged">
+      <ng-container *ngIf="server.isVM && server.isSelfManaged">
         <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Delete)"
           [disabled]="!server.deletable"
@@ -133,26 +139,23 @@
       </a>
     </ng-container>
 
-    <div [matTooltip]="getResetPasswordTooltipText()"
-         [matTooltipDisabled]="server.canResetPassword"
-         matTooltipClass="mat-tooltip">
-      <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmPasswordReset'; validateWhen: server.isDedicated">
-        <ng-container *mcsAccessControl="[]; feature: 'EnableManagedVmPasswordReset';
-          validateWhen: server.isManagedVCloud">
-          <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
-            <a mcsButton="basic" color="white" labelPlacement="left"
-              (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
-              [disabled]="!server.canResetPassword"
-              mcsId
-              mcsEventTracker="reset-server-password"
-              mcsEventCategory="server"
-              mcsEventLabel="server-command-tool">
-              {{ 'servers.resetVmPassword' | translate }}
-            </a>
-          </ng-container>
-        </ng-container >
-      </ng-container>
-    </div>
+    <ng-container>
+      <div [matTooltip]="getResetPasswordTooltipText()"
+           [matTooltipDisabled]="server.canResetPassword"
+           matTooltipClass="mat-tooltip">
+        <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
+          <a mcsButton="basic" color="white" labelPlacement="left"
+            (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
+            [disabled]="!server.canResetPassword"
+            mcsId
+            mcsEventTracker="reset-server-password"
+            mcsEventCategory="server"
+            mcsEventLabel="server-command-tool">
+            {{ 'servers.resetVmPassword' | translate }}
+          </a>
+        </ng-container>
+      </div>
+    </ng-container>
 
     <mcs-context-menu-link [serviceId]="server.serviceId"
       [serviceChangeAvailable]="server.serviceChangeAvailable"

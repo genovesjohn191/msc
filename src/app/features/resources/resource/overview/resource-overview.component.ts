@@ -36,7 +36,9 @@ type ResourceDetailLabels = {
   platformTitle: string;
   newServerButtonShown: boolean;
   storagePanelShown: boolean;
-  computeConfigurationShown: boolean;
+  computeTotalShown: boolean;
+  computeUsageShown: boolean;
+  rawCpuShown: boolean;
   platformLink: string;
   storageTitle: string;
   storageRefreshMessage: string;
@@ -76,6 +78,12 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
 
   public get routeKeyEnum(): any {
     return RouteKey;
+  }
+
+  public get cpuLabel(): string {
+    return this.resourceDetailLabels.rawCpuShown?
+      this.translateService.instant('label.cpu') :
+      this.translateService.instant('label.vCpu')
   }
 
   /**
@@ -123,7 +131,7 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
     let isSelfManaged = getSafeProperty(resource, (obj) => obj.isSelfManaged);
     let requiredPermissions = isSelfManaged ?
       [McsPermission.SelfManagedCloudVmEdit] :
-      [McsPermission.OrderEdit, McsPermission.OrderApprove];
+      [McsPermission.OrderEdit];
 
     return this._accessControlService.hasPermission(requiredPermissions)
       && !!getSafeProperty(resource, (obj) => obj.platform === PlatformType.VCloud);
@@ -216,7 +224,9 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
       platformTitle: this.translateService.instant('resources.overview.vcloud.platform.title'),
       newServerButtonShown: true,
       storagePanelShown: true,
-      computeConfigurationShown: true,
+      computeUsageShown: true,
+      computeTotalShown: true,
+      rawCpuShown: false,
       platformLink: this.translateService.instant('resources.overview.vcloud.platform.linkLabel'),
       storageTitle: this.translateService.instant('resources.overview.shared.storageProfiles.title'),
       storageRefreshMessage: this.translateService.instant('resources.overview.shared.storageProfiles.storageRefreshMessage'),
@@ -229,7 +239,9 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
       platformTitle: this.translateService.instant('resources.overview.vcenter.platform.title'),
       newServerButtonShown: false,
       storagePanelShown: true,
-      computeConfigurationShown: true,
+      computeUsageShown: true,
+      computeTotalShown: true,
+      rawCpuShown: false,
       platformLink: this.translateService.instant('resources.overview.vcenter.platform.linkLabel'),
       storageTitle: this.translateService.instant('resources.overview.shared.datastores.title'),
       storageRefreshMessage: this.translateService.instant('resources.overview.shared.datastores.storageRefreshMessage'),
@@ -242,7 +254,9 @@ export class ResourceOverviewComponent extends ResourceDetailsBase implements On
       platformTitle: this.translateService.instant('resources.overview.ucs.platform.title'),
       newServerButtonShown: false,
       storagePanelShown: false,
-      computeConfigurationShown: false,
+      computeUsageShown: false,
+      computeTotalShown: true,
+      rawCpuShown: true,
       platformLink: this.translateService.instant('resources.overview.ucs.platform.linkLabel'),
       storageTitle: null,
       storageRefreshMessage: null,

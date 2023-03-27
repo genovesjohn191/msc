@@ -249,8 +249,14 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
    * Returns true when server is scaleable
    */
   public get scaleable(): boolean {
-    let isScaleable = this.executable && !this.isDedicated;
-    return this.isSelfManaged ? isScaleable : isScaleable && this.serviceChangeAvailable;
+    if (!this.isVCloud) { return false; }
+    if (!this.executable) { return false; }
+
+    if (this.isSelfManaged || this.serviceChangeAvailable)  {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -303,12 +309,11 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
    * Returns true when server can reset the password
    */
   public get canResetPassword(): boolean {
-    if(this.isSelfManaged){
-      return this.executable && this.isVMWareToolsRunning;
-    }
-    else {
-      return this.executable && this.osAutomationAvailable;
-    }
+    if (!this.executable) { return false; }
+    if (this.operatingSystem.type === Os.ESX) { return false; }
+
+    return (this.isSelfManaged && this.isVCloud)?
+      this.isVMWareToolsRunning : this.osAutomationAvailable;
   }
 
   /**

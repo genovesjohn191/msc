@@ -47,7 +47,8 @@ import {
   McsOrderWorkflow,
   McsResource,
   McsResourceCompute,
-  OrderIdType
+  OrderIdType,
+  McsResourceQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -317,10 +318,12 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
    * Get all the available resources
    */
   private _getAllResources(): void {
-    this.resources$ = this._apiService.getResources().pipe(
+    let queryParam = new McsResourceQueryParam();
+    queryParam.platform = 'VCloud';
+
+    this.resources$ = this._apiService.getResources(null, queryParam).pipe(
       map((response) => {
-        let resources = getSafeProperty(response, (obj) => obj.collection)
-          .filter((resource) => !resource.isDedicated);
+        let resources = getSafeProperty(response, (obj) => obj.collection);
         this._resourcesCount = resources?.length;
         return resources;
       }),

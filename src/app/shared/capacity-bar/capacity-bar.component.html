@@ -1,7 +1,7 @@
 <div class="capacity-bar-content" (blur)="onBlur()">
   <div class="capacity-bar" [ngClass]="{'low': isLow}" [ngStyle]="{width: percentage}"></div>
   <div [ngClass]="{'low': isLow}" class="capacity-bar-label">
-    <span *ngIf="(value | mcsIsNotNullOrEmpty); else emptyLabel">
+    <span *ngIf="(value !== null); else emptyLabel">
       <ng-container *ngIf="!hideDataSize; else emptyDataSize">
         {{ value | mcsDataSize: 'MB' }}
       </ng-container>

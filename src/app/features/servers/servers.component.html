@@ -5,7 +5,7 @@
   <mcs-top-panel *mcsTopPanelDef [active]="dataSelection?.someItemsAreSelected()">
 
     <!-- Server Creation -->
-    <ng-container *mcsAccessControl="['DedicatedVmEdit', 'ManagedCloudVmEdit', 'SelfManagedCloudVmEdit']">
+    <ng-container *mcsAccessControl="['OrderEdit', 'SelfManagedCloudVmEdit']">
       <ng-container *ngIf="hasCreateResources">
         <mcs-top-panel-item *mcsTopPanelItemDef>
           <mcs-action-item
@@ -24,7 +24,7 @@
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <mcs-responsive-panel *mcsAccessControl="['DedicatedVmPowerStateEdit','ManagedCloudVmPowerStateEdit', 'SelfManagedCloudVmPowerStateEdit']">
+        <mcs-responsive-panel *mcsAccessControl="['DedicatedVmPowerStateEdit','ManagedCloudVmPowerStateEdit', 'SelfManagedCloudVmPowerStateEdit','UcsBladePowerStateEdit']">
           <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!canExecuteAction('startable')"
             (click)="startMultipleServers()"
@@ -149,7 +149,7 @@
             [disabled]="row.isProcessing"
             mcsCursor="default"
             mcsStopPropagation>
-            <mcs-checkbox color="dark" *mcsAccessControl="getPowerStatePermission(row).vmPowerStateEdit;"
+            <mcs-checkbox color="dark" *mcsAccessControl="getPowerStatePermission(row).serverPowerStateEdit;"
               [checked]="dataSelection?.isItemSelected(row)"
               (statusChange)="dataSelection?.toggleItemSelection(row)">
             </mcs-checkbox>
@@ -196,6 +196,17 @@
           </th>
           <td mat-cell *matCellDef="let row" hidden-xsmall>
             <span [innerHTML]="row.hardware.typeLabel | mcsDataLabel: 'Unknown'">
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- OS Column -->
+        <ng-container matColumnDef="osType">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall disableClear>
+            {{ 'columnHeader.osType' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-xsmall>
+            <span [innerHTML]="serverOsTypeText[row.operatingSystem?.type] | mcsDataLabel: 'Unknown'">
             </span>
           </td>
         </ng-container>
@@ -356,7 +367,7 @@
             text-center
             class="action-data-cell">
             <mcs-server-command mcsId="server-command"
-              *mcsAccessControl="getPowerStatePermission(row).vmPowerStateEdit;"
+              *mcsAccessControl="getPowerStatePermission(row).serverPowerStateEdit;"
               [server]="row"
               [excluded]="excludedCommands"></mcs-server-command>
           </td>

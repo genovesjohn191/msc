@@ -5,7 +5,7 @@
     <mcs-grid>
       <mcs-grid-row>
         <!-- VM Properties -->
-        <mcs-grid-column sizeSm="12">
+        <mcs-grid-column sizeSm="12" sizeLg="6">
           <mcs-presentation-panel mcsId="vm-properties">
             <ng-container mcsPresentationPanelHeader>
               <h2>{{ 'serverManagement.vmProperties.title' | translate }}</h2>
@@ -22,6 +22,11 @@
                 mcsTooltipPosition="right"></mcs-loader>
 
               <span [innerHTML]="server.statusLabel | mcsDataLabel: 'Unknown'"></span>
+            </mcs-item>
+
+            <mcs-item>
+              <span>{{ 'serverManagement.vmProperties.osType' | translate }}:</span>
+              <span [innerHTML]="serverOsTypeText[server.operatingSystem?.type] | mcsDataLabel: 'Unknown'"></span>
             </mcs-item>
 
             <mcs-item>
@@ -68,7 +73,7 @@
               </ng-template>
             </mcs-item>
 
-            <mcs-item *ngIf="server.vApp && !server.isDedicated">
+            <mcs-item *ngIf="server.isVMware && server.isVM">
               <span>{{ 'serverManagement.vmProperties.vApp' | translate }}:</span>
               <span [innerHTML]="server.vApp"></span>
             </mcs-item>
@@ -88,9 +93,10 @@
         </mcs-grid-column>
 
         <!-- VM Console -->
-        <mcs-grid-column sizeSm="12" hidden-small
+        <ng-container *ngIf="server.isVMware && server.isVM">
+        <mcs-grid-column sizeSm="12" sizeLg="6" hidden-small
           *mcsAccessControl="[]; feature: 'enableDedicatedVmConsole';
-            validateWhen: server.isDedicated">
+            validateWhen: server.isVCenter">
 
           <mcs-presentation-panel mcsId="vm-console">
             <ng-container mcsPresentationPanelHeader>
@@ -130,57 +136,59 @@
             </ng-template>
           </mcs-presentation-panel>
         </mcs-grid-column>
+        </ng-container>
       </mcs-grid-row>
 
       <mcs-grid-row>
         <!-- VM Storage -->
-        <mcs-grid-column sizeSm="12">
-          <mcs-presentation-panel mcsId="vm-storage">
-            <ng-container mcsPresentationPanelHeader>
-              <mcs-item>
-                <h2>{{ 'serverManagement.storage.title' | translate }}</h2>
-                <ng-container *mcsAccessControl="serverPermission.vmEdit">
-                  <a *ngIf="!server.isDedicated"
-                    [disabled]="!server.executable"
-                    (click)="navigateServerDetailsTo(server, routeKeyEnum.ServerDetailsStorage)"
-                    mcsId
-                    mcsEventTracker="manage-storage"
-                    mcsEventCategory="server"
-                    mcsEventLabel="server-details-page">
-                    {{ 'serverManagement.storage.manage' | translate }}
-                  </a>
-                </ng-container>
-              </mcs-item>
-            </ng-container>
+        <ng-container *ngIf="server.isVMware && server.isVM">
+          <mcs-grid-column sizeSm="12" sizeLg="6">
+            <mcs-presentation-panel mcsId="vm-storage">
+              <ng-container mcsPresentationPanelHeader>
+                <mcs-item>
+                  <h2>{{ 'serverManagement.storage.title' | translate }}</h2>
+                  <ng-container *mcsAccessControl="serverPermission.serverEdit">
+                    <a *ngIf="!server.isVCenter"
+                      [disabled]="!server.executable"
+                      (click)="navigateServerDetailsTo(server, routeKeyEnum.ServerDetailsStorage)"
+                      mcsId
+                      mcsEventTracker="manage-storage"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-details-page">
+                      {{ 'serverManagement.storage.manage' | translate }}
+                    </a>
+                  </ng-container>
+                </mcs-item>
+              </ng-container>
 
-            <ng-container *ngIf="server?.storageDevices | mcsIsNotNullOrEmpty; else noDisks">
-              <mcs-list spacing="xsmall">
-                <mcs-list-item *ngFor="let storage of server?.storageDevices">
-                  <mcs-item>
-                    <span>{{ storage.name }}:</span>
-                    <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel: 'Unknown'"></span>
-                  </mcs-item>
-                </mcs-list-item>
-              </mcs-list>
-            </ng-container>
+              <ng-container *ngIf="server?.storageDevices | mcsIsNotNullOrEmpty; else noDisks">
+                <mcs-list spacing="xsmall">
+                  <mcs-list-item *ngFor="let storage of server?.storageDevices">
+                    <mcs-item>
+                      <span>{{ storage.name }}:</span>
+                      <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel: 'Unknown'"></span>
+                    </mcs-item>
+                  </mcs-list-item>
+                </mcs-list>
+              </ng-container>
 
-            <ng-template #noDisks>
-              <mcs-data-status-empty>
-                {{ 'serverManagement.storage.noContentMessage' | translate }}
-              </mcs-data-status-empty>
-            </ng-template>
-          </mcs-presentation-panel>
-        </mcs-grid-column>
+              <ng-template #noDisks>
+                <mcs-data-status-empty>
+                  {{ 'serverManagement.storage.noContentMessage' | translate }}
+                </mcs-data-status-empty>
+              </ng-template>
+            </mcs-presentation-panel>
+          </mcs-grid-column>
+        </ng-container>
 
         <!-- VM NICs -->
-        <mcs-grid-column sizeSm="12">
+        <mcs-grid-column sizeSm="12" sizeLg="6">
           <mcs-presentation-panel mcsId="vm-nics">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ 'serverManagement.nics.title' | translate }}</h2>
-                <ng-container *mcsAccessControl="serverPermission.vmNicEdit">
-                  <a *ngIf="!server.isDedicated"
-                    [disabled]="!server.executable"
+                <ng-container *mcsAccessControl="serverPermission.serverNicEdit">
+                  <a [disabled]="!server.executable"
                     (click)="navigateServerDetailsTo(server, routeKeyEnum.ServerDetailsNics)"
                     mcsId
                     mcsEventTracker="manage-nics"
@@ -203,7 +211,7 @@
                       </mcs-accordion-panel-header>
                       <mcs-item>
                         <span>{{ 'serverManagement.nics.ipAllocationMode' | translate }}:</span>
-                        <span>{{ nic.ipAllocationModeLabel }}</span>
+                        <span [innerHTML]="nic.ipAllocationModeLabel | mcsDataLabel: 'Unknown'"></span>
                       </mcs-item>
                       <mcs-item>
                         <span>{{ 'serverManagement.nics.ipAddresses' | translate }}:</span>
@@ -247,12 +255,13 @@
       <mcs-grid-row>
 
       <!-- VM Media -->
-        <mcs-grid-column sizeSm="12" sizeLg="6" *ngIf="(server.isVMware && server.isVM) && hasPermissionToViewMediaPanel(server.isDedicated)">
+      <ng-container *ngIf="(server.isVMware && server.isVM) && hasPermissionToViewMediaPanel(server.isVCenter)">
+        <mcs-grid-column sizeSm="12" sizeLg="6">
           <mcs-presentation-panel mcsId="vm-media">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ 'serverManagement.media.title' | translate }}</h2>
-                <ng-container *mcsAccessControl="serverPermission.vmEdit">
+                <ng-container *mcsAccessControl="serverPermission.serverEdit">
                   <a (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
                     [disabled]="!server.executable"
                     mcsId="attach-media"
@@ -271,7 +280,7 @@
 
                 <mcs-list-item *ngFor="let media of serverMedia">
                   <mcs-item>
-                    <ng-container *mcsAccessControl="serverPermission.vmEdit">
+                    <ng-container *mcsAccessControl="serverPermission.serverEdit">
                       <mcs-loader *ngIf="mediaIsDetaching(media)" size="small"
                         [mcsTooltip]="server.processingText"></mcs-loader>
 
@@ -296,6 +305,7 @@
 
           </mcs-presentation-panel>
         </mcs-grid-column>
+      </ng-container>
 
         <!-- VM Support Identifiers -->
         <mcs-grid-column sizeSm="12" sizeLg="6">
@@ -324,9 +334,6 @@
               <span>{{ server.inviewLevelLabel }}</span>
             </mcs-item>
           </mcs-presentation-panel>
-        </mcs-grid-column>
-        <mcs-grid-column sizeSm="12" sizeLg="6" *ngIf="!(server.isVMware && server.isVM && hasPermissionToViewMediaPanel(server.isDedicated))">
-          <!-- Fix for conditionally stretched panel -->
         </mcs-grid-column>
       </mcs-grid-row>
     </mcs-grid>

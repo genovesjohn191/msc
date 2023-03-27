@@ -461,8 +461,8 @@ export class DnsZoneViewModel {
   private _registerRegexMap(): void {
     this._dataFieldRegexMap.set(DnsRecordType.A, CommonDefinition.REGEX_DNS_DATA_A);
     this._dataFieldRegexMap.set(DnsRecordType.AAAA, CommonDefinition.REGEX_DNS_DATA_AAAA);
-    this._dataFieldRegexMap.set(DnsRecordType.CNAME, CommonDefinition.REGEX_DNS_DATA_DEFAULT);
-    this._dataFieldRegexMap.set(DnsRecordType.MX, CommonDefinition.REGEX_DNS_DATA_DEFAULT);
+    this._dataFieldRegexMap.set(DnsRecordType.CNAME, CommonDefinition.REGEX_DNS_HOSTNAME_CNAME_OR_TXT_TYPE);
+    this._dataFieldRegexMap.set(DnsRecordType.MX, CommonDefinition.REGEX_DNS_HOSTNAME);
     this._dataFieldRegexMap.set(DnsRecordType.NS, CommonDefinition.REGEX_DNS_DATA_DEFAULT);
     this._dataFieldRegexMap.set(DnsRecordType.PTR, CommonDefinition.REGEX_DNS_DATA_GENERIC);
     this._dataFieldRegexMap.set(DnsRecordType.SOA, CommonDefinition.REGEX_DNS_DATA_DEFAULT);

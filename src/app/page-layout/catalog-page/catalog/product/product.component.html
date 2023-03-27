@@ -267,7 +267,7 @@
       <mcs-scrollable-link label="Compliance" *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
       <div class="product-catalog-item">
         <h2>PCI Compliance</h2>
-        <table [dataSource]="sortPciDetails(selectedProduct.pciDetails)">
+        <table mat-table [dataSource]="sortPciDetails(selectedProduct.pciDetails)">
           <!-- Raci Column -->
           <ng-container matColumnDef="raci">
             <th mat-header-cell *matHeaderCellDef>

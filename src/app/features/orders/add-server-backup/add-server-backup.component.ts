@@ -50,7 +50,8 @@ import {
   McsServer,
   McsServerBackupServer,
   OrderIdType,
-  ServiceOrderState
+  ServiceOrderState,
+  McsServersQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -226,15 +227,17 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   private _subscribeToServers(): void {
     this.serverGroups$ = this._apiService.getServerBackupServers().pipe(
       switchMap((backupsCollection) => {
+        let queryParam = new McsServersQueryParams();
+        queryParam.platformType = 'VCloud';
 
-        return this._apiService.getServers().pipe(
+        return this._apiService.getServers(queryParam).pipe(
           map((serversCollection) => {
             let serverGroups: McsOptionGroup[] = [];
             let backups = getSafeProperty(backupsCollection, (obj) => obj.collection) || [];
             let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
             servers.forEach((server) => {
-              if (!server.isManagedVCloud) { return; }
+              if (server.isSelfManaged) { return; }
 
               let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
               let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);

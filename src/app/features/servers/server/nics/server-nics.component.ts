@@ -260,7 +260,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public ngOnInit() {
     this._hasInternalPrivateCloudEngineerAccess = this._accessControlService.hasPermission([McsPermission.InternalPrivateCloudEngineerAccess]);
-    this._isUcsBladeNicEditFeatureEnabled = this._accessControlService.hasAccessToFeature(McsFeatureFlag.DedicatedBladeNicEdit);
+    this._isUcsBladeNicEditFeatureEnabled = this._accessControlService.hasAccessToFeature(McsFeatureFlag.UcsBladeNicEdit);
     this.server$.subscribe(server => {
       this._serverIsDedicated = server.isDedicated;
       this._selectedServer = server;

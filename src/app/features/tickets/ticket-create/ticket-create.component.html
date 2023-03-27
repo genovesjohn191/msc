@@ -81,7 +81,7 @@
 
                   <mcs-option *ngFor="let service of ticketServices" [value]="service"
                     [selected]="(selectedServiceId$ | async) === service.id">
-                    {{ service.name }}
+                    {{ service.name }} <span read-only>({{ service.id }})</span>
                   </mcs-option>
                 </mcs-option-group>
               </ng-template>
@@ -183,11 +183,11 @@
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
-                context: { $implicit: (vdcStorages$ | async), serviceTitle: 'VDC Storage'}">
+                context: { $implicit: (vdcServices$ | async), serviceTitle: 'VDCs'}">
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
-                context: { $implicit: (vdcServices$ | async), serviceTitle: 'VDCs'}">
+                context: { $implicit: (vdcStorages$ | async), serviceTitle: 'VDC Storage'}">
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;

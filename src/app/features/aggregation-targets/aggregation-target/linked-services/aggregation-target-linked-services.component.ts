@@ -115,7 +115,9 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
     return this._accessControlService.hasPermission([
       McsPermission.ManagedCloudVmAccess,
       McsPermission.SelfManagedCloudVmAccess,
-      McsPermission.DedicatedVmAccess]);
+      McsPermission.DedicatedVmAccess,
+      McsPermission.UcsBladeAccess
+    ]);
   }
 
   /**

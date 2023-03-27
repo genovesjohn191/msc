@@ -98,16 +98,17 @@
           </ng-container>
 
           <!-- Storage Tab -->
-          <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
-            validateWhen: server?.isDedicated">
+          <ng-container *ngIf="server.isVMware && server.isVM">
             <mcs-tab [label]="'serverStorage.label' | translate" id="storage"></mcs-tab>
           </ng-container>
 
           <!-- Snapshots Tab -->
-          <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
-            validateWhen: server?.isDedicated">
-            <ng-container *mcsAccessControl="serverPermission.vmSnapshotAccess;">
-              <mcs-tab [label]="'serverSnapshots.label' | translate" id="snapshots"></mcs-tab>
+          <ng-container *ngIf="server.isVMware && server.isVM">
+            <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
+              validateWhen: server?.isVCenter">
+              <ng-container *mcsAccessControl="serverPermission.vmSnapshotAccess;">
+                <mcs-tab [label]="'serverSnapshots.label' | translate" id="snapshots"></mcs-tab>
+              </ng-container>
             </ng-container>
           </ng-container>
 
@@ -118,7 +119,7 @@
           </ng-container>
 
           <!-- Action tab -->
-          <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.vmPowerStateEdit">
+          <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.serverPowerStateEdit">
             <mcs-server-command mcsId="server-command" mcsAlign="end"
               [server]="server" [autoCalculatePosition]="false">
             </mcs-server-command>
