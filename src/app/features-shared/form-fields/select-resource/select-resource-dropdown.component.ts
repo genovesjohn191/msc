@@ -145,6 +145,7 @@ export class SelectResourceDropdownComponent implements OnInit, AfterViewInit, O
   private _subscribeToAllResources(): void {
     this.resources$ = this.getResourcesByAccess().pipe(
       map((resources) => {
+        this._resources = resources;
         return resources;
       })
     );
