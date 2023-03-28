@@ -486,6 +486,7 @@ export * from './common/mcs-ucs-query-params';
 export * from './common/mcs-storage-saas-backupattempt-query-params';
 export * from './common/mcs-network-db-vlan-query-params';
 export * from './common/mcs-resource-query-param';
+export * from './common/mcs-physical-servers-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

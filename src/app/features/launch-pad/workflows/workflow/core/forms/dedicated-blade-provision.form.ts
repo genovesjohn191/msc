@@ -41,7 +41,8 @@ export const dedicatedBladeProvisionForm: LaunchPadForm = {
     new DynamicInputHiddenField({
       key: 'serviceId',
       value: '',
-      eventName: 'service-id-change'
+      eventName: 'service-id-change',
+      dependents: ['serverId']
     }),
     new DynamicSelectField({
       key: 'platform',

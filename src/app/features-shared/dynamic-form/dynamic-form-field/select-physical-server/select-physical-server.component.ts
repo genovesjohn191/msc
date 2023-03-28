@@ -18,8 +18,8 @@ import {
 import { McsApiService } from '@app/services';
 import {
   McsResource,
-  McsResourceNetwork,
-  McsPhysicalServer
+  McsPhysicalServer,
+  McsPhysicalServersQueryParams
 } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
@@ -31,7 +31,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
 
 @Component({
   selector: 'mcs-dff-select-physical-server-field',
-  templateUrl: '../shared-template/select.component.html',
+  templateUrl: './select-physical-server.component.html',
   styleUrls: [ '../dynamic-form-field.scss' ],
   providers: [
     {
@@ -48,7 +48,10 @@ export class DynamicSelectPhysicalServerComponent extends DynamicSelectFieldComp
   public config: DynamicSelectPhysicalServerField;
 
   private _companyId: string = undefined;
+  private _associatedServiceId: string = undefined;
   private _resource: McsResource = undefined;
+  // private _isInitialLoad: boolean = true;
+  public isFilteredByAssociatedId: boolean = true;
 
   public constructor(
     private _apiService: McsApiService,
@@ -61,11 +64,19 @@ export class DynamicSelectPhysicalServerComponent extends DynamicSelectFieldComp
     switch (params.eventName) {
       case 'company-change':
         this._companyId = params.value;
+        this.isFilteredByAssociatedId = true;
+        this.retrieveOptions();
+        break;
+
+      case 'service-id-change':
+        this._associatedServiceId = params.value;
+        this.isFilteredByAssociatedId = true;
         this.retrieveOptions();
         break;
 
       case 'resource-change':
         this._resource = params.value as McsResource;
+        this.isFilteredByAssociatedId = true;
         this.retrieveOptions();
         break;
     }
@@ -77,9 +88,19 @@ export class DynamicSelectPhysicalServerComponent extends DynamicSelectFieldComp
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
 
-    return this._apiService.getPhysicalServers(this._resource.id, null, optionalHeaders).pipe(
+    let param = new McsPhysicalServersQueryParams();
+    param.associatedServiceId = this._associatedServiceId;
+
+    return this._apiService.getPhysicalServers(this._resource.id, param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
-      map((response) => response && response.collection));
+      map((response) => {
+        if(response.collection.length > 0 || !this.isFilteredByAssociatedId){
+          return response && response.collection
+        }
+        this._associatedServiceId = null;
+        this.isFilteredByAssociatedId = false;
+        this.retrieveOptions();
+      }));
   }
 
   protected filter(collection: McsPhysicalServer[]): FlatOption[] {

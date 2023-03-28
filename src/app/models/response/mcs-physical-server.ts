@@ -39,4 +39,7 @@ export class McsPhysicalServer extends McsEntityBase {
   @JsonProperty()
   public managedBy: string = undefined;
 
+  @JsonProperty()
+  public associatedServiceId: string = undefined;
+
 }

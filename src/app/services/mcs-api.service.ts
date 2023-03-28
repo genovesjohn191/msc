@@ -344,7 +344,8 @@ import {
   McsResourceQueryParam,
   McsSaasBackupAttempt,
   McsNonStandardBundle,
-  McsPerpetualSoftware
+  McsPerpetualSoftware,
+  McsPhysicalServersQueryParams
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
 import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
@@ -893,7 +894,7 @@ export class McsApiService {
     );
   }
 
-  public getPhysicalServers(id: string, query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsPhysicalServer>> {
+  public getPhysicalServers(id: string, query?: McsPhysicalServersQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsPhysicalServer>> {
     return this._resourcesApi.getPhysicalServers(id, query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcePhysicalServers'))

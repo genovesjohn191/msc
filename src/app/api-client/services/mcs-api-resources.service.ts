@@ -16,7 +16,8 @@ import {
   McsResourceCatalog,
   McsQueryParam,
   McsPhysicalServer,
-  McsResourceQueryParam
+  McsResourceQueryParam,
+  McsPhysicalServersQueryParams
 } from '@app/models';
 import { isNullOrEmpty, serializeObjectToJson } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -260,7 +261,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
       );
   }
 
-  public getPhysicalServers(id:string, query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsPhysicalServer[]>> {
+  public getPhysicalServers(id:string, query?: McsPhysicalServersQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsPhysicalServer[]>> {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();

@@ -13,7 +13,8 @@ import {
   McsResourceCatalog,
   McsQueryParam,
   McsPhysicalServer,
-  McsResourceQueryParam
+  McsResourceQueryParam,
+  McsPhysicalServersQueryParams
 } from '@app/models';
 
 export interface IMcsApiResourcesService {
@@ -122,5 +123,5 @@ export interface IMcsApiResourcesService {
    * Get all the Physical Servers
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getPhysicalServers(id:string, query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsPhysicalServer[]>>;
+  getPhysicalServers(id:string, query?: McsPhysicalServersQueryParams, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsPhysicalServer[]>>;
 }
