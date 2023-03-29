@@ -27,12 +27,14 @@
           <ng-template #partialComputeMemory>
             <ng-container *ngIf="resourceDetailLabels.computeUsageShown">
               <span>Used {{ 'label.ram' | translate }}:</span>
-              <span>{{ resource?.compute.memoryUsedMB | mcsDataSize: 'MB' }}</span>
+              <ng-container *ngIf="resource?.compute.memoryUsedMB !== null; else unknownValue">
+                <span>{{ resource?.compute.memoryUsedMB | mcsDataSize: 'MB' }}</span>
+              </ng-container>
             </ng-container>
             <ng-container *ngIf="resourceDetailLabels.computeTotalShown">
               <span>Total {{ 'label.ram' | translate }}:</span>
-              <ng-container *ngIf="resource?.compute.memoryLimitMB !== null; else unknownValue">
-                <span>{{ resource?.compute.memoryLimitMB.toString() | mcsDataSize: 'MB' }}</span>
+              <ng-container *ngIf="resource?.compute.memoryLimitMB; else unknownValue">
+                <span>{{ resource?.compute.memoryLimitMB | mcsDataSize: 'MB' }}</span>
               </ng-container>
             </ng-container>
           </ng-template>
@@ -49,12 +51,14 @@
           <ng-template #partialComputeCpu>
             <ng-container *ngIf="resourceDetailLabels.computeUsageShown">
               <span>Used {{ cpuLabel }}:</span>
-              <span [innerHTML]="resource?.compute.cpuUsed | mcsDataLabel"></span>
+              <ng-container *ngIf="resource?.compute.cpuUsed !== null; else unknownValue">
+                <span>{{ resource?.compute.cpuUsed }}</span>
+              </ng-container>
             </ng-container>
             <ng-container *ngIf="resourceDetailLabels.computeTotalShown">
               <span>Total {{ cpuLabel }}:</span>
-              <ng-container *ngIf="resource?.compute.cpuLimit !== null; else unknownValue">
-                <span>{{ resource?.compute.cpuLimit.toString() }}</span>
+              <ng-container *ngIf="resource?.compute.cpuLimit; else unknownValue">
+                <span>{{ resource?.compute.cpuLimit }}</span>
               </ng-container>
             </ng-container>
           </ng-template>

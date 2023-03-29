@@ -21,7 +21,7 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['subscription']
+      dependents: ['subscription','resourceId']
     }),
     new DynamicInputHiddenField({
       key: 'skuId',
@@ -45,11 +45,13 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       key: 'linkedService',
       value: '',
       eventName: 'linked-service-id-change',
-      dependents: ['subscription','resourceId'],
+      dependents: ['subscription'],
     }),
     new DynamicSelectAzureSubscriptionField({
       key: 'subscription',
       label: 'Subscription',
+      eventName: 'subscription-change',
+      dependents: ['resourceId'],
       validators: { required: true },
       settings: { readonly: true },
       useSubscriptionIdAsKey: true
@@ -90,8 +92,9 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
     mappedProperties.push({ key: 'productId',
     value: findCrispElementAttribute(CrispAttributeNames.ProductId, attributes)?.value } );
 
-    mappedProperties.push({ key: 'linkedService',
-    value: findCrispElementAttribute(CrispAttributeNames.LinkedConsService, attributes)?.displayValue } );
+    let linkedServiceAz = findCrispElementAttribute(CrispAttributeNames.LinkedServiceAz, attributes)?.displayValue;
+    let linkedConsService = findCrispElementAttribute(CrispAttributeNames.LinkedConsService, attributes)?.displayValue;
+    mappedProperties.push({ key: 'linkedService', value: linkedServiceAz ?? linkedConsService } );
 
     mappedProperties.push({ key: 'quantity',
     value: findCrispElementAttribute(CrispAttributeNames.Quantity, attributes)?.displayValue } );

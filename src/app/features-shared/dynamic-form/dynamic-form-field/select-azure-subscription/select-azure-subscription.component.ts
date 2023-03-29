@@ -197,6 +197,6 @@ export class DynamicSelectAzureSubscriptionComponent extends DynamicSelectFieldC
   }
 
   private shortenGuid(guid: string): string {
-    return guid.substring(0, 4) + ' ... ' + guid.substring(guid.length - 5, guid.length - 1);
+    return guid.substring(0, 5) + '...' + guid.substring(guid.length - 5, guid.length);
   }
 }

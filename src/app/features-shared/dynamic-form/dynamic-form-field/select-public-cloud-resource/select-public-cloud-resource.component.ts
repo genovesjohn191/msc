@@ -13,7 +13,11 @@ import {
 } from 'rxjs';
 
 import { CommonDefinition, isNullOrEmpty, isNullOrUndefined } from '@app/utilities';
-import { McsAzureResource, McsAzureResourceQueryParams } from '@app/models';
+import {
+  McsAzureResource,
+  McsAzureService,
+  McsAzureResourceQueryParams
+} from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
   DynamicFormFieldOnChangeEvent,
@@ -45,7 +49,7 @@ export class DynamicSelectPublicCloudResourceComponent extends DynamicSelectFiel
 
   // Filter variables
   private _companyId: string = '';
-  private _linkedSubscriptionUuid: string = '';
+  private _linkedSubscription: McsAzureService = undefined;
   private _destroySubject = new Subject<void>();
 
   constructor(
@@ -61,8 +65,8 @@ export class DynamicSelectPublicCloudResourceComponent extends DynamicSelectFiel
         this._companyId = params.value;
         this.retrieveOptions();
         break;
-      case 'linked-service-id-change':
-        this._linkedSubscriptionUuid = params.value;
+      case 'subscription-change':
+        this._linkedSubscription = params.value as McsAzureService;
         this.retrieveOptions();
         break;
     }
@@ -91,13 +95,13 @@ export class DynamicSelectPublicCloudResourceComponent extends DynamicSelectFiel
   }
 
   protected callService(): Observable<McsAzureResource[]> {
-    if(isNullOrUndefined(this._companyId) || isNullOrUndefined(this._linkedSubscriptionUuid)) { return of([]) }
+    if(isNullOrUndefined(this._companyId) || isNullOrUndefined(this._linkedSubscription)) { return of([]) }
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
     let param = new McsAzureResourceQueryParams();
     param.pageSize = CommonDefinition.AZURE_RESOURCES_PAGE_SIZE_MAX;
-    param.subscriptionId = this._linkedSubscriptionUuid;
+    param.subscriptionId = this._linkedSubscription.subscriptionId;
 
     return this._apiService.getAzureResources(param, optionalHeaders).pipe(
       takeUntil(this._destroySubject),
