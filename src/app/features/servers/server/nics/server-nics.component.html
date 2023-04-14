@@ -279,24 +279,24 @@
           <ng-container *ngIf="resourceNetworks$ | async as resourceNetworks">
             <div class="action-box" *ngIf="canAddNic(server, resourceNetworks)"
               [@fadeIn] [disabled]="!server.executable">
-  
+
               <mcs-server-manage-network *mcsComponentHandler
                 [resourceId]="(resource$ | async)?.id"
                 [networks]="resourceNetworks"
                 (dataChange)="onNetworkChanged($event)"
                 [selectedNetwork]="selectedNetwork">
-  
+
                 <ng-container mcsManageNetworkHeader>
                   <h2>{{ 'serverNics.addHeading' | translate }}</h2>
                 </ng-container>
-  
+
                 <ng-container mcsManageNetworkWarning>
                   <mcs-data-status-warning>
                     {{ 'serverNics.warningEditingNic' | translate }}
                   </mcs-data-status-warning>
                 </ng-container>
               </mcs-server-manage-network>
-  
+
               <div class="action-items">
                 <button mcsButton
                   arrow="right" size="small"
@@ -322,25 +322,25 @@
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic">
       <mcs-item *ngIf="!serverIsBlade">
         <ng-container *ngIf="resourceNetworks$ | async as resourceNetworks">
-          <div class="action-box" [disabled]="!server.executable">
+          <div class="action-box" full-width [disabled]="!server.executable">
             <mcs-server-manage-network
               [networks]="resourceNetworks"
               [resourceId]="(resource$ | async)?.id"
               (dataChange)="onNetworkChanged($event)"
               [targetNic]="selectedNic"
               [selectedNetwork]="selectedNetwork">
-  
+
               <ng-container mcsManageNetworkHeader>
                 <h2>{{ 'serverNics.editHeading' | translate }} {{ selectedNic.name }}</h2>
               </ng-container>
-  
+
               <ng-container mcsManageNetworkWarning>
                 <mcs-data-status-warning>
                   {{ 'serverNics.warningEditingNic' | translate }}
                 </mcs-data-status-warning>
               </ng-container>
             </mcs-server-manage-network>
-  
+
             <div class="action-items">
               <a (click)="closeEditNicWindow(resourceNetworks)"
                 mcsId="close-update-nic"
