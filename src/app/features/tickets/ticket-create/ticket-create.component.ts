@@ -50,6 +50,7 @@ import {
   McsOptionGroup,
   McsPermission,
   McsResource,
+  PlatformType,
   McsServer,
   McsTicketCreate,
   McsTicketCreateAttachment,
@@ -90,7 +91,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public jobDetails$: Observable<McsJob>;
   public servicesSubscription: Subscription;
 
-  public vdcServices$: Observable<TicketService[]>;
+  public privateCloudResources$: Observable<TicketService[]>;
   public serverServices$: Observable<TicketService[]>;
   public firewallServices$: Observable<TicketService[]>;
   public internetPortServices$: Observable<TicketService[]>;
@@ -119,9 +120,10 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public saasBackups$: Observable<TicketService[]>;
   public nonStandardBundles$: Observable<TicketService[]>;
   public perpetualSoftware$: Observable<TicketService[]>;
+  public managedSiemServices$: Observable<TicketService[]>;
 
   public serversList$: Observable<McsServer[]>;
-  public vdcList$: Observable<McsResource[]>;
+  public privateCloudResourceList$: Observable<McsResource[]>;
   public azureResources: McsOptionGroup[];
 
   // Form variables
@@ -161,7 +163,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToServersList();
     this._subscribesToVdcList();
     this._subscribedToQueryParams();
-    this._subscribesToVdcServices();
+    this._subscribesToPrivateCloudResources();
     this._subscribesToServerServices();
     this._subscribesToFirewallServices();
     this._subscribesToInternetPortServices();
@@ -191,6 +193,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToSaasBackups();
     this._subscribesToNonStandardBundles();
     this._subscribesToPerpetualSoftware();
+    this._subscribesToManagedSiemServices();
   }
 
   public ngOnDestroy() {
@@ -319,8 +322,12 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     ).subscribe();
   }
 
-  public get hasPublicCloudAccess(): boolean {
+  public get hasPublicCloudPlatform(): boolean {
     return this._authenticationIdentity.platformSettings.hasPublicCloud;
+  }
+
+  public get hasManagedSecurityPlatform(): boolean {
+    return this._authenticationIdentity.platformSettings.hasManagedSecurity;
   }
 
   /**
@@ -392,7 +399,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     let queryParam = new McsResourceQueryParam();
     queryParam.platform = 'VCloud';
 
-    this.vdcList$ = this._apiService.getResources(null, queryParam).pipe(
+    this.privateCloudResourceList$ = this._apiService.getResources(null, queryParam).pipe(
       map((response) => {
         let resources = getSafeProperty(response, (obj) => obj.collection);
         return resources
@@ -418,17 +425,20 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     );
   }
 
-  private _subscribesToVdcServices(): void {
-    this.vdcServices$ = this.vdcList$.pipe(
-      map((response) => {
-        let resources = response;
-        return resources
-          .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
-          .map((resource) => new TicketService(
-            resource.billingDescription,
-            resource.name,
-            TicketServiceType.Vdcs
-          ));
+  private _subscribesToPrivateCloudResources(): void {
+    this.privateCloudResources$ = this.privateCloudResourceList$.pipe(
+      map((resources) => {
+        return resources.map((resource) => {
+          let name = (resource.platform == PlatformType.VCloud)?
+            `${serviceTypeText[resource.serviceType]} VDC` :
+              (resource.billingDescription || resource.name);
+
+          return new TicketService(
+            name,
+            resource.serviceId,
+            TicketServiceType.PrivateCloudResources
+          )
+        });
       })
     );
   }
@@ -493,7 +503,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   private _subscribesToLicenses(): void {
-    if (!this.hasPublicCloudAccess) { return; }
+    if (!this.hasPublicCloudPlatform) { return; }
     this.licenses$ = this._apiService.getLicenses().pipe(
       map((response) => {
         let licenses = getSafeProperty(response, (obj) => obj.collection);
@@ -592,14 +602,14 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   private _subscribesToVdcStorage(): void {
-    this.vdcStorages$ = this.vdcList$.pipe(
+    this.vdcStorages$ = this.privateCloudResourceList$.pipe(
       map((vdcCollection) => {
         let vdcStorageGroup: TicketService[] = [];
         let vdc = getSafeProperty(vdcCollection, (obj) => obj) || [];
 
         vdc.forEach((resource) => {
           this._apiService.getResource(resource.id).subscribe((vdcStorage) => {
-            vdcStorage.storage.forEach((storage) => {
+            vdcStorage?.storage.forEach((storage) => {
               if (isNullOrEmpty(storage?.serviceId)) { return; }
               vdcStorageGroup.push(new TicketService(
                 `${storage.name} - for ${resource.serviceId}`,
@@ -630,7 +640,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   private _subscribesToManagementServices(): void {
-    if (!this.hasPublicCloudAccess) { return; }
+    if (!this.hasPublicCloudPlatform) { return; }
     this.managementServices$ = this._apiService.getManagementServices().pipe(
       map((response) => {
         let managementServices = getSafeProperty(response, (obj) => obj.collection);
@@ -936,6 +946,25 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             service.name,
             service.serviceId,
             TicketServiceType.PerpetualSoftware
+          ));
+      })
+    );
+  }
+
+  private _subscribesToManagedSiemServices(): void {
+    if (!this.hasManagedSecurityPlatform) { return; }
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ManagedSecurity])) {
+      return;
+    }
+
+    this.managedSiemServices$ = this._apiService.getManagedSiemServices().pipe(
+      map((response) => {
+        let managedSiemServices = getSafeProperty(response, (obj) => obj.collection);
+        return managedSiemServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(
+            service.billingDescription,
+            service.serviceId,
+            TicketServiceType.ManagedSiemServices
           ));
       })
     );

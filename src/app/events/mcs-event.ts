@@ -21,6 +21,7 @@ import { DataChangeNonStandardBundlesEvent } from './items/data-change-non-stand
 import { DataChangeNoticesEvent } from './items/data-change-notices.event';
 import { DataChangeOrdersEvent } from './items/data-change-orders.event';
 import { DataChangePerpetualSoftwareEvent } from './items/data-change-perpetual-software.event';
+import { DataChangeManagedSiemServicesEvent } from './items/data-change-managed-siem-services.event';
 import { DataChangePlannedWorkDetailsEvent } from './items/data-change-planned-work-details.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
 import { DataChangeSaasBackupEvent } from './items/data-change-saas-backup.event';
@@ -175,6 +176,7 @@ export class McsEvent {
   public static dataChangeSaasBackup = new DataChangeSaasBackupEvent();
   public static dataChangeNonStandardBundles = new DataChangeNonStandardBundlesEvent();
   public static dataChangePerpetualSoftware = new DataChangePerpetualSoftwareEvent();
+  public static dataChangeManagedSiemServices = new DataChangeManagedSiemServicesEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();

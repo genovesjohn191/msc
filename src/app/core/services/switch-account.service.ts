@@ -77,7 +77,8 @@ export class SwitchAccountService {
     return {
       hasPrivateCloud: this._authIdentity.platformSettings.hasPrivateCloud,
       hasPublicCloud: this._authIdentity.platformSettings.hasPublicCloud,
-      hasHybridCloud: this._authIdentity.platformSettings.hasHybridCloud
+      hasHybridCloud: this._authIdentity.platformSettings.hasHybridCloud,
+      hasManagedSecurity: this._authIdentity.platformSettings.hasManagedSecurity
     } as McsPlatform;
   }
 

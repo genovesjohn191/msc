@@ -421,6 +421,7 @@ export * from './response/vcloud-instance/mcs-vcloud-instance-provider-vdc';
 export * from './response/vcloud-instance/mcs-vcloud-storage-profile';
 export * from './response/mcs-non-standard-bundle';
 export * from './response/mcs-perpetual-software';
+export * from './response/mcs-managed-siem-service';
 
 /** Common */
 export * from './common/mcs-api-search-key';

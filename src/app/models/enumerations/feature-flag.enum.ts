@@ -62,5 +62,7 @@ export enum McsFeatureFlag {
   PlannedWork = 'EnablePlannedWork',
 
   NonStandardBundlesListing = 'EnableAzureNonStandardBundles',
-  PerpetualSoftwareListing = 'EnableAzurePerpetualSoftware'
+  PerpetualSoftwareListing = 'EnableAzurePerpetualSoftware',
+
+  ManagedSecurity = 'EnableManagedSecurity'
 }

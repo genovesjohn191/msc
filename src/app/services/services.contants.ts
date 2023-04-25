@@ -24,6 +24,7 @@ import { McsNetworkDbNetworksRepository } from './repositories/mcs-network-db-ne
 import { McsNonStandardBundlesRepository } from './repositories/mcs-non-standard-bundles.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsPerpetualSoftwareRepository } from './repositories/mcs-perpetual-software.repository';
+import { McsManagedSiemServicesRepository } from './repositories/mcs-managed-siem-services.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsServersOsRepository } from './repositories/mcs-servers-os.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
@@ -58,6 +59,7 @@ export const repositoryProviders: any[] = [
   McsNoticesRepository,
   McsOrdersRepository,
   McsPerpetualSoftwareRepository,
+  McsManagedSiemServicesRepository,
   McsResourcesRepository,
   McsSaasBackupRepository,
   McsServersOsRepository,

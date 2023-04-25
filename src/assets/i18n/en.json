@@ -3771,6 +3771,7 @@
     "getAzureSoftwareSubscriptions": "Something went wrong while retrieving your list of Software Subscriptions. Please try again.",
     "getAzureNonStandardBundles": "Something went wrong while retrieving your list of Azure Non-Standard Bundles. Please try again.",
     "getAzurePerpetualSoftware": "Something went wrong while retrieving your list of Azure Perpetual Software. Please try again.",
+    "getManagedSiemServices": "Something went wrong while retrieving your Managed SIEM services. Please try again.",
     "getBillingSummaries": "Something went wrong while retrieving your bill summary. Please try again.",
     "getBillingSummariesCsv": "Something went wrong while exporting your bill summary. Please try again.",
     "updateGeneric": "Something went wrong while saving. Please try again.",

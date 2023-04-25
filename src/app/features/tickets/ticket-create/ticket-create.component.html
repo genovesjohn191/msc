@@ -135,6 +135,10 @@
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (managedSiemServices$ | async), serviceTitle: 'Managed SIEM'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (managementServices$ | async), serviceTitle: 'Microsoft Management Services'}">
               </ng-container>
 
@@ -159,6 +163,10 @@
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (privateCloudResources$ | async), serviceTitle: 'Resources'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (colocationRooms$ | async), serviceTitle: 'Rooms'}">
               </ng-container>
 
@@ -180,10 +188,6 @@
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (colocationStandardSqms$ | async), serviceTitle: 'Standard Square Metres'}">
-              </ng-container>
-
-              <ng-container *ngTemplateOutlet="servicesTemplate;
-                context: { $implicit: (vdcServices$ | async), serviceTitle: 'VDCs'}">
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;

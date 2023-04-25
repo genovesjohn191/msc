@@ -59,6 +59,7 @@ import {
   DeliveryType,
   McsServer,
   McsResource,
+  PlatformType,
   McsFeatureFlag,
   McsPermission
 } from '@app/models';
@@ -97,6 +98,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public serverServices$: Observable<CustomChangeService[]>;
   public firewallServices$: Observable<CustomChangeService[]>;
   public internetPortServices$: Observable<CustomChangeService[]>;
+  public managedSiemServices$: Observable<CustomChangeService[]>;
   public batServices$: Observable<CustomChangeService[]>;
   public vdcStorages$: Observable<CustomChangeService[]>;
   public dns$: Observable<CustomChangeService[]>;
@@ -186,6 +188,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribesToVeeamBackupServices();
     this._subscribesToVeeamDrServices();
     this._subscribesToSaasBackupServices();
+
+    this._subscribeToManagedSiemServices();
   }
 
   public ngOnDestroy() {
@@ -359,9 +363,13 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this.vdcServices$ = this.vdcList$.pipe(
       map((resources) => {
         return resources.map((resource) => {
+          let name = (resource.platform == PlatformType.VCloud)?
+            `${serviceTypeText[resource.serviceType]} VDC` :
+              (resource.billingDescription || resource.name);
+
           return {
-            name: `${serviceTypeText[resource.serviceType]} VDC (${resource.name})`,
-            serviceId: resource.name
+            name: name,
+            serviceId: resource.serviceId
           } as CustomChangeService;
         });
       })
@@ -378,7 +386,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return servers.filter((server) => getSafeProperty(server, (obj) => obj.serviceChangeAvailable))
           .map((server) => {
             return {
-              name: `${server.name} (${server.serviceId})`,
+              name: server.name,
               serviceId: server.serviceId
             } as CustomChangeService;
           });
@@ -396,7 +404,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return firewalls.filter((firewall) => getSafeProperty(firewall, (obj) => obj.serviceId))
           .map((firewall) => {
             return {
-              name: `${firewall.managementName} (${firewall.serviceId})`,
+              name: firewall.managementName,
               serviceId: firewall.serviceId
             } as CustomChangeService;
           });
@@ -414,7 +422,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return internetPorts.filter((internetPort) => getSafeProperty(internetPort, (obj) => obj.serviceId))
           .map((internetPort) => {
             return {
-              name: `${internetPort.description} (${internetPort.serviceId})`,
+              name: internetPort.description,
               serviceId: internetPort.serviceId
             } as CustomChangeService;
           });
@@ -432,7 +440,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return bats.filter((bat) => getSafeProperty(bat, (obj) => obj.serviceId))
           .map((bat) => {
             return {
-              name: `${bat.description} (${bat.serviceId})`,
+              name: bat.description,
               serviceId: bat.serviceId
             } as CustomChangeService;
           });
@@ -451,12 +459,12 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
 
         vdc.forEach((resource) => {
           this._apiService.getResource(resource.id).subscribe((vdcStorage) => {
-            vdcStorage.storage.forEach((storage) => {
+            vdcStorage?.storage.forEach((storage) => {
               let vdcStorageInvalidToCustomChange = isNullOrEmpty(storage?.serviceId) || !storage?.serviceChangeAvailable;
               if (vdcStorageInvalidToCustomChange) { return; }
 
               vdcStorageGroup.push({
-                name: `${storage.name} - for ${resource.serviceId} (${storage.serviceId})`,
+                name: `${storage.name} - for ${resource.serviceId}`,
                 serviceId: storage.serviceId
               });
             });
@@ -484,7 +492,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
               if (serverBackupInvalidForCustomChange) { return; }
               let serverName = this._getServerName(serverBackup.id, servers);
               serverBackupGroup.push({
-                name: `Server Backup - ${serverName} (${serverBackup.serviceId})`,
+                name: `Server Backup - ${serverName}`,
                 serviceId: serverBackup.serviceId
               });
             })
@@ -512,7 +520,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
               if (vmBackupInvalidForCustomChange) { return; }
               let serverName = this._getServerName(vmBackup.id, servers);
               vmBackupGroup.push({
-                name: `VM Backup - ${serverName} (${vmBackup.serviceId})`,
+                name: `VM Backup - ${serverName}`,
                 serviceId: vmBackup.serviceId
               });
             })
@@ -537,7 +545,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
               if (antiVirusInvalidForCustomChange) { return; }
               let serverName = this._getServerName(av.serverId, servers);
               antiVirusGroup.push({
-                name: `${av.antiVirus.billingDescription} - ${serverName} (${av.antiVirus.serviceId})`,
+                name: `${av.antiVirus.billingDescription} - ${serverName}`,
                 serviceId: av.antiVirus.serviceId
               });
             })
@@ -562,7 +570,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
               if (hidsInvalidForCustomChange) { return; }
               let serverName = this._getServerName(hidsDetails.serverId, servers);
               hidsGroup.push({
-                name: `${hidsDetails.hids.billingDescription} - ${serverName} (${hidsDetails.hids.serviceId})`,
+                name: `${hidsDetails.hids.billingDescription} - ${serverName}`,
                 serviceId: hidsDetails.hids.serviceId
               });
             })
@@ -595,7 +603,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return dnsService.filter((dns) => getSafeProperty(dns, (obj) => obj.serviceId && obj.serviceChangeAvailable))
           .map((dns) => {
             return {
-              name: `${dns.billingDescription} (${dns.serviceId})`,
+              name: dns.billingDescription,
               serviceId: dns.serviceId
             } as CustomChangeService;
           });
@@ -619,7 +627,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return extenders.filter((extender) => getSafeProperty(extender, (obj) => obj.serviceId))
           .map((extender) => {
             return {
-              name: `${extender.billingDescription} (${extender.serviceId})`,
+              name: extender.billingDescription,
               serviceId: extender.serviceId
             } as CustomChangeService;
           });
@@ -646,7 +654,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
           (applicationRecoveryService) => getSafeProperty(applicationRecoveryService, (obj) => obj.serviceId))
           .map((applicationRecoveryService) => {
             return {
-              name: `${applicationRecoveryService.billingDescription} (${applicationRecoveryService.serviceId})`,
+              name: applicationRecoveryService.billingDescription,
               serviceId: applicationRecoveryService.serviceId
             } as CustomChangeService;
           });
@@ -664,7 +672,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return veeamBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => {
             return {
-              name: `${service.billingDescription} (${service.serviceId})`,
+              name: service.billingDescription,
               serviceId: service.serviceId
             } as CustomChangeService;
           });
@@ -690,7 +698,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return saasBackups.filter((service) => getSafeProperty(service, (obj) => obj.serviceId && obj.serviceChangeAvailable))
           .map((service) => {
             return {
-              name: `${service.billingDescription} (${service.serviceId})`,
+              name: service.billingDescription,
               serviceId: service.serviceId
             } as CustomChangeService;
           });
@@ -708,8 +716,31 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         return veeamDrs.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => {
             return {
-              name: `${service.billingDescription} (${service.serviceId})`,
+              name: service.billingDescription,
               serviceId: service.serviceId
+            } as CustomChangeService;
+          });
+      })
+    );
+  }
+
+  /**
+   * Subscribe to Managed SIEM services
+   */
+  private _subscribeToManagedSiemServices(): void {
+    if (!this._authenticationIdentity.platformSettings.hasManagedSecurity) { return; }
+    if (!this._accessControlService.hasAccessToFeature([McsFeatureFlag.ManagedSecurity])) {
+      return;
+    }
+
+    this.managedSiemServices$ = this._apiService.getManagedSiemServices().pipe(
+      map((response) => {
+        let managedSiemServices = getSafeProperty(response, (obj) => obj.collection);
+        return managedSiemServices.filter((managedSiemService) => getSafeProperty(managedSiemService, (obj) => obj.serviceId))
+          .map((managedSiemService) => {
+            return {
+              name: managedSiemService.billingDescription,
+              serviceId: managedSiemService.serviceId
             } as CustomChangeService;
           });
       })

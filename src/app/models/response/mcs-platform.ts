@@ -10,4 +10,7 @@ export class McsPlatform extends McsEntityBase {
 
   @JsonProperty()
   public hasHybridCloud: boolean = undefined;
+
+  @JsonProperty()
+  public hasManagedSecurity: boolean = undefined;
 }

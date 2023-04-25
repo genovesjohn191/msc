@@ -33,6 +33,7 @@ import { McsApiNetworkDbService } from './services/mcs-api-network-db.service';
 import { McsApiNetworkDnsService } from './services/mcs-api-network-dns.service';
 import { McsApiNonStandardBundlesService } from './services/mcs-api-non-standard-bundles.services';
 import { McsApiPerpetualSoftwareService } from './services/mcs-api-perpetual-software.services';
+import { McsApiManagedSiemService } from './services/mcs-api-managed-siem-services.service';
 import { McsApiNoticesService } from './services/mcs-api-notices.service';
 import { McsApiObjectsService } from './services/mcs-api-objects.service';
 import { McsApiOrdersService } from './services/mcs-api-orders.service';
@@ -89,6 +90,7 @@ export const apiClientProviders: Provider[] = [
   McsApiObjectsService,
   McsApiOrdersService,
   McsApiPerpetualSoftwareService,
+  McsApiManagedSiemService,
   McsApiPlatformService,
   McsApiReportsService,
   McsApiResourcesService,

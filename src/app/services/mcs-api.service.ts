@@ -106,6 +106,8 @@ import {
   McsApiNonStandardBundleFactory,
   IMcsApiPerpetualSoftwareService,
   McsApiPerpetualSoftwareFactory,
+  IMcsApiManagedSiemService,
+  McsApiManagedSiemServicesFactory
 } from '@app/api-client';
 import { McsApiCloudHealthAlertFactory } from '@app/api-client/factory/mcs-api-cloudhealth-alert.factory';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
@@ -345,6 +347,7 @@ import {
   McsSaasBackupAttempt,
   McsNonStandardBundle,
   McsPerpetualSoftware,
+  McsManagedSiemService,
   McsPhysicalServersQueryParams
 } from '@app/models';
 import { McsVCenterBaselineQueryParam } from '@app/models/request/vcenter/mcs-vcenter-baseline-query-param';
@@ -380,6 +383,7 @@ import { McsNonStandardBundlesRepository } from './repositories/mcs-non-standard
 import { McsNoticesRepository } from './repositories/mcs-notices.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsPerpetualSoftwareRepository } from './repositories/mcs-perpetual-software.repository';
+import { McsManagedSiemServicesRepository } from './repositories/mcs-managed-siem-services.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsSaasBackupRepository } from './repositories/mcs-saas-backup.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
@@ -413,6 +417,7 @@ export class McsApiService {
   private readonly _noticesRepository: McsNoticesRepository;
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _perpetualSoftwareRepository: McsPerpetualSoftwareRepository;
+  private readonly _managedSiemRepository: McsManagedSiemServicesRepository;
   private readonly _resourcesRepository: McsResourcesRepository;
   private readonly _saasBackupRepository: McsSaasBackupRepository;
   private readonly _serversRepository: McsServersRepository;
@@ -454,6 +459,7 @@ export class McsApiService {
   private readonly _objectsApi: IMcsApiObjectsService;
   private readonly _ordersApi: IMcsApiOrdersService;
   private readonly _perpetualSoftwareApi: IMcsApiPerpetualSoftwareService;
+  private readonly _managedSiemServicesApi: IMcsApiManagedSiemService;
   private readonly _platformApi: IMcsApiPlatformService;
   private readonly _reportsApi: IMcsApiReportsService;
   private readonly _resourcesApi: IMcsApiResourcesService;
@@ -494,6 +500,7 @@ export class McsApiService {
     this._noticesRepository = _injector.get(McsNoticesRepository);
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._perpetualSoftwareRepository = _injector.get(McsPerpetualSoftwareRepository);
+    this._managedSiemRepository = _injector.get(McsManagedSiemServicesRepository);
     this._resourcesRepository = _injector.get(McsResourcesRepository);
     this._saasBackupRepository = _injector.get(McsSaasBackupRepository);
     this._serversRepository = _injector.get(McsServersRepository);
@@ -2163,6 +2170,14 @@ export class McsApiService {
     return this._mapToEntityRecords(this._perpetualSoftwareRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzurePerpetualSoftware'))
+      )
+    );
+  }
+
+  public getManagedSiemServices(query?: McsQueryParam): Observable<McsApiCollection<McsManagedSiemService>> {
+    return this._mapToEntityRecords(this._managedSiemRepository, query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getManagedSiemServices'))
       )
     );
   }
