@@ -253,7 +253,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
         this._updateValue();
       })
     ).subscribe();
-    
+
     this.inputCtrlEth0Eth1.valueChanges.pipe(
       takeUntil(this._destroySubject),
       tap(changes => {
@@ -280,7 +280,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
 
   private _onNetworkEth2Eth3Change(selectedNetworks: string[]): void {
     let secondaryFields = this._networkInterfaceValue.filter(i => this._secondaryInterfaceList.includes(i.networkInterface));
-    if(isNullOrEmpty(secondaryFields)) { 
+    if (isNullOrEmpty(secondaryFields)) {
       this._secondaryInterfaceList.forEach(item => {
         let networkInterface: NetworkInterface = {
           networkInterface: item,
@@ -289,7 +289,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
         this._networkInterfaceValue.push(networkInterface);
       });
     }
-    
+
     this._networkInterfaceValue.forEach(networkInterface => {
       if (networkInterface.networkInterface === 'eth2' || networkInterface.networkInterface === 'eth3') {
         networkInterface.uuids = selectedNetworks;
@@ -299,7 +299,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   }
 
   private _updateValue() {
-    if(isNullOrEmpty(this.inputCtrlEth2Eth3.value)){
+    if (isNullOrEmpty(this.inputCtrlEth2Eth3.value)) {
       this._networkInterfaceValue.splice(2, 2);
     }
     this.config.value = this._networkInterfaceValue;
@@ -349,6 +349,17 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
         networkInterface: item,
         uuids: []
       };
+      if (item === 'eth0') {
+        if (!isNullOrUndefined(this.fcGateway.value)) {
+          networkInterface.gateway = this.fcGateway.value;
+        }
+        if (!isNullOrUndefined(this.fcPrefix.value)) {
+          networkInterface.prefix = this.fcPrefix.value;
+        }
+        if(!isNullOrUndefined(this.fcManagementIp.value)){
+          networkInterface.ipAddress = this.fcManagementIp.value;
+        }
+      }
       this._networkInterfaceValue.push(networkInterface);
     });
   }
@@ -382,7 +393,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
     }
   }
 
-   private _ipGatewayValidator(inputValue: any): boolean {
+  private _ipGatewayValidator(inputValue: any): boolean {
     try {
       return this.fcGateway.value !== inputValue;
     }
