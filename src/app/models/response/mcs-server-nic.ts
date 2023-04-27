@@ -1,16 +1,19 @@
-import { JsonProperty } from '@app/utilities';
-import { isNullOrEmpty } from '@app/utilities';
 import {
-  IpAllocationMode,
-  IpAllocationModeSerialization,
-  ipAllocationModeText
-} from '../enumerations/ip-allocation-mode.enum';
-import {
-  DeviceType,
-  DeviceTypeSerialization,
-  deviceTypeText
-} from '../enumerations/device-type.enum';
+  isNullOrEmpty,
+  JsonProperty
+} from '@app/utilities';
+
 import { McsEntityBase } from '../common/mcs-entity.base';
+import {
+  deviceTypeText,
+  DeviceType,
+  DeviceTypeSerialization
+} from '../enumerations/device-type.enum';
+import {
+  ipAllocationModeText,
+  IpAllocationMode,
+  IpAllocationModeSerialization
+} from '../enumerations/ip-allocation-mode.enum';
 
 export class McsServerNic extends McsEntityBase {
   @JsonProperty()
@@ -81,6 +84,9 @@ export class McsServerNic extends McsEntityBase {
 
   @JsonProperty()
   public isESXVirtualKernelInterface: boolean = undefined;
+
+  @JsonProperty()
+  public connected: boolean = undefined;
 
   /**
    * Returns the ip allocation mode label

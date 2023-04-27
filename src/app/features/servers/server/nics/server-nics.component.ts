@@ -4,8 +4,7 @@ import {
   BehaviorSubject,
   Observable,
   Subject,
-  Subscription,
-  forkJoin
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -29,6 +28,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import {
   McsAccessControlService,
@@ -40,7 +40,10 @@ import {
   McsTableDataSource2
 } from '@app/core';
 import { McsEvent } from '@app/events';
-import { FlatOption, ServerManageNetwork } from '@app/features-shared';
+import {
+  FlatOption,
+  ServerManageNetwork
+} from '@app/features-shared';
 import {
   IpAllocationMode,
   McsApiCollection,
@@ -75,14 +78,13 @@ import {
   CommonDefinition,
   Guid,
   TreeDatasource,
+  TreeGroup,
   TreeItem,
-  TreeUtility,
-  TreeGroup
+  TreeUtility
 } from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ServerDetailsBase } from '../server-details.base';
-import { FormControl } from '@angular/forms';
 
 // Enumeration
 export enum ServerNicMethodType {
@@ -380,6 +382,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
+    nicValues.connected = this.manageNetwork.connected;
     nicValues.clientReferenceObject = {
       serverId: server.id,
       nicName: nicValues.name,
@@ -444,6 +447,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
+    nicValues.connected = this.manageNetwork.connected;
     nicValues.clientReferenceObject = {
       serverId: server.id,
       nicId: this.selectedNic.id
@@ -461,6 +465,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     nicValues.name = this.selectedNic.name;
     nicValues.ipAllocationMode = IpAllocationMode.Manual;
     nicValues.ipAddresses = this.selectedNic.ipAddresses;
+    nicValues.connected = this.selectedNic.connected;
     nicValues.vlanNumberRanges = this.fcVlan.value;
     nicValues.clientReferenceObject = {
       serverId: server.id,

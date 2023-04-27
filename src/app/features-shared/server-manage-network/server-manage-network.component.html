@@ -2,6 +2,15 @@
   <!-- Network header -->
   <ng-content select="[mcsManageNetworkHeader]"></ng-content>
 
+  <!-- TODO(apascual): Commented out this field when the confirmation on this ticket is done: https://jira.macquarietelecom.com/browse/FUSION-4725 -->
+  <!-- Connected Field -->
+  <!-- <mcs-item orientation="separated">
+    <span></span>
+    <mcs-checkbox color="dark" [formControl]="fcConnected">
+      {{ 'label.connected' | translate }}
+    </mcs-checkbox>
+  </mcs-item> -->
+
   <!-- Network selection -->
   <mcs-form-field>
     <mcs-select mcsId="select-network"

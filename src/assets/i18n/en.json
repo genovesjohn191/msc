@@ -4027,6 +4027,7 @@
     "enabled": "Enabled"
   },
   "label": {
+    "connected": "Connected",
     "totalCost": "Total Cost",
     "rrpCostDollars": "RRP",
     "serviceSpecificManagementCharges": "Service-Specific Management Charges",

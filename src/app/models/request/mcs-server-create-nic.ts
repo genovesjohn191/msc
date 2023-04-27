@@ -1,9 +1,10 @@
 import { JsonProperty } from '@app/utilities';
+
+import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 import {
   IpAllocationMode,
   IpAllocationModeSerialization
 } from '../enumerations/ip-allocation-mode.enum';
-import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export interface IMcsServerCreateNicRefObj {
   serverId?: string;
@@ -31,4 +32,7 @@ export class McsServerCreateNic extends McsApiJobRequestBase<IMcsServerCreateNic
 
   @JsonProperty()
   public vlanNumberRanges?: string[] = undefined;
+
+  @JsonProperty()
+  public connected: boolean = undefined;
 }

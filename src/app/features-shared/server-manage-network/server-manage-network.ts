@@ -1,6 +1,6 @@
 import {
-  McsResourceNetwork,
-  IpAllocationMode
+  IpAllocationMode,
+  McsResourceNetwork
 } from '@app/models';
 
 export class ServerManageNetwork {
@@ -9,4 +9,5 @@ export class ServerManageNetwork {
   public ipAllocationMode: IpAllocationMode;
   public valid: boolean;
   public hasChanged: boolean;
+  public connected: boolean;
 }

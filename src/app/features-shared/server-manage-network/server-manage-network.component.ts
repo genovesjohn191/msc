@@ -1,52 +1,54 @@
-import {
-  Component,
-  OnInit,
-  OnChanges,
-  Input,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  EventEmitter,
-  Output,
-  SimpleChanges,
-  ViewChild,
-  AfterViewInit
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder
-} from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import {
-  takeUntil,
-  shareReplay
+  shareReplay,
+  takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
 import {
   CoreValidators,
-  IMcsFormGroup,
-  IMcsDataChange
+  IMcsDataChange,
+  IMcsFormGroup
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  animateFactory,
-  clearArrayRecord,
-  getSafeProperty,
-  coerceBoolean,
-  isNullOrUndefined
-} from '@app/utilities';
 import {
   InputManageType,
   IpAllocationMode,
-  McsServerNic,
   McsOption,
   McsResourceNetwork,
   McsResourceNetworkIpAddress,
+  McsServerNic
 } from '@app/models';
+import { McsResourceNetworkSubnet } from '@app/models/response/mcs-resource-network-subnet';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
+import {
+  animateFactory,
+  clearArrayRecord,
+  coerceBoolean,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerManageNetwork } from './server-manage-network';
-import { McsResourceNetworkSubnet } from '@app/models/response/mcs-resource-network-subnet';
 
 // Constants
 const DEFAULT_GATEWAY = '192.168.0.1';
@@ -78,6 +80,7 @@ export class ServerManageNetworkComponent
   public fgNetwork: FormGroup<any>;
   public fcIpAllocationMode: FormControl<any>;
   public fcCustomIpAddress: FormControl<any>;
+  public fcConnected: FormControl<boolean>;
 
   @Output()
   public dataChange = new EventEmitter<ServerManageNetwork>();
@@ -255,6 +258,7 @@ export class ServerManageNetworkComponent
         this._networkOutput.customIpAddress = this.fcCustomIpAddress.value;
         this._networkOutput.ipAllocationMode = IpAllocationMode.Manual;
         this._networkOutput.valid = this.fcCustomIpAddress.valid && !isNullOrEmpty(this.selectedNetwork);
+        this._networkOutput.connected = this.fcConnected.value;
         break;
 
       case InputManageType.Auto:
@@ -263,6 +267,7 @@ export class ServerManageNetworkComponent
         this._networkOutput.customIpAddress = null;
         this._networkOutput.ipAllocationMode = this.fcIpAllocationMode.value;
         this._networkOutput.valid = this.fcIpAllocationMode.valid && !isNullOrEmpty(this.selectedNetwork);
+        this._networkOutput.connected = this.fcConnected.value;
         break;
     }
     this._setNetworkHasChangedFlag();
@@ -280,7 +285,7 @@ export class ServerManageNetworkComponent
     if (isNullOrUndefined(network)) { return; }
     let netWorkSubnets: Array<McsResourceNetworkSubnet> = network.subnets;
     this.netMasks = new Array<any>();
-    netWorkSubnets.forEach((subnet)=>{
+    netWorkSubnets.forEach((subnet) => {
       this.netMasks.push(new Netmask(`${subnet.gateway}/${subnet.netmask}`));
     });
     this.netMasks.forEach((netMask) => {
@@ -319,9 +324,9 @@ export class ServerManageNetworkComponent
       let mask = new Netmask(`${subnet.gateway}/${subnet.netmask}`);
       let match = this.netMasks.find(netMask => {
         return (netMask.first === mask.first &&
-                netMask.last === mask.last);
+          netMask.last === mask.last);
       });
-      if(!isNullOrUndefined(match)) {
+      if (!isNullOrUndefined(match)) {
         match.automationAvailable = subnet?.automationAvailable;
       }
     })
@@ -414,6 +419,12 @@ export class ServerManageNetworkComponent
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
 
+    // Register form control for connected checkbox
+    this.fcConnected = new FormControl<boolean>(true);
+    this.fcConnected.valueChanges
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this.notifyDataChange());
+
     // Form group settings
     this.fgNetwork = this._formBuilder.group([]);
     this._registerFormControlsByInputType();
@@ -438,6 +449,7 @@ export class ServerManageNetworkComponent
   private _registerAutoFormControls(): void {
     this.fgNetwork.removeControl('fcCustomIpAddress');
     this.fgNetwork.setControl('fcIpAllocationMode', this.fcIpAllocationMode);
+    this.fgNetwork.setControl('fcConnected', this.fcConnected);
   }
 
   /**
@@ -446,6 +458,7 @@ export class ServerManageNetworkComponent
   private _registerCustomFormControls(): void {
     this.fgNetwork.removeControl('fcIpAllocationMode');
     this.fgNetwork.setControl('fcCustomIpAddress', this.fcCustomIpAddress);
+    this.fgNetwork.setControl('fcConnected', this.fcConnected);
   }
 
   /**
@@ -507,9 +520,10 @@ export class ServerManageNetworkComponent
     }
     let currentIpAddress: string = getSafeProperty(this.targetNic, (obj) => obj.ipAddresses[0]);
     let ipAddress: string = (!isNullOrEmpty(currentIpAddress)) ?
-                            currentIpAddress
-                          : getSafeProperty(this.targetNic, (obj) => obj.vCloudIpAddress);
+      currentIpAddress
+      : getSafeProperty(this.targetNic, (obj) => obj.vCloudIpAddress);
     this.fcCustomIpAddress.setValue(ipAddress);
+    this.fcConnected.setValue(this.targetNic.connected);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -520,7 +534,8 @@ export class ServerManageNetworkComponent
     if (isNullOrEmpty(this.targetNic)) { return; }
     this._networkOutput.hasChanged = this._networkOutput.valid
       && (this._networkOutput.ipAllocationMode !== this.targetNic.ipAllocationMode
-        || this._networkOutput.network.networkName !== this.targetNic.networkName);
+        || this._networkOutput.network.networkName !== this.targetNic.networkName
+        || this._networkOutput.connected !== this.targetNic.connected);
 
     let isCustomIpAddress = !this._networkOutput.hasChanged
       && this._networkOutput.ipAllocationMode === IpAllocationMode.Manual
