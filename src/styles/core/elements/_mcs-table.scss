@@ -9,6 +9,8 @@ $table-header-background-color: $color-black;
 $table-header-font-color: $dark-bg-text-color;
 $table-header-cell-padding: $space-small $table-cell-side-padding;
 $table-header-font-size: $font-size-default;
+$table-header-border-radius-left: 5px 0 0 5px;
+$table-header-border-radius-right: 0 5px 5px 0;
 $calendar-table-header-row-size: 2rem;
 
 // Table rows
@@ -45,6 +47,16 @@ table {
   border-collapse: collapse;
   width: 100%;
 
+  th:first-child  {
+    border-radius: $table-header-border-radius-left;
+    border-collapse: separate;
+  }
+
+  th:last-child {
+    border-radius: $table-header-border-radius-right;
+    border-collapse: separate;
+  }
+
   thead {
     &:hover {
       .mat-sort-header-arrow {
@@ -72,6 +84,7 @@ table {
         padding: $table-header-cell-padding;
         font-family: $circular-pro-book;
         color: $table-header-font-color;
+        border-bottom: 0px;
       }
 
       th.action-header-cell {

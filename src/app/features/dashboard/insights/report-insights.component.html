@@ -1,7 +1,7 @@
 <mcs-page header="Insights">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
-    <mcs-top-panel-item *mcsTopPanelItemDef padding-left-medium class="hide-on-print">
+    <mcs-top-panel-item *mcsTopPanelItemDef class="hide-on-print">
       <!-- PDF Icon -->
       <mcs-action-item mcsResponsivePanelItem hidden-small
         [disabled]="pdfDownloadInProgress || widgetsLoading()"
@@ -63,7 +63,7 @@
         <div class="insight-header costs" #costsSection>
           <h1><span class="show-on-print-only">1. </span>{{ 'label.costs' | translate }}</h1>
         </div>
-        <section>
+        <section class="mat-elevation-z2">
           <div class="sub-section">
             <!-- Service Overview -->
             <h2><span class="show-on-print-only">1.1 </span>{{ 'label.servicesOverview' | translate }}</h2>
@@ -171,7 +171,7 @@
             <div class="insight-header tech-review">
               <h1><span class="show-on-print-only">2. </span>{{ 'label.techReview' | translate }}</h1>
             </div>
-            <section>
+            <section class="mat-elevation-z2">
               <div class="sub-section">
                 <!-- Security -->
                 <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.security.title' | translate }}</h2>

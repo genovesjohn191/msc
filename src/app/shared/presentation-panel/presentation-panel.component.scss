@@ -1,6 +1,7 @@
 @import "shared/index";
 
 $presentation-panel-header-padding: 5px 13px;
+$presentation-panel-header-border-radius: 5px;
 $presentation-panel-content-padding: 13px;
 
 .presentation-panel-wrapper {
@@ -21,6 +22,7 @@ $presentation-panel-content-padding: 13px;
   padding: $presentation-panel-header-padding;
   background-color: $color-grey-07;
   min-height: 50px;
+  border-radius: $presentation-panel-header-border-radius;
 }
 
 .presentation-panel-content {

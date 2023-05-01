@@ -84,7 +84,7 @@ const STEP_HOUR: number = 1;
 const STEP_MINUTE: number = 30;
 const ARRIVAL_TIME_MAX = '23:30';
 const ARRIVAL_TIME_MIN_DEFAULT = '00:00';
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 interface IRackService {
   serviceId: string
   name: string;

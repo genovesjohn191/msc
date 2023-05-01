@@ -1,4 +1,4 @@
-<div class="widget azure-ticket-wrapper">
+<div class="widget azure-ticket-wrapper mat-elevation-z2">
   <h3>
     {{ title }}
   </h3>
@@ -6,7 +6,7 @@
     <span *mcsExclusiveForAccount="'default'">
       <a *mcsAccessControl="['TicketCreate']"
         class="hide-on-print new-ticket-link"
-        href="{{ newTicketLink }}"
+        [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
         mcsId
         mcsEventTracker="create-new-ticket"
         mcsEventCategory="ticket"
@@ -64,7 +64,7 @@
           <span>{{ 'reports.overview.azureTicketsWidget.empty' | translate }}</span>
           <ng-container *mcsAccessControl="['TicketCreate']">
             <span *mcsExclusiveForAccount="'default'">
-              Click <a href="{{ newTicketLink }}"
+              Click <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
               mcsId
               mcsEventTracker="create-new-ticket"
               mcsEventCategory="ticket"
@@ -88,7 +88,7 @@
       <div style="text-align: center" *ngIf="hasMore">
         <a
           class="hide-on-print"
-          href="{{ ticketListingLink }}"
+          [mcsRouterLink]="[routeKeyEnum.Tickets]"
           mcsId
           mcsEventTracker="navigate-to-ticket-listing"
           mcsEventCategory="ticket"

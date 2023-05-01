@@ -1,6 +1,7 @@
 @import "shared/index";
 
 $shadow-effect: 1px solid #e3e3e3;
+$widget-border-radius: 3px;
 
 .widget-box {
   .widget {
@@ -9,6 +10,7 @@ $shadow-effect: 1px solid #e3e3e3;
     background-color: $color-white;
     border-bottom: $shadow-effect;
     border-right: $shadow-effect;
+    border-radius: $widget-border-radius;
     @include break(avoid);
 
     @include print() {

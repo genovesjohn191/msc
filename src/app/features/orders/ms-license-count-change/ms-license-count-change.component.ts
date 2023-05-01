@@ -75,7 +75,7 @@ const DEFAULT_LICENSE_COUNT_MIN = 1;
 const DEFAULT_LICENSE_COUNT_MAX = 99999;
 const DEFAULT_LICENSE_COUNT_STEP = 1;
 const MS_LICENSE_COUNT_CHANGE = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 const COMMERCIAL_AGREEMENT_TYPE_NEW = 'NCE';
 
 interface LicenseCountFormControlConfig {

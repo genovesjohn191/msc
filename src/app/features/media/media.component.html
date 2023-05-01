@@ -66,14 +66,8 @@
             {{ 'columnHeader.media' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            <a [mcsRouterLink]="[routeKeyEnum.Medium, row.id]"
-              mcsId="select-media"
-              mcsEventTracker="navigate-to-media"
-              mcsEventCategory="media"
-              mcsEventLabel="media-listing-page">
-              <span [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
-              </span>
-            </a>
+            <span [innerHTML]="row.name | mcsDataLabel: 'Unknown'">
+            </span>
           </td>
         </ng-container>
 

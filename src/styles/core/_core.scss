@@ -93,6 +93,7 @@ html {
     @include font-size($font-size-default);
     @include breakpoint(small) {
       @include font-size($font-size-small);
+      overflow-y: visible !important;
     }
   }
 

@@ -67,7 +67,7 @@ import { ServerRequestPatchService } from './server-request-patch.service';
 const MAX_INSTRUCTIONS_LENGTH = 850;
 const VISIBILE_ROWS = 3;
 const REQUEST_PATCH_ID = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 
 type PatchRequestProperties = {
   exclusions: '',

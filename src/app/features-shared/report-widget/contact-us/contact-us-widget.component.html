@@ -1,4 +1,4 @@
-<div class="widget" *ngIf="processing; else done">
+<div class="widget mat-elevation-z2" *ngIf="processing; else done">
   <div class="placeholder-content">
   </div>
 </div>
@@ -6,7 +6,7 @@
   <div *ngIf="!hasError; else error">
     <div *ngIf="contactsInfo.contacts && contactsInfo.contacts.length > 0">
       <div class="data-wrapper">
-        <div class="widget">
+        <div class="widget mat-elevation-z2">
           <h3>{{ 'reports.overview.contactUsWidget.title' | translate }}</h3>
           <mcs-cta-list>
             <mcs-cta-list-panel [icon]="contactPersonIcon" *ngFor="let contactInfo of contactsInfo.contacts">
@@ -35,7 +35,7 @@
   </div>
   <ng-template #error>
     <div class="data-wrapper">
-      <div class="widget">
+      <div class="widget mat-elevation-z2">
         <h3>{{ 'reports.overview.contactUsWidget.title' | translate }}</h3>
         <div class="error-wrapper">
           <mcs-status-message type="error">

@@ -112,6 +112,11 @@ export class NetworkDbNetworksComponent extends McsPageBase implements OnDestroy
     this.dataSource.refreshDataRecords();
   }
 
+  public navigateToNetwork(network: McsNetworkDbNetwork): void {
+    if (isNullOrEmpty(network)) { return; }
+    this._navigationService.navigateTo(RouteKey.LaunchPadNetworkDbNetworks, [network.id]);
+  }
+
   private _getTableData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDbNetwork>> {
     let queryParam = new McsAzureDeploymentsQueryParams();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);

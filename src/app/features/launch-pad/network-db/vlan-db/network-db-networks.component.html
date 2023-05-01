@@ -70,12 +70,7 @@
           </th>
           <td mat-cell *matCellDef="let row">
             <mcs-item>
-              <a [mcsRouterLink]="getRouteUrl(row?.id)"
-                mcsId
-                mcsEventTracker="navigate-to-network-db-details"
-                mcsEventCategory="launchpad-network-db"
-                mcsEventLabel="network-db-listing-page">
-                {{ row.name }}</a>
+              <span>{{ row.name }}</span>
             </mcs-item>
           </td>
         </ng-container>
@@ -173,7 +168,9 @@
         <!-- Header and Data row -->
         <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"
           [disabled]="dataSource?.isInProgress$ | async"></tr>
-        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          (click)="navigateToNetwork(row)"></tr>
       </table>
 
       <!-- Table Statuses -->

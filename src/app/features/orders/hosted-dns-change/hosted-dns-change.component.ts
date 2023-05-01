@@ -77,7 +77,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 const HOSTED_DNS_CHANGE = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 
 @Component({
   selector: 'mcs-order-hosted-dns-change',

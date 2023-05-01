@@ -14,6 +14,8 @@ $notification-item-label-bg-color: $color-scheme-primary;
 $notification-item-label-color: $color-black;
 $notification-item-label-font: $base-font-bold;
 $notification-item-label-size: 18px;
+$user-panel-switch-account-border-radius: 5px;
+
 
 // User panel layout
 .user-panel-wrapper {
@@ -109,6 +111,7 @@ $notification-item-label-size: 18px;
   color: $color-grey-05;
   min-width: $user-panel-switch-account-desktop-min-width;
   max-height: $user-panel-switch-account-max-height;
+  border-radius: $user-panel-switch-account-border-radius;
 
   a {
     color: $color-grey-05;

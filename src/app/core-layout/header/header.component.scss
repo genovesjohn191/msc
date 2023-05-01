@@ -69,6 +69,9 @@ $header-small-padding: $space-medium;
           cursor: pointer;
         }
       }
+      .global-search-button {
+        vertical-align: sub;
+      }
     }
 
     .make-a-change {

@@ -64,7 +64,7 @@ import { BackupRestoreRequestService } from './backup-restore-request.service';
 const MAX_INSTRUCTIONS_LENGTH = 850;
 const VISIBILE_ROWS = 3;
 const RESTORE_BACKUP_ID = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 const MIN_DATE = addYearsToDate(getCurrentDate(), -7);
 
 type BackupRestoreRequestProperties = {

@@ -93,8 +93,8 @@ export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
     return this.moneyFormat(this.costRecommendations.potentialRightsizingSavings)
   }
 
-  public get azureServiceRequestLink(): string {
-    return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   public constructor(

@@ -81,7 +81,7 @@ import { ComplexFirewallChangeService } from './complex-firewall-change.service'
 const MAX_OBJECTIVE_LENGTH = 850;
 const VISIBILE_ROWS = 3;
 const COMPLEX_FIREWALL_CHANGE_ID = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 const MIN_DATE = addYearsToDate(getCurrentDate(), -7);
 
 type ComplexFirewallChangeRequestProperties = {

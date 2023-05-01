@@ -19,7 +19,7 @@
   <ng-container *mcsExclusiveForAccount="['default']">
     <div class="global-search" *mcsAccessControl="['InternalPrivateCloudEngineerAccess', 'InternalPublicCloudEngineerAccess']; feature: ['EnableLaunchPad']">
       <mat-form-field>
-        <mat-label>Search</mat-label>
+        <mat-label>CRISP Search</mat-label>
         <input #searchField type="text"
           matInput
           mcsId="global-search-input"
@@ -30,7 +30,8 @@
           mcsId="global-search-button"
           mcsEventTracker="global-search"
           mcsEventCategory="navigation"
-          mcsEventLabel="search">search</mat-icon>
+          mcsEventLabel="search"
+          class="global-search-button">search</mat-icon>
       </mat-form-field>
     </div>
   </ng-container>

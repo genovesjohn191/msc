@@ -56,15 +56,8 @@
             <mcs-item>
               <mcs-icon [key]="row.connectionStatusIconKey" size="small"
                 [mcsTooltip]="row.connectionStatusLabel"></mcs-icon>
-
-              <a [mcsRouterLink]="[routeKeyEnum.FirewallDetails, row.id]"
-                mcsId="select-firewall"
-                mcsEventTracker="select-firewall-name"
-                mcsEventCategory="firewall"
-                mcsEventLabel="firewall-listing-page">
-                <span [innerHTML]="row.managementName | mcsDataLabel: 'Unknown'">
-                </span>
-              </a>
+              <span [innerHTML]="row.managementName | mcsDataLabel: 'Unknown'">
+              </span>
             </mcs-item>
           </td>
         </ng-container>

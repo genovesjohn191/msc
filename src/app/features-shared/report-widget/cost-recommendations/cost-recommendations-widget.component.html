@@ -1,4 +1,4 @@
-<div class="widget">
+<div class="widget mat-elevation-z2">
   <h3>{{ 'reports.overview.costAndRecommendationsWidget.title' | translate }}</h3>
   <div class="data-wrapper">
     <div *ngIf="processing; else done">
@@ -58,7 +58,7 @@
             </mcs-cta-list-body>
             <mcs-cta-list-action>
               <a *mcsAccessControl="['OrderEdit'];"
-                href="{{ azureServiceRequestLink }}"
+                [mcsRouterLink]="[routeKeyEnum.OrderMsRequestChange]"
                 matTooltip="We'll work with you to optimise your environment."
                 matTooltipPosition="right"
                 mcsId="recommendations-optimize"
@@ -74,7 +74,7 @@
             </mcs-cta-list-body>
             <mcs-cta-list-action>
               <a *mcsAccessControl="['OrderEdit'];"
-                href="{{ azureServiceRequestLink }}"
+                [mcsRouterLink]="[routeKeyEnum.OrderMsRequestChange]"
                 matTooltip="We'll work with you to rightsize the VMs in your environment."
                 matTooltipPosition="right"
                 mcsId="recommendations-rightsize"

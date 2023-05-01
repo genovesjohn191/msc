@@ -104,7 +104,7 @@ import { ProvisionDetails } from './provision/provision.details';
 
 const MS_REQUEST_SERVICE_CHANGE = Guid.newGuid().toString();
 const MULTI_SELECT_LIMIT = 5;
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 @Component({
   selector: 'mcs-ms-request-change',
   templateUrl: 'ms-request-change.component.html',

@@ -169,12 +169,7 @@
               <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
                 <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
               </div>
-              <a [mcsRouterLink]="[routeKeyEnum.ServerDetails, row?.id]"
-                mcsId
-                mcsEventTracker="navigate-to-server"
-                mcsEventCategory="server"
-                mcsEventLabel="server-listing-page">
-                {{ row.name }}</a>
+              <span>{{ row.name }}</span>
             </mcs-item>
           </td>
         </ng-container>

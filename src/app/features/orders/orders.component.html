@@ -56,12 +56,7 @@
             {{ 'columnHeader.description' | translate }}
           </th>
           <td mat-cell *matCellDef="let row">
-            <a [mcsRouterLink]="[routeKeyEnum.OrderDetails, row.id]"
-              mcsId="select-order"
-              mcsEventTracker="navigate-to-order"
-              mcsEventCategory="order"
-              mcsEventLabel="order-listing-page">
-              {{ row.description }}</a>
+            <span>{{ row.description }}</span>
           </td>
         </ng-container>
 

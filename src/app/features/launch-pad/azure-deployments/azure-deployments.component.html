@@ -101,12 +101,7 @@
               <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
                 <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
               </div>
-              <a [mcsRouterLink]="[routeKeyEnum.LaunchPadAzureDeployments, row?.id]"
-                mcsId
-                mcsEventTracker="navigate-to-deployment"
-                mcsEventCategory="launchpad-deployment"
-                mcsEventLabel="deployment-listing-page">
-                {{ row.name }}</a>
+              <span>{{ row.name }}</span>
             </mcs-item>
           </td>
         </ng-container>

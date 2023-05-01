@@ -76,7 +76,7 @@ import { AddSimpleFirewallChangeService } from '../firewall-changes-shared/servi
 import { FirewallChangesRuleHelper } from '../firewall-changes-shared/rule/firewall-changes-shared-rule.helper';
 
 const FIREWALL_CHANGE_ID = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 
 @Component({
   selector: 'mcs-add-simple-firewall-change',

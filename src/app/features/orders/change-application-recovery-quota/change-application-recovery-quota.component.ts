@@ -63,7 +63,7 @@ import {
 import { ChangeApplicationRecoveryQuotaService } from './change-application-recovery-quota.service';
 
 const CHANGE_APP_RECOVERY_QUOTA_ID = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 const NUMBER_OF_VMS_MIN = 1;
 const NUMBER_OF_VMS_MAX = 100;
 

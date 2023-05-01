@@ -78,14 +78,6 @@ export class AzureTicketsWidgetComponent implements OnDestroy, OnChanges {
     return RouteKey;
   }
 
-  public get ticketListingLink(): string {
-    return CoreRoutes.getNavigationPath(RouteKey.Tickets);
-  }
-
-  public get newTicketLink(): string {
-    return CoreRoutes.getNavigationPath(RouteKey.TicketCreate);
-  }
-
   @Output()
   public dataChange= new EventEmitter<McsTicket[]>(null);
 

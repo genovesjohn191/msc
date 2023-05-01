@@ -77,7 +77,7 @@ import { RemoteHandsService } from './remote-hands.service';
 const MAX_INSTRUCTIONS_LENGTH = 850;
 const VISIBILE_ROWS = 3;
 const REMOTE_HANDS_ID = Guid.newGuid().toString();
-const LOADING_TEXT = 'loading';
+const LOADING_TEXT = 'Loading';
 
 type RemoteHandRequestProperties = {
   locationWithinCabinet: string;

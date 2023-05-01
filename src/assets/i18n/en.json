@@ -2493,7 +2493,7 @@
       }
     },
     "loading": {
-      "text": "loading"
+      "text": "Loading"
     },
     "fallback": {
       "description": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team for more information.",

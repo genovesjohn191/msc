@@ -1,7 +1,7 @@
 <mcs-page header="Overview">
    <!-- Top Panel -->
    <mcs-top-panel *mcsTopPanelDef>
-    <mcs-top-panel-item *mcsTopPanelItemDef padding-left-medium class="hide-on-print">
+    <mcs-top-panel-item *mcsTopPanelItemDef class="hide-on-print">
        <!-- Nav Menu -->
       <mcs-action-item *ngIf="hasPrivateAndPublicCloudAccess && hasAccessToPrivateCloudDashboard"
         mcsResponsivePanelItem hidden-small [matMenuTriggerFor]="menu">
