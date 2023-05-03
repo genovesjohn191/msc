@@ -24,13 +24,7 @@
           </th>
           <td mat-cell *matCellDef="let row" [mcsTextTruncate]="row.shortDescription" mcsTextTruncateSize="100px">
             <mcs-icon [key]="getStatusIcon(row.stateLabel)" size="small" style="margin-right: 5px;"></mcs-icon>
-            <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
-              mcsId="select-ticket"
-              mcsEventTracker="navigate-to-ticket"
-              mcsEventCategory="ticket"
-              mcsEventLabel="ticket-listing-page">
-              {{ row.shortDescription }}
-            </a>
+            <span>{{ row.shortDescription }}</span>
           </td>
         </ng-container>
 
