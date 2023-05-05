@@ -33,8 +33,7 @@ import {
   InputManageType,
   McsResource,
   McsServerCompute,
-  Os,
-  ServiceType
+  Os
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -195,7 +194,7 @@ export class ServerManageScaleComponent
   /**
    * Returns the service type
    */
-   public get isSelfManaged(): boolean {
+  public get isSelfManaged(): boolean {
     return getSafeProperty(this.resource, (obj) => obj.isSelfManaged, false);
   }
 
@@ -238,10 +237,10 @@ export class ServerManageScaleComponent
    * Returns the resource available memory in GB
    */
   public get resourceAvailableMemoryGB(): number {
-    let resourceMemory = this.isSelfManaged ?
+    let resourceMemoryGb = this.isSelfManaged ?
       getSafeProperty(this.resource, (obj) => convertMbToGb(obj.compute.memoryLimitMB), 0) :
       getSafeProperty(this.resource, (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
-    return isNullOrEmpty(this.serverCompute) ? resourceMemory : resourceMemory + this.serverMemoryUsedGB;
+    return isNullOrEmpty(this.serverCompute) ? resourceMemoryGb : resourceMemoryGb + this.serverMemoryUsedGB;
   }
 
   /**
@@ -331,7 +330,7 @@ export class ServerManageScaleComponent
   /**
    * Touches all auto-populated form controls
    */
-   private _markAsTouchedAutoPopulatedControls(): void {
+  private _markAsTouchedAutoPopulatedControls(): void {
     if (isNullOrEmpty(this.resource)) { return; }
     if (!isNullOrEmpty(this.fcCustomCpu)) { this.fcCustomCpu.markAsTouched(); }
     if (!isNullOrEmpty(this.fcCustomMemory)) { this.fcCustomMemory.markAsTouched(); }
@@ -407,7 +406,7 @@ export class ServerManageScaleComponent
       (control) => CoreValidators.max(this.resourceAvailableCpu)(control),
       CoreValidators.custom(this._cpuStepIsValid.bind(this), 'cpuStep')
     ]);
-    
+
     this.fcRestartServer = new FormControl<any>(null);
 
     // Create form group and bind the form controls
@@ -415,7 +414,7 @@ export class ServerManageScaleComponent
     this.fgServerScale.statusChanges.pipe(
       startWith(null as any),
       takeUntil(this._destroySubject)
-      ).subscribe(() => this.notifyDataChange());
+    ).subscribe(() => this.notifyDataChange());
     this._registerFormControlsByInputType();
   }
 
@@ -509,8 +508,8 @@ export class ServerManageScaleComponent
    * Returns true if new value is allowed to be lower than the current memory value.
    * @param inputValue Value to be checked
    */
-   private _minumumRamGb(inputValue: any) {
-    if(isNullOrUndefined(this.minimumOsMemoryMb)) { return true }
+  private _minumumRamGb(inputValue: any) {
+    if (isNullOrUndefined(this.minimumOsMemoryMb)) { return true }
     return inputValue >= this.minumumRamGb;
   }
 
