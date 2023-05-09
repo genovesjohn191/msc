@@ -12,6 +12,11 @@ import {
   FormControl,
   FormBuilder
 } from '@angular/forms';
+import {
+  MatDatepicker,
+  MatDatepickerInputEvent
+} from '@angular/material/datepicker';
+
 import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
@@ -24,18 +29,20 @@ import {
   tap,
   concatMap
 } from 'rxjs/operators';
+
 import {
   CoreValidators,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsDateTimeService
 } from '@app/core';
 import {
   animateFactory,
   isNullOrEmpty,
   deleteArrayRecord,
   formatTime,
-  buildCronWeekly,
-  parseCronStringToJson,
-  getSafeProperty
+  getSafeProperty,
+  compareStrings,
+  compareArrays
 } from '@app/utilities';
 import {
   McsServerOsUpdatesScheduleRequest,
@@ -44,7 +51,11 @@ import {
   McsServer,
   OsUpdatesScheduleType,
   Day,
-  ServerServicesAction
+  ServerServicesAction,
+  Week,
+  McsServerOsUpdatesScheduleDetails,
+  osUpdatesScheduleTypeText,
+  McsServerOsUpdatesScheduleDetailsRequest
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -55,7 +66,8 @@ import {
 } from '@app/shared';
 import {
   OsUpdatesScheduleDetails,
-  ScheduleDay
+  ScheduleDay,
+  ScheduleWeek
 } from './os-updates-schedule-details';
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
@@ -71,16 +83,19 @@ import { ServerServiceActionDetail } from '../../strategy/server-service-action.
 })
 export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
 
-  public recurringCategories: McsServerOsUpdatesCategory[];
-  public runOnceCategories: McsServerOsUpdatesCategory[];
+  public monthlyCategories: McsServerOsUpdatesCategory[];
+  public weeklyCategories: McsServerOsUpdatesCategory[];
+  public customCategories: McsServerOsUpdatesCategory[];
   public scheduleDetails: OsUpdatesScheduleDetails;
   public scheduleDate: McsServerOsUpdatesSchedule;
-  public scheduleType: OsUpdatesScheduleType;
+  public scheduleType: number;
   public snapshot: boolean = false;
   public restart: boolean = false;
+  public datePanelOpen: boolean = true;
 
   public osUpdatesScheduleConfiguration$: Observable<McsServerOsUpdatesSchedule>;
   public scheduleDaysChange$: Observable<ScheduleDay[]>;
+  public scheduleWeeksChange$: Observable<ScheduleWeek[]>;
   public configurationStatusFactory: McsDataStatusFactory<any>;
 
   public timeOptions: string[] = [];
@@ -88,12 +103,37 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
 
   // Form variables
   public fgSchedule: FormGroup<any>;
-  public fcRecurringScheduleDay: FormControl<any>;
-  public fcRecurringScheduleTime: FormControl<any>;
-  public fcRecurringScheduleTimePeriod: FormControl<any>;
-  public fcRunOnceScheduleDay: FormControl<any>;
-  public fcRunOnceScheduleTime: FormControl<any>;
-  public fcRunOnceScheduleTimePeriod: FormControl<any>;
+
+  // Weekly Form Controls
+  public fcWeeklyScheduleDay: FormControl<any>;
+  public fcWeeklyScheduleTime: FormControl<any>;
+  public fcWeeklyScheduleTimePeriod: FormControl<any>;
+
+  // Monthly Form Controls
+  public fcMonthlyScheduleWeek: FormControl<any>;
+  public fcMonthlyScheduleDay: FormControl<any>;
+  public fcMonthlyScheduleTime: FormControl<any>;
+  public fcMonthlyScheduleTimePeriod: FormControl<any>;
+
+  // Custom Form Controls
+  public fcCustomScheduleTime: FormControl<any>;
+  public fcCustomScheduleTimePeriod: FormControl<any>;
+
+  // Custom Calendar variables
+  public CALENDAR_CLOSE_ON_SELECTED = false;
+  public defaultDate = new Date();
+  public resetDateModel = new Date(0);
+  public dateModel = [];
+  public minDate = new Date(Date.now() + ( 3600 * 1000 * 24)); // current date plus 1 day
+  public maxDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1)); // 1 yr from current date
+
+  @ViewChild('picker') _picker: MatDatepicker<Date>;
+  public dateClass = (date: Date) => {
+    if (this._findDate(date) !== -1) {
+      return [ 'selected' ];
+    }
+    return [ ];
+  }
 
   @Input()
   public selectedServer: McsServer;
@@ -111,66 +151,76 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   private _formGroup: McsFormGroupDirective;
 
   private _initialScheduleCategoryList: McsServerOsUpdatesCategory[];
-  private _initialCronJson: any;
+  private _initialSchedule: McsServerOsUpdatesScheduleDetails;
 
-  /**
-   * Returns the enum type of the server services view
-   */
   public get scheduleTypeOption(): typeof OsUpdatesScheduleType {
     return OsUpdatesScheduleType;
   }
 
-  /**
-   * Returns true/false depending if there is a schedule set
-   */
   public get hasSchedule(): boolean {
-    return !isNullOrEmpty(this.scheduleDate);
+    return !isNullOrEmpty(this.scheduleDate?.job?.schedule);
   }
 
-  /**
-   * Returns true/false depending if there is a schedule set
-   */
-  public get isRunOnce(): boolean {
-    return this.scheduleDate.runOnce;
+  public get scheduleDateType(): number {
+    return this.scheduleDate?.job?.schedule?.type;
   }
 
   /**
    * Returns true if there are no selected categories and no change in the form, false otherwise
    */
-  public get isRunOnceSaveButtonDisabled(): boolean {
+  public get isWeeklySaveButtonDisabled(): boolean {
     if (isNullOrEmpty(this._formGroup)) { return true; }
 
-    let hasSelectedCategories = this.runOnceCategories.filter((category) => category.isSelected).length > 0;
-    let allRequiredFieldsAreSet = hasSelectedCategories && this._formGroup.isValid();
+    let hasSelectedCategories = this.monthlyCategories.filter((category) => category.isSelected).length > 0;
+    let hasSelectedDays = getSafeProperty(this.fcWeeklyScheduleDay, (obj) => obj.value.length > 0, false);
+    let allRequiredFieldsAreSet = hasSelectedCategories && hasSelectedDays && this._formGroup.isValid();
     if (!allRequiredFieldsAreSet) { return true; }
 
-    if (this.hasSchedule && this.isRunOnce) { return !this._hasPendingRunOnceScheduleChanges(); }
+    if (this.hasSchedule && this.scheduleType === OsUpdatesScheduleType.Weekly) { return !this._hasPendingWeeklyScheduleChanges(); }
     return false;
   }
 
   /**
    * Returns true if there are no selected categories and no change in the form, false otherwise
    */
-  public get isRecurringSaveButtonDisabled(): boolean {
+  public get isMonthlySaveButtonDisabled(): boolean {
     if (isNullOrEmpty(this._formGroup)) { return true; }
 
-    let hasSelectedCategories = this.recurringCategories.filter((category) => category.isSelected).length > 0;
-    let hasSelectedDays = getSafeProperty(this.fcRecurringScheduleDay, (obj) => obj.value.length > 0, false);
-    let allRequiredFieldsAreSet = hasSelectedCategories && hasSelectedDays && this._formGroup.isValid();
+    let hasSelectedCategories = this.weeklyCategories.filter((category) => category.isSelected).length > 0;
+    let hasSelectedWeeks = getSafeProperty(this.fcMonthlyScheduleWeek, (obj) => obj.value.length > 0, false);
+    let hasSelectedDays = getSafeProperty(this.fcMonthlyScheduleDay, (obj) => obj.value.length > 0, false);
+    let allRequiredFieldsAreSet = hasSelectedCategories && hasSelectedWeeks && hasSelectedDays && this._formGroup.isValid();
     if (!allRequiredFieldsAreSet) { return true; }
 
-    if (this.hasSchedule && !this.isRunOnce) { return !this._hasPendingRecurringScheduleChanges(); }
+    if (this.hasSchedule && this.scheduleType === OsUpdatesScheduleType.Monthly) { return !this._hasPendingMonthlyScheduleChanges(); }
+    return false;
+  }
+
+  /**
+   * Returns true if there are no selected categories and no change in the form, false otherwise
+   */
+  public get isCustomSaveButtonDisabled(): boolean {
+    if (isNullOrEmpty(this._formGroup)) { return true; }
+
+    this._changeDetectorRef.markForCheck();
+    let hasSelectedCategories = this.customCategories.filter((category) => category.isSelected).length > 0;
+    let hasSelectedDates = this.dateModel?.length !== 0;
+    let allRequiredFieldsAreSet = hasSelectedDates && hasSelectedCategories && this._formGroup.isValid();
+    if (!allRequiredFieldsAreSet) { return true; }
+
+    if (this.hasSchedule && this.scheduleType === OsUpdatesScheduleType.Custom) { return !this._hasPendingCustomScheduleChanges(); }
     return false;
   }
 
   constructor(
     private _dialogService: DialogService,
     private _formBuilder: FormBuilder,
+    private _dateTimeService: McsDateTimeService,
     protected _apiService: McsApiService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _translateService: TranslateService
   ) {
-    this.scheduleType = OsUpdatesScheduleType.RunOnce;
+    this.scheduleType = OsUpdatesScheduleType.Weekly;
     this.saveSchedule = new EventEmitter();
     this.deleteSchedule = new EventEmitter();
     this.scheduleDetails = new OsUpdatesScheduleDetails();
@@ -178,27 +228,63 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this._initializeFormData();
+    this._initializeFormControls();
     this._getOsUpdatesScheduleConfiguration();
     this.scheduleDaysChange$ = this.scheduleDetails.scheduleDaysChange();
+    this.scheduleWeeksChange$ = this.scheduleDetails.scheduleWeeksChange();
   }
 
-  /**
-   * Emits an event to save/update the os-update schedule as Run Once
-   */
-  public saveRunOnceSchedule(): void {
+  public updateDatePanelStatus(isPanelOpen: boolean): void {
+    this.datePanelOpen = isPanelOpen;
+  }
+
+  public saveWeeklySchedule(): void {
     let request = new McsServerOsUpdatesScheduleRequest();
-    let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
-    request.runOnce = true; // RunOnce
+    request.snapshot = this.snapshot;
+    request.restart = this.restart;
+    let schedule = new McsServerOsUpdatesScheduleDetailsRequest();
+    schedule.type = osUpdatesScheduleTypeText[this.scheduleType];
+    schedule.weekdays = this.fcWeeklyScheduleDay.value;
+    schedule.weekdayOrdinals = null;
+    schedule.time = this._convertTimeTo24hrFormat(this.fcWeeklyScheduleTime.value, this.fcWeeklyScheduleTimePeriod.value);
+    schedule.dates = null; 
+    request.schedule = schedule;
+    request.categories = [];
+
+    this.weeklyCategories.forEach((category) => {
+      if (category.isSelected) { request.categories.push(category.id); }
+    });
+    let actionDetails = { server: this.selectedServer, payload: request, action: ServerServicesAction.OsUpdatesScheduleSave };
+
+    if (this.hasSchedule) {
+      this._showScheduleDialog(this.selectedServer,
+        this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogTitle'),
+        this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogMessage'),
+        this._translateService.instant('serverServicesOsUpdatesSchedule.saveConfirmText'),
+      ).pipe(
+        tap((dialogResult) => {
+          if (isNullOrEmpty(dialogResult)) { return of(undefined); }
+          this.saveSchedule.emit(actionDetails);
+        })).subscribe();
+    } else {
+      this.saveSchedule.emit(actionDetails);
+    }
+  }
+
+  public saveMonthlySchedule(): void {
+    let request = new McsServerOsUpdatesScheduleRequest();
     request.snapshot = this.snapshot;
     request.restart = this.restart;
     request.categories = [];
-    request.crontab = this._createCronStringRequest(
-      this.fcRunOnceScheduleTime.value,
-      this.fcRunOnceScheduleTimePeriod.value,
-      scheduleDayArray
-    );
-    this.runOnceCategories.forEach((category) => {
+    let schedule = new McsServerOsUpdatesScheduleDetailsRequest();
+    schedule.type = osUpdatesScheduleTypeText[this.scheduleType];
+    schedule.weekdayOrdinals = this.fcMonthlyScheduleWeek.value;
+    schedule.weekdays = this.fcMonthlyScheduleDay.value;
+    schedule.time = this._convertTimeTo24hrFormat(this.fcMonthlyScheduleTime.value, this.fcMonthlyScheduleTimePeriod.value);
+    schedule.dates = null; 
+    request.schedule = schedule;
+
+    this.monthlyCategories.forEach((category) => {
       if (category.isSelected) { request.categories.push(category.id); }
     });
     let actionDetails = { server: this.selectedServer, payload: request, action: ServerServicesAction.OsUpdatesScheduleSave };
@@ -219,27 +305,27 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     }
   }
 
-  /**
-   * Emits an event to save/update the os-update schedule as Recurring
-   */
-  public saveRecurringSchedule(): void {
+  public saveCustomSchedule(): void {
     let request = new McsServerOsUpdatesScheduleRequest();
-    request.runOnce = false; // Recurring
     request.snapshot = this.snapshot;
     request.restart = this.restart;
-    request.crontab = this._createCronStringRequest(
-      this.fcRecurringScheduleTime.value,
-      this.fcRecurringScheduleTimePeriod.value,
-      this.fcRecurringScheduleDay.value
-    );
     request.categories = [];
-    this.recurringCategories.forEach((category) => {
+    let schedule = new McsServerOsUpdatesScheduleDetailsRequest();
+    schedule.type = osUpdatesScheduleTypeText[this.scheduleType];
+    schedule.weekdayOrdinals = null;
+    schedule.weekdays = null;
+    schedule.dates = this._convertCustomDatesToIsoString(this.dateModel);
+    schedule.time = null;
+    request.schedule = schedule;
+
+    this.monthlyCategories.forEach((category) => {
       if (category.isSelected) { request.categories.push(category.id); }
     });
     let actionDetails = { server: this.selectedServer, payload: request, action: ServerServicesAction.OsUpdatesScheduleSave };
 
     if (this.hasSchedule) {
-      this._showScheduleDialog(this.selectedServer,
+      this._showScheduleDialog(
+        this.selectedServer,
         this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogTitle'),
         this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogMessage'),
         this._translateService.instant('serverServicesOsUpdatesSchedule.saveConfirmText'),
@@ -253,9 +339,6 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     }
   }
 
-  /**
-   * Emits an event to delete the os-update schedule of the server
-   */
   public deleteExistingSchedule(): void {
     this._showScheduleDialog(
       this.selectedServer,
@@ -270,49 +353,71 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     ).subscribe();
   }
 
-  /**
-   * Event listener whenever schedule type change
-   */
   public onScheduleTypeChange(): void {
-    this.scheduleType === OsUpdatesScheduleType.Recurring ?
-      this._registerRecurringFormControls() : this._registerRunOnceFormControls();
+    switch(this.scheduleType)  {
+      case OsUpdatesScheduleType.Weekly:
+        this._registerWeeklyFormControls();
+        break;
+      case OsUpdatesScheduleType.Monthly:
+        this._registerMonthlyFormControls();
+        break;
+      case OsUpdatesScheduleType.Custom:
+        this._registerCustomFormControls();
+        break;
+    }
 
     if (!this.hasSchedule) {
       this.scheduleDetails.resetDays();
+      this.scheduleDetails.resetWeeks();
+      this.dateModel = [];
       this._resetCategories();
       return;
     }
 
-    let formattedTime = this._initialCronJson.hour + ':' + this._initialCronJson.minute;
-    let convertedTime = formatTime(formattedTime, 'HH:mm', 'h:mm A');
-    let convertedTimeArray = convertedTime.split(' ');
+    let convertedTime = formatTime(this._initialSchedule?.time, 'HH:mm', 'h:mm A');
 
-    if (this.scheduleType === OsUpdatesScheduleType.Recurring && !this.isRunOnce) {
-      this._setRecurringFormControls(convertedTimeArray[1], convertedTimeArray[0], this._initialCronJson.dayOfWeek);
-      this.recurringCategories = this._mapSelectedCategories(
-        this.recurringCategories, this._initialScheduleCategoryList
+    if (this._initialSchedule?.dates?.length !== 0) {
+      convertedTime = this._formatCustomTypeTime(this._initialSchedule.dates[0]);
+    }
+
+    let convertedTimeArray = convertedTime?.split(' ');
+
+    if (this.scheduleType === OsUpdatesScheduleType.Weekly) {
+      this._setWeeklyFormControls(convertedTimeArray[1], convertedTimeArray[0], this._initialSchedule.weekdays);
+
+      this.weeklyCategories = this._mapSelectedCategories(
+        this.weeklyCategories, this._initialScheduleCategoryList
       );
       return;
     }
 
-    if (this.scheduleType === OsUpdatesScheduleType.RunOnce && this.isRunOnce) {
-      this._setRunOnceFormControls(convertedTimeArray[1], convertedTimeArray[0], this._initialCronJson.dayOfWeek[0]);
-      this.runOnceCategories = this._mapSelectedCategories(
-        this.runOnceCategories, this._initialScheduleCategoryList
+    if (this.scheduleType === OsUpdatesScheduleType.Monthly) {
+      this._setMonthlyFormControls(convertedTimeArray[1], convertedTimeArray[0], this._initialSchedule.weekdays, this._initialSchedule.weekdayOrdinals);
+      this.monthlyCategories = this._mapSelectedCategories(
+        this.monthlyCategories, this._initialScheduleCategoryList
+      );
+      return;
+    }
+
+    if (this.scheduleType === OsUpdatesScheduleType.Custom) {
+      this._setCustomFormControls(this._initialSchedule.dates, convertedTimeArray[1], convertedTimeArray[0]);
+      this.customCategories = this._mapSelectedCategories(
+        this.customCategories, this._initialScheduleCategoryList
       );
       return;
     }
 
     this.scheduleDetails.resetDays();
+    this.scheduleDetails.resetWeeks();
     this._resetCategories();
   }
 
   /**
-   * Listener method whenever there is a change in selection on the runonce tree view
+   * Listener method whenever there is a change in selection on the weekly tree view
    * @param _selectedNodes selected nodes reference from the tree view
    */
-  public onRunOnceTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
-    this.runOnceCategories.forEach((category) => {
+  public onWeeklyTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
+    this.weeklyCategories.forEach((category) => {
       category.isSelected = !isNullOrEmpty(_selectedNodes.find(
         (selectedNode) => category.id === selectedNode.value.id));
     });
@@ -320,11 +425,23 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   }
 
   /**
-   * Listener method whenever there is a change in selection on the recurring tree view
+   * Listener method whenever there is a change in selection on the monthly tree view
    * @param _selectedNodes selected nodes reference from the tree view
    */
-  public onRecurringTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
-    this.recurringCategories.forEach((category) => {
+  public onMonthlyTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
+    this.monthlyCategories.forEach((category) => {
+      category.isSelected = !isNullOrEmpty(_selectedNodes.find(
+        (selectedNode) => category.id === selectedNode.value.id));
+    });
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Listener method whenever there is a change in selection on the custom tree view
+   * @param _selectedNodes selected nodes reference from the tree view
+   */
+  public onCustomTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
+    this.customCategories.forEach((category) => {
       category.isSelected = !isNullOrEmpty(_selectedNodes.find(
         (selectedNode) => category.id === selectedNode.value.id));
     });
@@ -337,26 +454,63 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
    */
   public isCategorySelected(osUpdateCategory: McsServerOsUpdatesCategory): boolean {
     if (!this.hasSchedule) { return false; }
-    if (this.scheduleType === OsUpdatesScheduleType.Recurring && this.isRunOnce) {
+    if (this.scheduleType === OsUpdatesScheduleType.Weekly) {
       return false;
     }
-    if (this.scheduleType === OsUpdatesScheduleType.RunOnce && !this.isRunOnce) {
+    if (this.scheduleType === OsUpdatesScheduleType.Monthly) {
+      return false;
+    }
+    if (this.scheduleType === OsUpdatesScheduleType.Custom) {
       return false;
     }
     return !!this.scheduleDate.categories.find((category) => category.id === osUpdateCategory.id);
   }
 
-  /**
-   * Form groups and Form controls registration area
-   */
-  private _initializeFormData(): void {
-    // Register Form Controls
-    this.fcRecurringScheduleDay = new FormControl<any>('', [CoreValidators.required]);
-    this.fcRecurringScheduleTime = new FormControl<any>('', [CoreValidators.required]);
-    this.fcRecurringScheduleTimePeriod = new FormControl<any>('', [CoreValidators.required]);
-    this.fcRunOnceScheduleDay = new FormControl<any>('', [CoreValidators.required]);
-    this.fcRunOnceScheduleTime = new FormControl<any>('', [CoreValidators.required]);
-    this.fcRunOnceScheduleTimePeriod = new FormControl<any>('', [CoreValidators.required]);
+  public dateChanged(event: MatDatepickerInputEvent<Date>): void {
+    if (event.value) {
+      let date = event.value;
+      let index = this._findDate(date);
+      if (index === -1) {
+        this.dateModel.push(event.value);
+      } else {
+        this.dateModel.splice(index, 1)
+      }
+      this.resetDateModel = new Date(0);
+      if (!this.CALENDAR_CLOSE_ON_SELECTED) {
+        const closeFn = this._picker.close;
+        this._picker.close = () => { };
+        this._picker['_componentRef'].instance._calendar.monthView._createWeekCells()
+        setTimeout(() => {
+          this._picker.close = closeFn;
+        });
+      }
+    }
+  }
+
+  public removeSelectedDate(date: Date): void {
+    const index = this._findDate(date);
+    this.dateModel.splice(index, 1)
+  }
+
+  private _findDate(date: Date): number {
+    return this.dateModel.map((m) => +m).indexOf(+date);
+  }
+
+  private _initializeFormControls(): void {
+    // Weekly
+    this.fcWeeklyScheduleDay = new FormControl<any>('', [CoreValidators.required]);
+    this.fcWeeklyScheduleTime = new FormControl<any>('', [CoreValidators.required]);
+    this.fcWeeklyScheduleTimePeriod = new FormControl<any>('', [CoreValidators.required]);
+
+    // Monthly
+    this.fcMonthlyScheduleWeek = new FormControl<any>('', [CoreValidators.required]);
+    this.fcMonthlyScheduleDay = new FormControl<any>('', [CoreValidators.required]);
+    this.fcMonthlyScheduleTime = new FormControl<any>('', [CoreValidators.required]);
+    this.fcMonthlyScheduleTimePeriod = new FormControl<any>('', [CoreValidators.required]);
+
+    // Custom
+    this.fcCustomScheduleTime = new FormControl<any>('', [CoreValidators.required]);
+    this.fcCustomScheduleTimePeriod = new FormControl<any>('', [CoreValidators.required]);
 
     // Register Form Groups using binding
     this.fgSchedule = this._formBuilder.group([]);
@@ -395,8 +549,9 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
         (category) => category.osType === this.selectedServer.operatingSystem.type)
       ),
       tap((categories) => {
-        this.runOnceCategories = categories.slice();
-        this.recurringCategories = categories.slice();
+        this.weeklyCategories = categories.slice();
+        this.monthlyCategories = categories.slice();
+        this.customCategories = categories.slice();
       }),
       catchError((error) => throwError(error))
     );
@@ -430,131 +585,172 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
       );
   }
 
-  /**
-   * Registers the form controls related to recurring schedule type
-   */
-  private _registerRecurringFormControls(): void {
+  private _registerWeeklyFormControls(): void {
     this.fgSchedule = this._formBuilder.group([]);
-    this.fgSchedule.setControl('fcRecurringScheduleDay', this.fcRecurringScheduleDay);
-    this.fgSchedule.setControl('fcRecurringScheduleTime', this.fcRecurringScheduleTime);
-    this.fgSchedule.setControl('fcRecurringScheduleTimePeriod', this.fcRecurringScheduleTimePeriod);
+    this.fgSchedule.setControl('fcWeeklyScheduleDay', this.fcWeeklyScheduleDay);
+    this.fgSchedule.setControl('fcWeeklyScheduleTime', this.fcWeeklyScheduleTime);
+    this.fgSchedule.setControl('fcWeeklyScheduleTimePeriod', this.fcWeeklyScheduleTimePeriod);
   }
 
-  /**
-   * Registers the form controls related to runonce schedule type
-   */
-  private _registerRunOnceFormControls(): void {
+  private _registerMonthlyFormControls(): void {
     this.fgSchedule = this._formBuilder.group([]);
-    this.fgSchedule.setControl('fcRunOnceScheduleDay', this.fcRunOnceScheduleDay);
-    this.fgSchedule.setControl('fcRunOnceScheduleTime', this.fcRunOnceScheduleTime);
-    this.fgSchedule.setControl('fcRunOnceScheduleTimePeriod', this.fcRunOnceScheduleTimePeriod);
+    this.fgSchedule.setControl('fcMonthlyScheduleWeek', this.fcMonthlyScheduleWeek);
+    this.fgSchedule.setControl('fcMonthlyScheduleDay', this.fcMonthlyScheduleDay);
+    this.fgSchedule.setControl('fcMonthlyScheduleTime', this.fcMonthlyScheduleTime);
+    this.fgSchedule.setControl('fcMonthlyScheduleTimePeriod', this.fcMonthlyScheduleTimePeriod);
   }
 
-  /**
-   * Resets/Unselect all the categories
-   */
+  private _registerCustomFormControls(): void {
+    this.fgSchedule = this._formBuilder.group([]);
+    this.fgSchedule.setControl('fcCustomScheduleTime', this.fcCustomScheduleTime);
+    this.fgSchedule.setControl('fcCustomScheduleTimePeriod', this.fcCustomScheduleTimePeriod);
+  }
+
   private _resetCategories(): void {
-    this.recurringCategories.forEach((category) => category.isSelected = false);
-    this.runOnceCategories.forEach((category) => category.isSelected = false);
+    this.weeklyCategories.forEach((category) => category.isSelected = false);
+    this.monthlyCategories.forEach((category) => category.isSelected = false);
+    this.customCategories.forEach((category) => category.isSelected = false);
     this._changeDetectorRef.markForCheck();
   }
 
-  /**
-   * Create the cron string for the OS Updates Schedule Request with the proper format
-   * @param time time in string
-   * @param period period in string (AM, PM)
-   * @param daysOfWeek days of week in array
-   */
-  private _createCronStringRequest(time: string, period: string, daysOfWeek: number[]): string {
+  private _convertTimeTo24hrFormat(time: string, period: string): string {
     let timeWithPeriod = time + ' ' + period;
-    let convertedTimeArray = formatTime(timeWithPeriod, 'hh:mm a').split(':');
-    let hour = convertedTimeArray[0];
-    let minute = convertedTimeArray[1];
-    return buildCronWeekly([minute], [hour], daysOfWeek);
+    return formatTime(timeWithPeriod, 'hh:mm a');
   }
 
-  /**
-   * Maps the existing Schedule to the UI components
-   */
   private _setInitialScheduleReference(): void {
     if (!this.hasSchedule) { return; }
-    this.scheduleType = this.isRunOnce ? OsUpdatesScheduleType.RunOnce : OsUpdatesScheduleType.Recurring;
+    this.scheduleType = this.scheduleDateType;
     this.snapshot = this.scheduleDate.snapshot;
     this.restart = this.scheduleDate.restart;
-    this._initialCronJson = parseCronStringToJson(this.scheduleDate.crontab);
+    this._initialSchedule = this.scheduleDate?.job?.schedule;
     this._initialScheduleCategoryList = this.scheduleDate.categories.slice();
     this._changeDetectorRef.markForCheck();
   }
 
-  /**
-   * Set the categories by schedule type
-   */
   private _setSelectedCategoriesByType(categories: McsServerOsUpdatesCategory[]) {
     if (!this.hasSchedule) { return; }
     let selectedCategories = this._mapSelectedCategories(categories, this.scheduleDate.categories);
-    if (this.isRunOnce) {
-      this.runOnceCategories = selectedCategories;
-    } else {
-      this.recurringCategories = selectedCategories;
+    if (this.scheduleType === OsUpdatesScheduleType.Weekly) {
+      this.weeklyCategories = selectedCategories;
+    } 
+    if (this.scheduleType === OsUpdatesScheduleType.Monthly) {
+      this.monthlyCategories = selectedCategories;
+    }
+    if (this.scheduleType === OsUpdatesScheduleType.Custom) {
+      this.customCategories = selectedCategories;
     }
   }
 
-  /**
-   * Sets the form controls of the recurring schedule
-   * @param period period selected by the user
-   * @param time time selected by the user
-   * @param days days selected by the user
-   */
-  private _setRecurringFormControls(period: string, time: string, days: Day[]): void {
-    this.fcRecurringScheduleTimePeriod.setValue(period);
-    this.fcRecurringScheduleTime.setValue(time);
-    this.fcRecurringScheduleDay.setValue(days);
-    this.scheduleDetails.setDays(...days);
+  private _setWeeklyFormControls(period: string, time: string, days: Day[]): void {
+    this.fcWeeklyScheduleTimePeriod.setValue(period);
+    this.fcWeeklyScheduleTime.setValue(time);
+    this.fcWeeklyScheduleDay.setValue(days);
+    if (days?.length > 0) {
+      this.scheduleDetails.setDays(...days);
+    }
   }
 
-  /**
-   * Sets the form controls of the run once schedule
-   * @param period period selected by the user
-   * @param time time selected by the user
-   * @param day day selected by the user
-   */
-  private _setRunOnceFormControls(period: string, time: string, day: Day): void {
-    this.fcRunOnceScheduleTimePeriod.setValue(period);
-    this.fcRunOnceScheduleTime.setValue(time);
-    this.fcRunOnceScheduleDay.setValue(day);
+  private _setMonthlyFormControls(period: string, time: string, days: Day[], weeks: Week[]): void {
+    this.fcMonthlyScheduleTimePeriod.setValue(period);
+    this.fcMonthlyScheduleTime.setValue(time);
+    this.fcMonthlyScheduleDay.setValue(days);
+    this.fcMonthlyScheduleWeek.setValue(weeks);
+    if (days?.length > 0) {
+      this.scheduleDetails.setDays(...days);
+    }
+    if (weeks?.length > 0) {
+      this.scheduleDetails.setWeeks(...weeks);
+    }
   }
 
+    private _setCustomFormControls(dates: string[], period: string, time: string): void {
+      let dateArray = [];
+      if (dates?.length > 0) {
+        dates.forEach((date) => {
+          let formatDate = new Date(date).toLocaleDateString();
+          dateArray.push(new Date(formatDate));
+        });
+      }
+      this.dateModel = dateArray;
+      this.fcCustomScheduleTimePeriod.setValue(period);
+      this.fcCustomScheduleTime.setValue(time);
+      this._changeDetectorRef.markForCheck();
+    }
+
   /**
-   * Returns true if there are current changes in the schedule options of runonce schedule
+   * Returns true if there are current changes in the schedule options of weekly schedule
    */
-  private _hasPendingRunOnceScheduleChanges(): boolean {
-    let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
-    let currentCronSelected = this._createCronStringRequest(
-      this.fcRunOnceScheduleTime.value,
-      this.fcRunOnceScheduleTimePeriod.value,
-      scheduleDayArray
-    );
-    let differentCronOption = this.scheduleDate.crontab !== currentCronSelected;
-    let differentCategorySelection = this._categorySelectionHasChanged(this.runOnceCategories);
+  private _hasPendingWeeklyScheduleChanges(): boolean {
+    let differentScheduleDaySelection = compareArrays(this.fcWeeklyScheduleDay.value, this.scheduleDate?.job?.schedule?.weekdays) !== 0;
+    let currentTimeSelected = this._convertTimeTo24hrFormat(this.fcWeeklyScheduleTime.value, this.fcWeeklyScheduleTimePeriod.value);
+    let differentScheduleTimeSelection = compareStrings(
+      currentTimeSelected, formatTime(this.scheduleDate?.job?.schedule?.time, 'hh:mm:ss')) !== 0;
+    let differentSchedule = differentScheduleDaySelection || differentScheduleTimeSelection;
+
+    let differentCategorySelection = this._categorySelectionHasChanged(this.monthlyCategories);
     let differentSnapshotOption = this.snapshot !== this.scheduleDate.snapshot;
     let differentRestartOption = this.restart !== this.scheduleDate.restart;
-    return differentCronOption || differentCategorySelection || differentSnapshotOption || differentRestartOption;
+    return differentSchedule || differentCategorySelection || differentSnapshotOption || differentRestartOption;
   }
 
   /**
-   * Returns true if there are current changes in the schedule options of recurring schedule
+   * Returns true if there are current changes in the schedule options of monthly schedule
    */
-  private _hasPendingRecurringScheduleChanges(): boolean {
-    let currentCronSelected = this._createCronStringRequest(
-      this.fcRecurringScheduleTime.value,
-      this.fcRecurringScheduleTimePeriod.value,
-      this.fcRecurringScheduleDay.value
-    );
-    let differentCronOption = this.scheduleDate.crontab !== currentCronSelected;
-    let differentCategorySelection = this._categorySelectionHasChanged(this.recurringCategories);
+  private _hasPendingMonthlyScheduleChanges(): boolean {
+    let differentScheduleWeekSelection = compareArrays(this.fcMonthlyScheduleWeek.value, this.scheduleDate?.job?.schedule?.weekdayOrdinals) !== 0;
+    let differentScheduleDaySelection = compareArrays(this.fcMonthlyScheduleDay.value, this.scheduleDate?.job?.schedule?.weekdays) !== 0;
+    let currentTimeSelected = this._convertTimeTo24hrFormat(this.fcMonthlyScheduleTime.value, this.fcMonthlyScheduleTimePeriod.value);
+    let differentScheduleTimeSelection = compareStrings(
+      currentTimeSelected, formatTime(this.scheduleDate?.job?.schedule?.time, 'hh:mm:ss')) !== 0;
+    let differentSchedule = differentScheduleWeekSelection || differentScheduleDaySelection || differentScheduleTimeSelection;
+
+    let differentCategorySelection = this._categorySelectionHasChanged(this.monthlyCategories);
     let differentSnapshotOption = this.snapshot !== this.scheduleDate.snapshot;
     let differentRestartOption = this.restart !== this.scheduleDate.restart;
-    return differentCronOption || differentCategorySelection || differentSnapshotOption || differentRestartOption;
+    return differentSchedule || differentCategorySelection || differentSnapshotOption || differentRestartOption;
+  }
+
+  /**
+   * Returns true if there are current changes in the schedule options of custom schedule
+   */
+  private _hasPendingCustomScheduleChanges(): boolean {
+    let differentScheduleTimeSelection = this._isCustomTimeDifferent();
+    let differentScheduleDateSelection = this._isCustomDateDifferent();
+    let differentSchedule = differentScheduleDateSelection || differentScheduleTimeSelection;
+
+    let differentCategorySelection = this._categorySelectionHasChanged(this.customCategories);
+    let differentSnapshotOption = this.snapshot !== this.scheduleDate.snapshot;
+    let differentRestartOption = this.restart !== this.scheduleDate.restart;
+    return differentSchedule || differentCategorySelection || differentSnapshotOption || differentRestartOption;
+  }
+
+  private _isCustomDateDifferent(): boolean {
+    let currentDateSelected = this._convertCustomTypeDate(this.dateModel);
+    let existingDateSchedule = this._convertCustomTypeDate(this.scheduleDate?.job?.schedule.dates);
+    return compareStrings(currentDateSelected.toString(), existingDateSchedule.toString()) !== 0;
+  }
+
+  private _convertCustomTypeDate(dates: string[]): string[] {
+    let dateArray = [];
+    dates.forEach((dateString) => {
+      dateArray.push(this._dateTimeService.formatDate(new Date(dateString), 'longDate'));
+    })
+    return dateArray;
+  }
+
+  private _isCustomTimeDifferent(): boolean {
+    let currentTimeSelected = this._convertTimeTo24hrFormat(this.fcCustomScheduleTime.value, this.fcCustomScheduleTimePeriod.value);
+    let existingTimeSchedule = this._formatCustomTypeTime(this.scheduleDate?.job?.schedule.dates[0]);
+    let existingTimeSchedule24hrFormat = formatTime(existingTimeSchedule, 'h:mm A', 'HH:mm');
+    return compareStrings(currentTimeSelected, existingTimeSchedule24hrFormat) !== 0;
+  }
+
+  private _formatCustomTypeTime(date: string): string {
+    let dateString = new Date(date).toUTCString();
+    dateString = dateString.split(' ').slice(0, 5).join(' '); // remove GMT in time
+    let convertedTime = this._dateTimeService.formatDate(new Date(dateString), 'h:mm A');
+    return convertedTime;
   }
 
   /**
@@ -600,5 +796,18 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     return dialogRef.afterClosed();
+  }
+
+  private _convertCustomDatesToIsoString(selectedDates: Date[]): string[] {
+    let dateArray = [];
+    if (selectedDates?.length > 0) {
+      this.dateModel.forEach((date) => {
+        let formatDate = this._dateTimeService.formatDate(new Date(date), 'shortDateTime');
+        let formatTime = this._convertTimeTo24hrFormat(this.fcCustomScheduleTime.value, this.fcCustomScheduleTimePeriod.value);
+        let combinedDateTime = new Date(formatDate + ' ' + formatTime);
+        dateArray.push(this._dateTimeService.formatDate(combinedDateTime, 'fullIsoDate'));
+      })
+    }
+    return dateArray;
   }
 }

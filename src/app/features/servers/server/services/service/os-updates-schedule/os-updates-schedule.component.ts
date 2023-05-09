@@ -11,7 +11,9 @@ import {
 } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { McsServerPermission } from '@app/core';
+import {
+  McsDateTimeService,
+  McsServerPermission } from '@app/core';
 import {
   ServerServicesView,
   McsServerOsUpdatesDetails,
@@ -20,13 +22,13 @@ import {
   osUpdatesScheduleSubtitleLabel,
   OsUpdatesScheduleType,
   osUpdatesScheduleLabel,
-  osUpdatesScheduleWarningLabel,
-  JobType
+  JobType,
+  McsServerOsUpdatesScheduleDetails,
+  weekText
 } from '@app/models';
 import {
   isNullOrEmpty,
   replacePlaceholder,
-  parseCronStringToJson,
   formatTime,
   getSafeProperty,
   CommonDefinition
@@ -85,7 +87,10 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
 
   private _scheduleStatusChange: BehaviorSubject<OsUpdateScheduleStatus>;
 
-  constructor(private _translateService: TranslateService) {
+  constructor(
+    private _dateTimeService: McsDateTimeService,
+    private _translateService: TranslateService
+  ) {
     super(ServerServicesView.OsUpdatesSchedule);
     this._scheduleStatusChange = new BehaviorSubject<OsUpdateScheduleStatus>({ hasErrors: false, isAnalysing: false, isUpdating: false });
     this._createScheduleMap();
@@ -122,38 +127,42 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
         return;
       }
 
-      let status = this._osUpdatesDetails.runOnce ? OsUpdatesScheduleType.RunOnce : OsUpdatesScheduleType.Recurring;
+      let status = null;
+      switch(this._osUpdatesDetails.schedule?.type) {
+        case OsUpdatesScheduleType.Weekly:
+          status = OsUpdatesScheduleType.Weekly;
+          break;
+        case OsUpdatesScheduleType.Monthly:
+          status = OsUpdatesScheduleType.Monthly;
+          break;
+        case OsUpdatesScheduleType.Custom:
+          status = OsUpdatesScheduleType.Custom;
+          break;
+      }
+      
       this._setOsUpdateScheduleByType(status);
     }
   }
 
-  /**
-   * Returns the clock icon key
-   */
   public get clockKey(): string {
     return CommonDefinition.ASSETS_SVG_CLOCK;
   }
 
-  /**
-   * Returns true if the schedule is set to RunOnce
-   */
-  public get isRunOnce(): boolean {
-    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.RunOnce, false);
+  public get isWeekly(): boolean {
+    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.Weekly, false);
   }
 
-  /**
-   * Returns true if the schedule is set to Recurring
-   */
-  public get isRecurring(): boolean {
-    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.Recurring, false);
+  public get isMonthly(): boolean {
+    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.Monthly, false);
   }
 
-  /**
-   * Returns true if a schedule is set, false otherwise
-   */
+  public get isCustom(): boolean {
+    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.Custom, false);
+  }
+
   public get hasSchedule(): boolean {
-    let cron = getSafeProperty(this._osUpdatesDetails, (obj) => obj.crontab);
-    return !isNullOrEmpty(cron);
+    let schedule = getSafeProperty(this._osUpdatesDetails, (obj) => obj.schedule);
+    return !isNullOrEmpty(schedule);
   }
 
   /**
@@ -167,15 +176,8 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
    * Returns the updates schedule subtitle label
    */
   public get updatesScheduleSubtitleLabel(): string {
-    let scheduleDate = this._buildFormattedScheduleDate(this._osUpdatesDetails.crontab);
+    let scheduleDate = this._buildFormattedScheduleDate(this._osUpdatesDetails.schedule);
     return replacePlaceholder(this._osUpdatesScheduleDetails.sublabel, 'scheduleDate', scheduleDate);
-  }
-
-  /**
-   * Returns the updates schedule warning label
-   */
-  public get updatesScheduleWarningLabel(): string {
-    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.warningLabel);
   }
 
   public get configureButtonLabel(): string {
@@ -265,32 +267,74 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
   /**
    * Build schedule date with proper format
    */
-  private _buildFormattedScheduleDate(cron: string) {
+  private _buildFormattedScheduleDate(schedule: McsServerOsUpdatesScheduleDetails) {
     let convertedDaysArray = [];
-    let cronJson = parseCronStringToJson(cron);
-    cronJson.dayOfWeek.forEach(
-      (day) => convertedDaysArray.push(formatTime(day.toString(), 'd', 'ddd'))
-    );
-    let time = formatTime(cronJson.hour[0] + ':' + cronJson.minute[0], 'HH:mm', 'h:mm A');
-    return convertedDaysArray.join(', ') + ' at ' + time;
+
+    let time = formatTime(schedule?.time, 'HH:mm', 'h:mm A');
+    let subLabel = '';
+    switch(schedule?.type) {
+      case OsUpdatesScheduleType.Weekly:
+        if (schedule.weekdays?.length <= 3) {
+          schedule.weekdays.forEach((day) => convertedDaysArray.push(formatTime((day - 1).toString(), 'd', 'ddd')));
+          subLabel = `Every ${convertedDaysArray.join(', ')} at ${time}, Sydney time`;
+        } else {
+          subLabel = `Multiple days each week at ${time}`;
+        }
+        break;
+      case OsUpdatesScheduleType.Monthly:
+        if (schedule.weekdayOrdinals?.length <= 3 && schedule.weekdays?.length <= 3) {
+          let convertedWeeksArray = [];
+
+          schedule.weekdayOrdinals.forEach((week) => convertedWeeksArray.push(weekText[week]));
+          schedule.weekdays.forEach((day) => convertedDaysArray.push(formatTime((day - 1).toString(), 'd', 'ddd')));
+          
+          if (convertedWeeksArray?.length === 2) {
+            subLabel += `${convertedWeeksArray[0]} and ${convertedWeeksArray[1]} `;
+          } else {
+            subLabel += `${convertedWeeksArray.join(', ')} `;
+          }
+          if (convertedDaysArray?.length === 2) {
+            subLabel += `${convertedDaysArray[0]} and ${convertedDaysArray[1]} `;
+          } else {
+            subLabel += `${convertedDaysArray.join(', ')} `;
+          }
+          subLabel += `of each month at ${time}, Sydney time`;
+        } else {
+          subLabel = `Custom schedule`;
+        }
+        break;
+      case OsUpdatesScheduleType.Custom:
+        if (schedule.dates?.length === 1) {
+          let dateString = new Date(schedule.dates[0]).toUTCString();
+          dateString = dateString.split(' ').slice(0, 5).join(' '); // remove GMT in time
+          let formattedDate = this._dateTimeService.formatDate(new Date(dateString), 'fullDate');
+          let formattedTime = this._dateTimeService.formatDate(new Date(dateString), 'shortTime');
+          subLabel = `${formattedDate} at ${formattedTime}, Sydney time`;
+        } else {
+          subLabel = `Custom update schedule`;
+        }
+        break;
+    }
+    return subLabel;
   }
 
-  /**
-   * Creates the status map table
-   */
   private _createScheduleMap(): void {
     this._osUpdatesScheduleDetailsMap = new Map();
 
-    this._osUpdatesScheduleDetailsMap.set(OsUpdatesScheduleType.Recurring, {
-      label: osUpdatesScheduleLabel[OsUpdatesScheduleType.Recurring],
-      type: OsUpdatesScheduleType.Recurring,
-      sublabel: osUpdatesScheduleSubtitleLabel[OsUpdatesScheduleType.Recurring]
+    this._osUpdatesScheduleDetailsMap.set(OsUpdatesScheduleType.Monthly, {
+      label: osUpdatesScheduleLabel[OsUpdatesScheduleType.Monthly],
+      type: OsUpdatesScheduleType.Monthly,
+      sublabel: osUpdatesScheduleSubtitleLabel[OsUpdatesScheduleType.Monthly]
     });
-    this._osUpdatesScheduleDetailsMap.set(OsUpdatesScheduleType.RunOnce, {
-      label: osUpdatesScheduleLabel[OsUpdatesScheduleType.RunOnce],
-      type: OsUpdatesScheduleType.RunOnce,
-      sublabel: osUpdatesScheduleSubtitleLabel[OsUpdatesScheduleType.RunOnce],
-      warningLabel: osUpdatesScheduleWarningLabel[OsUpdatesScheduleType.RunOnce]
+    this._osUpdatesScheduleDetailsMap.set(OsUpdatesScheduleType.Weekly, {
+      label: osUpdatesScheduleLabel[OsUpdatesScheduleType.Weekly],
+      type: OsUpdatesScheduleType.Weekly,
+      sublabel: osUpdatesScheduleSubtitleLabel[OsUpdatesScheduleType.Weekly]
+    });
+    this._osUpdatesScheduleDetailsMap.set(OsUpdatesScheduleType.Custom, {
+      label: osUpdatesScheduleLabel[OsUpdatesScheduleType.Custom],
+      type: OsUpdatesScheduleType.Custom,
+      sublabel: osUpdatesScheduleSubtitleLabel[OsUpdatesScheduleType.Custom]
     });
     this._osUpdatesScheduleDetailsMap.set(OsUpdatesScheduleType.None, {
       label: osUpdatesScheduleLabel[OsUpdatesScheduleType.None],

@@ -343,7 +343,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
       tap(() => {
         this._formMessage.showMessage('success', {
           messages: this._translateService.instant('serverServices.operatingSystemUpdates.updateSuccessMessage')
-        });
+        }, false);
       }),
       finalize(() => {
         this.refreshServerResource();

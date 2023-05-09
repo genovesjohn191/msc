@@ -82,7 +82,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   /**
    * Shows the message based on the message strings
    */
-  public showMessage(messageType: McsStatusType, messageContent: FormMessageContent): void {
+  public showMessage(messageType: McsStatusType, messageContent: FormMessageContent, showBullet?: boolean): void {
     if (isNullOrEmpty(messageContent)) {
       throw new Error('Form message content is not defined.');
     }
@@ -90,7 +90,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
     // Set form attributes
     this.type = messageType;
     this.hidden = false;
-    this._setFormMessageContent(messageContent);
+    this._setFormMessageContent(messageContent, showBullet);
 
     Promise.resolve().then(() => {
       if (!isNullOrEmpty(this._alertMessage)) {
@@ -134,11 +134,16 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
    * Sets the form message contents
    * @param messageContent Message content to be set on the form component
    */
-  private _setFormMessageContent(messageContent: FormMessageContent): void {
+  private _setFormMessageContent(messageContent: FormMessageContent, showBullet?: boolean): void {
     let formMessages: string[] = !(messageContent.messages instanceof Array) ?
       [messageContent.messages] : messageContent.messages;
 
-    this.showBullet = !isNullOrEmpty(messageContent.messages) && messageContent.messages.length > 1;
+    if (showBullet !== undefined) {
+      this.showBullet = showBullet;
+    } else {
+      this.showBullet = !isNullOrEmpty(messageContent.messages) && messageContent.messages.length > 1;
+    }
+
     this.messages$ = isNullOrEmpty(formMessages) ?
       of([messageContent.fallbackMessage]) : of(formMessages);
   }

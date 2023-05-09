@@ -1,9 +1,7 @@
 import { JsonProperty } from '@app/utilities';
+import { McsServerOsUpdatesScheduleDetailsRequest } from './mcs-server-os-updates-schedule-details-request';
 
 export class McsServerOsUpdatesScheduleRequest {
-  @JsonProperty()
-  public runOnce: boolean = undefined;
-
   @JsonProperty()
   public snapshot: boolean = undefined;
 
@@ -11,7 +9,7 @@ export class McsServerOsUpdatesScheduleRequest {
   public restart: boolean = undefined;
 
   @JsonProperty()
-  public crontab: string = undefined;
+  public schedule: McsServerOsUpdatesScheduleDetailsRequest = undefined;
 
   @JsonProperty()
   public categories: string[] = undefined;

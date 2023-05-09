@@ -125,6 +125,7 @@ export * from './enumerations/ucs-object-type.enum';
 export * from './enumerations/vcloud-instance/dedicated-provider.enum';
 export * from './enumerations/vcloud-instance/pod-availability-zone.enum';
 export * from './enumerations/vcloud-instance/storage-profile-iops.enum';
+export * from './enumerations/week.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -160,6 +161,7 @@ export * from './request/mcs-server-storage-device-update';
 export * from './request/mcs-server-update';
 export * from './request/mcs-server-os-updates-request';
 export * from './request/mcs-server-os-updates-schedule-request';
+export * from './request/mcs-server-os-updates-schedule-details-request';
 export * from './request/mcs-server-os-updates-inspect-request';
 export * from './request/mcs-server-power-state-command';
 export * from './request/mcs-server-snapshot-restore';
@@ -262,6 +264,8 @@ export * from './response/mcs-server-platform';
 export * from './response/mcs-server-os-updates';
 export * from './response/mcs-server-os-updates-details';
 export * from './response/mcs-server-os-updates-schedule';
+export * from './response/mcs-server-os-updates-schedule-details';
+export * from './response/mcs-server-os-updates-job';
 export * from './response/mcs-server-os-updates-category';
 export * from './response/mcs-server-host-security';
 export * from './response/mcs-server-host-security-anti-virus';

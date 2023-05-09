@@ -29,6 +29,18 @@ mat-form-field.mat-form-field {
     .mat-form-field-subscript-wrapper {
       white-space: pre-wrap;
     }
+
+    mat-datepicker-toggle {
+      .mat-icon-button {
+        height: 2.5em;
+        width: 2.5em;
+
+        .mat-datepicker-toggle-default-icon {
+          width: 2em;
+        }
+      }
+    }
+    
   }
 
   &.mcs-select-no-padding {

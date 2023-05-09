@@ -1926,19 +1926,27 @@
     "title": "Configure Schedule",
     "description": {
       "default": "Our system will update the guest OS on this server for you and restart it.",
-      "recurring": " Your server has a recurring update schedule set. See the Recurring option below for details.",
-      "runonce": " Your server has a one-time update schedule set. See the Once option below for details.",
+      "weekly": " Your server has an update schedule set. See the Weekly option below for details.",
+      "monthly": " Your server has an update schedule set. See the Monthly option below for details.",
+      "custom": " Your server has an update schedule set. See the Custom option below for details.",
       "invalidToUpdateSchedule": "Your account does not have the necessary permissions to configure an update schedule for this server, but you can still view its existing schedule."
     },
-    "scheduleTypeLabel": "Schedule Type:",
+    "scheduleTypeLabel": "Schedule:",
     "scheduleTypeOption": {
-      "runonce": "Once",
-      "recurring": "Recurring"
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "custom": "Custom"
     },
-    "scheduleTimeLabel": "Schedule:",
+    "scheduleTimeLabel": "On:",
     "daysPlaceholder": {
-      "runonce": "Select day",
-      "recurring": "Select day/s"
+      "multipleDays": "Select day/s"
+    },
+    "weeksPlaceholder": {
+      "multipleWeeks": "Select week/s"
+    },
+    "customPlaceholder": {
+      "selectDate": "Select date/s",
+      "selectedDates": "Selected dates"
     },
     "snapshotOptionsLabel": "Snapshot Options:",
     "snapshotOptionsDescription": "If applicable updates are found for your server, we can snapshot it before installing them. This snapshot will persist for 23 hours after it is captured.",

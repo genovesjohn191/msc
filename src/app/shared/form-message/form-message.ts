@@ -7,7 +7,7 @@ export interface FormMessageContent {
 }
 
 export interface FormMessage {
-  showMessage(type: McsStatusType, messageContent: FormMessageContent): void;
+  showMessage(type: McsStatusType, messageContent: FormMessageContent, showBullet?: boolean): void;
   hideMessage(): void;
   updateConfiguration(config: FormMessageConfig): void;
 }

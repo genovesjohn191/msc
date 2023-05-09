@@ -1,22 +1,27 @@
 export enum OsUpdatesScheduleType {
-  None = 0,
-  RunOnce = 1,
-  Recurring = 2
+  None = null,
+  Weekly = 0,
+  Monthly = 1,
+  Custom = 2
 }
+
+export const osUpdatesScheduleTypeText = {
+  [OsUpdatesScheduleType.None]: '',
+  [OsUpdatesScheduleType.Weekly]: 'WEEKLY',
+  [OsUpdatesScheduleType.Monthly]: 'MONTHLY',
+  [OsUpdatesScheduleType.Custom]: 'CUSTOM',
+};
+
 
 export const osUpdatesScheduleLabel = {
   [OsUpdatesScheduleType.None]: 'No update schedule configured.',
-  [OsUpdatesScheduleType.RunOnce]: 'You have an update schedule configured.',
-  [OsUpdatesScheduleType.Recurring]: 'You have an update schedule configured.',
+  [OsUpdatesScheduleType.Weekly]: 'You have an update schedule configured.',
+  [OsUpdatesScheduleType.Monthly]: 'You have an update schedule configured.',
+  [OsUpdatesScheduleType.Custom]: 'You have an update schedule configured.'
 };
 
 export const osUpdatesScheduleSubtitleLabel = {
-  [OsUpdatesScheduleType.RunOnce]: 'This {{scheduleDate}}.',
-  [OsUpdatesScheduleType.Recurring]: 'Every {{scheduleDate}}.'
+  [OsUpdatesScheduleType.Weekly]: '{{scheduleDate}}.',
+  [OsUpdatesScheduleType.Monthly]: '{{scheduleDate}}.',
+  [OsUpdatesScheduleType.Custom]: '{{scheduleDate}}.'
 };
-
-export const osUpdatesScheduleWarningLabel = {
-  [OsUpdatesScheduleType.RunOnce]: 'Once this job is complete, you will need to set up a new update schedule.'
-};
-
-

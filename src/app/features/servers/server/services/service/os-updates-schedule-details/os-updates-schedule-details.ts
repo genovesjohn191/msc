@@ -2,7 +2,7 @@ import {
   Observable,
   BehaviorSubject
 } from 'rxjs';
-import { Day } from '@app/models';
+import { Day, Week, dayText, weekText } from '@app/models';
 import {
   isNullOrEmpty,
   isNullOrUndefined
@@ -14,18 +14,20 @@ export type ScheduleDay = {
   day: Day;
 };
 
-export enum DayFrequency {
-  Everyday = 1,
-  Weekends = 2,
-  Weekdays = 3
-}
+export type ScheduleWeek = {
+  checked: boolean;
+  name: string;
+  week: Week;
+};
+
 
 export class OsUpdatesScheduleDetails {
   private _time: string;
   private _period: string;
-  private _isEveryday: boolean;
   private _scheduleDays: ScheduleDay[];
   private _scheduleDaysChange: BehaviorSubject<ScheduleDay[]>;
+  private _scheduleWeeks: ScheduleWeek[];
+  private _scheduleWeeksChange: BehaviorSubject<ScheduleWeek[]>;
 
   /**
    * Returns the time of the schedule
@@ -41,69 +43,30 @@ export class OsUpdatesScheduleDetails {
     return this._period;
   }
 
-  /**
-   * Returns the number of days that are selected from the schedule days
-   */
-  public get selectedScheduleDaysCount(): number {
-    return this._getSelectedScheduleDays().length;
-  }
+  constructor(scheduleWeeks?: ScheduleWeek[], scheduleDays?: ScheduleDay[], time?: string, period?: string) {
+    this._scheduleWeeks = !isNullOrEmpty(scheduleWeeks) ? scheduleWeeks : [
+      { week: Week.First, name: weekText[Week.First], checked: false },
+      { week: Week.Second, name: weekText[Week.Second], checked: false },
+      { week: Week.Third, name: weekText[Week.Third], checked: false },
+      { week: Week.Fourth, name: weekText[Week.Fourth], checked: false },
+      { week: Week.Fifth, name: weekText[Week.Fifth], checked: false }
+    ];
+    this._scheduleWeeksChange = new BehaviorSubject<ScheduleWeek[]>(this._scheduleWeeks);
 
-  /**
-   * Returns true if all of the days are selected
-   */
-  public get isEveryday(): boolean {
-    let unSelectedDay = this._scheduleDaysChange.getValue().find((selection) => !selection.checked);
-    return this._isEveryday = isNullOrEmpty(unSelectedDay);
-  }
-
-  /**
-   * Returns true if Monday through Friday are checked/ticked
-   * See Day Enum for day index reference
-   */
-  public get isWeekdays(): boolean {
-    if (this.selectedScheduleDaysCount !== 5) {
-      return false;
-    }
-    let selectedDays = this._scheduleDaysChange.getValue().filter((scheduleDay) => {
-      return this._dayFallsOnWeekdays(scheduleDay.day) && scheduleDay.checked;
-    });
-    let hasAllWeekdaysOnly = selectedDays.length === 5 && !this._isEveryday;
-    return hasAllWeekdaysOnly;
-  }
-
-  /**
-   * Returns true if Sunday and Saturday selection are checked/ticked
-   * See Day Enum for day index reference
-   */
-  public get isWeekends(): boolean {
-    if (this.selectedScheduleDaysCount !== 2) {
-      return false;
-    }
-    let selectedDays = this._scheduleDaysChange.getValue().filter((scheduleDay) => {
-      return this._dayFallsOnWeekends(scheduleDay.day) && scheduleDay.checked;
-    });
-    let hasAllWeekendsOnly = selectedDays.length === 2 && !this._isEveryday;
-    return hasAllWeekendsOnly;
-  }
-
-  constructor(scheduleDays?: ScheduleDay[], time?: string, period?: string) {
     this._scheduleDays = !isNullOrEmpty(scheduleDays) ? scheduleDays : [
-      { day: Day.Sunday, name: 'Sunday', checked: false },
-      { day: Day.Monday, name: 'Monday', checked: false },
-      { day: Day.Tuesday, name: 'Tuesday', checked: false },
-      { day: Day.Wednesday, name: 'Wednesday', checked: false },
-      { day: Day.Thursday, name: 'Thursday', checked: false },
-      { day: Day.Friday, name: 'Friday', checked: false },
-      { day: Day.Saturday, name: 'Saturday', checked: false },
+      { day: Day.Sunday, name: dayText[Day.Sunday], checked: false },
+      { day: Day.Monday, name: dayText[Day.Monday], checked: false },
+      { day: Day.Tuesday, name: dayText[Day.Tuesday], checked: false },
+      { day: Day.Wednesday, name: dayText[Day.Wednesday], checked: false },
+      { day: Day.Thursday, name: dayText[Day.Thursday], checked: false },
+      { day: Day.Friday, name: dayText[Day.Friday], checked: false },
+      { day: Day.Saturday, name: dayText[Day.Saturday], checked: false },
     ];
     this._scheduleDaysChange = new BehaviorSubject<ScheduleDay[]>(this._scheduleDays);
     this._time = time;
     this._period = period;
   }
 
-  /**
-   * Returns the schedule day/s as Observable
-   */
   public scheduleDaysChange(): Observable<ScheduleDay[]> {
     return this._scheduleDaysChange.asObservable();
   }
@@ -120,39 +83,6 @@ export class OsUpdatesScheduleDetails {
   }
 
   /**
-   * Tick all the days of the schedule days based on parameter provided
-   * @param dayFrequency how often in a week, see DayFrequency enum for reference
-   */
-  public setDaysByFrequency(dayFrequency: DayFrequency): void {
-    switch (dayFrequency) {
-      case DayFrequency.Everyday:
-        this._scheduleDays.forEach((scheduleDay) => scheduleDay.checked = true);
-        this._scheduleDaysChange.next(this._scheduleDays);
-        break;
-
-      case DayFrequency.Weekdays:
-        this._scheduleDays.forEach((scheduleDay) => {
-          scheduleDay.checked = false;
-          if (this._dayFallsOnWeekdays(scheduleDay.day)) {
-            scheduleDay.checked = true;
-          }
-        });
-        this._scheduleDaysChange.next(this._scheduleDays);
-        break;
-
-      case DayFrequency.Weekends:
-        this._scheduleDays.forEach((selectionDay) => {
-          selectionDay.checked = false;
-          if (this._dayFallsOnWeekends(selectionDay.day)) {
-            selectionDay.checked = true;
-          }
-        });
-        this._scheduleDaysChange.next(this._scheduleDays);
-        break;
-    }
-  }
-
-  /**
    * Unselect all or sets all the schedule days to false
    */
   public resetDays(): void {
@@ -162,26 +92,28 @@ export class OsUpdatesScheduleDetails {
     this._scheduleDaysChange.next(this._scheduleDays);
   }
 
-  /**
-   * Filter all the selected schedule days
-   */
-  private _getSelectedScheduleDays(): ScheduleDay[] {
-    return this._scheduleDaysChange.getValue().filter((scheduleDay) => scheduleDay.checked);
+  public scheduleWeeksChange(): Observable<ScheduleWeek[]> {
+    return this._scheduleWeeksChange.asObservable();
   }
 
   /**
-   * Returns true if the day is within Monday through Friday (1-5)
-   * @param days day to be check
+   * Tick all the weeks of the schedule weeks based on an array provided
+   * @param weeks weeks index in an array
    */
-  private _dayFallsOnWeekdays(day: number): boolean {
-    return day >= 1 && day <= 5;
+  public setWeeks(...weeks: Week[]): void {
+    this._scheduleWeeks.forEach((scheduleWeek) => {
+      scheduleWeek.checked = !isNullOrUndefined(weeks.find((week) => (scheduleWeek.week === +week)));
+    });
+    this._scheduleWeeksChange.next(this._scheduleWeeks);
   }
 
   /**
-   * Returns true if the day is Saturday or Sunday (0 or 6)
-   * @param days day to be check
+   * Unselect all or sets all the schedule weeks to false
    */
-  private _dayFallsOnWeekends(day: number): boolean {
-    return day < 1 || day > 5;
+  public resetWeeks(): void {
+    this._scheduleWeeks.forEach((selectionWeek) => {
+      selectionWeek.checked = false;
+    });
+    this._scheduleWeeksChange.next(this._scheduleWeeks);
   }
 }
