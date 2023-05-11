@@ -45,7 +45,7 @@ export const microsoftSoftwareSubscriptionProvisionForm: LaunchPadForm = {
       key: 'linkedService',
       value: '',
       eventName: 'linked-service-id-change',
-      dependents: ['subscription','resourceId'],
+      dependents: ['subscription'],
     }),
     new DynamicSelectAzureSubscriptionField({
       key: 'subscription',
