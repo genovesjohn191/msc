@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "portal"
-          image: "${AZURE_CONTAINER_REGISTRY}.azurecr.io/${IMAGE_NAME}:latest" 
+          image: "${AZURE_CONTAINER_REGISTRY}.azurecr.io/${IMAGE_NAME}:${IMAGE_VERSION}" 
           imagePullPolicy: "Always"
           ports:
             - containerPort: 5000
