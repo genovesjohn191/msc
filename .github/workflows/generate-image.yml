@@ -1,0 +1,31 @@
+name: Generate Container Image
+
+on:
+  workflow_dispatch: 
+    inputs:
+      environment:
+        type: environment
+        description: "Environment to run the workflow."
+        default: "staging"
+      image_version:
+        type: string
+        description: "Version of the image to create."
+        required: true
+        default: "latest"
+jobs:
+  call-build-and-test:
+    uses: ./.github/workflows/build-and-test.yml
+    with:
+      environment: ${{ inputs.environment }}
+      is_run_test: false
+      is_upload_artifacts: true
+
+  call-publish:
+    uses: ./.github/workflows/publish.yml
+    needs: [call-build-and-test]
+
+    with:
+      environment: ${{ inputs.environment }}
+      image_version: ${{ inputs.image_version }}
+      is_image_latest: false
+    secrets: inherit
