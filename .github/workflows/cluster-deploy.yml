@@ -8,8 +8,25 @@ on:
         type: environment
         description: "Environment to run the workflow."
         default: "staging"
-
+      image_version:
+        type: string
+        description: "Version of the image from the ACR."
+        required: true
+        default: "latest"
 jobs:
+  prep:
+    name: init
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: parameters
+      run: |
+        echo ${GITHUB_REF}
+        echo ${{ inputs.environment }}
+        echo ${{ inputs.image_version }}
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -56,7 +73,9 @@ jobs:
             manifest/deployment.yaml
             manifest/ingress.yaml
           replacement-method: defined
-        
+        env:
+          IMAGE_VERSION: ${{ inputs.image_version }}
+          
       - name: Rollout
         run: |
-          kubectl rollout status deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }}
+          kubectl rollout restart deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }}
