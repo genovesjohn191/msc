@@ -491,7 +491,7 @@ export class ServerManageScaleComponent
    * @param inputValue Value to be checked
    */
   private _cpuCanScaleDown(inputValue: any) {
-    let minimumSameAsDefaultMinimum = DEFAULT_MIN_CPU === this.minimumCpu;
+    let minimumSameAsDefaultMinimum = DEFAULT_MIN_CPU === this.minimumCpu || this.isSelfManaged;
     return minimumSameAsDefaultMinimum ? minimumSameAsDefaultMinimum : inputValue >= this.minimumCpu;
   }
 
