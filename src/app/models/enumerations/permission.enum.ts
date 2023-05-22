@@ -39,8 +39,6 @@ export enum McsPermission {
   FirewallPolicyEdit = 'FirewallPolicyEdit',
   FirewallSerialNumberView = 'FirewallSerialNumberView',
 
-  InternetView = 'InternetView',
-
   // Server Services
   AvView = 'AvView',
   AvEdit = 'AvEdit',
