@@ -605,7 +605,6 @@
     "enumCategory": "Network",
     "enumKey": "Internet",
     "navigationPath": "network/internet",
-    "requiredPermissions": ["InternetView"],
     "documentTitle": "Internet Ports - Macquarie Cloud Services"
   },
   "internetDetails": {
@@ -613,7 +612,6 @@
     "enumCategory": "Network",
     "enumKey": "InternetDetails",
     "navigationPath": "network/internet",
-    "requiredPermissions": ["InternetView"],
     "documentTitle": "Internet Ports Details - Macquarie Cloud Services"
   },
   "internetDetailsManagement": {
@@ -621,7 +619,6 @@
     "enumCategory": "Network",
     "enumKey": "InternetDetailsManagement",
     "navigationPath": "management",
-    "requiredPermissions": ["InternetView"],
     "documentTitle": "Internet Port Management - Macquarie Cloud Services"
   },
   "dnsListing": {

@@ -21,7 +21,7 @@ module.exports = function (config) {
       // to show the relative output in your local browser.
       // Related issue on Some of your tests did a full page reload!
       // https://github.com/karma-runner/karma/issues/3560
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: true // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, './coverage/fusion'),
