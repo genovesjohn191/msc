@@ -48,9 +48,9 @@ export class DynamicSelectPhysicalServerComponent extends DynamicSelectFieldComp
   public config: DynamicSelectPhysicalServerField;
 
   private _companyId: string = undefined;
+  private _initialAssociatedServiceId: string = undefined;
   private _associatedServiceId: string = undefined;
   private _resource: McsResource = undefined;
-  // private _isInitialLoad: boolean = true;
   public isFilteredByAssociatedId: boolean = true;
 
   public constructor(
@@ -69,16 +69,25 @@ export class DynamicSelectPhysicalServerComponent extends DynamicSelectFieldComp
         break;
 
       case 'service-id-change':
-        this._associatedServiceId = params.value;
+        this.initialiseAssociatedServiceId(params.value);
         this.isFilteredByAssociatedId = true;
         this.retrieveOptions();
         break;
 
       case 'resource-change':
+        this.initialiseAssociatedServiceId();
         this._resource = params.value as McsResource;
         this.isFilteredByAssociatedId = true;
         this.retrieveOptions();
         break;
+    }
+  }
+
+  public initialiseAssociatedServiceId(serviceId?): void {
+    this._associatedServiceId = serviceId || this._initialAssociatedServiceId;
+
+    if (serviceId) {
+      this._initialAssociatedServiceId = serviceId;
     }
   }
 
