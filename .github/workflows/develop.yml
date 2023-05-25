@@ -2,7 +2,8 @@
 name: Develop
 
 on:
-  push:
+  pull_request:
+    types: [opened, reopened]
     branches: [ "develop" ]
   workflow_dispatch:
 
