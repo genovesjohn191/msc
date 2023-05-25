@@ -161,7 +161,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
 
   public ngOnInit() {
     this._subscribesToServersList();
-    this._subscribesToVdcList();
+    this._subscribesToResourceList();
     this._subscribedToQueryParams();
     this._subscribesToPrivateCloudResources();
     this._subscribesToServerServices();
@@ -187,7 +187,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToAzureSoftwareSubscriptions();
     this._subscribesToExtenders();
     this._subscribesToApplicationRecovery();
-    
+
     this._subscribesToVeeamBackups();
     this._subscribesToVeeamDrs();
     this._subscribesToSaasBackups();
@@ -393,13 +393,10 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   /**
-   * Subscribes to list of vdc resources
+   * Subscribes to list of resources
    */
-  private _subscribesToVdcList(): void {
-    let queryParam = new McsResourceQueryParam();
-    queryParam.platform = 'VCloud';
-
-    this.privateCloudResourceList$ = this._apiService.getResources(null, queryParam).pipe(
+  private _subscribesToResourceList(): void {
+    this.privateCloudResourceList$ = this._apiService.getResources().pipe(
       map((response) => {
         let resources = getSafeProperty(response, (obj) => obj.collection);
         return resources
