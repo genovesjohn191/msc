@@ -2,7 +2,7 @@ name: Lab (Build and Deploy)
 
 on:
   push:
-    branches: [ "release" ]
+    branches: [ "develop" ]
   workflow_dispatch: 
 
 jobs:
