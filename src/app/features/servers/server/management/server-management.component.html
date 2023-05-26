@@ -147,7 +147,7 @@
               <ng-container mcsPresentationPanelHeader>
                 <mcs-item>
                   <h2>{{ 'serverManagement.storage.title' | translate }}</h2>
-                  <ng-container *mcsAccessControl="serverPermission.serverEdit">
+                  <ng-container *mcsAccessControl="serverPermission.serverStorageEdit">
                     <a *ngIf="!server.isVCenter"
                       [disabled]="!server.executable"
                       (click)="navigateServerDetailsTo(server, routeKeyEnum.ServerDetailsStorage)"
@@ -261,7 +261,7 @@
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ 'serverManagement.media.title' | translate }}</h2>
-                <ng-container *mcsAccessControl="serverPermission.serverEdit">
+                <ng-container *mcsAccessControl="serverPermission.serverStorageEdit">
                   <a (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
                     [disabled]="!server.executable"
                     mcsId="attach-media"
@@ -280,7 +280,7 @@
 
                 <mcs-list-item *ngFor="let media of serverMedia">
                   <mcs-item>
-                    <ng-container *mcsAccessControl="serverPermission.serverEdit">
+                    <ng-container *mcsAccessControl="serverPermission.serverStorageEdit">
                       <mcs-loader *ngIf="mediaIsDetaching(media)" size="small"
                         [mcsTooltip]="server.processingText"></mcs-loader>
 
