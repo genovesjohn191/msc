@@ -58,5 +58,5 @@ jobs:
     - name: Rollout
       run: |
         kubectl set image deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }} portal=${{ vars.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ vars.IMAGE_NAME }}:${{ inputs.image_version }} --record
-        kubectl rollout restart deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }}
+        kubectl rollout status deployment portal --namespace=${{ vars.PORTAL_NAMESPACE }}
           
