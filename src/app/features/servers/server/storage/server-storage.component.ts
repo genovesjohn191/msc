@@ -31,7 +31,8 @@ import {
   McsMatTableContext,
   McsMatTableQueryParam,
   McsServerPermission,
-  McsTableDataSource2
+  McsTableDataSource2,
+  McsAccessControlService
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import { ServerManageStorage } from '@app/features-shared';
@@ -155,7 +156,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
-    private _dialogService: DialogService
+    private _dialogService: DialogService,
+    private _accessControlService: McsAccessControlService
   ) {
     super(_injector, _changeDetectorRef);
     this.dataSourceInProgress$ = new BehaviorSubject(false);
@@ -223,8 +225,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     return true;
   }
 
-  public getPowerStatePermission(server: McsServer): McsServerPermission {
-    return new McsServerPermission(server);
+  public hasStorageEditPermission(server: McsServer): boolean {
+    return this._accessControlService.hasPermission(
+      new McsServerPermission(server).serverStorageEdit
+    );
   }
 
   /**
@@ -538,6 +542,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   private _getServerSnapshots(server: McsServer): void {
+    if (!this.hasStorageEditPermission(server)) { return; }
+
     this.apiService.getServerSnapshots(server.id).subscribe((snapshots) => {
       this._snapshotCount = getSafeProperty(snapshots, (obj) => obj.totalCollectionCount);
     });

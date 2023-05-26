@@ -41,6 +41,24 @@ export class McsServerPermission {
   }
 
   /**
+   * Returns the permission for server storage edit based on server type; only applicable to vCloud and vCenter
+   */
+  public get serverStorageEdit(): string[] {
+    switch(this._server.platform.type) {
+     case PlatformType.VCenter: {
+        return [McsPermission.DedicatedVmEdit];
+        break;
+     }
+     case PlatformType.VCloud: {
+       if (this._server.serviceType === ServiceType.Managed) {
+         return [McsPermission.ManagedCloudVmEdit];
+       }
+       return [McsPermission.SelfManagedCloudVmEdit];
+     }
+   }
+  }
+
+  /**
    * Returns the permission for server NIC Edit based on server type
    */
   public get serverNicEdit(): string[] {
