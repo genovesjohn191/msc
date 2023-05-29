@@ -49,7 +49,7 @@ export class McsOrderItem extends McsEntityBase {
   public billingSite: string = undefined;
 
   @JsonProperty()
-  public costCentre: string = undefined;
+  public billingCostCentre: string = undefined;
 
   @JsonProperty({
     serializer: OrderItemStatusSerialization,
