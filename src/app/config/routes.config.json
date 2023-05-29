@@ -488,7 +488,7 @@
     "enumCategory": "Compute",
     "enumKey": "ServerCreate",
     "navigationPath": "compute/servers/create",
-    "requiredPermissions": ["ManagedCloudVmEdit", "SelfManagedCloudVmEdit"],
+    "requiredPermissions": ["OrderEdit", "SelfManagedCloudVmEdit"],
     "documentTitle": "Create Server - Macquarie Cloud Services"
   },
   "resources": {

@@ -604,6 +604,10 @@ export class StepOrderDetailsComponent
     this._setOrderDetailsTableColumns();
 
     if (isNullOrEmpty(this.order)) { return; }
+    if (isNullOrEmpty(this.order.items)) {
+      this.dataChangeStatus = DataStatus.Error;
+      return;
+    }
 
     let orderItems = Object.assign([], this.order.items);
     orderItems.push({
