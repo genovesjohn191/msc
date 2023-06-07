@@ -27,6 +27,7 @@ $product-max-width: 100%;
 $product-catalog-description-max-height: 30px;
 $product-catalog-widget-size: 350px;
 $product-panel-color: $color-grey-08;
+$product-catalog-image-max-width: 50%;
 
 .product-wrapper {
   position: absolute;
@@ -60,6 +61,19 @@ $product-panel-color: $color-grey-08;
   sup {
     font-size: x-small;
     vertical-align: super;
+  }
+
+  table {
+    table-layout: fixed;
+  }
+
+  td, th {
+    white-space: normal;
+  }
+
+  img {
+    max-width: $product-catalog-image-max-width;
+    height: auto;
   }
 }
 
