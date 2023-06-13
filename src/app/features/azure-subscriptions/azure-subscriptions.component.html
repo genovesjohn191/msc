@@ -58,6 +58,25 @@
           </td>
         </ng-container>
 
+        <!-- Subscription ID Column -->
+        <ng-container matColumnDef="subscriptionId">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.subscriptionId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
+            <ng-container *ngIf="row.subscriptionId; else noSubscriptionIdTemplate">
+              <span>{{ row.subscriptionId }}</span>
+            </ng-container>
+            <ng-template #noSubscriptionIdTemplate>
+              <mcs-data-status-empty
+                [mcsTooltip]="'label.someFunctionalityUnavailable' | translate"
+                [mcsTooltipShow]="!row.subscriptionId">
+                {{ 'label.unknown' | translate }}
+              </mcs-data-status-empty>
+            </ng-template>
+          </td>
+        </ng-container>
+
         <!-- Service ID Column -->
         <ng-container matColumnDef="serviceId">
           <th mat-header-cell *matHeaderCellDef hidden-small>
@@ -74,19 +93,6 @@
                 {{ 'label.unknown' | translate }}
               </mcs-data-status-empty>
             </ng-template>
-          </td>
-        </ng-container>
-
-        <!-- Parent Subscription Service ID Column -->
-        <ng-container matColumnDef="parent">
-          <th mat-header-cell *matHeaderCellDef hidden-small>
-            {{ 'columnHeader.parent' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let row" hidden-small>
-            <span> {{  row.parentSubscriptionServiceId }}</span>
-            <span *ngIf="!row.parentSubscriptionServiceId"
-            [innerHTML]="row.parentSubscriptionServiceId | mcsDataLabel: 'None'">
-            </span>
           </td>
         </ng-container>
 

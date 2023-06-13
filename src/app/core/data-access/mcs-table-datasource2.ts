@@ -208,6 +208,14 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
 
   public registerColumnFilter(columnFilter: ColumnFilter): McsTableDataSource2<TEntity> {
     if (this._columnFilter === columnFilter) { return this; }
+
+    //remove saved settings for columns that no longer exist, otherwise table will break
+    let _defaultFilters = columnFilter['defaultFilters']?.map(column => column.id);
+    columnFilter.filters.forEach((column, index) => {
+      if (!_defaultFilters || _defaultFilters.includes(column.id)) { return; }
+      columnFilter.filters.splice(index, 1);
+    });
+
     this._columnFilter = columnFilter;
     this._subscribeToColumnChange();
     return this;
@@ -338,7 +346,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
         this._paginator?.reset();
         this._requestUpdate.next();
 
-        if (this._configuration?.applyDefaultPagination) { 
+        if (this._configuration?.applyDefaultPagination) {
           this._dataRecordsChange.next(null);
         }
 
