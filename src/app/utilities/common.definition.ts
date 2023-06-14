@@ -234,6 +234,7 @@ export class CommonDefinition {
   public static REGEX_ADOM_NAME_PATTERN = /^[a-zA-Z0-9_\-]+_[0-9]+$/;
   public static REGEX_SHORT_CUSTOMER_NAME_PATTERN = /^[a-zA-Z0-9]{1,16}$/;
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
+  public static REGEX_TARGET_FIRMWARE_VERSION_PATTERN = /\d*\.\d*\.\d*/;
   public static REGEX_NUMERIC_PATTERN = /^-?\d*?$/;
   public static REGEX_INTEGER_PATTERN = /^\d*$/;
   public static REGEX_DECIMAL_PATTERN = /^-?\d*(\.\d+)?$/;

@@ -64,6 +64,9 @@ export class DynamicFormValidationService {
     if (control.hasError('accountUpn')) {
       return 'Incorrect account UPN format';
     }
+    if (control.hasError('targetFirmwareVersion')) {
+      return 'Valid format example: 7.4.0';
+    }
     if (control.hasError('adomName')) {
       return 'Incorrect ADOM name format';
     }

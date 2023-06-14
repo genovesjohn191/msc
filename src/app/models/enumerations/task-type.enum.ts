@@ -91,6 +91,7 @@ export enum TaskType {
   LaunchpadPrivateCloudFirewallDeprovisionPhysical = 7029,
   LaunchpadPrivateCloudFirewallUpgrade = 7030,
   LaunchpadVirtualDataCenterDeprovision = 7035,
+  LaunchpadPrivateCloudFirewallAssessUpgradeReadiness = 7037,
 
   // Terraform 9000-9999
   TerraformRunPlan = 9000,
