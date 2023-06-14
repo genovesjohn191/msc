@@ -114,6 +114,7 @@ export enum JobType {
   LaunchpadPrivateCloudFirewallUpgrade = 102031,
   LaunchpadVirtualDataCenterProvision = 102035,
   LaunchpadVirtualDataCenterDeprovision = 102036,
+  LaunchpadPrivateCloudFirewallAssessUpgradeReadiness = 102038,
 
   // Terraform
   TerraformRunPlan = 104001,

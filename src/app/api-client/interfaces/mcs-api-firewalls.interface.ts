@@ -15,7 +15,7 @@ export interface IMcsApiFirewallsService {
    * Get Firewalls (MCS API Response)
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getFirewalls(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewall[]>>;
+  getFirewalls(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsFirewall[]>>;
 
   /**
    * Get firewall by ID (MCS API Response)
