@@ -37,6 +37,10 @@ export class TableDatasource implements McsDataSource<any> {
     // Do refresh
   }
 
+  public isSearching(): boolean {
+    return false;
+  }
+
   public onCompletion(): void {
     this.loading = false;
   }

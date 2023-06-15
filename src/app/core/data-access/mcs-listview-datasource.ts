@@ -70,6 +70,10 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
     unsubscribeSafely(this._requestUpdate);
   }
 
+  public isSearching(): boolean {
+    return !isNullOrEmpty(this._search?.keyword);
+  }
+
   public onCompletion(_data?: any): void {
     if (!isNullOrEmpty(this._search)) {
       this._search.showLoading(false);
