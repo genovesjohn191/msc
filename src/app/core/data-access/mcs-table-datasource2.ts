@@ -159,6 +159,10 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity>, Mcs
     this._resetPaginator();
   }
 
+  public isSearching(): boolean {
+    return !isNullOrEmpty(this._search?.keyword);
+  }
+
   public onCompletion(data?: TEntity[]): void {
     this._sortingChange.next(false);
     if (!isNullOrEmpty(this._search)) {

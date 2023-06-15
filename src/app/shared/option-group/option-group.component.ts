@@ -31,7 +31,8 @@ import {
   coerceBoolean,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  Guid
 } from '@app/utilities';
 
 import { OptionGroupHeaderDirective } from './option-group-header.directive';
@@ -58,6 +59,7 @@ import { OptionComponent } from './option/option.component';
 })
 
 export class OptionGroupComponent implements AfterContentInit, OnDestroy {
+  public id = Guid.newGuid().toString();
 
   @Input()
   public label: string;

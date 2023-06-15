@@ -36,6 +36,10 @@ export class TableDataSource<T> implements McsDataSource<T> {
     // Release resources
   }
 
+  public isSearching(): boolean {
+    return false;
+  }
+
   /**
    * Event that emits when the data status has been changed
    */

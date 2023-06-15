@@ -86,6 +86,7 @@ export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy 
 
   private _destroySubject = new Subject<void>();
   private _dataDiffer: IterableDiffer<TEntity>;
+  private _savedActiveGroupId: string;
 
   /**
    * Combine streams of all option click change
@@ -157,10 +158,15 @@ export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy 
   /**
    * Close all the option groups without option selected/active
    */
-  private _closeOptionGroupsPanel(): void {
+  private _closeOptionGroupsPanel(all?: boolean): void {
     if (isNullOrEmpty(this._optionGroups)) { return; }
 
     this._optionGroups.forEach((optionGroup) => {
+      if (all) {
+        optionGroup.closePanel();
+        return;
+      }
+
       if (!optionGroup.hasSelectedOption) {
         optionGroup.closePanel();
       }
@@ -181,7 +187,13 @@ export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy 
 
     this._dataSource.connect(null).pipe(
       takeUntil(this._destroySubject),
-      tap((entities) => this._renderListPanelContent(entities as TEntity[]))
+      tap((entities) => {
+        this._renderListPanelContent(entities as TEntity[]);
+
+        setTimeout(() => {
+          this._updateOptionGroupExpandableStatus();
+        }, 300);
+      })
     ).subscribe();
   }
 
@@ -219,6 +231,21 @@ export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy 
   private _validateListPanelContent(): void {
     if (isNullOrEmpty(this._listPanelContent)) {
       throw new Error(`List panel content is not defined. Please make sure the template is bind correctly.`);
+    }
+  }
+
+  private _updateOptionGroupExpandableStatus(): void {
+    if (this._dataSource.isSearching()) {
+      this._savedActiveGroupId = this._optionGroups.find(og => og.panelOpen)?.id;
+      this._optionGroups.forEach(og => {
+        og.openPanel();
+      });
+
+    } else if (!isNullOrEmpty(this._savedActiveGroupId)) {
+      let foundGroup = this._optionGroups.find(og => og.id === this._savedActiveGroupId);
+      if (!isNullOrEmpty(foundGroup)) {
+        foundGroup.openPanel();
+      }
     }
   }
 }
