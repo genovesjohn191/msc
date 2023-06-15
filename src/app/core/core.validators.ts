@@ -178,6 +178,12 @@ export class CoreValidators {
       null : { accountUpn: true };
   }
 
+  public static targetFirmwareVersion(control: AbstractControl): ValidationErrors | null {
+    if (isNullOrEmpty(control.value)) { return null; }
+    return CommonDefinition.REGEX_TARGET_FIRMWARE_VERSION_PATTERN.test(control.value) ?
+      null : { targetFirmwareVersion: true };
+  }
+
   /**
    * Validator that performs ou path validation
    * e.g. of valid values

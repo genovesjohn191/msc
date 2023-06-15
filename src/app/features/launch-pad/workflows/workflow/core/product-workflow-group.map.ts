@@ -193,6 +193,14 @@ export const productWorkflowGroupMap: Map<ProductType, WorkflowGroupIdInfo[]> = 
         {
           workflowId: WorkflowGroupId.ManagementToolsUpdate,
           allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallUpgrade,
+          allowedElementStatuses: [ ]
+        },
+        {
+          workflowId: WorkflowGroupId.FirewallAssessUpgradeReadiness,
+          allowedElementStatuses: [ ]
         }
       ]
     ],

@@ -1767,7 +1767,16 @@ export class McsApiService {
   }
 
 
-  public getFirewalls(query?: McsQueryParam): Observable<McsApiCollection<McsFirewall>> {
+  public getFirewalls(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsFirewall>> {
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._firewallsApi.getFirewalls(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewalls'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+    
     return this._mapToEntityRecords(this._firewallsRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getFirewalls'))

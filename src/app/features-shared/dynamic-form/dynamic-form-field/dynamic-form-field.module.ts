@@ -14,6 +14,7 @@ import { DynamicInputRandomComponent } from './input-random/input-random.compone
 import { DynamicInputShortCustomerNameComponent } from './input-short-customer-name/input-short-customer-name.component';
 import { DynamicInputTerraformDeploymentNameComponent } from './input-terraform-deployment-name/input-terraform-deployment-name.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
+import { DynamicInputTargetFirmwareVersionComponent } from './input-target-firmware-version/input-target-firmware-version.component';
 import { DynamicInputVcloudAllocationComponent } from './input-vcloud-allocation/input-vcloud-allocation.component';
 import { DynamicSelectAvailabilityZoneComponent } from './select-availability-zone/select-availability-zone.component';
 import { DynamicSelectChipsAzureSoftwareSubscriptionProductTypeComponent } from './select-chips-azure-software-subscription-product-type/select-chips-azure-software-subscription-product-type.component';
@@ -75,6 +76,7 @@ import { DynamicStorageSlideToggleComponent } from './storage-slide-toggle/stora
 import { DynamicSelectStorageTierComponent } from './select-storage-tier/select-storage-tier.component';
 import { DynamicSelectPublicCloudResourceComponent } from './select-public-cloud-resource/select-public-cloud-resource.component'
 import { FormFieldsModule } from '@app/features-shared/form-fields/form-fields.module';
+import { DynamicSelectFirewallComponent } from './select-firewall/select-firewall.component';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -90,6 +92,7 @@ const exports: any[] | Type<any> = [
   DynamicInputSizeComponent,
   DynamicInputSubscriptionIdComponent,
   DynamicInputStorageSizeComponent,
+  DynamicInputTargetFirmwareVersionComponent,
   DynamicInputVcloudAllocationComponent,
   DynamicSelectAzureSubscriptionComponent,
   DynamicSelectAvailabilityZoneComponent,
@@ -102,6 +105,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectChipsTerraformModuleComponent,
   DynamicSelectChipsTerraformTagComponent,
   DynamicSelectChipsVmComponent,
+  DynamicSelectFirewallComponent,
   DynamicSelectFortiManagerComponent,
   DynamicSelectFortiAnalyzerComponent,
   DynamicSelectComponent,

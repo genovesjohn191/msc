@@ -20,12 +20,13 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getFirewalls(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewall[]>> {
+  public getFirewalls(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsFirewall[]>> {
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/firewalls';
     mcsApiRequestParameter.searchParameters = McsQueryParam.convertCustomQueryToParamMap(query);
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

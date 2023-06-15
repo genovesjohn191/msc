@@ -42,6 +42,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-storage-size-field>
 
+        <mcs-dff-input-target-firmware-version-field *ngSwitchCase="'input-target-firmware-version'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-input-target-firmware-version-field>
+
         <mcs-dff-input-vcloud-allocation-field *ngSwitchCase="'input-vcloud-allocation'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-input-vcloud-allocation-field>
@@ -238,6 +242,10 @@
         <mcs-dff-storage-slide-toggle-field *ngSwitchCase="'storage-slide-toggle'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
         </mcs-dff-storage-slide-toggle-field>
+
+        <mcs-dff-select-firewall *ngSwitchCase="'select-firewall'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
+        </mcs-dff-select-firewall>
 
         <mcs-dff-select-forti-manager *ngSwitchCase="'select-forti-manager'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)" (afterDataChange)="onAfterDataChange()">
