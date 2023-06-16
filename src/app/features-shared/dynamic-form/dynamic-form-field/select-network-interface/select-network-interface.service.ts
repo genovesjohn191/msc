@@ -23,7 +23,6 @@ import {
   FlatOption,
   GroupedOption
 } from "../../dynamic-form-field-config.interface";
-import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class DynamicSelectNetworkInterfaceService {

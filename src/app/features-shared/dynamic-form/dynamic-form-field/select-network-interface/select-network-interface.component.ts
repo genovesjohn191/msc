@@ -9,8 +9,6 @@ import {
   of,
   Subject
 } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-
 import {
   Component,
   forwardRef,
@@ -111,8 +109,10 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   private _optionsEth2Eth3 = new BehaviorSubject<FlatOption[]>(null);
   private _destroySubject = new Subject<void>();
 
-  private _initialInterfaceList: string[] = ['eth0', 'eth1'];
+  private _esxiInterfaceList: string[] = ['eth0', 'eth1', 'eth2', 'eth3'];
   private _secondaryInterfaceList: string[] = ['eth2', 'eth3'];
+  private _defaultInterfaceList: string[] = ['eth0'];
+  public eth0Label = "Interface (eth0)"
 
   @ViewChild('treeViewSelect')
   public treeViewSelect: FieldSelectTreeViewComponent<any>;
@@ -181,9 +181,12 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
       case 'os-change':
         this._os = params.value as operatingSystem;
         this.isEsxi = false;
-        if (this._os.type === 'ESX') { this.isEsxi = true; }
+        this.eth0Label = "Interface (eth0)";
+        if (!isNullOrUndefined(this._os) && this._os.type === 'ESX') { 
+          this.isEsxi = true;
+          this.eth0Label = "Interfaces (eth0 and eth1)";
+        }
         this._reset();
-        this.retrieveOptions();
         break;
     }
   }
@@ -279,15 +282,17 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   }
 
   private _onNetworkEth2Eth3Change(selectedNetworks: string[]): void {
-    let secondaryFields = this._networkInterfaceValue.filter(i => this._secondaryInterfaceList.includes(i.networkInterface));
-    if (isNullOrEmpty(secondaryFields)) {
-      this._secondaryInterfaceList.forEach(item => {
-        let networkInterface: NetworkInterface = {
-          networkInterface: item,
-          uuids: []
-        };
-        this._networkInterfaceValue.push(networkInterface);
-      });
+    if(!isNullOrEmpty(selectedNetworks)){
+      let secondaryFields = this._networkInterfaceValue.filter(i => this._secondaryInterfaceList.includes(i.networkInterface));
+      if (isNullOrEmpty(secondaryFields)) {
+        this._secondaryInterfaceList.forEach(item => {
+          let networkInterface: NetworkInterface = {
+            networkInterface: item,
+            uuids: []
+          };
+          this._networkInterfaceValue.push(networkInterface);
+        });
+      }
     }
 
     this._networkInterfaceValue.forEach(networkInterface => {
@@ -301,6 +306,9 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
   private _updateValue() {
     if (isNullOrEmpty(this.inputCtrlEth2Eth3.value)) {
       this._networkInterfaceValue.splice(2, 2);
+    }
+    if (!this.isEsxi) {
+      this._networkInterfaceValue.splice(1, 1);
     }
     this.config.value = this._networkInterfaceValue;
     this.valueChange(this.config.value);
@@ -344,7 +352,13 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
 
   private _initializeNetworkValue(): void {
     this._networkInterfaceValue = [];
-    this._initialInterfaceList.forEach(item => {
+    let initialInterfaceList: string[] = this._defaultInterfaceList;
+
+    if(this.isEsxi){
+      initialInterfaceList = this._esxiInterfaceList;
+    }
+
+    initialInterfaceList.forEach(item => {
       let networkInterface: NetworkInterface = {
         networkInterface: item,
         uuids: []
@@ -356,7 +370,7 @@ export class DynamicSelectNetworkInterfaceComponent extends DynamicSelectFieldCo
         if (!isNullOrUndefined(this.fcPrefix.value)) {
           networkInterface.prefix = this.fcPrefix.value;
         }
-        if(!isNullOrUndefined(this.fcManagementIp.value)){
+        if (!isNullOrUndefined(this.fcManagementIp.value)) {
           networkInterface.ipAddress = this.fcManagementIp.value;
         }
       }

@@ -32,7 +32,7 @@
 <div class="div-network">
   <mcs-field-select-tree-view #treeViewSelect size="large"
     [formControl]="inputCtrlEth0Eth1"
-    label="Interfaces (eth0 and eth1)"
+    [label]="eth0Label"
     [hideChips]="false"
     [multiple]="true"
     [dataSource]="datasourceEth0Eth1"
