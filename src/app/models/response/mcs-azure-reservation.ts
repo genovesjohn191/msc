@@ -59,5 +59,5 @@ export class McsAzureReservation extends McsEntityBase {
   public regionName: string = undefined;
   
   @JsonProperty()
-  public utilisationPercent: number = undefined;
+  public averageUtilisationPercent: number = undefined;
 }
