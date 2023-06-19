@@ -32,8 +32,7 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureReservations.columnFilter' | translate" offset="medium">
       <mcs-column-selector #columnFilter
         [storageKey]="featureName"
-        [defaultFilters]="defaultColumnFilters"
-        [filterPredicate]="filterPredicate">
+        [defaultFilters]="defaultColumnFilters">
       </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -78,14 +77,18 @@
           </td>
         </ng-container>
 
-        <!-- Utilisation Column -->
-        <ng-container matColumnDef="utilisation">
-         <th mat-header-cell *matHeaderCellDef mat-sort-header="utilisation" disableClear>
-           {{ 'columnHeader.utilisation' | translate }}
+        <!-- Average Utilisation Column -->
+        <ng-container matColumnDef="averageUtilisation">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header="averageUtilisation" disableClear>
+           {{ 'columnHeader.averageUtilisation' | translate }}
          </th>
          <td mat-cell *matCellDef="let row">
-           <span [innerHTML]="row.utilisationPercent | mcsDataLabel: 'Unknown'"></span>
-           <span *ngIf="row.utilisationPercent">%</span>
+          <ng-container *ngIf="row.averageUtilisationPercent !== null; else averageUtilisationIsNull">
+            <span>{{ row.averageUtilisationPercent }}%</span>
+          </ng-container>
+          <ng-template #averageUtilisationIsNull>
+            <span read-only>{{ 'label.unknown' | translate }}</span>
+          </ng-template>
          </td>
        </ng-container>
 

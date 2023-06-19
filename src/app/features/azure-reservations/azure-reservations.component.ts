@@ -53,12 +53,12 @@ export class AzureReservationsComponent extends McsPageBase {
 
   public readonly dataSource: McsTableDataSource2<McsAzureReservation>;
   public readonly dataEvents: McsTableEvents<McsAzureReservation>;
-  public readonly filterPredicate = this._isColumnIncluded.bind(this);
+
   public readonly defaultColumnFilters: McsFilterInfo[] = [
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'productName' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'quantity' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'utilisation' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'averageUtilisation' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'region' }),
@@ -139,16 +139,7 @@ export class AzureReservationsComponent extends McsPageBase {
       && compareDates(reservation.commitmentEndDate, getCurrentDate()) === 1
       && !reservation.autoRenewEnabled);
   }
-
-  private _isColumnIncluded(filter: McsFilterInfo): boolean {
-    // temporarily hide this column as per FUSION-9717
-    if (filter.id === 'utilisation') {
-      return false;
-    }
-
-    return true;
-  }
-
+  
   private _getAzureReservations(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureReservation>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
